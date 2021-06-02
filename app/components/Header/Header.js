@@ -144,7 +144,7 @@ function Header(props) {
                   </IconButton>
                 </Tooltip>
               )}
-              {/* <Tooltip title="Turn Dark/Light" placement="bottom">
+              <Tooltip title="Turn Dark/Light" placement="bottom">
                 <IconButton className={classes.button} onClick={() => turnMode(mode)}>
                   <i className="ion-ios-bulb-outline" />
                 </IconButton>
@@ -153,7 +153,7 @@ function Header(props) {
                 <IconButton className={classes.button} onClick={openGuide}>
                   <i className="ion-ios-help-circle-outline" />
                 </IconButton>
-              </Tooltip> */}
+              </Tooltip>
             </div>
             {/* <Typography component="h2" className={classNames(classes.headerTitle, showTitle && classes.show)}>
               {title}
