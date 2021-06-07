@@ -15,13 +15,17 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 function App() {
 
+  const searchParams = new URLSearchParams(window.location.search);    
+  const code = searchParams.get("code");
+
   useEffect(() => {
+       
       var axios = require('axios');
       var data = JSON.stringify({
       "grant_type":"authorization_code",
       "client_id":"DEsDngx9KAeuoJzhmR3wMuhC78NK4YUcXMOzNKt3",
       "client_secret":"LVVbYw5RmKOZCDTC1CV1tQKtN4DGso0FoClAz22GRhV81Bd7egLZ2qiNoXGmqjarCDUEoXiO7F8Q27On0aK5gGosIyCG0EhnRXz3mD88SkKrcf3F3BA5Ny84NkX9MehF",
-      "code":"idLfqeoluEY5NelVT0Lg7E2EE6xMH8"
+      "code":code
       });
 
       var config = {
