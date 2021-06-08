@@ -88,43 +88,43 @@ function Application(props) {
 
         {/* form initialNotification */}
 
-        <Route path="/app/forms/InitialNotification/EnvironmentAffected" component={EnvironmentAffected} />
-        <Route path="/app/forms/InitialNotification/EqiptmentAffected" component={EqiptmentAffected} />
-        <Route path="/app/forms/InitialNotification/IncidentDetails" component={IncidentDetails} />
-        <Route path="/app/forms/InitialNotification/PeoplesAfftected" component={PeoplesAfftected} />
-        <Route path="/app/forms/InitialNotification/PropertyAffected" component={PropertyAffected} />
-        <Route path="/app/forms/InitialNotification/ReportingAndNotification" component={ReportingAndNotification} />
+        <Route path="/app/incident-management/registration/initial-notification/environment-affected/" component={EnvironmentAffected} />
+        <Route path="/app/incident-management/registration/initial-notification/eqiptment-affected/" component={EqiptmentAffected} />
+        <Route path="/app/incident-management/registration/initial-notification/incident-details/" component={IncidentDetails} />
+        <Route path="/app/incident-management/registration/initial-notification/peoples-afftected/" component={PeoplesAfftected} />
+        <Route path="/app/incident-management/registration/initial-notification/property-affected/" component={PropertyAffected} />
+        <Route path="/app/incident-management/registration/initial-notification/reporting-and-notification/" component={ReportingAndNotification} />
 
         {/* form Evidence */}
 
-        <Route path="/app/forms/Evidence/ActivityDetail" component={ActivityDetail} />
-        <Route path="/app/forms/Evidence/AdditionalDetails" component={AdditionalDetails} />
-        <Route path="/app/forms/Evidence/Evidence" component={Evidence} />
-        <Route path="/app/forms/Evidence/PersonalAndPpeDetails" component={PersonalAndPpeDetails} />
+        <Route path="/app/incident-management/registration/evidence/activity-detail/" component={ActivityDetail} />
+        <Route path="/app/incident-management/registration/evidence/additional-details/" component={AdditionalDetails} />
+        <Route path="/app/incident-management/registration/evidence/evidence/" component={Evidence} />
+        <Route path="/app/incident-management/registration/evidence/personal-and-ppedetails/" component={PersonalAndPpeDetails} />
 
         {/* form investigation */}
 
-        <Route path="/app/forms/investigation/ActionTaken" component={ActionTaken} />
-        <Route path="/app/forms/investigation/EquiptmentImpactDetails" component={EquiptmentImpactDetails} />
-        <Route path="/app/forms/investigation/EventDetails" component={EventDetails} />
-        <Route path="/app/forms/investigation/InvestigationOverview" component={InvestigationOverview} />
-        <Route path="/app/forms/investigation/PropertyImpactDetails" component={PropertyImpactDetails} />
-        <Route path="/app/forms/investigation/WorkerDetails" component={WorkerDetails} />
+        <Route path="/app/incident-management/registration/investigation/action-taken/" component={ActionTaken} />
+        <Route path="/app/incident-management/registration/investigation/equiptment-impact-details/" component={EquiptmentImpactDetails} />
+        <Route path="/app/incident-management/registration/investigation/event-details/" component={EventDetails} />
+        <Route path="/app/incident-management/registration/investigation/investigation-overview/" component={InvestigationOverview} />
+        <Route path="/app/incident-management/registration/investigation/property-impact-details/" component={PropertyImpactDetails} />
+        <Route path="/app/incident-management/registration/investigation/worker-details/" component={WorkerDetails} />
 
         {/* form root cause analysis */}
 
-        <Route path="/app/forms/RootCauseAnalysis/BasicCause" component={BasicCause} />
-        <Route path="/app/forms/RootCauseAnalysis/BasicCauseAndAction" component={BasicCauseAndAction} />
-        <Route path="/app/forms/RootCauseAnalysis/CauseAndAction" component={CauseAndAction} />
-        <Route path="/app/forms/RootCauseAnalysis/CorrectiveActions" component={CorrectiveActions} />
-        <Route path="/app/forms/RootCauseAnalysis/Details" component={Details} />
-        <Route path="/app/forms/RootCauseAnalysis/HazardiousActs" component={HazardiousActs} />
-        <Route path="/app/forms/RootCauseAnalysis/HazardiousCondtions" component={HazardiousCondtions} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/basic-cause/" component={BasicCause} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/" component={BasicCauseAndAction} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/cause-and-action/" component={CauseAndAction} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/corrective-actions/" component={CorrectiveActions} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/details/" component={Details} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/hazardious-acts/" component={HazardiousActs} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/" component={HazardiousCondtions} />
 
 
         {/* form summary */}
 
-        <Route path="/app/forms/Summary/Summary" component={Summary} />
+        <Route path="/app/incident-management/registration/summary/summary/" component={Summary} />
 
         { /* Ui Components */}
         <Route exact path="/app/ui" component={Parent} />
