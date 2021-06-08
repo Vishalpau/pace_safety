@@ -173,6 +173,7 @@
     "react-text-mask": "^5.3.2",
     "react-trello": "^2.2.10",
     "react-ultimate-pagination": "^1.2.0",
+    "reactstrap": "^8.9.0",
     "recharts": "^2.0.0",
     "recompose": "^0.28.2",
     "redux": "4.0.5",
