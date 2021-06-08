@@ -33,10 +33,10 @@ import {
   Error, Settings, HelpSupport,
   MapMarker, MapDirection, SearchMap,
   TrafficIndicator, StreetViewMap, NotFound,
-  EnvironmentAffected,EqiptmentAffected,IncidentDetails,PeoplesAfftected,PropertyAffected,ReportingAndNotification,
-  ActivityDetail,AdditionalDetails,Evidence,PersonalAndPpeDetails,
-  ActionTaken,EquiptmentImpactDetails,EventDetails,InvestigationOverview,PropertyImpactDetails,WorkerDetails,
-  BasicCause,BasicCauseAndAction,CauseAndAction,CorrectiveActions,Details,HazardiousActs,HazardiousCondtions,
+  EnvironmentAffected, EqiptmentAffected, IncidentDetails, PeoplesAfftected, PropertyAffected, ReportingAndNotification,
+  ActivityDetail, AdditionalDetails, Evidence, PersonalAndPpeDetails,
+  ActionTaken, EquiptmentImpactDetails, EventDetails, InvestigationOverview, PropertyImpactDetails, WorkerDetails,
+  BasicCause, BasicCauseAndAction, CauseAndAction, ManagementControl, Details, HazardiousActs, HazardiousCondtions,
   Summary
 } from '../pageListAsync';
 
@@ -47,29 +47,29 @@ function Application(props) {
   return (
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
-        { /* Home */ }
+        { /* Home */}
         <Route exact path="/app" component={PersonalDashboard} />
         <Route path="/app/crm-dashboard" component={CrmDashboard} />
         <Route path="/app/crypto-dashboard" component={CryptoDashboard} />
-        { /* Widgets */ }
+        { /* Widgets */}
         <Route path="/app/widgets/infographics" component={Infographics} />
         <Route path="/app/widgets/status" component={Status} />
         <Route path="/app/widgets/mini-apps" component={MiniApps} />
         <Route path="/app/widgets/analytics" component={Analytics} />
         <Route path="/app/widgets/info-updates" component={InfoUpdates} />
-        { /* Layout */ }
+        { /* Layout */}
         <Route exact path="/app/layouts" component={Parent} />
         <Route path="/app/layouts/grid" component={Grid} />
         <Route path="/app/layouts/app-layout" component={AppLayout} />
         <Route path="/app/layouts/responsive" component={Responsive} />
-        { /* Table */ }
+        { /* Table */}
         <Route exact path="/app/tables" component={Parent} />
         <Route path="/app/tables/basic-table" component={SimpleTable} />
         <Route path="/app/tables/data-table" component={AdvancedTable} />
         <Route path="/app/tables/table-playground" component={TablePlayground} />
         <Route path="/app/tables/tree-table" component={TreeTable} />
         <Route path="/app/tables/editable-cell" component={EditableCell} />
-        { /* Form & Button */ }
+        { /* Form & Button */}
         <Route exact path="/app/forms" component={Parent} />
         <Route path="/app/forms/reduxform" component={ReduxForm} />
         <Route path="/app/forms/date-time-picker" component={DateTimePicker} />
@@ -116,7 +116,7 @@ function Application(props) {
         <Route path="/app/incident-management/registration/root-cause-analysis/basic-cause/" component={BasicCause} />
         <Route path="/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/" component={BasicCauseAndAction} />
         <Route path="/app/incident-management/registration/root-cause-analysis/cause-and-action/" component={CauseAndAction} />
-        <Route path="/app/incident-management/registration/root-cause-analysis/corrective-actions/" component={CorrectiveActions} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/management-control/" component={ManagementControl} />
         <Route path="/app/incident-management/registration/root-cause-analysis/details/" component={Details} />
         <Route path="/app/incident-management/registration/root-cause-analysis/hazardious-acts/" component={HazardiousActs} />
         <Route path="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/" component={HazardiousCondtions} />
@@ -149,7 +149,7 @@ function Application(props) {
         <Route path="/app/ui/slider-carousel" component={SliderCarousel} />
         <Route path="/app/ui/tags" component={Tags} />
         <Route path="/app/ui/dividers" component={Dividers} />
-        { /* Chart */ }
+        { /* Chart */}
         <Route exact path="/app/charts" component={Parent} />
         <Route path="/app/charts/line-charts" component={LineCharts} />
         <Route path="/app/charts/bar-charts" component={BarCharts} />
@@ -163,7 +163,7 @@ function Application(props) {
         <Route path="/app/charts/line-scatter-charts" component={LineScatterChart} />
         <Route path="/app/charts/area-filled-charts" component={AreaFilledChart} />
         <Route path="/app/charts/radar-polar-chart" component={RadarPolarCharts} />
-        { /* Sample Apps */ }
+        { /* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />
         <Route path="/app/pages/chat" component={Chat} />
         <Route path="/app/pages/email" component={Email} />
@@ -174,7 +174,7 @@ function Application(props) {
         <Route path="/app/pages/calendar" component={Calendar} />
         <Route path="/app/pages/taskboard" component={TaskBoard} />
         <Route path="/app/pages/invoice" component={Invoice} />
-        { /* Pages */ }
+        { /* Pages */}
         <Route exact path="/app/pages" component={Parent} />
         <Route path="/app/pages/user-profile" component={Profile} />
         <Route path="/app/pages/blank-page" component={BlankPage} />
@@ -184,14 +184,14 @@ function Application(props) {
         <Route path="/app/pages/error" component={Error} />
         <Route path="/app/pages/settings" component={Settings} />
         <Route path="/app/pages/help-support" component={HelpSupport} />
-        { /* Map */ }
+        { /* Map */}
         <Route exact path="/app/maps" component={Parent} />
         <Route path="/app/maps/map-marker" component={MapMarker} />
         <Route path="/app/maps/map-direction" component={MapDirection} />
         <Route path="/app/maps/map-searchbox" component={SearchMap} />
         <Route path="/app/maps/map-traffic" component={TrafficIndicator} />
         <Route path="/app/maps/street-view" component={StreetViewMap} />
-        { /* Default */ }
+        { /* Default */}
         <Route component={NotFound} />
       </Switch>
     </Dashboard>

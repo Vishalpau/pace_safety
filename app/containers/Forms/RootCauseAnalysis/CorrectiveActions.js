@@ -1,10 +1,10 @@
 import React from 'react';
 
 
-const CorrectiveAction = () =>{
-    return(
+const CorrectiveAction = () => {
+    return (
         <div>
-            <h1>CorrectiveAction form</h1>
+            <h1>ManagementControl form</h1>
         </div>
     )
 }
