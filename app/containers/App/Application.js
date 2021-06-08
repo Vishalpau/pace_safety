@@ -94,10 +94,14 @@ function Application(props) {
 
         {/* form Evidence */}
 
-        <Route path="/app/forms/InitialNotification/ActivityDetail" component={ActivityDetail} />
-        <Route path="/app/forms/InitialNotification/AdditionalDetails" component={AdditionalDetails} />
-        <Route path="/app/forms/InitialNotification/Evidence" component={Evidence} />
-        <Route path="/app/forms/InitialNotification/PersonalAndPpeDetails" component={PersonalAndPpeDetails} />
+        <Route path="/app/forms/Evidence/ActivityDetail" component={ActivityDetail} />
+        <Route path="/app/forms/Evidence/AdditionalDetails" component={AdditionalDetails} />
+        <Route path="/app/forms/Evidence/Evidence" component={Evidence} />
+        <Route path="/app/forms/Evidence/PersonalAndPpeDetails" component={PersonalAndPpeDetails} />
+
+        {/* form investigation */}
+
+        
 
 
         { /* Ui Components */}

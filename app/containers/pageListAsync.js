@@ -488,3 +488,34 @@ export const PersonalAndPpeDetails = loadable(() =>
 import ('./Forms/Evidence/PersonalAndPpeDetails'), {
   fallback: <Loading />,
 });
+
+// form investigation
+
+export const ActionTaken = loadable(() =>
+  import ('./Forms/Investigation/ActionTaken'), {
+    fallback: <Loading />,
+  });
+export const EquiptmentImpactDetails = loadable(() =>
+import ('./Forms/Investigation/EquiptmentImpactDetails'), {
+  fallback: <Loading />,
+});
+
+export const EventDetails = loadable(() =>
+import ('./Forms/Investigation/EventDetails'), {
+  fallback: <Loading />,
+});
+
+export const InvestigationOverview = loadable(() =>
+import ('./Forms/Investigation/InvestigationOverview'), {
+  fallback: <Loading />,
+});
+
+export const PropertyImpactDetails = loadable(() =>
+import ('./Forms/Investigation/PropertyImpactDetails'), {
+  fallback: <Loading />,
+});
+
+export const WorkerDetails = loadable(() =>
+import ('./Forms/Investigation/WorkerDetails'), {
+  fallback: <Loading />,
+});
