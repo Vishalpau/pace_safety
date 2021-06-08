@@ -15,11 +15,12 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 function App() {
 
-  const searchParams = new URLSearchParams(window.location.search);    
-  const code = searchParams.get("code");
+  
 
   useEffect(() => {
-       
+    
+      const searchParams = new URLSearchParams(window.location.search);    
+      const code = searchParams.get("code"); 
       var axios = require('axios');
       var data = JSON.stringify({
       "grant_type":"authorization_code",

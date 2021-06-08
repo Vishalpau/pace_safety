@@ -32,8 +32,11 @@ import {
   Photos, Pricing, CheckoutPage,
   Error, Settings, HelpSupport,
   MapMarker, MapDirection, SearchMap,
-  TrafficIndicator, StreetViewMap, NotFound
+  TrafficIndicator, StreetViewMap, NotFound,
+  EnvironmentAffected,EqiptmentAffected,IncidentDetails,PeoplesAfftected,PropertyAffected,ReportingAndNotification,
+  ActivityDetail,AdditionalDetails,Evidence,PersonalAndPpeDetails
 } from '../pageListAsync';
+
 
 function Application(props) {
   const { history } = props;
@@ -79,6 +82,24 @@ function Application(props) {
         <Route path="/app/forms/autocomplete" component={Autocomplete} />
         <Route path="/app/forms/upload" component={Upload} />
         <Route path="/app/forms/wysiwyg-editor" component={TextEditor} />
+
+        {/* form initialNotification */}
+
+        <Route path="/app/forms/InitialNotification/EnvironmentAffected" component={EnvironmentAffected} />
+        <Route path="/app/forms/InitialNotification/EqiptmentAffected" component={EqiptmentAffected} />
+        <Route path="/app/forms/InitialNotification/IncidentDetails" component={IncidentDetails} />
+        <Route path="/app/forms/InitialNotification/PeoplesAfftected" component={PeoplesAfftected} />
+        <Route path="/app/forms/InitialNotification/PropertyAffected" component={PropertyAffected} />
+        <Route path="/app/forms/InitialNotification/ReportingAndNotification" component={ReportingAndNotification} />
+
+        {/* form Evidence */}
+
+        <Route path="/app/forms/InitialNotification/ActivityDetail" component={ActivityDetail} />
+        <Route path="/app/forms/InitialNotification/AdditionalDetails" component={AdditionalDetails} />
+        <Route path="/app/forms/InitialNotification/Evidence" component={Evidence} />
+        <Route path="/app/forms/InitialNotification/PersonalAndPpeDetails" component={PersonalAndPpeDetails} />
+
+
         { /* Ui Components */}
         <Route exact path="/app/ui" component={Parent} />
         <Route path="/app/ui/avatars" component={Avatars} />

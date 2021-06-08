@@ -433,3 +433,58 @@ export const HelpSupport = loadable(() =>
   import ('./Pages/HelpSupport'), {
     fallback: <Loading />,
   });
+
+// form initialNotification
+
+export const EnvironmentAffected = loadable(() =>
+  import ('./Forms/InitialNotification/EnvironmentAffected'), {
+    fallback: <Loading />,
+  });
+
+export const EqiptmentAffected = loadable(() =>
+import ('./Forms/InitialNotification/EqiptmentAffected'), {
+  fallback: <Loading />,
+});
+
+export const IncidentDetails = loadable(() =>
+import ('./Forms/InitialNotification/IncidentDetails'), {
+  fallback: <Loading />,
+});
+
+export const PeoplesAfftected = loadable(() =>
+import ('./Forms/InitialNotification/PeoplesAfftected'), {
+  fallback: <Loading />,
+});
+
+export const PropertyAffected = loadable(() =>
+import ('./Forms/InitialNotification/PropertyAffected'), {
+  fallback: <Loading />,
+});
+
+export const ReportingAndNotification = loadable(() =>
+import ('./Forms/InitialNotification/ReportingAndNotification'), {
+  fallback: <Loading />,
+});
+
+
+// form Evidence
+
+export const ActivityDetail = loadable(() =>
+  import ('./Forms/Evidence/ActivityDetail'), {
+    fallback: <Loading />,
+  });
+
+export const AdditionalDetails = loadable(() =>
+import ('./Forms/Evidence/AdditionalDetails'), {
+  fallback: <Loading />,
+});
+
+export const Evidence = loadable(() =>
+import ('./Forms/Evidence/Evidence'), {
+  fallback: <Loading />,
+});
+
+export const PersonalAndPpeDetails = loadable(() =>
+import ('./Forms/Evidence/PersonalAndPpeDetails'), {
+  fallback: <Loading />,
+});
