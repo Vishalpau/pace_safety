@@ -34,7 +34,10 @@ import {
   MapMarker, MapDirection, SearchMap,
   TrafficIndicator, StreetViewMap, NotFound,
   EnvironmentAffected,EqiptmentAffected,IncidentDetails,PeoplesAfftected,PropertyAffected,ReportingAndNotification,
-  ActivityDetail,AdditionalDetails,Evidence,PersonalAndPpeDetails
+  ActivityDetail,AdditionalDetails,Evidence,PersonalAndPpeDetails,
+  ActionTaken,EquiptmentImpactDetails,EventDetails,InvestigationOverview,PropertyImpactDetails,WorkerDetails,
+  BasicCause,BasicCauseAndAction,CauseAndAction,CorrectiveActions,Details,HazardiousActs,HazardiousCondtions,
+  Summary
 } from '../pageListAsync';
 
 
@@ -101,8 +104,27 @@ function Application(props) {
 
         {/* form investigation */}
 
-        
+        <Route path="/app/forms/investigation/ActionTaken" component={ActionTaken} />
+        <Route path="/app/forms/investigation/EquiptmentImpactDetails" component={EquiptmentImpactDetails} />
+        <Route path="/app/forms/investigation/EventDetails" component={EventDetails} />
+        <Route path="/app/forms/investigation/InvestigationOverview" component={InvestigationOverview} />
+        <Route path="/app/forms/investigation/PropertyImpactDetails" component={PropertyImpactDetails} />
+        <Route path="/app/forms/investigation/WorkerDetails" component={WorkerDetails} />
 
+        {/* form root cause analysis */}
+
+        <Route path="/app/forms/RootCauseAnalysis/BasicCause" component={BasicCause} />
+        <Route path="/app/forms/RootCauseAnalysis/BasicCauseAndAction" component={BasicCauseAndAction} />
+        <Route path="/app/forms/RootCauseAnalysis/CauseAndAction" component={CauseAndAction} />
+        <Route path="/app/forms/RootCauseAnalysis/CorrectiveActions" component={CorrectiveActions} />
+        <Route path="/app/forms/RootCauseAnalysis/Details" component={Details} />
+        <Route path="/app/forms/RootCauseAnalysis/HazardiousActs" component={HazardiousActs} />
+        <Route path="/app/forms/RootCauseAnalysis/HazardiousCondtions" component={HazardiousCondtions} />
+
+
+        {/* form summary */}
+
+        <Route path="/app/forms/Summary/Summary" component={Summary} />
 
         { /* Ui Components */}
         <Route exact path="/app/ui" component={Parent} />

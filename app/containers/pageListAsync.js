@@ -495,6 +495,7 @@ export const ActionTaken = loadable(() =>
   import ('./Forms/Investigation/ActionTaken'), {
     fallback: <Loading />,
   });
+
 export const EquiptmentImpactDetails = loadable(() =>
 import ('./Forms/Investigation/EquiptmentImpactDetails'), {
   fallback: <Loading />,
@@ -519,3 +520,47 @@ export const WorkerDetails = loadable(() =>
 import ('./Forms/Investigation/WorkerDetails'), {
   fallback: <Loading />,
 });
+
+// form root cause analysis
+
+export const BasicCause = loadable(() =>
+  import ('./Forms/RootCauseAnalysis/BasicCause'), {
+    fallback: <Loading />,
+  });
+  
+export const BasicCauseAndAction = loadable(() =>
+import ('./Forms/RootCauseAnalysis/BasicCauseAndAction'), {
+  fallback: <Loading />,
+});
+
+export const CauseAndAction = loadable(() =>
+import ('./Forms/RootCauseAnalysis/CauseAndAction'), {
+  fallback: <Loading />,
+});
+
+export const CorrectiveActions = loadable(() =>
+import ('./Forms/RootCauseAnalysis/CorrectiveActions'), {
+  fallback: <Loading />,
+});
+
+export const Details = loadable(() =>
+import ('./Forms/RootCauseAnalysis/Details'), {
+  fallback: <Loading />,
+});
+
+export const HazardiousActs = loadable(() =>
+import ('./Forms/RootCauseAnalysis/HazardiousActs'), {
+  fallback: <Loading />,
+});
+
+export const HazardiousCondtions = loadable(() =>
+import ('./Forms/RootCauseAnalysis/HazardiousCondtions'), {
+  fallback: <Loading />,
+});
+
+// form summary
+
+export const Summary = loadable(() =>
+  import ('./Forms/Summary/Summary'), {
+    fallback: <Loading />,
+  });
