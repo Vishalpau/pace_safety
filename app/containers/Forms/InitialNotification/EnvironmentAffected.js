@@ -1,32 +1,32 @@
-import React from "react";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
+import React from 'react';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: ".5rem 0",
+    margin: '.5rem 0',
     minWidth: 260,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: "100%",
-    margin: ".5rem 0",
+    width: '100%',
+    margin: '.5rem 0',
   },
   spacer: {
-    marginTop: "1rem",
+    marginTop: '1rem',
   },
   customLabel: {
     marginBottom: 0,
@@ -34,25 +34,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EnvironmentAffected = () => {
-  let reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
+  const reportedTo = [
+    'Internal Leadership',
+    'Police',
+    'Environment Officer',
+    'OHS',
+    'Mital Aid',
+    'Other',
   ];
-  let notificationSent = ["Manage", "SuperVisor"];
-  let selectValues = [1, 2, 3, 4];
+  const notificationSent = ['Manage', 'SuperVisor'];
+  const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+    new Date('2014-08-18T21:11:54')
   );
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const radioDecide = ["Yes", "No", "N/A"];
+  const radioDecide = ['Yes', 'No', 'N/A'];
 
   const classes = useStyles();
 

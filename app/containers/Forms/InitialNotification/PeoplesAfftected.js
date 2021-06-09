@@ -1,70 +1,70 @@
-import React from "react";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import InputLabel from "@material-ui/core/InputLabel";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import React from 'react';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputLabel from '@material-ui/core/InputLabel';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: ".5rem 0",
+    margin: '.5rem 0',
     minWidth: 400,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: "100%",
-    margin: ".5rem 0",
+    width: '100%',
+    margin: '.5rem 0',
   },
   spacer: {
-    marginTop: "1rem",
+    marginTop: '1rem',
   },
   customLabel: {
     marginBottom: 0,
   },
   textButton: {
-    color: "#3498db",
+    color: '#3498db',
     padding: 0,
-    textDecoration: "underline",
-    display: "inlineBlock",
-    marginBlock: "1.5rem",
-    backgroundColor: "transparent",
+    textDecoration: 'underline',
+    display: 'inlineBlock',
+    marginBlock: '1.5rem',
+    backgroundColor: 'transparent',
   },
 }));
 
 const PeoplesAffected = () => {
-  let reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
+  const reportedTo = [
+    'Internal Leadership',
+    'Police',
+    'Environment Officer',
+    'OHS',
+    'Mital Aid',
+    'Other',
   ];
-  let notificationSent = ["Manage", "SuperVisor"];
-  let selectValues = [1, 2, 3, 4];
+  const notificationSent = ['Manage', 'SuperVisor'];
+  const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+    new Date('2014-08-18T21:11:54')
   );
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const radioDecide = ["Yes", "No"];
-  const radioDecideNew = ["Yes", "No", "N/A"];
+  const radioDecide = ['Yes', 'No'];
+  const radioDecideNew = ['Yes', 'No', 'N/A'];
   const classes = useStyles();
   return (
     <div>
@@ -176,7 +176,9 @@ const PeoplesAffected = () => {
 
               <Grid item lg={12} md={6} sm={6}>
                 <button className={classes.textButton}>
-                  <PersonAddIcon /> Add details of another person affected
+                  <PersonAddIcon />
+                  {' '}
+Add details of another person affected
                 </button>
               </Grid>
 

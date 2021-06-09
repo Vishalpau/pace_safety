@@ -1,59 +1,59 @@
-import React from "react";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Typography from "@material-ui/core/Typography";
-import DateFnsUtils from "@date-io/date-fns";
-import MomentUtils from "@date-io/moment";
+import React from 'react';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Typography from '@material-ui/core/Typography';
+import DateFnsUtils from '@date-io/date-fns';
+import MomentUtils from '@date-io/moment';
 import {
   TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-} from "@material-ui/pickers";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
+} from '@material-ui/pickers';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: ".5rem 0",
+    margin: '.5rem 0',
     minWidth: 260,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: "100%",
-    margin: ".5rem 0",
+    width: '100%',
+    margin: '.5rem 0',
   },
   spacer: {
-    padding: ".75rem 0",
+    padding: '.75rem 0',
   },
 }));
 
 const IncidentDetails = () => {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+    new Date('2014-08-18T21:11:54')
   );
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
   const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No", "N/A"];
+  const radioDecide = ['Yes', 'No', 'N/A'];
   return (
     <div>
       <Container>
@@ -67,7 +67,7 @@ const IncidentDetails = () => {
                 <InputLabel id="project-name">Project Name</InputLabel>
                 <Select
                   inputProps={{
-                    id: "project-name",
+                    id: 'project-name',
                   }}
                 >
                   {selectValues.map((selectValues) => (
@@ -127,7 +127,7 @@ const IncidentDetails = () => {
               >
                 <TimePicker
                   label="Masked timepicker"
-                  mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
+                  mask={[/\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
                   placeholder="08:00 AM"
                   required
                   value={selectedDate}
