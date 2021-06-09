@@ -20,8 +20,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 
 
-const Summary = () => {
-
+const LessionLearned = () => {
     const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
     const handleDateChange = (date) => {
@@ -78,7 +77,7 @@ const Summary = () => {
                                 {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
                                 <p>
                                     Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                    </p>
+                                </p>
                             </FormControl>
                         </Grid>
 
@@ -96,7 +95,7 @@ const Summary = () => {
                                     the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
                                     and more recently with desktop publishing software like Aldus PageMaker including
                                     versions of Lorem Ipsum.
-                                </p>
+                            </p>
                             </FormControl>
                         </Grid>
 
@@ -107,35 +106,17 @@ const Summary = () => {
                                 {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
                                 <p>
                                     Lorem Ipsum is simply dummy text
-                                </p>
+                            </p>
                             </FormControl>
                         </Grid>
+
+
+
+
 
                         <Grid item md={12}>
-                            <p>Summary Can be same as current page--</p>
-                            <hr />
-
-                            <FormControl>
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-
-                                <p>1....</p>
-                                <p>2....</p>
-                                <p>3....</p>
-                                <p>4....
-                                    <ul>
-                                        <li>a....</li>
-                                        <li>a....</li>
-                                        <li>a....</li>
-                                    </ul>
-                                </p>
-                            </FormControl>
-                        </Grid>
-
-
-
-                        <Grid item md={6}>
-                            <p>Incident report for review</p>
-                            <p>Reviewed by</p>
+                            <p>Key learnings</p>
+                            <p>Team/Department</p>
                             <FormControl component="fieldset">
                                 {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
                                 <Select
@@ -149,73 +130,27 @@ const Summary = () => {
                             </FormControl>
                         </Grid>
 
-                        <Grid item md={6}>
-                            <p>Reviewed On</p>
 
+
+                        <Grid item md={12}>
+                            <p>Team/Department Learnings</p>
                             <FormControl component="fieldset">
-
                                 {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <KeyboardDatePicker
-                                        margin="normal"
-                                        id="date-picker-dialog"
-                                        format="MM/dd/yyyy"
-                                        value={selectedDate}
-                                        onChange={handleDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </MuiPickersUtilsProvider>
+                                <TextField id="filled-basic" />
                             </FormControl>
                         </Grid>
 
-                        <Grid item md={6}>
-                            <p>Action item</p>
-                            <p>Closed By</p>
-                            <FormControl component="fieldset">
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                    {selectValues.map((selectValues) => (
-                                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
 
-                        <Grid item md={6}>
-                            <p>Closed on</p>
-
-                            <FormControl component="fieldset">
-
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <KeyboardDatePicker
-                                        margin="normal"
-                                        id="date-picker-dialog"
-                                        format="MM/dd/yyyy"
-                                        value={selectedDate}
-                                        onChange={handleDateChange}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </MuiPickersUtilsProvider>
-                            </FormControl>
-                        </Grid>
 
 
                     </Grid>
                     <Button variant="contained" color="primary" href="#contained-buttons">
                         Next
-                </Button>
+            </Button>
                 </Paper>
             </Container>
         </div>
     )
 }
 
-export default Summary
+export default LessionLearned

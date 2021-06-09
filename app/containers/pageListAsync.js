@@ -564,3 +564,10 @@ export const Summary = loadable(() =>
   import('./Forms/Summary/Summary'), {
   fallback: <Loading />,
 });
+
+// form lession learned
+
+export const LessionLearned = loadable(() =>
+  import('./Forms/LessonLearned/LessonLearned'), {
+  fallback: <Loading />,
+});

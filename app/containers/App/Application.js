@@ -37,7 +37,8 @@ import {
   ActivityDetail, AdditionalDetails, Evidence, PersonalAndPpeDetails,
   ActionTaken, EquiptmentImpactDetails, EventDetails, InvestigationOverview, PropertyImpactDetails, WorkerDetails,
   BasicCause, BasicCauseAndAction, CauseAndAction, ManagementControl, Details, HazardiousActs, HazardiousCondtions,
-  Summary
+  Summary,
+  LessionLearned
 } from '../pageListAsync';
 
 
@@ -125,6 +126,10 @@ function Application(props) {
         {/* form summary */}
 
         <Route path="/app/incident-management/registration/summary/summary/" component={Summary} />
+
+        {/* from leassionlearned */}
+
+        <Route path="/app/incident-management/registration/lession-learned/lession-learned/" component={LessionLearned} />
 
         { /* Ui Components */}
         <Route exact path="/app/ui" component={Parent} />
