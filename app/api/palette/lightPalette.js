@@ -132,7 +132,7 @@ const lightPalette = {
       primary: {
         light: '#ff8533',
         main: '#06425c',
-        dark: '#ffffff',
+        dark: '#042b3c',
         contrastText: '#ffffff',
       },
       secondary: {
@@ -270,7 +270,7 @@ const lightPalette = {
         contrastText: '#fff',
       },
     },
-  }
+  },
 };
 
 export default lightPalette;

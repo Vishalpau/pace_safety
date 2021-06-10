@@ -1,215 +1,288 @@
 import React from 'react';
-import Container from "@material-ui/core/Container"
-import Grid from "@material-ui/core/Grid"
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Paper from "@material-ui/core/Paper"
+import Box from '@material-ui/core/Box';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import DateFnsUtils from "@date-io/date-fns";
+import Typography from '@material-ui/core/Typography';
+import DateFnsUtils from '@date-io/date-fns';
+import MomentUtils from '@date-io/moment';
 import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker
-} from "@material-ui/pickers";
+  TimePicker,
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 
 
+import { ThemeProvider } from '@material-ui/styles';
 
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: '.5rem 0',
+    width: '100%',
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  fullWidth: {
+    width: '100%',
+    margin: '.5rem 0',
+  },
+  spacer: {
+    padding: '.75rem 0',
+  },
+}));
 
 const IncidentDetails = () => {
+  const classes = useStyles();
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date('2014-08-18T21:11:54')
+  );
 
-    const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+  const selectValues = [1, 2, 3, 4];
+  const radioDecide = ['Yes', 'No', 'N/A'];
+  return (
+    <div>
+      <Container>
+        <Box padding={3} bgcolor="background.paper">
+          <Typography variant="h4" gutterBottom>
+            Initial Notification
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item md={6}>
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Project Name</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Project Name"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Required</FormHelperText>
+              </FormControl>
+            </Grid>
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
-    const selectValues = [1, 2, 3, 4]
-    const radioDecide = ["Yes", "No", "N/A"]
-    return (
-        <div>
-            <Container>
-                <Paper>
-                    <Grid container justify="flex-start" >
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Project name</p>
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">Unit Name</InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Unit Name"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={6}>
+              <FormControl
+                variant="outlined"
+                requirement
+                className={classes.formControl}
+              >
+                <InputLabel id="demo-simple-select-label">
+                  Incident Type
+                </InputLabel>
+                <Select
+                  labelId="incident-type-label"
+                  id="incident-type"
+                  label="Incident Type"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Required</FormHelperText>
+              </FormControl>
+            </Grid>
 
-                            <FormControl>
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                    {selectValues.map((selectValues) => (
-                                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                                    ))}
+            <Grid item md={6}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  label="Incident Date"
+                  className={classes.formControl}
+                  variant="outlined"
+                  required
+                  id="date-picker-dialog"
+                  format="dd/mm/yyyy"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
 
-                                </Select>
-                            </FormControl>
+            <Grid item md={6}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <TimePicker
+                  label="Incident Time"
+                  className={classes.formControl}
+                  mask={[/\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
+                  // placeholder="08:00 AM"
+                  required
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton>
+                          <Icon>access_time</Icon>
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
 
-                        </Grid>
+            <Grid item lg={12} md={6} sm={6}>
+              <TextField
+                id="title"
+                variant="outlined"
+                label="Title"
+                className={classes.fullWidth}
+              />
+            </Grid>
 
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Unit name</p>
+            <Grid item md={12}>
+              <TextField
+                multiline
+                variant="outlined"
+                rows="5"
+                id="description"
+                label="Description"
+                className={classes.fullWidth}
+              />
+            </Grid>
 
-                            <FormControl>
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                    {selectValues.map((selectValues) => (
-                                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                                    ))}
+            <Grid item md={12}>
+              <TextField
+                variant="outlined"
+                id="immediate-actions"
+                multiline
+                rows="4"
+                label="Any immediate actions taken"
+                className={classes.fullWidth}
+              />
+            </Grid>
 
-                                </Select>
-                            </FormControl>
+            <Grid item md={6}>
+              <TextField
+                id="title"
+                variant="outlined"
+                label="Location"
+                className={classes.fullWidth}
+              />
+            </Grid>
 
-                        </Grid>
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Incident name</p>
+            <Grid item md={6}>
+              <TextField
+                variant="outlined"
+                id="contractor"
+                label="Contractor"
+                required
+                className={classes.formControl}
+              />
+            </Grid>
 
-                            <FormControl>
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                    {selectValues.map((selectValues) => (
-                                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                                    ))}
+            <Grid item md={6}>
+              <TextField
+                id="filled-basic"
+                label="Sub-Contractor"
+                variant="outlined"
+                required
+                className={classes.formControl}
+              />
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item lg={12} md={6} sm={6}>
+              <div className={classes.spacer}>
+                <p>Were any person affected during incident?</p>
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </div>
+            </Grid>
 
-                                </Select>
-                            </FormControl>
+            <Grid item lg={12} md={6} sm={6}>
+              <div className={classes.spacer}>
+                <p>Was any propery damaged during incident?</p>
 
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </div>
+            </Grid>
 
-                        </Grid>
-                        <Grid item lg={12} md={6} sm={6}>
+            <Grid item lg={12} md={6} sm={6}>
+              <div className={classes.spacer}>
+                <p>Was there any equiptment damaged?</p>
 
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDatePicker
-                                    margin="normal"
-                                    id="date-picker-dialog"
-                                    format="MM/dd/yyyy"
-                                    value={selectedDate}
-                                    onChange={handleDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </div>
+            </Grid>
 
+            <Grid item lg={12} md={6} sm={6}>
+              <p>Was there any environment impact?</p>
 
-                            <TextField id="filled-basic" />
+              {radioDecide.map((value) => (
+                <FormControlLabel
+                  value={value}
+                  control={<Radio />}
+                  label={value}
+                />
+              ))}
+            </Grid>
 
-                        </Grid>
+            <Box marginTop={4}>
+              <Button size="medium" variant="contained" color="primary">
+                Next
+              </Button>
+            </Box>
+          </Grid>
+        </Box>
+      </Container>
+    </div>
+  );
+};
 
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Title</p>
-                            <TextField id="filled-basic" />
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Description</p>
-                            <TextField id="filled-basic" />
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Any immediat actions taken</p>
-                            <TextField id="filled-basic" />
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Location</p>
-                            <FormControl>
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                    {selectValues.map((selectValues) => (
-                                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                                    ))}
-
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Contaractor</p>
-                            <TextField id="filled-basic" />
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Sub-Contractor</p>
-                            <TextField id="filled-basic" />
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Were any person affected during incident?</p>
-                            <FormControl component="fieldset">
-                                <RadioGroup aria-label="gender" >
-                                    {radioDecide.map((value) => (
-                                        <FormControlLabel value={value} control={<Radio />} label={value} />
-                                    ))}
-
-                                </RadioGroup>
-                            </FormControl>
-
-
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Was any propery damaged during incident?</p>
-                            <FormControl component="fieldset">
-                                <RadioGroup aria-label="gender" >
-                                    {radioDecide.map((value) => (
-                                        <FormControlLabel value={value} control={<Radio />} label={value} />
-                                    ))}
-
-                                </RadioGroup>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Was there any equiptment damaged?</p>
-                            <FormControl component="fieldset">
-                                <RadioGroup aria-label="gender" >
-                                    {radioDecide.map((value) => (
-                                        <FormControlLabel value={value} control={<Radio />} label={value} />
-                                    ))}
-
-                                </RadioGroup>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Was there any environment impact?</p>
-                            <FormControl component="fieldset">
-                                <RadioGroup aria-label="gender" >
-                                    {radioDecide.map((value) => (
-                                        <FormControlLabel value={value} control={<Radio />} label={value} />
-                                    ))}
-
-                                </RadioGroup>
-                            </FormControl>
-                        </Grid>
-
-                        <Button variant="contained" color="primary" href="#contained-buttons">
-                            Next
-                    </Button>
-
-                    </Grid>
-                </Paper>
-            </Container>
-
-        </div>
-    )
-}
-
-export default IncidentDetails
-
+export default IncidentDetails;
