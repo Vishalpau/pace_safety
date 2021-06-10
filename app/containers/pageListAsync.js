@@ -521,6 +521,11 @@ export const WorkerDetails = loadable(() =>
   fallback: <Loading />,
 });
 
+export const InitialDetails = loadable(() =>
+  import('./Forms/Investigation/InitialDetails.js'), {
+  fallback: <Loading />,
+});
+
 // form root cause analysis
 
 export const BasicCause = loadable(() =>

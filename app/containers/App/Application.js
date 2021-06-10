@@ -35,7 +35,7 @@ import {
   TrafficIndicator, StreetViewMap, NotFound,
   EnvironmentAffected, EqiptmentAffected, IncidentDetails, PeoplesAfftected, PropertyAffected, ReportingAndNotification,
   ActivityDetail, AdditionalDetails, Evidence, PersonalAndPpeDetails,
-  ActionTaken, EquiptmentImpactDetails, EventDetails, InvestigationOverview, PropertyImpactDetails, WorkerDetails,
+  ActionTaken, EquiptmentImpactDetails, EventDetails, InvestigationOverview, PropertyImpactDetails, WorkerDetails,InitialDetails,
   BasicCause, BasicCauseAndAction, CauseAndAction, ManagementControl, Details, HazardiousActs, HazardiousCondtions,RootCauseAnalysis,WhyAnalysis,
   Summary,
   LessionLearned
@@ -111,6 +111,7 @@ function Application(props) {
         <Route path="/app/incident-management/registration/investigation/investigation-overview/" component={InvestigationOverview} />
         <Route path="/app/incident-management/registration/investigation/property-impact-details/" component={PropertyImpactDetails} />
         <Route path="/app/incident-management/registration/investigation/worker-details/" component={WorkerDetails} />
+        <Route path="/app/incident-management/registration/investigation/initial-details/" component={InitialDetails} />
 
         {/* form root cause analysis */}
 
