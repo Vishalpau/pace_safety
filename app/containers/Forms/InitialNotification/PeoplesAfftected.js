@@ -18,8 +18,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: '.5rem 0',
-    minWidth: 400,
+    width: '100%',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -71,10 +70,12 @@ const PeoplesAffected = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Typography variant="h5" gutterBottom>
-              Details of Persons Affected
-            </Typography>
-            <Grid container justify="flex-start">
+            <Box marginBottom={3}>
+              <Typography variant="h5" gutterBottom>
+                Details of Persons Affected
+              </Typography>
+            </Box>
+            <Grid container spacing={3}>
               <Grid item lg={12} md={6} sm={6}>
                 <Typography variant="h6">
                   Do you have details of individual effected?
@@ -90,7 +91,7 @@ const PeoplesAffected = () => {
               </Grid>
 
               <Grid item md={12}>
-                <Box marginTop={4} marginBottom={4}>
+                <Box marginTop={2} marginBottom={2}>
                   {/* <h4>Details of people affected</h4> */}
                   <Typography variant="h6">
                     Details of people affected
@@ -100,9 +101,13 @@ const PeoplesAffected = () => {
 
               <Grid item md={6}>
                 {/* <p>person type</p> */}
-                <FormControl className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="person-type-label">Person type</InputLabel>
-                  <Select labelId="person-type-label" id="person-type">
+                  <Select
+                    labelId="person-type-label"
+                    id="person-type"
+                    label="Person type"
+                  >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
@@ -111,9 +116,9 @@ const PeoplesAffected = () => {
               </Grid>
 
               <Grid item md={6}>
-                <FormControl className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="dep-label">Department</InputLabel>
-                  <Select labelId="dep-label" id="dep">
+                  <Select labelId="dep-label" id="dep" label="Department">
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
@@ -125,6 +130,7 @@ const PeoplesAffected = () => {
                 {/* <p>Name of people affected</p> */}
                 <TextField
                   id="name-affected"
+                  variant="outlined"
                   label="Name of people affected"
                   className={classes.formControl}
                 />
@@ -134,6 +140,7 @@ const PeoplesAffected = () => {
                 {/* <p>Identification number of person</p> */}
                 <TextField
                   id="id-num"
+                  variant="outlined"
                   label="Identification number of person"
                   className={classes.formControl}
                 />
@@ -156,25 +163,27 @@ const PeoplesAffected = () => {
                 </div>
               </Grid>
 
-              <Grid item lg={12} md={6} sm={6}>
+              <Grid item md={6}>
                 {/* <p>Worker taken offisite for further assesment?</p> */}
                 <TextField
                   id="worker-taken"
+                  variant="outlined"
                   label="Worker taken offisite for further assesment?"
                   className={classes.formControl}
                 />
               </Grid>
 
-              <Grid item lg={12} md={6} sm={6}>
+              <Grid item md={6}>
                 {/* <p>Location details of assesment center</p> */}
                 <TextField
+                  variant="outlined"
                   id="location-details"
                   label="Worker taken offisite for further assesment?"
                   className={classes.formControl}
                 />
               </Grid>
 
-              <Grid item lg={12} md={6} sm={6}>
+              <Grid item md={12}>
                 <button className={classes.textButton}>
                   <PersonAddIcon />
                   {' '}
@@ -182,12 +191,13 @@ Add details of another person affected
                 </button>
               </Grid>
 
-              <Grid item lg={12} md={6} sm={6}>
+              <Grid item md={12}>
                 {/* <p>Comments</p> */}
                 <TextField
                   id="comments"
                   multiline
                   rows="3"
+                  variant="outlined"
                   label="Describe any actions taken"
                   className={classes.fullWidth}
                 />

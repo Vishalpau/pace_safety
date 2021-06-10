@@ -1,184 +1,283 @@
 import React from 'react';
-import Container from "@material-ui/core/Container"
-import Grid from "@material-ui/core/Grid"
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Paper from "@material-ui/core/Paper"
+import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import DateFnsUtils from "@date-io/date-fns";
+import DateFnsUtils from '@date-io/date-fns';
+import MomentUtils from '@date-io/moment';
 import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker
-} from "@material-ui/pickers";
+  TimePicker,
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-
-
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: '.5rem 0',
+    minWidth: 300,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  fullWidth: {
+    width: '100%',
+    margin: '.5rem 0',
+  },
+  spacer: {
+    marginTop: '1rem',
+  },
+  customLabel: {
+    marginBottom: 0,
+  },
+  textButton: {
+    color: '#3498db',
+    padding: 0,
+    textDecoration: 'underline',
+    display: 'inlineBlock',
+    marginBlock: '1.5rem',
+    backgroundColor: 'transparent',
+  },
+}));
 
 const ReportingAndNotification = () => {
-    let reportedTo = ["Internal Leadership", "Police", "Environment Officer", "OHS", "Mital Aid", "Other"]
-    let notificationSent = ["Manage", "SuperVisor"]
-    let selectValues = [1, 2, 3, 4]
-    const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const reportedTo = [
+    'Internal Leadership',
+    'Police',
+    'Environment Officer',
+    'OHS',
+    'Mital Aid',
+    'Other',
+  ];
+  const notificationSent = ['Manage', 'SuperVisor'];
+  const selectValues = [1, 2, 3, 4];
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date('2014-08-18T21:11:54')
+  );
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
-    const radioDecide = ["Yes", "No", "N/A"]
-    return (
-        <div>
-            <Container>
-                <Paper>
-                    <Grid container justify="flex-start" >
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Reported to</p>
+  const radioDecide = ['Yes', 'No', 'N/A'];
+  const classes = useStyles();
+  return (
+    <div>
+      <Container>
+        <Paper>
+          <Box padding={3} bgcolor="background.paper">
+            <Box marginBottom={4} borderBottom={1}>
+              <Typography variant="h5" gutterBottom>
+                Reporting and Notification
+              </Typography>
+            </Box>
+            <Grid container justify="flex-start">
+              <Grid item lg={12} md={6} sm={6}>
+                <p>Reportable to</p>
 
-                            <FormControl component="fieldset">
-                                <RadioGroup aria-label="gender" >
-                                    {reportedTo.map((value) => (
-                                        <FormControlLabel value={value} control={<Radio />} label={value} />
-                                    ))}
+                <FormControl component="fieldset">
+                  <RadioGroup aria-label="gender">
+                    {reportedTo.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
 
-                                </RadioGroup>
-                            </FormControl>
+              <Grid item lg={12} md={6} sm={6}>
+                <p>Notification to be sent</p>
 
-                        </Grid>
+                <FormControl component="fieldset">
+                  <RadioGroup aria-label="gender">
+                    {notificationSent.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item lg={12} justify="flex-start">
+                {/* <p>Initial Evidences</p> */}
+                <Box marginTop={3} marginBottom={4}>
+                  <Typography variant="h6" gutterBottom>
+                    Initial Evidences
+                  </Typography>
+                </Box>
 
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Notification to be sent</p>
+                <FormControl>
+                  <Grid item lg={6}>
+                    <input type="file" />
+                    <DeleteForeverIcon />
 
-                            <FormControl component="fieldset">
-                                <RadioGroup aria-label="gender" >
-                                    {notificationSent.map((value) => (
-                                        <FormControlLabel value={value} control={<Radio />} label={value} />
-                                    ))}
+                    <TextField id="filled-basic" />
+                    <DeleteForeverIcon />
+                  </Grid>
+                  <hr />
+                  <Grid item lg={6}>
+                    <input type="file" />
+                    <DeleteForeverIcon />
 
-                                </RadioGroup>
-                            </FormControl>
+                    <TextField id="filled-basic" />
+                    <DeleteForeverIcon />
+                  </Grid>
+                  <hr />
+                  <Grid item lg={6}>
+                    <input type="file" />
+                    <DeleteForeverIcon />
 
-                        </Grid>
-                        <Grid item lg={12} justify="flex-start" >
-                            <p>Initial Evidences</p>
+                    <TextField id="filled-basic" />
+                    <DeleteForeverIcon />
+                  </Grid>
+                  <hr />
+                  <Grid item lg={6}>
+                    <input type="file" />
+                    <DeleteForeverIcon />
 
-                            <FormControl>
-                                <Grid item lg={6}>
-                                    <input type="file" />
-                                    <DeleteForeverIcon />
+                    <TextField id="filled-basic" />
+                    <DeleteForeverIcon />
+                  </Grid>
+                </FormControl>
+              </Grid>
 
-                                    <TextField id="filled-basic" />
-                                    <DeleteForeverIcon />
-                                </Grid>
-                                <hr />
-                                <Grid item lg={6}>
-                                    <input type="file" />
-                                    <DeleteForeverIcon />
+              <Grid item md={6}>
+                {/* <p>Supervisor name</p> */}
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="supervisorName-label">
+                    Supervisor name
+                  </InputLabel>
+                  <Select labelId="supervisorName-label" id="supervisorName">
+                    {selectValues.map((selectValues) => (
+                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                                    <TextField id="filled-basic" />
-                                    <DeleteForeverIcon />
-                                </Grid>
-                                <hr />
-                                <Grid item lg={6}>
-                                    <input type="file" />
-                                    <DeleteForeverIcon />
+              <Grid item md={6}>
+                {/* <p>Others Name</p> */}
+                <TextField
+                  id="othersName"
+                  label="Others Name"
+                  className={classes.formControl}
+                />
+              </Grid>
 
-                                    <TextField id="filled-basic" />
-                                    <DeleteForeverIcon />
-                                </Grid>
-                                <hr />
-                                <Grid item lg={6}>
-                                    <input type="file" />
-                                    <DeleteForeverIcon />
+              <Grid item md={6}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    className={classes.formControl}
+                    id="date-picker-dialog"
+                    format="MM/dd/yyyy"
+                    required
+                    label="Reporting Date"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
 
-                                    <TextField id="filled-basic" />
-                                    <DeleteForeverIcon />
-                                </Grid>
-                            </FormControl>
+              <Grid item md={6}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <TimePicker
+                    label="Reporting Time"
+                    className={classes.formControl}
+                    mask={[/\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
+                    placeholder="08:00 AM"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    required
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton>
+                            <Icon>access_time</Icon>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
 
+              <Grid item md={6}>
+                {/* <p>Reported by</p> */}
+                <FormControl required className={classes.formControl}>
+                  <InputLabel id="reportedBy-label">Reported By</InputLabel>
+                  <Select labelId="reportedBy-label" id="reportedBy">
+                    {selectValues.map((selectValues) => (
+                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                        </Grid>
+              <Grid item md={6}>
+                {/* <p>Others Name</p> */}
+                <TextField
+                  id="others"
+                  label="Others"
+                  className={classes.formControl}
+                />
+              </Grid>
 
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Supervisor name</p>
-                            <FormControl>
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                    {selectValues.map((selectValues) => (
-                                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                                    ))}
+              <Grid item md={12}>
+                {/* <p>Resaon for reporting later than 4 hours</p> */}
+                <TextField
+                  id="reason"
+                  label="Resaon for reporting later than 4 hours"
+                  multiline
+                  rows="4"
+                  className={classes.fullWidth}
+                />
+              </Grid>
 
-                                </Select>
-                                <p>Others Name</p>
-                                <TextField id="filled-basic" />
-                            </FormControl>
-                        </Grid>
+              <Grid item lg={12} md={6} sm={6}>
+                {/* <p>Additional details if any</p> */}
+                <TextField
+                  id="additionalDetails"
+                  label="Additional details if any"
+                  multiline
+                  rows="4"
+                  className={classes.fullWidth}
+                />
+              </Grid>
 
-                        <Grid item lg={12} md={6} sm={6}>
+              <Box marginTop={4}>
+                <Button variant="contained" color="primary">
+                  Next
+                </Button>
+              </Box>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
+    </div>
+  );
+};
 
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDatePicker
-                                    margin="normal"
-                                    id="date-picker-dialog"
-                                    format="MM/dd/yyyy"
-                                    value={selectedDate}
-                                    onChange={handleDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
-
-                            <TextField id="filled-basic" />
-
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Reported by</p>
-                            <FormControl>
-                                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                    {selectValues.map((selectValues) => (
-                                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                                    ))}
-
-                                </Select>
-                                <p>Others Name</p>
-                                <TextField id="filled-basic" />
-                            </FormControl>
-                        </Grid>
-
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Reson for reporting later than 4 hours</p>
-                            <TextField id="filled-basic" />
-                        </Grid>
-
-                        <Grid item lg={12} md={6} sm={6}>
-                            <p>Additional details if any</p>
-                            <TextField id="filled-basic" />
-                        </Grid>
-
-                        <Button variant="contained" color="primary" href="#contained-buttons">
-                            Next
-                        </Button>
-
-                    </Grid>
-                </Paper>
-            </Container>
-
-        </div>
-    )
-}
-
-export default ReportingAndNotification
+export default ReportingAndNotification;

@@ -17,8 +17,7 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: '.5rem 0',
-    minWidth: 300,
+    width: '100%',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -84,12 +83,16 @@ const EqiptmentAffected = () => {
               </Grid>
             </Grid>
 
-            <Grid container>
+            <Grid container spacing={3}>
               <Grid item md={6}>
                 {/* <p>Equiptment type</p> */}
-                <FormControl className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="eq-type-label">Equiptment type</InputLabel>
-                  <Select labelId="eq-type-label" id="eq-type">
+                  <Select
+                    labelId="eq-type-label"
+                    id="eq-type"
+                    label="Equiptment type"
+                  >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
@@ -97,22 +100,22 @@ const EqiptmentAffected = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item>
+              <Grid item md={6}>
                 {/* <p>if other describe</p> */}
                 <TextField
+                  variant="outlined"
                   id="filled-basic"
                   label="If others, describe"
                   className={classes.formControl}
                 />
               </Grid>
-            </Grid>
 
-            <Grid container>
               <Grid item md={12}>
                 {/* <p>Describe the damage</p> */}
                 <TextField
                   id="describe-damage"
                   multiline
+                  variant="outlined"
                   rows="3"
                   label="Describe the damage"
                   className={classes.fullWidth}
@@ -130,6 +133,7 @@ const EqiptmentAffected = () => {
                 <TextField
                   id="comments"
                   multiline
+                  variant="outlined"
                   rows="4"
                   label="Describe any actions taken"
                   className={classes.fullWidth}

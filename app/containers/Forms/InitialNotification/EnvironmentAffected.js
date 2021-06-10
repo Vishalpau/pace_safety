@@ -15,8 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: '.5rem 0',
-    minWidth: 260,
+    width: '100%',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -83,6 +82,7 @@ const EnvironmentAffected = () => {
                 <div>
                   <TextField
                     id="spills-details"
+                    variant="outlined"
                     label="Details of spills"
                     multiline
                     rows="3"
@@ -111,6 +111,7 @@ const EnvironmentAffected = () => {
                   <TextField
                     id="release-details"
                     multiline
+                    variant="outlined"
                     rows="3"
                     label="Details of release"
                     className={classes.fullWidth}
@@ -141,6 +142,7 @@ const EnvironmentAffected = () => {
                     id="wildlife-details"
                     multiline
                     rows="3"
+                    variant="outlined"
                     label="Details of spills"
                     className={classes.fullWidth}
                   />
@@ -170,6 +172,7 @@ const EnvironmentAffected = () => {
                     id="waterbody-details"
                     multiline
                     rows="3"
+                    variant="outlined"
                     label="Details of spills"
                     className={classes.fullWidth}
                   />
@@ -182,6 +185,7 @@ const EnvironmentAffected = () => {
                   <TextField
                     id="comments"
                     multiline
+                    variant="outlined"
                     rows="3"
                     label="Comment if any"
                     className={classes.fullWidth}
