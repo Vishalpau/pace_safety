@@ -558,6 +558,18 @@ export const HazardiousCondtions = loadable(() =>
   fallback: <Loading />,
 });
 
+export const RootCauseAnalysis = loadable(() =>
+  import('./Forms/RootCauseAnalysis/RootCauseAnalysis'), {
+  fallback: <Loading />,
+});
+
+
+export const WhyAnalysis = loadable(() =>
+  import('./Forms/RootCauseAnalysis/WhyAnalysis'), {
+  fallback: <Loading />,
+});
+
+
 // form summary
 
 export const Summary = loadable(() =>

@@ -36,7 +36,7 @@ import {
   EnvironmentAffected, EqiptmentAffected, IncidentDetails, PeoplesAfftected, PropertyAffected, ReportingAndNotification,
   ActivityDetail, AdditionalDetails, Evidence, PersonalAndPpeDetails,
   ActionTaken, EquiptmentImpactDetails, EventDetails, InvestigationOverview, PropertyImpactDetails, WorkerDetails,
-  BasicCause, BasicCauseAndAction, CauseAndAction, ManagementControl, Details, HazardiousActs, HazardiousCondtions,
+  BasicCause, BasicCauseAndAction, CauseAndAction, ManagementControl, Details, HazardiousActs, HazardiousCondtions,RootCauseAnalysis,WhyAnalysis,
   Summary,
   LessionLearned
 } from '../pageListAsync';
@@ -121,6 +121,8 @@ function Application(props) {
         <Route path="/app/incident-management/registration/root-cause-analysis/details/" component={Details} />
         <Route path="/app/incident-management/registration/root-cause-analysis/hazardious-acts/" component={HazardiousActs} />
         <Route path="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/" component={HazardiousCondtions} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/root-cause-analysis/" component={RootCauseAnalysis} />
+        <Route path="/app/incident-management/registration/root-cause-analysis/why-analysis/" component={WhyAnalysis} />
 
 
         {/* form summary */}

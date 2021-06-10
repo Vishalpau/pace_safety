@@ -1,14 +1,14 @@
-import { Container, Grid, Button } from '@material-ui/core';
-import React, { Fragment } from 'react';
+import React from 'react';
+import { Button, Grid, Container } from '@material-ui/core';
+
+import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
 
-const Details = () => {
+const RootCauseAnalysis = () => {
   const reportedTo = [
     'Internal Leadership',
     'Police',
@@ -31,11 +31,12 @@ const Details = () => {
   return (
     <Container>
       <Paper>
-        <Grid>
-          <Grid>
-            <h1>RCA details </h1>
+        <Grid container justify="flex-start">
+          <Grid item lg={12} md={6} sm={6}>
+            <h2> Root couse Analysis</h2>
             <hr />
-            <h5>Incident number : nnnnnnn</h5>
+            <p> incident number: nnnnnnn</p>
+
             <h6> Incident Description </h6>
             <p>
               Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -62,25 +63,24 @@ const Details = () => {
             <h6> RCA recommended</h6>
             <p> to be clearified what is this</p>
           </Grid>
+          <Grid item lg={6} md={12} sm={12}>
+            <h6> Incident Date and Time</h6>
+            <span> date formate</span>
+          </Grid>
+          <Grid item lg={6} md={12} sm={12}>
+            <h6> Analysis conducted by</h6>
+            <span> date formate</span>
+          </Grid>
           <Grid item lg={12} md={6} sm={6}>
-            <p>Equiptment type</p>
-
-            <FormControl>
-              {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-              {/* <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select> */}
-            </FormControl>
-            <p>if other describe</p>
+            <p>What caused the incident </p>
             <TextField id="filled-basic" />
           </Grid>
           <Grid item lg={12} md={6} sm={6}>
-            <p>Where there any release</p>
+            <p>Corrective actions</p>
+            <TextField id="filled-basic" />
+          </Grid>
+          <Grid item lg={12} md={6} sm={6}>
+            <p>Where there any spills</p>
 
             <FormControl component="fieldset">
               <RadioGroup aria-label="gender">
@@ -95,44 +95,8 @@ const Details = () => {
             </FormControl>
           </Grid>
           <Grid item lg={12} md={6} sm={6}>
-            <p>Where there any release</p>
-
-            <FormControl component="fieldset">
-              <RadioGroup aria-label="gender">
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid item lg={12} md={6} sm={6}>
-            <p>Where there any release</p>
-
-            <FormControl component="fieldset">
-              <RadioGroup aria-label="gender">
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid>
-            <p>
-              {' '}
-              Then investigation team to develop credble assumption and/or
-              hypthesis, continue with RCA process. Ensure this fact is captured
-              in investigation report that investigation is based on some
-              assumption.
-              {' '}
-            </p>
+            <p>if No, please recommended correct solution ?</p>
+            <TextField id="filled-basic" />
           </Grid>
           <Button variant="contained" color="primary">
             Submit
@@ -143,4 +107,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default RootCauseAnalysis;
