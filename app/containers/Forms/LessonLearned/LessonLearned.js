@@ -18,7 +18,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-
+import FormSideBar from '../FormSideBar'
+import { LESSION_LEARNED_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
 
 const LessionLearned = () => {
     const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
@@ -35,7 +37,7 @@ const LessionLearned = () => {
                 <h4>Basic Cause</h4>
                 <hr />
                 <Paper>
-
+                <FormHeader selectedHeader = {"Lession learned"}/>
                     <Grid container justify="flex-start" >
 
                         <Grid item md={6}>
@@ -147,6 +149,7 @@ const LessionLearned = () => {
                     <Button variant="contained" color="primary" href="#contained-buttons">
                         Next
             </Button>
+            <Grid><FormSideBar listOfItems={LESSION_LEARNED_FORM} selectedItem={"Lession learned"} /></Grid>
                 </Paper>
             </Container>
         </div>

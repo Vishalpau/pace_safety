@@ -11,6 +11,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
+import FormSideBar from '../FormSideBar'
+import { INVESTIGATION_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: ".5rem 0",
@@ -52,6 +56,7 @@ const InitialDetails = () => {
   return (
     <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Investigation"}/>
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h5" gutterBottom>
             Initial Details
@@ -230,6 +235,7 @@ const InitialDetails = () => {
             </Button>
           </Grid>
         </Box>
+        <Grid><FormSideBar listOfItems={INVESTIGATION_FORM} selectedItem={"Initial details"} /></Grid>
       </Paper>
     </Container>
   );

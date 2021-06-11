@@ -18,6 +18,10 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
+import FormSideBar from '../FormSideBar'
+import { SUMMERY_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 
 
 const Summary = () => {
@@ -36,7 +40,7 @@ const Summary = () => {
                 <h4>Basic Cause</h4>
                 <hr />
                 <Paper>
-
+                <FormHeader selectedHeader = {"Summary"}/>
                     <Grid container justify="flex-start" >
 
                         <Grid item md={6}>
@@ -212,6 +216,7 @@ const Summary = () => {
                     <Button variant="contained" color="primary" href="#contained-buttons">
                         Next
                 </Button>
+                <Grid><FormSideBar listOfItems={SUMMERY_FORM} selectedItem={"Summary"} /></Grid>
                 </Paper>
             </Container>
         </div>

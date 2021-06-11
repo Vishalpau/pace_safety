@@ -15,6 +15,13 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
+import FormSideBar from '../FormSideBar'
+import { 
+  INITIAL_NOTIFICATION, 
+  INITIAL_NOTIFICATION_FORM 
+} from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -62,6 +69,7 @@ const EqiptmentAffected = () => {
     <div>
       <Container>
         <Paper>
+        <FormHeader selectedHeader = {"Initial notification"}/>
           <Box padding={3} bgcolor="background.paper">
             <Typography variant="h5" gutterBottom>
               Details of Equiptments Affected
@@ -150,6 +158,7 @@ const EqiptmentAffected = () => {
               </Box>
             </Grid>
           </Box>
+          <Grid><FormSideBar listOfItems={INITIAL_NOTIFICATION_FORM} selectedItem={"Equipment affected"} /></Grid>
         </Paper>
       </Container>
     </div>

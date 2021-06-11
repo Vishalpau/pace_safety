@@ -8,6 +8,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
+
 const Details = () => {
   const reportedTo = [
     'Internal Leadership',
@@ -31,6 +36,7 @@ const Details = () => {
   return (
     <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Root cause analysis"}/>
         <Grid>
           <Grid>
             <h1>RCA details </h1>
@@ -138,6 +144,7 @@ const Details = () => {
             Submit
           </Button>
         </Grid>
+        <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Details"} /></Grid>
       </Paper>
     </Container>
   );
