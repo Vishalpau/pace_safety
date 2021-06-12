@@ -71,7 +71,7 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Unit Construction Manager Contact </p> */}
               <TextField
                 id="title"
@@ -80,7 +80,7 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Unit HSE Specialist Name </p> */}
               <TextField
                 id="title"
@@ -89,7 +89,7 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Unit HSE Specialist Contact </p> */}
               <TextField
                 id="title"
@@ -98,7 +98,7 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Actual Severity Level </p> */}
               <TextField
                 id="title"
@@ -107,7 +107,7 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Potential Severity Level </p> */}
               <TextField
                 id="title"
@@ -116,27 +116,73 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid lg={12}>
-              <h3>Event</h3>
+            <Grid item md={12}>
+              {/* <h3>Event</h3> */}
+              <Typography variant="h6" gutterBottom>
+                Event
+              </Typography>
             </Grid>
 
-            <Grid item lg={6}>
-              <p>Activity</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p>Activity</p> */}
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Activity</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Activity"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
-              <p>Job Task</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Project Name</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Project Name"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={12}>
+            <Grid item md={6}>
+              {/* <p>Job Task</p> */}
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Job Task</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Job Task"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={6}>
               {/* <p>Eqipment Invoked</p> */}
               <TextField
                 id="title"
@@ -145,23 +191,47 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p> Weather</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p> Weather</p> */}
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Weather</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Weather"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
-              <p> Weather2</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p> Weather2</p> */}
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Weather2</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Weather2"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
+            <Grid item md={6}>
               {/* <p> Temprature(c</p> */}
               <TextField
                 id="title"
@@ -170,15 +240,27 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p>Lighting</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p>Lighting</p> */}
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Lighting</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Lighting"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={12}>
+            <Grid item md={6}>
               {/* <p> Wind Speed</p> */}
               <TextField
                 id="title"
@@ -187,10 +269,13 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid>
-              <h4>Spills</h4>
+            <Grid item md={12}>
+              {/* <h3>Event</h3> */}
+              <Typography variant="h6" gutterBottom>
+                Event
+              </Typography>
             </Grid>
-            <Grid item lg={6}>
+            <Grid item md={6}>
               {/* <p>Fluid Amount</p> */}
               <TextField
                 id="title"
@@ -199,15 +284,27 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p>Fluid Type</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p>Fluid Type</p> */}
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Fluid Type</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Fluid Type"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>AEL </p> */}
               <TextField
                 id="title"
@@ -216,7 +313,7 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>PEL </p> */}
               <TextField
                 id="title"
@@ -225,9 +322,11 @@ const InitialDetails = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Button variant="contained" color="primary">
-              Submit
-            </Button>
+            <Box marginTop={3}>
+              <Button variant="contained" color="primary">
+                Submit
+              </Button>
+            </Box>
           </Grid>
         </Box>
       </Paper>

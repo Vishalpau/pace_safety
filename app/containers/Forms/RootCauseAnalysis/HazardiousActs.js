@@ -13,7 +13,14 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    width: "100%",
+  },
+}));
 
 const HazardiousActs = () => {
   // const reportedTo = [
@@ -35,6 +42,7 @@ const HazardiousActs = () => {
   // };
 
   // const radioDecide = ['Yes', 'No'];
+  const classes = useStyles();
   return (
     <Container>
       <Paper>
@@ -47,15 +55,10 @@ const HazardiousActs = () => {
               Incident number: nnnnnnnnnn
             </Typography>
           </Box>
-          <Grid container>
-            <Grid item lg={12} md={6} sm={6} />
-            <Grid item lg={6} md={6} sm={6} />
-            <Grid item lg={6} md={6} sm={6} />
-            <Grid />
-            <Grid item lg={12} md={6} sm={6} />
-            <Grid item lg={6} md={6} sm={6}>
+          <Grid container spacing={3}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend"> Supervision</FormLabel>
+                <FormLabel component="legend">Supervision</FormLabel>
                 <FormGroup>
                   <FormControlLabel
                     control={<Checkbox name="option1" />}
@@ -72,7 +75,7 @@ const HazardiousActs = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={6} md={6} sm={6}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend"> Work package </FormLabel>
                 <FormGroup>
@@ -92,7 +95,7 @@ const HazardiousActs = () => {
               </FormControl>
             </Grid>
 
-            <Grid item lg={6} md={6} sm={6}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">
                   {" "}
@@ -114,7 +117,7 @@ const HazardiousActs = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={6} md={6} sm={6}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend"> Behaviour Issue</FormLabel>
                 <FormGroup>
@@ -133,7 +136,7 @@ const HazardiousActs = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={6} md={6} sm={6}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend"> Saftey Items</FormLabel>
                 <FormGroup>
@@ -152,7 +155,7 @@ const HazardiousActs = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={6} md={6} sm={6}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Ergohomics</FormLabel>
                 <FormGroup>
@@ -171,7 +174,7 @@ const HazardiousActs = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={6} md={6} sm={6}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Procedure</FormLabel>
                 <FormGroup>
@@ -190,13 +193,24 @@ const HazardiousActs = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={12} md={6} sm={6}>
-              <p>others</p>
-              <TextField id="filled-basic" />
+            <Grid item md={12}>
+              {/* <p>others</p> */}
+              <TextField
+                className={classes.formControl}
+                id="filled-basic"
+                label="Others"
+                variant="outlined"
+                multiline
+                rows={3}
+              />
             </Grid>
-            <Button variant="contained" color="primary">
-              Next
-            </Button>
+            <Grid item md={12}>
+              <Box marginTop={4}>
+                <Button variant="contained" color="primary">
+                  Next
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
         </Box>
       </Paper>
