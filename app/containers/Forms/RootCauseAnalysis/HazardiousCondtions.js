@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+import FormSideBar from "../FormSideBar";
+import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
+
 const HazardiousCondition = () => {
   const reportedTo = [
     "Internal Leadership",
@@ -178,6 +182,12 @@ const HazardiousCondition = () => {
           </Grid>
         </Box>
       </Paper>
+      <Grid>
+        <FormSideBar
+          listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+          selectedItem={"Hazardious conditions"}
+        />
+      </Grid>
     </Container>
   );
 };

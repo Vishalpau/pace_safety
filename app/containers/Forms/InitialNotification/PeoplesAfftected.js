@@ -16,6 +16,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
+import FormSideBar from '../FormSideBar'
+import { 
+  INITIAL_NOTIFICATION, 
+  INITIAL_NOTIFICATION_FORM 
+} from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
+
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: '100%',
@@ -69,6 +78,7 @@ const PeoplesAffected = () => {
     <div>
       <Container>
         <Paper>
+        <FormHeader selectedHeader = {"Initial notification"}/>
           <Box padding={3} bgcolor="background.paper">
             <Box marginBottom={3}>
               <Typography variant="h5" gutterBottom>
@@ -213,6 +223,7 @@ Add details of another person affected
               </Box>
             </Grid>
           </Box>
+          <Grid><FormSideBar listOfItems={INITIAL_NOTIFICATION_FORM} selectedItem={"Peoples affected"} /></Grid>
         </Paper>
       </Container>
     </div>

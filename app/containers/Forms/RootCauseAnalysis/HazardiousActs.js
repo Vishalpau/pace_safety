@@ -21,31 +21,35 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 }));
+import FormSideBar from "../FormSideBar";
+import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const HazardiousActs = () => {
-  // const reportedTo = [
-  //   'Internal Leadership',
-  //   'Police',
-  //   'Environment Officer',
-  //   'OHS',
-  //   'Mital Aid',
-  //   'Other',
-  // ];
-  // const notificationSent = ['Manage', 'SuperVisor'];
-  // const selectValues = [1, 2, 3, 4];
-  // const [selectedDate, setSelectedDate] = React.useState(
-  //   new Date('2014-08-18T21:11:54')
-  // );
+  const reportedTo = [
+    "Internal Leadership",
+    "Police",
+    "Environment Officer",
+    "OHS",
+    "Mital Aid",
+    "Other",
+  ];
+  const notificationSent = ["Manage", "SuperVisor"];
+  const selectValues = [1, 2, 3, 4];
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
 
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   // const radioDecide = ['Yes', 'No'];
   const classes = useStyles();
   return (
     <Container>
       <Paper>
+        <FormHeader selectedHeader={"Root cause analysis"} />
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h6" gutterBottom>
             Immediate Causes - Hazardous acts
@@ -213,6 +217,12 @@ const HazardiousActs = () => {
             </Grid>
           </Grid>
         </Box>
+        <Grid>
+          <FormSideBar
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem={"Hazardious acts"}
+          />
+        </Grid>
       </Paper>
     </Container>
   );

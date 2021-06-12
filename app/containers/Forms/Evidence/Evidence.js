@@ -15,6 +15,10 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
+import FormSideBar from '../FormSideBar'
+import { EVIDENCE_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const Evidence = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -29,6 +33,7 @@ const Evidence = () => {
     <div>
       <Container>
         <Paper>
+        <FormHeader selectedHeader = {"Evidence collection"}/>
           <Box padding={3} bgcolor="background.paper">
             <Box marginBottom={4}>
               <Typography variant="h6" gutterBottom>
@@ -92,6 +97,7 @@ const Evidence = () => {
               </Button>
             </Grid>
           </Box>
+          <Grid><FormSideBar listOfItems={EVIDENCE_FORM} selectedItem={"Evidence"} /></Grid>
         </Paper>
       </Container>
     </div>

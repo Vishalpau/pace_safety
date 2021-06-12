@@ -13,6 +13,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 
+import FormSideBar from '../FormSideBar'
+import { EVIDENCE_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
@@ -27,6 +31,7 @@ const PersonalAndPpeDetails = () => {
     <div>
       <Container>
         <Paper>
+        <FormHeader selectedHeader = {"Evidence collection"}/>
           <Box padding={3} bgcolor="background.paper">
             <Box marginBottom={4}>
               <Typography variant="h6" gutterBottom>
@@ -334,6 +339,7 @@ const PersonalAndPpeDetails = () => {
               </Button>
             </Box>
           </Box>
+          <Grid><FormSideBar listOfItems={EVIDENCE_FORM} selectedItem={"Personal and Ppedetails"} /></Grid>
         </Paper>
       </Container>
     </div>

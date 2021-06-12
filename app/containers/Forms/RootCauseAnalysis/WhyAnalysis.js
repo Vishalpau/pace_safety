@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+import FormSideBar from "../FormSideBar";
+import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
+
 const WhyAnalysis = () => {
   const reportedTo = [
     "Internal Leadership",
