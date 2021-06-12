@@ -28,6 +28,13 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
+import FormSideBar from '../FormSideBar'
+import { 
+  INITIAL_NOTIFICATION, 
+  INITIAL_NOTIFICATION_FORM 
+} from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: ".5rem 0",
@@ -81,6 +88,7 @@ const ReportingAndNotification = () => {
     <div>
       <Container>
         <Paper>
+        <FormHeader selectedHeader = {"Initial notification"}/>
           <Box padding={3} bgcolor="background.paper">
             <Box marginBottom={4} borderBottom={1}>
               <Typography variant="h5" gutterBottom>
@@ -262,6 +270,7 @@ const ReportingAndNotification = () => {
               </Box>
             </Grid>
           </Box>
+          <Grid><FormSideBar listOfItems={INITIAL_NOTIFICATION_FORM} selectedItem={"Reporting and notification"} /></Grid>
         </Paper>
       </Container>
     </div>

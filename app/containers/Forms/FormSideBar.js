@@ -1,22 +1,19 @@
-import React from 'react';
+import { lineBreak } from 'acorn';
+import React, { useState, useEffect } from 'react';
 
+import { INITIAL_NOTIFICATION_FORM,EVIDENCE_FORM,INVESTIGATION_FORM,ROOT_CAUSE_ANALYSIS,INITIAL_NOTIFICATION } from '../../utils/constants'
 
-const FormSideBar = (props) =>{
-    let form_link = props.form_name
-    let link_splitted = form_link.split('/')
-    let form_name = link_splitted[link_splitted.length-2]
+export const FormSideBar=(props)=>{
 
-   
+    let lt = ">>"
+    let linkBreak = Object.keys(props.listOfItems).indexOf(props.selectedItem);
     return(
-        <div>
-            { <h1 style= {{color: "Blue"}} >Environment affecteds</h1> ? form_name === "environment-affected" : <h1>Environment affected</h1>}
-            <h1>Environment affected</h1>
-            <h1>Equipment affected</h1>
-            <h1>Incident details</h1>
-            <h1>Peoples affected</h1>
-            <h1>Reporting and notification</h1>
+        <div>  
+            {Object.entries(props.listOfItems).map(([key,value],index) => (  
+                index>=linkBreak? (index===linkBreak ? (<h1 style={{color:"Blue"}}>| {lt} {key}</h1>) : (<h1>{key}</h1>)) : (<h1><a href={value}>{key}</a></h1>)
+            ))}
         </div>
     )
 }
 
-export default FormSideBar
+export default FormSideBar; 

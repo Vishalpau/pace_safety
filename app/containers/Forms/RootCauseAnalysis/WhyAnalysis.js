@@ -11,6 +11,10 @@ import RemoveCircleOutlineSharpIcon from '@material-ui/icons/RemoveCircleOutline
 
 import AddSharpIcon from '@material-ui/icons/AddSharp';
 
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const WhyAnalysis = () => {
   const reportedTo = [
     "Internal Leadership",
@@ -34,6 +38,7 @@ const WhyAnalysis = () => {
   return (
     <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Root cause analysis"}/>
         <Grid container justify="flex-start">
           <Grid item lg={12} md={6} sm={6}>
             <h2> Why Analysis</h2>
@@ -93,6 +98,7 @@ const WhyAnalysis = () => {
             </Grid>
           
         </Grid>
+        <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Why analysis"} /></Grid>
       </Paper>
     </Container>
   );

@@ -13,6 +13,10 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const HazardiousCondition = () => {
   const reportedTo = [
     'Internal Leadership',
@@ -36,6 +40,7 @@ const HazardiousCondition = () => {
   return (
     <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Root cause analysis"}/>
         <Grid container justify="flex-start">
           <Grid item lg={12} md={6} sm={6}>
             <h2> Immediate Causes : Hazardous conditions </h2>
@@ -139,6 +144,7 @@ const HazardiousCondition = () => {
           </Button>
         </Grid>
       </Paper>
+      <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Hazardious conditions"} /></Grid>
     </Container>
   );
 };

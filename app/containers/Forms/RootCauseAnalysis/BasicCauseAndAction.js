@@ -1,9 +1,58 @@
 import React from 'react';
+import Container from "@material-ui/core/Container"
+import Grid from "@material-ui/core/Grid"
+import Button from '@material-ui/core/Button';
+import Paper from "@material-ui/core/Paper"
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import DateFnsUtils from "@date-io/date-fns";
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker
+} from "@material-ui/pickers";
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { AccessAlarm, ThreeDRotation } from '@material-ui/icons';
+
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
 
 
-const BasicCauseAndAction = () => (
-    <Container>
+
+
+
+const BasicCauseAndAction = () => {
+  const reportedTo = [
+    'Internal Leadership',
+    'Police',
+    'Environment Officer',
+    'OHS',
+    'Mital Aid',
+    'Other',
+  ];
+  const notificationSent = ['Manage', 'SuperVisor'];
+  const selectValues = [1, 2, 3, 4];
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date('2014-08-18T21:11:54')
+  );
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const radioDecide = ['Yes', 'No'];
+
+  let form_link = window.location.href
+  return (
+   <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Root cause analysis"}/>
         <Grid container justify="flex-start">
           <Grid item lg={12} md={6} sm={6}>
             <h2> Actions against Basic Causes </h2>
@@ -34,7 +83,7 @@ const BasicCauseAndAction = () => (
               <a href="/">Al-nnnnn</a>
             </Grid>
             <div>
-              <Icon style={{ fontSize: 30 }}>add_circle</Icon>
+              {/* <Icon style={{ fontSize: 30 }}>add_circle</Icon> */}
               {' '}
               <a href="/"> Add a new action</a>
             </div>
@@ -54,7 +103,7 @@ const BasicCauseAndAction = () => (
               <a href="/">Al-nnnnn</a>
             </Grid>
             <div>
-              <Icon style={{ fontSize: 30 }}>add_circle</Icon>
+              {/* <Icon style={{ fontSize: 30 }}>add_circle</Icon> */}
               {' '}
               <a href="/"> Add a new action</a>
             </div>
@@ -75,7 +124,7 @@ const BasicCauseAndAction = () => (
               <a href="/">Al-nnnnn</a>
             </Grid>
             <div>
-              <Icon style={{ fontSize: 30 }}>add_circle</Icon>
+              {/* <Icon style={{ fontSize: 30 }}>add_circle</Icon> */}
               {' '}
               <a href="/"> Add a new action</a>
             </div>
@@ -95,7 +144,7 @@ const BasicCauseAndAction = () => (
               <a href="/">Al-nnnnn</a>
             </Grid>
             <div>
-              <Icon style={{ fontSize: 30 }}>add_circle</Icon>
+              {/* <Icon style={{ fontSize: 30 }}>add_circle</Icon> */}
               {' '}
               <a href="/"> Add a new action</a>
             </div>
@@ -116,7 +165,7 @@ const BasicCauseAndAction = () => (
               <a href="#">Al-nnnnn</a>
             </Grid>
             <div>
-              <Icon style={{ fontSize: 30 }}>add_circle</Icon>
+              {/*                           e={{ fontSize: 30 }}>add_circle</Icon> */}
               {' '}
               <a href="#"> Add a new action</a>
             </div>
@@ -127,10 +176,12 @@ const BasicCauseAndAction = () => (
           <Button variant="contained" color="primary">
                 Next
           </Button>
+          
         </Grid>
+        <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Basic cause and action"} /></Grid>
       </Paper>
     </Container>
-  
   );
-  
-  export default BasicCauseAndAction;
+};
+
+export default BasicCauseAndAction;

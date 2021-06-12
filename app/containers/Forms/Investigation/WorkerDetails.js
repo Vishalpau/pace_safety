@@ -10,6 +10,10 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
+import FormSideBar from '../FormSideBar'
+import { INVESTIGATION_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -40,6 +44,7 @@ const WorkerDetails = () => {
   return (
     <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Investigation"}/>
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h5" gutterBottom>
             Details of person affected
@@ -285,6 +290,7 @@ const WorkerDetails = () => {
             </Box>
           </Grid>
         </Box>
+        <Grid><FormSideBar listOfItems={INVESTIGATION_FORM} selectedItem={"Worker details"} /></Grid>
       </Paper>
     </Container>
   );

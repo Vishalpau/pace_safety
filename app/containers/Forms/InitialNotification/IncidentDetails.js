@@ -24,8 +24,15 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
-
 import { ThemeProvider } from "@material-ui/styles";
+
+import FormSideBar from '../FormSideBar'
+import { 
+  INITIAL_NOTIFICATION, 
+  INITIAL_NOTIFICATION_FORM 
+} from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -58,6 +65,7 @@ const IncidentDetails = () => {
   return (
     <div>
       <Container>
+      <FormHeader selectedHeader = {"Initial notification"}/>
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h4" gutterBottom>
             Initial Notification
@@ -278,6 +286,7 @@ const IncidentDetails = () => {
               </Button>
             </Box>
           </Grid>
+          <Grid item md={3}><FormSideBar listOfItems={INITIAL_NOTIFICATION_FORM} selectedItem={"Incident details"} /></Grid>
         </Box>
       </Container>
     </div>

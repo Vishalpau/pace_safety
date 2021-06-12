@@ -9,6 +9,10 @@ import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
 import Icon from '@material-ui/core/Icon';
 
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 const CauseAndAction = () => {
   const reportedTo = [
     'Internal Leadership',
@@ -32,6 +36,7 @@ const CauseAndAction = () => {
   return (
     <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Root cause analysis"}/>
         <Grid container justify="flex-start">
           <Grid item lg={12} md={6} sm={6}>
             <h2> Actions against Immediate Causes </h2>
@@ -156,6 +161,7 @@ const CauseAndAction = () => {
             Next
           </Button>
         </Grid>
+        <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Cause and action"} /></Grid>
       </Paper>
     </Container>
   );

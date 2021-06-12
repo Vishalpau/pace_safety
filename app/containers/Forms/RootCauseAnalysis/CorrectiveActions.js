@@ -21,6 +21,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 
 const CorrectiveAction = () => {
 
@@ -40,6 +44,7 @@ const CorrectiveAction = () => {
                 <h4>Corrective Actions</h4>
                 <hr />
                 <Paper>
+                <FormHeader selectedHeader = {"Root cause analysis"}/>
                     <p><b>Incident number:nnnnnnnnn     RCA Method:PACE Cause Analysis</b></p>
 
                     <Grid container justify="flex-start" >
@@ -66,6 +71,7 @@ const CorrectiveAction = () => {
                     <Button variant="contained" color="primary" href="#contained-buttons">
                         Next
                     </Button>
+                    <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Corrective action"} /></Grid>
                 </Paper>
             </Container>
         </div>

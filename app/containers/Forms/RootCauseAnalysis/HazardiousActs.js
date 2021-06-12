@@ -15,29 +15,35 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import Typography from "@material-ui/core/Typography";
 
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
+
 const HazardiousActs = () => {
-  // const reportedTo = [
-  //   'Internal Leadership',
-  //   'Police',
-  //   'Environment Officer',
-  //   'OHS',
-  //   'Mital Aid',
-  //   'Other',
-  // ];
-  // const notificationSent = ['Manage', 'SuperVisor'];
-  // const selectValues = [1, 2, 3, 4];
-  // const [selectedDate, setSelectedDate] = React.useState(
-  //   new Date('2014-08-18T21:11:54')
-  // );
+  const reportedTo = [
+    'Internal Leadership',
+    'Police',
+    'Environment Officer',
+    'OHS',
+    'Mital Aid',
+    'Other',
+  ];
+  const notificationSent = ['Manage', 'SuperVisor'];
+  const selectValues = [1, 2, 3, 4];
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date('2014-08-18T21:11:54')
+  );
 
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
-  // const radioDecide = ['Yes', 'No'];
+  const radioDecide = ['Yes', 'No'];
   return (
     <Container>
       <Paper>
+      <FormHeader selectedHeader = {"Root cause analysis"}/>
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h6" gutterBottom>
             Immediate Causes - Hazardous acts
@@ -199,6 +205,7 @@ const HazardiousActs = () => {
             </Button>
           </Grid>
         </Box>
+        <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Hazardious acts"} /></Grid>
       </Paper>
     </Container>
   );

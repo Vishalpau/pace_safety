@@ -18,6 +18,10 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
+import FormSideBar from '../FormSideBar'
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants'
+import FormHeader from '../FormHeader'
+
 
 
 const BasicCause = () => {
@@ -36,6 +40,7 @@ const BasicCause = () => {
                 <h4>Basic Cause</h4>
                 <hr />
                 <Paper>
+                <FormHeader selectedHeader = {"Root cause analysis"}/>
                     <p>Basic Cause</p>
                     <p><b>Human Factors</b></p>
                     <Grid container justify="flex-start" >
@@ -119,6 +124,7 @@ const BasicCause = () => {
                     <Button variant="contained" color="primary" href="#contained-buttons">
                         Next
                 </Button>
+                <Grid><FormSideBar listOfItems={ROOT_CAUSE_ANALYSIS_FORM} selectedItem={"Basic cause"} /></Grid>
                 </Paper>
             </Container>
         </div>
