@@ -15,12 +15,12 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import FormSideBar from '../FormSideBar'
-import { 
-  INITIAL_NOTIFICATION, 
-  INITIAL_NOTIFICATION_FORM 
-} from '../../../utils/constants'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import {
+  INITIAL_NOTIFICATION,
+  INITIAL_NOTIFICATION_FORM,
+} from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -69,8 +69,10 @@ const EqiptmentAffected = () => {
     <div>
       <Container>
         <Paper>
-        <FormHeader selectedHeader = {"Initial notification"}/>
           <Box padding={3} bgcolor="background.paper">
+            <Box marginBottom={5}>
+              <FormHeader selectedHeader={"Initial notification"} />
+            </Box>
             <Typography variant="h5" gutterBottom>
               Details of Equiptments Affected
             </Typography>
@@ -158,7 +160,12 @@ const EqiptmentAffected = () => {
               </Box>
             </Grid>
           </Box>
-          <Grid><FormSideBar listOfItems={INITIAL_NOTIFICATION_FORM} selectedItem={"Equipment affected"} /></Grid>
+          <Grid>
+            <FormSideBar
+              listOfItems={INITIAL_NOTIFICATION_FORM}
+              selectedItem={"Equipment affected"}
+            />
+          </Grid>
         </Paper>
       </Container>
     </div>

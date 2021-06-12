@@ -1,39 +1,39 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Box from '@material-ui/core/Box';
-import { spacing } from '@material-ui/system';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Box from "@material-ui/core/Box";
+import { spacing } from "@material-ui/system";
+import { makeStyles } from "@material-ui/core/styles";
 
-import { 
-  INITIAL_NOTIFICATION, 
-  INITIAL_NOTIFICATION_FORM 
-} from '../../../utils/constants'
+import {
+  INITIAL_NOTIFICATION,
+  INITIAL_NOTIFICATION_FORM,
+} from "../../../utils/constants";
 
-import FormSideBar from '../FormSideBar'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: '100%',
+    width: "100%",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: '100%',
-    margin: '.5rem 0',
+    width: "100%",
+    margin: ".5rem 0",
   },
   spacer: {
-    marginTop: '1rem',
+    marginTop: "1rem",
   },
   customLabel: {
     marginBottom: 0,
@@ -42,24 +42,24 @@ const useStyles = makeStyles((theme) => ({
 
 const EnvironmentAffected = () => {
   const reportedTo = [
-    'Internal Leadership',
-    'Police',
-    'Environment Officer',
-    'OHS',
-    'Mital Aid',
-    'Other',
+    "Internal Leadership",
+    "Police",
+    "Environment Officer",
+    "OHS",
+    "Mital Aid",
+    "Other",
   ];
-  const notificationSent = ['Manage', 'SuperVisor'];
+  const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
+    new Date("2014-08-18T21:11:54")
   );
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const radioDecide = ['Yes', 'No', 'N/A'];
+  const radioDecide = ["Yes", "No", "N/A"];
 
   const classes = useStyles();
 
@@ -67,8 +67,10 @@ const EnvironmentAffected = () => {
     <div>
       <Container>
         <Paper>
-        <FormHeader selectedHeader = {"Initial notification"}/>
           <Box padding={3} bgcolor="background.paper">
+            <Box marginBottom={5}>
+              <FormHeader selectedHeader={"Initial notification"} />
+            </Box>
             <Typography variant="h4" gutterBottom>
               Environment Affected
             </Typography>
@@ -209,7 +211,12 @@ const EnvironmentAffected = () => {
               </Box>
             </Grid>
           </Box>
-          <Grid><FormSideBar listOfItems={INITIAL_NOTIFICATION_FORM} selectedItem={"Environment affected"} /></Grid>
+          <Grid>
+            <FormSideBar
+              listOfItems={INITIAL_NOTIFICATION_FORM}
+              selectedItem={"Environment affected"}
+            />
+          </Grid>
         </Paper>
       </Container>
     </div>

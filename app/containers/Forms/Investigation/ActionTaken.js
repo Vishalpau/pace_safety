@@ -15,34 +15,13 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import FormSideBar from '../FormSideBar'
-import { INVESTIGATION_FORM } from '../../../utils/constants'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  fullWidth: {
-    width: "100%",
-    margin: ".5rem 0",
-  },
-  spacer: {
-    marginTop: "1rem",
-  },
-  customLabel: {
-    marginBottom: 0,
-  },
-  textButton: {
-    color: "#3498db",
-    padding: 0,
-    textDecoration: "underline",
-    display: "inlineBlock",
-    marginBlock: "1.5rem",
-    backgroundColor: "transparent",
   },
 }));
 
@@ -66,11 +45,15 @@ const ActionTaken = () => {
     <div>
       <Container>
         <Paper>
-        <FormHeader selectedHeader = {"Investigation"}/>
           <Box padding={3} bgcolor="background.paper">
-            <Typography variant="h5" gutterBottom>
-              Action Taken
-            </Typography>
+            <Box marginBottom={5}>
+              <FormHeader selectedHeader={"Investigation"} />
+            </Box>
+            <Box marginBottom={3}>
+              <Typography variant="h5" gutterBottom>
+                Action Taken
+              </Typography>
+            </Box>
 
             <Grid container spacing={3}>
               <Grid item md={6}>
@@ -90,7 +73,7 @@ const ActionTaken = () => {
                   label="Birthday"
                   type="date"
                   defaultValue="2017-05-24"
-                  className={classes.textField}
+                  className={classes.formControl}
                 />
               </Grid>
               <Box marginTop={4}>
@@ -104,7 +87,12 @@ const ActionTaken = () => {
               </Box>
             </Grid>
           </Box>
-          <Grid><FormSideBar listOfItems={INVESTIGATION_FORM} selectedItem={"Action taken"} /></Grid>
+          <Grid>
+            <FormSideBar
+              listOfItems={INVESTIGATION_FORM}
+              selectedItem={"Action taken"}
+            />
+          </Grid>
         </Paper>
       </Container>
     </div>

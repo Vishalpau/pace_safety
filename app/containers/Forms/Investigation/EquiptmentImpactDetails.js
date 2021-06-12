@@ -15,9 +15,9 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import FormSideBar from '../FormSideBar'
-import { INVESTIGATION_FORM } from '../../../utils/constants'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -66,18 +66,20 @@ const EquiptmentImpactDetails = () => {
     <div>
       <Container>
         <Paper>
-        <FormHeader selectedHeader = {"Investigation"}/>
           <Box padding={3} bgcolor="background.paper">
-            <Typography variant="h5" gutterBottom>
-              Details of Equiptments Affected
-            </Typography>
-            <Grid container justify="flex-start">
-              <Box borderBottom={1} marginTop={6} marginBottom={3}>
-                <Typography variant="body2" gutterBottom>
-                Do you have details to share about the equipment affected?
-                </Typography>
-              </Box>
-              <Grid item lg={12} md={6} sm={6}>
+            <Box marginBottom={5}>
+              <FormHeader selectedHeader={"Investigation"} />
+            </Box>
+            <Box marginBottom={3}>
+              <Typography variant="h5" gutterBottom>
+                Details of Equiptments Affected
+              </Typography>
+            </Box>
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <p>
+                  Do you have details to share about the equipment affected?
+                </p>
                 {radioDecide.map((value) => (
                   <FormControlLabel
                     value={value}
@@ -86,9 +88,7 @@ const EquiptmentImpactDetails = () => {
                   />
                 ))}
               </Grid>
-            </Grid>
 
-            <Grid container spacing={3}>
               <Grid item md={6}>
                 {/* <p>Equiptment type</p> */}
                 <FormControl variant="outlined" className={classes.formControl}>
@@ -144,18 +144,19 @@ const EquiptmentImpactDetails = () => {
                   className={classes.fullWidth}
                 />
               </Grid>
-              <Box marginTop={4}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  href="#contained-buttons"
-                >
+              <Grid item md={6}>
+                <Button variant="contained" color="primary">
                   Next
                 </Button>
-              </Box>
+              </Grid>
             </Grid>
           </Box>
-          <Grid><FormSideBar listOfItems={INVESTIGATION_FORM} selectedItem={"Equipment impact details"} /></Grid>
+          <Grid>
+            <FormSideBar
+              listOfItems={INVESTIGATION_FORM}
+              selectedItem={"Equipment impact details"}
+            />
+          </Grid>
         </Paper>
       </Container>
     </div>

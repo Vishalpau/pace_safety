@@ -11,13 +11,12 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
-import FormSideBar from '../FormSideBar'
-import { INVESTIGATION_FORM } from '../../../utils/constants'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: ".5rem 0",
     width: "100%",
   },
   selectEmpty: {
@@ -56,8 +55,10 @@ const InvestigationOverview = () => {
   return (
     <Container>
       <Paper>
-      <FormHeader selectedHeader = {"Investigation"}/>
         <Box padding={3} bgcolor="background.paper">
+          <Box marginBottom={5}>
+            <FormHeader selectedHeader={"Investigation"} />
+          </Box>
           <Typography variant="h5" gutterBottom>
             Initial Details
           </Typography>
@@ -76,7 +77,7 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Unit Construction Manager Contact </p> */}
               <TextField
                 id="title"
@@ -85,7 +86,7 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Unit HSE Specialist Name </p> */}
               <TextField
                 id="title"
@@ -94,7 +95,7 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Unit HSE Specialist Contact </p> */}
               <TextField
                 id="title"
@@ -103,7 +104,7 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Actual Severity Level </p> */}
               <TextField
                 id="title"
@@ -112,7 +113,7 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>Potential Severity Level </p> */}
               <TextField
                 id="title"
@@ -121,35 +122,43 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid lg={12}>
-              <h3>Event</h3>
+            <Grid item md={12}>
+              <Typography variant="h6">Event</Typography>
             </Grid>
 
-            <Grid item lg={6}>
-              <p>*Activity</p>
-              <Select
-                    labelId="eq-type-label"
-                    id="eq-type"
-                    label="Activity"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
+            <Grid item md={6}>
+              {/* <p>*Activity</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Activity</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Activity"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
-              <p>*Job Task</p>
-              <Select
-                    labelId="eq-type-label"
-                    id="eq-type"
-                    label="Job Task"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
+            <Grid item md={6}>
+              {/* <p>*Job Task</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Job Task</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Job Task"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={12}>
+            <Grid item md={6}>
               {/* <p>Eqipment Invoked</p> */}
               <TextField
                 id="title"
@@ -158,31 +167,39 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p> Weather</p>
-              <Select
-                    labelId="eq-type-label"
-                    id="eq-type"
-                    label="Weather"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
+            <Grid item md={6}>
+              {/* <p> Weather</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Weather</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Weather"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
-              <p> Weather2</p>
-              <Select
-                    labelId="eq-type-label"
-                    id="eq-type"
-                    label="Weather2"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
+            <Grid item md={6}>
+              {/* <p> Weather2</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Weather2</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Weather2"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
+            <Grid item md={6}>
               {/* <p> Temprature(c</p> */}
               <TextField
                 id="title"
@@ -191,19 +208,23 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p>Lighting</p>
-              <Select
-                    labelId="eq-type-label"
-                    id="eq-type"
-                    label="Equiptment type"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
+            <Grid item md={6}>
+              {/* <p>Lighting</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Lighting</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Lighting"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={12}>
+            <Grid item md={6}>
               {/* <p> Wind Speed</p> */}
               <TextField
                 id="title"
@@ -212,8 +233,9 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Grid lg={12}>
-              <h4>Spills</h4>
+            <Grid item md={12}>
+              {/* <h4>Spills</h4> */}
+              <Typography variant="h6">Spills</Typography>
             </Grid>
             <Grid item lg={6}>
               {/* <p>Fluid Amount</p> */}
@@ -225,16 +247,20 @@ const InvestigationOverview = () => {
               />
             </Grid>
             <Grid item lg={6}>
-              <p>Fluid Type</p>
-              <Select
-                    labelId="eq-type-label"
-                    id="eq-type"
-                    label="Equiptment type"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
+              {/* <p>Fluid Type</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">Fluid Type</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Fluid Type"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item lg={6} md={12} sm={12}>
               {/* <p>AEL </p> */}
@@ -272,13 +298,19 @@ const InvestigationOverview = () => {
                 className={classes.fullWidth}
               />
             </Grid>
-            <Button variant="contained" color="primary">
-              Next
-            </Button>
-            
+            <Grid item md={12}>
+              <Button variant="contained" color="primary">
+                Next
+              </Button>
+            </Grid>
           </Grid>
         </Box>
-        <Grid><FormSideBar listOfItems={INVESTIGATION_FORM} selectedItem={"Investigation overview"} /></Grid>
+        <Grid>
+          <FormSideBar
+            listOfItems={INVESTIGATION_FORM}
+            selectedItem={"Investigation overview"}
+          />
+        </Grid>
       </Paper>
     </Container>
   );

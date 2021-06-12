@@ -13,9 +13,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 
-import FormSideBar from '../FormSideBar'
-import { EVIDENCE_FORM } from '../../../utils/constants'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,9 +31,11 @@ const PersonalAndPpeDetails = () => {
     <div>
       <Container>
         <Paper>
-        <FormHeader selectedHeader = {"Evidence collection"}/>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={4}>
+            <Box marginBottom={5}>
+              <FormHeader selectedHeader={"Evidence collection"} />
+            </Box>
+            <Box marginBottom={3}>
               <Typography variant="h6" gutterBottom>
                 Personal and PPE
               </Typography>
@@ -339,7 +341,12 @@ const PersonalAndPpeDetails = () => {
               </Button>
             </Box>
           </Box>
-          <Grid><FormSideBar listOfItems={EVIDENCE_FORM} selectedItem={"Personal and Ppedetails"} /></Grid>
+          <Grid>
+            <FormSideBar
+              listOfItems={EVIDENCE_FORM}
+              selectedItem={"Personal and Ppedetails"}
+            />
+          </Grid>
         </Paper>
       </Container>
     </div>

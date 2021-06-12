@@ -11,9 +11,9 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import FormSideBar from '../FormSideBar'
-import { EVIDENCE_FORM } from '../../../utils/constants'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -37,8 +37,10 @@ const AdditionalDetails = () => {
     <div>
       <Container>
         <Paper>
-        <FormHeader selectedHeader = {"Evidence collection"}/>
           <Box padding={3} bgcolor="background.paper">
+            <Box marginBottom={5}>
+              <FormHeader selectedHeader={"Evidence collection"} />
+            </Box>
             <Box marginBottom={4}>
               <Typography variant="h6" gutterBottom>
                 Additional Details
@@ -125,7 +127,12 @@ const AdditionalDetails = () => {
               </Button>
             </Box>
           </Box>
-          <Grid><FormSideBar listOfItems={EVIDENCE_FORM} selectedItem={"Additional detail"} /></Grid>
+          <Grid>
+            <FormSideBar
+              listOfItems={EVIDENCE_FORM}
+              selectedItem={"Additional detail"}
+            />
+          </Grid>
         </Paper>
       </Container>
     </div>

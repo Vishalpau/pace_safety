@@ -11,25 +11,13 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
-import FormSideBar from '../FormSideBar'
-import { INVESTIGATION_FORM } from '../../../utils/constants'
-import FormHeader from '../FormHeader'
-
+import FormSideBar from "../FormSideBar";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: ".5rem 0",
     width: "100%",
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  fullWidth: {
-    width: "100%",
-    margin: ".5rem 0",
-  },
-  spacer: {
-    padding: ".75rem 0",
   },
 }));
 
@@ -57,125 +45,177 @@ const EventDetails = () => {
   return (
     <Container>
       <Paper>
-      <FormHeader selectedHeader = {"Investigation"}/>
         <Box padding={3} bgcolor="background.paper">
-          <Typography variant="h5" gutterBottom>
-            Events Details
-          </Typography>
-          <Grid container spacing={3}>
-          
+          <Box marginBottom={5}>
+            <FormHeader selectedHeader={"Investigation"} />
+          </Box>
+          <Box marginBottom={3}>
+            <Typography variant="h5" gutterBottom>
+              Events Details
+            </Typography>
+          </Box>
 
-            <Grid item lg={6}>
-              <p>*Activity</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+          <Grid container spacing={3}>
+            <Grid item md={6}>
+              {/* <p>*Activity</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Activity</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Activity"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
-              <p>*Job Task</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p>*Job Task</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Job Task</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Job Task"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={12}>
+            <Grid item md={6}>
               {/* <p>Eqipment Invoked</p> */}
               <TextField
                 id="title"
                 variant="outlined"
                 label="Equipment involved"
-                className={classes.fullWidth}
+                className={classes.formControl}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p> Weather</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p> Weather</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Weather</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Weather"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
-              <p> Weather2</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p> Weather2</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Weather2</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Weather2"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6}>
+            <Grid item md={6}>
               {/* <p> Temprature(c</p> */}
               <TextField
                 id="title"
                 variant="outlined"
                 label="Temprature"
-                className={classes.fullWidth}
+                className={classes.formControl}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p>Lighting</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p>Lighting</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Lighting</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Lighting"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={12}>
+            <Grid item md={6}>
               {/* <p> Wind Speed</p> */}
               <TextField
                 id="title"
                 variant="outlined"
                 label="Wind Speed"
-                className={classes.fullWidth}
+                className={classes.formControl}
               />
             </Grid>
-            <Grid lg={12}>
-              <h4>Spills</h4>
+            <Grid item md={12}>
+              <Typography variant="h6">Lighting</Typography>
             </Grid>
-            <Grid item lg={6}>
+            <Grid item md={6}>
               {/* <p>Fluid Amount</p> */}
               <TextField
                 id="title"
                 variant="outlined"
                 label="Fluid Amount"
-                className={classes.fullWidth}
+                className={classes.formControl}
               />
             </Grid>
-            <Grid item lg={6}>
-              <p>Fluid Type</p>
-              <Select>
-                <otion>1</otion>
-                <otion>1</otion>
-                <otion>1</otion>
-              </Select>
+            <Grid item md={6}>
+              {/* <p>Fluid Type</p> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Fluid Type</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="Fluid Type"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>AEL </p> */}
               <TextField
                 id="title"
                 variant="outlined"
                 label="AEL"
-                className={classes.fullWidth}
+                className={classes.formControl}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
+            <Grid item md={6}>
               {/* <p>PEL </p> */}
               <TextField
                 id="title"
                 variant="outlined"
                 label="PEL"
-                className={classes.fullWidth}
+                className={classes.formControl}
               />
             </Grid>
-            <Button variant="contained" color="primary">
-              Submit
-            </Button>
+            <Grid item md={12}>
+              <Button variant="contained" color="primary">
+                Submit
+              </Button>
+            </Grid>
           </Grid>
         </Box>
-        <Grid><FormSideBar listOfItems={INVESTIGATION_FORM} selectedItem={"Event details"} /></Grid>
+        <Grid>
+          <FormSideBar
+            listOfItems={INVESTIGATION_FORM}
+            selectedItem={"Event details"}
+          />
+        </Grid>
       </Paper>
     </Container>
   );
