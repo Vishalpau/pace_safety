@@ -56,15 +56,21 @@ const PropertyImpacetDetails = () => {
           <Box marginBottom={5}>
             <FormHeader selectedHeader={"Investigation"} />
           </Box>
-          <Typography variant="h5" gutterBottom>
-            Details of Properties affected
-          </Typography>
-          <Box marginTop={3} marginBottom={4}>
-            <Typography variant="subtitle1" gutterBottom borderBottom={1}>
-              Incident number: nnnnnnn
+
+          <Box borderBottom={1} marginBottom={2}>
+            <Typography variant="h6" gutterBottom>
+              Details of Properties affected
             </Typography>
           </Box>
+
           <Grid container spacing={3}>
+            <Grid item md={12}>
+              <Box>
+                <Typography variant="body2" gutterBottom>
+                  Incident number: nnnnnnnnnn
+                </Typography>
+              </Box>
+            </Grid>
             <Grid item md={6}>
               {/* <p>Unit Construction Manager Name</p> */}
               <TextField

@@ -11,9 +11,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
-import FormSideBar from '../FormSideBar'
-import { INVESTIGATION_FORM } from '../../../utils/constants'
-import FormHeader from '../FormHeader'
+import FormSideBar from "../FormSideBar";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -56,11 +56,13 @@ const InitialDetails = () => {
   return (
     <Container>
       <Paper>
-      <FormHeader selectedHeader = {"Investigation"}/>
+        <FormHeader selectedHeader={"Investigation"} />
         <Box padding={3} bgcolor="background.paper">
-          <Typography variant="h5" gutterBottom>
-            Initial Details
-          </Typography>
+          <Box borderBottom={1} marginBottom={2}>
+            <Typography variant="h6" gutterBottom>
+              Initial Details
+            </Typography>
+          </Box>
           <Box marginTop={3} marginBottom={4}>
             <Typography variant="subtitle1" gutterBottom borderBottom={1}>
               Incident number: nnnnnnn
@@ -334,7 +336,12 @@ const InitialDetails = () => {
             </Box>
           </Grid>
         </Box>
-        <Grid><FormSideBar listOfItems={INVESTIGATION_FORM} selectedItem={"Initial details"} /></Grid>
+        <Grid>
+          <FormSideBar
+            listOfItems={INVESTIGATION_FORM}
+            selectedItem={"Initial details"}
+          />
+        </Grid>
       </Paper>
     </Container>
   );

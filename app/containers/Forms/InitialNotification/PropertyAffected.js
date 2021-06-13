@@ -80,14 +80,14 @@ const PropertyAffected = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
             </Box>
-            <Box marginBottom={3}>
-              <Typography variant="h5" gutterBottom>
+            <Box borderBottom={1} marginBottom={2}>
+              <Typography variant="h6" gutterBottom>
                 Details of proprties Affected?
               </Typography>
             </Box>
             <Grid container spacing={3}>
               <Grid item lg={12} md={6} sm={6}>
-                <Typography variant="h6">
+                <Typography variant="body2">
                   Do you have details to share about the properties affected?
                 </Typography>
                 {/* <p>Do you have details of individual effected?</p>   */}
@@ -163,7 +163,7 @@ const PropertyAffected = () => {
                   className={classes.fullWidth}
                 />
               </Grid>
-              <Box marginTop={4}>
+              <Grid item md={6}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -171,7 +171,7 @@ const PropertyAffected = () => {
                 >
                   Next
                 </Button>
-              </Box>
+              </Grid>
             </Grid>
             <Grid>
               <FormSideBar

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -27,6 +27,7 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { MaterialDropZone } from "dan-components";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -82,6 +83,7 @@ const ReportingAndNotification = () => {
   };
 
   const radioDecide = ["Yes", "No", "N/A"];
+  const [files] = useState([]);
   const classes = useStyles();
   return (
     <div>
@@ -91,8 +93,9 @@ const ReportingAndNotification = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
             </Box>
-            <Box marginBottom={4} borderBottom={1}>
-              <Typography variant="h5" gutterBottom>
+
+            <Box borderBottom={1} marginBottom={2}>
+              <Typography variant="h6" gutterBottom>
                 Reporting and Notification
               </Typography>
             </Box>
@@ -136,11 +139,14 @@ const ReportingAndNotification = () => {
                   </Typography>
                 </Box>
 
-                <FormControl>
-                  <Grid item lg={6}>
-                    <Input type="file" variant="outlined" />
-                  </Grid>
-                </FormControl>
+                <MaterialDropZone
+                  files={files}
+                  showPreviews
+                  maxSize={5000000}
+                  filesLimit={5}
+                  text="Drag and drop file(s) here or click button bellow"
+                  showButton
+                />
               </Grid>
 
               <Grid item md={6}>
@@ -264,11 +270,11 @@ const ReportingAndNotification = () => {
                 />
               </Grid>
 
-              <Box marginTop={4}>
+              <Grid item md={6}>
                 <Button variant="contained" color="primary">
                   Next
                 </Button>
-              </Box>
+              </Grid>
             </Grid>
           </Box>
           <Grid>

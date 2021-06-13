@@ -70,11 +70,13 @@ const EquiptmentImpactDetails = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Investigation"} />
             </Box>
-            <Box marginBottom={3}>
-              <Typography variant="h5" gutterBottom>
+
+            <Box borderBottom={1} marginBottom={2}>
+              <Typography variant="h6" gutterBottom>
                 Details of Equiptments Affected
               </Typography>
             </Box>
+
             <Grid container spacing={3}>
               <Grid item md={12}>
                 <p>

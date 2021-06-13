@@ -35,17 +35,21 @@ const PersonalAndPpeDetails = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
             </Box>
-            <Box marginBottom={3}>
+
+            <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Personal and PPE
               </Typography>
             </Box>
-            <Box marginBottom={4} borderBottom={1}>
-              <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
-              </Typography>
-            </Box>
-            <Grid container justify="flex-start">
+
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
               <Grid item md={6}>
                 {/* <p>PPE worn properly</p> */}
                 <FormControl

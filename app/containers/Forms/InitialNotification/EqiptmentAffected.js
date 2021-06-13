@@ -73,16 +73,17 @@ const EqiptmentAffected = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
             </Box>
-            <Typography variant="h5" gutterBottom>
-              Details of Equiptments Affected
-            </Typography>
-            <Grid container justify="flex-start">
-              <Box borderBottom={1} marginTop={6} marginBottom={3}>
-                <Typography variant="body2" gutterBottom>
+            <Box borderBottom={1} marginBottom={2}>
+              <Typography variant="h6" gutterBottom>
+                Details of Equiptments Affected
+              </Typography>
+            </Box>
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <Typography variant="body" component="p" gutterBottom>
                   Do you have details to share about the equiptment accected?
                 </Typography>
-              </Box>
-              <Grid item lg={12} md={6} sm={6}>
+
                 {radioDecide.map((value) => (
                   <FormControlLabel
                     value={value}
@@ -91,9 +92,7 @@ const EqiptmentAffected = () => {
                   />
                 ))}
               </Grid>
-            </Grid>
 
-            <Grid container spacing={3}>
               <Grid item md={6}>
                 {/* <p>Equiptment type</p> */}
                 <FormControl variant="outlined" className={classes.formControl}>

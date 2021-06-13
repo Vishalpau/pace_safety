@@ -71,35 +71,32 @@ const EnvironmentAffected = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
             </Box>
-            <Typography variant="h4" gutterBottom>
-              Environment Affected
-            </Typography>
+            <Box borderBottom={1} marginBottom={2}>
+              <Typography variant="h6" gutterBottom>
+                Environment Affected
+              </Typography>
+            </Box>
             <Grid container>
               <Grid item md={6}>
-                <div>
-                  <p>Where there any spills</p>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </div>
+                <p>Where there any spills</p>
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
               </Grid>
 
               <Grid item md={12}>
-                {/* <p>Details of spills</p> */}
-                <div>
-                  <TextField
-                    id="spills-details"
-                    variant="outlined"
-                    label="Details of spills"
-                    multiline
-                    rows="3"
-                    className={classes.fullWidth}
-                  />
-                </div>
+                <TextField
+                  id="spills-details"
+                  variant="outlined"
+                  label="Details of spills"
+                  multiline
+                  rows="3"
+                  className={classes.fullWidth}
+                />
               </Grid>
 
               <Grid item md={6}>

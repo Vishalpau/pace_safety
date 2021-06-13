@@ -17,10 +17,28 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    width: "100%",
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  fullWidth: {
+    width: "100%",
+    margin: ".5rem 0",
+  },
+  spacer: {
+    padding: ".75rem 0",
+  },
+}));
 
 const Details = () => {
   const reportedTo = [
@@ -42,6 +60,7 @@ const Details = () => {
   };
 
   const radioDecide = ["Yes", "No"];
+  const classes = useStyles();
   return (
     <Container>
       <Paper>
@@ -49,20 +68,25 @@ const Details = () => {
           <Box marginBottom={5}>
             <FormHeader selectedHeader={"Root cause analysis"} />
           </Box>
-          <Typography variant="h5" gutterBottom>
-            RCA details
-          </Typography>
-          <Box marginTop={3} marginBottom={4}>
-            <Typography variant="subtitle1" gutterBottom borderBottom={1}>
-              Incident number: nnnnnnn
+
+          <Box borderBottom={1} marginBottom={2}>
+            <Typography variant="h6" gutterBottom>
+              RCA details
             </Typography>
           </Box>
 
           <Grid container spacing={3}>
             <Grid item md={12}>
+              <Box>
+                <Typography variant="body2" gutterBottom>
+                  Incident number: nnnnnnnnnn
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item md={12}>
               {/* <h6> Incident Description </h6> */}
               <Typography variant="h6" gutterBottom>
-                Incident Description{" "}
+                Incident Description
               </Typography>
               <Typography variant="body">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi
@@ -71,19 +95,35 @@ const Details = () => {
                 repellendus eum dolore autem.
               </Typography>
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
-              <h6> Investigation start date</h6>
+            <Grid item md={6}>
+              <Typography component="p">Investigation start date</Typography>
               <p>date formate</p>
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
-              <h6> Investigation end date</h6>
+            <Grid item md={6}>
+              <Typography component="p">Investigation end date</Typography>
               <p>date formate</p>
             </Grid>
-            <Grid item lg={6} md={12} sm={12}>
-              <h6> RCA recommended</h6>
-              <p> to be clearified what is this</p>
+            <Grid item md={6}>
+              <Typography component="p">Level of Investigation</Typography>
+              <p> Value selected to be displayed</p>
             </Grid>
-            <Grid item lg={12} md={6} sm={6}>
+            <Grid item md={6}>
+              {/* <h6> RCA recommended</h6> */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                {/* <Typography varint="p">Project Name</Typography> */}
+                <InputLabel id="project-name-label">RCA recommended</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="RCA recommended"
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item md={6}>
               <p>Equiptment type</p>
 
               <FormControl>
@@ -100,7 +140,7 @@ const Details = () => {
               <p>if other describe</p>
               <TextField id="filled-basic" />
             </Grid>
-            <Grid item lg={12} md={6} sm={6}>
+            <Grid item md={6}>
               <p>Where there any release</p>
 
               <FormControl component="fieldset">
@@ -115,7 +155,7 @@ const Details = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={12} md={6} sm={6}>
+            <Grid item md={6}>
               <p>Where there any release</p>
 
               <FormControl component="fieldset">
@@ -130,7 +170,7 @@ const Details = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item lg={12} md={6} sm={6}>
+            <Grid item md={6}>
               <p>Where there any release</p>
 
               <FormControl component="fieldset">
@@ -147,16 +187,17 @@ const Details = () => {
             </Grid>
             <Grid>
               <p>
-                {" "}
                 Then investigation team to develop credble assumption and/or
                 hypthesis, continue with RCA process. Ensure this fact is
                 captured in investigation report that investigation is based on
-                some assumption.{" "}
+                some assumption.
               </p>
             </Grid>
-            <Button variant="contained" color="primary">
-              Submit
-            </Button>
+            <Grid item md={12}>
+              <Button variant="contained" color="primary">
+                Submit
+              </Button>
+            </Grid>
           </Grid>
           <Grid>
             <FormSideBar

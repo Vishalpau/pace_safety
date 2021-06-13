@@ -49,8 +49,9 @@ const EventDetails = () => {
           <Box marginBottom={5}>
             <FormHeader selectedHeader={"Investigation"} />
           </Box>
-          <Box marginBottom={3}>
-            <Typography variant="h5" gutterBottom>
+
+          <Box borderBottom={1} marginBottom={2}>
+            <Typography variant="h6" gutterBottom>
               Events Details
             </Typography>
           </Box>

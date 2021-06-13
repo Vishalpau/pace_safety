@@ -44,18 +44,21 @@ const ActivityDetails = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
             </Box>
-            <Box marginBottom={4}>
-              <Typography variant="h5" gutterBottom>
+
+            <Box borderBottom={1} marginBottom={2}>
+              <Typography variant="h6" gutterBottom>
                 Activity Details
               </Typography>
             </Box>
 
-            <Box marginBottom={4} borderBottom={1}>
-              <Typography variant="p" gutterBottom>
-                Incident number: nnnnnnnnnn
-              </Typography>
-            </Box>
-            <Grid container justify="flex-start">
+            <Grid container spacing={3}>
+              <Grid item md={4}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
               <Grid item md={12}>
                 <FormControl
                   component="fieldset"

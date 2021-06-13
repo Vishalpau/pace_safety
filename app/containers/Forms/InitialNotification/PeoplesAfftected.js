@@ -80,14 +80,14 @@ const PeoplesAffected = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
             </Box>
-            <Box marginBottom={3}>
-              <Typography variant="h5" gutterBottom>
+            <Box borderBottom={1} marginBottom={2}>
+              <Typography variant="h6" gutterBottom>
                 Details of Persons Affected
               </Typography>
             </Box>
             <Grid container spacing={3}>
               <Grid item lg={12} md={6} sm={6}>
-                <Typography variant="h6">
+                <Typography variant="body2">
                   Do you have details of individual effected?
                 </Typography>
                 {/* <p>Do you have details of individual effected?</p>   */}
@@ -159,7 +159,7 @@ const PeoplesAffected = () => {
               <Grid item md={12}>
                 <div className={classes.spacer}>
                   {/* <p>Was that person taken to medical care?</p> */}
-                  <Typography variant="h6">
+                  <Typography variant="body2">
                     Was that person taken to medical care?
                   </Typography>
 
@@ -210,7 +210,7 @@ const PeoplesAffected = () => {
                   className={classes.fullWidth}
                 />
               </Grid>
-              <Box marginTop={4}>
+              <Grid item md={6}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -218,7 +218,7 @@ const PeoplesAffected = () => {
                 >
                   Next
                 </Button>
-              </Box>
+              </Grid>
             </Grid>
           </Box>
           <Grid>

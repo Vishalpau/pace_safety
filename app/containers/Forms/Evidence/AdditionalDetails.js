@@ -41,28 +41,32 @@ const AdditionalDetails = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
             </Box>
-            <Box marginBottom={4}>
+
+            <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Additional Details
               </Typography>
             </Box>
-            <Box marginBottom={4} borderBottom={1}>
-              <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
-              </Typography>
-            </Box>
-            <Box marginBottom={3}>
-              <Typography variant="h6" gutterBottom>
-                Incident Description
-              </Typography>
-              <Typography variant="p" gutterBottom>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
-                debitis saepe corporis quo inventore similique fugiat voluptatem
-                alias et quae temporibus necessitatibus ut, magni ea quisquam
-                vel, officiis cupiditate aperiam.
-              </Typography>
-            </Box>
-            <Grid container>
+
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item md={12}>
+                <Typography variant="h6" gutterBottom>
+                  Incident Description
+                </Typography>
+                <Typography variant="body">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Nobis debitis saepe corporis quo inventore similique fugiat
+                  voluptatem alias et quae temporibus necessitatibus ut, magni
+                  ea quisquam vel, officiis cupiditate aperiam.
+                </Typography>
+              </Grid>
               <Grid item md={12}>
                 <FormControl className={classes.formControl}>
                   <TextField

@@ -66,9 +66,11 @@ const IncidentDetails = () => {
           <Box marginBottom={5}>
             <FormHeader selectedHeader={"Initial notification"} />
           </Box>
-          <Typography variant="h4" gutterBottom>
-            Initial Notification
-          </Typography>
+          <Box borderBottom={1} marginBottom={2}>
+            <Typography variant="h6" gutterBottom>
+              Initial Notification
+            </Typography>
+          </Box>
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
               <Grid item md={6}>

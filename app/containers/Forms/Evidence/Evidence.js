@@ -37,52 +37,62 @@ const Evidence = () => {
             <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
             </Box>
-            <Box marginBottom={4}>
+
+            <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Evidences
               </Typography>
             </Box>
 
-            <Box marginBottom={4} borderBottom={1}>
-              <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
-              </Typography>
-            </Box>
-
-            <Box marginBottom={3}>
-              <Typography variant="h6" gutterBottom>
-                Incident Description
-              </Typography>
-              <Typography variant="p" gutterBottom>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
-                debitis saepe corporis quo inventore similique fugiat voluptatem
-                alias et quae temporibus necessitatibus ut, magni ea quisquam
-                vel, officiis cupiditate aperiam.
-              </Typography>
-            </Box>
-            <Grid container justify="flex-start">
-              <Grid item md={3}>
-                <p>Evidance type</p>
-                <p>Evidance type 1</p>
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item md={12}>
+                <Typography variant="h6" gutterBottom>
+                  Incident Description
+                </Typography>
+                <Typography variant="body" gutterBottom>
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Nobis debitis saepe corporis quo inventore similique fugiat
+                  voluptatem alias et quae temporibus necessitatibus ut, magni
+                  ea quisquam vel, officiis cupiditate aperiam.
+                </Typography>
+              </Grid>
+              <Grid item md={2}>
+                <Box marginBottom={2}>
+                  <Typography variant="body">Evidence Type</Typography>
+                </Box>
+                <Typography variant="body2">Evidence Type 1</Typography>
               </Grid>
 
-              <Grid item md={3}>
-                <p>Aviliable</p>
+              <Grid item md={3} justify="center">
+                <Box marginBottom={2}>
+                  <Typography variant="body">Available</Typography>
+                </Box>
 
-                <FormControl>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
               </Grid>
-              <Grid item md={3}>
-                <p>Comments</p>
+              <Grid item md={4}>
+                <Box marginBottom={2}>
+                  <Typography variant="body">Comments</Typography>
+                </Box>
 
-                <TextField id="filled-basic" />
+                <TextField
+                  id="filled-basic"
+                  variant="outlined"
+                  label="Type...."
+                />
               </Grid>
               <Grid item md={3}>
                 <p>Attachments</p>

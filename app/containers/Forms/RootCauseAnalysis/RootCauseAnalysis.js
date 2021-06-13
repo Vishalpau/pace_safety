@@ -60,15 +60,20 @@ const RootCauseAnalysis = () => {
           <Box marginBottom={5}>
             <FormHeader selectedHeader={"Root cause analysis"} />
           </Box>
-          <Typography variant="h5" gutterBottom>
-            Root couse Analysis
-          </Typography>
-          <Box marginTop={3} marginBottom={4}>
-            <Typography variant="subtitle1" gutterBottom borderBottom={1}>
-              Incident number: nnnnnnn
+          <Box borderBottom={1} marginBottom={2}>
+            <Typography variant="h6" gutterBottom>
+              Root couse Analysis
             </Typography>
           </Box>
+
           <Grid container spacing={3}>
+            <Grid item md={12}>
+              <Box>
+                <Typography variant="body2" gutterBottom>
+                  Incident number: nnnnnnnnnn
+                </Typography>
+              </Box>
+            </Grid>
             <Grid item md={12}>
               {/* <h6> Incident Description </h6> */}
               <Typography variant="h6" gutterBottom>
@@ -192,9 +197,11 @@ const RootCauseAnalysis = () => {
                 rows="3"
               />
             </Grid>
-            <Button variant="contained" color="primary">
-              Submit
-            </Button>
+            <Grid item md={12}>
+              <Button variant="contained" color="primary">
+                Submit
+              </Button>
+            </Grid>
           </Grid>
           <Grid>
             <FormSideBar
