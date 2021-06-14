@@ -200,9 +200,20 @@ const RootCauseAnalysis = () => {
                 />
               </Grid>
               <Grid item md={12}>
-                <Button variant="contained" color="primary">
-                  Submit
-                </Button>
+              <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/why-analysis/"
+                  >
+                    Next
+                  </Button>
               </Grid>
             </Grid>
             <Grid item={3}>

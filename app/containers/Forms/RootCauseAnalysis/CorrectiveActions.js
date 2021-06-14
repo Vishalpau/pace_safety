@@ -118,10 +118,17 @@ const CorrectiveAction = () => {
                   />
                 </Grid>
                 <Grid item md={12}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+                  >
+                    Previous
+                  </Button>
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
                   >
                     Next
                   </Button>

@@ -175,7 +175,18 @@ const HazardiousCondition = () => {
               </Grid>
               <Grid item md={12}>
                 <Box marginTop={3}>
-                  <Button variant="contained" color="primary">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+                  >
                     Next
                   </Button>
                 </Box>

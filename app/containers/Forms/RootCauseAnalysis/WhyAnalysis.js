@@ -156,9 +156,20 @@ const WhyAnalysis = () => {
                 </button>
               </Grid>
               <Grid item md={12}>
-                <Button variant="contained" color="primary">
-                  Next
-                </Button>
+              <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/summary/summary/"
+                  >
+                    Submit
+                  </Button>
               </Grid>
             </Grid>
             <Grid item md={3}>

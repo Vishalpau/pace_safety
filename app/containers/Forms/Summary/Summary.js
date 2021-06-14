@@ -261,12 +261,12 @@ const Summary = () => {
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
-                  <Button
+                <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/lession-learned/lession-learned/"
                   >
-                    Next
+                    Submit
                   </Button>
                 </Grid>
               </Grid>
