@@ -266,7 +266,7 @@ function Application(props) {
         />
 
         <Route
-          path="/app/incident-management/registration/root-cause-analysis/details/"
+          path= "/app/incident-management/registration/root-cause-analysis/details/"
           component={Details}
         />
         <Route
