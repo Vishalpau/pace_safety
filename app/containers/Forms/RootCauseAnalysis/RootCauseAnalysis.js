@@ -21,17 +21,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
 }));
-
 const RootCauseAnalysis = () => {
   const reportedTo = [
     "Internal Leadership",
@@ -46,11 +43,9 @@ const RootCauseAnalysis = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   return (
@@ -179,7 +174,6 @@ const RootCauseAnalysis = () => {
               </Grid>
               <Grid item md={12}>
                 <p>Where there any spills</p>
-
                 {radioDecide.map((value) => (
                   <FormControlLabel
                     value={value}
@@ -228,5 +222,4 @@ const RootCauseAnalysis = () => {
     </Container>
   );
 };
-
 export default RootCauseAnalysis;
