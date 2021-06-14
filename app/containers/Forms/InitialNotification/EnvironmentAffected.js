@@ -76,144 +76,148 @@ const EnvironmentAffected = () => {
                 Environment Affected
               </Typography>
             </Box>
-            <Grid container>
-              <Grid item md={6}>
-                <p>Where there any spills</p>
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </Grid>
+            <Grid container spacing={3}>
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={6}>
+                  <p>Where there any spills</p>
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </Grid>
 
-              <Grid item md={12}>
-                <TextField
-                  id="spills-details"
-                  variant="outlined"
-                  label="Details of spills"
-                  multiline
-                  rows="3"
-                  className={classes.fullWidth}
+                <Grid item md={12}>
+                  <TextField
+                    id="spills-details"
+                    variant="outlined"
+                    label="Details of spills"
+                    multiline
+                    rows="3"
+                    className={classes.fullWidth}
+                  />
+                </Grid>
+
+                <Grid item md={6}>
+                  <div className={classes.spacer}>
+                    <p className={classes.customLabel}>
+                      Where there any release
+                    </p>
+
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </div>
+                </Grid>
+
+                <Grid item md={12}>
+                  <div>
+                    {/* <p>Details of release</p> */}
+                    <TextField
+                      id="release-details"
+                      multiline
+                      variant="outlined"
+                      rows="3"
+                      label="Details of release"
+                      className={classes.fullWidth}
+                    />
+                  </div>
+                </Grid>
+
+                <Grid itemmd={6}>
+                  <div className={classes.spacer}>
+                    <p className={classes.customLabel}>
+                      Where there any impact on wildlife
+                    </p>
+
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </div>
+                </Grid>
+
+                <Grid item md={12}>
+                  <div>
+                    {/* <p>Details of spills</p> */}
+                    <TextField
+                      id="wildlife-details"
+                      multiline
+                      rows="3"
+                      variant="outlined"
+                      label="Details of spills"
+                      className={classes.fullWidth}
+                    />
+                  </div>
+                </Grid>
+
+                <Grid item md={6}>
+                  <div className={classes.spacer}>
+                    <p className={classes.customLabel}>
+                      Where there any waterbody affected
+                    </p>
+
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </div>
+                </Grid>
+
+                <Grid item md={12}>
+                  <div>
+                    {/* <p>Details of spills</p> */}
+                    <TextField
+                      id="waterbody-details"
+                      multiline
+                      rows="3"
+                      variant="outlined"
+                      label="Details of spills"
+                      className={classes.fullWidth}
+                    />
+                  </div>
+                </Grid>
+
+                <Grid item md={12}>
+                  <div>
+                    {/* <p>Comment if any</p> */}
+                    <TextField
+                      id="comments"
+                      multiline
+                      variant="outlined"
+                      rows="3"
+                      label="Comment if any"
+                      className={classes.fullWidth}
+                    />
+                  </div>
+                </Grid>
+
+                <Box marginTop={4}>
+                  <Button size="medium" variant="contained" color="primary">
+                    Next
+                  </Button>
+                </Box>
+              </Grid>
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={INITIAL_NOTIFICATION_FORM}
+                  selectedItem={"Environment affected"}
                 />
               </Grid>
-
-              <Grid item md={6}>
-                <div className={classes.spacer}>
-                  <p className={classes.customLabel}>Where there any release</p>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </div>
-              </Grid>
-
-              <Grid item md={12}>
-                <div>
-                  {/* <p>Details of release</p> */}
-                  <TextField
-                    id="release-details"
-                    multiline
-                    variant="outlined"
-                    rows="3"
-                    label="Details of release"
-                    className={classes.fullWidth}
-                  />
-                </div>
-              </Grid>
-
-              <Grid itemmd={6}>
-                <div className={classes.spacer}>
-                  <p className={classes.customLabel}>
-                    Where there any impact on wildlife
-                  </p>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </div>
-              </Grid>
-
-              <Grid item md={12}>
-                <div>
-                  {/* <p>Details of spills</p> */}
-                  <TextField
-                    id="wildlife-details"
-                    multiline
-                    rows="3"
-                    variant="outlined"
-                    label="Details of spills"
-                    className={classes.fullWidth}
-                  />
-                </div>
-              </Grid>
-
-              <Grid item md={6}>
-                <div className={classes.spacer}>
-                  <p className={classes.customLabel}>
-                    Where there any waterbody affected
-                  </p>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </div>
-              </Grid>
-
-              <Grid item md={12}>
-                <div>
-                  {/* <p>Details of spills</p> */}
-                  <TextField
-                    id="waterbody-details"
-                    multiline
-                    rows="3"
-                    variant="outlined"
-                    label="Details of spills"
-                    className={classes.fullWidth}
-                  />
-                </div>
-              </Grid>
-
-              <Grid item md={12}>
-                <div>
-                  {/* <p>Comment if any</p> */}
-                  <TextField
-                    id="comments"
-                    multiline
-                    variant="outlined"
-                    rows="3"
-                    label="Comment if any"
-                    className={classes.fullWidth}
-                  />
-                </div>
-              </Grid>
-
-              <Box marginTop={4}>
-                <Button size="medium" variant="contained" color="primary">
-                  Next
-                </Button>
-              </Box>
             </Grid>
           </Box>
-          <Grid>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Environment affected"}
-            />
-          </Grid>
         </Paper>
       </Container>
     </div>

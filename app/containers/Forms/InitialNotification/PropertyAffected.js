@@ -86,98 +86,108 @@ const PropertyAffected = () => {
               </Typography>
             </Box>
             <Grid container spacing={3}>
-              <Grid item lg={12} md={6} sm={6}>
-                <Typography variant="body2">
-                  Do you have details to share about the properties affected?
-                </Typography>
-                {/* <p>Do you have details of individual effected?</p>   */}
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginTop={2} marginBottom={2}>
-                  {/* <h4>Details of people affected</h4> */}
-                  <Typography variant="h6">
-                    Details of properties affected
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={12}>
+                  <Typography variant="body2">
+                    Do you have details to share about the properties affected?
                   </Typography>
-                </Box>
-              </Grid>
+                  {/* <p>Do you have details of individual effected?</p>   */}
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </Grid>
 
-              <Grid item md={6}>
-                {/* <p>person type</p> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="person-type-label">Property type</InputLabel>
-                  <Select
-                    labelId="person-type-label"
-                    id="person-type"
-                    label="Person type"
+                <Grid item md={12}>
+                  <Box marginTop={2} marginBottom={2}>
+                    {/* <h4>Details of people affected</h4> */}
+                    <Typography variant="h6">
+                      Details of properties affected
+                    </Typography>
+                  </Box>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>person type</p> */}
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
                   >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+                    <InputLabel id="person-type-label">
+                      Property type
+                    </InputLabel>
+                    <Select
+                      labelId="person-type-label"
+                      id="person-type"
+                      label="Person type"
+                    >
+                      {selectValues.map((selectValues) => (
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-              <Grid item md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="dep-label">if others, describe</InputLabel>
-                  <Select labelId="dep-label" id="dep" label="Department">
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+                <Grid item md={6}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="dep-label">if others, describe</InputLabel>
+                    <Select labelId="dep-label" id="dep" label="Department">
+                      {selectValues.map((selectValues) => (
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-              <Grid item md={12}>
-                {/* <p>Name of people affected</p> */}
-                <TextField
-                  id="name-affected"
-                  variant="outlined"
-                  label="Describe the damage"
-                  className={classes.formControl}
+                <Grid item md={12}>
+                  {/* <p>Name of people affected</p> */}
+                  <TextField
+                    id="name-affected"
+                    variant="outlined"
+                    label="Describe the damage"
+                    className={classes.formControl}
+                  />
+                </Grid>
+
+                <Grid item md={12}>
+                  <button className={classes.textButton}>
+                    <PersonAddIcon /> Add details of another person affected
+                  </button>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Comments</p> */}
+                  <TextField
+                    id="comments"
+                    multiline
+                    rows="3"
+                    variant="outlined"
+                    label="Describe any actions taken"
+                    className={classes.fullWidth}
+                  />
+                </Grid>
+                <Grid item md={6}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="#contained-buttons"
+                  >
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={INITIAL_NOTIFICATION_FORM}
+                  selectedItem={"Property affected"}
                 />
               </Grid>
-
-              <Grid item md={12}>
-                <button className={classes.textButton}>
-                  <PersonAddIcon /> Add details of another person affected
-                </button>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Comments</p> */}
-                <TextField
-                  id="comments"
-                  multiline
-                  rows="3"
-                  variant="outlined"
-                  label="Describe any actions taken"
-                  className={classes.fullWidth}
-                />
-              </Grid>
-              <Grid item md={6}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  href="#contained-buttons"
-                >
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid>
-              <FormSideBar
-                listOfItems={INITIAL_NOTIFICATION_FORM}
-                selectedItem={"Property affected"}
-              />
             </Grid>
           </Box>
         </Paper>

@@ -61,119 +61,147 @@ const LessionLearned = () => {
           </Box>
 
           <Paper>
-            <Grid container justify="flex-start" spacing={3}>
-              <Grid item md={6}>
-                <Typography varint="p">Incident Number</Typography>
+            <Grid container spacing={3}>
+              <Grid container item md={9} justify="flex-start" spacing={3}>
+                <Grid item md={6}>
+                  <Typography varint="p">Incident Number</Typography>
 
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <p>nnnnnnnnn</p>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                <Typography varint="p">Incident on</Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <p>Date and time</p>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                <Typography varint="p">Repoted on</Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <p>Date and tiem</p>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                <Typography varint="p">Reported by</Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <p>Time format</p>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography varint="p">Incident Type</Typography>
-                <FormControl>
-                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                  <Typography varint="p">Near miss</Typography>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography varint="p">Incidnet Title</Typography>
-                <FormControl>
-                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                  <Typography varint="p">
-                    Lorem Ipsum is simply dummy text
-                  </Typography>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography varint="p">Incident description</Typography>
-                <FormControl>
-                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                  <Typography varint="p">
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a
-                    type specimen book. It has survived not only five centuries
-                  </Typography>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography varint="p">Incident Location</Typography>
-                <FormControl>
-                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                  <Typography varint="p">
-                    Lorem Ipsum is simply dummy text
-                  </Typography>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography variant="h6" gutterBottom spacing={2}>
-                  Key Learnings
-                </Typography>
-                {/*<Typography varint="p">Team/Department</Typography>*/}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="Team/Department">Team/Department</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Key learnings"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <TextField
-                    id="outlined-search"
-                    label="Team/Department Learnings"
+                  <FormControl
                     variant="outlined"
-                    rows="3"
-                    multiline
-                  />
-                </FormControl>
+                    className={classes.formControl}
+                  >
+                    <p>nnnnnnnnn</p>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  <Typography varint="p">Incident on</Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <p>Date and time</p>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  <Typography varint="p">Repoted on</Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <p>Date and tiem</p>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  <Typography varint="p">Reported by</Typography>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <p>Time format</p>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  <Typography varint="p">Incident Type</Typography>
+                  <FormControl>
+                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                    <Typography varint="p">Near miss</Typography>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  <Typography varint="p">Incidnet Title</Typography>
+                  <FormControl>
+                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                    <Typography varint="p">
+                      Lorem Ipsum is simply dummy text
+                    </Typography>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  <Typography varint="p">Incident description</Typography>
+                  <FormControl>
+                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                    <Typography varint="p">
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been the industry's
+                      standard dummy text ever since the 1500s, when an unknown
+                      printer took a galley of type and scrambled it to make a
+                      type specimen book. It has survived not only five
+                      centuries
+                    </Typography>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  <Typography varint="p">Incident Location</Typography>
+                  <FormControl>
+                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                    <Typography varint="p">
+                      Lorem Ipsum is simply dummy text
+                    </Typography>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  <Typography variant="h6" gutterBottom spacing={2}>
+                    Key Learnings
+                  </Typography>
+                  {/*<Typography varint="p">Team/Department</Typography>*/}
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="Team/Department">
+                      Team/Department
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Key learnings"
+                    >
+                      {selectValues.map((selectValues) => (
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <TextField
+                      id="outlined-search"
+                      label="Team/Department Learnings"
+                      variant="outlined"
+                      rows="3"
+                      multiline
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item md={12}>
+                  <Box marginTop={4}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      href="#contained-buttons"
+                    >
+                      Next
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid item md={3}>
+                Sidebar
               </Grid>
             </Grid>
-            <Box marginTop={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                href="#contained-buttons"
-              >
-                Next
-              </Button>
-            </Box>
           </Paper>
         </Box>
       </Container>

@@ -50,173 +50,174 @@ const ActivityDetails = () => {
                 Activity Details
               </Typography>
             </Box>
-
             <Grid container spacing={3}>
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
-                  </Typography>
-                </Box>
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={4}>
+                  <Box>
+                    <Typography variant="body2" gutterBottom>
+                      Incident number: nnnnnnnnnn
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item md={12}>
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Did the job require work permit?
+                    </FormLabel>
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>If yes ,was a permit complted prior of the job?</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      If yes ,was a permit complted prior of the job?
+                    </FormLabel>
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Was per-job safety discussed head?</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was per-job safety discussed head?
+                    </FormLabel>
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Was JHA executed for the task?</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was JHA executed for the task?
+                    </FormLabel>
+
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Was FLA executed for the task?</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was FLA executed for the task?
+                    </FormLabel>
+
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Did pre-planning identified the hazard?</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Did pre-planning identified the hazard?
+                    </FormLabel>
+
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>was per-jon planning enhanced the post-event?</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      was per-jon planning enhanced the post-event?
+                    </FormLabel>
+
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+                <Grid item md={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="#contained-buttons"
+                  >
+                    Next
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item md={12}>
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Did the job require work permit?
-                  </FormLabel>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>If yes ,was a permit complted prior of the job?</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    If yes ,was a permit complted prior of the job?
-                  </FormLabel>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Was per-job safety discussed head?</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Was per-job safety discussed head?
-                  </FormLabel>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Was JHA executed for the task?</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Was JHA executed for the task?
-                  </FormLabel>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Was FLA executed for the task?</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Was FLA executed for the task?
-                  </FormLabel>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Did pre-planning identified the hazard?</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Did pre-planning identified the hazard?
-                  </FormLabel>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>was per-jon planning enhanced the post-event?</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    was per-jon planning enhanced the post-event?
-                  </FormLabel>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={EVIDENCE_FORM}
+                  selectedItem={"Activity detail"}
+                />
               </Grid>
             </Grid>
-            <Box marginTop={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                href="#contained-buttons"
-              >
-                Next
-              </Button>
-            </Box>
           </Box>
-          <Grid>
-            <FormSideBar
-              listOfItems={EVIDENCE_FORM}
-              selectedItem={"Activity detail"}
-            />
-          </Grid>
         </Paper>
       </Container>
     </div>

@@ -100,189 +100,194 @@ const ReportingAndNotification = () => {
               </Typography>
             </Box>
             <Grid container spacing={3}>
-              <Grid item lg={12} md={6} sm={6}>
-                <p>Reportable to</p>
+              <Grid container item md={9} spacing={3}>
+                <Grid item lg={12} md={6} sm={6}>
+                  <p>Reportable to</p>
 
-                <FormControl component="fieldset">
-                  <RadioGroup aria-label="gender">
-                    {reportedTo.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
+                  <FormControl component="fieldset">
+                    <RadioGroup aria-label="gender">
+                      {reportedTo.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
 
-              <Grid item lg={12} md={6} sm={6}>
-                <p>Notification to be sent</p>
+                <Grid item lg={12} md={6} sm={6}>
+                  <p>Notification to be sent</p>
 
-                <FormControl component="fieldset">
-                  <RadioGroup aria-label="gender">
-                    {notificationSent.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item lg={12} justify="flex-start">
-                {/* <p>Initial Evidences</p> */}
-                <Box marginTop={3} marginBottom={4}>
-                  <Typography variant="h6" gutterBottom>
-                    Initial Evidences
-                  </Typography>
-                </Box>
+                  <FormControl component="fieldset">
+                    <RadioGroup aria-label="gender">
+                      {notificationSent.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item lg={12} justify="flex-start">
+                  {/* <p>Initial Evidences</p> */}
+                  <Box marginTop={3} marginBottom={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Initial Evidences
+                    </Typography>
+                  </Box>
 
-                <MaterialDropZone
-                  files={files}
-                  showPreviews
-                  maxSize={5000000}
-                  filesLimit={5}
-                  text="Drag and drop file(s) here or click button bellow"
-                  showButton
-                />
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Supervisor name</p> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="supervisorName-label">
-                    Supervisor name
-                  </InputLabel>
-                  <Select
-                    labelId="supervisorName-label"
-                    id="supervisorName"
-                    label="Supervisor name"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Others Name</p> */}
-                <TextField
-                  id="othersName"
-                  label="Others Name"
-                  className={classes.formControl}
-                />
-              </Grid>
-
-              <Grid item md={6}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    className={classes.formControl}
-                    id="date-picker-dialog"
-                    format="MM/dd/yyyy"
-                    required
-                    label="Reporting Date"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    KeyboardButtonProps={{
-                      "aria-label": "change date",
-                    }}
+                  <MaterialDropZone
+                    files={files}
+                    showPreviews
+                    maxSize={5000000}
+                    filesLimit={5}
+                    text="Drag and drop file(s) here or click button bellow"
+                    showButton
                   />
-                </MuiPickersUtilsProvider>
-              </Grid>
+                </Grid>
 
-              <Grid item md={6}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <TimePicker
-                    label="Reporting Time"
+                <Grid item md={6}>
+                  {/* <p>Supervisor name</p> */}
+                  <FormControl
+                    variant="outlined"
                     className={classes.formControl}
-                    mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
-                    placeholder="08:00 AM"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    required
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton>
-                            <Icon>access_time</Icon>
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Reported by</p> */}
-                <FormControl
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="reportedBy-label">Reported By</InputLabel>
-                  <Select
-                    labelId="reportedBy-label"
-                    id="reportedBy"
-                    label="Reported By"
                   >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+                    <InputLabel id="supervisorName-label">
+                      Supervisor name
+                    </InputLabel>
+                    <Select
+                      labelId="supervisorName-label"
+                      id="supervisorName"
+                      label="Supervisor name"
+                    >
+                      {selectValues.map((selectValues) => (
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-              <Grid item md={6}>
-                {/* <p>Others Name</p> */}
-                <TextField
-                  id="others"
-                  variant="outlined"
-                  label="Others"
-                  className={classes.formControl}
+                <Grid item md={6}>
+                  {/* <p>Others Name</p> */}
+                  <TextField
+                    id="othersName"
+                    label="Others Name"
+                    className={classes.formControl}
+                  />
+                </Grid>
+
+                <Grid item md={6}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      className={classes.formControl}
+                      id="date-picker-dialog"
+                      format="MM/dd/yyyy"
+                      required
+                      label="Reporting Date"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                    />
+                  </MuiPickersUtilsProvider>
+                </Grid>
+
+                <Grid item md={6}>
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <TimePicker
+                      label="Reporting Time"
+                      className={classes.formControl}
+                      mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
+                      placeholder="08:00 AM"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      required
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton>
+                              <Icon>access_time</Icon>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </MuiPickersUtilsProvider>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Reported by</p> */}
+                  <FormControl
+                    variant="outlined"
+                    required
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="reportedBy-label">Reported By</InputLabel>
+                    <Select
+                      labelId="reportedBy-label"
+                      id="reportedBy"
+                      label="Reported By"
+                    >
+                      {selectValues.map((selectValues) => (
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Others Name</p> */}
+                  <TextField
+                    id="others"
+                    variant="outlined"
+                    label="Others"
+                    className={classes.formControl}
+                  />
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Resaon for reporting later than 4 hours</p> */}
+                  <TextField
+                    id="reason"
+                    variant="outlined"
+                    label="Resaon for reporting later than 4 hours"
+                    multiline
+                    rows="4"
+                    className={classes.fullWidth}
+                  />
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Additional details if any</p> */}
+                  <TextField
+                    id="additionalDetails"
+                    variant="outlined"
+                    label="Additional details if any"
+                    multiline
+                    rows="4"
+                    className={classes.fullWidth}
+                  />
+                </Grid>
+
+                <Grid item md={6}>
+                  <Button variant="contained" color="primary">
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={INITIAL_NOTIFICATION_FORM}
+                  selectedItem={"Reporting and notification"}
                 />
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Resaon for reporting later than 4 hours</p> */}
-                <TextField
-                  id="reason"
-                  variant="outlined"
-                  label="Resaon for reporting later than 4 hours"
-                  multiline
-                  rows="4"
-                  className={classes.fullWidth}
-                />
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Additional details if any</p> */}
-                <TextField
-                  id="additionalDetails"
-                  variant="outlined"
-                  label="Additional details if any"
-                  multiline
-                  rows="4"
-                  className={classes.fullWidth}
-                />
-              </Grid>
-
-              <Grid item md={6}>
-                <Button variant="contained" color="primary">
-                  Next
-                </Button>
               </Grid>
             </Grid>
           </Box>
-          <Grid>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Reporting and notification"}
-            />
-          </Grid>
         </Paper>
       </Container>
     </div>

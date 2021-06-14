@@ -58,136 +58,138 @@ const HazardiousCondition = () => {
             </Typography>
           </Box>
           <Grid container spacing={3}>
-            <Grid item md={4}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Incident number: nnnnnnnnnn
+            <Grid container item md={9} spacing={3}>
+              <Grid item md={4}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item md={8}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    RCA Method: PACE Cuase Analysis
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item md={12}>
+                <Typography variant="h6" gutterBottom>
+                  Immediate Causes
                 </Typography>
-              </Box>
-            </Grid>
-            <Grid item md={8}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  RCA Method: PACE Cuase Analysis
+
+                <Typography variant="body" gutterBottom>
+                  Hazardous conditions
                 </Typography>
-              </Box>
-            </Grid>
+              </Grid>
 
-            <Grid item md={12}>
-              <Typography variant="h6" gutterBottom>
-                Immediate Causes
-              </Typography>
+              <Grid item md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Warning System</FormLabel>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox name="option1" />}
+                      label="option1"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="option2" />}
+                      label="option2"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="antoine" />}
+                      label="..."
+                    />
+                  </FormGroup>
+                </FormControl>
+              </Grid>
 
-              <Typography variant="body" gutterBottom>
-                Hazardous conditions
-              </Typography>
-            </Grid>
+              <Grid item md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend"> Energy Types</FormLabel>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox name="option1" />}
+                      label="option1"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="option2" />}
+                      label="option2"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="antoine" />}
+                      label="..."
+                    />
+                  </FormGroup>
+                </FormControl>
+              </Grid>
 
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Warning System</FormLabel>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox name="option1" />}
-                    label="option1"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="option2" />}
-                    label="option2"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="antoine" />}
-                    label="..."
-                  />
-                </FormGroup>
-              </FormControl>
+              <Grid item md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend"> Tools</FormLabel>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox name="option1" />}
+                      label="option1"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="option2" />}
+                      label="option2"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="antoine" />}
+                      label="..."
+                    />
+                  </FormGroup>
+                </FormControl>
+              </Grid>
+              <Grid item md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend"> Saftey Items</FormLabel>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox name="option1" />}
+                      label="option1"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="option2" />}
+                      label="option2"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox name="antoine" />}
+                      label="..."
+                    />
+                  </FormGroup>
+                </FormControl>
+              </Grid>
+              <Grid item md={12}>
+                {/* <p>others</p> */}
+                <TextField
+                  variant="outlined"
+                  id="filled-basic"
+                  label="Others"
+                  multiline
+                  rows={3}
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid item md={12}>
+                <Box marginTop={3}>
+                  <Button variant="contained" color="primary">
+                    Next
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend"> Energy Types</FormLabel>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox name="option1" />}
-                    label="option1"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="option2" />}
-                    label="option2"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="antoine" />}
-                    label="..."
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend"> Tools</FormLabel>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox name="option1" />}
-                    label="option1"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="option2" />}
-                    label="option2"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="antoine" />}
-                    label="..."
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend"> Saftey Items</FormLabel>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox name="option1" />}
-                    label="option1"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="option2" />}
-                    label="option2"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="antoine" />}
-                    label="..."
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={12}>
-              {/* <p>others</p> */}
-              <TextField
-                variant="outlined"
-                id="filled-basic"
-                label="Others"
-                multiline
-                rows={3}
-                className={classes.formControl}
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Hazardious conditions"}
               />
-            </Grid>
-            <Grid item md={12}>
-              <Box marginTop={3}>
-                <Button variant="contained" color="primary">
-                  Next
-                </Button>
-              </Box>
             </Grid>
           </Grid>
         </Box>
       </Paper>
-      <Grid>
-        <FormSideBar
-          listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-          selectedItem={"Hazardious conditions"}
-        />
-      </Grid>
     </Container>
   );
 };

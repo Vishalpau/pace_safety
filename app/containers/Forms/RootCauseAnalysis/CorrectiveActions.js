@@ -76,63 +76,64 @@ const CorrectiveAction = () => {
                 Corrective Actions
               </Typography>
             </Box>
-
             <Grid container spacing={3}>
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
-                  </Typography>
-                </Box>
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={4}>
+                  <Box>
+                    <Typography variant="body2" gutterBottom>
+                      Incident number: nnnnnnnnnn
+                    </Typography>
+                  </Box>
+                </Grid>
+
+                <Grid item md={8}>
+                  <Box>
+                    <Typography variant="body2" gutterBottom>
+                      RCA Method: PACE Cause Analysis
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item md={12}>
+                  <Typography variant="h6">Management Control</Typography>
+                </Grid>
+                <Grid item md={12}>
+                  <FormControl component="fieldset">
+                    {checkBox.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                      />
+                    ))}
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  <TextField
+                    id="filled-basic"
+                    variant="outlined"
+                    multiline
+                    rows={3}
+                    label="Details the region to support above"
+                    className={classes.formControl}
+                  />
+                </Grid>
+                <Grid item md={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="#contained-buttons"
+                  >
+                    Next
+                  </Button>
+                </Grid>
               </Grid>
 
-              <Grid item md={8}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    RCA Method: PACE Cause Analysis
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item md={12}>
-                <Typography variant="h6">Management Control</Typography>
-              </Grid>
-              <Grid item md={12}>
-                <FormControl component="fieldset">
-                  {checkBox.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                <TextField
-                  id="filled-basic"
-                  variant="outlined"
-                  multiline
-                  rows={3}
-                  label="Details the region to support above"
-                  className={classes.formControl}
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                  selectedItem={"Corrective action"}
                 />
               </Grid>
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  href="#contained-buttons"
-                >
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-
-            <Grid>
-              <FormSideBar
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Corrective action"}
-              />
             </Grid>
           </Box>
         </Paper>

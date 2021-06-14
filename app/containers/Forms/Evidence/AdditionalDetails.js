@@ -47,96 +47,98 @@ const AdditionalDetails = () => {
                 Additional Details
               </Typography>
             </Box>
-
             <Grid container spacing={3}>
-              <Grid item md={12}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={12}>
+                  <Box>
+                    <Typography variant="body2" gutterBottom>
+                      Incident number: nnnnnnnnnn
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item md={12}>
+                  <Typography variant="h6" gutterBottom>
+                    Incident Description
                   </Typography>
-                </Box>
+                  <Typography variant="body">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    Nobis debitis saepe corporis quo inventore similique fugiat
+                    voluptatem alias et quae temporibus necessitatibus ut, magni
+                    ea quisquam vel, officiis cupiditate aperiam.
+                  </Typography>
+                </Grid>
+                <Grid item md={12}>
+                  <FormControl className={classes.formControl}>
+                    <TextField
+                      id="filled-basic"
+                      variant="outlined"
+                      label="Any Part/Equiptment sent for anlysis"
+                      multiline
+                      rows="4"
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Evidence analysis notes</p> */}
+
+                  <FormControl className={classes.formControl}>
+                    <TextField
+                      id="filled-basic"
+                      variant="outlined"
+                      label="Evidence analysis notes"
+                      multiline
+                      rows="4"
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Evidence summary</p> */}
+
+                  <FormControl className={classes.formControl}>
+                    <TextField
+                      id="filled-basic"
+                      variant="outlined"
+                      label="Evidence summary"
+                      multiline
+                      rows="4"
+                    />
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={12}>
+                  {/* <p>Additional notes if any</p> */}
+
+                  <FormControl className={classes.formControl}>
+                    <TextField
+                      id="filled-basic"
+                      variant="outlined"
+                      label="Additional notes if any"
+                      multiline
+                      rows="4"
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item md={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="#contained-buttons"
+                  >
+                    Next
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item md={12}>
-                <Typography variant="h6" gutterBottom>
-                  Incident Description
-                </Typography>
-                <Typography variant="body">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Nobis debitis saepe corporis quo inventore similique fugiat
-                  voluptatem alias et quae temporibus necessitatibus ut, magni
-                  ea quisquam vel, officiis cupiditate aperiam.
-                </Typography>
-              </Grid>
-              <Grid item md={12}>
-                <FormControl className={classes.formControl}>
-                  <TextField
-                    id="filled-basic"
-                    variant="outlined"
-                    label="Any Part/Equiptment sent for anlysis"
-                    multiline
-                    rows="4"
-                  />
-                </FormControl>
-              </Grid>
 
-              <Grid item md={12}>
-                {/* <p>Evidence analysis notes</p> */}
-
-                <FormControl className={classes.formControl}>
-                  <TextField
-                    id="filled-basic"
-                    variant="outlined"
-                    label="Evidence analysis notes"
-                    multiline
-                    rows="4"
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Evidence summary</p> */}
-
-                <FormControl className={classes.formControl}>
-                  <TextField
-                    id="filled-basic"
-                    variant="outlined"
-                    label="Evidence summary"
-                    multiline
-                    rows="4"
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                {/* <p>Additional notes if any</p> */}
-
-                <FormControl className={classes.formControl}>
-                  <TextField
-                    id="filled-basic"
-                    variant="outlined"
-                    label="Additional notes if any"
-                    multiline
-                    rows="4"
-                  />
-                </FormControl>
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={EVIDENCE_FORM}
+                  selectedItem={"Additional detail"}
+                />
               </Grid>
             </Grid>
-            <Box marginTop={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                href="#contained-buttons"
-              >
-                Next
-              </Button>
-            </Box>
           </Box>
-          <Grid>
-            <FormSideBar
-              listOfItems={EVIDENCE_FORM}
-              selectedItem={"Additional detail"}
-            />
-          </Grid>
         </Paper>
       </Container>
     </div>

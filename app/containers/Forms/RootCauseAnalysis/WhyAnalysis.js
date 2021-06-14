@@ -65,99 +65,104 @@ const WhyAnalysis = () => {
             </Typography>
           </Box>
           <Grid container spacing={3}>
-            <Grid item md={4}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Incident number: nnnnnnnnnn
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item md={8}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Method: 5 Why Analysis
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item md={12}>
-              <Typography variant="h6" gutterBottom>
-                Incident Description
-              </Typography>
-
-              <Typography variant="body">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Laboriosam repellendus quaerat ullam nemo tempora voluptatem!
-                Dolorum cum ab error rerum reiciendis, dolores incidunt ex,
-                repellendus beatae ea qui, reprehenderit rem.
-              </Typography>
-
-              <Box marginTop={3}>
+            <Grid container item md={9} spacing={3}>
+              <Grid item md={4}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item md={8}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Method: 5 Why Analysis
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item md={12}>
                 <Typography variant="h6" gutterBottom>
-                  Level of Investigation
+                  Incident Description
                 </Typography>
-                <Typography variant="body2">Level 5</Typography>
-              </Box>
-            </Grid>
-            <Grid item md={12}>
-              {/* <p>Evidence collection</p> */}
-              <TextField
-                variant="outlined"
-                id="filled-basic"
-                label="Evidence collection"
-                multiline
-                rows={3}
-                className={classes.formControl}
-              />
-            </Grid>
-            <Grid item md={12}>
-              {/* <p>why3</p> */}
 
-              <Grid container spacing={2}>
-                <Grid item sm={11}>
-                  <TextField
-                    id="filled-basic"
-                    label="Why 1"
-                    variant="outlined"
-                    className={classes.formControl}
-                  />
-                </Grid>
+                <Typography variant="body">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Laboriosam repellendus quaerat ullam nemo tempora voluptatem!
+                  Dolorum cum ab error rerum reiciendis, dolores incidunt ex,
+                  repellendus beatae ea qui, reprehenderit rem.
+                </Typography>
 
-                <Grid item sm={1} justify="center">
-                  <Fab size="small" color="secondary" aria-label="remove">
-                    <RemoveCircleOutlineIcon />
-                  </Fab>
+                <Box marginTop={3}>
+                  <Typography variant="h6" gutterBottom>
+                    Level of Investigation
+                  </Typography>
+                  <Typography variant="body2">Level 5</Typography>
+                </Box>
+              </Grid>
+              <Grid item md={12}>
+                {/* <p>Evidence collection</p> */}
+                <TextField
+                  variant="outlined"
+                  id="filled-basic"
+                  label="Evidence collection"
+                  multiline
+                  rows={3}
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid item md={12}>
+                {/* <p>why3</p> */}
+
+                <Grid container spacing={2}>
+                  <Grid item sm={11}>
+                    <TextField
+                      id="filled-basic"
+                      label="Why 1"
+                      variant="outlined"
+                      className={classes.formControl}
+                    />
+                  </Grid>
+
+                  <Grid item sm={1} justify="center">
+                    <Fab size="small" color="secondary" aria-label="remove">
+                      <RemoveCircleOutlineIcon />
+                    </Fab>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item md={12}>
-              <Grid container spacing={2}>
-                <Grid item sm={11}>
-                  <TextField
-                    id="filled-basic"
-                    label="Why 1"
-                    variant="outlined"
-                    className={classes.formControl}
-                  />
-                </Grid>
+              <Grid item md={12}>
+                <Grid container spacing={2}>
+                  <Grid item sm={11}>
+                    <TextField
+                      id="filled-basic"
+                      label="Why 1"
+                      variant="outlined"
+                      className={classes.formControl}
+                    />
+                  </Grid>
 
-                <Grid item sm={1}>
-                  <Fab size="small" color="secondary" aria-label="remove">
-                    <RemoveCircleOutlineIcon />
-                  </Fab>
+                  <Grid item sm={1}>
+                    <Fab size="small" color="secondary" aria-label="remove">
+                      <RemoveCircleOutlineIcon />
+                    </Fab>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
 
-            <Grid item md={12}>
-              {/* This button will add another entry of why input  */}
-              <button className={classes.textButton}>
-                <AddIcon /> Add
-              </button>
+              <Grid item md={12}>
+                {/* This button will add another entry of why input  */}
+                <button className={classes.textButton}>
+                  <AddIcon /> Add
+                </button>
+              </Grid>
+              <Grid item md={12}>
+                <Button variant="contained" color="primary">
+                  Next
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item md={12}>
-              <Button variant="contained" color="primary">
-                Next
-              </Button>
+            <Grid item md={3}>
+              Sidebar
             </Grid>
           </Grid>
         </Box>

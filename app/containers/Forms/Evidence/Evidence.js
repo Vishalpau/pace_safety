@@ -43,78 +43,81 @@ const Evidence = () => {
                 Evidences
               </Typography>
             </Box>
-
             <Grid container spacing={3}>
-              <Grid item md={12}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={12}>
+                  <Box>
+                    <Typography variant="body2" gutterBottom>
+                      Incident number: nnnnnnnnnn
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item md={12}>
+                  <Typography variant="h6" gutterBottom>
+                    Incident Description
                   </Typography>
-                </Box>
-              </Grid>
-              <Grid item md={12}>
-                <Typography variant="h6" gutterBottom>
-                  Incident Description
-                </Typography>
-                <Typography variant="body" gutterBottom>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Nobis debitis saepe corporis quo inventore similique fugiat
-                  voluptatem alias et quae temporibus necessitatibus ut, magni
-                  ea quisquam vel, officiis cupiditate aperiam.
-                </Typography>
-              </Grid>
-              <Grid item md={2}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">Evidence Type</Typography>
-                </Box>
-                <Typography variant="body2">Evidence Type 1</Typography>
-              </Grid>
+                  <Typography variant="body" gutterBottom>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    Nobis debitis saepe corporis quo inventore similique fugiat
+                    voluptatem alias et quae temporibus necessitatibus ut, magni
+                    ea quisquam vel, officiis cupiditate aperiam.
+                  </Typography>
+                </Grid>
+                <Grid item md={2}>
+                  <Box marginBottom={2}>
+                    <Typography variant="body">Evidence Type</Typography>
+                  </Box>
+                  <Typography variant="body2">Evidence Type 1</Typography>
+                </Grid>
 
-              <Grid item md={3} justify="center">
-                <Box marginBottom={2}>
-                  <Typography variant="body">Available</Typography>
-                </Box>
+                <Grid item md={3} justify="center">
+                  <Box marginBottom={2}>
+                    <Typography variant="body">Available</Typography>
+                  </Box>
 
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </Grid>
+                <Grid item md={4}>
+                  <Box marginBottom={2}>
+                    <Typography variant="body">Comments</Typography>
+                  </Box>
+
+                  <TextField
+                    id="filled-basic"
+                    variant="outlined"
+                    label="Type...."
                   />
-                ))}
-              </Grid>
-              <Grid item md={4}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">Comments</Typography>
-                </Box>
+                </Grid>
+                <Grid item md={3}>
+                  <p>Attachments</p>
+                  <a>Link</a>
+                  <DeleteForeverIcon />
+                </Grid>
 
-                <TextField
-                  id="filled-basic"
-                  variant="outlined"
-                  label="Type...."
-                />
+                <Grid item md={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="#contained-buttons"
+                  >
+                    Next
+                  </Button>
+                </Grid>
               </Grid>
               <Grid item md={3}>
-                <p>Attachments</p>
-                <a>Link</a>
-                <DeleteForeverIcon />
+                <FormSideBar
+                  listOfItems={EVIDENCE_FORM}
+                  selectedItem={"Evidence"}
+                />
               </Grid>
-
-              <Button
-                variant="contained"
-                color="primary"
-                href="#contained-buttons"
-              >
-                Next
-              </Button>
             </Grid>
           </Box>
-          <Grid>
-            <FormSideBar
-              listOfItems={EVIDENCE_FORM}
-              selectedItem={"Evidence"}
-            />
-          </Grid>
         </Paper>
       </Container>
     </div>

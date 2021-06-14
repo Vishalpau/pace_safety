@@ -57,123 +57,124 @@ const BasicCause = () => {
                 Basic Cause
               </Typography>
             </Box>
-
             <Grid container spacing={3}>
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
-                  </Typography>
-                </Box>
-              </Grid>
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={4}>
+                  <Box>
+                    <Typography variant="body2" gutterBottom>
+                      Incident number: nnnnnnnnnn
+                    </Typography>
+                  </Box>
+                </Grid>
 
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    RCA Method: PACE Cause Analysis
-                  </Typography>
-                </Box>
-              </Grid>
+                <Grid item md={4}>
+                  <Box>
+                    <Typography variant="body2" gutterBottom>
+                      RCA Method: PACE Cause Analysis
+                    </Typography>
+                  </Box>
+                </Grid>
 
-              <Grid item md={12}>
-                <Box>
-                  <Typography variant="h5" gutterBottom>
-                    Human Factors
-                  </Typography>
-                </Box>
-              </Grid>
+                <Grid item md={12}>
+                  <Box>
+                    <Typography variant="h5" gutterBottom>
+                      Human Factors
+                    </Typography>
+                  </Box>
+                </Grid>
 
-              <Grid item md={6}>
-                <Typography variant="subtitle1">Personal</Typography>
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
+                <Grid item md={6}>
+                  <Typography variant="subtitle1">Personal</Typography>
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </Grid>
+
+                <Grid item md={6}>
+                  <Typography variant="subtitle1">Welness Factor</Typography>
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </Grid>
+
+                <Grid item md={12}>
+                  <TextField
+                    id="filled-basic"
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    label="Other Human Factors"
+                    className={classes.formControl}
                   />
-                ))}
-              </Grid>
+                </Grid>
 
-              <Grid item md={6}>
-                <Typography variant="subtitle1">Welness Factor</Typography>
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
+                <Grid item md={12}>
+                  <Box>
+                    <Typography variant="h5" gutterBottom>
+                      Job Factors
+                    </Typography>
+                  </Box>
+                </Grid>
+
+                <Grid item md={6}>
+                  <Typography variant="subtitle1">Leadership</Typography>
+
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </Grid>
+
+                <Grid item md={6}>
+                  <Typography variant="subtitle1">Process</Typography>
+
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </Grid>
+
+                <Grid item md={12}>
+                  <TextField
+                    id="filled-basic"
+                    variant="outlined"
+                    multiline
+                    rows={3}
+                    label="Other job factors"
+                    className={classes.formControl}
                   />
-                ))}
-              </Grid>
+                </Grid>
 
-              <Grid item md={12}>
-                <TextField
-                  id="filled-basic"
-                  variant="outlined"
-                  multiline
-                  rows={4}
-                  label="Other Human Factors"
-                  className={classes.formControl}
+                <Grid item md={6}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="#contained-buttons"
+                  >
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                  selectedItem={"Basic cause"}
                 />
               </Grid>
-
-              <Grid item md={12}>
-                <Box>
-                  <Typography variant="h5" gutterBottom>
-                    Job Factors
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item md={6}>
-                <Typography variant="subtitle1">Leadership</Typography>
-
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </Grid>
-
-              <Grid item md={6}>
-                <Typography variant="subtitle1">Process</Typography>
-
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </Grid>
-
-              <Grid item md={12}>
-                <TextField
-                  id="filled-basic"
-                  variant="outlined"
-                  multiline
-                  rows={3}
-                  label="Other job factors"
-                  className={classes.formControl}
-                />
-              </Grid>
-
-              <Grid item md={6}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  href="#contained-buttons"
-                >
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid>
-              <FormSideBar
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Basic cause"}
-              />
             </Grid>
           </Box>
         </Paper>

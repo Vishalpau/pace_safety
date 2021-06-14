@@ -74,61 +74,63 @@ const Details = () => {
               RCA details
             </Typography>
           </Box>
-
           <Grid container spacing={3}>
-            <Grid item md={12}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Incident number: nnnnnnnnnn
+            <Grid container item md={9} spacing={3}>
+              <Grid item md={12}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item md={12}>
+                {/* <h6> Incident Description </h6> */}
+                <Typography variant="h6" gutterBottom>
+                  Incident Description
                 </Typography>
-              </Box>
-            </Grid>
-            <Grid item md={12}>
-              {/* <h6> Incident Description </h6> */}
-              <Typography variant="h6" gutterBottom>
-                Incident Description
-              </Typography>
-              <Typography variant="body">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi
-                eos autem fugit maiores, doloremque quo in neque iure,
-                asperiores quasi, aut ipsa magni voluptates corrupti. Rerum
-                repellendus eum dolore autem.
-              </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography component="p">Investigation start date</Typography>
-              <p>date formate</p>
-            </Grid>
-            <Grid item md={6}>
-              <Typography component="p">Investigation end date</Typography>
-              <p>date formate</p>
-            </Grid>
-            <Grid item md={6}>
-              <Typography component="p">Level of Investigation</Typography>
-              <p> Value selected to be displayed</p>
-            </Grid>
-            <Grid item md={6}>
-              {/* <h6> RCA recommended</h6> */}
-              <FormControl variant="outlined" className={classes.formControl}>
-                {/* <Typography varint="p">Project Name</Typography> */}
-                <InputLabel id="project-name-label">RCA recommended</InputLabel>
-                <Select
-                  id="project-name"
-                  labelId="project-name-label"
-                  label="RCA recommended"
-                >
-                  {selectValues.map((selectValues) => (
-                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item md={6}>
-              <p>Equiptment type</p>
+                <Typography variant="body">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi
+                  eos autem fugit maiores, doloremque quo in neque iure,
+                  asperiores quasi, aut ipsa magni voluptates corrupti. Rerum
+                  repellendus eum dolore autem.
+                </Typography>
+              </Grid>
+              <Grid item md={6}>
+                <Typography component="p">Investigation start date</Typography>
+                <p>date formate</p>
+              </Grid>
+              <Grid item md={6}>
+                <Typography component="p">Investigation end date</Typography>
+                <p>date formate</p>
+              </Grid>
+              <Grid item md={6}>
+                <Typography component="p">Level of Investigation</Typography>
+                <p> Value selected to be displayed</p>
+              </Grid>
+              <Grid item md={6}>
+                {/* <h6> RCA recommended</h6> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  {/* <Typography varint="p">Project Name</Typography> */}
+                  <InputLabel id="project-name-label">
+                    RCA recommended
+                  </InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="RCA recommended"
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={6}>
+                <p>Equiptment type</p>
 
-              <FormControl>
-                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                {/* <Select
+                <FormControl>
+                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                  {/* <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
               >
@@ -136,74 +138,75 @@ const Details = () => {
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
               </Select> */}
-              </FormControl>
-              <p>if other describe</p>
-              <TextField id="filled-basic" />
-            </Grid>
-            <Grid item md={6}>
-              <p>Where there any release</p>
+                </FormControl>
+                <p>if other describe</p>
+                <TextField id="filled-basic" />
+              </Grid>
+              <Grid item md={6}>
+                <p>Where there any release</p>
 
-              <FormControl component="fieldset">
-                <RadioGroup aria-label="gender">
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6}>
-              <p>Where there any release</p>
+                <FormControl component="fieldset">
+                  <RadioGroup aria-label="gender">
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item md={6}>
+                <p>Where there any release</p>
 
-              <FormControl component="fieldset">
-                <RadioGroup aria-label="gender">
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6}>
-              <p>Where there any release</p>
+                <FormControl component="fieldset">
+                  <RadioGroup aria-label="gender">
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item md={6}>
+                <p>Where there any release</p>
 
-              <FormControl component="fieldset">
-                <RadioGroup aria-label="gender">
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
+                <FormControl component="fieldset">
+                  <RadioGroup aria-label="gender">
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid>
+                <p>
+                  Then investigation team to develop credble assumption and/or
+                  hypthesis, continue with RCA process. Ensure this fact is
+                  captured in investigation report that investigation is based
+                  on some assumption.
+                </p>
+              </Grid>
+              <Grid item md={12}>
+                <Button variant="contained" color="primary">
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-            <Grid>
-              <p>
-                Then investigation team to develop credble assumption and/or
-                hypthesis, continue with RCA process. Ensure this fact is
-                captured in investigation report that investigation is based on
-                some assumption.
-              </p>
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Details"}
+              />
             </Grid>
-            <Grid item md={12}>
-              <Button variant="contained" color="primary">
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"Details"}
-            />
           </Grid>
         </Box>
       </Paper>

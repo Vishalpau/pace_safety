@@ -54,45 +54,46 @@ const ActionTaken = () => {
                 Action Taken
               </Typography>
             </Box>
+            <Grid container spacing={3} alignItems="flex-start">
+              <Grid container item md={9} spacing={3}>
+                <Grid item md={6}>
+                  {/* <p>if other describe</p> */}
+                  <TextField
+                    variant="outlined"
+                    id="filled-basic"
+                    label="Pre event mitigation"
+                    className={classes.formControl}
+                  />
+                </Grid>
 
-            <Grid container spacing={3}>
-              <Grid item md={6}>
-                {/* <p>if other describe</p> */}
-                <TextField
-                  variant="outlined"
-                  id="filled-basic"
-                  label="Pre event mitigation"
-                  className={classes.formControl}
+                <Grid item md={6}>
+                  {/* <p>Describe the damage</p> */}
+                  <TextField
+                    id="date"
+                    label="Birthday"
+                    type="date"
+                    defaultValue="2017-05-24"
+                    className={classes.formControl}
+                  />
+                </Grid>
+                <Grid item md={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="#contained-buttons"
+                  >
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item md={3}>
+                <FormSideBar
+                  listOfItems={INVESTIGATION_FORM}
+                  selectedItem={"Action taken"}
                 />
               </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Describe the damage</p> */}
-                <TextField
-                  id="date"
-                  label="Birthday"
-                  type="date"
-                  defaultValue="2017-05-24"
-                  className={classes.formControl}
-                />
-              </Grid>
-              <Box marginTop={4}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  href="#contained-buttons"
-                >
-                  Next
-                </Button>
-              </Box>
             </Grid>
           </Box>
-          <Grid>
-            <FormSideBar
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem={"Action taken"}
-            />
-          </Grid>
         </Paper>
       </Container>
     </div>

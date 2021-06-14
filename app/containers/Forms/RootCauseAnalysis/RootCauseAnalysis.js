@@ -65,149 +65,152 @@ const RootCauseAnalysis = () => {
               Root couse Analysis
             </Typography>
           </Box>
-
           <Grid container spacing={3}>
-            <Grid item md={12}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Incident number: nnnnnnnnnn
+            <Grid container item md={9} spacing={3}>
+              <Grid item md={12}>
+                <Box>
+                  <Typography variant="body2" gutterBottom>
+                    Incident number: nnnnnnnnnn
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item md={12}>
+                {/* <h6> Incident Description </h6> */}
+                <Typography variant="h6" gutterBottom>
+                  Incident Description
                 </Typography>
-              </Box>
-            </Grid>
-            <Grid item md={12}>
-              {/* <h6> Incident Description </h6> */}
-              <Typography variant="h6" gutterBottom>
-                Incident Description
-              </Typography>
-              <Typography variant="body">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Praesentium sit voluptatem porro mollitia placeat ducimus
-                delectus harum. Doloremque quas tempore assumenda perspiciatis
-                inventore similique esse quam dolores aliquid, quos harum.
-              </Typography>
-            </Grid>
-            <Grid item lg={6} md={12} sm={12}>
-              {/* <h6> Investigation start date</h6> */}
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  label="Investigation Start Date"
+                <Typography variant="body">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Praesentium sit voluptatem porro mollitia placeat ducimus
+                  delectus harum. Doloremque quas tempore assumenda perspiciatis
+                  inventore similique esse quam dolores aliquid, quos harum.
+                </Typography>
+              </Grid>
+              <Grid item lg={6} md={12} sm={12}>
+                {/* <h6> Investigation start date</h6> */}
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    label="Investigation Start Date"
+                    className={classes.formControl}
+                    variant="outlined"
+                    required
+                    id="date-picker-dialog"
+                    format="dd/mm/yyyy"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item md={6}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    label="Investigation End Date"
+                    className={classes.formControl}
+                    variant="outlined"
+                    required
+                    id="date-picker-dialog"
+                    format="dd/mm/yyyy"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item md={6}>
+                {/* <h6> RCA recommended</h6> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  {/* <Typography varint="p">Project Name</Typography> */}
+                  <InputLabel id="project-name-label">
+                    RCA recommended
+                  </InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Project Name"
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item lg={6} md={12} sm={12}>
+                {/* <h6> Incident Date and Time</h6> */}
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DateTimePicker
+                    autoOk
+                    className={classes.formControl}
+                    ampm={false}
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    label="Incident Date and Time"
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item md={6}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    label="Analysis Conduted By"
+                    className={classes.formControl}
+                    variant="outlined"
+                    required
+                    id="date-picker-dialog"
+                    format="dd/mm/yyyy"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid item md={6}>
+                {/* <p>What caused the incident </p> */}
+                <TextField
                   className={classes.formControl}
+                  id="filled-basic"
                   variant="outlined"
-                  required
-                  id="date-picker-dialog"
-                  format="dd/mm/yyyy"
-                  value={selectedDate}
-                  onChange={handleDateChange}
+                  label="What caused the incident"
                 />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item md={6}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  label="Investigation End Date"
-                  className={classes.formControl}
+              </Grid>
+              <Grid item lg={12} md={6} sm={6}>
+                {/* <p>Corrective actions</p> */}
+                <TextField
+                  id="filled-basic"
                   variant="outlined"
-                  required
-                  id="date-picker-dialog"
-                  format="dd/mm/yyyy"
-                  value={selectedDate}
-                  onChange={handleDateChange}
+                  label="Corrective actions"
                 />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item md={6}>
-              {/* <h6> RCA recommended</h6> */}
-              <FormControl variant="outlined" className={classes.formControl}>
-                {/* <Typography varint="p">Project Name</Typography> */}
-                <InputLabel id="project-name-label">RCA recommended</InputLabel>
-                <Select
-                  id="project-name"
-                  labelId="project-name-label"
-                  label="Project Name"
-                >
-                  {selectValues.map((selectValues) => (
-                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item lg={6} md={12} sm={12}>
-              {/* <h6> Incident Date and Time</h6> */}
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DateTimePicker
-                  autoOk
-                  className={classes.formControl}
-                  ampm={false}
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  label="Incident Date and Time"
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item md={6}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  label="Analysis Conduted By"
-                  className={classes.formControl}
-                  variant="outlined"
-                  required
-                  id="date-picker-dialog"
-                  format="dd/mm/yyyy"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item md={6}>
-              {/* <p>What caused the incident </p> */}
-              <TextField
-                className={classes.formControl}
-                id="filled-basic"
-                variant="outlined"
-                label="What caused the incident"
-              />
-            </Grid>
-            <Grid item lg={12} md={6} sm={6}>
-              {/* <p>Corrective actions</p> */}
-              <TextField
-                id="filled-basic"
-                variant="outlined"
-                label="Corrective actions"
-              />
-            </Grid>
-            <Grid item md={12}>
-              <p>Where there any spills</p>
+              </Grid>
+              <Grid item md={12}>
+                <p>Where there any spills</p>
 
-              {radioDecide.map((value) => (
-                <FormControlLabel
-                  value={value}
-                  control={<Radio />}
-                  label={value}
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </Grid>
+              <Grid item md={12}>
+                {/* <p>if No, please recommended correct solution ?</p> */}
+                <TextField
+                  className={classes.formControl}
+                  id="filled-basic"
+                  variant="outlined"
+                  multiline
+                  label="if No, please recommended correct solution ?"
+                  rows="3"
                 />
-              ))}
+              </Grid>
+              <Grid item md={12}>
+                <Button variant="contained" color="primary">
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item md={12}>
-              {/* <p>if No, please recommended correct solution ?</p> */}
-              <TextField
-                className={classes.formControl}
-                id="filled-basic"
-                variant="outlined"
-                multiline
-                label="if No, please recommended correct solution ?"
-                rows="3"
+            <Grid item={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Root cause analysis"}
               />
             </Grid>
-            <Grid item md={12}>
-              <Button variant="contained" color="primary">
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"Root cause analysis"}
-            />
           </Grid>
         </Box>
       </Paper>
