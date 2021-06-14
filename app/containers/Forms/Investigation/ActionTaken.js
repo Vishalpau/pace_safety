@@ -14,6 +14,16 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import DateFnsUtils from "@date-io/date-fns";
+import MomentUtils from "@date-io/moment";
+import {
+  TimePicker,
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import Icon from "@material-ui/core/Icon";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -38,6 +48,13 @@ const ActionTaken = () => {
   const notificationSent = ["Manage", "SuperVisor"];
 
   const selectValues = [1, 2, 3, 4];
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
@@ -67,14 +84,28 @@ const ActionTaken = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Describe the damage</p> */}
-                  <TextField
-                    id="date"
-                    label="Birthday"
-                    type="date"
-                    defaultValue="2017-05-24"
-                    className={classes.formControl}
-                  />
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <TimePicker
+                      label="Reporting Time"
+                      className={classes.formControl}
+                      mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
+                      placeholder="08:00 AM"
+                      clearable
+                      // value={selectedDate}
+                      inputVariant="outlined"
+                      // onChange={handleDateChange}
+                      required
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton>
+                              <Icon>access_time</Icon>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item md={12}>
                   <Button

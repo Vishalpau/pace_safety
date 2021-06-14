@@ -175,6 +175,7 @@ const ReportingAndNotification = () => {
                   {/* <p>Others Name</p> */}
                   <TextField
                     id="othersName"
+                    variant="outlined"
                     label="Others Name"
                     className={classes.formControl}
                   />
@@ -187,6 +188,7 @@ const ReportingAndNotification = () => {
                       id="date-picker-dialog"
                       format="MM/dd/yyyy"
                       required
+                      inputVariant="outlined"
                       label="Reporting Date"
                       value={selectedDate}
                       onChange={handleDateChange}
@@ -205,6 +207,7 @@ const ReportingAndNotification = () => {
                       mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
                       placeholder="08:00 AM"
                       value={selectedDate}
+                      inputVariant="outlined"
                       onChange={handleDateChange}
                       required
                       InputProps={{

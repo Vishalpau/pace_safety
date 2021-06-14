@@ -33,7 +33,6 @@ import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: ".5rem 0",
     width: "100%",
   },
   selectEmpty: {
@@ -41,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-    margin: ".5rem 0",
   },
   spacer: {
     padding: ".75rem 0",
@@ -131,11 +129,14 @@ const IncidentDetails = () => {
               </Grid>
 
               <Grid item md={6}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <MuiPickersUtilsProvider
+                  variant="outlined"
+                  utils={DateFnsUtils}
+                >
                   <KeyboardDatePicker
                     label="Incident Date"
                     className={classes.formControl}
-                    variant="outlined"
+                    inputVariant="outlined"
                     required
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
@@ -151,10 +152,11 @@ const IncidentDetails = () => {
                     label="Incident Time"
                     className={classes.formControl}
                     mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
-                    // placeholder="08:00 AM"
+                    clearable
                     required
                     value={selectedDate}
                     onChange={handleDateChange}
+                    inputVariant="outlined"
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
