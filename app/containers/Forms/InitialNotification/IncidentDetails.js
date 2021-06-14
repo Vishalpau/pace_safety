@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -57,6 +57,17 @@ const IncidentDetails = () => {
   };
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No", "N/A"];
+
+  const [listData, setListData] = useState([]);
+
+  useEffect(async()=>{
+    const res = await API.get('api/v1/lists/');
+
+    const result = res.data.data.results
+    setListData(result)
+
+  },[])
+
   return (
     <div>
       <Container>
