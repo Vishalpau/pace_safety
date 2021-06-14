@@ -124,9 +124,16 @@ const AdditionalDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/"
                   >
-                    Next
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
+                  >
+                    Submit
                   </Button>
                 </Grid>
               </Grid>

@@ -205,7 +205,18 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 <Box marginTop={4}>
-                  <Button size="medium" variant="contained" color="primary">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                  >
+                    Previouse
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/reporting-and-notification/"
+                  >
                     Next
                   </Button>
                 </Box>

@@ -284,7 +284,12 @@ const IncidentDetails = () => {
 
               <Grid item md={12}>
                 <Box marginTop={4}>
-                  <Button size="medium" variant="contained" color="primary">
+                  <Button
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                    size="medium"
+                    variant="contained"
+                    color="primary"
+                  >
                     Next
                   </Button>
                 </Box>

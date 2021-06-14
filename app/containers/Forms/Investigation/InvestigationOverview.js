@@ -305,7 +305,18 @@ const InvestigationOverview = () => {
                 />
               </Grid>
               <Grid item md={12}>
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="http://localhost:3000/app/incident-management/registration/investigation/worker-details/"
+                >
                   Next
                 </Button>
               </Grid>

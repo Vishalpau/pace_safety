@@ -205,8 +205,19 @@ const EventDetails = () => {
                 />
               </Grid>
               <Grid item md={12}>
-                <Button variant="contained" color="primary">
-                  Submit
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="http://localhost:3000/app/incident-management/registration/investigation/equiptment-impact-details/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="http://localhost:3000/app/incident-management/registration/investigation/action-taken/"
+                >
+                  Next
                 </Button>
               </Grid>
             </Grid>

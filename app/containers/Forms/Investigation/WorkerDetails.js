@@ -289,7 +289,18 @@ const WorkerDetails = () => {
                 />
               </Grid>
               <Box marginTop={4}>
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="http://localhost:3000/app/incident-management/registration/investigation/property-impact-details/"
+                >
                   Next
                 </Button>
               </Box>

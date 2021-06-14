@@ -278,8 +278,19 @@ const ReportingAndNotification = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  <Button variant="contained" color="primary">
-                    Next
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                  >
+                    Previouse
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
+                  >
+                    Submit
                   </Button>
                 </Grid>
               </Grid>

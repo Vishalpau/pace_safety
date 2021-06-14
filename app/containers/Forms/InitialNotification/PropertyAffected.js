@@ -176,7 +176,14 @@ const PropertyAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                  >
+                    Previouse
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
                     Next
                   </Button>

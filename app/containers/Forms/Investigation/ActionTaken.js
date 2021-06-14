@@ -111,9 +111,16 @@ const ActionTaken = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
                   >
-                    Next
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/evidence/evidence/"
+                  >
+                    Submit
                   </Button>
                 </Grid>
               </Grid>

@@ -333,8 +333,12 @@ const InitialDetails = () => {
                 />
               </Grid>
               <Box marginTop={3}>
-                <Button variant="contained" color="primary">
-                  Submit
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+                >
+                  Next
                 </Button>
               </Box>
             </Grid>

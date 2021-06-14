@@ -219,9 +219,16 @@ const PeoplesAffected = () => {
                 </Grid>
                 <Grid item md={6}>
                   <Button
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/incident-details/"
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                  >
+                    Previouse
+                  </Button>
+                  <Button
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                    variant="contained"
+                    color="primary"
                   >
                     Next
                   </Button>

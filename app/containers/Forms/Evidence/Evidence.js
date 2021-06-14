@@ -104,7 +104,7 @@ const Evidence = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/evidence/activity-detail/"
                   >
                     Next
                   </Button>

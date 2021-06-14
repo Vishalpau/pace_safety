@@ -156,7 +156,14 @@ const EqiptmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                  >
+                    Previouse
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Next
                   </Button>

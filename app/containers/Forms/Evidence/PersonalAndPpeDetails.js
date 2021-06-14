@@ -333,7 +333,14 @@ const PersonalAndPpeDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/evidence/activity-detail/"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/evidence/additional-details/"
                   >
                     Next
                   </Button>
