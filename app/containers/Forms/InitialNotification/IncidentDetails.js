@@ -31,6 +31,8 @@ import {
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 
+import api from "../../../utils/axios";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -59,14 +61,80 @@ const IncidentDetails = () => {
   const radioDecide = ["Yes", "No", "N/A"];
 
   const [listData, setListData] = useState([]);
+  const [incidentData, setIncidentData] = useState([]);
+  const [personDuringIncident, setPersonDuringIncident] = useState([]);
+  const [propertyDamage, setPropertyDamage] = useState([]);
+  const [equipmentDamage, setEquipmentDamage] = useState([]);
+  const [environmentDamage, setEnvironmentdamage] = useState([]);
+  const [contractor, setContractor] = useState([]);
+  const [subContractor, setSubContractor] = useState([]);
 
-  useEffect(async()=>{
-    const res = await API.get('api/v1/lists/');
+  const fetchListData = async () => {
+    const res = await api.get("api/v1/lists/");
 
-    const result = res.data.data.results
-    setListData(result)
+    const result = res.data.data.results;
+    setListData(result);
+  };
+  const fetchIncidentData = async () => {
+    const res = await api.get("api/v1/lists/1/value");
 
-  },[])
+    const result = res.data.data.results;
+    setIncidentData(result);
+    console.log(result);
+  };
+  const fetchContractorData = async () => {
+    const res = await api.get("api/v1/lists/2/value");
+
+    const result = res.data.data.results;
+    setContractor(result);
+    console.log(result);
+  };
+  const fetchSubContractorData = async () => {
+    const res = await api.get("api/v1/lists/3/value");
+
+    const result = res.data.data.results;
+    setSubContractor(result);
+    console.log(result);
+  };
+  const fetchPersonDuringIncident = async () => {
+    const res = await api.get("api/v1/lists/4/value");
+
+    const result = res.data.data.results;
+    setPersonDuringIncident(result);
+    console.log(result);
+  };
+  const fetchPropertyDamage = async () => {
+    const res = await api.get("api/v1/lists/5/value");
+
+    const result = res.data.data.results;
+    setPropertyDamage(result);
+    console.log(result);
+  };
+  const fetchEquipmentDamage = async () => {
+    const res = await api.get("api/v1/lists/6/value");
+
+    const result = res.data.data.results;
+    setEquipmentDamage(result);
+    console.log(result);
+  };
+  const fetchEnviormentDamage = async () => {
+    const res = await api.get("api/v1/lists/7/value");
+
+    const result = res.data.data.results;
+    setEnvironmentdamage(result);
+    console.log(result);
+  };
+
+  useEffect(() => {
+    fetchListData();
+    fetchIncidentData();
+    fetchContractorData();
+    fetchSubContractorData();
+    fetchPersonDuringIncident();
+    fetchPropertyDamage();
+    fetchEquipmentDamage();
+    fetchEnviormentDamage();
+  }, []);
 
   return (
     <div>
@@ -80,6 +148,7 @@ const IncidentDetails = () => {
               Initial Notification
             </Typography>
           </Box>
+
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
               <Grid item md={6}>
@@ -117,6 +186,7 @@ const IncidentDetails = () => {
                   </Select>
                 </FormControl>
               </Grid>
+
               <Grid item md={6}>
                 <FormControl
                   variant="outlined"
@@ -124,16 +194,22 @@ const IncidentDetails = () => {
                   className={classes.formControl}
                 >
                   <InputLabel id="demo-simple-select-label">
-                    Incident Type
+                    {listData.length !== 0
+                      ? listData[0].listLabel
+                      : "Incident Type"}
                   </InputLabel>
                   <Select
                     labelId="incident-type-label"
                     id="incident-type"
                     label="Incident Type"
                   >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
+                    {incidentData.length !== 0
+                      ? incidentData.map((incident, index) => (
+                          <MenuItem key={index} value={incident.inputValue}>
+                            {incident.inputLabel}
+                          </MenuItem>
+                        ))
+                      : null}
                   </Select>
                   <FormHelperText>Required</FormHelperText>
                 </FormControl>
@@ -222,6 +298,33 @@ const IncidentDetails = () => {
               </Grid>
 
               <Grid item md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    {listData.length !== 0
+                      ? listData[1].listLabel
+                      : "Contractor"}
+                  </InputLabel>
+                  <Select
+                    labelId="contractor-name-label"
+                    id="contractor"
+                    label={
+                      listData.length !== 0
+                        ? listData[1].listLabel
+                        : "Contractor"
+                    }
+                  >
+                    {contractor.length !== 0
+                      ? contractor.map((value, index) => (
+                          <MenuItem key={index} value={value.inputValue}>
+                            {value.inputLabel}
+                          </MenuItem>
+                        ))
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* <Grid item md={6}>
                 <TextField
                   variant="outlined"
                   id="contractor"
@@ -229,71 +332,117 @@ const IncidentDetails = () => {
                   required
                   className={classes.formControl}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item md={6}>
-                <TextField
-                  id="filled-basic"
-                  label="Sub-Contractor"
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                />
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    {listData.length !== 0
+                      ? listData[2].listLabel
+                      : "Sub-Contractor"}
+                  </InputLabel>
+                  <Select
+                    labelId="contractor-name-label"
+                    id="sub-contractor"
+                    label={
+                      listData.length !== 0
+                        ? listData[2].listLabel
+                        : "Sub-Contractor"
+                    }
+                  >
+                    {subContractor.length !== 0
+                      ? subContractor.map((value, index) => (
+                          <MenuItem key={index} value={value.inputValue}>
+                            {value.inputLabel}
+                          </MenuItem>
+                        ))
+                      : null}
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item md={12}>
                 <div className={classes.spacer}>
-                  <p>Were any person affected during incident?</p>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                  <p>
+                    {" "}
+                    {listData.length !== 0
+                      ? listData[3].listLabel
+                      : "Were any person affected during incident?"}
+                  </p>
+                  {personDuringIncident.length !== 0
+                    ? personDuringIncident.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputValue}
+                        />
+                      ))
+                    : null}
                 </div>
               </Grid>
 
               <Grid item md={12}>
                 <div className={classes.spacer}>
-                  <p>Was any propery damaged during incident?</p>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                  <p>
+                    {listData.length !== 0
+                      ? listData[4].listLabel
+                      : "Was any propery damaged during incident?"}
+                  </p>
+                  {propertyDamage.length !== 0
+                    ? propertyDamage.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
+                    : null}
                 </div>
               </Grid>
 
               <Grid item md={12}>
                 <div className={classes.spacer}>
-                  <p>Was there any equiptment damaged?</p>
+                  <p>
+                    {listData.length !== 0
+                      ? listData[5].listLabel
+                      : "Was there any equiptment damaged?"}
+                  </p>
 
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                  {equipmentDamage.length !== 0
+                    ? equipmentDamage.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
+                    : null}
                 </div>
               </Grid>
 
               <Grid item md={12}>
-                <p>Was there any environment impact?</p>
+                <p>
+                  {listData.length !== 0
+                    ? listData[6].listLabel
+                    : "Was there any environment impact?"}
+                </p>
 
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
+                {environmentDamage.length !== 0
+                  ? environmentDamage.map((value, index) => (
+                      <FormControlLabel
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
+                  : null}
               </Grid>
 
               <Grid item md={12}>
+                {/* {listData.map((item,index)=><h1 key={index}>{item.listLabel}</h1>)} */}
                 <Box marginTop={4}>
                   <Button
                     href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"

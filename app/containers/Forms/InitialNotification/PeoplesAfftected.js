@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -22,6 +22,7 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import api from '../../../utils/axios';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -72,6 +73,53 @@ const PeoplesAffected = () => {
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
+  const [listData, setListData] = useState([]);
+  const [personTypevalue, setPersonTypeValue] = useState([]);
+  const [departmentValue, setDepartmentValue] = useState([]);
+  const [data, setData] = useState([]);
+  const [individualEffectValue, setIndividualEffetValue] = useState([]);
+  const [peopleEffected, setPeopleEffected] = useState([]);
+  const [medicalTakenValue, setMedicalTakenValue] = useState([]);
+  
+  const fetchMedicalTakenValue = async()=>{
+    const res = await api.get("api/v1/lists/11/value");
+
+    const result = res.data.data.results;
+    setMedicalTakenValue(result);
+    console.log(result)
+  }
+
+  const fetchDetailsOfIndividualAffect = async()=>{
+    const res = await api.get("api/v1/lists/8/value");
+    const result = res.data.data.results;
+    setIndividualEffetValue(result);
+  }
+  const fetchPersonType = async()=>{
+    const res = await api.get("api/v1/lists/9/value");
+    const result = res.data.data.results;
+    setPersonTypeValue(result);
+  }
+  const fetchDepartmetValue = async()=>{
+    const res = await api.get("api/v1/lists/10/value");
+    const result = res.data.data.results;
+    setDepartmentValue(result);
+  }
+
+  const fetchListData = async()=>{
+    const res = await api.get("api/v1/lists/");
+
+    const result = res.data.data.results;
+    setListData(result);
+  }
+
+  useEffect( () => {
+    fetchListData();
+    fetchDetailsOfIndividualAffect();
+    fetchPersonType();
+    fetchDepartmetValue();
+    fetchMedicalTakenValue();
+   
+  }, []);
   return (
     <div>
       <Container>
@@ -92,13 +140,14 @@ const PeoplesAffected = () => {
                     Do you have details of individual effected?
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
-                  {radioDecide.map((value) => (
+                  {individualEffectValue.length !==0?individualEffectValue.map((value,index) => (
                     <FormControlLabel
-                      value={value}
+                    key={index}
+                      value={value.inputValue}
                       control={<Radio />}
-                      label={value}
+                      label={value.inputLabel}
                     />
-                  ))}
+                  )):null}
                 </Grid>
 
                 <Grid item md={12}>
@@ -122,9 +171,9 @@ const PeoplesAffected = () => {
                       id="person-type"
                       label="Person type"
                     >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
+                      {personTypevalue.length!==0?personTypevalue.map((selectValues, index) => (
+                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
+                      )):null}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -136,9 +185,9 @@ const PeoplesAffected = () => {
                   >
                     <InputLabel id="dep-label">Department</InputLabel>
                     <Select labelId="dep-label" id="dep" label="Department">
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
+                      {departmentValue.length!==0?departmentValue.map((selectValues,index) => (
+                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
+                      )):null}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -170,13 +219,14 @@ const PeoplesAffected = () => {
                       Was that person taken to medical care?
                     </Typography>
 
-                    {radioDecideNew.map((value) => (
+                    {medicalTakenValue!==0?medicalTakenValue.map((value,index) => (
                       <FormControlLabel
-                        value={value}
+                      key={index}
+                        value={value.inputValue}
                         control={<Radio />}
-                        label={value}
+                        label={value.inputLabel}
                       />
-                    ))}
+                    )):null}
                   </div>
                 </Grid>
 

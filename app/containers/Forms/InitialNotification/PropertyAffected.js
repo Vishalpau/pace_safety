@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -22,6 +22,7 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import api from '../../../utils/axios';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -72,6 +73,25 @@ const PropertyAffected = () => {
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
+
+  const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
+  const [propertyTypeValue, setPropertyTypeValue] = useState([]);
+
+  const fetchPropertyAffectedValue = async()=>{
+    const res = await api.get("api/v1/lists/12/value");
+    const result = res.data.data.results;
+    setPropertyAffectedValue(result);
+  }
+  const fetchPropertyTypeValue = async()=>{
+    const res = await api.get("api/v1/lists/13/value");
+    const result = res.data.data.results;
+    setPropertyTypeValue(result);
+  }
+
+  useEffect(()=>{
+    fetchPropertyAffectedValue();
+    fetchPropertyTypeValue();
+  },[])
   return (
     <div>
       <Container>
@@ -92,13 +112,13 @@ const PropertyAffected = () => {
                     Do you have details to share about the properties affected?
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
-                  {radioDecide.map((value) => (
+                  {propertyAffectedValue!==0?propertyAffectedValue.map((value,index) => (
                     <FormControlLabel
-                      value={value}
+                      value={value.inputValue}
                       control={<Radio />}
-                      label={value}
+                      label={value.inputLabel}
                     />
-                  ))}
+                  )):null}
                 </Grid>
 
                 <Grid item md={12}>
@@ -124,9 +144,9 @@ const PropertyAffected = () => {
                       id="person-type"
                       label="Person type"
                     >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
+                      {propertyTypeValue.length!==0?propertyTypeValue.map((selectValues,index) => (
+                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
+                      )):null}
                     </Select>
                   </FormControl>
                 </Grid>

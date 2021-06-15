@@ -4,7 +4,7 @@ export const getToken = () => localStorage.getItem("token");
 
 export const removeToken = () => localStorage.removeItem("token");
 
-export const apiUrl = "http://34.70.4.134:8051/api/";
+export const apiUrl = "https://feature1-hseapi.paceos.io/";
 export const capitalize = (s) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toUpperCase() + s.slice(1);

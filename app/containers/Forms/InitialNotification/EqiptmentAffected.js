@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -21,6 +21,8 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -65,6 +67,32 @@ const EqiptmentAffected = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+
+  const [equipmentAffected, setequipmentAffected] = useState([]);
+  const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
+  // const []
+
+  const fetchEquipmentAffectedValue = async () => {
+    const res = await api.get("api/v1/lists/14/value");
+    const result = res.data.data.results;
+    setequipmentAffected(result);
+  };
+  
+  const fetchEquipmentTypeValue = async () => {
+    const res = await api.get("api/v1/lists/15/value");
+    const result = res.data.data.results;
+    setEquipmentTypeValue(result);
+  };
+
+  // const fetchEquipmentTypeValue = async()=>{
+  //   const res = await api.get("api/v1/lists/16/value");
+  //   const result = res.data.data.results;
+  //   setEquipmentTypeValue(result);
+  // }
+  useEffect(() => {
+    fetchEquipmentAffectedValue();
+    fetchEquipmentTypeValue();
+  }, []);
   return (
     <div>
       <Container>
@@ -85,13 +113,15 @@ const EqiptmentAffected = () => {
                     Do you have details to share about the equiptment accected?
                   </Typography>
 
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                  {equipmentAffected.length !== 0
+                    ? equipmentAffected.map((value,index) => (
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
+                    : null}
                 </Grid>
 
                 <Grid item md={6}>
@@ -106,9 +136,16 @@ const EqiptmentAffected = () => {
                       id="eq-type"
                       label="Equiptment type"
                     >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
+                      {equipmentTypeValue.length !== 0
+                        ? equipmentTypeValue.map((selectValues, index) => (
+                            <MenuItem
+                              key={index}
+                              value={selectValues.inputValue}
+                            >
+                              {selectValues.inputLabel}
+                            </MenuItem>
+                          ))
+                        : null}
                     </Select>
                   </FormControl>
                 </Grid>

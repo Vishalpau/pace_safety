@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -35,6 +35,9 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+
+import api from '../../../utils/axios';
+import { isNullLiteral } from "babel-types";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -85,6 +88,19 @@ const ReportingAndNotification = () => {
   const radioDecide = ["Yes", "No", "N/A"];
   const [files] = useState([]);
   const classes = useStyles();
+
+  const [reportedToValue, setReportedToValue] = useState([]);
+
+  const fetchReportedToValue = async () => {
+    const res = await api.get("api/v1/lists/20/value");
+    const result = res.data.data.results;
+    setReportedToValue(result);
+  }
+
+  useEffect(()=>{
+    fetchReportedToValue();
+  },[])
+
   return (
     <div>
       <Container>
@@ -106,13 +122,13 @@ const ReportingAndNotification = () => {
 
                   <FormControl component="fieldset">
                     <RadioGroup aria-label="gender">
-                      {reportedTo.map((value) => (
+                      {reportedToValue.length !==0?reportedToValue.map((value, index) => (
                         <FormControlLabel
-                          value={value}
+                          value={value.inputValue}
                           control={<Radio />}
-                          label={value}
+                          label={value.inputLabel}
                         />
-                      ))}
+                      )):null}
                     </RadioGroup>
                   </FormControl>
                 </Grid>

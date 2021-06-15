@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -20,6 +20,8 @@ import {
 
 import FormSideBar from "../FormSideBar";
 import FormHeader from "../FormHeader";
+
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -63,6 +65,42 @@ const EnvironmentAffected = () => {
 
   const classes = useStyles();
 
+  const [environmentAffectedValue, setEnvironmentAffectedValue] = useState([]);
+  const [anyReleaseValue, setAnyReleaseValue] = useState([]);
+  const [impactOnWildLife, setImpactOnWildLife] = useState([]);
+  const [waterbodyAffectedValue, setWaterbodyAffectedValue] = useState([]);
+
+  const fetchWaterBodyAffectedValue = async () => {
+    const res = await api.get("api/v1/lists/19/value");
+    const result = res.data.data.results;
+    setWaterbodyAffectedValue(result);
+  }
+
+  const fetchImpactOnWildLifeValue = async () => {
+    const res = await api.get("api/v1/lists/18/value");
+    const result = res.data.data.results;
+    setImpactOnWildLife(result);
+  }
+
+  const fetchAnyReleaseValue = async () => {
+    const res = await api.get("api/v1/lists/17/value");
+    const result = res.data.data.results;
+    setAnyReleaseValue(result);
+  };
+
+  const fetchEquipmentAffectedValue = async () => {
+    const res = await api.get("api/v1/lists/16/value");
+    const result = res.data.data.results;
+    setEnvironmentAffectedValue(result);
+  };
+  useEffect(()=>{
+    fetchEquipmentAffectedValue();
+    fetchAnyReleaseValue();
+    fetchImpactOnWildLifeValue();
+    fetchWaterBodyAffectedValue();
+  },[])
+  
+
   return (
     <div>
       <Container>
@@ -80,13 +118,13 @@ const EnvironmentAffected = () => {
               <Grid container item md={9} spacing={3}>
                 <Grid item md={6}>
                   <p>Where there any spills</p>
-                  {radioDecide.map((value) => (
+                  {environmentAffectedValue.length!==0?environmentAffectedValue.map((value,index) => (
                     <FormControlLabel
-                      value={value}
+                      value={value.inputValue}
                       control={<Radio />}
-                      label={value}
+                      label={value.inputLabel}
                     />
-                  ))}
+                  )):null}
                 </Grid>
 
                 <Grid item md={12}>
@@ -106,13 +144,13 @@ const EnvironmentAffected = () => {
                       Where there any release
                     </p>
 
-                    {radioDecide.map((value) => (
+                    {anyReleaseValue.length!==0?anyReleaseValue.map((value) => (
                       <FormControlLabel
                         value={value}
                         control={<Radio />}
                         label={value}
                       />
-                    ))}
+                    )):null}
                   </div>
                 </Grid>
 
@@ -136,13 +174,14 @@ const EnvironmentAffected = () => {
                       Where there any impact on wildlife
                     </p>
 
-                    {radioDecide.map((value) => (
+                    {impactOnWildLife.length!==0?impactOnWildLife.map((value,index) => (
                       <FormControlLabel
-                        value={value}
+                      key={index}
+                        value={value.inputValue}
                         control={<Radio />}
-                        label={value}
+                        label={value.inputLabel}
                       />
-                    ))}
+                    )):null}
                   </div>
                 </Grid>
 
@@ -166,13 +205,13 @@ const EnvironmentAffected = () => {
                       Where there any waterbody affected
                     </p>
 
-                    {radioDecide.map((value) => (
+                    {waterbodyAffectedValue!== 0 ? waterbodyAffectedValue.map((value) => (
                       <FormControlLabel
-                        value={value}
+                        value={value.inputValue}
                         control={<Radio />}
-                        label={value}
+                        label={value.inputLabel}
                       />
-                    ))}
+                    )):null}
                   </div>
                 </Grid>
 
