@@ -838,6 +838,6 @@ module.exports = [
     key: 'no_child',
     name: 'One Level Menu',
     icon: 'ion-ios-document-outline',
-    linkParent: '/app/pages/blank-page',
+    linkParent: '/app/pages/blank-page/',
   }
 ];

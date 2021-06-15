@@ -87,7 +87,7 @@ const RootCauseAnalysis = () => {
                   <KeyboardDatePicker
                     label="Investigation Start Date"
                     className={classes.formControl}
-                    variant="outlined"
+                    inputVariant="outlined"
                     required
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
@@ -101,7 +101,7 @@ const RootCauseAnalysis = () => {
                   <KeyboardDatePicker
                     label="Investigation End Date"
                     className={classes.formControl}
-                    variant="outlined"
+                    inputVariant="outlined"
                     required
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
@@ -133,6 +133,7 @@ const RootCauseAnalysis = () => {
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <DateTimePicker
                     autoOk
+                    inputVariant="outlined"
                     className={classes.formControl}
                     ampm={false}
                     value={selectedDate}
@@ -146,7 +147,7 @@ const RootCauseAnalysis = () => {
                   <KeyboardDatePicker
                     label="Analysis Conduted By"
                     className={classes.formControl}
-                    variant="outlined"
+                    inputVariant="outlined"
                     required
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
