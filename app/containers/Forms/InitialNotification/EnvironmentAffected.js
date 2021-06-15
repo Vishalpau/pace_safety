@@ -103,6 +103,7 @@ const EnvironmentAffected = () => {
 
   return (
     <div>
+      {console.log(INITIAL_NOTIFICATION_FORM)}
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">

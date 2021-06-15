@@ -160,10 +160,17 @@ const BasicCause = () => {
                 </Grid>
 
                 <Grid item md={6}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+                  >
+                    Previous
+                  </Button>
                   <Button
                     variant="contained"
                     color="primary"
-                    href="#contained-buttons"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
                   >
                     Next
                   </Button>

@@ -196,9 +196,14 @@ const Details = () => {
                 </p>
               </Grid>
               <Grid item md={12}>
-                <Button variant="contained" color="primary">
-                  Submit
-                </Button>
+              
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+                  >
+                    Next
+                  </Button>
               </Grid>
             </Grid>
             <Grid item md={3}>

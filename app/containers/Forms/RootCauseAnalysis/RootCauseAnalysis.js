@@ -21,17 +21,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
 }));
-
 const RootCauseAnalysis = () => {
   const reportedTo = [
     "Internal Leadership",
@@ -46,11 +43,9 @@ const RootCauseAnalysis = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   return (
@@ -92,7 +87,7 @@ const RootCauseAnalysis = () => {
                   <KeyboardDatePicker
                     label="Investigation Start Date"
                     className={classes.formControl}
-                    variant="outlined"
+                    inputVariant="outlined"
                     required
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
@@ -106,7 +101,7 @@ const RootCauseAnalysis = () => {
                   <KeyboardDatePicker
                     label="Investigation End Date"
                     className={classes.formControl}
-                    variant="outlined"
+                    inputVariant="outlined"
                     required
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
@@ -138,6 +133,7 @@ const RootCauseAnalysis = () => {
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <DateTimePicker
                     autoOk
+                    inputVariant="outlined"
                     className={classes.formControl}
                     ampm={false}
                     value={selectedDate}
@@ -151,7 +147,7 @@ const RootCauseAnalysis = () => {
                   <KeyboardDatePicker
                     label="Analysis Conduted By"
                     className={classes.formControl}
-                    variant="outlined"
+                    inputVariant="outlined"
                     required
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
@@ -179,7 +175,6 @@ const RootCauseAnalysis = () => {
               </Grid>
               <Grid item md={12}>
                 <p>Where there any spills</p>
-
                 {radioDecide.map((value) => (
                   <FormControlLabel
                     value={value}
@@ -200,9 +195,20 @@ const RootCauseAnalysis = () => {
                 />
               </Grid>
               <Grid item md={12}>
-                <Button variant="contained" color="primary">
-                  Submit
-                </Button>
+              <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/why-analysis/"
+                  >
+                    Next
+                  </Button>
               </Grid>
             </Grid>
             <Grid item={3}>
@@ -217,5 +223,4 @@ const RootCauseAnalysis = () => {
     </Container>
   );
 };
-
 export default RootCauseAnalysis;

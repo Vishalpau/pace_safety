@@ -226,9 +226,20 @@ const BasicCauseAndAction = () => {
               </Grid>
 
               <Grid item md={12}>
-                <Button variant="contained" color="primary">
-                  Next
-                </Button>
+              <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause/"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+                  >
+                    Next
+                  </Button>
               </Grid>
             </Grid>
             <Grid item md={3}>
