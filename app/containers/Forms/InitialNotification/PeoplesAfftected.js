@@ -56,7 +56,7 @@ const PeoplesAffected = () => {
 
   const [form, setForm] = useState({
                                     detailindividualeffected:"",
-                                    affectedpersons:[{
+                                    affectedpersons:{
                                                       persontype:"",
                                                       department:"",
                                                       name:"",
@@ -64,7 +64,7 @@ const PeoplesAffected = () => {
                                                       ismedicalcare:"",
                                                       offsiteassesment:"",
                                                       locationdetails:""
-                                                    }],
+                                                    },
                                     describeactiontaken:""
                                   })
     
@@ -155,12 +155,19 @@ const PeoplesAffected = () => {
                       labelId="person-type-label"
                       id="person-type"
                       label="Person type"
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          affectedpersons: {...form.affectedpersons,persontype:e.target.value.toString()},
+                        });
+                      }}
                     >
                       {selectValues.map((selectValues) => (
                         <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  {error && error.persontype && <p>{error.persontype}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -169,12 +176,23 @@ const PeoplesAffected = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="dep-label">Department</InputLabel>
-                    <Select labelId="dep-label" id="dep" label="Department">
+                    <Select 
+                    labelId="dep-label" 
+                    id="dep" 
+                    label="Department"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedpersons: {...form.affectedpersons,department:e.target.value.toString()},
+                      });
+                    }}
+                    >
                       {selectValues.map((selectValues) => (
                         <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  {error && error.department && <p>{error.department}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -184,7 +202,14 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Name of people affected"
                     className={classes.formControl}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedpersons: {...form.affectedpersons,name:e.target.value},
+                      });
+                    }}
                   />
+                  {error && error.name && <p>{error.name}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -194,7 +219,14 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Identification number of person"
                     className={classes.formControl}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedpersons: {...form.affectedpersons,idnumber:e.target.value},
+                      });
+                    }}
                   />
+                   {error && error.idnumber && <p>{error.idnumber}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -209,9 +241,16 @@ const PeoplesAffected = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            affectedpersons: {...form.affectedpersons,ismedicalcare:e.target.value},
+                          });
+                        }}
                       />
                     ))}
                   </div>
+                  {error && error.ismedicalcare && <p>{error.ismedicalcare}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -221,7 +260,14 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Worker taken offisite for further assesment?"
                     className={classes.formControl}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedpersons: {...form.affectedpersons,offsiteassesment:e.target.value},
+                      });
+                    }}
                   />
+                  {error && error.offsiteassesment && <p>{error.offsiteassesment}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -231,7 +277,14 @@ const PeoplesAffected = () => {
                     id="location-details"
                     label="Location details of assesment center?"
                     className={classes.formControl}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedpersons: {...form.affectedpersons,locationdetails:e.target.value},
+                      });
+                    }}
                   />
+                  {error && error.locationdetails && <p>{error.locationdetails}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -267,9 +320,9 @@ const PeoplesAffected = () => {
                     Previouse
                   </Button>
                   <Button
-                    // href={Object.keys(error).length === 0? 
-                    //   "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/" 
-                    //   : "#"}
+                    href={Object.keys(error).length === 0? 
+                      "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/" 
+                      : "#"}
                     variant="contained"
                     color="primary"
                     onClick={(e)=>handelNext(e)}
