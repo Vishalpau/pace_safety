@@ -67,6 +67,8 @@ const PeoplesAffected = () => {
                                                     }],
                                     describeactiontaken:""
                                   })
+    
+  const [error,setError] = useState({})
 
   function handelNext(e){
     console.log(form)
@@ -121,8 +123,16 @@ const PeoplesAffected = () => {
                       value={value}
                       control={<Radio />}
                       label={value}
+
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          detailindividualeffected: e.target.value,
+                        });
+                      }}
                     />
                   ))}
+                  {error && error.detailindividualeffected && <p>{error.detailindividualeffected}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -239,7 +249,14 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        describeactiontaken: e.target.value,
+                      });
+                    }}
                   />
+                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
                 </Grid>
                 <Grid item md={6}>
                   <Button
@@ -250,9 +267,9 @@ const PeoplesAffected = () => {
                     Previouse
                   </Button>
                   <Button
-                    href={Object.keys(error).length === 0? 
-                      "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/" 
-                      : "#"}
+                    // href={Object.keys(error).length === 0? 
+                    //   "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/" 
+                    //   : "#"}
                     variant="contained"
                     color="primary"
                     onClick={(e)=>handelNext(e)}
