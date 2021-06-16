@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -21,6 +21,8 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import EquipmentValidate from "../../Validator/EquipmentValidation"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -50,6 +52,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EqiptmentAffected = () => {
+
+  const [form, setForm] = useState({
+    detailequipmentaffected:"",
+    affectedequipment:{
+                      equipmentytype:"",
+                      describe:"",
+                      damage:""
+                    },
+    describeactiontaken:""
+  })
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -64,6 +77,16 @@ const EqiptmentAffected = () => {
   const selectValues = [1, 2, 3, 4];
 
   const radioDecide = ["Yes", "No"];
+
+  const [error,setError] = useState({})
+
+  function handelNext(e){
+    console.log(form)
+    const { error, isValid } = EquipmentValidate(form)
+    setError(error)
+    console.log(error,isValid)
+  }
+
   const classes = useStyles();
   return (
     <div>
@@ -90,8 +113,15 @@ const EqiptmentAffected = () => {
                       value={value}
                       control={<Radio />}
                       label={value}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          detailequipmentaffected: e.target.value,
+                        });
+                      }}
                     />
                   ))}
+                  {error && error.detailequipmentaffected && <p>{error.detailequipmentaffected}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -105,12 +135,20 @@ const EqiptmentAffected = () => {
                       labelId="eq-type-label"
                       id="eq-type"
                       label="Equiptment type"
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          affectedequipment: {...form.affectedequipment,
+                                                 equipmentytype:e.target.value.toString()},
+                        });
+                      }}
                     >
                       {selectValues.map((selectValues) => (
                         <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  {error && error.equipmentytype && <p>{error.equipmentytype}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -120,7 +158,15 @@ const EqiptmentAffected = () => {
                     id="filled-basic"
                     label="If others, describe"
                     className={classes.formControl}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedequipment: {...form.affectedequipment,
+                                               describe:e.target.value.toString()},
+                      });
+                    }}
                   />
+                  {error && error.describe && <p>{error.describe}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -132,7 +178,15 @@ const EqiptmentAffected = () => {
                     rows="3"
                     label="Describe the damage"
                     className={classes.fullWidth}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedequipment: {...form.affectedequipment,
+                                               damage:e.target.value.toString()},
+                      });
+                    }}
                   />
+                  {error && error.damage && <p>{error.damage}</p> }
                 </Grid>
 
                 <Grid item lg={12} md={6} sm={6}>
@@ -150,7 +204,14 @@ const EqiptmentAffected = () => {
                     rows="4"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        describeactiontaken: e.target.value,
+                      });
+                    }}
                   />
+                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
                 </Grid>
                 <Box marginTop={4}>
                   <Button
@@ -163,7 +224,11 @@ const EqiptmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                    
+                    href={Object.keys(error).length === 0? 
+                      "http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/" 
+                      : "#"}
+                    onClick={(e)=>handelNext(e)}
                   >
                     Next
                   </Button>

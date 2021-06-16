@@ -1,29 +1,29 @@
 import validator from 'validator';
 
-function PropertyValidate(data){
+function EquipmentValidate(data){
     console.log(data)
     let isValid = true
     const error = {}
 
-    if (validator.isEmpty(data.detailpropertyaffected)){
-        error.detailpropertyaffected = "this filed is empty"
+    if (validator.isEmpty(data.detailequipmentaffected)){
+        error.detailequipmentaffected = "this filed is empty"
         isValid = false
     }else{
         isValid = true
     }
    
 
-    if (validator.isEmpty(data.affectedproperty.propertytype)){
-        error.propertytype = "this filed is empty"
+    if (validator.isEmpty(data.affectedequipment.equipmentytype)){
+        error.equipmentytype = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.affectedproperty.describe)){
+    if (validator.isEmpty(data.affectedequipment.describe)){
         error.describe = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.affectedproperty.damage)){
+    if (validator.isEmpty(data.affectedequipment.damage)){
         error.damage = "this filed is empty"
         isValid = false
     }
@@ -38,4 +38,4 @@ function PropertyValidate(data){
     return { error, isValid }
 } 
 
-export default PropertyValidate
+export default EquipmentValidate
