@@ -15,6 +15,7 @@ import {
   TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  KeyboardTimePicker
 } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -23,17 +24,15 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
-
+import moment from 'moment'
 import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-
-import api from "../../../utils/axios";
-import moment from 'moment'
-
+import { func } from "prop-types";
+import validate from "../../Validator/validation"
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -48,98 +47,62 @@ const useStyles = makeStyles((theme) => ({
     padding: ".75rem 0",
   },
 }));
-
 const IncidentDetails = () => {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2014-08-18")
+  );
+  const [selectedTime, setSelectedTime] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-
-  const handleDateChange = (date) => {
-    console.log(date)
-    setSelectedDate(date);
-    const dateFormate = moment(date).format('YYYY/DD/MM')
-    alert(dateFormate)
-  };
+  const [error,setError] = useState({})
   const selectValues = [1, 2, 3, 4];
+  const companyName = ["ABC Ltd","XYZ steel","ABA power","XDA works"]
   const radioDecide = ["Yes", "No", "N/A"];
-
   const [listData, setListData] = useState([]);
-  const [incidentData, setIncidentData] = useState([]);
-  const [personDuringIncident, setPersonDuringIncident] = useState([]);
-  const [propertyDamage, setPropertyDamage] = useState([]);
-  const [equipmentDamage, setEquipmentDamage] = useState([]);
-  const [environmentDamage, setEnvironmentdamage] = useState([]);
-  const [contractor, setContractor] = useState([]);
-  const [subContractor, setSubContractor] = useState([]);
-
-  const fetchListData = async () => {
-    const res = await api.get("api/v1/lists/");
-
-    const result = res.data.data.results;
-    setListData(result);
+  const [form, setForm] = useState({projectname:"",
+                                    unitname:"",
+                                    incidenttype:"",
+                                    incidentdata:"2021/09/06",
+                                    incidenttime:"21:11:54",
+                                    title:"",
+                                    description:"",
+                                    immediateactiontaken:"",
+                                    location:"",
+                                    contractor:"",
+                                    subcontractor:"",
+                                    personaffected:"",
+                                    propertyaffected:"",
+                                    equiptmenteffected:"",
+                                    environmentaffected:""
+})
+  function handelNext(e){
+    console.log(form)
+    const { error, isValid } = validate(form)
+    setError(error)
+    console.log(error,isValid)
+  }
+  const handleDateChange = (date) => {
+    let onlyDate = moment(date).format('YYYY/DD/MM')
+    console.log(onlyDate)
+    setForm({
+      ...form,
+      incidentdata: onlyDate,
+    });
   };
-  const fetchIncidentData = async () => {
-    const res = await api.get("api/v1/lists/1/value");
-
-    const result = res.data.data.results;
-    setIncidentData(result);
-    console.log(result);
-  };
-  const fetchContractorData = async () => {
-    const res = await api.get("api/v1/lists/2/value");
-
-    const result = res.data.data.results;
-    setContractor(result);
-    console.log(result);
-  };
-  const fetchSubContractorData = async () => {
-    const res = await api.get("api/v1/lists/3/value");
-
-    const result = res.data.data.results;
-    setSubContractor(result);
-    console.log(result);
-  };
-  const fetchPersonDuringIncident = async () => {
-    const res = await api.get("api/v1/lists/4/value");
-
-    const result = res.data.data.results;
-    setPersonDuringIncident(result);
-    console.log(result);
-  };
-  const fetchPropertyDamage = async () => {
-    const res = await api.get("api/v1/lists/5/value");
-
-    const result = res.data.data.results;
-    setPropertyDamage(result);
-    console.log(result);
-  };
-  const fetchEquipmentDamage = async () => {
-    const res = await api.get("api/v1/lists/6/value");
-
-    const result = res.data.data.results;
-    setEquipmentDamage(result);
-    console.log(result);
-  };
-  const fetchEnviormentDamage = async () => {
-    const res = await api.get("api/v1/lists/7/value");
-
-    const result = res.data.data.results;
-    setEnvironmentdamage(result);
-    console.log(result);
-  };
-
-  useEffect(() => {
-    fetchListData();
-    fetchIncidentData();
-    fetchContractorData();
-    fetchSubContractorData();
-    fetchPersonDuringIncident();
-    fetchPropertyDamage();
-    fetchEquipmentDamage();
-    fetchEnviormentDamage();
-  }, []);
-
+  const handelTimeChange = (date) => {
+    let onlyTime = moment(date).format('HH:mm')
+    setForm({
+      ...form,
+      incidenttime: onlyTime,
+    });
+  }
+  useEffect(async()=>{
+    const res = await API.get('api/v1/lists/');
+    const result = res.data.data.results
+    setListData(result)
+  },[])
+  
   return (
     <div>
       <Container>
@@ -152,9 +115,10 @@ const IncidentDetails = () => {
               Initial Notification
             </Typography>
           </Box>
-
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
+              
+              {/* project name */}
               <Grid item md={6}>
                 <FormControl
                   required
@@ -167,15 +131,26 @@ const IncidentDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Project Name"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        projectname: e.target.value,
+                      });
+                    }}
                   >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    {companyName.map((selectValues) => (
+                      <MenuItem 
+                        value={selectValues} 
+                      >
+                        {selectValues}
+                        </MenuItem>
                     ))}
                   </Select>
+                  {error && error.projectname && <p>{error.projectname}</p> }
                   <FormHelperText>Required</FormHelperText>
                 </FormControl>
               </Grid>
-
+              {/* unit name */}
               <Grid item md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">Unit Name</InputLabel>
@@ -183,14 +158,21 @@ const IncidentDetails = () => {
                     labelId="unit-name-label"
                     id="unit-name"
                     label="Unit Name"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        unitname: toString(e.target.value),
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.unitname && <p>{error.unitname}</p> }
                 </FormControl>
               </Grid>
-
+              {/* incident type */}
               <Grid item md={6}>
                 <FormControl
                   variant="outlined"
@@ -198,78 +180,80 @@ const IncidentDetails = () => {
                   className={classes.formControl}
                 >
                   <InputLabel id="demo-simple-select-label">
-                    {listData.length !== 0
-                      ? listData[0].listLabel
-                      : "Incident Type"}
+                    Incident Type
                   </InputLabel>
                   <Select
                     labelId="incident-type-label"
                     id="incident-type"
                     label="Incident Type"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        incidenttype: toString(e.target.value),
+                      });
+                    }}
                   >
-                    {incidentData.length !== 0
-                      ? incidentData.map((incident, index) => (
-                          <MenuItem key={index} value={incident.inputValue}>
-                            {incident.inputLabel}
-                          </MenuItem>
-                        ))
-                      : null}
+                    {selectValues.map((selectValues) => (
+                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    ))}
                   </Select>
                   <FormHelperText>Required</FormHelperText>
+                  {error && error.incidenttype && <p>{error.incidenttype}</p> }
                 </FormControl>
               </Grid>
-
+              
+              {/* date */}
               <Grid item md={6}>
                 <MuiPickersUtilsProvider
                   variant="outlined"
                   utils={DateFnsUtils}
                 >
-                  <KeyboardDatePicker
-                    label="Incident Date"
-                    className={classes.formControl}
-                    inputVariant="outlined"
-                    required
-                    id="date-picker-dialog"
-                    format="dd/mm/yyyy"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                  />
+                <KeyboardDatePicker
+                  placeholder="2018/10/10"
+                  value={new Date(form.incidentdata)}
+                  onChange={date => handleDateChange(date)}
+                  format="yyyy/MM/dd"
+                />
+                 
                 </MuiPickersUtilsProvider>
               </Grid>
-
+              
+              {/* time */}
               <Grid item md={6}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <TimePicker
-                    label="Incident Time"
-                    className={classes.formControl}
-                    mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
-                    clearable
-                    required
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    inputVariant="outlined"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton>
-                            <Icon>access_time</Icon>
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
+                 
+                <KeyboardTimePicker
+                  margin="normal"
+                  id="time-picker"
+                  label="Time picker"
+                  // defaultValue="05:30 AM"
+                  value = {selectedTime}
+                  onChange={date => handelTimeChange(date)}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change time',
+                  }}
+                  format="HH:mm"
+                />
                 </MuiPickersUtilsProvider>
               </Grid>
-
+              {/* title */}
               <Grid item lg={12} md={6} sm={6}>
                 <TextField
                   id="title"
                   variant="outlined"
                   label="Title"
                   className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      title: e.target.value,
+                    });
+                  }}
                 />
+                {error && error.title && <p>{error.title}</p> }
               </Grid>
-
+              
+              {/* description */}
               <Grid item md={12}>
                 <TextField
                   multiline
@@ -278,9 +262,18 @@ const IncidentDetails = () => {
                   id="description"
                   label="Description"
                   className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      description: e.target.value,
+                    });
+                  }}
+                  
                 />
+                {error && error.description && <p>{error.description}</p> }
               </Grid>
-
+              
+              {/* immediate-actions */}
               <Grid item md={12}>
                 <TextField
                   variant="outlined"
@@ -289,170 +282,156 @@ const IncidentDetails = () => {
                   rows="4"
                   label="Any immediate actions taken"
                   className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      immediateactiontaken: e.target.value,
+                    });
+                  }}
                 />
+                {error && error.immediateactiontaken && <p>{error.immediateactiontaken}</p> }
               </Grid>
-
+              
+              {/* location */}
               <Grid item md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
                   label="Location"
                   className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      location: e.target.value,
+                    });
+                  }}
                 />
+                {error && error.location && <p>{error.location}</p> }
               </Grid>
-
+              {/* contractor */}
               <Grid item md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="unit-name-label">
-                    {listData.length !== 0
-                      ? listData[1].listLabel
-                      : "Contractor"}
-                  </InputLabel>
-                  <Select
-                    labelId="contractor-name-label"
-                    id="contractor"
-                    label={
-                      listData.length !== 0
-                        ? listData[1].listLabel
-                        : "Contractor"
-                    }
-                  >
-                    {contractor.length !== 0
-                      ? contractor.map((value, index) => (
-                          <MenuItem key={index} value={value.inputValue}>
-                            {value.inputLabel}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* <Grid item md={6}>
                 <TextField
                   variant="outlined"
                   id="contractor"
                   label="Contractor"
                   required
                   className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      contractor: e.target.value,
+                    });
+                  }}
                 />
-              </Grid> */}
-
+                {error && error.contractor && <p>{error.contractor}</p> }
+              </Grid>
+              {/* sub contractor */}
               <Grid item md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="unit-name-label">
-                    {listData.length !== 0
-                      ? listData[2].listLabel
-                      : "Sub-Contractor"}
-                  </InputLabel>
-                  <Select
-                    labelId="contractor-name-label"
-                    id="sub-contractor"
-                    label={
-                      listData.length !== 0
-                        ? listData[2].listLabel
-                        : "Sub-Contractor"
-                    }
-                  >
-                    {subContractor.length !== 0
-                      ? subContractor.map((value, index) => (
-                          <MenuItem key={index} value={value.inputValue}>
-                            {value.inputLabel}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
-                </FormControl>
+                <TextField
+                  id="filled-basic"
+                  label="Sub-Contractor"
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      subcontractor: e.target.value,
+                    });
+                  }}
+                />
+                {error && error.subcontractor && <p>{error.subcontractor}</p> }
               </Grid>
-
+              
+              {/* person affected */}
               <Grid item md={12}>
                 <div className={classes.spacer}>
-                  <p>
-                    {" "}
-                    {listData.length !== 0
-                      ? listData[3].listLabel
-                      : "Were any person affected during incident?"}
-                  </p>
-                  {personDuringIncident.length !== 0
-                    ? personDuringIncident.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputValue}
-                        />
-                      ))
-                    : null}
+                  <p>Were any person affected during incident?</p>
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          personaffected: e.target.value,
+                        });
+                      }}
+                    />
+                  ))}
                 </div>
+                {error && error.personaffected && <p>{error.personaffected}</p> }
               </Grid>
-
+              {/* propery damaged */}
               <Grid item md={12}>
                 <div className={classes.spacer}>
-                  <p>
-                    {listData.length !== 0
-                      ? listData[4].listLabel
-                      : "Was any propery damaged during incident?"}
-                  </p>
-                  {propertyDamage.length !== 0
-                    ? propertyDamage.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                    : null}
+                  <p>Was any propery damaged during incident?</p>
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          propertyaffected: e.target.value,
+                        });
+                      }}
+                    />
+                  ))}
                 </div>
+                {error && error.propertyaffected && <p>{error.propertyaffected}</p> }
               </Grid>
-
+              {/* equiptment damaged */}
               <Grid item md={12}>
                 <div className={classes.spacer}>
-                  <p>
-                    {listData.length !== 0
-                      ? listData[5].listLabel
-                      : "Was there any equiptment damaged?"}
-                  </p>
-
-                  {equipmentDamage.length !== 0
-                    ? equipmentDamage.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                    : null}
+                  <p>Was there any equiptment damaged?</p>
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          equiptmenteffected: e.target.value,
+                        });
+                      }}
+                    />
+                  ))}
                 </div>
+                {error && error.equiptmenteffected && <p>{error.equiptmenteffected}</p> }
               </Grid>
-
+              {/* environment impact */}
               <Grid item md={12}>
-                <p>
-                  {listData.length !== 0
-                    ? listData[6].listLabel
-                    : "Was there any environment impact?"}
-                </p>
-
-                {environmentDamage.length !== 0
-                  ? environmentDamage.map((value, index) => (
-                      <FormControlLabel
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                      />
-                    ))
-                  : null}
+                <p>Was there any environment impact?</p>
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        environmentaffected: e.target.value,
+                      });
+                    }}
+                  />
+                ))}
+                {error && error.environmentaffected && <p>{error.environmentaffected}</p> }
               </Grid>
-
               <Grid item md={12}>
-                {/* {listData.map((item,index)=><h1 key={index}>{item.listLabel}</h1>)} */}
                 <Box marginTop={4}>
                   <Button
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                    href= {Object.keys(error).length === 0? 
+                          "http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/" 
+                          : "#"}
+                    type=  "button"
                     size="medium"
                     variant="contained"
                     color="primary"
+                    onClick={(e)=>handelNext(e)}
                   >
                     Next
                   </Button>
@@ -471,5 +450,4 @@ const IncidentDetails = () => {
     </div>
   );
 };
-
 export default IncidentDetails;

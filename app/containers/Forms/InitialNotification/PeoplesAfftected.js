@@ -23,6 +23,7 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import PeopleValidate from "../../Validator/PeopleValidation";
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +54,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PeoplesAffected = () => {
+  const [form, setForm] = useState({
+    detailindividualeffected: "",
+    affectedpersons: [
+      {
+        persontype: "",
+        department: "",
+        name: "",
+        idnumber: "",
+        ismedicalcare: "",
+        offsiteassesment: "",
+        locationdetails: "",
+      },
+    ],
+    describeactiontaken: "",
+  });
+
+  function handelNext(e) {
+    console.log(form);
+    const { error, isValid } = PeopleValidate(form);
+    setError(error);
+    console.log(error, isValid);
+  }
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -96,8 +120,8 @@ const PeoplesAffected = () => {
   ]);
   const handleSubmit = () => {
     console.log(form);
-    if(individualAffect === 'Yes'){
-      this.props.location.push('')
+    if (individualAffect === "Yes") {
+      this.props.location.push("");
     }
   };
   const handleRadioChange = (event) => {
@@ -376,11 +400,14 @@ const PeoplesAffected = () => {
                     Previouse
                   </Button>
                   <Button
-                    type="button"
-                    onClick={()=>handleSubmit()}
-                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                    href={
+                      Object.keys(error).length === 0
+                        ? "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                        : "#"
+                    }
                     variant="contained"
                     color="primary"
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>

@@ -142,6 +142,7 @@ const EqiptmentAffected = () => {
                       labelId="eq-type-label"
                       id="eq-type"
                       label="Equiptment type"
+                      onChange={(e)=>{setForm({...form,equip:e.target.value})}}
                     >
                       {equipmentTypeValue.length !== 0
                         ? equipmentTypeValue.map((selectValues, index) => (

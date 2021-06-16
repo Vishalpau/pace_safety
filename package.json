@@ -185,6 +185,7 @@
     "serve-favicon": "^2.4.5",
     "slick-carousel": "^1.8.1",
     "tunnel-agent": "^0.6.0",
+    "validator": "^13.6.0",
     "warning": "4.0.2"
   },
   "devDependencies": {
