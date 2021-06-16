@@ -4,7 +4,7 @@ const styles = (theme) => ({
     position: "relative",
     display: "block",
     fontSize: 12,
-    // color: "rgba(255, 255, 255, 0.5)",
+    color: "rgba(255, 255, 255, 0.5)",
     "& p": {
       display: "block",
       margin: 0,
@@ -13,7 +13,7 @@ const styles = (theme) => ({
         marginLeft: 5,
       },
       "& a": {
-        color: theme.palette.primary.main,
+        color: theme.palette.common.white,
         textDecoration: "none",
         margin: "0 5px",
       },

@@ -1,10 +1,8 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
@@ -16,22 +14,16 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { PapperBlock } from "dan-components";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import AccessTime from "@material-ui/icons/AccessTime";
 import Divider from "@material-ui/core/Divider";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 // List
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 
@@ -61,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   statusButton: {
     borderRadius: 4,
-    fontWeight: "bold",
+    fontSize: 12,
   },
 }));
 
@@ -92,7 +84,7 @@ const Summary = () => {
 
       <Grid container spacing={5}>
         <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
               Observation Number
             </Typography>
@@ -107,7 +99,7 @@ const Summary = () => {
             </Box>
             <Divider />
           </Grid>
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
               Incident Progress
             </Typography>
@@ -123,6 +115,49 @@ const Summary = () => {
                     className={classes.statusButton}
                   >
                     Initial Notification
+                  </Button>
+                  <Typography variant="caption" className={Type.textSuccess}>
+                    Done
+                  </Typography>
+                </div>
+                <div className={Styles.item}>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    endIcon={<CheckCircle />}
+                    className={classes.statusButton}
+                  >
+                    Initial Notification
+                  </Button>
+                  <Typography variant="caption" className={Type.textSuccess}>
+                    Done
+                  </Typography>
+                </div>
+                <div className={Styles.item}>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    endIcon={<CheckCircle />}
+                    className={classes.statusButton}
+                  >
+                    Initial Notification
+                  </Button>
+                  <Typography variant="caption" className={Type.textSuccess}>
+                    Done
+                  </Typography>
+                </div>
+                <div className={Styles.item}>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    endIcon={<CheckCircle />}
+                    className={classes.statusButton}
+                  >
+                    Initial Notification Initial Notification Initial
+                    Notification
                   </Button>
                   <Typography variant="caption">Done</Typography>
                 </div>
@@ -184,11 +219,7 @@ const Summary = () => {
               Incident Number
             </Typography>
 
-            <Typography
-              varaint="body"
-              color="textSecondary"
-              className={Type.textGreyDark}
-            >
+            <Typography varaint="body" color="textSecondary">
               3568166
             </Typography>
           </Grid>
