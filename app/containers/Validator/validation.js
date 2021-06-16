@@ -96,15 +96,15 @@ function validate(data){
         isValid = true
     }
 
-    if (validator.isEmpty(data.detailindividualeffected)){
-        error.detailindividualeffected = "this filed is empty"
+    if (validator.isEmpty(data.equiptmenteffected)){
+        error.equiptmenteffected = "this filed is empty"
         isValid = false
     }else{
         isValid = true
     }
 
-    if (validator.isEmpty(data.affectedpersons)){
-        error.affectedpersons = "this filed is empty"
+    if (validator.isEmpty(data.environmentaffected)){
+        error.environmentaffected = "this filed is empty"
         isValid = false
     }else{
         isValid = true
