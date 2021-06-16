@@ -15,6 +15,7 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import RadioGroup from "@material-ui/core/RadioGroup";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -22,7 +23,7 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import api from '../../../utils/axios';
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -73,6 +74,7 @@ const PeoplesAffected = () => {
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
+  const [individualAffect, setIndividualAffect] = useState(false);
   const [listData, setListData] = useState([]);
   const [personTypevalue, setPersonTypeValue] = useState([]);
   const [departmentValue, setDepartmentValue] = useState([]);
@@ -80,45 +82,71 @@ const PeoplesAffected = () => {
   const [individualEffectValue, setIndividualEffetValue] = useState([]);
   const [peopleEffected, setPeopleEffected] = useState([]);
   const [medicalTakenValue, setMedicalTakenValue] = useState([]);
-  
-  const fetchMedicalTakenValue = async()=>{
+  const [form, setForm] = useState([
+    {
+      personType: "",
+      personDepartment: "",
+      personNAme: "",
+      personIdentification: "",
+      personMedicalCare: "",
+      workerOffsiteAssessment: "",
+      locationAssessmentCenter: "",
+      fkIncidentId: 0,
+    },
+  ]);
+  const handleSubmit = () => {
+    console.log(form);
+    if(individualAffect === 'Yes'){
+      this.props.location.push('')
+    }
+  };
+  const handleRadioChange = (event) => {
+    // setValue(event.target.value);
+    // if (event.target.value === "Yes") {
+    setIndividualAffect(event.target.value);
+    // } else {
+    //   setIndividualAffect(false);
+    // }
+    // setHelperText(' ');
+    // setError(false);
+  };
+  const fetchMedicalTakenValue = async () => {
     const res = await api.get("api/v1/lists/11/value");
 
     const result = res.data.data.results;
     setMedicalTakenValue(result);
-    console.log(result)
-  }
+    console.log(result);
+  };
 
-  const fetchDetailsOfIndividualAffect = async()=>{
+  const fetchDetailsOfIndividualAffect = async () => {
     const res = await api.get("api/v1/lists/8/value");
     const result = res.data.data.results;
     setIndividualEffetValue(result);
-  }
-  const fetchPersonType = async()=>{
+  };
+  const fetchPersonType = async () => {
     const res = await api.get("api/v1/lists/9/value");
     const result = res.data.data.results;
     setPersonTypeValue(result);
-  }
-  const fetchDepartmetValue = async()=>{
+  };
+  const fetchDepartmetValue = async () => {
     const res = await api.get("api/v1/lists/10/value");
     const result = res.data.data.results;
     setDepartmentValue(result);
-  }
+  };
 
-  const fetchListData = async()=>{
+  const fetchListData = async () => {
     const res = await api.get("api/v1/lists/");
 
     const result = res.data.data.results;
     setListData(result);
-  }
+  };
 
-  useEffect( () => {
+  useEffect(() => {
     fetchListData();
     fetchDetailsOfIndividualAffect();
     fetchPersonType();
     fetchDepartmetValue();
     fetchMedicalTakenValue();
-   
   }, []);
   return (
     <div>
@@ -139,134 +167,206 @@ const PeoplesAffected = () => {
                   <Typography variant="body2">
                     Do you have details of individual effected?
                   </Typography>
-                  {/* <p>Do you have details of individual effected?</p>   */}
-                  {individualEffectValue.length !==0?individualEffectValue.map((value,index) => (
-                    <FormControlLabel
-                    key={index}
-                      value={value.inputValue}
-                      control={<Radio />}
-                      label={value.inputLabel}
-                    />
-                  )):null}
-                </Grid>
-
-                <Grid item md={12}>
-                  <Box marginTop={2} marginBottom={2}>
-                    {/* <h4>Details of people affected</h4> */}
-                    <Typography variant="h6">
-                      Details of people affected
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid item md={6}>
-                  {/* <p>person type</p> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
+                  <RadioGroup
+                    aria-label="quiz"
+                    name="quiz"
+                    value={individualAffect}
+                    onChange={handleRadioChange}
                   >
-                    <InputLabel id="person-type-label">Person type</InputLabel>
-                    <Select
-                      labelId="person-type-label"
-                      id="person-type"
-                      label="Person type"
-                    >
-                      {personTypevalue.length!==0?personTypevalue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
-                      )):null}
-                    </Select>
-                  </FormControl>
+                    {/* <p>Do you have details of individual effected?</p>   */}
+                    {individualEffectValue.length !== 0
+                      ? individualEffectValue.map((value, index) => (
+                          <FormControlLabel
+                            key={index}
+                            id={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                            // onChange = {(e)=> e.target.value === 'Yes'?setIndividualAffect(true):setIndividualAffect(false)}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
                 </Grid>
+                {individualAffect === "Yes" ? (
+                  <>
+                    <Grid item md={12}>
+                      <Box marginTop={2} marginBottom={2}>
+                        {/* <h4>Details of people affected</h4> */}
+                        <Typography variant="h6">
+                          Details of people affected
+                        </Typography>
+                      </Box>
+                    </Grid>
 
-                <Grid item md={6}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="dep-label">Department</InputLabel>
-                    <Select labelId="dep-label" id="dep" label="Department">
-                      {departmentValue.length!==0?departmentValue.map((selectValues,index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
-                      )):null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                    <Grid item md={6}>
+                      {/* <p>person type</p> */}
+                      <FormControl
+                        variant="outlined"
+                        className={classes.formControl}
+                      >
+                        <InputLabel id="person-type-label">
+                          Person type
+                        </InputLabel>
+                        <Select
+                          labelId="person-type-label"
+                          id="person-type"
+                          label="Person type"
+                          onChange={(e) => {
+                            setForm({ ...form, personType: e.target.value });
+                          }}
+                        >
+                          {personTypevalue.length !== 0
+                            ? personTypevalue.map((selectValues, index) => (
+                                <MenuItem
+                                  key={index}
+                                  value={selectValues.inputValue}
+                                >
+                                  {selectValues.inputLabel}
+                                </MenuItem>
+                              ))
+                            : null}
+                        </Select>
+                      </FormControl>
+                    </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>Name of people affected</p> */}
-                  <TextField
-                    id="name-affected"
-                    variant="outlined"
-                    label="Name of people affected"
-                    className={classes.formControl}
-                  />
-                </Grid>
+                    <Grid item md={6}>
+                      <FormControl
+                        variant="outlined"
+                        className={classes.formControl}
+                      >
+                        <InputLabel id="dep-label">Department</InputLabel>
+                        <Select
+                          labelId="dep-label"
+                          id="dep"
+                          label="Department"
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              personDepartment: e.target.value,
+                            });
+                          }}
+                        >
+                          {departmentValue.length !== 0
+                            ? departmentValue.map((selectValues, index) => (
+                                <MenuItem
+                                  key={index}
+                                  value={selectValues.inputValue}
+                                >
+                                  {selectValues.inputLabel}
+                                </MenuItem>
+                              ))
+                            : null}
+                        </Select>
+                      </FormControl>
+                    </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>Identification number of person</p> */}
-                  <TextField
-                    id="id-num"
-                    variant="outlined"
-                    label="Identification number of person"
-                    className={classes.formControl}
-                  />
-                </Grid>
-
-                <Grid item md={12}>
-                  <div className={classes.spacer}>
-                    {/* <p>Was that person taken to medical care?</p> */}
-                    <Typography variant="body2">
-                      Was that person taken to medical care?
-                    </Typography>
-
-                    {medicalTakenValue!==0?medicalTakenValue.map((value,index) => (
-                      <FormControlLabel
-                      key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
+                    <Grid item md={6}>
+                      {/* <p>Name of people affected</p> */}
+                      <TextField
+                        id="name-affected"
+                        variant="outlined"
+                        label="Name of people affected"
+                        className={classes.formControl}
+                        onChange={(e) => {
+                          setForm({ ...form, personNAme: e.target.value });
+                        }}
                       />
-                    )):null}
-                  </div>
-                </Grid>
+                    </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>Worker taken offisite for further assesment?</p> */}
-                  <TextField
-                    id="worker-taken"
-                    variant="outlined"
-                    label="Worker taken offisite for further assesment?"
-                    className={classes.formControl}
-                  />
-                </Grid>
+                    <Grid item md={6}>
+                      {/* <p>Identification number of person</p> */}
+                      <TextField
+                        id="id-num"
+                        variant="outlined"
+                        label="Identification number of person"
+                        className={classes.formControl}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            personIdentification: e.target.value,
+                          });
+                        }}
+                      />
+                    </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>Location details of assesment center</p> */}
-                  <TextField
-                    variant="outlined"
-                    id="location-details"
-                    label="Worker taken offisite for further assesment?"
-                    className={classes.formControl}
-                  />
-                </Grid>
+                    <Grid item md={12}>
+                      <div className={classes.spacer}>
+                        {/* <p>Was that person taken to medical care?</p> */}
+                        <Typography variant="body2">
+                          Was that person taken to medical care?
+                        </Typography>
 
-                <Grid item md={12}>
-                  <button className={classes.textButton}>
-                    <PersonAddIcon /> Add details of another person affected
-                  </button>
-                </Grid>
+                        {medicalTakenValue !== 0
+                          ? medicalTakenValue.map((value, index) => (
+                              <FormControlLabel
+                                key={index}
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                                onChange={(e) => {
+                                  setForm({
+                                    ...form,
+                                    personMedicalCare: e.target.value,
+                                  });
+                                }}
+                              />
+                            ))
+                          : null}
+                      </div>
+                    </Grid>
 
-                <Grid item md={12}>
-                  {/* <p>Comments</p> */}
-                  <TextField
-                    id="comments"
-                    multiline
-                    rows="3"
-                    variant="outlined"
-                    label="Describe any actions taken"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
+                    <Grid item md={6}>
+                      {/* <p>Worker taken offisite for further assesment?</p> */}
+                      <TextField
+                        id="worker-taken"
+                        variant="outlined"
+                        label="Worker taken offisite for further assesment?"
+                        className={classes.formControl}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            workerOffsiteAssessment: e.target.value,
+                          });
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item md={6}>
+                      {/* <p>Location details of assesment center</p> */}
+                      <TextField
+                        variant="outlined"
+                        id="location-details"
+                        label="Location details of assesment center"
+                        className={classes.formControl}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            locationAssessmentCenter: e.target.value,
+                          });
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item md={12}>
+                      <button className={classes.textButton}>
+                        <PersonAddIcon /> Add details of another person affected
+                      </button>
+                    </Grid>
+
+                    <Grid item md={12}>
+                      {/* <p>Comments</p> */}
+                      <TextField
+                        id="comments"
+                        multiline
+                        rows="3"
+                        variant="outlined"
+                        label="Describe any actions taken"
+                        className={classes.fullWidth}
+                      />
+                    </Grid>
+                  </>
+                ) : null}
                 <Grid item md={6}>
                   <Button
                     href="http://localhost:3000/app/incident-management/registration/initial-notification/incident-details/"
@@ -276,7 +376,9 @@ const PeoplesAffected = () => {
                     Previouse
                   </Button>
                   <Button
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                    type="button"
+                    onClick={()=>handleSubmit()}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
                     variant="contained"
                     color="primary"
                   >

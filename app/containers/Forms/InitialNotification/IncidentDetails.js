@@ -32,6 +32,7 @@ import {
 import FormHeader from "../FormHeader";
 
 import api from "../../../utils/axios";
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -55,7 +56,10 @@ const IncidentDetails = () => {
   );
 
   const handleDateChange = (date) => {
+    console.log(date)
     setSelectedDate(date);
+    const dateFormate = moment(date).format('YYYY/DD/MM')
+    alert(dateFormate)
   };
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No", "N/A"];

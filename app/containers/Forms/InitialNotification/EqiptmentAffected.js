@@ -70,8 +70,15 @@ const EqiptmentAffected = () => {
 
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
-  // const []
-
+  const [form, setForm] = useState({
+    envQuestion: "",
+    envQuestionOption: "",
+    envAnswerDetails: "",
+    fkIncidentId: 0,
+  });
+  const handleSubmit =()=>{
+    console.log(form)
+  }
   const fetchEquipmentAffectedValue = async () => {
     const res = await api.get("api/v1/lists/14/value");
     const result = res.data.data.results;

@@ -69,7 +69,15 @@ const EnvironmentAffected = () => {
   const [anyReleaseValue, setAnyReleaseValue] = useState([]);
   const [impactOnWildLife, setImpactOnWildLife] = useState([]);
   const [waterbodyAffectedValue, setWaterbodyAffectedValue] = useState([]);
-
+  const [form, setForm] = useState({
+    envQuestion: "",
+    envQuestionOption: "",
+    envAnswerDetails: "",
+    fkIncidentId: 0,
+  });
+  const handleSubmit =()=>{
+    console.log(form)
+  }
   const fetchWaterBodyAffectedValue = async () => {
     const res = await api.get("api/v1/lists/19/value");
     const result = res.data.data.results;
@@ -85,6 +93,7 @@ const EnvironmentAffected = () => {
   const fetchAnyReleaseValue = async () => {
     const res = await api.get("api/v1/lists/17/value");
     const result = res.data.data.results;
+    console.log(result)
     setAnyReleaseValue(result);
   };
 
@@ -95,8 +104,8 @@ const EnvironmentAffected = () => {
   };
   useEffect(()=>{
     fetchEquipmentAffectedValue();
-    fetchAnyReleaseValue();
-    fetchImpactOnWildLifeValue();
+    // fetchAnyReleaseValue();
+    // fetchImpactOnWildLifeValue();
     fetchWaterBodyAffectedValue();
   },[])
   
@@ -175,14 +184,14 @@ const EnvironmentAffected = () => {
                       Where there any impact on wildlife
                     </p>
 
-                    {impactOnWildLife.length!==0?impactOnWildLife.map((value,index) => (
+                    {/* {impactOnWildLife.length!==0?impactOnWildLife.map((value,index) => (
                       <FormControlLabel
                       key={index}
                         value={value.inputValue}
                         control={<Radio />}
                         label={value.inputLabel}
                       />
-                    )):null}
+                    )):null} */}
                   </div>
                 </Grid>
 
@@ -206,13 +215,13 @@ const EnvironmentAffected = () => {
                       Where there any waterbody affected
                     </p>
 
-                    {waterbodyAffectedValue!== 0 ? waterbodyAffectedValue.map((value) => (
+                    {/* {waterbodyAffectedValue!== 0 ? waterbodyAffectedValue.map((value) => (
                       <FormControlLabel
                         value={value.inputValue}
                         control={<Radio />}
                         label={value.inputLabel}
                       />
-                    )):null}
+                    )):null} */}
                   </div>
                 </Grid>
 

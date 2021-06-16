@@ -22,7 +22,7 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import api from '../../../utils/axios';
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -76,22 +76,32 @@ const PropertyAffected = () => {
 
   const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
+  const [form, setForm] = useState({
+    propertyType: "",
+    propertyOtherType: "",
+    damageDetails: "",
+    fkIncidentId: 0,
+  });
+  const handleSubmit =()=>{
+    console.log(form)
+  }
 
-  const fetchPropertyAffectedValue = async()=>{
+  const fetchPropertyAffectedValue = async () => {
     const res = await api.get("api/v1/lists/12/value");
     const result = res.data.data.results;
     setPropertyAffectedValue(result);
-  }
-  const fetchPropertyTypeValue = async()=>{
+  };
+  const fetchPropertyTypeValue = async () => {
     const res = await api.get("api/v1/lists/13/value");
     const result = res.data.data.results;
     setPropertyTypeValue(result);
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchPropertyAffectedValue();
     fetchPropertyTypeValue();
-  },[])
+  }, []);
+
   return (
     <div>
       <Container>
@@ -112,13 +122,15 @@ const PropertyAffected = () => {
                     Do you have details to share about the properties affected?
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
-                  {propertyAffectedValue!==0?propertyAffectedValue.map((value,index) => (
-                    <FormControlLabel
-                      value={value.inputValue}
-                      control={<Radio />}
-                      label={value.inputLabel}
-                    />
-                  )):null}
+                  {propertyAffectedValue !== 0
+                    ? propertyAffectedValue.map((value, index) => (
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
+                    : null}
                 </Grid>
 
                 <Grid item md={12}>
@@ -143,15 +155,34 @@ const PropertyAffected = () => {
                       labelId="person-type-label"
                       id="person-type"
                       label="Person type"
+                      onChange={(e)=>{setForm({...form,propertyType:e.target.value})}}
                     >
-                      {propertyTypeValue.length!==0?propertyTypeValue.map((selectValues,index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
-                      )):null}
+                      {propertyTypeValue.length !== 0
+                        ? propertyTypeValue.map((selectValues, index) => (
+                            <MenuItem
+                              key={index}
+                              value={selectValues.inputValue}
+                            >
+                              {selectValues.inputLabel}
+                            </MenuItem>
+                          ))
+                        : null}
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item md={6}>
+                  {/* <p>Name of people affected</p> */}
+                  <TextField
+                    id="name-affected"
+                    variant="outlined"
+                    label="if others, describe"
+                    className={classes.formControl}
+                    onChange={(e)=>{setForm({...form,propertyOtherType:e.target.value})}}
+                  />
+                </Grid>
+
+                {/* <Grid item md={6}>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
@@ -163,7 +194,7 @@ const PropertyAffected = () => {
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
 
                 <Grid item md={12}>
                   {/* <p>Name of people affected</p> */}
@@ -172,6 +203,7 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe the damage"
                     className={classes.formControl}
+                    onChange={(e)=>{setForm({...form,damageDetails:e.target.value})}}
                   />
                 </Grid>
 
