@@ -245,7 +245,7 @@ const BasicCauseAndAction = () => {
             <Grid item md={3}>
               <FormSideBar
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Basic cause and action"}
+                selectedItem={"Cause and action"}
               />
             </Grid>
           </Grid>
