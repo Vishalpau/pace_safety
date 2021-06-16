@@ -136,7 +136,7 @@
     "keycode": "^2.2.0",
     "lodash": "^4.17.20",
     "minimist": "^1.2.5",
-    "moment": "^2.22.2",
+    "moment": "^2.29.1",
     "mui-datatables": "^3.7.7",
     "prop-types": "15.7.2",
     "rcolor": "^1.0.1",
@@ -185,6 +185,7 @@
     "serve-favicon": "^2.4.5",
     "slick-carousel": "^1.8.1",
     "tunnel-agent": "^0.6.0",
+    "validator": "^13.6.0",
     "warning": "4.0.2"
   },
   "devDependencies": {
