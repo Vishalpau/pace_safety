@@ -220,7 +220,6 @@ const ReportingAndNotification = () => {
                     text="Drag and drop file(s) here or click button bellow"
                     showButton
                     onDrop={handleDrop}
-                    onClick={(e)=>console.log('clicked')}
                    
                   />
                   {error && error.fileupload && <p>{error.fileupload}</p> }
