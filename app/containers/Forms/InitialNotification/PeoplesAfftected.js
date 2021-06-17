@@ -24,6 +24,7 @@ import {
 import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
 import { useHistory } from "react-router";
+import api from '../../../utils/axios'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -95,8 +96,8 @@ const PeoplesAffected = () => {
       personMedicalCare: "",
       workerOffsiteAssessment: "",
       locationAssessmentCenter: "",     
-      createdBy: 0,     
-      fkIncidentId: 0
+      createdBy: 1,     
+      fkIncidentId: 3
     },
   ]);
   const addNewPeopleDetails = () => {
@@ -111,8 +112,8 @@ const PeoplesAffected = () => {
         personMedicalCare: "",
         workerOffsiteAssessment: "",
         locationAssessmentCenter: "",     
-        createdBy: 0,     
-        fkIncidentId: 10
+        createdBy: 1,     
+        fkIncidentId: 3
       },
     ]);
   };
@@ -125,14 +126,16 @@ const PeoplesAffected = () => {
   };
  
   const handleNext = async () => {
+    // 
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
-    if (detailsOfPropertyAffect === "Yes") {
-      console.log(form);
+    if (personAffect === "Yes") {
+      alert('ram')
       for(var i = 0; i < form.length;i++){
-        const res = await api.post("api/v1/incidents/1/people/",form[i]);
-        history.push("/app/incident-management/registration/initial-notification/property-affected/");
+        
+        const res = await api.post("api/v1/incidents/3/people/",form[i]);
+       
       }
-     
+      history.push("/app/incident-management/registration/initial-notification/property-affected/");
     } else {
       history.push("/app/incident-management/registration/initial-notification/property-affected/");
     }
@@ -332,14 +335,15 @@ const PeoplesAffected = () => {
                     Previouse
                   </Button>
                   <Button
-                    href={
-                      Object.keys(error).length === 0
-                        ? "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
-                        : "#"
-                    }
+                    // href={
+                    //   Object.keys(error).length === 0
+                    //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                    //     : "#"
+                    // }
+                    onClick={()=>handleNext()}
                     variant="contained"
                     color="primary"
-                    onClick={(e) => handelNext(e)}
+                    // onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>

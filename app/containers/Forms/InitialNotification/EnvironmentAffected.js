@@ -22,6 +22,7 @@ import FormSideBar from "../FormSideBar";
 import FormHeader from "../FormHeader";
 
 import api from "../../../utils/axios";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -51,6 +52,7 @@ const EnvironmentAffected = () => {
     "Mital Aid",
     "Other",
   ];
+  
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
@@ -64,6 +66,7 @@ const EnvironmentAffected = () => {
   const radioDecide = ["Yes", "No", "N/A"];
 
   const classes = useStyles();
+  const history = useHistory();
 
   const [environmentAffectedValue, setEnvironmentAffectedValue] = useState([]);
   const [anyReleaseValue, setAnyReleaseValue] = useState([]);
@@ -76,7 +79,8 @@ const EnvironmentAffected = () => {
       envQuestion: "",
       envQuestionOption: "",
       envAnswerDetails: "",
-      fkIncidentId: 0,
+      createdBy: 1,     
+        fkIncidentId: 3
     },
   );
   
@@ -88,7 +92,8 @@ const EnvironmentAffected = () => {
         envQuestion: "",
         envQuestionOption: "",
         envAnswerDetails: "",
-        fkIncidentId: 0,
+        createdBy: 1,     
+        fkIncidentId: 3
       },
     ]);
   };

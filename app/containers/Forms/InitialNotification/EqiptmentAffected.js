@@ -78,7 +78,8 @@ const EqiptmentAffected = () => {
       equipmentType: "",
       equipmentOtherType: "",
       equipmentDeatils: "",
-      fkIncidentId: 0,
+      createdBy: 1,     
+        fkIncidentId: 3
     },
   ]);
   const addNewEquipmentDetails = () => {
@@ -89,7 +90,8 @@ const EqiptmentAffected = () => {
         equipmentType: "",
         equipmentOtherType: "",
         equipmentDeatils: "",
-        fkIncidentId: 0,
+        createdBy: 1,     
+        fkIncidentId: 3
       },
     ]);
   };

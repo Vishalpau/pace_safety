@@ -24,6 +24,7 @@ import {
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -76,10 +77,12 @@ const PropertyAffected = () => {
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
+  const history = useHistory();
 
   const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
   const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
+  
   const [form, setForm] = useState([
     {
       propertyType: "",
@@ -129,13 +132,12 @@ const PropertyAffected = () => {
       console.log(form);
       for(var i = 0; i < form.length;i++){
         const res = await api.post("api/v1/incidents/3/properties/",form[i]);
-        // window.location.href =
-        //   "/app/incident-management/registration/initial-notification/eqiptment-affected/";
+        console.log(res)
+        history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
       }
      
     } else {
-      window.location.href =
-        "/app/incident-management/registration/initial-notification/eqiptment-affected/";
+      history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
     }
   };
 

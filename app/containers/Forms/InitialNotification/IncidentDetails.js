@@ -35,6 +35,7 @@ import FormHeader from "../FormHeader";
 import { func } from "prop-types";
 import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -70,6 +71,7 @@ const IncidentDetails = () => {
   const [propertiesAffectValue, setPropertiesAffectValue] = useState([]);
   const [eqiptmentAffectValue, setEquipmentAffectValue] = useState([]);
   const [environmentAffectValue, setEnvironmentAffectValue] = useState([]);
+  const history = useHistory();
 
   const [form, setForm] = useState({
     projectname: "",
@@ -137,7 +139,9 @@ const IncidentDetails = () => {
       "subContractor": form.subcontractor
     }
     const res = await api.post('/api/v1/incidents/',formData)
+    history.push("/app/incident-management/registration/initial-notification/peoples-afftected/");
     console.log(res)
+
   }
   
   const handleDateChange = (date) => {

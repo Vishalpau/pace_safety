@@ -297,14 +297,14 @@ const ReportingAndNotification = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                    href="/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Previouse
                   </Button>
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
+                    href="/app/incident-management/registration/summary/summary/"
                   >
                     Submit
                   </Button>
