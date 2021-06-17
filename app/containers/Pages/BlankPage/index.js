@@ -47,7 +47,7 @@ function BlankPage() {
 
       {Object.entries(incidents).map((item) => (
         <Card variant="outlined" className={Incidents.card}>
-          <CardHeader disableTypography title="Incident with No Injury" />
+          {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
           <CardContent>
             <Grid container spacing={3}>
               <Grid item lg={4}>
@@ -62,9 +62,11 @@ function BlankPage() {
                 <Typography
                   variant="body1"
                   color="textSecondary"
-                  className={Fonts.labelValue}
+                  className={Incidents.incidentNumberBold}
                 >
-                  {item[1]["incidentNumber"]}
+                  <Link href="#" style={{ textDecoration: "underline" }}>
+                    {item[1]["incidentNumber"]}
+                  </Link>
                 </Typography>
               </Grid>
               <Grid item lg={4}>
