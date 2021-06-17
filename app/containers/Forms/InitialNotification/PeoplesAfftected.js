@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -86,7 +86,13 @@ const PeoplesAffected = () => {
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
   const history = useHistory();
-  const [personAffect, setPersonAffect] = useState('')
+
+  const [personAffect, setPersonAffect] = useState('No')
+  const [individualAffectValue, setIndividualAffecctValue] = useState([]);
+  const [personTypeValue, setPersonTypeValue] = useState([]);
+  const [departmentValue, setDepartmentValue] = useState([]);
+  const [medicalCareValue, setMedicalCareValue] = useState([]);
+
   const [form, setForm] = useState([
     {
       personType: "",
@@ -141,6 +147,38 @@ const PeoplesAffected = () => {
     }
   };
   const [error, setError] = useState({});
+
+  const fetchIndividualAffectValue = async()=>{
+    const res = await api.get("api/v1/lists/8/value");
+    const result = res.data.data.results;
+    setIndividualAffecctValue(result);
+  }
+
+  const fetchPersonTypeValue = async()=>{
+    const res = await api.get("api/v1/lists/9/value");
+    const result = res.data.data.results;
+    setPersonTypeValue(result);
+  }
+
+  const fetchDepartmentValue = async()=>{
+    const res = await api.get("api/v1/lists/10/value");
+    const result = res.data.data.results;
+    setDepartmentValue(result);
+  }
+
+  const fetchPersonTakenMedicalCare = async()=>{
+    const res = await api.get("api/v1/lists/11/value");
+    const result = res.data.data.results;
+    console.log(result)
+    setMedicalCareValue(result);
+  }
+
+  useEffect(()=>{
+    fetchIndividualAffectValue()
+    fetchPersonTypeValue();
+    fetchDepartmentValue();
+    fetchPersonTakenMedicalCare();
+  },[])
  
  
   return (
@@ -169,11 +207,12 @@ const PeoplesAffected = () => {
                     value={personAffect}
                     onChange={(e)=>setPersonAffect(e.target.value)}
                   >
-                  {radioDecide.map((value) => (
+                  {individualAffectValue.map((value,key) => (
                     <FormControlLabel
-                      value={value}
+                    key={key}
+                      value={value.inputValue}
                       control={<Radio />}
-                      label={value}
+                      label={value.inputLabel}
                      
                     />
                   ))}
@@ -205,9 +244,9 @@ const PeoplesAffected = () => {
                       label="Person type"
                       onChange={(e)=>handleForm(e,key,'personType')}
                     >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
+                      {personTypeValue.length!==0?personTypeValue.map((selectValues,key) => (
+                        <MenuItem key={key} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
+                      )):null}
                     </Select>
                   </FormControl>
                   {/* {error && error.persontype && <p>{error.persontype}</p>} */}
@@ -224,9 +263,9 @@ const PeoplesAffected = () => {
                       label="Department"
                       onChange={(e)=>handleForm(e,key,'personDepartment')}
                     >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
+                      {departmentValue.length!==0?departmentValue.map((selectValues,index) => (
+                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
+                      )):null}
                     </Select>
                   </FormControl>
                   {/* {error && error.department && <p>{error.department}</p>} */}
@@ -266,14 +305,15 @@ const PeoplesAffected = () => {
                     value={value.personMedicalCare}
                     onChange={(e)=>handleForm(e,key,'personMedicalCare')}
                   >
-                    {radioDecideNew.map((value) => (
+                    {medicalCareValue.length!==0?medicalCareValue.map((value,index) => (
                       <FormControlLabel
-                        value={value}
+                      key={index}
+                        value={value.inputValue}
                         control={<Radio />}
-                        label={value}
+                        label={value.inputLabel}
                         
                       />
-                    ))}
+                    )):null}
                     </RadioGroup>
                   </div>
                   {/* {error && error.ismedicalcare && <p>{error.ismedicalcare}</p>} */}

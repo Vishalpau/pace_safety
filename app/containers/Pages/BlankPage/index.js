@@ -15,6 +15,9 @@ import Typography from "@material-ui/core/Typography";
 import Print from "@material-ui/icons/Print";
 import Share from "@material-ui/icons/Share";
 import Divider from "@material-ui/core/Divider";
+import Link from "@material-ui/core/Link";
+import AttachmentIcon from "@material-ui/icons/Attachment";
+import InfoIcon from "@material-ui/icons/Info";
 
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
@@ -56,7 +59,7 @@ function BlankPage() {
                 </Typography>
 
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -73,7 +76,7 @@ function BlankPage() {
                 </Typography>
 
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -90,7 +93,7 @@ function BlankPage() {
                 </Typography>
 
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -107,7 +110,7 @@ function BlankPage() {
                   Incident location
                 </Typography>
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -124,7 +127,7 @@ function BlankPage() {
                 </Typography>
 
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -141,7 +144,7 @@ function BlankPage() {
                 </Typography>
 
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -159,7 +162,7 @@ function BlankPage() {
                 </Typography>
 
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -193,7 +196,7 @@ function BlankPage() {
                   Reviewed by
                 </Typography>
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -210,7 +213,7 @@ function BlankPage() {
                   Reviewed on
                 </Typography>
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -226,7 +229,7 @@ function BlankPage() {
                   Closed by
                 </Typography>
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -242,7 +245,7 @@ function BlankPage() {
                   Closed date
                 </Typography>
                 <Typography
-                  variant="body"
+                  variant="body1"
                   color="textSecondary"
                   className={Fonts.labelValue}
                 >
@@ -253,7 +256,35 @@ function BlankPage() {
           </CardContent>
           <Divider />
           <CardActions className={Incidents.cardActions}>
-            <Grid container spacing={2} justify="flex-end">
+            <Grid container spacing={2} justify="flex-end" alignItems="center">
+              <Grid item xs={6} md={3} lg={3}>
+                <Typography
+                  variant="body2"
+                  display="inline"
+                  className={Incidents.actionsLabel}
+                >
+                  <AttachmentIcon /> Attathments:
+                </Typography>
+                <Typography variant="body2" display="inline">
+                  <Link href="#">3</Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={6} md={3} lg={3}>
+                <Typography
+                  variant="body2"
+                  display="inline"
+                  className={Incidents.actionsLabel}
+                >
+                  <InfoIcon /> Status:
+                </Typography>
+                <Typography
+                  variant="body2"
+                  display="inline"
+                  color="textSecondary"
+                >
+                  Initial Notification
+                </Typography>
+              </Grid>
               <Grid item xs={6} md={3} lg={2}>
                 <Button
                   size="small"

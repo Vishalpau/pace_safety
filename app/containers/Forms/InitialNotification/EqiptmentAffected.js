@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React,{useState} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -22,6 +22,8 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import EquipmentValidate from "../../Validator/EquipmentValidation"
+
 
 import api from "../../../utils/axios";
 import { useHistory } from "react-router";
@@ -54,6 +56,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EqiptmentAffected = () => {
+
+  // const [form, setForm] = useState({
+  //   detailequipmentaffected:"",
+  //   affectedequipment:{
+  //                     equipmentytype:"",
+  //                     describe:"",
+  //                     damage:""
+  //                   },
+  //   describeactiontaken:""
+  // })
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -68,6 +81,16 @@ const EqiptmentAffected = () => {
   const selectValues = [1, 2, 3, 4];
 
   const radioDecide = ["Yes", "No"];
+
+  const [error,setError] = useState({})
+
+  function handelNext(e){
+    console.log(form)
+    const { error, isValid } = EquipmentValidate(form)
+    setError(error)
+    console.log(error,isValid)
+  }
+
   const classes = useStyles();
   const history = useHistory();
   const [equipmentAffected, setequipmentAffected] = useState([]);
@@ -257,7 +280,14 @@ const EqiptmentAffected = () => {
                     rows="4"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        describeactiontaken: e.target.value,
+                      });
+                    }}
                   />
+                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
                 </Grid>
                 <Box marginTop={4}>
                   <Button

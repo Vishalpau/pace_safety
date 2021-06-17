@@ -54,6 +54,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PropertyAffected = () => {
+
+  // const [form, setForm] = useState({
+  //   detailpropertyaffected:"",
+  //   affectedproperty:{
+  //                     propertytype:"",
+  //                     describe:"",
+  //                     damage:""
+  //                   },
+  //   describeactiontaken:""
+  // })
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -76,6 +87,16 @@ const PropertyAffected = () => {
   };
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
+
+  const [error,setError] = useState({})
+
+  function handelNext(e){
+    console.log(form)
+    const { error, isValid } = PropertyValidate(form)
+    setError(error)
+    console.log(error,isValid)
+  }
+
   const classes = useStyles();
   const history = useHistory();
 
@@ -256,7 +277,18 @@ const PropertyAffected = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="dep-label">if others, describe</InputLabel>
-                    <Select labelId="dep-label" id="dep" label="Department">
+                    <Select 
+                    labelId="dep-label" 
+                    id="dep" 
+                    label="Department"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedproperty: {...form.affectedproperty,
+                                              describe:e.target.value.toString()},
+                      });
+                    }}
+                    >
                       {selectValues.map((selectValues) => (
                         <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
@@ -296,7 +328,14 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        describeactiontaken: e.target.value,
+                      });
+                    }}
                   />
+                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
                 </Grid>
                 <Grid item md={6}>
                   <Button

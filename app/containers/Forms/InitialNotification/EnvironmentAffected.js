@@ -309,7 +309,8 @@ const EnvironmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/reporting-and-notification/"
+                    onClick={()=> handleNext()}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/reporting-and-notification/"
                   >
                     Next
                   </Button>
