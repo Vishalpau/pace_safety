@@ -119,7 +119,7 @@ const PeoplesAffected = () => {
         workerOffsiteAssessment: "",
         locationAssessmentCenter: "",     
         createdBy: 1,     
-        fkIncidentId: 3
+        fkIncidentId: localStorage.getItem("fkincidentId")
       },
     ]);
   };
@@ -138,7 +138,7 @@ const PeoplesAffected = () => {
       alert('ram')
       for(var i = 0; i < form.length;i++){
         
-        const res = await api.post("api/v1/incidents/3/people/",form[i]);
+        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,form[i]);
        
       }
       history.push("/app/incident-management/registration/initial-notification/property-affected/");

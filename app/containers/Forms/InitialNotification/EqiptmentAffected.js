@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -57,15 +57,6 @@ const useStyles = makeStyles((theme) => ({
 
 const EqiptmentAffected = () => {
 
-  // const [form, setForm] = useState({
-  //   detailequipmentaffected:"",
-  //   affectedequipment:{
-  //                     equipmentytype:"",
-  //                     describe:"",
-  //                     damage:""
-  //                   },
-  //   describeactiontaken:""
-  // })
 
   const reportedTo = [
     "Internal Leadership",
@@ -102,7 +93,7 @@ const EqiptmentAffected = () => {
       equipmentOtherType: "",
       equipmentDeatils: "",
       createdBy: 1,     
-        fkIncidentId: 3
+        fkIncidentId: localStorage.getItem("fkincidentId")
     },
   ]);
   const addNewEquipmentDetails = () => {
@@ -114,7 +105,7 @@ const EqiptmentAffected = () => {
         equipmentOtherType: "",
         equipmentDeatils: "",
         createdBy: 1,     
-        fkIncidentId: 3
+        fkIncidentId: localStorage.getItem("fkincidentId")
       },
     ]);
   };
@@ -128,10 +119,14 @@ const EqiptmentAffected = () => {
   const handleNext = async () => {
     if (detailsOfEquipmentAffect === "Yes") {
       console.log(form)
+      var status = 0
       
       for (var i = 0; i < form.length; i++) {
-        const res = await api.post("/api/v1/incidents/3/equipments/", form[i]);
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/equipments/`, form[i]);
         
+        status = res.status
+      }
+      if(status === 201){
         history.push("/app/incident-management/registration/initial-notification/environment-affected/");
        
       }

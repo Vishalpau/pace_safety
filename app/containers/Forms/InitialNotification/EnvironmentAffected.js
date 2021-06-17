@@ -80,7 +80,7 @@ const EnvironmentAffected = () => {
       envQuestionOption: "",
       envAnswerDetails: "",
       createdBy: 1,     
-        fkIncidentId: 3
+        fkIncidentId: localStorage.getItem("fkincidentId")
     },
   );
   
@@ -93,7 +93,7 @@ const EnvironmentAffected = () => {
         envQuestionOption: "",
         envAnswerDetails: "",
         createdBy: 1,     
-        fkIncidentId: 3
+        fkIncidentId: localStorage.getItem("fkincidentId")
       },
     ]);
   };
@@ -102,9 +102,10 @@ const EnvironmentAffected = () => {
     if (detailsOfEquipmentAffect === "Yes") {
       console.log(form)
       
-        const res = await api.post("api/v1/incidents/1/environment/", form);
-        
-        history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`, form);
+        if(res.status === 201){
+          history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+        }   
       
     } else {
      

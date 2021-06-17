@@ -109,7 +109,7 @@ const PropertyAffected = () => {
       propertyType: "",
       propertyOtherType: "",
       damageDetails: "",
-      fkIncidentId: 3,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
       createdBy:2
     },
   ]);
@@ -121,7 +121,7 @@ const PropertyAffected = () => {
         propertyType: "",
         propertyOtherType: "",
         damageDetails: "",
-        fkIncidentId: 3,
+        fkIncidentId: localStorage.getItem("fkincidentId"),
         createdBy:2
       },
     ]);
@@ -151,12 +151,17 @@ const PropertyAffected = () => {
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
     if (detailsOfPropertyAffect === "Yes") {
       console.log(form);
+      let status=0
       for(var i = 0; i < form.length;i++){
-        const res = await api.post("api/v1/incidents/3/properties/",form[i]);
+        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/properties/`,form[i]);
         console.log(res)
+        status= res.status
+        
+      }
+      if(status === 201){
         history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
       }
-     
+      
     } else {
       history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
     }

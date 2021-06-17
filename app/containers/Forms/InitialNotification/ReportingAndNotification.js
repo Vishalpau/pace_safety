@@ -135,12 +135,16 @@ const ReportingAndNotification = () => {
     const { error, isValid } = ReportingValidation(form);
     setError(error);
     console.log(error, isValid);
-    const res = await api.post("/api/v1/incidents/3/reports/", {
+    const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/reports/`, {
       reportTo: form.reportedto,
       reportingNote: form.latereporting,
       createdBy: 0,
-      fkIncidentId: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
     });
+    if(res.status === 201){
+      localStorage.removeItem('fkincidentId')
+      history.push('/app/incident-management/registration/summary/summary/')
+    }
   };
 
   const classes = useStyles();
@@ -400,7 +404,7 @@ const ReportingAndNotification = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                    href="/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Previouse
                   </Button>

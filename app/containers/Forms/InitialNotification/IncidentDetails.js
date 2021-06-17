@@ -659,6 +659,7 @@ const IncidentDetails = () => {
             </Grid>
             <Grid item md={3}>
               <FormSideBar
+              
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem={"Incident details"}
               />
