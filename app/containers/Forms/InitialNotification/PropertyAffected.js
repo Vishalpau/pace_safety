@@ -7,7 +7,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
@@ -69,21 +70,34 @@ const PropertyAffected = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
+  const handleChange = (event) => {
+    setDetailsOfPropertyAffect(event.target.value);
+  }
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
 
   const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
+  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect]  = useState([]);
   const [form, setForm] = useState({
     propertyType: "",
     propertyOtherType: "",
     damageDetails: "",
     fkIncidentId: 0,
   });
-  const handleSubmit =()=>{
-    console.log(form)
+  const handleNext = async()=>{
+    
+    // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
+    if(detailsOfPropertyAffect === 'Yes'){
+      console.log(form)
+      const res = await api.post('api/v1/incidents/1/properties/')
+      window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
+      
+    }
+    else{
+      window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
+    }
   }
 
   const fetchPropertyAffectedValue = async () => {
@@ -122,6 +136,7 @@ const PropertyAffected = () => {
                     Do you have details to share about the properties affected?
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
+                  <RadioGroup aria-label="detailsOfPropertyAffect" name="detailsOfPropertyAffect" value={detailsOfPropertyAffect} onChange={handleChange}>
                   {propertyAffectedValue !== 0
                     ? propertyAffectedValue.map((value, index) => (
                         <FormControlLabel
@@ -131,8 +146,10 @@ const PropertyAffected = () => {
                         />
                       ))
                     : null}
+                    </RadioGroup>
                 </Grid>
-
+                    {detailsOfPropertyAffect === 'Yes'?
+                    <>
                 <Grid item md={12}>
                   <Box marginTop={2} marginBottom={2}>
                     {/* <h4>Details of people affected</h4> */}
@@ -212,7 +229,7 @@ const PropertyAffected = () => {
                     <PersonAddIcon /> Add details of another person affected
                   </button>
                 </Grid>
-
+                </>:null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
                   <TextField
@@ -228,14 +245,16 @@ const PropertyAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                    onClick={()=>{window.history.back()}}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
                     Previouse
                   </Button>
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                    onClick={handleNext}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
                     Next
                   </Button>

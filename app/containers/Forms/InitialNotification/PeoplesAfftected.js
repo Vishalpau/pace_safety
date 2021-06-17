@@ -24,7 +24,8 @@ import {
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
-import api from "../../../utils/axios";
+import api from '../../../utils/axios'
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -54,27 +55,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PeoplesAffected = () => {
-  const [form, setForm] = useState({
-    detailindividualeffected: "",
-    affectedpersons: [
-      {
-        persontype: "",
-        department: "",
-        name: "",
-        idnumber: "",
-        ismedicalcare: "",
-        offsiteassesment: "",
-        locationdetails: "",
-      },
-    ],
-    describeactiontaken: "",
-  });
 
-  function handelNext(e) {
-    console.log(form);
-    const { error, isValid } = PeopleValidate(form);
-    setError(error);
-    console.log(error, isValid);
+  // const [form, setForm] = useState({
+  //                                   detailindividualeffected:"",
+  //                                   affectedpersons:[{
+  //                                                     persontype:"",
+  //                                                     department:"",
+  //                                                     name:"",
+  //                                                     idnumber:"",
+  //                                                     ismedicalcare:"",
+  //                                                     offsiteassesment:"",
+  //                                                     locationdetails:""
+  //                                                   }],
+  //                                   describeactiontaken:""
+  //                                 })
+
+  function handelNext(e){
+    console.log(form)
+    const { error, isValid } = PeopleValidate(form)
+    setError(error)
+    console.log(error,isValid)
   }
 
   const reportedTo = [
@@ -120,19 +120,12 @@ const PeoplesAffected = () => {
   ]);
   const handleSubmit = () => {
     console.log(form);
-    if (individualAffect === "Yes") {
-      this.props.location.push("");
+    if(individualAffect === 'Yes'){
+      this.props.location.push('')
     }
   };
   const handleRadioChange = (event) => {
-    // setValue(event.target.value);
-    // if (event.target.value === "Yes") {
     setIndividualAffect(event.target.value);
-    // } else {
-    //   setIndividualAffect(false);
-    // }
-    // setHelperText(' ');
-    // setError(false);
   };
   const fetchMedicalTakenValue = async () => {
     const res = await api.get("api/v1/lists/11/value");
@@ -191,26 +184,7 @@ const PeoplesAffected = () => {
                   <Typography variant="body2">
                     Do you have details of individual effected?
                   </Typography>
-                  <RadioGroup
-                    aria-label="quiz"
-                    name="quiz"
-                    value={individualAffect}
-                    onChange={handleRadioChange}
-                  >
-                    {/* <p>Do you have details of individual effected?</p>   */}
-                    {individualEffectValue.length !== 0
-                      ? individualEffectValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            id={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                            // onChange = {(e)=> e.target.value === 'Yes'?setIndividualAffect(true):setIndividualAffect(false)}
-                          />
-                        ))
-                      : null}
-                  </RadioGroup>
+                 
                 </Grid>
                 {individualAffect === "Yes" ? (
                   <>
@@ -400,14 +374,12 @@ const PeoplesAffected = () => {
                     Previouse
                   </Button>
                   <Button
-                    href={
-                      Object.keys(error).length === 0
-                        ? "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
-                        : "#"
-                    }
+                    href={Object.keys(error).length === 0? 
+                      "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/" 
+                      : "#"}
                     variant="contained"
                     color="primary"
-                    onClick={(e) => handelNext(e)}
+                    onClick={(e)=>handelNext(e)}
                   >
                     Next
                   </Button>
@@ -420,6 +392,7 @@ const PeoplesAffected = () => {
                 />
               </Grid>
             </Grid>
+          
           </Box>
         </Paper>
       </Container>
