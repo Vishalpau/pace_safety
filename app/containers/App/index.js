@@ -8,6 +8,9 @@ import LandingCreative from './LandingCreative';
 import ArticleNews from './ArticleNews';
 import ThemeWrapper from './ThemeWrapper';
 import {useEffect} from 'react';
+import {
+  PersonalDashboard
+} from "../../containers/pageListAsync";
 
 import axios from 'axios'
 
@@ -52,7 +55,7 @@ function App() {
   return (
     <ThemeWrapper>
       <Switch>
-        <Route path="/" exact component={LandingCorporate} />
+        <Route path="/" exact component={PersonalDashboard} />
         <Route path="/landing-creative" exact component={LandingCreative} />
         <Route path="/app" component={Application} />
         <Route path="/blog" component={ArticleNews} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -22,6 +22,8 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import PropertyValidate from "../../Validator/PropertyValidation"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -51,6 +53,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PropertyAffected = () => {
+
+  const [form, setForm] = useState({
+    detailpropertyaffected:"",
+    affectedproperty:{
+                      propertytype:"",
+                      describe:"",
+                      damage:""
+                    },
+    describeactiontaken:""
+  })
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -71,6 +84,16 @@ const PropertyAffected = () => {
 
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
+
+  const [error,setError] = useState({})
+
+  function handelNext(e){
+    console.log(form)
+    const { error, isValid } = PropertyValidate(form)
+    setError(error)
+    console.log(error,isValid)
+  }
+
   const classes = useStyles();
   return (
     <div>
@@ -97,8 +120,15 @@ const PropertyAffected = () => {
                       value={value}
                       control={<Radio />}
                       label={value}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          detailpropertyaffected: e.target.value,
+                        });
+                      }}
                     />
                   ))}
+                  {error && error.detailpropertyaffected && <p>{error.detailpropertyaffected}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -123,12 +153,20 @@ const PropertyAffected = () => {
                       labelId="person-type-label"
                       id="person-type"
                       label="Person type"
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          affectedproperty: {...form.affectedproperty,
+                                                propertytype:e.target.value.toString()},
+                        });
+                      }}
                     >
                       {selectValues.map((selectValues) => (
                         <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  {error && error.propertytype && <p>{error.propertytype}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -137,12 +175,24 @@ const PropertyAffected = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="dep-label">if others, describe</InputLabel>
-                    <Select labelId="dep-label" id="dep" label="Department">
+                    <Select 
+                    labelId="dep-label" 
+                    id="dep" 
+                    label="Department"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedproperty: {...form.affectedproperty,
+                                              describe:e.target.value.toString()},
+                      });
+                    }}
+                    >
                       {selectValues.map((selectValues) => (
                         <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  {error && error.describe && <p>{error.describe}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -152,7 +202,15 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe the damage"
                     className={classes.formControl}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        affectedproperty: {...form.affectedproperty,
+                                              damage:e.target.value.toString()},
+                      });
+                    }}
                   />
+                  {error && error.damage && <p>{error.damage}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -170,7 +228,14 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        describeactiontaken: e.target.value,
+                      });
+                    }}
                   />
+                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
                 </Grid>
                 <Grid item md={6}>
                   <Button
@@ -183,7 +248,10 @@ const PropertyAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                    onClick={(e)=>handelNext(e)}
+                    href={Object.keys(error).length === 0? 
+                      "http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/" 
+                      : "#"}
                   >
                     Next
                   </Button>

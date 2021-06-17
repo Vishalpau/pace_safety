@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -20,6 +20,8 @@ import {
 
 import FormSideBar from "../FormSideBar";
 import FormHeader from "../FormHeader";
+import EnvironmentValidate from "../../Validator/EnvironmetValidation"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -41,6 +43,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EnvironmentAffected = () => {
+
+  const [form, setForm] = useState({
+    isspills:"",
+    spilldetails:"",
+    isrelease:"",
+    releasedetails:"",
+    iswildlifeimpact:"",
+    wildlifeimpacedetails:"",
+    iswaterbodyaffected:"",
+    waterbodyaffecteddetails:"",
+    comment:""
+  })
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -51,7 +66,12 @@ const EnvironmentAffected = () => {
   ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
+  
   const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
+  const [selectedTime, setSelectedTime] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
 
@@ -59,13 +79,22 @@ const EnvironmentAffected = () => {
     setSelectedDate(date);
   };
 
+  const [error,setError] = useState({})
+
+  function handelNext(e){
+    console.log(form)
+    const { error, isValid } = EnvironmentValidate(form)
+    setError(error)
+    console.log(error,isValid)
+  }
+
   const radioDecide = ["Yes", "No", "N/A"];
 
   const classes = useStyles();
 
   return (
     <div>
-      {console.log(INITIAL_NOTIFICATION_FORM)}
+      {/* {console.log(INITIAL_NOTIFICATION_FORM)} */}
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
@@ -86,8 +115,15 @@ const EnvironmentAffected = () => {
                       value={value}
                       control={<Radio />}
                       label={value}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          isspills: e.target.value,
+                        });
+                      }}
                     />
                   ))}
+                  {error && error.isspills && <p>{error.isspills}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -98,7 +134,14 @@ const EnvironmentAffected = () => {
                     multiline
                     rows="3"
                     className={classes.fullWidth}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        spilldetails: e.target.value,
+                      });
+                    }}
                   />
+                  {error && error.spilldetails && <p>{error.spilldetails}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -112,9 +155,16 @@ const EnvironmentAffected = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            isrelease: e.target.value,
+                          });
+                        }}
                       />
                     ))}
                   </div>
+                  {error && error.isrelease && <p>{error.isrelease}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -127,8 +177,15 @@ const EnvironmentAffected = () => {
                       rows="3"
                       label="Details of release"
                       className={classes.fullWidth}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          releasedetails: e.target.value,
+                        });
+                      }}
                     />
                   </div>
+                  {error && error.releasedetails && <p>{error.releasedetails}</p> }
                 </Grid>
 
                 <Grid itemmd={6}>
@@ -142,9 +199,16 @@ const EnvironmentAffected = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            iswildlifeimpact: e.target.value,
+                          });
+                        }}
                       />
                     ))}
                   </div>
+                  {error && error.iswildlifeimpact && <p>{error.iswildlifeimpact}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -157,8 +221,15 @@ const EnvironmentAffected = () => {
                       variant="outlined"
                       label="Details of spills"
                       className={classes.fullWidth}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          wildlifeimpacedetails: e.target.value,
+                        });
+                      }}
                     />
                   </div>
+                  {error && error.wildlifeimpacedetails && <p>{error.wildlifeimpacedetails}</p> }
                 </Grid>
 
                 <Grid item md={6}>
@@ -172,9 +243,16 @@ const EnvironmentAffected = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            iswaterbodyaffected: e.target.value,
+                          });
+                        }}
                       />
                     ))}
                   </div>
+                  {error && error.iswaterbodyaffected && <p>{error.iswaterbodyaffected}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -187,8 +265,15 @@ const EnvironmentAffected = () => {
                       variant="outlined"
                       label="Details of spills"
                       className={classes.fullWidth}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          waterbodyaffecteddetails: e.target.value,
+                        });
+                      }}
                     />
                   </div>
+                  {error && error.waterbodyaffecteddetails && <p>{error.waterbodyaffecteddetails}</p> }
                 </Grid>
 
                 <Grid item md={12}>
@@ -201,8 +286,15 @@ const EnvironmentAffected = () => {
                       rows="3"
                       label="Comment if any"
                       className={classes.fullWidth}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          comment: e.target.value,
+                        });
+                      }}
                     />
                   </div>
+                  {error && error.comment && <p>{error.comment}</p> }
                 </Grid>
 
                 <Box marginTop={4}>
@@ -216,7 +308,10 @@ const EnvironmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/reporting-and-notification/"
+                    href={Object.keys(error).length === 0? 
+                      "http://localhost:3000/app/incident-management/registration/initial-notification/reporting-and-notification/" 
+                      : "#"}
+                    onClick={(e)=>handelNext(e)}
                   >
                     Next
                   </Button>
