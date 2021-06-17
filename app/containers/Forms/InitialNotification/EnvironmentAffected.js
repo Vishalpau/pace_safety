@@ -69,15 +69,43 @@ const EnvironmentAffected = () => {
   const [anyReleaseValue, setAnyReleaseValue] = useState([]);
   const [impactOnWildLife, setImpactOnWildLife] = useState([]);
   const [waterbodyAffectedValue, setWaterbodyAffectedValue] = useState([]);
-  const [form, setForm] = useState({
-    envQuestion: "",
-    envQuestionOption: "",
-    envAnswerDetails: "",
-    fkIncidentId: 0,
-  });
-  const handleSubmit =()=>{
-    console.log(form)
-  }
+  const [detailsOfEnvAffect, setDetailsOfEnvAffect] = useState('');
+
+  const [form, setForm] = useState(
+    {
+      envQuestion: "",
+      envQuestionOption: "",
+      envAnswerDetails: "",
+      fkIncidentId: 0,
+    },
+  );
+  
+  const addNewEnvironmentDetails = () => {
+    // alert('ram')
+    setForm([
+      ...form,
+      {
+        envQuestion: "",
+        envQuestionOption: "",
+        envAnswerDetails: "",
+        fkIncidentId: 0,
+      },
+    ]);
+  };
+ 
+  const handleNext = async () => {
+    if (detailsOfEquipmentAffect === "Yes") {
+      console.log(form)
+      
+        const res = await api.post("api/v1/incidents/1/environment/", form);
+        
+        history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+      
+    } else {
+     
+      history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+    }
+  };
   const fetchWaterBodyAffectedValue = async () => {
     const res = await api.get("api/v1/lists/19/value");
     const result = res.data.data.results;
@@ -128,6 +156,14 @@ const EnvironmentAffected = () => {
               <Grid container item md={9} spacing={3}>
                 <Grid item md={6}>
                   <p>Where there any spills</p>
+                  <RadioGroup
+                    aria-label="detailsOfPropertyAffect"
+                    name="detailsOfPropertyAffect"
+                    value={detailsOfEnvAffect}
+                    onChange={(e) =>
+                      setDetailsOfEnvAffect(e.target.value)
+                    }
+                  >
                   {environmentAffectedValue.length!==0?environmentAffectedValue.map((value,index) => (
                     <FormControlLabel
                       value={value.inputValue}
@@ -135,6 +171,7 @@ const EnvironmentAffected = () => {
                       label={value.inputLabel}
                     />
                   )):null}
+                  </RadioGroup>
                 </Grid>
 
                 <Grid item md={12}>
@@ -147,7 +184,7 @@ const EnvironmentAffected = () => {
                     className={classes.fullWidth}
                   />
                 </Grid>
-
+                  {detailsOfEnvAffect === 'Yes'?<>
                 <Grid item md={6}>
                   <div className={classes.spacer}>
                     <p className={classes.customLabel}>
@@ -174,6 +211,7 @@ const EnvironmentAffected = () => {
                       rows="3"
                       label="Details of release"
                       className={classes.fullWidth}
+                      onChange={(e)=> setForm({...form, envQuestion:e.target.value})}
                     />
                   </div>
                 </Grid>
@@ -203,8 +241,9 @@ const EnvironmentAffected = () => {
                       multiline
                       rows="3"
                       variant="outlined"
-                      label="Details of spills"
+                      label="Details of wildlife"
                       className={classes.fullWidth}
+                      onChange={(e)=> setForm({...form, envQuestionOption:e.target.value})}
                     />
                   </div>
                 </Grid>
@@ -233,12 +272,13 @@ const EnvironmentAffected = () => {
                       multiline
                       rows="3"
                       variant="outlined"
-                      label="Details of spills"
+                      label="Details of waterbody affected"
                       className={classes.fullWidth}
+                      onChange={(e)=> setForm({...form, envAnswerDetails:e.target.value})}
                     />
                   </div>
                 </Grid>
-
+</>:null}
                 <Grid item md={12}>
                   <div>
                     {/* <p>Comment if any</p> */}

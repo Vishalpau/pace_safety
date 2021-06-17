@@ -7,8 +7,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
@@ -24,6 +24,7 @@ import {
 import FormHeader from "../FormHeader";
 
 import api from "../../../utils/axios";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -68,35 +69,65 @@ const EqiptmentAffected = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-
+  const history = useHistory();
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
-  const [form, setForm] = useState({
-    envQuestion: "",
-    envQuestionOption: "",
-    envAnswerDetails: "",
-    fkIncidentId: 0,
-  });
-  const handleSubmit =()=>{
-    console.log(form)
-  }
+  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState("");
+  const [form, setForm] = useState([
+    {
+      equipmentType: "",
+      equipmentOtherType: "",
+      equipmentDeatils: "",
+      fkIncidentId: 0,
+    },
+  ]);
+  const addNewEquipmentDetails = () => {
+    // alert('ram')
+    setForm([
+      ...form,
+      {
+        equipmentType: "",
+        equipmentOtherType: "",
+        equipmentDeatils: "",
+        fkIncidentId: 0,
+      },
+    ]);
+  };
+  const handleForm = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp);
+    setForm(temp);
+  };
+  const handleNext = async () => {
+    if (detailsOfEquipmentAffect === "Yes") {
+      console.log(form)
+      
+      for (var i = 0; i < form.length; i++) {
+        const res = await api.post("/api/v1/incidents/3/equipments/", form[i]);
+        
+        history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+       
+      }
+    } else {
+     
+      history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+    }
+  };
+
   const fetchEquipmentAffectedValue = async () => {
     const res = await api.get("api/v1/lists/14/value");
     const result = res.data.data.results;
     setequipmentAffected(result);
   };
-  
+
   const fetchEquipmentTypeValue = async () => {
     const res = await api.get("api/v1/lists/15/value");
     const result = res.data.data.results;
     setEquipmentTypeValue(result);
   };
 
-  // const fetchEquipmentTypeValue = async()=>{
-  //   const res = await api.get("api/v1/lists/16/value");
-  //   const result = res.data.data.results;
-  //   setEquipmentTypeValue(result);
-  // }
   useEffect(() => {
     fetchEquipmentAffectedValue();
     fetchEquipmentTypeValue();
@@ -120,73 +151,101 @@ const EqiptmentAffected = () => {
                   <Typography variant="body" component="p" gutterBottom>
                     Do you have details to share about the equiptment accected?
                   </Typography>
-
-                  {equipmentAffected.length !== 0
-                    ? equipmentAffected.map((value,index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                    : null}
-                </Grid>
-
-                <Grid item md={6}>
-                  {/* <p>Equiptment type</p> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
+                  <RadioGroup
+                    aria-label="detailsOfPropertyAffect"
+                    name="detailsOfPropertyAffect"
+                    value={detailsOfEquipmentAffect}
+                    onChange={(e) =>
+                      setDetailsOfEquipmentAffect(e.target.value)
+                    }
                   >
-                    <InputLabel id="eq-type-label">Equiptment type</InputLabel>
-                    <Select
-                      labelId="eq-type-label"
-                      id="eq-type"
-                      label="Equiptment type"
-                      onChange={(e)=>{setForm({...form,equip:e.target.value})}}
-                    >
-                      {equipmentTypeValue.length !== 0
-                        ? equipmentTypeValue.map((selectValues, index) => (
-                            <MenuItem
-                              key={index}
-                              value={selectValues.inputValue}
+                    {equipmentAffected.length !== 0
+                      ? equipmentAffected.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
+                </Grid>
+                {detailsOfEquipmentAffect === "Yes" ? (
+                  <>
+                    {form.map((value, key) => (
+                      <>
+                        <Grid item md={6}>
+                          {/* <p>Equiptment type</p> */}
+                          <FormControl
+                            variant="outlined"
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="eq-type-label">
+                              Equiptment type
+                            </InputLabel>
+                            <Select
+                              labelId="eq-type-label"
+                              id="eq-type"
+                              label="Equiptment type"
+                              onChange={(e) =>
+                                handleForm(e, key, "equipmentType")
+                              }
                             >
-                              {selectValues.inputLabel}
-                            </MenuItem>
-                          ))
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                              {equipmentTypeValue.length !== 0
+                                ? equipmentTypeValue.map(
+                                    (selectValues, index) => (
+                                      <MenuItem
+                                        key={index}
+                                        value={selectValues.inputValue}
+                                      >
+                                        {selectValues.inputLabel}
+                                      </MenuItem>
+                                    )
+                                  )
+                                : null}
+                            </Select>
+                          </FormControl>
+                        </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>if other describe</p> */}
-                  <TextField
-                    variant="outlined"
-                    id="filled-basic"
-                    label="If others, describe"
-                    className={classes.formControl}
-                  />
-                </Grid>
+                        <Grid item md={6}>
+                          {/* <p>if other describe</p> */}
+                          <TextField
+                            variant="outlined"
+                            id="filled-basic"
+                            label="If others, describe"
+                            className={classes.formControl}
+                            onChange={(e) =>
+                              handleForm(e, key, "equipmentOtherType")
+                            }
+                          />
+                        </Grid>
 
-                <Grid item md={12}>
-                  {/* <p>Describe the damage</p> */}
-                  <TextField
-                    id="describe-damage"
-                    multiline
-                    variant="outlined"
-                    rows="3"
-                    label="Describe the damage"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-
-                <Grid item lg={12} md={6} sm={6}>
-                  <button className={classes.textButton}>
-                    Add details of additional equiptment affected?
-                  </button>
-                </Grid>
-
+                        <Grid item md={12}>
+                          {/* <p>Describe the damage</p> */}
+                          <TextField
+                            id="describe-damage"
+                            multiline
+                            variant="outlined"
+                            rows="3"
+                            label="Describe the damage"
+                            className={classes.fullWidth}
+                            onChange={(e) =>
+                              handleForm(e, key, "equipmentDeatils")
+                            }
+                          />
+                        </Grid>
+                      </>
+                    ))}
+                    <Grid item lg={12} md={6} sm={6}>
+                      <button
+                        className={classes.textButton}
+                        onClick={() => addNewEquipmentDetails()}
+                      >
+                        Add details of additional equiptment affected?
+                      </button>
+                    </Grid>
+                  </>
+                ) : null}
                 <Grid item lg={12} md={6} sm={6}>
                   {/* <p>Comment </p> */}
                   <TextField
@@ -209,7 +268,8 @@ const EqiptmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                    onClick={() => handleNext()}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Next
                   </Button>

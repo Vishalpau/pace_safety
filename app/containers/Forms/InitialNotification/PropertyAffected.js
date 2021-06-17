@@ -7,8 +7,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
@@ -72,33 +72,72 @@ const PropertyAffected = () => {
   };
   const handleChange = (event) => {
     setDetailsOfPropertyAffect(event.target.value);
-  }
+  };
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
 
   const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
-  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect]  = useState([]);
-  const [form, setForm] = useState({
-    propertyType: "",
-    propertyOtherType: "",
-    damageDetails: "",
-    fkIncidentId: 0,
-  });
-  const handleNext = async()=>{
-    
+  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
+  const [form, setForm] = useState([
+    {
+      propertyType: "",
+      propertyOtherType: "",
+      damageDetails: "",
+      fkIncidentId: 3,
+      createdBy:2
+    },
+  ]);
+  const addNewPropertyDetails = () => {
+    // alert('ram')
+    setForm([
+      ...form,
+      {
+        propertyType: "",
+        propertyOtherType: "",
+        damageDetails: "",
+        fkIncidentId: 3,
+        createdBy:2
+      },
+    ]);
+  };
+  const handlePropertyType = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp)
+    setForm(temp);
+  };
+  const handlePropertyOtherType = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp)
+    setForm(temp);
+  };
+  const handleDamageDetails = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp)
+    setForm(temp);
+  };
+  const handleNext = async () => {
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
-    if(detailsOfPropertyAffect === 'Yes'){
-      console.log(form)
-      const res = await api.post('api/v1/incidents/1/properties/')
-      window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
-      
+    if (detailsOfPropertyAffect === "Yes") {
+      console.log(form);
+      for(var i = 0; i < form.length;i++){
+        const res = await api.post("api/v1/incidents/3/properties/",form[i]);
+        // window.location.href =
+        //   "/app/incident-management/registration/initial-notification/eqiptment-affected/";
+      }
+     
+    } else {
+      window.location.href =
+        "/app/incident-management/registration/initial-notification/eqiptment-affected/";
     }
-    else{
-      window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
-    }
-  }
+  };
 
   const fetchPropertyAffectedValue = async () => {
     const res = await api.get("api/v1/lists/12/value");
@@ -136,70 +175,80 @@ const PropertyAffected = () => {
                     Do you have details to share about the properties affected?
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
-                  <RadioGroup aria-label="detailsOfPropertyAffect" name="detailsOfPropertyAffect" value={detailsOfPropertyAffect} onChange={handleChange}>
-                  {propertyAffectedValue !== 0
-                    ? propertyAffectedValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                    : null}
-                    </RadioGroup>
-                </Grid>
-                    {detailsOfPropertyAffect === 'Yes'?
-                    <>
-                <Grid item md={12}>
-                  <Box marginTop={2} marginBottom={2}>
-                    {/* <h4>Details of people affected</h4> */}
-                    <Typography variant="h6">
-                      Details of properties affected
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid item md={6}>
-                  {/* <p>person type</p> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
+                  <RadioGroup
+                    aria-label="detailsOfPropertyAffect"
+                    name="detailsOfPropertyAffect"
+                    value={detailsOfPropertyAffect}
+                    onChange={handleChange}
                   >
-                    <InputLabel id="person-type-label">
-                      Property type
-                    </InputLabel>
-                    <Select
-                      labelId="person-type-label"
-                      id="person-type"
-                      label="Person type"
-                      onChange={(e)=>{setForm({...form,propertyType:e.target.value})}}
-                    >
-                      {propertyTypeValue.length !== 0
-                        ? propertyTypeValue.map((selectValues, index) => (
-                            <MenuItem
-                              key={index}
-                              value={selectValues.inputValue}
+                    {propertyAffectedValue !== 0
+                      ? propertyAffectedValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
+                </Grid>
+                {detailsOfPropertyAffect === "Yes" ? (
+                  <>
+                    <Grid item md={12}>
+                      <Box marginTop={2} marginBottom={2}>
+                        {/* <h4>Details of people affected</h4> */}
+                        <Typography variant="h6">
+                          Details of properties affected
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    {form.map((value, index) => (
+                      <>
+                        <Grid item md={6}>
+                          {/* <p>person type</p> */}
+                          <FormControl
+                            variant="outlined"
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="person-type-label">
+                              Property type
+                            </InputLabel>
+                            <Select
+                              labelId="person-type-label"
+                              id="person-type"
+                              label="Person type"
+                              onChange={(e) =>
+                                handlePropertyType(e, index, "propertyType")
+                              }
                             >
-                              {selectValues.inputLabel}
-                            </MenuItem>
-                          ))
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                              {propertyTypeValue.length !== 0
+                                ? propertyTypeValue.map(
+                                    (selectValues, index) => (
+                                      <MenuItem
+                                        key={index}
+                                        value={selectValues.inputValue}
+                                      >
+                                        {selectValues.inputLabel}
+                                      </MenuItem>
+                                    )
+                                  )
+                                : null}
+                            </Select>
+                          </FormControl>
+                        </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>Name of people affected</p> */}
-                  <TextField
-                    id="name-affected"
-                    variant="outlined"
-                    label="if others, describe"
-                    className={classes.formControl}
-                    onChange={(e)=>{setForm({...form,propertyOtherType:e.target.value})}}
-                  />
-                </Grid>
+                        <Grid item md={6}>
+                          {/* <p>Name of people affected</p> */}
+                          <TextField
+                            id="name-affected"
+                            variant="outlined"
+                            label="if others, describe"
+                            className={classes.formControl}
+                            onChange={(e) => handlePropertyOtherType(e,index, 'propertyOtherType')}
+                          />
+                        </Grid>
 
-                {/* <Grid item md={6}>
+                        {/* <Grid item md={6}>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
@@ -213,23 +262,29 @@ const PropertyAffected = () => {
                   </FormControl>
                 </Grid> */}
 
-                <Grid item md={12}>
-                  {/* <p>Name of people affected</p> */}
-                  <TextField
-                    id="name-affected"
-                    variant="outlined"
-                    label="Describe the damage"
-                    className={classes.formControl}
-                    onChange={(e)=>{setForm({...form,damageDetails:e.target.value})}}
-                  />
-                </Grid>
-
-                <Grid item md={12}>
-                  <button className={classes.textButton}>
-                    <PersonAddIcon /> Add details of another person affected
-                  </button>
-                </Grid>
-                </>:null}
+                        <Grid item md={12}>
+                          {/* <p>Name of people affected</p> */}
+                          <TextField
+                            id="name-affected"
+                            variant="outlined"
+                            label="Describe the damage"
+                            className={classes.formControl}
+                            onChange={(e) => handleDamageDetails(e,index, 'damageDetails')}
+                            
+                          />
+                        </Grid>
+                      </>
+                    ))}
+                    <Grid item md={12}>
+                      <button
+                        className={classes.textButton}
+                        onClick={() => addNewPropertyDetails()}
+                      >
+                        <PersonAddIcon /> Add details of another person affected
+                      </button>
+                    </Grid>
+                  </>
+                ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
                   <TextField
@@ -245,7 +300,9 @@ const PropertyAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={()=>{window.history.back()}}
+                    onClick={() => {
+                      window.history.back();
+                    }}
                     // href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
                     Previouse

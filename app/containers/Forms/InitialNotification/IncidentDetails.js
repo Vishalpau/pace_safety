@@ -102,7 +102,7 @@ const IncidentDetails = () => {
       "incidentTitle": form.incidenttype,
       "incidentDetails": "string",
       "immediateActionsTaken": "string",
-      "incidentOccuredOn": form.incidentdata,
+      "incidentOccuredOn": '2021-06-17T01:02:49.099Z',
       "isPersonAffected": form.personaffected,
       "isPersonDetailsAvailable": "Yes",
       "personAffectedComments": "string",
@@ -116,7 +116,7 @@ const IncidentDetails = () => {
       "enviromentalImpactComments": "string",
       "supervisorByName": "string",
       "supervisorById": 0,
-      "incidentReportedOn": form.incidenttime,
+      "incidentReportedOn": '2021-06-17T01:02:49.099Z',
       "incidentReportedByName": "string",
       "incidentReportedById": 0,
       "reasonLateReporting": "string",
@@ -141,7 +141,7 @@ const IncidentDetails = () => {
   }
   
   const handleDateChange = (date) => {
-    let onlyDate = moment(date).format("YYYY/DD/MM");
+    let onlyDate = moment(date).format("YYYY/MM/DD");
     console.log(onlyDate);
     setForm({
       ...form,
