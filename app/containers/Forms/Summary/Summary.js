@@ -37,6 +37,7 @@ import History from "@material-ui/icons/History";
 // Styles
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
+import Fonts from "dan-styles/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -85,7 +86,7 @@ const Summary = () => {
       <Grid container spacing={5}>
         <Grid container item md={9} spacing={3}>
           <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Observation Number
             </Typography>
             <Box paddingBottom={1}>
@@ -100,7 +101,7 @@ const Summary = () => {
             <Divider />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Progress
             </Typography>
 
@@ -116,9 +117,7 @@ const Summary = () => {
                   >
                     Initial Notification
                   </Button>
-                  <Typography variant="caption" className={Type.textSuccess}>
-                    Done
-                  </Typography>
+                  <Typography variant="caption">Done</Typography>
                 </div>
                 <div className={Styles.item}>
                   <Button
@@ -129,38 +128,10 @@ const Summary = () => {
                     className={classes.statusButton}
                   >
                     Initial Notification
-                  </Button>
-                  <Typography variant="caption" className={Type.textSuccess}>
-                    Done
-                  </Typography>
-                </div>
-                <div className={Styles.item}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    endIcon={<CheckCircle />}
-                    className={classes.statusButton}
-                  >
-                    Initial Notification
-                  </Button>
-                  <Typography variant="caption" className={Type.textSuccess}>
-                    Done
-                  </Typography>
-                </div>
-                <div className={Styles.item}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    endIcon={<CheckCircle />}
-                    className={classes.statusButton}
-                  >
-                    Initial Notification Initial Notification Initial
-                    Notification
                   </Button>
                   <Typography variant="caption">Done</Typography>
                 </div>
+
                 <div className={Styles.item}>
                   <Button
                     color="primary"
@@ -196,7 +167,9 @@ const Summary = () => {
                   >
                     Root Cause & Analysis
                   </Button>
-                  <Typography variant="caption">Not Applicable</Typography>
+                  <Typography variant="caption" color="error">
+                    Not Applicable
+                  </Typography>
                 </div>
                 <div className={Styles.item}>
                   <Button
@@ -215,70 +188,98 @@ const Summary = () => {
             <Divider />
           </Grid>
           <Grid item md={6}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Number
             </Typography>
 
-            <Typography varaint="body" color="textSecondary">
+            <Typography
+              varaint="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
               3568166
             </Typography>
           </Grid>
 
           <Grid item md={6}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident on
             </Typography>
-            <Typography variant="body" color="textSecondary">
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
               15th June 2018
             </Typography>
           </Grid>
 
           <Grid item md={6}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Reported on
             </Typography>
 
-            <Typography variant="body" color="textSecondary">
-              17th June 2018
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
+              17th June 2018, 11:26 AM
             </Typography>
           </Grid>
 
           <Grid item md={6}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Reported by
             </Typography>
 
-            <Typography variant="body" color="textSecondary">
-              11:16 AM
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
+              FirstName LastName
             </Typography>
           </Grid>
 
           <Grid item md={6}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Type
             </Typography>
 
-            <Typography variant="body" color="textSecondary">
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
               Near miss
             </Typography>
           </Grid>
 
           <Grid item md={6}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Title
             </Typography>
 
-            <Typography variant="body" color="textSecondary">
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
               Lorem Ipsum is simply dummy text
             </Typography>
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incidnet Description
             </Typography>
 
             {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-            <Typography variant="body" color="textSecondary">
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the industry's standard dummy text
               ever since the 1500s, when an unknown printer took a galley of
@@ -293,32 +294,30 @@ const Summary = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Location
             </Typography>
 
             {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-            <Typography variant="body" color="textSecondary">
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
               Location
             </Typography>
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="p">
-              Summary Can be same as current page--
+            <Typography
+              variant="body"
+              color="textSecondary"
+              className={Fonts.labelValue}
+            >
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
+              nihil similique dolorem assumenda, adipisci cum, laudantium, iusto
+              quisquam at quis eius quasi.
             </Typography>
-
-            <p>1....</p>
-            <p>2....</p>
-            <p>3....</p>
-            <p>
-              4....
-              <ul>
-                <li>a....</li>
-                <li>a....</li>
-                <li>a....</li>
-              </ul>
-            </p>
           </Grid>
 
           <Grid item md={6}>
@@ -405,13 +404,13 @@ const Summary = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} md={3}>
           <Paper>
             <List
               dense
               subheader={<ListSubheader component="div">Actions</ListSubheader>}
             >
-              <ListItem button>
+              <ListItem button divider>
                 <ListItemIcon>
                   <Close />
                 </ListItemIcon>
