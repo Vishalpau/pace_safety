@@ -20,10 +20,10 @@ function ReportingValidation(data){
         isValid = false
     }
 
-    if (validator.isEmpty(data.othername)){
-        error.othername = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.othername)){
+    //     error.othername = "this filed is empty"
+    //     isValid = false
+    // }
 
     if (data.fileupload.length == 0){
         error.fileupload = "this filed is empty"
@@ -45,20 +45,20 @@ function ReportingValidation(data){
         isValid = false
     }
 
-    if (validator.isEmpty(data.others)){
-        error.others = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.others)){
+    //     error.others = "this filed is empty"
+    //     isValid = false
+    // }
 
     if (validator.isEmpty(data.latereporting)){
         error.latereporting = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.additionaldetails)){
-        error.additionaldetails = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.additionaldetails)){
+    //     error.additionaldetails = "this filed is empty"
+    //     isValid = false
+    // }
 
    
     return { error, isValid }

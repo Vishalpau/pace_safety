@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -12,7 +12,7 @@ import {
   TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-  KeyboardTimePicker
+  KeyboardTimePicker,
 } from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
@@ -29,9 +29,9 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { MaterialDropZone } from "dan-components";
-import { DropzoneDialogBase } from 'material-ui-dropzone';
-import CloseIcon from '@material-ui/icons/Close';
-import moment from 'moment'
+import { DropzoneDialogBase } from "material-ui-dropzone";
+import CloseIcon from "@material-ui/icons/Close";
+import moment from "moment";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -39,9 +39,8 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import ReportingValidation from "../../Validator/ReportingValidation"
-
-
+import ReportingValidation from "../../Validator/ReportingValidation";
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -71,24 +70,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ReportingAndNotification = () => {
-
   const [files, setFile] = React.useState([]);
-  const [error,setError] = useState({})
+  const [error, setError] = useState({});
 
   const [form, setForm] = useState({
-    reportedto:"",
-    isnotificationsent:"",
-    fileupload:"",
-    supervisorname:"",
-    othername:"",
-    reportingdate:"2021/09/06",
-    reportingtime:"",
-    reportedby:"",
-    others:"",
-    latereporting:"",
-    additionaldetails:""
-  })
-
+    reportedto: "",
+    isnotificationsent: "",
+    fileupload: "",
+    supervisorname: "",
+    othername: "",
+    reportingdate: "2021/09/06",
+    reportingtime: "",
+    reportedby: "",
+    others: "",
+    latereporting: "",
+    additionaldetails: "",
+  });
 
   const reportedTo = [
     "Internal Leadership",
@@ -105,7 +102,7 @@ const ReportingAndNotification = () => {
   );
 
   const handleDateChange = (date) => {
-    let onlyDate = moment(date).format('YYYY/MM/DD')
+    let onlyDate = moment(date).format("YYYY/MM/DD");
     setForm({
       ...form,
       reportingdate: onlyDate,
@@ -113,32 +110,38 @@ const ReportingAndNotification = () => {
   };
 
   const handelTimeChange = (date) => {
-    let onlyTime = moment(date).format('HH:mm')
-    
+    let onlyTime = moment(date).format("HH:mm");
+
     setForm({
       ...form,
       reportingtime: onlyTime,
     });
-  }
+  };
 
-   const [selectedTime, setSelectedTime] = React.useState(
+  const [selectedTime, setSelectedTime] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
 
-  const handleDrop = (acceptedFiles) =>{
+  const handleDrop = (acceptedFiles) => {
     setForm({
       ...form,
       fileupload: acceptedFiles,
-    })
-    setFileNames(acceptedFiles.map(file => file.name));
-  }
+    });
+    setFileNames(acceptedFiles.map((file) => file.name));
+  };
 
-  const handelNext = (e) =>{
-    console.log(form)
-    const { error, isValid } = ReportingValidation(form)
-    setError(error)
-    console.log(error,isValid)
-  }
+  const handelNext = async (e) => {
+    console.log(form);
+    const { error, isValid } = ReportingValidation(form);
+    setError(error);
+    console.log(error, isValid);
+    const res = await api.post("/api/v1/incidents/3/reports/", {
+      reportTo: form.reportedto,
+      reportingNote: form.latereporting,
+      createdBy: 0,
+      fkIncidentId: 0,
+    });
+  };
 
   const classes = useStyles();
   return (
@@ -177,7 +180,7 @@ const ReportingAndNotification = () => {
                       ))}
                     </RadioGroup>
                   </FormControl>
-                  {error && error.reportedto && <p>{error.reportedto}</p> }
+                  {error && error.reportedto && <p>{error.reportedto}</p>}
                 </Grid>
 
                 <Grid item lg={12} md={6} sm={6}>
@@ -200,10 +203,11 @@ const ReportingAndNotification = () => {
                       ))}
                     </RadioGroup>
                   </FormControl>
-                  {error && error.isnotificationsent && <p>{error.isnotificationsent}</p> }
+                  {error && error.isnotificationsent && (
+                    <p>{error.isnotificationsent}</p>
+                  )}
                 </Grid>
                 <Grid item lg={12} justify="flex-start">
-
                   {/* <p>Initial Evidences</p> */}
 
                   <Box marginTop={3} marginBottom={4}>
@@ -211,7 +215,7 @@ const ReportingAndNotification = () => {
                       Initial Evidences
                     </Typography>
                   </Box>
-                  
+
                   <MaterialDropZone
                     files={files}
                     showPreviews
@@ -220,9 +224,8 @@ const ReportingAndNotification = () => {
                     text="Drag and drop file(s) here or click button bellow"
                     showButton
                     onDrop={handleDrop}
-                   
                   />
-                  {error && error.fileupload && <p>{error.fileupload}</p> }
+                  {error && error.fileupload && <p>{error.fileupload}</p>}
                 </Grid>
 
                 <Grid item md={6}>
@@ -250,7 +253,9 @@ const ReportingAndNotification = () => {
                       ))}
                     </Select>
                   </FormControl>
-                  {error && error.supervisorname && <p>{error.supervisorname}</p> }
+                  {error && error.supervisorname && (
+                    <p>{error.supervisorname}</p>
+                  )}
                 </Grid>
 
                 <Grid item md={6}>
@@ -267,7 +272,7 @@ const ReportingAndNotification = () => {
                       });
                     }}
                   />
-                  {error && error.othername && <p>{error.othername}</p> }
+                  {/* {error && error.othername && <p>{error.othername}</p>} */}
                 </Grid>
 
                 <Grid item md={6}>
@@ -280,31 +285,31 @@ const ReportingAndNotification = () => {
                       inputVariant="outlined"
                       label="Reporting Date"
                       value={new Date(form.reportingdate)}
-                      onChange={date => handleDateChange(date)}
+                      onChange={(date) => handleDateChange(date)}
                       KeyboardButtonProps={{
                         "aria-label": "change date",
                       }}
                     />
                   </MuiPickersUtilsProvider>
-                  {error && error.reportingdate && <p>{error.reportingdate}</p> }
+                  {error && error.reportingdate && <p>{error.reportingdate}</p>}
                 </Grid>
 
                 <Grid item md={6}>
                   <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <KeyboardTimePicker
-                  margin="normal"
-                  id="time-picker"
-                  label="Time picker"
-                  // defaultValue="05:30 AM"
-                  value = {selectedTime}
-                  onChange={date => handelTimeChange(date)}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change time',
-                  }}
-                  format="HH:mm"
-                />
+                    <KeyboardTimePicker
+                      margin="normal"
+                      id="time-picker"
+                      label="Time picker"
+                      // defaultValue="05:30 AM"
+                      value={selectedTime}
+                      onChange={(date) => handelTimeChange(date)}
+                      KeyboardButtonProps={{
+                        "aria-label": "change time",
+                      }}
+                      format="HH:mm"
+                    />
                   </MuiPickersUtilsProvider>
-                  {error && error.reportingtime && <p>{error.reportingtime}</p> }
+                  {error && error.reportingtime && <p>{error.reportingtime}</p>}
                 </Grid>
 
                 <Grid item md={6}>
@@ -331,7 +336,7 @@ const ReportingAndNotification = () => {
                       ))}
                     </Select>
                   </FormControl>
-                  {error && error.reportedby && <p>{error.reportedby}</p> }
+                  {error && error.reportedby && <p>{error.reportedby}</p>}
                 </Grid>
 
                 <Grid item md={6}>
@@ -348,7 +353,7 @@ const ReportingAndNotification = () => {
                       });
                     }}
                   />
-                  {error && error.others && <p>{error.others}</p> }
+                  {/* {error && error.others && <p>{error.others}</p>} */}
                 </Grid>
 
                 <Grid item md={12}>
@@ -367,7 +372,7 @@ const ReportingAndNotification = () => {
                       });
                     }}
                   />
-                  {error && error.latereporting && <p>{error.latereporting}</p> }
+                  {error && error.latereporting && <p>{error.latereporting}</p>}
                 </Grid>
 
                 <Grid item md={12}>
@@ -386,7 +391,9 @@ const ReportingAndNotification = () => {
                       });
                     }}
                   />
-                  {error && error.additionaldetails && <p>{error.additionaldetails}</p> }
+                  {/* {error && error.additionaldetails && (
+                    <p>{error.additionaldetails}</p>
+                  )} */}
                 </Grid>
 
                 <Grid item md={6}>
@@ -401,10 +408,10 @@ const ReportingAndNotification = () => {
                     variant="contained"
                     color="primary"
                     // href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
-                    href={Object.keys(error).length === 0? 
-                      "http://localhost:3000/app/incident-management/registration/investigation/initial-details/" 
-                      : "#"}
-                    onClick={(e)=>handelNext(e)}
+                    // href={Object.keys(error).length === 0?
+                    //   "http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
+                    //   : "#"}
+                    onClick={(e) => handelNext(e)}
                   >
                     Submit
                   </Button>
