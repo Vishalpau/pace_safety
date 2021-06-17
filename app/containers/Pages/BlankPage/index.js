@@ -21,6 +21,7 @@ import InfoIcon from "@material-ui/icons/Info";
 
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
+import Type from "dan-styles/Typography.scss";
 
 function BlankPage() {
   // const title = brand.name + ' - Blank Page';
@@ -281,6 +282,7 @@ function BlankPage() {
                   variant="body2"
                   display="inline"
                   color="textSecondary"
+                  className={Type.medium}
                 >
                   Initial Notification
                 </Typography>

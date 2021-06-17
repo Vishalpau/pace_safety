@@ -87,7 +87,7 @@ const Summary = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Observation Number
+              Incident Number
             </Typography>
             <Box paddingBottom={1}>
               <Typography
