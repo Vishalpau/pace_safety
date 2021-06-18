@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -213,9 +216,10 @@ const HazardiousActs = () => {
               </Grid>
               <Grid item md={12}>
                 <Box marginTop={4}>
-                <Button
+                  <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
                   >
                     Previous
@@ -223,6 +227,7 @@ const HazardiousActs = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
                   >
                     Next

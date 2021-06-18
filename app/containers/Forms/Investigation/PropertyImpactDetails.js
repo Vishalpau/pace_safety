@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: ".5rem 0",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const PropertyImpacetDetails = () => {
@@ -282,6 +285,7 @@ const PropertyImpacetDetails = () => {
               <Grid item md={12}>
                 <Button
                   variant="contained"
+                  className={classes.button}
                   color="primary"
                   href="http://localhost:3000/app/incident-management/registration/investigation/worker-details/"
                 >
@@ -290,6 +294,7 @@ const PropertyImpacetDetails = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  className={classes.button}
                   href="http://localhost:3000/app/incident-management/registration/investigation/equiptment-impact-details/"
                 >
                   Next

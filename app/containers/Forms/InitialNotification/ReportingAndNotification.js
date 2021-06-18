@@ -67,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const ReportingAndNotification = () => {
@@ -400,6 +403,7 @@ const ReportingAndNotification = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Previouse
@@ -407,6 +411,7 @@ const ReportingAndNotification = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     // href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
                     // href={Object.keys(error).length === 0?
                     //   "http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
