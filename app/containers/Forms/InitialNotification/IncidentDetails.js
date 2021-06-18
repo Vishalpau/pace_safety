@@ -160,10 +160,11 @@ const IncidentDetails = () => {
     });
   };
   const handelTimeChange = (date) => {
-    let onlyTime = moment(date).format("HH:mm");
+    console.log(date)
+    setSelectedTime(date);
     setForm({
       ...form,
-      incidenttime: onlyTime,
+      incidenttime: moment(date).format("HH:mm"),
     });
   };
   const fetchIncidentTypeValue = async () => {
@@ -341,7 +342,7 @@ const IncidentDetails = () => {
                     id="time-picker"
                     label="Time picker"
                     // defaultValue="05:30 AM"
-                    value={selectedTime}
+                    value={new Date(selectedTime)}
                     onChange={(date) => handelTimeChange(date)}
                     KeyboardButtonProps={{
                       "aria-label": "change time",

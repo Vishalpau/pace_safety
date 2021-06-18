@@ -108,6 +108,10 @@ const ReportingAndNotification = () => {
     new Date("2014-08-18T21:11:54")
   );
 
+  const [selectedTime, setSelectedTime] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
   const handleDateChange = (date) => {
     let onlyDate = moment(date).format("YYYY/MM/DD");
     setForm({
@@ -117,18 +121,15 @@ const ReportingAndNotification = () => {
   };
 
   const handelTimeChange = (date) => {
-    let onlyTime = moment(date).format("HH:mm");
-
+    console.log(date)
+    setSelectedTime(date);
     setForm({
       ...form,
-      reportingtime: onlyTime,
+      incidenttime: moment(date).format("HH:mm"),
     });
   };
 
-  const [selectedTime, setSelectedTime] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
+  
   const handleDrop = (acceptedFiles) => {
     setForm({
       ...form,
@@ -314,8 +315,7 @@ const ReportingAndNotification = () => {
                       margin="normal"
                       id="time-picker"
                       label="Time picker"
-                      // defaultValue="05:30 AM"
-                      value={selectedTime}
+                      value={new Date(selectedTime)}
                       onChange={(date) => handelTimeChange(date)}
                       KeyboardButtonProps={{
                         "aria-label": "change time",

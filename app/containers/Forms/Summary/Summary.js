@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -19,6 +19,8 @@ import CheckCircle from "@material-ui/icons/CheckCircle";
 import AccessTime from "@material-ui/icons/AccessTime";
 import Divider from "@material-ui/core/Divider";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import api from "../../../utils/axios";
+
 
 // List
 import List from "@material-ui/core/List";
@@ -40,6 +42,10 @@ import Add from "@material-ui/icons/Add";
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
+import moment from "moment";
+
+
+import IncidentDetails from "../../Forms/InitialNotification/IncidentDetails"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -67,32 +73,37 @@ function ListItemLink(props) {
 }
 
 const Summary = () => {
+ 
+  const [initialNotification,setInitialNotification] = useState(false)
+  const [incidents, setIncidents] = useState([]);
+
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
 
+  const handelInitialNotification = (e) =>{
+    setInitialNotification(!initialNotification)
+  }
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  useEffect(async () => {
+    const allIncidents = await api.get("api/v1/incidents/16/");
+    await setIncidents(allIncidents.data.data.results);
+  }, []);
+  console.log(incidents)
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+
   return (
-    <PapperBlock title="Incident Number : 5432454" icon="ion-md-list-box">
-      {/* <Box borderBottom={1} marginBottom={2}>
-          <Typography variant="h6" gutterBottom>
-            Summary
-          </Typography>
-        </Box> */}
+    <div>
 
-      <Grid container spacing={5}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incident Overview
-            </Typography>
+      {/* header */}
 
-            <Box paddingBottom={1}>
+      <Box paddingBottom={1}>
               <div className={Styles.incidents}>
                 <div className={Styles.item}>
                   <Button
@@ -101,6 +112,7 @@ const Summary = () => {
                     size="small"
                     endIcon={<CheckCircle />}
                     className={classes.statusButton}
+                    onClick = {(e)=>handelInitialNotification(e)}
                   >
                     Initial Notification
                   </Button>
@@ -158,312 +170,317 @@ const Summary = () => {
               </div>
             </Box>
             <Divider />
+     
+     {/* summary and part */}
+    {initialNotification == false ? 
+        // Object.entries(incidents).map((item) =>(
+          <PapperBlock title={`Incident Number${incidents["incidentTitle"]}`} icon="ion-md-list-box">
+    
+          <Grid container spacing={5}>
+            <Grid container item md={9} spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                  Incident Overview
+                </Typography>
+    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+              </Grid>
+    
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                 
+                >
+                  {/* {item[1]["incidentTitle"]} */}
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Reprehenderit culpa voluptates iste.
+                </Typography>
+              </Grid>
+    
+              <Grid item md={6}>
+                <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                  Incident on
+                </Typography>
+                <Typography
+                  variant="body"
+                  color="textSecondary"
+                  className={Fonts.labelValue}
+                >
+                  {moment(incidents["incidentOccuredOn"]).format('Do MMMM YYYY, h:mm:ss a')}  
+                </Typography>
+              </Grid>
+    
+              <Grid item md={6}>
+                <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                  Reported on
+                </Typography>
+    
+                <Typography
+                  variant="body"
+                  color="textSecondary"
+                  className={Fonts.labelValue}
+                >
+                  {moment(incidents["incidentReportedOn"]).format('Do MMMM YYYY, h:mm:ss a')}
+                </Typography>
+              </Grid>
+    
+              <Grid item md={6}>
+                <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                  Reported by
+                </Typography>
+    
+                <Typography
+                  variant="body"
+                  color="textSecondary"
+                  className={Fonts.labelValue}
+                >
+                   {incidents["incidentReportedByName"]}
+                </Typography>
+              </Grid>
+    
+              <Grid item md={6}>
+                <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                  Incident Type
+                </Typography>
+    
+                <Typography
+                  variant="body"
+                  color="textSecondary"
+                  className={Fonts.labelValue}
+                >
+                  {incidents["incidentReportedByName"]}
+                </Typography>
+              </Grid>
+    
+              <Grid item md={12}>
+                <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                  Incidnet Description
+                </Typography>
+    
+                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                <Typography
+                  variant="body"
+                  color="textSecondary"
+                  className={Fonts.labelValue}
+                >
+                  {incidents["incidentDetails"]}
+                </Typography>
+              </Grid>
+    
+              <Grid item md={12}>
+                <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                  Incident Location
+                </Typography>
+    
+                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                <Typography
+                  variant="body"
+                  color="textSecondary"
+                  className={Fonts.labelValue}
+                >
+                  {incidents["incidentLocation"]}
+                </Typography>
+              </Grid>
+    
+              <Grid item md={12}>
+                <Typography
+                  variant="body"
+                  color="textSecondary"
+                  className={Fonts.labelValue}
+                >
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
+                  nihil similique dolorem assumenda, adipisci cum, laudantium, iusto
+                  quisquam at quis eius quasi.
+                </Typography>
+              </Grid>
+    
+              <Grid item md={6}>
+                {/* <Typography varint="p">Incident report for review</Typography> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-label">Reviewed by</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Reviewed by"
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+    
+              <Grid item md={6}>
+                {/* <Typography varint="p">Reviewed On</Typography> */}
+    
+                <FormControl variant="outlined" className={classes.formControl}>
+                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      id="date-picker-dialog"
+                      format="MM/dd/yyyy"
+                      value={selectedDate}
+                      inputVariant="outlined"
+                      label="Reviewed On"
+                      onChange={handleDateChange}
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                    />
+                  </MuiPickersUtilsProvider>
+                </FormControl>
+              </Grid>
+    
+              <Grid item md={6}>
+                {/* <Typography varint="p">Action item</Typography> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-label">Closed By</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Closed By"
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+    
+              <Grid item md={6}>
+                {/* <Typography varint="p">Closed on</Typography> */}
+    
+                <FormControl variant="outlined" className={classes.formControl}>
+                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      id="date-picker-dialog"
+                      format="MM/dd/yyyy"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      label="Closed On"
+                      inputVariant="outlined"
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                    />
+                  </MuiPickersUtilsProvider>
+                </FormControl>
+              </Grid>
+              
+              <Grid item md={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  href="http://localhost:3000/app/incident-management/registration/lession-learned/lession-learned/"
+                >
+                  Submit
+                </Button>
+              </Grid>
+            
+            </Grid>
+    
+            {/* sidebar */}
+            <Grid item xs={12} md={3}>
+              <Paper>
+                <List
+                  dense
+                  subheader={<ListSubheader component="div">Actions</ListSubheader>}
+                >
+                  <ListItem button>
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                      <a href="/app/incident-management/registration/initial-notification/incident-details/" >
+                        <ListItemText primary="Modify Notification" />
+                      </a>
+                  </ListItem>
+    
+                  <ListItem button>
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                      <a href="/app/incident-management/registration/investigation/initial-details/" >
+                        <ListItemText primary="Modify Investigation" />
+                      </a>
+                  </ListItem>
+    
+                  <ListItem button>
+                      <ListItemIcon>
+                          <Add />
+                      </ListItemIcon>
+                      <a href="app/incident-management/registration/evidence/evidence/" >
+                          <ListItemText primary="Add Evidence" />
+                      </a> 
+                  </ListItem>
+                  
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Add />
+                    </ListItemIcon>
+                    <a href="/app/incident-management/registration/root-cause-analysis/details/" >
+                        <ListItemText primary="Perform RCA" />
+                    </a> 
+                  </ListItem>
+    
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Add />
+                    </ListItemIcon>
+                    <a href="/app/incident-management/registration/lession-learned/lession-learned/" >
+                      <ListItemText primary="Lessions Learnt" />
+                    </a> 
+                  </ListItem>
+    
+                  <ListItem button divider>
+                    <ListItemIcon>
+                      <Close />
+                    </ListItemIcon>
+                    <ListItemText primary="Close Out" />
+                  </ListItem>
+    
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Comment />
+                    </ListItemIcon>
+                    <ListItemText primary="Comments" />
+                  </ListItem>
+    
+                  <ListItem button>
+                    <ListItemIcon>
+                      <History />
+                    </ListItemIcon>
+                    <ListItemText primary="Activity History" />
+                  </ListItem>
+                  
+                </List>
+                <Divider />
+                <List dense>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Print />
+                    </ListItemIcon>
+                    <ListItemText primary="Print" />
+                  </ListItem>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Share />
+                    </ListItemIcon>
+                    <ListItemText primary="Share" />
+                  </ListItem>
+                </List>
+              </Paper>
+            </Grid>
           </Grid>
-
-          {/* <Grid item md={6}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incident Number
-            </Typography>
-
-            <Typography
-              varaint="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              3568166
-            </Typography>
-          </Grid> */}
-
-          <Grid item xs={12}>
-            <Typography
-              variant="h6"
-              // display="inline"
-              // color="textSecondary"
-              // className={Fonts.labelValue}
-            >
-              {/* {item[1]["incidentTitle"]} */}
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Reprehenderit culpa voluptates iste.
-            </Typography>
-          </Grid>
-
-          <Grid item md={6}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incident on
-            </Typography>
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              15th June 2018
-            </Typography>
-          </Grid>
-
-          <Grid item md={6}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Reported on
-            </Typography>
-
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              17th June 2018, 11:26 AM
-            </Typography>
-          </Grid>
-
-          <Grid item md={6}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Reported by
-            </Typography>
-
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              FirstName LastName
-            </Typography>
-          </Grid>
-
-          <Grid item md={6}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incident Type
-            </Typography>
-
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              Near miss
-            </Typography>
-          </Grid>
-
-          {/* <Grid item md={6}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incident Title
-            </Typography>
-
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              Lorem Ipsum is simply dummy text
-            </Typography>
-          </Grid> */}
-          <Grid item md={12}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incidnet Description
-            </Typography>
-
-            {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem Ipsum.
-            </Typography>
-          </Grid>
-
-          <Grid item md={12}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incident Location
-            </Typography>
-
-            {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              Location
-            </Typography>
-          </Grid>
-
-          <Grid item md={12}>
-            <Typography
-              variant="body"
-              color="textSecondary"
-              className={Fonts.labelValue}
-            >
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-              nihil similique dolorem assumenda, adipisci cum, laudantium, iusto
-              quisquam at quis eius quasi.
-            </Typography>
-          </Grid>
-
-          <Grid item md={6}>
-            {/* <Typography varint="p">Incident report for review</Typography> */}
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-label">Reviewed by</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Reviewed by"
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            {/* <Typography varint="p">Reviewed On</Typography> */}
-
-            <FormControl variant="outlined" className={classes.formControl}>
-              {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  id="date-picker-dialog"
-                  format="MM/dd/yyyy"
-                  value={selectedDate}
-                  inputVariant="outlined"
-                  label="Reviewed On"
-                  onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            {/* <Typography varint="p">Action item</Typography> */}
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-label">Closed By</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Closed By"
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            {/* <Typography varint="p">Closed on</Typography> */}
-
-            <FormControl variant="outlined" className={classes.formControl}>
-              {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  id="date-picker-dialog"
-                  format="MM/dd/yyyy"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  label="Closed On"
-                  inputVariant="outlined"
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-            </FormControl>
-          </Grid>
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              href="http://localhost:3000/app/incident-management/registration/lession-learned/lession-learned/"
-            >
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Paper>
-            <List
-              dense
-              subheader={<ListSubheader component="div">Actions</ListSubheader>}
-            >
-              <ListItem button>
-                <ListItemIcon>
-                  <Edit />
-                </ListItemIcon>
-                <ListItemText primary="Modify Notification" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <Edit />
-                </ListItemIcon>
-                <ListItemText primary="Modify Investigation" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <Add />
-                </ListItemIcon>
-                <ListItemText primary="Add Evidence" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <Add />
-                </ListItemIcon>
-                <ListItemText primary="Perform RCA" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <Add />
-                </ListItemIcon>
-                <ListItemText primary="Lessions Learnt" />
-              </ListItem>
-              <ListItem button divider>
-                <ListItemIcon>
-                  <Close />
-                </ListItemIcon>
-                <ListItemText primary="Close Out" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <Comment />
-                </ListItemIcon>
-                <ListItemText primary="Comments" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <History />
-                </ListItemIcon>
-                <ListItemText primary="Activity History" />
-              </ListItem>
-            </List>
-            <Divider />
-            <List dense>
-              <ListItem button>
-                <ListItemIcon>
-                  <Print />
-                </ListItemIcon>
-                <ListItemText primary="Print" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <Share />
-                </ListItemIcon>
-                <ListItemText primary="Share" />
-              </ListItem>
-            </List>
-          </Paper>
-        </Grid>
-      </Grid>
-    </PapperBlock>
+        </PapperBlock>
+        // ))
+      
+      
+      :
+    <IncidentDetails/>
+    }
+    </div>
   );
 };
 

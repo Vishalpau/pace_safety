@@ -871,4 +871,10 @@ module.exports = [
     linkParent:
       "/app/incident-management/registration/initial-notification/incident-details/",
   },
+  // {
+  //   key: "no_child",
+  //   name: "listIncident",
+  //   icon: "ion-ios-checkbox",
+  //   linkParent: "/app/pages/Incident/",
+  // },
 ];
