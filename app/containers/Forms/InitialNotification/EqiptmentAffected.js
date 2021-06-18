@@ -81,7 +81,7 @@ const EqiptmentAffected = () => {
       equipmentOtherType: "",
       equipmentDeatils: "",
       createdBy: 1,     
-        fkIncidentId: 3
+        fkIncidentId: localStorage.getItem("fkincidentId")
     },
   ]);
   const [error,setError] = useState({})
@@ -94,7 +94,7 @@ const EqiptmentAffected = () => {
         equipmentOtherType: "",
         equipmentDeatils: "",
         createdBy: 1,     
-        fkIncidentId: 3
+        fkIncidentId: localStorage.getItem("fkincidentId")
       },
     ]);
   };
@@ -112,10 +112,14 @@ const EqiptmentAffected = () => {
     console.log(error,isValid)
     if (detailsOfEquipmentAffect === "Yes") {
       console.log(form)
+      var status = 0
       
       for (var i = 0; i < form.length; i++) {
-        const res = await api.post("/api/v1/incidents/3/equipments/", form[i]);
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/equipments/`, form[i]);
         
+        status = res.status
+      }
+      if(status === 201){
         history.push("/app/incident-management/registration/initial-notification/environment-affected/");
        
       }

@@ -32,6 +32,7 @@ import { MaterialDropZone } from "dan-components";
 import { DropzoneDialogBase } from "material-ui-dropzone";
 import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
+import { useHistory } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -70,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ReportingAndNotification = () => {
+
   const [files, setFile] = React.useState([]);
   const [error, setError] = useState({});
 
@@ -86,6 +88,8 @@ const ReportingAndNotification = () => {
     latereporting: "",
     additionaldetails: "",
   });
+
+  const history = useHistory()
 
   const reportedTo = [
     "Internal Leadership",
@@ -130,17 +134,24 @@ const ReportingAndNotification = () => {
     setFileNames(acceptedFiles.map((file) => file.name));
   };
 
+
+  
   const handelNext = async (e) => {
     console.log(form);
     const { error, isValid } = ReportingValidation(form);
     setError(error);
     console.log(error, isValid);
-    const res = await api.post("/api/v1/incidents/3/reports/", {
+    const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/reports/`, {
       reportTo: form.reportedto,
       reportingNote: form.latereporting,
       createdBy: 0,
-      fkIncidentId: 0,
+      fkIncidentId: 18,
     });
+    if(res.status === 201){
+      // localStorage.removeItem('fkincidentId')
+      history.push('/app/incident-management/registration/summary/summary/')
+    }
+     
   };
 
   const classes = useStyles();

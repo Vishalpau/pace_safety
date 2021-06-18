@@ -57,16 +57,22 @@ const useStyles = makeStyles((theme) => ({
 
 const PropertyAffected = () => {
 
-  const [form, setForm] = useState([
-    {
-      propertyType: "",
-      propertyOtherType: "",
-      damageDetails: "",
-      fkIncidentId: 3,
-      createdBy:2
-    },
-  ]);
+  // const [form, setForm] = useState({
+  //   detailpropertyaffected:"",
+  //   affectedproperty:{
+  //                     propertytype:"",
+  //                     describe:"",
+  //                     damage:""
+  //                   },
+  //   describeactiontaken:""
+  // })
+  const classes = useStyles();
+  const history = useHistory();
 
+  const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
+  const [propertyTypeValue, setPropertyTypeValue] = useState([]);
+  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
+  
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -93,14 +99,16 @@ const PropertyAffected = () => {
   const [error,setError] = useState({})
 
 
-  const classes = useStyles();
-  const history = useHistory();
-
-  const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
-  const [propertyTypeValue, setPropertyTypeValue] = useState([]);
-  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
   
-  
+  const [form, setForm] = useState([
+    {
+      propertyType: "",
+      propertyOtherType: "",
+      damageDetails: "",
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      createdBy:2
+    },
+  ]);
   const addNewPropertyDetails = () => {
     // alert('ram')
     setForm([
@@ -109,7 +117,7 @@ const PropertyAffected = () => {
         propertyType: "",
         propertyOtherType: "",
         damageDetails: "",
-        fkIncidentId: 3,
+        fkIncidentId: localStorage.getItem("fkincidentId"),
         createdBy:2
       },
     ]);
@@ -144,12 +152,17 @@ const PropertyAffected = () => {
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
     if (detailsOfPropertyAffect === "Yes") {
       console.log(form);
+      let status=0
       for(var i = 0; i < form.length;i++){
-        const res = await api.post("api/v1/incidents/3/properties/",form[i]);
+        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/properties/`,form[i]);
         console.log(res)
+        status= res.status
+        
+      }
+      if(status === 201){
         history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
       }
-     
+      
     } else {
       history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
     }
@@ -325,14 +338,14 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        describeactiontaken: e.target.value,
-                      });
-                    }}
+                    // onChange={(e) => {
+                    //   setForm({
+                    //     ...form,
+                    //     describeactiontaken: e.target.value,
+                    //   });
+                    // }}
                   />
-                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
+                  {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
                 </Grid>
                 <Grid item md={6}>
                   <Button
