@@ -119,18 +119,6 @@ const Summary = () => {
                   </Button>
                   <Typography variant="caption">Done</Typography>
                 </div>
-                <div className={Styles.item}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    endIcon={<CheckCircle />}
-                    className={classes.statusButton}
-                  >
-                    Initial Notification
-                  </Button>
-                  <Typography variant="caption">Done</Typography>
-                </div>
 
                 <div className={Styles.item}>
                   <Button
@@ -187,7 +175,7 @@ const Summary = () => {
             </Box>
             <Divider />
           </Grid>
-          <Grid item md={6}>
+          {/* <Grid item md={6}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Number
             </Typography>
@@ -199,7 +187,7 @@ const Summary = () => {
             >
               3568166
             </Typography>
-          </Grid>
+          </Grid> */}
 
           <Grid item md={6}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
@@ -256,7 +244,7 @@ const Summary = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          {/* <Grid item md={6}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Title
             </Typography>
@@ -268,7 +256,7 @@ const Summary = () => {
             >
               Lorem Ipsum is simply dummy text
             </Typography>
-          </Grid>
+          </Grid> */}
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incidnet Description
