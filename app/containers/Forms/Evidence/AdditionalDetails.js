@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: "1rem 0",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const AdditionalDetails = () => {
@@ -124,6 +127,7 @@ const AdditionalDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/"
                   >
                     Previous
@@ -131,6 +135,7 @@ const AdditionalDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
                   >
                     Submit

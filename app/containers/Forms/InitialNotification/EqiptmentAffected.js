@@ -17,7 +17,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router";
 
-
 import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
@@ -26,7 +25,6 @@ import {
 import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import EquipmentValidate from "../../Validator/EquipmentValidation";
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -52,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     display: "inlineBlock",
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
+  },
+  button: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -84,7 +85,7 @@ const EqiptmentAffected = () => {
         fkIncidentId: localStorage.getItem("fkincidentId")
     },
   ]);
-  const [error,setError] = useState({})
+  const [error, setError] = useState({});
   const addNewEquipmentDetails = () => {
     // alert('ram')
     setForm([
@@ -106,10 +107,10 @@ const EqiptmentAffected = () => {
     setForm(temp);
   };
   const handleNext = async () => {
-    console.log(form)
-    const { error, isValid } = EquipmentValidate(form)
-    setError(error)
-    console.log(error,isValid)
+    console.log(form);
+    const { error, isValid } = EquipmentValidate(form);
+    setError(error);
+    console.log(error, isValid);
     if (detailsOfEquipmentAffect === "Yes") {
       console.log(form)
       var status = 0
@@ -124,8 +125,9 @@ const EqiptmentAffected = () => {
        
       }
     } else {
-     
-      history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+      history.push(
+        "/app/incident-management/registration/initial-notification/environment-affected/"
+      );
     }
   };
 
@@ -218,7 +220,9 @@ const EqiptmentAffected = () => {
                                 : null}
                             </Select>
                           </FormControl>
-                          {error && error[`equipmentType${[key]}`] && <p>{error[`equipmentType${[key]}`]}</p>}
+                          {error && error[`equipmentType${[key]}`] && (
+                            <p>{error[`equipmentType${[key]}`]}</p>
+                          )}
                         </Grid>
 
                         <Grid item md={6}>
@@ -232,7 +236,9 @@ const EqiptmentAffected = () => {
                               handleForm(e, key, "equipmentOtherType")
                             }
                           />
-                          {error && error[`equipmentOtherType${[key]}`] && <p>{error[`equipmentOtherType${[key]}`]}</p>}
+                          {error && error[`equipmentOtherType${[key]}`] && (
+                            <p>{error[`equipmentOtherType${[key]}`]}</p>
+                          )}
                         </Grid>
 
                         <Grid item md={12}>
@@ -248,9 +254,10 @@ const EqiptmentAffected = () => {
                               handleForm(e, key, "equipmentDeatils")
                             }
                           />
-                          {error && error[`equipmentDeatils${[key]}`] && <p>{error[`equipmentDeatils${[key]}`]}</p>}
+                          {error && error[`equipmentDeatils${[key]}`] && (
+                            <p>{error[`equipmentDeatils${[key]}`]}</p>
+                          )}
                         </Grid>
-                        
                       </>
                     ))}
                     <Grid item lg={12} md={6} sm={6}>
@@ -278,6 +285,7 @@ const EqiptmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
                   >
                     Previouse
@@ -285,6 +293,7 @@ const EqiptmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     onClick={() => handleNext()}
                     // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
                   >

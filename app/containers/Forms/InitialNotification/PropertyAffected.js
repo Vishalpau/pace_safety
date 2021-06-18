@@ -27,7 +27,6 @@ import api from "../../../utils/axios";
 import { useHistory } from "react-router";
 import PropertyValidate from "../../Validator/PropertyValidation";
 
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -52,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
     display: "inlineBlock",
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
+  },
+  button: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -96,8 +98,7 @@ const PropertyAffected = () => {
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
 
-  const [error,setError] = useState({})
-
+  const [error, setError] = useState({});
 
   
   const [form, setForm] = useState([
@@ -126,28 +127,28 @@ const PropertyAffected = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp)
+    console.log(temp);
     setForm(temp);
   };
   const handlePropertyOtherType = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp)
+    console.log(temp);
     setForm(temp);
   };
   const handleDamageDetails = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp)
+    console.log(temp);
     setForm(temp);
   };
   const handleNext = async () => {
-    console.log(form)
-    const { error, isValid } = PropertyValidate(form)
-    setError(error)
-    console.log(error,isValid)
+    console.log(form);
+    const { error, isValid } = PropertyValidate(form);
+    setError(error);
+    console.log(error, isValid);
 
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
     if (detailsOfPropertyAffect === "Yes") {
@@ -164,7 +165,9 @@ const PropertyAffected = () => {
       }
       
     } else {
-      history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
+      history.push(
+        "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+      );
     }
   };
 
@@ -264,7 +267,9 @@ const PropertyAffected = () => {
                                 : null}
                             </Select>
                           </FormControl>
-                          {error && error[`propertyType${[index]}`] && <p>{error[`propertyType${[index]}`]}</p>}
+                          {error && error[`propertyType${[index]}`] && (
+                            <p>{error[`propertyType${[index]}`]}</p>
+                          )}
                         </Grid>
 
                         <Grid item md={6}>
@@ -274,9 +279,17 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="if others, describe"
                             className={classes.formControl}
-                            onChange={(e) => handlePropertyOtherType(e,index, 'propertyOtherType')}
+                            onChange={(e) =>
+                              handlePropertyOtherType(
+                                e,
+                                index,
+                                "propertyOtherType"
+                              )
+                            }
                           />
-                          {error && error[`propertyOtherType${[index]}`] && <p>{error[`propertyOtherType${[index]}`]}</p>}
+                          {error && error[`propertyOtherType${[index]}`] && (
+                            <p>{error[`propertyOtherType${[index]}`]}</p>
+                          )}
                         </Grid>
 
                         {/* <Grid item md={6}>
@@ -285,9 +298,9 @@ const PropertyAffected = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="dep-label">if others, describe</InputLabel>
-                    <Select 
-                    labelId="dep-label" 
-                    id="dep" 
+                    <Select
+                    labelId="dep-label"
+                    id="dep"
                     label="Department"
                     onChange={(e) => {
                       setForm({
@@ -311,12 +324,14 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
-                            onChange={(e) => handleDamageDetails(e,index, 'damageDetails')}
-                            
+                            onChange={(e) =>
+                              handleDamageDetails(e, index, "damageDetails")
+                            }
                           />
-                          {error && error[`damageDetails${[index]}`] && <p>{error[`damageDetails${[index]}`]}</p>}
+                          {error && error[`damageDetails${[index]}`] && (
+                            <p>{error[`damageDetails${[index]}`]}</p>
+                          )}
                         </Grid>
-                        
                       </>
                     ))}
                     <Grid item md={12}>
@@ -351,6 +366,7 @@ const PropertyAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     onClick={() => {
                       window.history.back();
                     }}
@@ -362,6 +378,7 @@ const PropertyAffected = () => {
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
+                    className={classes.button}
                     // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
                     Next

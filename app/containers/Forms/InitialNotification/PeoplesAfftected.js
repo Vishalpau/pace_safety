@@ -25,7 +25,7 @@ import {
 import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
 import { useHistory } from "react-router";
-import api from '../../../utils/axios'
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
     display: "inlineBlock",
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
+  },
+  button: {
+    margin: theme.spacing(1),
   },
 }));
 const PeoplesAffected = () => {
@@ -102,9 +105,9 @@ const PeoplesAffected = () => {
       personIdentification: "",
       personMedicalCare: "",
       workerOffsiteAssessment: "",
-      locationAssessmentCenter: "",     
-      createdBy: 1,     
-      fkIncidentId: 3
+      locationAssessmentCenter: "",
+      createdBy: 1,
+      fkIncidentId: 3,
     },
   ]);
   const addNewPeopleDetails = () => {
@@ -128,16 +131,16 @@ const PeoplesAffected = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp)
+    console.log(temp);
     setForm(temp);
   };
- 
+
   const handleNext = async () => {
     console.log(form);
     const { error, isValid } = PeopleValidate(form);
     setError(error);
     console.log(error, isValid);
-    // 
+    //
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
     if (personAffect === "Yes") {
       // alert('ram')
@@ -146,9 +149,13 @@ const PeoplesAffected = () => {
         const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,form[i]);
        
       }
-      history.push("/app/incident-management/registration/initial-notification/property-affected/");
+      history.push(
+        "/app/incident-management/registration/initial-notification/property-affected/"
+      );
     } else {
-      history.push("/app/incident-management/registration/initial-notification/property-affected/");
+      history.push(
+        "/app/incident-management/registration/initial-notification/property-affected/"
+      );
     }
   };
   const [error, setError] = useState({});
@@ -210,7 +217,7 @@ const PeoplesAffected = () => {
                     aria-label="personAffect"
                     name="personAffect"
                     value={personAffect}
-                    onChange={(e)=>setPersonAffect(e.target.value)}
+                    onChange={(e) => setPersonAffect(e.target.value)}
                   >
                   {individualAffectValue.map((value,key) => (
                     <FormControlLabel
@@ -377,7 +384,6 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
-                    
                   />
                   {/* {error && error.describeactiontaken && (
                     <p>{error.describeactiontaken}</p>
@@ -388,6 +394,7 @@ const PeoplesAffected = () => {
                     href="http://localhost:3000/app/incident-management/registration/initial-notification/incident-details/"
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                   >
                     Previouse
                   </Button>
@@ -400,6 +407,7 @@ const PeoplesAffected = () => {
                     onClick={()=>handleNext()}
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     // onClick={(e) => handelNext(e)}
                   >
                     Next

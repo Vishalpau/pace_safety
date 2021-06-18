@@ -40,9 +40,9 @@ export const FormSideBar = (props) => {
     <Paper elevation={1}>
       <Box padding={2} bgcolor="background.paper">
         <List dense>
-            {props.deleteForm.map((value) => (
+            {/* {props.deleteForm.map((value) => (
                 delete props.listOfItems[value]
-            ))}
+            ))} */}
           {Object.entries(props.listOfItems).map(([key, value], index) =>
             index >= linkBreak ? (
               index === linkBreak ? (

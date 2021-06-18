@@ -33,6 +33,8 @@ import Share from "@material-ui/icons/Share";
 import Close from "@material-ui/icons/Close";
 import Comment from "@material-ui/icons/Comment";
 import History from "@material-ui/icons/History";
+import Edit from "@material-ui/icons/Edit";
+import Add from "@material-ui/icons/Add";
 
 // Styles
 import Styles from "dan-styles/Summary.scss";
@@ -76,7 +78,7 @@ const Summary = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   return (
-    <PapperBlock title="Summary" icon="ion-md-list-box">
+    <PapperBlock title="Incident Number : 5432454" icon="ion-md-list-box">
       {/* <Box borderBottom={1} marginBottom={2}>
           <Typography variant="h6" gutterBottom>
             Summary
@@ -87,38 +89,11 @@ const Summary = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Observation Number
-            </Typography>
-            <Box paddingBottom={1}>
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                className={Type.bold}
-              >
-                54321 - Company Name
-              </Typography>
-            </Box>
-            <Divider />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-              Incident Progress
+              Incident Overview
             </Typography>
 
             <Box paddingBottom={1}>
               <div className={Styles.incidents}>
-                <div className={Styles.item}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    endIcon={<CheckCircle />}
-                    className={classes.statusButton}
-                  >
-                    Initial Notification
-                  </Button>
-                  <Typography variant="caption">Done</Typography>
-                </div>
                 <div className={Styles.item}>
                   <Button
                     color="primary"
@@ -162,14 +137,11 @@ const Summary = () => {
                     color="primary"
                     variant="outlined"
                     size="small"
-                    disabled
                     className={classes.statusButton}
                   >
                     Root Cause & Analysis
                   </Button>
-                  <Typography variant="caption" color="error">
-                    Not Applicable
-                  </Typography>
+                  <Typography variant="caption">Pending</Typography>
                 </div>
                 <div className={Styles.item}>
                   <Button
@@ -187,7 +159,8 @@ const Summary = () => {
             </Box>
             <Divider />
           </Grid>
-          <Grid item md={6}>
+
+          {/* <Grid item md={6}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Number
             </Typography>
@@ -198,6 +171,19 @@ const Summary = () => {
               className={Fonts.labelValue}
             >
               3568166
+            </Typography>
+          </Grid> */}
+
+          <Grid item xs={12}>
+            <Typography
+              variant="h6"
+              // display="inline"
+              // color="textSecondary"
+              // className={Fonts.labelValue}
+            >
+              {/* {item[1]["incidentTitle"]} */}
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Reprehenderit culpa voluptates iste.
             </Typography>
           </Grid>
 
@@ -256,7 +242,7 @@ const Summary = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          {/* <Grid item md={6}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incident Title
             </Typography>
@@ -268,7 +254,7 @@ const Summary = () => {
             >
               Lorem Ipsum is simply dummy text
             </Typography>
-          </Grid>
+          </Grid> */}
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={Fonts.labelName}>
               Incidnet Description
@@ -410,6 +396,36 @@ const Summary = () => {
               dense
               subheader={<ListSubheader component="div">Actions</ListSubheader>}
             >
+              <ListItem button>
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Notification" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Investigation" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+                <ListItemText primary="Add Evidence" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+                <ListItemText primary="Perform RCA" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+                <ListItemText primary="Lessions Learnt" />
+              </ListItem>
               <ListItem button divider>
                 <ListItemIcon>
                   <Close />

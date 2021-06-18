@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
   list: {
     maxWidth: "300px",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 function ListItemLink(props) {
@@ -226,20 +229,22 @@ const BasicCauseAndAction = () => {
               </Grid>
 
               <Grid item md={12}>
-              <Button
-                    variant="contained"
-                    color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause/"
-                  >
-                    Next
-                  </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause/"
+                >
+                  Next
+                </Button>
               </Grid>
             </Grid>
             <Grid item md={3}>

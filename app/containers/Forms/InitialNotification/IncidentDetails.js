@@ -91,7 +91,7 @@ const IncidentDetails = () => {
     equiptmenteffected: "",
     environmentaffected: "",
   });
-  const handelNext = async(e) =>{
+  const handelNext = async (e) => {
     console.log(form);
     const { error, isValid } = validate(form);
     setError(error);
@@ -224,9 +224,9 @@ const IncidentDetails = () => {
     <div>
       <Container>
         <Box padding={3} bgcolor="background.paper">
-          <Box marginBottom={5}>
+          {/* <Box marginBottom={5}>
             <FormHeader selectedHeader={"Initial notification"} />
-          </Box>
+          </Box> */}
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               Initial Notification
@@ -551,18 +551,17 @@ const IncidentDetails = () => {
                       });
                     }}
                   >
-                  {propertiesAffectValue.length !== 0
-                    ? propertiesAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                          
-                        />
-                      ))
-                    : null}
-                    </RadioGroup>
+                    {propertiesAffectValue.length !== 0
+                      ? propertiesAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
                 </div>
                 {error && error.propertyaffected && (
                   <p>{error.propertyaffected}</p>
@@ -583,22 +582,22 @@ const IncidentDetails = () => {
                       });
                     }}
                   >
-                  {eqiptmentAffectValue.length !== 0
-                    ? eqiptmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              equiptmenteffected: e.target.value,
-                            });
-                          }}
-                        />
-                      ))
-                    : null}
-                    </RadioGroup>
+                    {eqiptmentAffectValue.length !== 0
+                      ? eqiptmentAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                            onChange={(e) => {
+                              setForm({
+                                ...form,
+                                equiptmenteffected: e.target.value,
+                              });
+                            }}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
                 </div>
                 {error && error.equiptmenteffected && (
                   <p>{error.equiptmenteffected}</p>
@@ -608,33 +607,33 @@ const IncidentDetails = () => {
               <Grid item md={12}>
                 <p>Was there any environment impact?</p>
                 <RadioGroup
-                    aria-label="environmentaffected"
-                    name="environmentaffected"
-                    value={form.environmentaffected}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        environmentaffected: e.target.value,
-                      });
-                    }}
-                  >
-                {environmentAffectValue.length !== 0
-                  ? environmentAffectValue.map((value, index) => (
-                      <FormControlLabel
-                        key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                        onChange={(e) => {
-                          setForm({
-                            ...form,
-                            environmentaffected: e.target.value,
-                          });
-                        }}
-                      />
-                    ))
-                  : null}
-                  </RadioGroup>
+                  aria-label="environmentaffected"
+                  name="environmentaffected"
+                  value={form.environmentaffected}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      environmentaffected: e.target.value,
+                    });
+                  }}
+                >
+                  {environmentAffectValue.length !== 0
+                    ? environmentAffectValue.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              environmentaffected: e.target.value,
+                            });
+                          }}
+                        />
+                      ))
+                    : null}
+                </RadioGroup>
                 {error && error.environmentaffected && (
                   <p>{error.environmentaffected}</p>
                 )}

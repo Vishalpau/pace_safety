@@ -173,17 +173,17 @@ const EnvironmentAffected = () => {
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfEnvAffect}
-                    onChange={(e) =>
-                      setDetailsOfEnvAffect(e.target.value)
-                    }
+                    onChange={(e) => setDetailsOfEnvAffect(e.target.value)}
                   >
-                  {environmentAffectedValue.length!==0?environmentAffectedValue.map((value,index) => (
-                    <FormControlLabel
-                      value={value.inputValue}
-                      control={<Radio />}
-                      label={value.inputLabel}
-                    />
-                  )):null}
+                    {environmentAffectedValue.length !== 0
+                      ? environmentAffectedValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
                   </RadioGroup>
                 </Grid>
 
@@ -316,10 +316,11 @@ const EnvironmentAffected = () => {
                 <Box marginTop={4}>
                   <Button
                     variant="contained"
+                    className={classes.button}
                     color="primary"
                     href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
-                    Previouse    
+                    Previouse
                   </Button>
                   <Button
                     variant="contained"

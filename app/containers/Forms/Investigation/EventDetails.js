@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const EventDetails = () => {
@@ -208,6 +211,7 @@ const EventDetails = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  className={classes.button}
                   href="http://localhost:3000/app/incident-management/registration/investigation/equiptment-impact-details/"
                 >
                   Previous
@@ -215,6 +219,7 @@ const EventDetails = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  className={classes.button}
                   href="http://localhost:3000/app/incident-management/registration/investigation/action-taken/"
                 >
                   Next
