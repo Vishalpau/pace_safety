@@ -21,6 +21,7 @@ import InfoIcon from "@material-ui/icons/Info";
 
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
+import Type from "dan-styles/Typography.scss";
 
 function BlankPage() {
   // const title = brand.name + ' - Blank Page';
@@ -46,7 +47,7 @@ function BlankPage() {
 
       {Object.entries(incidents).map((item) => (
         <Card variant="outlined" className={Incidents.card}>
-          <CardHeader disableTypography title="Incident with No Injury" />
+          {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
           <CardContent>
             <Grid container spacing={3}>
               <Grid item lg={4}>
@@ -61,9 +62,11 @@ function BlankPage() {
                 <Typography
                   variant="body1"
                   color="textSecondary"
-                  className={Fonts.labelValue}
+                  className={Incidents.incidentNumberBold}
                 >
-                  {item[1]["incidentNumber"]}
+                  <Link href="#" style={{ textDecoration: "underline" }}>
+                    {item[1]["incidentNumber"]}
+                  </Link>
                 </Typography>
               </Grid>
               <Grid item lg={4}>
@@ -281,6 +284,7 @@ function BlankPage() {
                   variant="body2"
                   display="inline"
                   color="textSecondary"
+                  className={Type.medium}
                 >
                   Initial Notification
                 </Typography>

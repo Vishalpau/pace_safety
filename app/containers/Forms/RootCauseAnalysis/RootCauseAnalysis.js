@@ -24,11 +24,16 @@ import Select from "@material-ui/core/Select";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
+
 const RootCauseAnalysis = () => {
   const reportedTo = [
     "Internal Leadership",
@@ -195,20 +200,22 @@ const RootCauseAnalysis = () => {
                 />
               </Grid>
               <Grid item md={12}>
-              <Button
-                    variant="contained"
-                    color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/why-analysis/"
-                  >
-                    Next
-                  </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/why-analysis/"
+                >
+                  Next
+                </Button>
               </Grid>
             </Grid>
             <Grid item={3}>

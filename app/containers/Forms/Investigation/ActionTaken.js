@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const ActionTaken = () => {
@@ -111,6 +114,7 @@ const ActionTaken = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
                   >
                     Previous
@@ -118,6 +122,7 @@ const ActionTaken = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/evidence/evidence/"
                   >
                     Submit
