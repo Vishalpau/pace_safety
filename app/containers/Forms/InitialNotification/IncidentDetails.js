@@ -91,60 +91,61 @@ const IncidentDetails = () => {
     equiptmenteffected: "",
     environmentaffected: "",
   });
-  const handelNext = async(e) =>{
+  const handelNext = async (e) => {
     console.log(form);
     const { error, isValid } = validate(form);
     setError(error);
     console.log(error, isValid);
-    const formData ={
-      "fkCompanyId": 1,
-      "fkProjectId": 1,
-      "fkPhaseId": 1,
-      "fkUnitId": 1,
-      "incidentNumber": "string",
-      "incidentTitle": form.incidenttype,
-      "incidentDetails": "string",
-      "immediateActionsTaken": "string",
-      "incidentOccuredOn": '2021-06-17T01:02:49.099Z',
-      "isPersonAffected": form.personaffected,
-      "isPersonDetailsAvailable": "Yes",
-      "personAffectedComments": "string",
-      "isPropertyDamaged": form.propertyaffected,
-      "isPropertyDamagedAvailable": "Yes",
-      "propertyDamagedComments": "string",
-      "isEquipmentDamaged": form.equiptmenteffected,
-      "isEquipmentDamagedAvailable": "Yes",
-      "equipmentDamagedComments": "string",
-      "isEnviromentalImpacted": form.environmentaffected,
-      "enviromentalImpactComments": "string",
-      "supervisorByName": "string",
-      "supervisorById": 0,
-      "incidentReportedOn": '2021-06-17T01:02:49.099Z',
-      "incidentReportedByName": "string",
-      "incidentReportedById": 0,
-      "reasonLateReporting": "string",
-      "notificationComments": "string",
-      "reviewedBy": 0,
-      "reviewDate": "2021-06-17T01:02:49.099Z",
-      "closedBy": 0,
-      "closeDate": "2021-06-17T01:02:49.099Z",
-      "status": "Active",
-      "incidentLocation": "string",
-      "assignTo": 0,
-      "createdBy": 0,
-      "updatedBy": 0,
-      "source": "Web",
-      "vendor": "string",
-      "vendorReferenceId": "string",
-      "contractor": form.contractor,
-      "subContractor": form.subcontractor
-    }
-    const res = await api.post('/api/v1/incidents/',formData)
-    history.push("/app/incident-management/registration/initial-notification/peoples-afftected/");
-    console.log(res)
+    const formData = {
+      fkCompanyId: 1,
+      fkProjectId: 1,
+      fkPhaseId: 1,
+      fkUnitId: 1,
+      incidentNumber: "string",
+      incidentTitle: form.incidenttype,
+      incidentDetails: "string",
+      immediateActionsTaken: "string",
+      incidentOccuredOn: "2021-06-17T01:02:49.099Z",
+      isPersonAffected: form.personaffected,
+      isPersonDetailsAvailable: "Yes",
+      personAffectedComments: "string",
+      isPropertyDamaged: form.propertyaffected,
+      isPropertyDamagedAvailable: "Yes",
+      propertyDamagedComments: "string",
+      isEquipmentDamaged: form.equiptmenteffected,
+      isEquipmentDamagedAvailable: "Yes",
+      equipmentDamagedComments: "string",
+      isEnviromentalImpacted: form.environmentaffected,
+      enviromentalImpactComments: "string",
+      supervisorByName: "string",
+      supervisorById: 0,
+      incidentReportedOn: "2021-06-17T01:02:49.099Z",
+      incidentReportedByName: "string",
+      incidentReportedById: 0,
+      reasonLateReporting: "string",
+      notificationComments: "string",
+      reviewedBy: 0,
+      reviewDate: "2021-06-17T01:02:49.099Z",
+      closedBy: 0,
+      closeDate: "2021-06-17T01:02:49.099Z",
+      status: "Active",
+      incidentLocation: "string",
+      assignTo: 0,
+      createdBy: 0,
+      updatedBy: 0,
+      source: "Web",
+      vendor: "string",
+      vendorReferenceId: "string",
+      contractor: form.contractor,
+      subContractor: form.subcontractor,
+    };
+    const res = await api.post("/api/v1/incidents/", formData);
+    history.push(
+      "/app/incident-management/registration/initial-notification/peoples-afftected/"
+    );
+    console.log(res);
+  };
 
-  }
-  
   const handleDateChange = (date) => {
     let onlyDate = moment(date).format("YYYY/MM/DD");
     console.log(onlyDate);
@@ -218,9 +219,9 @@ const IncidentDetails = () => {
     <div>
       <Container>
         <Box padding={3} bgcolor="background.paper">
-          <Box marginBottom={5}>
+          {/* <Box marginBottom={5}>
             <FormHeader selectedHeader={"Initial notification"} />
-          </Box>
+          </Box> */}
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               Initial Notification
@@ -545,18 +546,17 @@ const IncidentDetails = () => {
                       });
                     }}
                   >
-                  {propertiesAffectValue.length !== 0
-                    ? propertiesAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                          
-                        />
-                      ))
-                    : null}
-                    </RadioGroup>
+                    {propertiesAffectValue.length !== 0
+                      ? propertiesAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
                 </div>
                 {error && error.propertyaffected && (
                   <p>{error.propertyaffected}</p>
@@ -577,22 +577,22 @@ const IncidentDetails = () => {
                       });
                     }}
                   >
-                  {eqiptmentAffectValue.length !== 0
-                    ? eqiptmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              equiptmenteffected: e.target.value,
-                            });
-                          }}
-                        />
-                      ))
-                    : null}
-                    </RadioGroup>
+                    {eqiptmentAffectValue.length !== 0
+                      ? eqiptmentAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                            onChange={(e) => {
+                              setForm({
+                                ...form,
+                                equiptmenteffected: e.target.value,
+                              });
+                            }}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
                 </div>
                 {error && error.equiptmenteffected && (
                   <p>{error.equiptmenteffected}</p>
@@ -602,33 +602,33 @@ const IncidentDetails = () => {
               <Grid item md={12}>
                 <p>Was there any environment impact?</p>
                 <RadioGroup
-                    aria-label="environmentaffected"
-                    name="environmentaffected"
-                    value={form.environmentaffected}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        environmentaffected: e.target.value,
-                      });
-                    }}
-                  >
-                {environmentAffectValue.length !== 0
-                  ? environmentAffectValue.map((value, index) => (
-                      <FormControlLabel
-                        key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                        onChange={(e) => {
-                          setForm({
-                            ...form,
-                            environmentaffected: e.target.value,
-                          });
-                        }}
-                      />
-                    ))
-                  : null}
-                  </RadioGroup>
+                  aria-label="environmentaffected"
+                  name="environmentaffected"
+                  value={form.environmentaffected}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      environmentaffected: e.target.value,
+                    });
+                  }}
+                >
+                  {environmentAffectValue.length !== 0
+                    ? environmentAffectValue.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              environmentaffected: e.target.value,
+                            });
+                          }}
+                        />
+                      ))
+                    : null}
+                </RadioGroup>
                 {error && error.environmentaffected && (
                   <p>{error.environmentaffected}</p>
                 )}
