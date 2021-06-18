@@ -410,7 +410,7 @@ const Summary = () => {
                       <ListItemIcon>
                           <Add />
                       </ListItemIcon>
-                      <a href="app/incident-management/registration/evidence/evidence/" >
+                      <a href="/app/incident-management/registration/evidence/evidence/" >
                           <ListItemText primary="Add Evidence" />
                       </a> 
                   </ListItem>
