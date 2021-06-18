@@ -28,6 +28,18 @@
   margin-right: 0.25rem;
 }
 
-.incidentNumberBold {
-  font-weight: bolder !important;
+.incidentNumber {
+  display: inline-block;
+  margin-left: 0.355rem;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dateValue {
+  display: inline-block;
+  margin-left: 0.5rem;
 }
