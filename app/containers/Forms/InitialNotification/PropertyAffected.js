@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -8,6 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
@@ -22,7 +23,9 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import PropertyValidate from "../../Validator/PropertyValidation"
+import api from "../../../utils/axios";
+import { useHistory } from "react-router";
+import PropertyValidate from "../../Validator/PropertyValidation";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,15 +57,15 @@ const useStyles = makeStyles((theme) => ({
 
 const PropertyAffected = () => {
 
-  const [form, setForm] = useState({
-    detailpropertyaffected:"",
-    affectedproperty:{
-                      propertytype:"",
-                      describe:"",
-                      damage:""
-                    },
-    describeactiontaken:""
-  })
+  const [form, setForm] = useState([
+    {
+      propertyType: "",
+      propertyOtherType: "",
+      damageDetails: "",
+      fkIncidentId: 3,
+      createdBy:2
+    },
+  ]);
 
   const reportedTo = [
     "Internal Leadership",
@@ -81,20 +84,93 @@ const PropertyAffected = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
+  const handleChange = (event) => {
+    setDetailsOfPropertyAffect(event.target.value);
+  };
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
 
   const [error,setError] = useState({})
 
-  function handelNext(e){
+
+  const classes = useStyles();
+  const history = useHistory();
+
+  const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
+  const [propertyTypeValue, setPropertyTypeValue] = useState([]);
+  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
+  
+  
+  const addNewPropertyDetails = () => {
+    // alert('ram')
+    setForm([
+      ...form,
+      {
+        propertyType: "",
+        propertyOtherType: "",
+        damageDetails: "",
+        fkIncidentId: 3,
+        createdBy:2
+      },
+    ]);
+  };
+  const handlePropertyType = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp)
+    setForm(temp);
+  };
+  const handlePropertyOtherType = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp)
+    setForm(temp);
+  };
+  const handleDamageDetails = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp)
+    setForm(temp);
+  };
+  const handleNext = async () => {
     console.log(form)
     const { error, isValid } = PropertyValidate(form)
     setError(error)
     console.log(error,isValid)
-  }
 
-  const classes = useStyles();
+    // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
+    if (detailsOfPropertyAffect === "Yes") {
+      console.log(form);
+      for(var i = 0; i < form.length;i++){
+        const res = await api.post("api/v1/incidents/3/properties/",form[i]);
+        console.log(res)
+        history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
+      }
+     
+    } else {
+      history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
+    }
+  };
+
+  const fetchPropertyAffectedValue = async () => {
+    const res = await api.get("api/v1/lists/12/value");
+    const result = res.data.data.results;
+    setPropertyAffectedValue(result);
+  };
+  const fetchPropertyTypeValue = async () => {
+    const res = await api.get("api/v1/lists/13/value");
+    const result = res.data.data.results;
+    setPropertyTypeValue(result);
+  };
+
+  useEffect(() => {
+    fetchPropertyAffectedValue();
+    fetchPropertyTypeValue();
+  }, []);
+
   return (
     <div>
       <Container>
@@ -115,61 +191,82 @@ const PropertyAffected = () => {
                     Do you have details to share about the properties affected?
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          detailpropertyaffected: e.target.value,
-                        });
-                      }}
-                    />
-                  ))}
-                  {error && error.detailpropertyaffected && <p>{error.detailpropertyaffected}</p> }
-                </Grid>
-
-                <Grid item md={12}>
-                  <Box marginTop={2} marginBottom={2}>
-                    {/* <h4>Details of people affected</h4> */}
-                    <Typography variant="h6">
-                      Details of properties affected
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                <Grid item md={6}>
-                  {/* <p>person type</p> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
+                  <RadioGroup
+                    aria-label="detailsOfPropertyAffect"
+                    name="detailsOfPropertyAffect"
+                    value={detailsOfPropertyAffect}
+                    onChange={handleChange}
                   >
-                    <InputLabel id="person-type-label">
-                      Property type
-                    </InputLabel>
-                    <Select
-                      labelId="person-type-label"
-                      id="person-type"
-                      label="Person type"
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          affectedproperty: {...form.affectedproperty,
-                                                propertytype:e.target.value.toString()},
-                        });
-                      }}
-                    >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  {error && error.propertytype && <p>{error.propertytype}</p> }
+                    {propertyAffectedValue !== 0
+                      ? propertyAffectedValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
                 </Grid>
+                {detailsOfPropertyAffect === "Yes" ? (
+                  <>
+                    <Grid item md={12}>
+                      <Box marginTop={2} marginBottom={2}>
+                        {/* <h4>Details of people affected</h4> */}
+                        <Typography variant="h6">
+                          Details of properties affected
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    {form.map((value, index) => (
+                      <>
+                        <Grid item md={6}>
+                          {/* <p>person type</p> */}
+                          <FormControl
+                            variant="outlined"
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="person-type-label">
+                              Property type
+                            </InputLabel>
+                            <Select
+                              labelId="person-type-label"
+                              id="person-type"
+                              label="Person type"
+                              onChange={(e) =>
+                                handlePropertyType(e, index, "propertyType")
+                              }
+                            >
+                              {propertyTypeValue.length !== 0
+                                ? propertyTypeValue.map(
+                                    (selectValues, index) => (
+                                      <MenuItem
+                                        key={index}
+                                        value={selectValues.inputValue}
+                                      >
+                                        {selectValues.inputLabel}
+                                      </MenuItem>
+                                    )
+                                  )
+                                : null}
+                            </Select>
+                          </FormControl>
+                          {error && error[`propertyType${[index]}`] && <p>{error[`propertyType${[index]}`]}</p>}
+                        </Grid>
 
-                <Grid item md={6}>
+                        <Grid item md={6}>
+                          {/* <p>Name of people affected</p> */}
+                          <TextField
+                            id="name-affected"
+                            variant="outlined"
+                            label="if others, describe"
+                            className={classes.formControl}
+                            onChange={(e) => handlePropertyOtherType(e,index, 'propertyOtherType')}
+                          />
+                          {error && error[`propertyOtherType${[index]}`] && <p>{error[`propertyOtherType${[index]}`]}</p>}
+                        </Grid>
+
+                        {/* <Grid item md={6}>
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
@@ -192,33 +289,33 @@ const PropertyAffected = () => {
                       ))}
                     </Select>
                   </FormControl>
-                  {error && error.describe && <p>{error.describe}</p> }
-                </Grid>
+                </Grid> */}
 
-                <Grid item md={12}>
-                  {/* <p>Name of people affected</p> */}
-                  <TextField
-                    id="name-affected"
-                    variant="outlined"
-                    label="Describe the damage"
-                    className={classes.formControl}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        affectedproperty: {...form.affectedproperty,
-                                              damage:e.target.value.toString()},
-                      });
-                    }}
-                  />
-                  {error && error.damage && <p>{error.damage}</p> }
-                </Grid>
-
-                <Grid item md={12}>
-                  <button className={classes.textButton}>
-                    <PersonAddIcon /> Add details of another person affected
-                  </button>
-                </Grid>
-
+                        <Grid item md={12}>
+                          {/* <p>Name of people affected</p> */}
+                          <TextField
+                            id="name-affected"
+                            variant="outlined"
+                            label="Describe the damage"
+                            className={classes.formControl}
+                            onChange={(e) => handleDamageDetails(e,index, 'damageDetails')}
+                            
+                          />
+                          {error && error[`damageDetails${[index]}`] && <p>{error[`damageDetails${[index]}`]}</p>}
+                        </Grid>
+                        
+                      </>
+                    ))}
+                    <Grid item md={12}>
+                      <button
+                        className={classes.textButton}
+                        onClick={() => addNewPropertyDetails()}
+                      >
+                        <PersonAddIcon /> Add details of another person affected
+                      </button>
+                    </Grid>
+                  </>
+                ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
                   <TextField
@@ -241,17 +338,18 @@ const PropertyAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                    onClick={() => {
+                      window.history.back();
+                    }}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
                     Previouse
                   </Button>
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={(e)=>handelNext(e)}
-                    href={Object.keys(error).length === 0? 
-                      "http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/" 
-                      : "#"}
+                    onClick={handleNext}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
                     Next
                   </Button>

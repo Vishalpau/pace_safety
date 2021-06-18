@@ -836,8 +836,14 @@ module.exports = [
   // },
   {
     key: 'no_child',
-    name: 'One Level Menu',
+    name: 'Incident Listing',
     icon: 'ion-ios-document-outline',
     linkParent: '/app/pages/blank-page/',
+  },
+  {
+    key: 'menu-level',
+    name: 'Incident',
+    icon: 'ion-ios-document-outline',
+    linkParent: '/app/incident-management/registration/initial-notification/incident-details/',
   }
 ];

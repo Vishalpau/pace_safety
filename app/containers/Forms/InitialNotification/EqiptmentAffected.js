@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -8,12 +8,15 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { useHistory } from "react-router";
+
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -21,7 +24,8 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import EquipmentValidate from "../../Validator/EquipmentValidation"
+import api from "../../../utils/axios";
+import EquipmentValidate from "../../Validator/EquipmentValidation";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,17 +56,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EqiptmentAffected = () => {
-
-  const [form, setForm] = useState({
-    detailequipmentaffected:"",
-    affectedequipment:{
-                      equipmentytype:"",
-                      describe:"",
-                      damage:""
-                    },
-    describeactiontaken:""
-  })
-
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -77,17 +70,77 @@ const EqiptmentAffected = () => {
   const selectValues = [1, 2, 3, 4];
 
   const radioDecide = ["Yes", "No"];
-
+  const classes = useStyles();
+  const history = useHistory();
+  const [equipmentAffected, setequipmentAffected] = useState([]);
+  const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
+  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState("");
+  const [form, setForm] = useState([
+    {
+      equipmentType: "",
+      equipmentOtherType: "",
+      equipmentDeatils: "",
+      createdBy: 1,     
+        fkIncidentId: 3
+    },
+  ]);
   const [error,setError] = useState({})
-
-  function handelNext(e){
+  const addNewEquipmentDetails = () => {
+    // alert('ram')
+    setForm([
+      ...form,
+      {
+        equipmentType: "",
+        equipmentOtherType: "",
+        equipmentDeatils: "",
+        createdBy: 1,     
+        fkIncidentId: 3
+      },
+    ]);
+  };
+  const handleForm = (e, key, fieldname) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    console.log(temp);
+    setForm(temp);
+  };
+  const handleNext = async () => {
     console.log(form)
     const { error, isValid } = EquipmentValidate(form)
     setError(error)
     console.log(error,isValid)
-  }
+    if (detailsOfEquipmentAffect === "Yes") {
+      console.log(form)
+      
+      for (var i = 0; i < form.length; i++) {
+        const res = await api.post("/api/v1/incidents/3/equipments/", form[i]);
+        
+        history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+       
+      }
+    } else {
+     
+      history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+    }
+  };
 
-  const classes = useStyles();
+  const fetchEquipmentAffectedValue = async () => {
+    const res = await api.get("api/v1/lists/14/value");
+    const result = res.data.data.results;
+    setequipmentAffected(result);
+  };
+
+  const fetchEquipmentTypeValue = async () => {
+    const res = await api.get("api/v1/lists/15/value");
+    const result = res.data.data.results;
+    setEquipmentTypeValue(result);
+  };
+
+  useEffect(() => {
+    fetchEquipmentAffectedValue();
+    fetchEquipmentTypeValue();
+  }, []);
   return (
     <div>
       <Container>
@@ -107,94 +160,105 @@ const EqiptmentAffected = () => {
                   <Typography variant="body" component="p" gutterBottom>
                     Do you have details to share about the equiptment accected?
                   </Typography>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          detailequipmentaffected: e.target.value,
-                        });
-                      }}
-                    />
-                  ))}
-                  {error && error.detailequipmentaffected && <p>{error.detailequipmentaffected}</p> }
-                </Grid>
-
-                <Grid item md={6}>
-                  {/* <p>Equiptment type</p> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
+                  <RadioGroup
+                    aria-label="detailsOfPropertyAffect"
+                    name="detailsOfPropertyAffect"
+                    value={detailsOfEquipmentAffect}
+                    onChange={(e) =>
+                      setDetailsOfEquipmentAffect(e.target.value)
+                    }
                   >
-                    <InputLabel id="eq-type-label">Equiptment type</InputLabel>
-                    <Select
-                      labelId="eq-type-label"
-                      id="eq-type"
-                      label="Equiptment type"
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          affectedequipment: {...form.affectedequipment,
-                                                 equipmentytype:e.target.value.toString()},
-                        });
-                      }}
-                    >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  {error && error.equipmentytype && <p>{error.equipmentytype}</p> }
+                    {equipmentAffected.length !== 0
+                      ? equipmentAffected.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
                 </Grid>
+                {detailsOfEquipmentAffect === "Yes" ? (
+                  <>
+                    {form.map((value, key) => (
+                      <>
+                        <Grid item md={6}>
+                          {/* <p>Equiptment type</p> */}
+                          <FormControl
+                            variant="outlined"
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="eq-type-label">
+                              Equiptment type
+                            </InputLabel>
+                            <Select
+                              labelId="eq-type-label"
+                              id="eq-type"
+                              label="Equiptment type"
+                              onChange={(e) =>
+                                handleForm(e, key, "equipmentType")
+                              }
+                            >
+                              {equipmentTypeValue.length !== 0
+                                ? equipmentTypeValue.map(
+                                    (selectValues, index) => (
+                                      <MenuItem
+                                        key={index}
+                                        value={selectValues.inputValue}
+                                      >
+                                        {selectValues.inputLabel}
+                                      </MenuItem>
+                                    )
+                                  )
+                                : null}
+                            </Select>
+                          </FormControl>
+                          {error && error[`equipmentType${[key]}`] && <p>{error[`equipmentType${[key]}`]}</p>}
+                        </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>if other describe</p> */}
-                  <TextField
-                    variant="outlined"
-                    id="filled-basic"
-                    label="If others, describe"
-                    className={classes.formControl}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        affectedequipment: {...form.affectedequipment,
-                                               describe:e.target.value.toString()},
-                      });
-                    }}
-                  />
-                  {error && error.describe && <p>{error.describe}</p> }
-                </Grid>
+                        <Grid item md={6}>
+                          {/* <p>if other describe</p> */}
+                          <TextField
+                            variant="outlined"
+                            id="filled-basic"
+                            label="If others, describe"
+                            className={classes.formControl}
+                            onChange={(e) =>
+                              handleForm(e, key, "equipmentOtherType")
+                            }
+                          />
+                          {error && error[`equipmentOtherType${[key]}`] && <p>{error[`equipmentOtherType${[key]}`]}</p>}
+                        </Grid>
 
-                <Grid item md={12}>
-                  {/* <p>Describe the damage</p> */}
-                  <TextField
-                    id="describe-damage"
-                    multiline
-                    variant="outlined"
-                    rows="3"
-                    label="Describe the damage"
-                    className={classes.fullWidth}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        affectedequipment: {...form.affectedequipment,
-                                               damage:e.target.value.toString()},
-                      });
-                    }}
-                  />
-                  {error && error.damage && <p>{error.damage}</p> }
-                </Grid>
-
-                <Grid item lg={12} md={6} sm={6}>
-                  <button className={classes.textButton}>
-                    Add details of additional equiptment affected?
-                  </button>
-                </Grid>
-
+                        <Grid item md={12}>
+                          {/* <p>Describe the damage</p> */}
+                          <TextField
+                            id="describe-damage"
+                            multiline
+                            variant="outlined"
+                            rows="3"
+                            label="Describe the damage"
+                            className={classes.fullWidth}
+                            onChange={(e) =>
+                              handleForm(e, key, "equipmentDeatils")
+                            }
+                          />
+                          {error && error[`equipmentDeatils${[key]}`] && <p>{error[`equipmentDeatils${[key]}`]}</p>}
+                        </Grid>
+                        
+                      </>
+                    ))}
+                    <Grid item lg={12} md={6} sm={6}>
+                      <button
+                        className={classes.textButton}
+                        onClick={() => addNewEquipmentDetails()}
+                      >
+                        Add details of additional equiptment affected?
+                      </button>
+                    </Grid>
+                  </>
+                ) : null}
                 <Grid item lg={12} md={6} sm={6}>
                   {/* <p>Comment </p> */}
                   <TextField
@@ -204,14 +268,7 @@ const EqiptmentAffected = () => {
                     rows="4"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        describeactiontaken: e.target.value,
-                      });
-                    }}
                   />
-                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
                 </Grid>
                 <Box marginTop={4}>
                   <Button
@@ -224,11 +281,8 @@ const EqiptmentAffected = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    
-                    href={Object.keys(error).length === 0? 
-                      "http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/" 
-                      : "#"}
-                    onClick={(e)=>handelNext(e)}
+                    onClick={() => handleNext()}
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Next
                   </Button>

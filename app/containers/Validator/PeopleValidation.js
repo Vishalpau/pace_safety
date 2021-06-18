@@ -5,59 +5,46 @@ function PeopleValidate(data){
     let isValid = true
     const error = {}
 
-    if (validator.isEmpty(data.detailindividualeffected)){
-        error.detailindividualeffected = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
    
+    for (let i = 0;i < data.length;i++){
+        if (validator.isEmpty(data[i].personType.toString())){
+            error[`personType${[i]}`] = "this filed is empty"
+            isValid = false
+        }
 
-    if (validator.isEmpty(data.affectedpersons.persontype)){
-        error.persontype = "this filed is empty"
-        isValid = false
+        if (validator.isEmpty(data[i].personDepartment.toString())){
+            error[`personDepartment${[i]}`] = "this filed is empty"
+            isValid = false
+        }
+
+        if (validator.isEmpty(data[i].personName.toString())){
+            error[`personName${[i]}`] = "this filed is empty"
+            isValid = false
+        }
+
+        if (validator.isEmpty(data[i].personIdentification.toString())){
+            error[`personIdentification${[i]}`] = "this filed is empty"
+            isValid = false
+        }
+
+        if (validator.isEmpty(data[i].personMedicalCare.toString())){
+            error[`personMedicalCare${[i]}`] = "this filed is empty"
+            isValid = false
+        }
+
+        if (validator.isEmpty(data[i].workerOffsiteAssessment.toString())){
+            error[`workerOffsiteAssessment${[i]}`] = "this filed is empty"
+            isValid = false
+        }
+
+        if (validator.isEmpty(data[i].locationAssessmentCenter.toString())){
+            error[`locationAssessmentCenter${[i]}`] = "this filed is empty"
+            isValid = false
+        }
+
     }
-
-    if (validator.isEmpty(data.affectedpersons.department)){
-        error.department = "this filed is empty"
-        isValid = false
-    }
-
-    if (validator.isEmpty(data.affectedpersons.name)){
-        error.name = "this filed is empty"
-        isValid = false
-    }
-
-    if (validator.isEmpty(data.affectedpersons.idnumber)){
-        error.idnumber = "this filed is empty"
-        isValid = false
-    }
-
-    if (validator.isEmpty(data.affectedpersons.ismedicalcare)){
-        error.ismedicalcare = "this filed is empty"
-        isValid = false
-    }
-
-    if (validator.isEmpty(data.affectedpersons.offsiteassesment)){
-        error.offsiteassesment = "this filed is empty"
-        isValid = false
-    }
-
-    if (validator.isEmpty(data.affectedpersons.locationdetails)){
-        error.locationdetails = "this filed is empty"
-        isValid = false
-    }
-
-
-    
-
-    if (validator.isEmpty(data.describeactiontaken)){
-        error.describeactiontaken = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
-
+       
+    console.log(error)
     return { error, isValid }
 } 
 

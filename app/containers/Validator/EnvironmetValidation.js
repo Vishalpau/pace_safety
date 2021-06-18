@@ -5,53 +5,53 @@ function EnvironmentValidate(data){
     let isValid = true
     const error = {}
 
-    if (validator.isEmpty(data.isspills)){
-        error.isspills = "this filed is empty"
+    if (validator.isEmpty(data.envQuestion.toString())){
+        error.envQuestion = "this filed is empty"
         isValid = false
     }else{
         isValid = true
     }
 
-    if (validator.isEmpty(data.spilldetails)){
-        error.spilldetails = "this filed is empty"
+    if (validator.isEmpty(data.envAnswerDetails.toString())){
+        error.envAnswerDetails = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.isrelease)){
-        error.isrelease = "this filed is empty"
+    if (validator.isEmpty(data.envQuestionOption.toString())){
+        error.envQuestionOption = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.releasedetails)){
-        error.releasedetails = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.releasedetails.toString())){
+    //     error.releasedetails = "this filed is empty"
+    //     isValid = false
+    // }
 
-    if (validator.isEmpty(data.iswildlifeimpact)){
-        error.iswildlifeimpact = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.iswildlifeimpact.toString())){
+    //     error.iswildlifeimpact = "this filed is empty"
+    //     isValid = false
+    // }
 
-    if (validator.isEmpty(data.wildlifeimpacedetails)){
-        error.wildlifeimpacedetails = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.wildlifeimpacedetails.toString())){
+    //     error.wildlifeimpacedetails = "this filed is empty"
+    //     isValid = false
+    // }
 
-    if (validator.isEmpty(data.iswaterbodyaffected)){
-        error.iswaterbodyaffected = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.iswaterbodyaffected.toString())){
+    //     error.iswaterbodyaffected = "this filed is empty"
+    //     isValid = false
+    // }
 
-    if (validator.isEmpty(data.waterbodyaffecteddetails)){
-        error.waterbodyaffecteddetails = "this filed is empty"
-        isValid = false
-    }
+    // if (validator.isEmpty(data.waterbodyaffecteddetails.toString())){
+    //     error.waterbodyaffecteddetails = "this filed is empty"
+    //     isValid = false
+    // }
 
-    if (validator.isEmpty(data.comment)){
-        error.comment = "this filed is empty"
-        isValid = false
-    }
-
+    // if (validator.isEmpty(data.comment.toString())){
+    //     error.comment = "this filed is empty"
+    //     isValid = false
+    // }
+    console.log(error)
     return { error, isValid }
 } 
 
