@@ -392,7 +392,7 @@ const Summary = () => {
                       <ListItemIcon>
                         <Edit />
                       </ListItemIcon>
-                      <a href="/app/incident-management/registration/initial-notification/incident-details/" >
+                      <a href={`/app/incident-management/registration/investigation/update-initial-details/${localStorage.getItem('fkincidentId')}`} >
                         <ListItemText primary="Modify Notification" />
                       </a>
                   </ListItem>

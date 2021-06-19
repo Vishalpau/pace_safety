@@ -119,6 +119,7 @@ import {
   WhyAnalysis,
   Summary,
   LessionLearned,
+  UpdateIncidentDetails,
 } from "../pageListAsync";
 
 function Application(props) {
@@ -245,6 +246,10 @@ function Application(props) {
         <Route
           path="/app/incident-management/registration/investigation/initial-details/"
           component={InitialDetails}
+        />
+        <Route
+          path="/app/incident-management/registration/investigation/update-initial-details/:id"
+          component={UpdateIncidentDetails}
         />
 
         {/* form root cause analysis */}

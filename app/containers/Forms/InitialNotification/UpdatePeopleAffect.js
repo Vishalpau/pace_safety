@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-const PeoplesAffected = () => {
+const UpdatePeoplesAffected = () => {
   // const [form, setForm] = useState({
   //   detailindividualeffected: "",
   //   affectedpersons: {
@@ -467,4 +467,4 @@ const PeoplesAffected = () => {
     </div>
   );
 };
-export default PeoplesAffected;
+export default UpdatePeoplesAffected;

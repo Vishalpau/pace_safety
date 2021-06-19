@@ -37,6 +37,7 @@ import { func } from "prop-types";
 import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import { useHistory } from "react-router";
+import { useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -52,8 +53,9 @@ const useStyles = makeStyles((theme) => ({
     padding: ".75rem 0",
   },
 }));
-const IncidentDetails = () => {
+const UpdateIncidentDetails = () => {
   const classes = useStyles();
+  const {id} = useParams()
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18")
   );
@@ -72,6 +74,8 @@ const IncidentDetails = () => {
   const [propertiesAffectValue, setPropertiesAffectValue] = useState([]);
   const [eqiptmentAffectValue, setEquipmentAffectValue] = useState([]);
   const [environmentAffectValue, setEnvironmentAffectValue] = useState([]);
+  const [incidentsData, setIncidentsData] = useState([])
+  const [isTrue, setIsTrue] = useState(true)
   const history = useHistory();
   const [hideAffect, setHideAffect] = useState([]);
   const [nextPath, setNextPath] =useState({
@@ -148,7 +152,7 @@ const IncidentDetails = () => {
         "contractor": form.contractor,
         "subContractor": form.subcontractor
       }
-      const res = await api.post('/api/v1/incidents/',formData)
+      const res = await api.put('/api/v1/incidents/',formData)
       if(res.status === 201){
         const fkincidentId = res.data.data.results.id
         localStorage.setItem('fkincidentId',fkincidentId)
@@ -242,38 +246,45 @@ const IncidentDetails = () => {
     const result = res.data.data.results;
     setListData(result);
   };
-  
+  const fetchIncidentData = async()=>{
+    
+    const res = await api.get(`/api/v1/incidents/${id}`);
+    const result = res.data.data.results;
+    await setIncidentsData(result)
+    await setIsTrue(false)
+  }
 
   const handleHideAffect = (e,name,key)=>{
     console.log('set hide affecct',hideAffect)
     if(e !== 'Yes'){
-        setHideAffect([...hideAffect,name])
-        
+        setHideAffect([...hideAffect,name]) 
     }
-    else{
-      
-      const newHideAffect = hideAffect.filter(item=> item !== name);
-      
-      setHideAffect(newHideAffect)
-      
+    else{ 
+      const newHideAffect = hideAffect.filter(item=> item !== name);     
+      setHideAffect(newHideAffect)     
     }
   }
   useEffect(() => {
-    localStorage.removeItem('deleteForm')
-    localStorage.removeItem('nextPath')
-    console.log(nextPath)
-    fetchListData();
-    fetchContractorValue();
-    fetchIncidentTypeValue();
-    fetchSubContractorValue();
-    fetchPersonAffectValue();
-    fetchPropertiesValue();
-    fetchEquipmentAffectValue();
-    fetchEnviornmentAffectValue();
+      const callable = async()=>{
+        localStorage.removeItem('deleteForm')
+        localStorage.removeItem('nextPath')
+        console.log(nextPath)
+        await fetchListData();
+        await fetchContractorValue();
+        await fetchIncidentTypeValue();
+        await fetchSubContractorValue();
+        await fetchPersonAffectValue();
+        await fetchPropertiesValue();
+        await fetchEquipmentAffectValue();
+        await fetchEnviornmentAffectValue();
+        await fetchIncidentData();
+      }
+    callable();
   }, []);
 
   return (
     <div>
+      {isTrue?<div>loadding</div>:
       <Container>
         <Box padding={3} bgcolor="background.paper">
           {/* <Box marginBottom={5}>
@@ -299,6 +310,7 @@ const IncidentDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Project Name"
+                    defaultValue={incidentsData.fkProjectId}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -322,6 +334,7 @@ const IncidentDetails = () => {
                     labelId="unit-name-label"
                     id="unit-name"
                     label="Unit Name"
+                    defaultValue={incidentsData.fkUnitId}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -350,6 +363,7 @@ const IncidentDetails = () => {
                     labelId="incident-type-label"
                     id="incident-type"
                     label="Incident Type"
+                    defaultValue={incidentsData.incidentNumber}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -408,6 +422,7 @@ const IncidentDetails = () => {
                   id="title"
                   variant="outlined"
                   label="Title"
+                  defaultValue={incidentsData.incidentTitle}
                   className={classes.fullWidth}
                   onChange={(e) => {
                     setForm({
@@ -427,6 +442,7 @@ const IncidentDetails = () => {
                   rows="5"
                   id="description"
                   label="Description"
+                  defaultValue={incidentsData.incidentDetails}
                   className={classes.fullWidth}
                   onChange={(e) => {
                     setForm({
@@ -447,6 +463,7 @@ const IncidentDetails = () => {
                   rows="4"
                   label="Any immediate actions taken"
                   className={classes.fullWidth}
+                  defaultValue={incidentsData.immediateActionsTaken}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -466,6 +483,7 @@ const IncidentDetails = () => {
                   variant="outlined"
                   label="Location"
                   className={classes.fullWidth}
+                  defaultValue={incidentsData.incidentLocation}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -482,6 +500,7 @@ const IncidentDetails = () => {
                   requirement
                   className={classes.formControl}
                 >
+                 
                   <InputLabel id="demo-simple-select-label">
                     Contractor *
                   </InputLabel>
@@ -489,6 +508,8 @@ const IncidentDetails = () => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor"
+                    defaultValue ={incidentsData.contractor}
+                    // value={incidentsData.contractor}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -536,8 +557,10 @@ const IncidentDetails = () => {
                   </InputLabel>
                   <Select
                     labelId="sub-contractor-type-label"
-                    id="sub-contractor"
+                    id={incidentsData.subContractor}
                     label="Sub-Contractor"
+                    defaultValue={incidentsData.subContractor}
+                    // value={incidentsData.subContractor}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -566,7 +589,7 @@ const IncidentDetails = () => {
                   <RadioGroup
                     aria-label="personaffected"
                     name="personaffected"
-                    value={form.personaffected}
+                    defaultValue={incidentsData.isPersonAffected}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -597,7 +620,7 @@ const IncidentDetails = () => {
                   <RadioGroup
                     aria-label="propertyaffected"
                     name="propertyaffected"
-                    value={form.propertyaffected}
+                    defaultValue={incidentsData.isPropertyDamaged}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -630,7 +653,7 @@ const IncidentDetails = () => {
                   <RadioGroup
                     aria-label="equiptmenteffected"
                     name="equiptmenteffected"
-                    value={form.equiptmenteffected}
+                    defaultValue={incidentsData.isEquipmentDamaged}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -667,7 +690,7 @@ const IncidentDetails = () => {
                 <RadioGroup
                   aria-label="environmentaffected"
                   name="environmentaffected"
-                  value={form.environmentaffected}
+                  defaultValue={incidentsData.isPersonAffected}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -726,8 +749,8 @@ const IncidentDetails = () => {
             </Grid>
           </Grid>
         </Box>
-      </Container>
+      </Container>}
     </div>
   );
 };
-export default IncidentDetails;
+export default UpdateIncidentDetails;
