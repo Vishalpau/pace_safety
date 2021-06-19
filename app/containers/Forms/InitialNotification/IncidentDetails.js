@@ -96,61 +96,56 @@ const IncidentDetails = () => {
     const { error, isValid } = validate(form);
     setError(error);
     console.log(error, isValid);
-    if(isValid === true){
-      const formData ={
-        "fkCompanyId": 1,
-        "fkProjectId": 1,
-        "fkPhaseId": 1,
-        "fkUnitId": 1,
-        "incidentNumber": form.incidenttype,
-        "incidentTitle": form.title,
-        "incidentDetails": form.description,
-        "immediateActionsTaken": form.immediateActionsTaken,
-        "incidentOccuredOn": '2021-06-17T01:02:49.099Z',
-        "isPersonAffected": form.personaffected,
-        "isPersonDetailsAvailable": "Yes",
-        "personAffectedComments": "string",
-        "isPropertyDamaged": form.propertyaffected,
-        "isPropertyDamagedAvailable": "Yes",
-        "propertyDamagedComments": "string",
-        "isEquipmentDamaged": form.equiptmenteffected,
-        "isEquipmentDamagedAvailable": "Yes",
-        "equipmentDamagedComments": "string",
-        "isEnviromentalImpacted": form.environmentaffected,
-        "enviromentalImpactComments": "string",
-        "supervisorByName": "string",
-        "supervisorById": 0,
-        "incidentReportedOn": '2021-06-17T01:02:49.099Z',
-        "incidentReportedByName": "string",
-        "incidentReportedById": 0,
-        "reasonLateReporting": "string",
-        "notificationComments": "string",
-        "reviewedBy": 0,
-        "reviewDate": "2021-06-17T01:02:49.099Z",
-        "closedBy": 0,
-        "closeDate": "2021-06-17T01:02:49.099Z",
-        "status": "Active",
-        "incidentLocation": form.location,
-        "assignTo": 0,
-        "createdBy": 0,
-        "updatedBy": 0,
-        "source": "Web",
-        "vendor": "string",
-        "vendorReferenceId": "string",
-        "contractor": form.contractor,
-        "subContractor": form.subcontractor
-      }
-      const res = await api.post('/api/v1/incidents/',formData)
-      if(res.status === 201){
-        const fkincidentId = res.data.data.results.id
-        localStorage.setItem('fkincidentId',fkincidentId)
-        history.push("/app/incident-management/registration/initial-notification/peoples-afftected/");
-      }
-      // 
-      console.log(res)
-    }
-  }
-  
+    const formData = {
+      fkCompanyId: 1,
+      fkProjectId: 1,
+      fkPhaseId: 1,
+      fkUnitId: 1,
+      incidentNumber: "string",
+      incidentTitle: form.incidenttype,
+      incidentDetails: "string",
+      immediateActionsTaken: "string",
+      incidentOccuredOn: "2021-06-17T01:02:49.099Z",
+      isPersonAffected: form.personaffected,
+      isPersonDetailsAvailable: "Yes",
+      personAffectedComments: "string",
+      isPropertyDamaged: form.propertyaffected,
+      isPropertyDamagedAvailable: "Yes",
+      propertyDamagedComments: "string",
+      isEquipmentDamaged: form.equiptmenteffected,
+      isEquipmentDamagedAvailable: "Yes",
+      equipmentDamagedComments: "string",
+      isEnviromentalImpacted: form.environmentaffected,
+      enviromentalImpactComments: "string",
+      supervisorByName: "string",
+      supervisorById: 0,
+      incidentReportedOn: "2021-06-17T01:02:49.099Z",
+      incidentReportedByName: "string",
+      incidentReportedById: 0,
+      reasonLateReporting: "string",
+      notificationComments: "string",
+      reviewedBy: 0,
+      reviewDate: "2021-06-17T01:02:49.099Z",
+      closedBy: 0,
+      closeDate: "2021-06-17T01:02:49.099Z",
+      status: "Active",
+      incidentLocation: "string",
+      assignTo: 0,
+      createdBy: 0,
+      updatedBy: 0,
+      source: "Web",
+      vendor: "string",
+      vendorReferenceId: "string",
+      contractor: form.contractor,
+      subContractor: form.subcontractor,
+    };
+    const res = await api.post("/api/v1/incidents/", formData);
+    history.push(
+      "/app/incident-management/registration/initial-notification/peoples-afftected/"
+    );
+    console.log(res);
+  };
+
   const handleDateChange = (date) => {
     let onlyDate = moment(date).format("YYYY/MM/DD");
     console.log(onlyDate);
@@ -160,11 +155,10 @@ const IncidentDetails = () => {
     });
   };
   const handelTimeChange = (date) => {
-    console.log(date)
-    setSelectedTime(date);
+    let onlyTime = moment(date).format("HH:mm");
     setForm({
       ...form,
-      incidenttime: moment(date).format("HH:mm"),
+      incidenttime: onlyTime,
     });
   };
   const fetchIncidentTypeValue = async () => {
@@ -342,7 +336,7 @@ const IncidentDetails = () => {
                     id="time-picker"
                     label="Time picker"
                     // defaultValue="05:30 AM"
-                    value={new Date(selectedTime)}
+                    value={selectedTime}
                     onChange={(date) => handelTimeChange(date)}
                     KeyboardButtonProps={{
                       "aria-label": "change time",
@@ -660,7 +654,6 @@ const IncidentDetails = () => {
             </Grid>
             <Grid item md={3}>
               <FormSideBar
-              
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem={"Incident details"}
               />
