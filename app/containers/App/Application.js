@@ -290,7 +290,7 @@ function Application(props) {
         {/* form summary */}
         {/* Done, topbar and sidebar pending  */}
         <Route
-          path="/app/incident-management/registration/summary/summary/"
+          path={`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}/`}
           component={Summary}
         />
 

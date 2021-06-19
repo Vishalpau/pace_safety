@@ -174,7 +174,7 @@ const Summary = () => {
      {/* summary and part */}
     {initialNotification == false ? 
         // Object.entries(incidents).map((item) =>(
-          <PapperBlock title={`Incident Number${incidents["incidentTitle"]}`} icon="ion-md-list-box">
+          <PapperBlock title={`Incident Number:${incidents["incidentTitle"]}`} icon="ion-md-list-box">
     
           <Grid container spacing={5}>
             <Grid container item md={9} spacing={3}>
