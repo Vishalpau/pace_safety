@@ -1,0 +1,45 @@
+.card {
+  & + .card {
+    margin-top: 3rem;
+  }
+}
+
+.actionButton {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cardActions {
+  padding: 1.25rem !important;
+}
+
+.incidentNumber {
+  font-weight: 700 !important;
+}
+
+.incidentTitle {
+  font-weight: 700 !important;
+}
+
+.actionsLabel {
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+
+.incidentNumber {
+  display: inline-block;
+  margin-left: 0.355rem;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dateValue {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
