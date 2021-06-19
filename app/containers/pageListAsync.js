@@ -329,6 +329,10 @@ export const BlankPage = loadable(() =>
   import('./Pages/BlankPage'), {
   fallback: <Loading />,
 });
+export const Incident = loadable(() =>
+  import('./Pages/Incident'), {
+    fallback: <Loading />,
+})
 export const Pricing = loadable(() =>
   import('./Pages/Pricing'), {
   fallback: <Loading />,

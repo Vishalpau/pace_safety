@@ -79,6 +79,7 @@ import {
   Invoice,
   Profile,
   BlankPage,
+  Incident,
   Photos,
   Pricing,
   CheckoutPage,
@@ -368,6 +369,7 @@ function Application(props) {
         <Route exact path="/app/pages" component={Parent} />
         <Route path="/app/pages/user-profile" component={Profile} />
         <Route path="/app/pages/blank-page" component={BlankPage} />
+        <Route path="/app/pages/incident" component={Incident} />
         <Route path="/app/pages/photo-gallery" component={Photos} />
         <Route path="/app/pages/pricing" component={Pricing} />
         <Route path="/app/pages/not-found" component={NotFound} />
