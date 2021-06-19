@@ -835,31 +835,31 @@ module.exports = [
   //   ]
   // },
   {
-    key: "no_child",
+    key: "home",
     name: "Home",
     icon: "ion-ios-home",
-    linkParent: "/app/pages/blank-page/",
+    linkParent: "/",
   },
   {
-    key: "no_child",
+    key: "Incidents",
     name: "Incidents",
     icon: "ion-md-body",
-    linkParent: "/app/pages/blank-page/",
+    linkParent: "/app/pages/incident/",
   },
   {
-    key: "no_child",
+    key: "assessments",
     name: "Assessments",
     icon: "ion-ios-clipboard",
     linkParent: "/app/pages/blank-page/",
   },
   {
-    key: "no_child",
+    key: "observations",
     name: "Observations",
     icon: "ion-md-eye",
     linkParent: "/app/pages/blank-page/",
   },
   {
-    key: "no_child",
+    key: "inspections",
     name: "Inspections",
     icon: "ion-ios-checkbox",
     linkParent: "/app/pages/blank-page/",

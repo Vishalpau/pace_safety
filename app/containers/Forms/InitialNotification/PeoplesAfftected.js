@@ -238,9 +238,9 @@ const PeoplesAffected = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
+            {/* <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
-            </Box>
+            </Box> */}
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Details of Persons Affected

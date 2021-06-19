@@ -174,7 +174,7 @@ const Summary = () => {
      {/* summary and part */}
     {initialNotification == false ? 
         // Object.entries(incidents).map((item) =>(
-          <PapperBlock title={`Incident Number${incidents["incidentTitle"]}`} icon="ion-md-list-box">
+          <PapperBlock title={`Incident Number:${incidents["incidentTitle"]}`} icon="ion-md-list-box">
     
           <Grid container spacing={5}>
             <Grid container item md={9} spacing={3}>
@@ -296,7 +296,7 @@ const Summary = () => {
     
               <Grid item md={6}>
                 {/* <Typography varint="p">Incident report for review</Typography> */}
-                <FormControl variant="outlined" className={classes.formControl}>
+                {/* <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-label">Reviewed by</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
@@ -307,15 +307,15 @@ const Summary = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
     
               <Grid item md={6}>
                 {/* <Typography varint="p">Reviewed On</Typography> */}
     
-                <FormControl variant="outlined" className={classes.formControl}>
+                {/* <FormControl variant="outlined" className={classes.formControl}>
                   {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                       id="date-picker-dialog"
                       format="MM/dd/yyyy"
@@ -328,12 +328,12 @@ const Summary = () => {
                       }}
                     />
                   </MuiPickersUtilsProvider>
-                </FormControl>
+                </FormControl> */} 
               </Grid>
     
               <Grid item md={6}>
                 {/* <Typography varint="p">Action item</Typography> */}
-                <FormControl variant="outlined" className={classes.formControl}>
+                {/* <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-label">Closed By</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
@@ -344,14 +344,14 @@ const Summary = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Grid>
     
               <Grid item md={6}>
                 {/* <Typography varint="p">Closed on</Typography> */}
     
-                <FormControl variant="outlined" className={classes.formControl}>
-                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                {/* <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-label">Age</InputLabel>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                       id="date-picker-dialog"
@@ -365,18 +365,18 @@ const Summary = () => {
                       }}
                     />
                   </MuiPickersUtilsProvider>
-                </FormControl>
+                </FormControl> */}
               </Grid>
               
               <Grid item md={12}>
-                <Button
+                {/* <Button
                   variant="contained"
                   color="primary"
                   size="large"
                   href="http://localhost:3000/app/incident-management/registration/lession-learned/lession-learned/"
                 >
                   Submit
-                </Button>
+                </Button> */}
               </Grid>
             
             </Grid>
