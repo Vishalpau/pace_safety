@@ -77,11 +77,11 @@ function LeftSidebarLayout(props) {
               >
                 {place}
               </Typography>
-              <BreadCrumb
+              {/* <BreadCrumb
                 separator=" / "
                 theme={bgPosition === "header" ? "dark" : "light"}
                 location={history.location}
-              />
+              /> */}
             </div>
           )}
           {!pageLoaded && (

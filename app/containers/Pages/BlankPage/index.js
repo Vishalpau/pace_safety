@@ -23,31 +23,91 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import MUIDataTable from "mui-datatables";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import moment from "moment";
+import MomentUtils from "@date-io/moment";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
+import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
+import ListIcon from "@material-ui/icons/List";
+import InputBase from "@material-ui/core/InputBase";
+import SearchIcon from "@material-ui/icons/Search";
 
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import MUIDataTable from 'mui-datatables';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import moment from "moment";
-import MomentUtils from "@date-io/moment";
+import { List } from "immutable";
 
-
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    marginBottom: theme.spacing(4),
+    border: `1px solid ${theme.palette.primary.shade}`,
+    borderRadius: "4px",
+  },
+  leftSide: {
+    flexGrow: 1,
+  },
+  newIncidentButton: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    // backgroundColor: theme.palette.primary.dark,
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(3),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
+    },
+  },
+  filterIcon: {
+    color: theme.palette.primary.dark,
+  },
+  toggleTitle: {
+    marginRight: theme.spacing(1),
+  },
+}));
 
 function BlankPage() {
-
- 
   const [incidents, setIncidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
 
   const handelView = (e) => {
-    setListToggle(!listToggle)
-  }
+    setListToggle(!listToggle);
+  };
 
   useEffect(async () => {
     const allIncidents = await api.get("api/v1/incidents/");
@@ -56,73 +116,112 @@ function BlankPage() {
 
   const columns = [
     {
-      name: 'Incident Number',
-      options: {
-        filter: true
-      }
-    },
-    {
-      name: 'Incident reported by',
+      name: "Incident Number",
       options: {
         filter: true,
-      }
+      },
     },
     {
-      name: 'Incident location',
+      name: "Incident reported by",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: "Incident location",
       options: {
         filter: false,
-        
-      }
+      },
     },
     {
-      name: 'Incident Reported on',
+      name: "Incident Reported on",
       options: {
         filter: true,
-       
-      }
+      },
     },
     {
-      name: 'Incident reported by',
+      name: "Incident reported by",
       options: {
         filter: true,
-       
-      }
+      },
     },
   ];
 
   const options = {
-    filterType: 'dropdown',
-    responsive: 'vertical',
+    filterType: "dropdown",
+    responsive: "vertical",
     print: true,
     rowsPerPage: 10,
-    page: 0
+    page: 0,
   };
 
-  return (
-    <div>
-      
-      <Button variant="contained" color="primary" onClick = {(e) => handelView(e)}>List View</Button>
-      
-      {listToggle == false ? 
-          <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
-          
-            <Box>
-              <Grid container>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    startIcon={<AddCircleIcon />}
-                    disableElevation
-                    href = "/app/incident-management/registration/initial-notification/incident-details/"
-                  >
-                    New Incident
-                  </Button>
-                </Grid>
-              </Grid>
-            </Box>
+  const classes = useStyles();
 
+  return (
+    <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
+      <Box>
+        <div className={classes.root}>
+          <AppBar position="static" color="transparent">
+            <Toolbar>
+              <div className="leftSide" className={classes.leftSide}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  startIcon={<AddCircleIcon />}
+                  className={classes.newIncidentButton}
+                  disableElevation
+                  href="/app/incident-management/registration/initial-notification/incident-details/"
+                >
+                  New Incident
+                </Button>
+              </div>
+              {/* <Button
+                variant="contained"
+                color="primary"
+                onClick={(e) => handelView(e)}
+              >
+                List View
+              </Button> */}
+
+              <div className={classes.search}>
+                <Paper>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
+                  </div>
+                  <InputBase
+                    placeholder="Search…"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ "aria-label": "search" }}
+                  />
+                </Paper>
+              </div>
+
+              <div className="toggleViewButtons">
+                <Typography variant="caption" className={classes.toggleTitle}>
+                  Toggle View
+                </Typography>
+                <IconButton aria-label="grid" className={classes.filterIcon}>
+                  <ViewAgendaIcon />
+                </IconButton>
+
+                <IconButton
+                  aria-label="list"
+                  onClick={(e) => handelView(e)}
+                  className={classes.filterIcon}
+                >
+                  <ListIcon />
+                </IconButton>
+              </div>
+            </Toolbar>
+          </AppBar>
+        </div>
+
+        {listToggle == false ? (
+          <div className="gridView">
             {Object.entries(incidents).map((item) => (
               <Card variant="outlined" className={Incidents.card}>
                 {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
@@ -138,8 +237,8 @@ function BlankPage() {
                             // className={Fonts.labelValue}
                           >
                             {/* {item[1]["incidentTitle"]} */}
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Reprehenderit culpa voluptates iste.
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Reprehenderit culpa voluptates iste.
                           </Typography>
                         </Grid>
 
@@ -187,7 +286,11 @@ function BlankPage() {
                           {/* {item[1]["incidentNumber"]} */}
                           <i className="ion-ios-calendar-outline" />
                           <span className={Incidents.dateValue}>
-                            {item[1]["incidentOccuredOn"]}
+                            {/* {item[1]["incidentOccuredOn"]} */}
+
+                            {moment(item[1]["incidentOccuredOn"]).format(
+                              "Do MMM YYYY, h:mm a"
+                            )}
                           </span>
                         </Typography>
                       </div>
@@ -227,7 +330,7 @@ function BlankPage() {
                         {item[1]["incidentLocation"]}
                       </Typography>
                     </Grid>
-                  
+
                     <Grid item lg={3}>
                       <Typography
                         variant="h6"
@@ -242,9 +345,9 @@ function BlankPage() {
                         color="textSecondary"
                         className={Fonts.labelValue}
                       >
-                        {
-                        moment(item[1]["incidentReportedOn"]).format('Do MMMM YYYY, h:mm:ss a')
-                        }
+                        {moment(item[1]["incidentReportedOn"]).format(
+                          "Do MMM YYYY, h:mm a"
+                        )}
                       </Typography>
                     </Grid>
 
@@ -265,13 +368,16 @@ function BlankPage() {
                         {item[1]["incidentReportedByName"]}
                       </Typography>
                     </Grid>
-
-                  
                   </Grid>
                 </CardContent>
                 <Divider />
                 <CardActions className={Incidents.cardActions}>
-                  <Grid container spacing={2} justify="flex-end" alignItems="center">
+                  <Grid
+                    container
+                    spacing={2}
+                    justify="flex-end"
+                    alignItems="center"
+                  >
                     <Grid item xs={6} md={3} lg={2}>
                       <Typography
                         variant="body2"
@@ -284,7 +390,7 @@ function BlankPage() {
                         <Link href="#">3</Link>
                       </Typography>
                     </Grid>
-                    
+
                     <Grid item xs={6} md={3} lg={2}>
                       <Typography
                         variant="body2"
@@ -351,31 +457,27 @@ function BlankPage() {
                 </CardActions>
               </Card>
             ))}
-          </PapperBlock>
-      :
-          <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
+          </div>
+        ) : (
+          <div className="listView">
             <MUIDataTable
               title="Employee list"
-              data={Object.entries(incidents).map((item)=>(
-                [
-                  item[1]["incidentNumber"],
-                  item[1]["incidentReportedByName"],
-                  item[1]["incidentLocation"],
-                  moment(item[1]["incidentReportedOn"]).format('Do MMMM YYYY, h:mm:ss a'),
-                  item[1]["incidentReportedByName"]
-                ]
-              ))}
+              data={Object.entries(incidents).map((item) => [
+                item[1]["incidentNumber"],
+                item[1]["incidentReportedByName"],
+                item[1]["incidentLocation"],
+                moment(item[1]["incidentReportedOn"]).format(
+                  "Do MMMM YYYY, h:mm:ss a"
+                ),
+                item[1]["incidentReportedByName"],
+              ])}
               columns={columns}
               options={options}
-             
             />
-        </PapperBlock>
-      }
-    </div>
-    
-
-    
-
+          </div>
+        )}
+      </Box>
+    </PapperBlock>
   );
 }
 
