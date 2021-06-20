@@ -318,7 +318,7 @@ const EnvironmentAffected = () => {
                     variant="contained"
                     className={classes.button}
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                    href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
                     Previouse
                   </Button>

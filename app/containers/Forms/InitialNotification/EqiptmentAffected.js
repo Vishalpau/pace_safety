@@ -297,7 +297,7 @@ const EqiptmentAffected = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                    href="/app/incident-management/registration/initial-notification/property-affected/"
                   >
                     Previouse
                   </Button>

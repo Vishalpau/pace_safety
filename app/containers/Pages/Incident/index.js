@@ -109,9 +109,13 @@ function Incident() {
     setListToggle(!listToggle);
   };
 
-  useEffect(async () => {
-    const allIncidents = await api.get("api/v1/incidents/");
-    await setIncidents(allIncidents.data.data.results);
+  useEffect( () => {
+    const callback=async()=>{
+      const allIncidents = await api.get("api/v1/incidents/");
+      await setIncidents(allIncidents.data.data.results);
+    }
+    callback();
+    
   }, []);
 
   const columns = [
@@ -222,10 +226,11 @@ function Incident() {
 
         {listToggle == false ? (
           <div className="gridView">
-            {Object.entries(incidents).map((item) => (
-              <Card variant="outlined" className={Incidents.card}>
+            {Object.entries(incidents).map((item,index) => (
+              <Card variant="outlined" className={Incidents.card} key={index}>
                 {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
                 <CardContent>
+                  {/* {console.log(item[index].incidentTitle)} */}
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <Grid container spacing={3} alignItems="flex-start">
@@ -236,9 +241,8 @@ function Incident() {
                             // color="textSecondary"
                             // className={Fonts.labelValue}
                           >
-                            {/* {item[1]["incidentTitle"]} */}
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Reprehenderit culpa voluptates iste.
+                            {item[1]["incidentTitle"]}
+                            {/* {item[index]["incidentTitle"]} */}
                           </Typography>
                         </Grid>
 

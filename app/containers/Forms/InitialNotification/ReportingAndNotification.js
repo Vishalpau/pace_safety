@@ -125,7 +125,7 @@ const ReportingAndNotification = () => {
     setSelectedTime(date);
     setForm({
       ...form,
-      incidenttime: moment(date).format("HH:mm"),
+      reportingtime: moment(date).format("HH:mm"),
     });
   };
 
@@ -143,17 +143,18 @@ const ReportingAndNotification = () => {
   const handelNext = async (e) => {
     console.log(form);
     const { error, isValid } = ReportingValidation(form);
+    const fkid = localStorage.getItem("fkincidentId")
     setError(error);
     console.log(error, isValid);
-    const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/reports/`, {
+    const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
       reportTo: form.reportedto,
       reportingNote: form.latereporting,
       createdBy: 0,
-      fkIncidentId: 18,
+      fkIncidentId: fkid,
     });
     if(res.status === 201){
       // localStorage.removeItem('fkincidentId')
-      history.push('/app/incident-management/registration/summary/summary/')
+      history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem('fkincidentId')}`)
     }
      
   };
@@ -415,7 +416,7 @@ const ReportingAndNotification = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                    href="/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Previouse
                   </Button>

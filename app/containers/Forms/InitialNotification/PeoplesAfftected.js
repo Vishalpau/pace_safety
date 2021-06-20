@@ -431,7 +431,7 @@ const PeoplesAffected = () => {
                 </Grid>
                 <Grid item md={6}>
                   <Button
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/incident-details/"
+                    href="/app/incident-management/registration/initial-notification/incident-details/"
                     variant="contained"
                     color="primary"
                     className={classes.button}

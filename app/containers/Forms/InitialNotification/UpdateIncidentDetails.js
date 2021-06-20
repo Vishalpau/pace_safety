@@ -38,6 +38,7 @@ import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import { useHistory } from "react-router";
 import { useParams } from "react-router";
+import { Form } from "reactstrap";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -104,31 +105,47 @@ const UpdateIncidentDetails = () => {
     environmentaffected: "",
   });
   const handelNext = async (e) => {
+    e.preventDefault()
+    // alert(e.target.contractor.value)
+    // await console.log(form.title)
+    //  if(!form.incidenttype){
+      
+      // await setForm({...form,incidenttype:e.target.incidenttype.value})
+      // await setForm({...form,incidenttype:e.target.title.value})
+      // await setForm({...form,incidenttype:e.target.description.value})
+      // await setForm({...form,incidenttype:e.target.immediateactiontaken.value})
+      // await setForm({...form,incidenttype:e.target.personaffected.value})
+      // await setForm({...form,incidenttype:e.target.propertyaffected.value})
+      // await setForm({...form,incidenttype:e.target.equiptmenteffected.value})
+      // await setForm({...form,incidenttype:e.target.environmentaffected.value})
+      // await setForm({...form,incidenttype:e.target.location.value})
+      // await setForm({...form,incidenttype:e.target.contractor.value})
+      // await setForm({...form,incidenttype:e.target.subcontractor.value})
     console.log(form);
-    const { error, isValid } = validate(form);
-    setError(error);
-    console.log(error, isValid);
-    if(isValid === true){
+    // const { error, isValid } = validate(form);
+    // setError(error);
+    // console.log(error, isValid);
+    // if(isValid === true){
       const formData ={
         "fkCompanyId": 1,
         "fkProjectId": 1,
         "fkPhaseId": 1,
         "fkUnitId": 1,
-        "incidentNumber": form.incidenttype,
-        "incidentTitle": form.title,
-        "incidentDetails": form.description,
-        "immediateActionsTaken": form.immediateActionsTaken,
+        "incidentNumber": e.target.incidenttype.value,
+        "incidentTitle": e.target.title.value,
+        "incidentDetails": e.target.description.value,
+        "immediateActionsTaken": e.target.immediateactiontaken.value,
         "incidentOccuredOn": '2021-06-17T01:02:49.099Z',
-        "isPersonAffected": form.personaffected,
+        "isPersonAffected": e.target.personaffected.value,
         "isPersonDetailsAvailable": "Yes",
         "personAffectedComments": "string",
-        "isPropertyDamaged": form.propertyaffected,
+        "isPropertyDamaged": e.target.propertyaffected.value,
         "isPropertyDamagedAvailable": "Yes",
         "propertyDamagedComments": "string",
-        "isEquipmentDamaged": form.equiptmenteffected,
+        "isEquipmentDamaged": e.target.equiptmenteffected.value,
         "isEquipmentDamagedAvailable": "Yes",
         "equipmentDamagedComments": "string",
-        "isEnviromentalImpacted": form.environmentaffected,
+        "isEnviromentalImpacted": e.target.environmentaffected.value,
         "enviromentalImpactComments": "string",
         "supervisorByName": "string",
         "supervisorById": 0,
@@ -142,17 +159,18 @@ const UpdateIncidentDetails = () => {
         "closedBy": 0,
         "closeDate": "2021-06-17T01:02:49.099Z",
         "status": "Active",
-        "incidentLocation": form.location,
+        "incidentLocation": e.target.location.value,
         "assignTo": 0,
         "createdBy": 0,
         "updatedBy": 0,
         "source": "Web",
         "vendor": "string",
         "vendorReferenceId": "string",
-        "contractor": form.contractor,
-        "subContractor": form.subcontractor
+        "contractor": e.target.contractor.value,
+        "subContractor": e.target.subcontractor.value
       }
-      const res = await api.put('/api/v1/incidents/',formData)
+      console.log(formData)
+      const res = await api.put('/api/v1/incidents',formData)
       if(res.status === 201){
         const fkincidentId = res.data.data.results.id
         localStorage.setItem('fkincidentId',fkincidentId)
@@ -180,7 +198,7 @@ const UpdateIncidentDetails = () => {
           }
         }
         
-          }
+          // }
         
         
       
@@ -190,7 +208,7 @@ const UpdateIncidentDetails = () => {
   }
   
   const handleDateChange = (date) => {
-    let onlyDate = moment(date).format("YYYY/MM/DD");
+    let onlyDate = moment(date).toISOString();
     console.log(onlyDate);
     setForm({
       ...form,
@@ -248,7 +266,7 @@ const UpdateIncidentDetails = () => {
   };
   const fetchIncidentData = async()=>{
     
-    const res = await api.get(`/api/v1/incidents/${id}`);
+    const res = await api.get(`api/v1/incidents/${id}/`);
     const result = res.data.data.results;
     await setIncidentsData(result)
     await setIsTrue(false)
@@ -286,6 +304,7 @@ const UpdateIncidentDetails = () => {
     <div>
       {isTrue?<div>loadding</div>:
       <Container>
+        <Form onSubmit={handelNext}>
         <Box padding={3} bgcolor="background.paper">
           {/* <Box marginBottom={5}>
             <FormHeader selectedHeader={"Initial notification"} />
@@ -296,6 +315,7 @@ const UpdateIncidentDetails = () => {
             </Typography>
           </Box>
           <Grid container spacing={3}>
+            
             <Grid container item md={9} spacing={3}>
               {/* project name */}
               <Grid item md={6}>
@@ -310,6 +330,7 @@ const UpdateIncidentDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Project Name"
+                    name='projectname'
                     defaultValue={incidentsData.fkProjectId}
                     onChange={(e) => {
                       setForm({
@@ -334,6 +355,7 @@ const UpdateIncidentDetails = () => {
                     labelId="unit-name-label"
                     id="unit-name"
                     label="Unit Name"
+                    name='unitname'
                     defaultValue={incidentsData.fkUnitId}
                     onChange={(e) => {
                       setForm({
@@ -363,11 +385,12 @@ const UpdateIncidentDetails = () => {
                     labelId="incident-type-label"
                     id="incident-type"
                     label="Incident Type"
+                    name='incidenttype'
                     defaultValue={incidentsData.incidentNumber}
                     onChange={(e) => {
                       setForm({
                         ...form,
-                        incidenttype: toString(e.target.value),
+                        incidenttype: e.target.value,
                       });
                     }}
                   >
@@ -392,7 +415,7 @@ const UpdateIncidentDetails = () => {
                 >
                   <KeyboardDatePicker
                     placeholder="2018/10/10"
-                    value={new Date(form.incidentdata)}
+                    // defaultValue={moment(incidents["incidentReportedOn"]).format("yyyy/MM/dd")}
                     onChange={(date) => handleDateChange(date)}
                     format="yyyy/MM/dd"
                   />
@@ -407,6 +430,7 @@ const UpdateIncidentDetails = () => {
                     id="time-picker"
                     label="Time picker"
                     // defaultValue="05:30 AM"
+                    // defaultValue={moment(incidents["incidentReportedOn"]).format("HH:mm")}
                     value={selectedTime}
                     onChange={(date) => handelTimeChange(date)}
                     KeyboardButtonProps={{
@@ -422,6 +446,7 @@ const UpdateIncidentDetails = () => {
                   id="title"
                   variant="outlined"
                   label="Title"
+                  name='title'
                   defaultValue={incidentsData.incidentTitle}
                   className={classes.fullWidth}
                   onChange={(e) => {
@@ -442,6 +467,7 @@ const UpdateIncidentDetails = () => {
                   rows="5"
                   id="description"
                   label="Description"
+                  name='description'
                   defaultValue={incidentsData.incidentDetails}
                   className={classes.fullWidth}
                   onChange={(e) => {
@@ -462,8 +488,9 @@ const UpdateIncidentDetails = () => {
                   multiline
                   rows="4"
                   label="Any immediate actions taken"
+                  name='immediateactiontaken'
                   className={classes.fullWidth}
-                  defaultValue={incidentsData.immediateActionsTaken}
+                  defaultValue={incidentsData.immediateactiontaken}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -482,6 +509,7 @@ const UpdateIncidentDetails = () => {
                   id="title"
                   variant="outlined"
                   label="Location"
+                  name='location'
                   className={classes.fullWidth}
                   defaultValue={incidentsData.incidentLocation}
                   onChange={(e) => {
@@ -508,6 +536,7 @@ const UpdateIncidentDetails = () => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor"
+                    name='contractor'
                     defaultValue ={incidentsData.contractor}
                     // value={incidentsData.contractor}
                     onChange={(e) => {
@@ -559,8 +588,9 @@ const UpdateIncidentDetails = () => {
                     labelId="sub-contractor-type-label"
                     id={incidentsData.subContractor}
                     label="Sub-Contractor"
+                    name='subcontractor'
                     defaultValue={incidentsData.subContractor}
-                    // value={incidentsData.subContractor}
+                    value={incidentsData.subContractor || incidents.subContractor}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -589,6 +619,7 @@ const UpdateIncidentDetails = () => {
                   <RadioGroup
                     aria-label="personaffected"
                     name="personaffected"
+                    name='personaffected'
                     defaultValue={incidentsData.isPersonAffected}
                     onChange={(e) => {
                       setForm({
@@ -729,17 +760,18 @@ const UpdateIncidentDetails = () => {
                     //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
                     //     : "#"
                     // }
-                    type="button"
+                    type="submit"
                     size="medium"
                     variant="contained"
                     color="primary"
-                    onClick={(e) => handelNext(e)}
+                    // onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>
                 </Box>
               </Grid>
             </Grid>
+          
             <Grid item md={3}>
               <FormSideBar
               deleteForm = {hideAffect}
@@ -749,6 +781,7 @@ const UpdateIncidentDetails = () => {
             </Grid>
           </Grid>
         </Box>
+        </Form>
       </Container>}
     </div>
   );
