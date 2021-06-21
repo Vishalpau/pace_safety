@@ -284,7 +284,6 @@ const Summary = () => {
           </Grid>
         </div>
       
-        
       ) : (
         <IncidentDetailsSummary />
       )}

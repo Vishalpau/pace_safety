@@ -55,9 +55,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 const IncidentDetails = () => {
   const classes = useStyles();
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18")
-  );
+  // const [selectedDate, setSelectedDate] = React.useState(
+  //   new Date("2014-08-18")
+  // );
   const [selectedTime, setSelectedTime] = React.useState(new Date());
   const [error, setError] = useState({});
   const selectValues = [1, 2, 3, 4];
@@ -83,12 +83,14 @@ const IncidentDetails = () => {
     environmentAffect: "",
   });
 
+  const [clearedDate, handleClearedDateChange] = useState(null);
+
   const [form, setForm] = useState({
     projectname: "",
     unitname: "",
     incidenttype: "",
-    incidentdate: "2021/09/06",
-    incidenttime: "21:11:54",
+    incidentdate: null,
+    incidenttime: null,
     title: "",
     description: "",
     immediateactiontaken: "",
@@ -101,6 +103,7 @@ const IncidentDetails = () => {
     environmentaffected: "",
   });
   const handelNext = async (e) => {
+    console.log(clearedDate)
     console.log(form);
       if (id !== undefined) {
         const tempNextPath = nextPath;
@@ -196,7 +199,6 @@ const IncidentDetails = () => {
           contractor: form.contractor,
           subContractor: form.subcontractor
         }
-        alert('ram')
         const res = await api.put(`/api/v1/incidents/${id}`, formData);
         console.log(res)
         if (res.status === 200) {
@@ -323,15 +325,7 @@ const IncidentDetails = () => {
       console.log(res);
     }
   };
-
-  const handleDateChange = (date) => {
-    let onlyDate = moment(date).format("YYYY/MM/DD");
-    console.log(onlyDate);
-    setForm({
-      ...form,
-      incidentdate: onlyDate,
-    });
-  };
+  
   const handelTimeChange = (date) => {
     console.log(date);
     let onlyTime = moment(date).format("HH:mm");
@@ -428,9 +422,7 @@ const IncidentDetails = () => {
       {isLoading ? (
         <Container>
           <Box padding={3} bgcolor="background.paper">
-            {/* <Box marginBottom={5}>
-            <FormHeader selectedHeader={"Initial notification"} />
-          </Box> */}
+            
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Initial Notification
@@ -438,6 +430,7 @@ const IncidentDetails = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
+
                 {/* project name */}
                 <Grid item md={6}>
                   <FormControl
@@ -469,6 +462,7 @@ const IncidentDetails = () => {
                     <FormHelperText>Required</FormHelperText>
                   </FormControl>
                 </Grid>
+                
                 {/* unit name */}
                 <Grid item md={6}>
                   <FormControl
@@ -495,6 +489,8 @@ const IncidentDetails = () => {
                     {error && error.unitname && <p>{error.unitname}</p>}
                   </FormControl>
                 </Grid>
+
+
                 {/* incident type */}
                 <Grid item md={6}>
                   <FormControl
@@ -533,6 +529,7 @@ const IncidentDetails = () => {
                   </FormControl>
                 </Grid>
 
+
                 {/* date */}
                 <Grid item md={6}>
                   <MuiPickersUtilsProvider
@@ -540,18 +537,20 @@ const IncidentDetails = () => {
                     utils={DateFnsUtils}
                   >
                     <KeyboardDatePicker
-                      placeholder="2018/10/10"
-                      value={
-                        new Date(
-                          form.incidentdate ||
-                            incidentsListData.incidentOccuredOn
-                        )
-                      }
-                      onChange={(date) => handleDateChange(date)}
+                      
+                      value={form.incidentdate === null? clearedDate : form.incidentdate}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          incidentdate: (moment(e).format("YYYY/MM/DD")),
+                        });
+                      }}
                       format="yyyy/MM/dd"
                     />
                   </MuiPickersUtilsProvider>
+                  {error && error.incidentdate && <p>{error.incidentdate}</p>}
                 </Grid>
+
 
                 {/* time */}
                 <Grid item md={6}>
@@ -560,16 +559,24 @@ const IncidentDetails = () => {
                       margin="normal"
                       id="time-picker"
                       label="Time picker"
-                      // defaultValue="05:30 AM"
-                      value={selectedTime}
-                      onChange={(date) => handelTimeChange(date)}
+                      value={form.incidenttime === null? clearedDate : selectedTime}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          incidenttime:moment(e).format("HH:mm"),
+                        });
+                        setSelectedTime(e)
+                      }}
                       KeyboardButtonProps={{
                         "aria-label": "change time",
                       }}
                       format="HH:mm"
                     />
                   </MuiPickersUtilsProvider>
+                  {error && error.incidentdate && <p>{error.incidentdate}</p>}
                 </Grid>
+
+
                 {/* title */}
                 <Grid item lg={12} md={6} sm={6}>
                   <TextField
