@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Grid, Container, Input, Select } from "@material-ui/core";
 
 import Paper from "@material-ui/core/Paper";
@@ -11,6 +11,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
+import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
@@ -43,16 +44,53 @@ const InitialDetails = () => {
   ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
+  const [error, setError] = useState({});
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
+
+  const [form, setForm] = useState({
+    unitconstructionmanagername: "",
+    unitconstructionmanagercontact: "",
+    unithsespecialistname: "",
+    unithsespecialistcontactno: "",
+    actualseveritylevel: "",
+    potentialseveritylevel: "",
+    activity: "",
+    projectname: "",
+    jobtask: "",
+    equipmentinvoked: "",
+    weather: "",
+    weather2: "",
+    temprature:"",
+    lighting: "",
+    windspeed: "",
+    fluidamount: "",
+    fluidtype: "",
+    ael: "",
+    pel:"",
+  });
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
+  const handleNext = () => {
+    console.log('sagar',form);
+    const { error, isValid } = initialdetailvalidate(form);
+    setError(error);
+    console.log(error, isValid);
+    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
+    // console.log(nextPath)
+
+    
+  };
+
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+  
+  
+
   return (
     <Container>
       <Paper>
@@ -79,7 +117,14 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit Construction Manager Name"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unitconstructionmanagername: e.target.value,
+                        });
+                      }}
+                 />
+                {error && error.unitconstructionmanagername && <p>{error.unitconstructionmanagername}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit Construction Manager Contact </p> */}
@@ -88,7 +133,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit Construction Manager Contact"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unitconstructionmanagercontact: e.target.value,
+                        });
+                      }}
+                />{error && error.unitconstructionmanagercontact && <p>{error.unitconstructionmanagercontact}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Name </p> */}
@@ -97,7 +148,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit HSE Specialist Name"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unithsespecialistname: e.target.value,
+                        });
+                      }}
+                />{error && error.unithsespecialistname && <p>{error.unithsespecialistname}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Contact </p> */}
@@ -106,7 +163,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit HSE Specialist Contact"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unithsespecialistcontactno: e.target.value,
+                        });
+                      }}
+                />{error && error.unithsespecialistcontactno && <p>{error.unithsespecialistcontactno}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Actual Severity Level </p> */}
@@ -115,7 +178,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Actual Severity Level "
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          actualseveritylevel: e.target.value,
+                        });
+                      }}
+                />{error && error.actualseveritylevel && <p>{error.actualseveritylevel}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Potential Severity Level </p> */}
@@ -124,7 +193,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Potential Severity Level"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          potentialseveritylevel: e.target.value,
+                        });
+                      }}
+                />{error && error.potentialseveritylevel && <p>{error.potentialseveritylevel}</p>}
               </Grid>
               <Grid item md={12}>
                 {/* <h3>Event</h3> */}
@@ -146,11 +221,18 @@ const InitialDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Activity"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          activity: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.activity && <p>{error.activity}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -165,11 +247,18 @@ const InitialDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Project Name"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          projectname: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.projectname && <p>{error.projectname}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -185,11 +274,18 @@ const InitialDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Job Task"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          jobtask: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.jobtask && <p>{error.jobtask}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -199,7 +295,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Eqipment Invoked"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          equipmentinvoked: e.target.value,
+                        });
+                      }}
+                />{error && error.equipmentinvoked && <p>{error.equipmentinvoked}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p> Weather</p> */}
@@ -214,11 +316,18 @@ const InitialDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Weather"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          weather: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.weather && <p>{error.weather}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -234,6 +343,12 @@ const InitialDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Weather2"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          weather: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -248,7 +363,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Temprature"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          temprature: e.target.value,
+                        });
+                      }}
+                />{error && error.temprature && <p>{error.temprature}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Lighting</p> */}
@@ -263,11 +384,18 @@ const InitialDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Lighting"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          lighting: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.lighting && <p>{error.lighting}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -277,7 +405,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Wind Speed"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          windspeed: e.target.value,
+                        });
+                      }}
+                />{error && error.windspeed && <p>{error.windspeed}</p>}
               </Grid>
               <Grid item md={12}>
                 {/* <h3>Event</h3> */}
@@ -292,7 +426,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Fluid Amount"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          fluidamount: e.target.value,
+                        });
+                      }}
+                />{error && error.fluidamount && <p>{error.fluidamount}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Fluid Type</p> */}
@@ -307,11 +447,18 @@ const InitialDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Fluid Type"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          fluidtype: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.fluidtype && <p>{error.fluidtype}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -321,7 +468,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="AEL"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          ael: e.target.value,
+                        });
+                      }}
+                />{error && error.ael && <p>{error.ael}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>PEL </p> */}
@@ -330,13 +483,20 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="PEL"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          pel: e.target.value,
+                        });
+                      }}
+                />{error && error.pel && <p>{error.pel}</p>}
               </Grid>
               <Box marginTop={3}>
                 <Button
                   variant="contained"
                   color="primary"
-                  href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+                  onClick={()=>handleNext()}
+                  // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
                 >
                   Next
                 </Button>
