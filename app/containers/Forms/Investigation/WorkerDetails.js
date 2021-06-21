@@ -311,10 +311,10 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Worker details"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>

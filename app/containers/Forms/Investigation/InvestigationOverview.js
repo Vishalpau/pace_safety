@@ -322,10 +322,10 @@ const InvestigationOverview = () => {
               </Grid>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Investigation overview"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>

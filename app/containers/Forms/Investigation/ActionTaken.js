@@ -130,10 +130,10 @@ const ActionTaken = () => {
                 </Grid>
               </Grid>
               <Grid item md={3}>
-                <FormSideBar
+                {/* <FormSideBar
                   listOfItems={INVESTIGATION_FORM}
                   selectedItem={"Action taken"}
-                />
+                /> */}
               </Grid>
             </Grid>
           </Box>
