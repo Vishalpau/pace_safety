@@ -106,7 +106,7 @@ const IncidentDetails = () => {
     environmentaffected: "",
   });
   const handelNext = async (e) => {
-    console.log(clearedDate)
+    console.log(clearedDate);
     console.log(form);
     if (id !== undefined) {
       const tempNextPath = nextPath;
@@ -120,118 +120,118 @@ const IncidentDetails = () => {
         nextPath.environmentAffect || incidentsListData.isEnviromentalImpacted;
       await setNextPath(tempNextPath);
 
-        const tempForm = form;
-        tempForm.projectname =
-          form.projectname || incidentsListData.fkProjectId;
-        tempForm.unitname = form.unitname || incidentsListData.fkUnitId;
-        tempForm.incidenttype =
-          form.incidenttype || incidentsListData.incidentNumber;
-        tempForm.incidentdate =
-          form.incidentdate || incidentsListData.incidentOccuredOn;
-        tempForm.incidenttime =
-          form.incidenttime || incidentsListData.incidentReportedOn;
-        tempForm.title = form.title || incidentsListData.incidentTitle;
-        tempForm.description =
-          form.description || incidentsListData.incidentDetails;
-        tempForm.immediateactiontaken =
-          form.immediateactiontaken || incidentsListData.immediateActionsTaken;
-        tempForm.location = form.location || incidentsListData.incidentLocation;
-        tempForm.contractor = form.contractor || incidentsListData.contractor;
-        tempForm.subcontractor =
-          form.subcontractor || incidentsListData.subContractor;
-        tempForm.personaffected =
-          form.personaffected || incidentsListData.isPersonAffected;
-        tempForm.propertyaffected =
-          form.propertyaffected || incidentsListData.isPropertyDamaged;
-        tempForm.equiptmenteffected =
-          form.equiptmenteffected || incidentsListData.isEquipmentDamaged;
-        tempForm.environmentaffected =
-          form.environmentaffected || incidentsListData.isEnviromentalImpacted;
-          
-        await setForm(tempForm);
-        console.log(form)
-        // const { error, isValid } = validate(tempForm);
-        // setError(error);
-        // if(isValid === true){}
-        const formData ={
-          id: parseInt(id),
-          fkCompanyId: 0,
-          fkProjectId: 0,
-          fkPhaseId: 0,
-          fkUnitId: 0,
-          incidentNumber: form.incidenttype ,
-          incidentTitle: form.title,
-          incidentDetails: form.description,
-          immediateActionsTaken: 'jdf',
-          incidentOccuredOn: moment(form.incidentdate).toISOString(),
-          isPersonAffected: form.personaffected,
-          isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
-          personAffectedComments: incidentsListData.personAffectedComments,
-          isPropertyDamaged: form.propertyaffected,
-          isPropertyDamagedAvailable: incidentsListData.isPropertyDamagedAvailable,
-          propertyDamagedComments: incidentsListData.propertyDamagedComments,
-          isEquipmentDamaged: form.equiptmenteffected,
-          isEquipmentDamagedAvailable: incidentsListData.isEquipmentDamagedAvailable,
-          equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
-          isEnviromentalImpacted: form.environmentaffected,
-          enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
-          supervisorByName: incidentsListData.supervisorByName,
-          supervisorById: incidentsListData.supervisorById,
-          incidentReportedOn: incidentsListData.incidentReportedOn,
-          incidentReportedByName: incidentsListData.incidentReportedByName,
-          incidentReportedById: incidentsListData.incidentReportedById,
-          reasonLateReporting: incidentsListData.reasonLateReporting,
-          notificationComments: incidentsListData.notificationComments,
-          reviewedBy: incidentsListData.reviewedBy,
-          reviewDate: incidentsListData.reviewDate,
-          closedBy: incidentsListData.closedBy,
-          closeDate: incidentsListData.closeDate,
-          status: incidentsListData.status,
-          incidentLocation: form.location,
-          latitude: null,
-          longitude: null,
-          createdAt: moment(new Date()).toISOString(),
-          updatedAt: moment(new Date()).toISOString(),
-          assignTo: incidentsListData.assignTo,
-          createdBy: incidentsListData.createdBy,
-          updatedBy: '0',
-          source: 'Web',
-          vendor: 'string',
-          vendorReferenceId: 'string',
-          contractor: form.contractor,
-          subContractor: form.subcontractor
-        }
-        const res = await api.put(`/api/v1/incidents/${id}`, formData);
-        console.log(res)
-        if (res.status === 200) {
-          
-          const fkincidentId = res.data.data.results.id;
-          localStorage.setItem("fkincidentId", fkincidentId);
-          localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
-          localStorage.setItem("nextPath", JSON.stringify(nextPath));
-          if (nextPath.personAffect === "Yes") {
+      const tempForm = form;
+      tempForm.projectname = form.projectname || incidentsListData.fkProjectId;
+      tempForm.unitname = form.unitname || incidentsListData.fkUnitId;
+      tempForm.incidenttype =
+        form.incidenttype || incidentsListData.incidentNumber;
+      tempForm.incidentdate =
+        form.incidentdate || incidentsListData.incidentOccuredOn;
+      tempForm.incidenttime =
+        form.incidenttime || incidentsListData.incidentReportedOn;
+      tempForm.title = form.title || incidentsListData.incidentTitle;
+      tempForm.description =
+        form.description || incidentsListData.incidentDetails;
+      tempForm.immediateactiontaken =
+        form.immediateactiontaken || incidentsListData.immediateActionsTaken;
+      tempForm.location = form.location || incidentsListData.incidentLocation;
+      tempForm.contractor = form.contractor || incidentsListData.contractor;
+      tempForm.subcontractor =
+        form.subcontractor || incidentsListData.subContractor;
+      tempForm.personaffected =
+        form.personaffected || incidentsListData.isPersonAffected;
+      tempForm.propertyaffected =
+        form.propertyaffected || incidentsListData.isPropertyDamaged;
+      tempForm.equiptmenteffected =
+        form.equiptmenteffected || incidentsListData.isEquipmentDamaged;
+      tempForm.environmentaffected =
+        form.environmentaffected || incidentsListData.isEnviromentalImpacted;
+
+      await setForm(tempForm);
+      console.log(form);
+      // const { error, isValid } = validate(tempForm);
+      // setError(error);
+      // if(isValid === true){}
+      const formData = {
+        id: parseInt(id),
+        fkCompanyId: 0,
+        fkProjectId: 0,
+        fkPhaseId: 0,
+        fkUnitId: 0,
+        incidentNumber: form.incidenttype,
+        incidentTitle: form.title,
+        incidentDetails: form.description,
+        immediateActionsTaken: "jdf",
+        incidentOccuredOn: moment(form.incidentdate).toISOString(),
+        isPersonAffected: form.personaffected,
+        isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
+        personAffectedComments: incidentsListData.personAffectedComments,
+        isPropertyDamaged: form.propertyaffected,
+        isPropertyDamagedAvailable:
+          incidentsListData.isPropertyDamagedAvailable,
+        propertyDamagedComments: incidentsListData.propertyDamagedComments,
+        isEquipmentDamaged: form.equiptmenteffected,
+        isEquipmentDamagedAvailable:
+          incidentsListData.isEquipmentDamagedAvailable,
+        equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
+        isEnviromentalImpacted: form.environmentaffected,
+        enviromentalImpactComments:
+          incidentsListData.enviromentalImpactComments,
+        supervisorByName: incidentsListData.supervisorByName,
+        supervisorById: incidentsListData.supervisorById,
+        incidentReportedOn: incidentsListData.incidentReportedOn,
+        incidentReportedByName: incidentsListData.incidentReportedByName,
+        incidentReportedById: incidentsListData.incidentReportedById,
+        reasonLateReporting: incidentsListData.reasonLateReporting,
+        notificationComments: incidentsListData.notificationComments,
+        reviewedBy: incidentsListData.reviewedBy,
+        reviewDate: incidentsListData.reviewDate,
+        closedBy: incidentsListData.closedBy,
+        closeDate: incidentsListData.closeDate,
+        status: incidentsListData.status,
+        incidentLocation: form.location,
+        latitude: null,
+        longitude: null,
+        createdAt: moment(new Date()).toISOString(),
+        updatedAt: moment(new Date()).toISOString(),
+        assignTo: incidentsListData.assignTo,
+        createdBy: incidentsListData.createdBy,
+        updatedBy: "0",
+        source: "Web",
+        vendor: "string",
+        vendorReferenceId: "string",
+        contractor: form.contractor,
+        subContractor: form.subcontractor,
+      };
+      const res = await api.put(`/api/v1/incidents/${id}`, formData);
+      console.log(res);
+      if (res.status === 200) {
+        const fkincidentId = res.data.data.results.id;
+        localStorage.setItem("fkincidentId", fkincidentId);
+        localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
+        localStorage.setItem("nextPath", JSON.stringify(nextPath));
+        if (nextPath.personAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/property-affected/"
+          );
+        } else {
+          if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/property-affected/"
+              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
             );
           } else {
-            if (nextPath.equipmentAffect === "Yes") {
+            if (nextPath.environmentAffect === "Yes") {
               history.push(
-                "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                "/app/incident-management/registration/initial-notification/environment-affected/"
               );
             } else {
-              if (nextPath.environmentAffect === "Yes") {
-                history.push(
-                  "/app/incident-management/registration/initial-notification/environment-affected/"
-                );
-              } else {
-                history.push(
-                  "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-                );
-              }
+              history.push(
+                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+              );
             }
           }
         }
-      
+      }
     } else {
       const { error, isValid } = validate(form);
       setError(error);
@@ -317,11 +317,9 @@ const IncidentDetails = () => {
           }
         }
       }
-
-   
     }
   };
-  
+
   const handelTimeChange = (date) => {
     console.log(date);
     let onlyTime = moment(date).format("HH:mm");
@@ -418,7 +416,6 @@ const IncidentDetails = () => {
       {isLoading ? (
         <Container>
           <Box padding={3} bgcolor="background.paper">
-            
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Initial Notification
@@ -426,7 +423,6 @@ const IncidentDetails = () => {
             </Box>
             <Grid container spacing={3} alignItems="flex-start">
               <Grid container item md={9} spacing={3}>
-
                 {/* project name */}
                 <Grid item md={6}>
                   <FormControl
@@ -452,9 +448,7 @@ const IncidentDetails = () => {
                       }}
                     >
                       {companyName.map((selectValues) => (
-                        <MenuItem value={selectValues}>
-                          {selectValues}
-                        </MenuItem>
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
                     </Select>
                     {error && error.projectname && (
@@ -462,12 +456,10 @@ const IncidentDetails = () => {
                     )}
                   </FormControl>
                 </Grid>
-                
+
                 {/* unit name */}
                 <Grid item md={6}>
                   <FormControl
-                    // required
-                    // error={error.unitname}
                     variant="outlined"
                     className={classes.formControl}
                   >
@@ -483,17 +475,9 @@ const IncidentDetails = () => {
                           unitname: toString(e.target.value),
                         });
                       }}
-                    >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
-                    </Select>
-                    {error && error.unitname && (
-                      <FormHelperText>{error.unitname}</FormHelperText>
-                    )}
+                    />
                   </FormControl>
                 </Grid>
-
 
                 {/* incident type */}
                 <Grid item md={6}>
@@ -535,7 +519,6 @@ const IncidentDetails = () => {
                   </FormControl>
                 </Grid>
 
-
                 {/* date */}
                 <Grid item md={6}>
                   <MuiPickersUtilsProvider
@@ -543,39 +526,53 @@ const IncidentDetails = () => {
                     utils={DateFnsUtils}
                   >
                     <KeyboardDatePicker
+                      error={error.incidentdate}
                       required
                       className={classes.formControl}
-                      value={form.incidentdate === null? clearedDate : form.incidentdate}
+                      label="Incident Date"
+                      helperText={
+                        error.incidentdate ? error.incidentdate : null
+                      }
+                      value={
+                        form.incidentdate === null
+                          ? clearedDate
+                          : form.incidentdate
+                      }
                       onChange={(e) => {
                         setForm({
                           ...form,
-                          incidentdate: (moment(e).format("YYYY/MM/DD")),
+                          incidentdate: moment(e).format("YYYY/MM/DD"),
                         });
                       }}
                       format="yyyy/MM/dd"
                       inputVariant="outlined"
                     />
                   </MuiPickersUtilsProvider>
-                  {error && error.incidentdate && <p>{error.incidentdate}</p>}
+                  {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
                 </Grid>
-
 
                 {/* time */}
                 <Grid item md={6}>
                   <MuiPickersUtilsProvider utils={MomentUtils}>
                     <KeyboardTimePicker
                       required
+                      error={error.incidenttime}
                       inputVariant="outlined"
+                      helperText={
+                        error.incidentdate ? error.incidenttime : null
+                      }
                       className={classes.formControl}
                       id="time-picker"
                       label="Time picker"
-                      value={form.incidenttime === null? clearedDate : selectedTime}
+                      value={
+                        form.incidenttime === null ? clearedDate : selectedTime
+                      }
                       onChange={(e) => {
                         setForm({
                           ...form,
-                          incidenttime:moment(e).format("HH:mm"),
+                          incidenttime: moment(e).format("HH:mm"),
                         });
-                        setSelectedTime(e)
+                        setSelectedTime(e);
                       }}
                       KeyboardButtonProps={{
                         "aria-label": "change time",
@@ -583,9 +580,8 @@ const IncidentDetails = () => {
                       format="HH:mm"
                     />
                   </MuiPickersUtilsProvider>
-                  {error && error.incidentdate && <p>{error.incidentdate}</p>}
+                  {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
                 </Grid>
-
 
                 {/* title */}
                 <Grid item lg={12} md={6} sm={6}>
@@ -648,9 +644,6 @@ const IncidentDetails = () => {
                       });
                     }}
                   />
-                  {error && error.immediateactiontaken && (
-                    <p>{error.immediateactiontaken}</p>
-                  )}
                 </Grid>
 
                 {/* location */}
@@ -732,7 +725,7 @@ const IncidentDetails = () => {
                 <Grid item md={6}>
                   <FormControl
                     variant="outlined"
-                    error={error.subContractor}
+                    error={error.subcontractor}
                     required
                     className={classes.formControl}
                   >
