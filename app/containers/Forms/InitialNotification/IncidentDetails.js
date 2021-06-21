@@ -59,7 +59,7 @@ const IncidentDetails = () => {
     new Date("2014-08-18")
   );
   const [selectedTime, setSelectedTime] = React.useState(
-    new Date("2014-08-18T21:11:54")
+    new Date()
   );
   const [error, setError] = useState({});
   const selectValues = [1, 2, 3, 4];
@@ -142,54 +142,59 @@ const IncidentDetails = () => {
       nextPath.environmentAffect || incidentsListData.isEnviromentalImpacted;
     await setNextPath(tempNextPath);
 
-    console.log(form);
-    const { error, isValid } = validate(form);
-    setError(error);
+    // console.log(form);
+    // const { error, isValid } = validate(form);
+    // setError(error);
 
-    console.log(error);
-    if (isValid === true) {
+    // console.log(error);
+    // if (isValid === true) {
       const formData = {
-        fkCompanyId: 1,
-        fkProjectId: 1,
-        fkPhaseId: 1,
-        fkUnitId: 1,
-        incidentNumber: form.incidenttype,
-        incidentTitle: form.title,
-        incidentDetails: form.description,
-        immediateActionsTaken: form.immediateActionsTaken,
-        incidentOccuredOn: moment(form.incidentdate).toISOString(),
-        isPersonAffected: form.personaffected,
-        isPersonDetailsAvailable: "Yes",
-        personAffectedComments: "string",
-        isPropertyDamaged: form.propertyaffected,
-        isPropertyDamagedAvailable: "Yes",
-        propertyDamagedComments: "string",
-        isEquipmentDamaged: form.equiptmenteffected,
-        isEquipmentDamagedAvailable: "Yes",
-        equipmentDamagedComments: "string",
-        isEnviromentalImpacted: form.environmentaffected,
-        enviromentalImpactComments: "string",
-        supervisorByName: "string",
-        supervisorById: 0,
-        incidentReportedOn: moment(form.incidentdate).toISOString(),
-        incidentReportedByName: "string",
-        incidentReportedById: 0,
-        reasonLateReporting: "string",
-        notificationComments: "string",
-        reviewedBy: 0,
-        reviewDate: "2021-06-17T01:02:49.099Z",
-        closedBy: 0,
-        closeDate: "2021-06-17T01:02:49.099Z",
-        status: "Active",
-        incidentLocation: form.location,
-        assignTo: 0,
-        createdBy: 0,
-        updatedBy: 0,
-        source: "Web",
-        vendor: "string",
-        vendorReferenceId: "string",
-        contractor: form.contractor,
-        subContractor: form.subcontractor,
+        "id": 71,
+        "fkCompanyId": 0,
+        "fkProjectId": 0,
+        "fkPhaseId": 0,
+        "fkUnitId": 0,
+        "incidentNumber": "IR-210620-006",
+        "incidentTitle": "string",
+        "incidentDetails": "string",
+        "immediateActionsTaken": "string",
+        "incidentOccuredOn": "2021-06-21T03:06:55.240000Z",
+        "isPersonAffected": "Yes",
+        "isPersonDetailsAvailable": "Yes",
+        "personAffectedComments": "string",
+        "isPropertyDamaged": "Yes",
+        "isPropertyDamagedAvailable": "Yes",
+        "propertyDamagedComments": "string",
+        "isEquipmentDamaged": "Yes",
+        "isEquipmentDamagedAvailable": "Yes",
+        "equipmentDamagedComments": "string",
+        "isEnviromentalImpacted": "Yes",
+        "enviromentalImpactComments": "string",
+        "supervisorByName": "string",
+        "supervisorById": 0,
+        "incidentReportedOn": "2021-06-21T03:06:55.240000Z",
+        "incidentReportedByName": "string",
+        "incidentReportedById": 0,
+        "reasonLateReporting": "string",
+        "notificationComments": "string",
+        "reviewedBy": 0,
+        "reviewDate": "2021-06-21T03:06:55.240000Z",
+        "closedBy": 0,
+        "closeDate": "2021-06-21T03:06:55.240000Z",
+        "status": "Active",
+        "incidentLocation": "string",
+        "latitude": null,
+        "longitude": null,
+        "createdAt": "2021-06-20T08:41:00.192728Z",
+        "updatedAt": "2021-06-21T03:08:16.415975Z",
+        "assignTo": 0,
+        "createdBy": 0,
+        "updatedBy": 0,
+        "source": "Web",
+        "vendor": "string",
+        "vendorReferenceId": "string",
+        "contractor": "string",
+        "subContractor": "string"
       };
       console.log(formData);
 
@@ -263,7 +268,7 @@ const IncidentDetails = () => {
             }
           }
         }
-      }
+      // }
 
       
       //
@@ -280,11 +285,13 @@ const IncidentDetails = () => {
     });
   };
   const handelTimeChange = (date) => {
+    console.log(date)
     let onlyTime = moment(date).format("HH:mm");
     setForm({
       ...form,
       incidenttime: onlyTime,
     });
+    setSelectedTime(date)
   };
   const fetchIncidentTypeValue = async () => {
     const res = await api.get("api/v1/lists/1/value");
@@ -507,7 +514,7 @@ const IncidentDetails = () => {
                       id="time-picker"
                       label="Time picker"
                       // defaultValue="05:30 AM"
-                      defaultValue={selectedTime}
+                      value={selectedTime}
                       onChange={(date) => handelTimeChange(date)}
                       KeyboardButtonProps={{
                         "aria-label": "change time",
