@@ -149,11 +149,11 @@ const IncidentDetails = () => {
         // setError(error);
         // if(isValid === true){}
         const formData ={
-          id: parseInt(id),
-          fkCompanyId: 0,
-          fkProjectId: 0,
-          fkPhaseId: 0,
-          fkUnitId: 0,
+          id: incidentsListData.id,
+          fkCompanyId: incidentsListData.fkCompanyId,
+          fkProjectId: incidentsListData.fkProjectId,
+          fkPhaseId: incidentsListData.fkPhaseId,
+          fkUnitId: incidentsListData.fkPhaseId,
           incidentNumber: form.incidenttype ,
           incidentTitle: form.title,
           incidentDetails: form.description,
@@ -196,37 +196,36 @@ const IncidentDetails = () => {
           contractor: form.contractor,
           subContractor: form.subcontractor
         }
-        alert('ram')
         const res = await api.put(`/api/v1/incidents/${id}`, formData);
         console.log(res)
         if (res.status === 200) {
           
           const fkincidentId = res.data.data.results.id;
-          localStorage.setItem("fkincidentId", fkincidentId);
+          localStorage.setItem("fkincidentId", incidentsListData.id);
           localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
           localStorage.setItem("nextPath", JSON.stringify(nextPath));
           if (nextPath.personAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/peoples-afftected/"
+              `/app/incident-management/registration/initial-notification/peoples-afftected/${incidentsListData.id}`
             );
           } else {
             if (nextPath.propertyAffect === "Yes") {
               history.push(
-                "/app/incident-management/registration/initial-notification/property-affected/"
+                `/app/incident-management/registration/initial-notification/property-affected/${incidentsListData.id}`
               );
             } else {
               if (nextPath.equipmentAffect === "Yes") {
                 history.push(
-                  "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                  `/app/incident-management/registration/initial-notification/eqiptment-affected/${incidentsListData.id}`
                 );
               } else {
                 if (nextPath.environmentAffect === "Yes") {
                   history.push(
-                    "/app/incident-management/registration/initial-notification/environment-affected/"
+                    `/app/incident-management/registration/initial-notification/environment-affected/${incidentsListData.id}`
                   );
                 } else {
                   history.push(
-                    "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+                    `/app/incident-management/registration/initial-notification/reporting-and-notification/${incidentsListData.id}`
                   );
                 }
               }
@@ -284,8 +283,9 @@ const IncidentDetails = () => {
           };
           console.log(formData);
         const res = await api.post("/api/v1/incidents/", formData);
-        if (res.status === 201) {
-          const fkincidentId = res.data.data.results.id;
+        if (res.status === 200) {
+          const length = res.data.data.results.length
+          const fkincidentId = res.data.data.results[length-1].id;
           localStorage.setItem("fkincidentId", fkincidentId);
           localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
           localStorage.setItem("nextPath", JSON.stringify(nextPath));

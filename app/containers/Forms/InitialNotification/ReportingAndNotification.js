@@ -138,7 +138,65 @@ const ReportingAndNotification = () => {
     setFileNames(acceptedFiles.map((file) => file.name));
   };
 
+  const UpdateIncidentDetails = async (e) => {
+    const temp = incidentsListData;
+    console.log("1", temp);
+    const formData = {
+      id: incidentsListData.id,
+      fkCompanyId: incidentsListData.fkCompanyId,
+      fkProjectId: incidentsListData.fkProjectId,
+      fkPhaseId: incidentsListData.fkPhaseId,
+      fkUnitId: incidentsListData.fkUnitId,
+      incidentNumber: incidentsListData.incidentNumber,
+      incidentTitle: incidentsListData.incidentTitle,
+      incidentDetails: incidentsListData.incidentDetails,
+      immediateActionsTaken: incidentsListData.immediateActionsTaken,
+      incidentOccuredOn: incidentsListData.incidentOccuredOn,
+      isPersonAffected: incidentsListData.isPersonAffected,
+      isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
+      personAffectedComments: incidentsListData.personAffectedComments,
+      isPropertyDamaged: incidentsListData.isPropertyDamaged,
+      isPropertyDamagedAvailable: detailsOfPropertyAffect,
+      propertyDamagedComments: incidentsListData.propertyDamagedComments,
+      isEquipmentDamaged: incidentsListData.isEquipmentDamaged,
+      isEquipmentDamagedAvailable:
+        incidentsListData.isEquipmentDamagedAvailable,
+      equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
+      isEnviromentalImpacted: incidentsListData.isEnviromentalImpacted,
+      enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
+      supervisorByName: incidentsListData.supervisorByName,
+      supervisorById: incidentsListData.supervisorById,
+      incidentReportedOn: incidentsListData.incidentReportedOn,
+      incidentReportedByName: incidentsListData.incidentReportedByName,
+      incidentReportedById: incidentsListData.incidentReportedById,
+      reasonLateReporting: incidentsListData.reasonLateReporting,
+      notificationComments: incidentsListData.notificationComments,
+      reviewedBy: incidentsListData.reviewedBy,
+      reviewDate: incidentsListData.reviewDate,
+      closedBy: incidentsListData.closedBy,
+      closeDate: incidentsListData.closeDate,
+      status: incidentsListData.status,
+      incidentLocation: incidentsListData.incidentLocation,
+      latitude: incidentsListData.latitude,
+      longitude: incidentsListData.longitude,
+      createdAt: incidentsListData.createdAt,
+      updatedAt: moment(new Date()).toISOString(),
+      assignTo: incidentsListData.assignTo,
+      createdBy: incidentsListData.createdBy,
+      updatedBy: "0",
+      source: "Web",
+      vendor: "string",
+      vendorReferenceId: "string",
+      contractor: incidentsListData.contractor,
+      subContractor: incidentsListData.subContractor,
+    };
 
+    const res = await api.put(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}`,
+      formData
+    );
+    console.log(res.data.data.results.isPersonDetailsAvailable);
+  };
   
   const handelNext = async (e) => {
     console.log(form);
@@ -243,37 +301,23 @@ const ReportingAndNotification = () => {
                   />
                   {error && error.fileupload && <p>{error.fileupload}</p>}
                 </Grid>
-
                 <Grid item md={6}>
-                  {/* <p>Supervisor name</p> */}
-                  <FormControl
+                  {/* <p>Others Name</p> */}
+                  <TextField
+                    id="supervisor-name"
                     variant="outlined"
+                    label="Supervisor name"
                     className={classes.formControl}
-                  >
-                    <InputLabel id="supervisorName-label">
-                      Supervisor name
-                    </InputLabel>
-                    <Select
-                      labelId="supervisorName-label"
-                      id="supervisorName"
-                      label="Supervisor name"
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          supervisorname: e.target.value.toString(),
-                        });
-                      }}
-                    >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  {error && error.supervisorname && (
-                    <p>{error.supervisorname}</p>
-                  )}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        supervisorname: e.target.value.toString(),
+                      });
+                    }}
+                  />
+                  {/* {error && error.others && <p>{error.others}</p>} */}
                 </Grid>
-
+               
                 <Grid item md={6}>
                   {/* <p>Others Name</p> */}
                   <TextField

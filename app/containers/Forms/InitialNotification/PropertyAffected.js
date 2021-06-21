@@ -74,7 +74,7 @@ const PropertyAffected = () => {
   const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
   const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
-  
+  const [incidentsListData, setIncidentsListdata] = useState([]);
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -144,6 +144,65 @@ const PropertyAffected = () => {
     console.log(temp);
     setForm(temp);
   };
+  const handlePropertyDamageAvailable = async (e) => {
+    const temp = incidentsListData;
+    console.log("1", temp);
+    const formData = {
+      id: incidentsListData.id,
+      fkCompanyId: incidentsListData.fkCompanyId,
+      fkProjectId: incidentsListData.fkProjectId,
+      fkPhaseId: incidentsListData.fkPhaseId,
+      fkUnitId: incidentsListData.fkUnitId,
+      incidentNumber: incidentsListData.incidentNumber,
+      incidentTitle: incidentsListData.incidentTitle,
+      incidentDetails: incidentsListData.incidentDetails,
+      immediateActionsTaken: incidentsListData.immediateActionsTaken,
+      incidentOccuredOn: incidentsListData.incidentOccuredOn,
+      isPersonAffected: incidentsListData.isPersonAffected,
+      isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
+      personAffectedComments: incidentsListData.personAffectedComments,
+      isPropertyDamaged: incidentsListData.isPropertyDamaged,
+      isPropertyDamagedAvailable: detailsOfPropertyAffect,
+      propertyDamagedComments: incidentsListData.propertyDamagedComments,
+      isEquipmentDamaged: incidentsListData.isEquipmentDamaged,
+      isEquipmentDamagedAvailable:
+        incidentsListData.isEquipmentDamagedAvailable,
+      equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
+      isEnviromentalImpacted: incidentsListData.isEnviromentalImpacted,
+      enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
+      supervisorByName: incidentsListData.supervisorByName,
+      supervisorById: incidentsListData.supervisorById,
+      incidentReportedOn: incidentsListData.incidentReportedOn,
+      incidentReportedByName: incidentsListData.incidentReportedByName,
+      incidentReportedById: incidentsListData.incidentReportedById,
+      reasonLateReporting: incidentsListData.reasonLateReporting,
+      notificationComments: incidentsListData.notificationComments,
+      reviewedBy: incidentsListData.reviewedBy,
+      reviewDate: incidentsListData.reviewDate,
+      closedBy: incidentsListData.closedBy,
+      closeDate: incidentsListData.closeDate,
+      status: incidentsListData.status,
+      incidentLocation: incidentsListData.incidentLocation,
+      latitude: incidentsListData.latitude,
+      longitude: incidentsListData.longitude,
+      createdAt: incidentsListData.createdAt,
+      updatedAt: moment(new Date()).toISOString(),
+      assignTo: incidentsListData.assignTo,
+      createdBy: incidentsListData.createdBy,
+      updatedBy: "0",
+      source: "Web",
+      vendor: "string",
+      vendorReferenceId: "string",
+      contractor: incidentsListData.contractor,
+      subContractor: incidentsListData.subContractor,
+    };
+
+    const res = await api.put(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}`,
+      formData
+    );
+    console.log(res.data.data.results.isPersonDetailsAvailable);
+  };
   const handleNext = async () => {
     console.log(form);
     const { error, isValid } = PropertyValidate(form);
@@ -204,10 +263,18 @@ const PropertyAffected = () => {
     const result = res.data.data.results;
     setPropertyTypeValue(result);
   };
-
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentsListdata(result);
+    await setIsLoading(true);
+  };
   useEffect(() => {
     fetchPropertyAffectedValue();
     fetchPropertyTypeValue();
+    fetchIncidentsData();
   }, []);
 
   return (

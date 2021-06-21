@@ -193,7 +193,13 @@ function Application(props) {
           component={IncidentDetails}
         />
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/peoples-afftected/"
+          component={PeoplesAfftected}
+        />
+        <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/peoples-afftected/:id"
           component={PeoplesAfftected}
         />
         <Route
@@ -201,7 +207,15 @@ function Application(props) {
           component={PropertyAffected}
         />
         <Route
+          path="/app/incident-management/registration/initial-notification/property-affected/:id"
+          component={PropertyAffected}
+        />
+        <Route
           path="/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          component={ReportingAndNotification}
+        />
+        <Route
+          path="/app/incident-management/registration/initial-notification/reporting-and-notification/:id"
           component={ReportingAndNotification}
         />
         <Route
