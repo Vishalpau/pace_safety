@@ -755,7 +755,7 @@ function BlankPage() {
         ) : (
           <div className="listView">
             <MUIDataTable
-              title="Employee list"
+              // title="Incidents List"
               data={Object.entries(incidents).map((item) => [
                 item[1]["incidentNumber"],
                 item[1]["incidentReportedByName"],
