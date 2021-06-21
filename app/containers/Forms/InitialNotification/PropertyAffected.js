@@ -149,6 +149,7 @@ const PropertyAffected = () => {
     const { error, isValid } = PropertyValidate(form);
     setError(error);
     console.log(error, isValid);
+    const nextPath =  JSON.parse(localStorage.getItem("nextPath"))
 
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
     if (detailsOfPropertyAffect === "Yes") {
@@ -161,13 +162,35 @@ const PropertyAffected = () => {
         
       }
       if(status === 201){
-        history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
+       
+          if(nextPath.equipmentAffect === 'Yes'){
+            history.push('/app/incident-management/registration/initial-notification/eqiptment-affected/')
+          }
+          else{
+            if(nextPath.environmentAffect === 'Yes'){
+              history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+            }
+            else{
+              history.push('/app/incident-management/registration/summary/summary/')
+            }
+          }
+        
+        
+        // history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
       }
       
     } else {
-      history.push(
-        "/app/incident-management/registration/initial-notification/eqiptment-affected/"
-      );
+      if(nextPath.equipmentAffect === 'Yes'){
+        history.push('/app/incident-management/registration/initial-notification/eqiptment-affected/')
+      }
+      else{
+        if(nextPath.environmentAffect === 'Yes'){
+          history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+        }
+        else{
+          history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
+        }
+      }
     }
   };
 

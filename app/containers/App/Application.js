@@ -120,6 +120,7 @@ import {
   WhyAnalysis,
   Summary,
   LessionLearned,
+  UpdateIncidentDetails,
 } from "../pageListAsync";
 
 function Application(props) {
@@ -180,8 +181,15 @@ function Application(props) {
           path="/app/incident-management/registration/initial-notification/eqiptment-affected/"
           component={EqiptmentAffected}
         />
+
         <Route
+          exact
           path="/app/incident-management/registration/initial-notification/incident-details/"
+          component={IncidentDetails}
+        />
+        <Route
+          exact
+          path="/app/incident-management/registration/initial-notification/incident-details/:id"
           component={IncidentDetails}
         />
         <Route
@@ -196,7 +204,10 @@ function Application(props) {
           path="/app/incident-management/registration/initial-notification/reporting-and-notification/"
           component={ReportingAndNotification}
         />
-
+        <Route
+          path="/app/incident-management/registration/investigation/update-initial-details/:id"
+          component={UpdateIncidentDetails}
+        />
         {/* form Evidence */}
 
         <Route
@@ -231,8 +242,7 @@ function Application(props) {
           component={EventDetails}
         />
         <Route
-          path="
-          "
+          path="/app/incident-management/registration/investigation/investigation-overview/"
           component={InvestigationOverview}
         />
         <Route
@@ -268,7 +278,7 @@ function Application(props) {
         />
 
         <Route
-          path= "/app/incident-management/registration/root-cause-analysis/details/"
+          path="/app/incident-management/registration/root-cause-analysis/details/"
           component={Details}
         />
         <Route
@@ -291,7 +301,9 @@ function Application(props) {
         {/* form summary */}
         {/* Done, topbar and sidebar pending  */}
         <Route
-          path={`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}/`}
+          path={`/app/incident-management/registration/summary/summary/:${localStorage.getItem(
+            "fkincidentId"
+          )}/`}
           component={Summary}
         />
 

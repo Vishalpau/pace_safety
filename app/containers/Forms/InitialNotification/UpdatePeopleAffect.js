@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-const PeoplesAffected = () => {
+const UpdatePeoplesAffected = () => {
   // const [form, setForm] = useState({
   //   detailindividualeffected: "",
   //   affectedpersons: {
@@ -238,9 +238,9 @@ const PeoplesAffected = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            {/* <Box marginBottom={5}>
+            <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
-            </Box> */}
+            </Box>
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Details of Persons Affected
@@ -431,7 +431,7 @@ const PeoplesAffected = () => {
                 </Grid>
                 <Grid item md={6}>
                   <Button
-                    href="/app/incident-management/registration/initial-notification/incident-details/"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/incident-details/"
                     variant="contained"
                     color="primary"
                     className={classes.button}
@@ -467,4 +467,4 @@ const PeoplesAffected = () => {
     </div>
   );
 };
-export default PeoplesAffected;
+export default UpdatePeoplesAffected;

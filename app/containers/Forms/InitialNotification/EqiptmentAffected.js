@@ -110,6 +110,7 @@ const EqiptmentAffected = () => {
     console.log(form);
     const { error, isValid } = EquipmentValidate(form);
     setError(error);
+    const nextPath =  JSON.parse(localStorage.getItem("nextPath"))
     console.log(error, isValid);
     if (detailsOfEquipmentAffect === "Yes") {
       console.log(form)
@@ -121,13 +122,23 @@ const EqiptmentAffected = () => {
         status = res.status
       }
       if(status === 201){
-        history.push("/app/incident-management/registration/initial-notification/environment-affected/");
-       
+
+        
+          if(nextPath.environmentAffect === 'Yes'){
+            history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+          }
+          else{
+            history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
+          }
+        
       }
     } else {
-      history.push(
-        "/app/incident-management/registration/initial-notification/environment-affected/"
-      );
+      if(nextPath.environmentAffect === 'Yes'){
+        history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+      }
+      else{
+        history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
+      }
     }
   };
 
@@ -286,7 +297,7 @@ const EqiptmentAffected = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
+                    href="/app/incident-management/registration/initial-notification/property-affected/"
                   >
                     Previouse
                   </Button>
