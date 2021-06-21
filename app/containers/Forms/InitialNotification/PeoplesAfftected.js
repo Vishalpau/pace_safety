@@ -91,11 +91,14 @@ const PeoplesAffected = () => {
   const classes = useStyles();
   const history = useHistory();
 
-  const [personAffect, setPersonAffect] = useState('No')
+  const [personAffect, setPersonAffect] = useState('')
   const [individualAffectValue, setIndividualAffecctValue] = useState([]);
   const [personTypeValue, setPersonTypeValue] = useState([]);
   const [departmentValue, setDepartmentValue] = useState([]);
   const [medicalCareValue, setMedicalCareValue] = useState([]);
+  
+  const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [isLoading, setIsLoading]= useState([])
 
   const [form, setForm] = useState([
     {
@@ -111,7 +114,6 @@ const PeoplesAffected = () => {
     },
   ]);
   const addNewPeopleDetails = () => {
-    // alert('ram')
     setForm([
       ...form,
       {
@@ -199,6 +201,12 @@ const PeoplesAffected = () => {
       }
     }
   };
+  const handlePersonAffect = async()=>{
+    const temp = incidentsListData;
+    temp.isPersonAffected = personAffect
+    const res = await api.put(`/api/v1/incidents/${localStorage.getItem('fkincidentId')}`, temp);
+    console.log(res)
+  }
   const [error, setError] = useState({});
 
   const fetchIndividualAffectValue = async () => {
@@ -225,12 +233,23 @@ const PeoplesAffected = () => {
     console.log(result);
     setMedicalCareValue(result);
   };
+  const fetchIncidentsData = async () => {
+    if (id === undefined) {
+      await setIsLoading(true);
+    } else {
+      const res = await api.get(`/api/v1/incidents/${id}/`);
+      const result = res.data.data.results;
+      await setIncidentsListdata(result);
+      await setIsLoading(true);
+    }
+  };
 
   useEffect(() => {
     fetchIndividualAffectValue();
     fetchPersonTypeValue();
     fetchDepartmentValue();
     fetchPersonTakenMedicalCare();
+    fetchIncidentsData()
   }, []);
 
   return (
@@ -257,7 +276,9 @@ const PeoplesAffected = () => {
                     aria-label="personAffect"
                     name="personAffect"
                     value={personAffect}
-                    onChange={(e) => setPersonAffect(e.target.value)}
+                    onChange={(e) => {setPersonAffect(e.target.value);
+                    handlePersonAffect();}
+                    }
                   >
                   {individualAffectValue.map((value,key) => (
                     <FormControlLabel

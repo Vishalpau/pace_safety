@@ -390,10 +390,7 @@ const PropertyAffected = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={() => {
-                      window.history.back();
-                    }}
-                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                    href="/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
                     Previouse
                   </Button>
