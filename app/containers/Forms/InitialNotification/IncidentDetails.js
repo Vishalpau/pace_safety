@@ -284,7 +284,7 @@ const IncidentDetails = () => {
           };
           console.log(formData);
         const res = await api.post("/api/v1/incidents/", formData);
-        if (res.status === 201) {
+        if (res.status === 200) {
           const fkincidentId = res.data.data.results.id;
           localStorage.setItem("fkincidentId", fkincidentId);
           localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
