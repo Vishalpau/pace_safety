@@ -58,9 +58,7 @@ const IncidentDetails = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18")
   );
-  const [selectedTime, setSelectedTime] = React.useState(
-    new Date()
-  );
+  const [selectedTime, setSelectedTime] = React.useState(new Date());
   const [error, setError] = useState({});
   const selectValues = [1, 2, 3, 4];
   const companyName = ["ABC Ltd", "XYZ steel", "ABA power", "XDA works"];
@@ -103,104 +101,106 @@ const IncidentDetails = () => {
     environmentaffected: "",
   });
   const handelNext = async (e) => {
-    const tempForm = form;
-    tempForm.projectname = form.projectname || incidentsListData.fkProjectId;
-    tempForm.unitname = form.unitname || incidentsListData.fkUnitId;
-    tempForm.incidenttype =
-      form.incidenttype || incidentsListData.incidentNumber;
-    tempForm.incidentdate =
-      form.incidentdate || incidentsListData.incidentOccuredOn;
-    tempForm.incidenttime =
-      form.incidenttime || incidentsListData.incidentReportedOn;
-    tempForm.title = form.title || incidentsListData.incidentTitle;
-    tempForm.description =
-      form.description || incidentsListData.incidentDetails;
-    tempForm.immediateactiontaken =
-      form.immediateactiontaken || incidentsListData.immediateActionsTaken;
-    tempForm.location = form.location || incidentsListData.incidentLocation;
-    tempForm.contractor = form.contractor || incidentsListData.contractor;
-    tempForm.subcontractor =
-      form.subcontractor || incidentsListData.subContractor;
-    tempForm.personaffected =
-      form.personaffected || incidentsListData.isPersonAffected;
-    tempForm.propertyaffected =
-      form.propertyaffected || incidentsListData.isPropertyDamaged;
-    tempForm.equiptmenteffected =
-      form.equiptmenteffected || incidentsListData.isEquipmentDamaged;
-    tempForm.environmentaffected =
-      form.environmentaffected || incidentsListData.isEnviromentalImpacted;
-
-    await setForm(tempForm);
-    const tempNextPath = nextPath;
-    tempNextPath.propertyAffect =
-      nextPath.propertyAffect || incidentsListData.isPropertyDamaged;
-    tempNextPath.personAffect =
-      nextPath.personAffect || incidentsListData.isPersonAffected;
-    tempNextPath.equipmentAffect =
-      nextPath.equipmentAffect || incidentsListData.isEquipmentDamaged;
-    tempNextPath.environmentAffect =
-      nextPath.environmentAffect || incidentsListData.isEnviromentalImpacted;
-    await setNextPath(tempNextPath);
-
-    // console.log(form);
-    // const { error, isValid } = validate(form);
-    // setError(error);
-
-    // console.log(error);
-    // if (isValid === true) {
-      const formData = {
-        "id": 71,
-        "fkCompanyId": 0,
-        "fkProjectId": 0,
-        "fkPhaseId": 0,
-        "fkUnitId": 0,
-        "incidentNumber": "IR-210620-006",
-        "incidentTitle": "string",
-        "incidentDetails": "string",
-        "immediateActionsTaken": "string",
-        "incidentOccuredOn": "2021-06-21T03:06:55.240000Z",
-        "isPersonAffected": "Yes",
-        "isPersonDetailsAvailable": "Yes",
-        "personAffectedComments": "string",
-        "isPropertyDamaged": "Yes",
-        "isPropertyDamagedAvailable": "Yes",
-        "propertyDamagedComments": "string",
-        "isEquipmentDamaged": "Yes",
-        "isEquipmentDamagedAvailable": "Yes",
-        "equipmentDamagedComments": "string",
-        "isEnviromentalImpacted": "Yes",
-        "enviromentalImpactComments": "string",
-        "supervisorByName": "string",
-        "supervisorById": 0,
-        "incidentReportedOn": "2021-06-21T03:06:55.240000Z",
-        "incidentReportedByName": "string",
-        "incidentReportedById": 0,
-        "reasonLateReporting": "string",
-        "notificationComments": "string",
-        "reviewedBy": 0,
-        "reviewDate": "2021-06-21T03:06:55.240000Z",
-        "closedBy": 0,
-        "closeDate": "2021-06-21T03:06:55.240000Z",
-        "status": "Active",
-        "incidentLocation": "string",
-        "latitude": null,
-        "longitude": null,
-        "createdAt": "2021-06-20T08:41:00.192728Z",
-        "updatedAt": "2021-06-21T03:08:16.415975Z",
-        "assignTo": 0,
-        "createdBy": 0,
-        "updatedBy": 0,
-        "source": "Web",
-        "vendor": "string",
-        "vendorReferenceId": "string",
-        "contractor": "string",
-        "subContractor": "string"
-      };
-      console.log(formData);
-
+    console.log(form);
       if (id !== undefined) {
+        const tempNextPath = nextPath;
+        tempNextPath.propertyAffect =
+          nextPath.propertyAffect || incidentsListData.isPropertyDamaged;
+        tempNextPath.personAffect =
+          nextPath.personAffect || incidentsListData.isPersonAffected;
+        tempNextPath.equipmentAffect =
+          nextPath.equipmentAffect || incidentsListData.isEquipmentDamaged;
+        tempNextPath.environmentAffect =
+          nextPath.environmentAffect ||
+          incidentsListData.isEnviromentalImpacted;
+        await setNextPath(tempNextPath);
+
+        const tempForm = form;
+        tempForm.projectname =
+          form.projectname || incidentsListData.fkProjectId;
+        tempForm.unitname = form.unitname || incidentsListData.fkUnitId;
+        tempForm.incidenttype =
+          form.incidenttype || incidentsListData.incidentNumber;
+        tempForm.incidentdate =
+          form.incidentdate || incidentsListData.incidentOccuredOn;
+        tempForm.incidenttime =
+          form.incidenttime || incidentsListData.incidentReportedOn;
+        tempForm.title = form.title || incidentsListData.incidentTitle;
+        tempForm.description =
+          form.description || incidentsListData.incidentDetails;
+        tempForm.immediateactiontaken =
+          form.immediateactiontaken || incidentsListData.immediateActionsTaken;
+        tempForm.location = form.location || incidentsListData.incidentLocation;
+        tempForm.contractor = form.contractor || incidentsListData.contractor;
+        tempForm.subcontractor =
+          form.subcontractor || incidentsListData.subContractor;
+        tempForm.personaffected =
+          form.personaffected || incidentsListData.isPersonAffected;
+        tempForm.propertyaffected =
+          form.propertyaffected || incidentsListData.isPropertyDamaged;
+        tempForm.equiptmenteffected =
+          form.equiptmenteffected || incidentsListData.isEquipmentDamaged;
+        tempForm.environmentaffected =
+          form.environmentaffected || incidentsListData.isEnviromentalImpacted;
+          
+        await setForm(tempForm);
+        console.log(form)
+        // const { error, isValid } = validate(tempForm);
+        // setError(error);
+        // if(isValid === true){}
+        const formData ={
+          id: parseInt(id),
+          fkCompanyId: 0,
+          fkProjectId: 0,
+          fkPhaseId: 0,
+          fkUnitId: 0,
+          incidentNumber: form.incidenttype ,
+          incidentTitle: form.title,
+          incidentDetails: form.description,
+          immediateActionsTaken: 'jdf',
+          incidentOccuredOn: moment(form.incidentdate).toISOString(),
+          isPersonAffected: form.personaffected,
+          isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
+          personAffectedComments: incidentsListData.personAffectedComments,
+          isPropertyDamaged: form.propertyaffected,
+          isPropertyDamagedAvailable: incidentsListData.isPropertyDamagedAvailable,
+          propertyDamagedComments: incidentsListData.propertyDamagedComments,
+          isEquipmentDamaged: form.equiptmenteffected,
+          isEquipmentDamagedAvailable: incidentsListData.isEquipmentDamagedAvailable,
+          equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
+          isEnviromentalImpacted: form.environmentaffected,
+          enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
+          supervisorByName: incidentsListData.supervisorByName,
+          supervisorById: incidentsListData.supervisorById,
+          incidentReportedOn: incidentsListData.incidentReportedOn,
+          incidentReportedByName: incidentsListData.incidentReportedByName,
+          incidentReportedById: incidentsListData.incidentReportedById,
+          reasonLateReporting: incidentsListData.reasonLateReporting,
+          notificationComments: incidentsListData.notificationComments,
+          reviewedBy: incidentsListData.reviewedBy,
+          reviewDate: incidentsListData.reviewDate,
+          closedBy: incidentsListData.closedBy,
+          closeDate: incidentsListData.closeDate,
+          status: incidentsListData.status,
+          incidentLocation: form.location,
+          latitude: null,
+          longitude: null,
+          createdAt: moment(new Date()).toISOString(),
+          updatedAt: moment(new Date()).toISOString(),
+          assignTo: incidentsListData.assignTo,
+          createdBy: incidentsListData.createdBy,
+          updatedBy: '0',
+          source: 'Web',
+          vendor: 'string',
+          vendorReferenceId: 'string',
+          contractor: form.contractor,
+          subContractor: form.subcontractor
+        }
+        alert('ram')
         const res = await api.put(`/api/v1/incidents/${id}`, formData);
-        if (res.status === 201) {
+        console.log(res)
+        if (res.status === 200) {
+          
           const fkincidentId = res.data.data.results.id;
           localStorage.setItem("fkincidentId", fkincidentId);
           localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
@@ -234,6 +234,55 @@ const IncidentDetails = () => {
           }
         }
       } else {
+        const { error, isValid } = validate(form);
+        setError(error);
+    
+        console.log(error);
+        if (isValid === true) {
+          const formData = {
+            fkCompanyId: 1,
+            fkProjectId: 1,
+            fkPhaseId: 1,
+            fkUnitId: 1,
+            incidentNumber: form.incidenttype,
+            incidentTitle: form.title,
+            incidentDetails: form.description,
+            immediateActionsTaken: form.immediateActionsTaken,
+            incidentOccuredOn: moment(form.incidentdate).toISOString(),
+            isPersonAffected: form.personaffected,
+            isPersonDetailsAvailable: "Yes",
+            personAffectedComments: "string",
+            isPropertyDamaged: form.propertyaffected,
+            isPropertyDamagedAvailable: "Yes",
+            propertyDamagedComments: "string",
+            isEquipmentDamaged: form.equiptmenteffected,
+            isEquipmentDamagedAvailable: "Yes",
+            equipmentDamagedComments: "string",
+            isEnviromentalImpacted: form.environmentaffected,
+            enviromentalImpactComments: "string",
+            supervisorByName: "string",
+            supervisorById: 0,
+            incidentReportedOn: moment(form.incidentdate).toISOString(),
+            incidentReportedByName: "string",
+            incidentReportedById: 0,
+            reasonLateReporting: "string",
+            notificationComments: "string",
+            reviewedBy: 0,
+            reviewDate: "2021-06-17T01:02:49.099Z",
+            closedBy: 0,
+            closeDate: "2021-06-17T01:02:49.099Z",
+            status: "Active",
+            incidentLocation: form.location,
+            assignTo: 0,
+            createdBy: 0,
+            updatedBy: 0,
+            source: "Web",
+            vendor: "string",
+            vendorReferenceId: "string",
+            contractor: form.contractor,
+            subContractor: form.subcontractor,
+          };
+          console.log(formData);
         const res = await api.post("/api/v1/incidents/", formData);
         if (res.status === 201) {
           const fkincidentId = res.data.data.results.id;
@@ -268,9 +317,8 @@ const IncidentDetails = () => {
             }
           }
         }
-      // }
+      }
 
-      
       //
       console.log(res);
     }
@@ -285,13 +333,13 @@ const IncidentDetails = () => {
     });
   };
   const handelTimeChange = (date) => {
-    console.log(date)
+    console.log(date);
     let onlyTime = moment(date).format("HH:mm");
     setForm({
       ...form,
       incidenttime: onlyTime,
     });
-    setSelectedTime(date)
+    setSelectedTime(date);
   };
   const fetchIncidentTypeValue = async () => {
     const res = await api.get("api/v1/lists/1/value");
@@ -337,7 +385,6 @@ const IncidentDetails = () => {
   };
 
   const fetchIncidentsData = async () => {
-  
     if (id === undefined) {
       await setIsLoading(true);
     } else {
