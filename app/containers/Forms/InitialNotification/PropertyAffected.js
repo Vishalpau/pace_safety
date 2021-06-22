@@ -75,6 +75,8 @@ const PropertyAffected = () => {
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
   const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
   const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [propertyDamagedComments, setPropertyDamagedComments]= useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -92,9 +94,7 @@ const PropertyAffected = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  const handleChange = (event) => {
-    setDetailsOfPropertyAffect(event.target.value);
-  };
+  
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
 
@@ -110,6 +110,8 @@ const PropertyAffected = () => {
       createdBy:2
     },
   ]);
+
+  
   const addNewPropertyDetails = () => {
     // alert('ram')
     setForm([
@@ -123,6 +125,8 @@ const PropertyAffected = () => {
       },
     ]);
   };
+
+
   const handlePropertyType = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
@@ -130,6 +134,8 @@ const PropertyAffected = () => {
     console.log(temp);
     setForm(temp);
   };
+
+
   const handlePropertyOtherType = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
@@ -137,6 +143,8 @@ const PropertyAffected = () => {
     console.log(temp);
     setForm(temp);
   };
+
+
   const handleDamageDetails = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
@@ -144,9 +152,9 @@ const PropertyAffected = () => {
     console.log(temp);
     setForm(temp);
   };
+
+
   const handlePropertyDamageAvailable = async (e) => {
-    const temp = incidentsListData;
-    console.log("1", temp);
     const formData = {
       id: incidentsListData.id,
       fkCompanyId: incidentsListData.fkCompanyId,
@@ -203,6 +211,8 @@ const PropertyAffected = () => {
     );
     console.log(res.data.data.results.isPersonDetailsAvailable);
   };
+
+
   const handleNext = async () => {
     console.log(form);
     const { error, isValid } = PropertyValidate(form);
@@ -239,6 +249,60 @@ const PropertyAffected = () => {
       }
       
     } else {
+      const formData = {
+        id: incidentsListData.id,
+        fkCompanyId: incidentsListData.fkCompanyId,
+        fkProjectId: incidentsListData.fkProjectId,
+        fkPhaseId: incidentsListData.fkPhaseId,
+        fkUnitId: incidentsListData.fkUnitId,
+        incidentNumber: incidentsListData.incidentNumber,
+        incidentTitle: incidentsListData.incidentTitle,
+        incidentDetails: incidentsListData.incidentDetails,
+        immediateActionsTaken: incidentsListData.immediateActionsTaken,
+        incidentOccuredOn: incidentsListData.incidentOccuredOn,
+        isPersonAffected: incidentsListData.isPersonAffected,
+        isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
+        personAffectedComments: incidentsListData.personAffectedComments,
+        isPropertyDamaged: incidentsListData.isPropertyDamaged,
+        isPropertyDamagedAvailable: detailsOfPropertyAffect,
+        propertyDamagedComments: propertyDamagedComments,
+        isEquipmentDamaged: incidentsListData.isEquipmentDamaged,
+        isEquipmentDamagedAvailable:
+          incidentsListData.isEquipmentDamagedAvailable,
+        equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
+        isEnviromentalImpacted: incidentsListData.isEnviromentalImpacted,
+        enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
+        supervisorByName: incidentsListData.supervisorByName,
+        supervisorById: incidentsListData.supervisorById,
+        incidentReportedOn: incidentsListData.incidentReportedOn,
+        incidentReportedByName: incidentsListData.incidentReportedByName,
+        incidentReportedById: incidentsListData.incidentReportedById,
+        reasonLateReporting: incidentsListData.reasonLateReporting,
+        notificationComments: incidentsListData.notificationComments,
+        reviewedBy: incidentsListData.reviewedBy,
+        reviewDate: incidentsListData.reviewDate,
+        closedBy: incidentsListData.closedBy,
+        closeDate: incidentsListData.closeDate,
+        status: incidentsListData.status,
+        incidentLocation: incidentsListData.incidentLocation,
+        latitude: incidentsListData.latitude,
+        longitude: incidentsListData.longitude,
+        createdAt: incidentsListData.createdAt,
+        updatedAt: moment(new Date()).toISOString(),
+        assignTo: incidentsListData.assignTo,
+        createdBy: incidentsListData.createdBy,
+        updatedBy: "0",
+        source: "Web",
+        vendor: "string",
+        vendorReferenceId: "string",
+        contractor: incidentsListData.contractor,
+        subContractor: incidentsListData.subContractor,
+      };
+  
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}`,
+        formData
+      );
       if(nextPath.equipmentAffect === 'Yes'){
         history.push('/app/incident-management/registration/initial-notification/eqiptment-affected/')
       }
@@ -301,7 +365,9 @@ const PropertyAffected = () => {
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfPropertyAffect}
-                    onChange={handleChange}
+                    onChange={(event)=>{setDetailsOfPropertyAffect(event.target.value);
+                      handlePropertyDamageAvailable();
+                    }}
                   >
                     {propertyAffectedValue !== 0
                       ? propertyAffectedValue.map((value, index) => (
@@ -443,12 +509,12 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
-                    // onChange={(e) => {
-                    //   setForm({
-                    //     ...form,
-                    //     describeactiontaken: e.target.value,
-                    //   });
-                    // }}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        propertyDamagedComments: e.target.value,
+                      });
+                    }}
                   />
                   {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
                 </Grid>

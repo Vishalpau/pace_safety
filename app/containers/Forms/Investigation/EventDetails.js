@@ -227,10 +227,10 @@ const EventDetails = () => {
               </Grid>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Event details"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>

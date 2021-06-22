@@ -302,10 +302,10 @@ const PropertyImpacetDetails = () => {
               </Grid>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Property impact details"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>

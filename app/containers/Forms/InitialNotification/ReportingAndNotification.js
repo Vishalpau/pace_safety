@@ -77,6 +77,8 @@ const ReportingAndNotification = () => {
 
   const [files, setFile] = React.useState([]);
   const [error, setError] = useState({});
+  const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
 
   const [form, setForm] = useState({
     reportedto: "",
@@ -131,6 +133,7 @@ const ReportingAndNotification = () => {
 
   
   const handleDrop = (acceptedFiles) => {
+    console.log(acceptedFiles)
     setForm({
       ...form,
       fileupload: acceptedFiles,
@@ -164,13 +167,13 @@ const ReportingAndNotification = () => {
       equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
       isEnviromentalImpacted: incidentsListData.isEnviromentalImpacted,
       enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
-      supervisorByName: incidentsListData.supervisorByName,
-      supervisorById: incidentsListData.supervisorById,
-      incidentReportedOn: incidentsListData.incidentReportedOn,
-      incidentReportedByName: incidentsListData.incidentReportedByName,
-      incidentReportedById: incidentsListData.incidentReportedById,
-      reasonLateReporting: incidentsListData.reasonLateReporting,
-      notificationComments: incidentsListData.notificationComments,
+      supervisorByName: form.supervisorname,
+      supervisorById: form.othername,
+      incidentReportedOn: form.reportingdate,
+      incidentReportedByName: form.reportedby,
+      incidentReportedById: form.others,
+      reasonLateReporting: form.latereporting,
+      notificationComments: form.additionaldetails,
       reviewedBy: incidentsListData.reviewedBy,
       reviewDate: incidentsListData.reviewDate,
       closedBy: incidentsListData.closedBy,
@@ -185,8 +188,8 @@ const ReportingAndNotification = () => {
       createdBy: incidentsListData.createdBy,
       updatedBy: "0",
       source: "Web",
-      vendor: "string",
-      vendorReferenceId: "string",
+      vendor: "",
+      vendorReferenceId: "",
       contractor: incidentsListData.contractor,
       subContractor: incidentsListData.subContractor,
     };
@@ -201,21 +204,33 @@ const ReportingAndNotification = () => {
   const handelNext = async (e) => {
     console.log(form);
     const { error, isValid } = ReportingValidation(form);
-    const fkid = localStorage.getItem("fkincidentId")
+    const fkid = localStorage.getItem("fkincidentId");
+    UpdateIncidentDetails();
     setError(error);
     console.log(error, isValid);
     const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
       reportTo: form.reportedto,
-      reportingNote: form.latereporting,
+      reportingNote: form.fileupload,
       createdBy: 0,
       fkIncidentId: fkid,
     });
     if(res.status === 201){
       // localStorage.removeItem('fkincidentId')
       history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem('fkincidentId')}`)
-    }
-     
+    }     
   };
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentsListdata(result);
+    await setIsLoading(true);
+  }
+
+  useEffect(()=>{
+    fetchIncidentsData();
+  },[])
 
   const classes = useStyles();
   return (

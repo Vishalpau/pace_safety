@@ -256,8 +256,7 @@ function Application(props) {
           component={EventDetails}
         />
         <Route
-          path="
-          "
+          path="/app/incident-management/registration/investigation/investigation-overview/"
           component={InvestigationOverview}
         />
         <Route

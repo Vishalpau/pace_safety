@@ -343,10 +343,10 @@ const InitialDetails = () => {
               </Box>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Initial details"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>
