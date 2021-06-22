@@ -17,11 +17,10 @@ import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
+import EnvironmentValidate from "../../Validator/EnvironmetValidation";
 
 import FormSideBar from "../FormSideBar";
 import FormHeader from "../FormHeader";
-import EnvironmentValidate from "../../Validator/EnvironmetValidation"
-
 
 import api from "../../../utils/axios";
 import { useHistory } from "react-router";
@@ -46,9 +45,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EnvironmentAffected = () => {
-
- 
-
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -57,15 +53,10 @@ const EnvironmentAffected = () => {
     "Mital Aid",
     "Other",
   ];
-  
+
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
-  
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
-  const [selectedTime, setSelectedTime] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
 
@@ -73,36 +64,37 @@ const EnvironmentAffected = () => {
     setSelectedDate(date);
   };
 
-  const [error,setError] = useState({})
-
-  // function handelNext(e){
-  //   console.log(form)
-  //   const { error, isValid } = EnvironmentValidate(form)
-  //   setError(error)
-  //   console.log(error,isValid)
-  // }
-
   const radioDecide = ["Yes", "No", "N/A"];
 
   const classes = useStyles();
   const history = useHistory();
+  const [error, setError] = useState({});
 
   const [environmentAffectedValue, setEnvironmentAffectedValue] = useState([]);
   const [anyReleaseValue, setAnyReleaseValue] = useState([]);
   const [impactOnWildLife, setImpactOnWildLife] = useState([]);
   const [waterbodyAffectedValue, setWaterbodyAffectedValue] = useState([]);
-  const [detailsOfEnvAffect, setDetailsOfEnvAffect] = useState('');
+  const [detailsOfEnvAffect, setDetailsOfEnvAffect] = useState("");
+  const [isspills,setIsSpills] = useState(false)
+  const [isrelase,setIsRelase] = useState(false)
+  const [isWildlife,setIsWildlife] = useState(false)
+  const [iswaterbody,setIswaterBody] = useState(false)
 
-  const [form, setForm] = useState(
-    {
-      envQuestion: "",
-      envQuestionOption: "",
-      envAnswerDetails: "",
-      createdBy: 1,     
-        fkIncidentId: 3
-    },
-  );
-  
+  const [spillsData,setSpillsData] = useState({})
+  const [relaseData,setReleaseData] = useState({})
+  const [wildLifeData,setWildLifeData] = useState({})
+  const [wateBodyData,setWaterBodyData] = useState({})
+
+
+
+  const [form, setForm] = useState({
+    envQuestion: "",
+    envQuestionOption: "",
+    envAnswerDetails: "",
+    createdBy: 1,
+    fkIncidentId: localStorage.getItem("fkincidentId"),
+  });
+
   const addNewEnvironmentDetails = () => {
     // alert('ram')
     setForm([
@@ -111,72 +103,72 @@ const EnvironmentAffected = () => {
         envQuestion: "",
         envQuestionOption: "",
         envAnswerDetails: "",
-        createdBy: 1,     
-        fkIncidentId: 3
+        createdBy: 1,
+        fkIncidentId: localStorage.getItem("fkincidentId"),
       },
     ]);
   };
- 
+
   const handleNext = async () => {
+    
+    const { error, isValid } = EnvironmentValidate(form);
+    setError(error);
+    console.log(error, isValid);
 
-    console.log(form)
-    const { error, isValid } = EnvironmentValidate(form)
-    setError(error)
-    console.log(error,isValid)
+    if (detailsOfEnvAffect === "Yes") {
+      console.log(form);
 
-    if (detailsOfEquipmentAffect === "Yes") {
-      console.log(form)
-      
-        const res = await api.post("api/v1/incidents/1/environment/", form);
-        
-        history.push("/app/incident-management/registration/initial-notification/environment-affected/");
-      
+      const res = await api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
+        form
+      );
+      // if(res.status === 201){
+      history.push(
+        "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+      );
+      // }
     } else {
-     
-      history.push("/app/incident-management/registration/initial-notification/environment-affected/");
+      history.push(
+        "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+      );
     }
   };
   const fetchWaterBodyAffectedValue = async () => {
     const res = await api.get("api/v1/lists/19/value");
     const result = res.data.data.results;
     setWaterbodyAffectedValue(result);
-  }
+  };
 
   const fetchImpactOnWildLifeValue = async () => {
     const res = await api.get("api/v1/lists/18/value");
     const result = res.data.data.results;
     setImpactOnWildLife(result);
-  }
+  };
 
   const fetchAnyReleaseValue = async () => {
     const res = await api.get("api/v1/lists/17/value");
     const result = res.data.data.results;
-    console.log(result)
-    setAnyReleaseValue(result);
+    await setAnyReleaseValue(result);
   };
 
-  const fetchEquipmentAffectedValue = async () => {
+  const fetchEnviornmentAffectedValue = async () => {
     const res = await api.get("api/v1/lists/16/value");
     const result = res.data.data.results;
     setEnvironmentAffectedValue(result);
   };
-  useEffect(()=>{
-    fetchEquipmentAffectedValue();
-    // fetchAnyReleaseValue();
-    // fetchImpactOnWildLifeValue();
+  useEffect(() => {
+    fetchEnviornmentAffectedValue();
+    fetchAnyReleaseValue();
+    fetchImpactOnWildLifeValue();
     fetchWaterBodyAffectedValue();
-  },[])
-  
+  }, []);
 
   return (
     <div>
-      {/* {console.log(INITIAL_NOTIFICATION_FORM)} */}
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
-              <FormHeader selectedHeader={"Initial notification"} />
-            </Box>
+           
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Environment Affected
@@ -184,139 +176,141 @@ const EnvironmentAffected = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
+
+                {/* spills question and option */}
                 <Grid item md={6}>
                   <p>Where there any spills</p>
                   <RadioGroup
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfEnvAffect}
-                    onChange={(e) =>
-                      setDetailsOfEnvAffect(e.target.value)
-                    }
+                    onChange={(e) => setDetailsOfEnvAffect(e.target.value)}
                   >
-                  {environmentAffectedValue.length!==0?environmentAffectedValue.map((value,index) => (
-                    <FormControlLabel
-                      value={value.inputValue}
-                      control={<Radio />}
-                      label={value.inputLabel}
-                    />
-                  )):null}
+                    {environmentAffectedValue.length !== 0
+                      ? environmentAffectedValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                            onChange = {(e)=>setIsSpills(value.inputValue == "Yes"? true : false)}
+                          />
+                        ))
+                      : null}
                   </RadioGroup>
                 </Grid>
 
-                <Grid item md={12}>
-                  <TextField
-                    id="spills-details"
-                    variant="outlined"
-                    label="Details of spills"
-                    multiline
-                    rows="3"
-                    className={classes.fullWidth}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        spilldetails: e.target.value,
-                      });
-                    }}
-                  />
-                  {error && error.spilldetails && <p>{error.spilldetails}</p> }
+                {isspills == true ? 
+                 <Grid item md={12}>
+                 <TextField
+                   id="spills-details"
+                   variant="outlined"
+                   label="Details of spills"
+                   multiline
+                   rows="3"
+                   className={classes.fullWidth}
+                   onChange={(e) => {
+                    setSpillsData({
+                      envQuestionOption: "Yes",
+                      envQuestion:"Where there any spills",
+                      envAnswerDetails:e.target.value,
+                      status: "Active",
+                      createdBy: 0,
+                      updatedBy: 0,
+                      fkIncidentId: localStorage.getItem("fkincidentId")
+                    });
+                  }}
+
+                 />
                 </Grid>
-                  {detailsOfEnvAffect === 'Yes'?<>
-                <Grid item md={6}>
+                :null}        
+                   
+                
+                {/* relase question and answer */}
+                <Grid item md={12}>
                   <div className={classes.spacer}>
                     <p className={classes.customLabel}>
                       Where there any release?
                     </p>
 
-                    {anyReleaseValue.length!==0?anyReleaseValue.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
+                    <RadioGroup
+                      aria-label="envQuestion"
+                      name="envQuestion"
+                      value={form.envQuestion}
+                      onChange={(e) =>
+                        setForm({ ...form, envQuestion: e.target.value })
+                      }
+                    >
+                      {anyReleaseValue.length !== 0
+                        ? anyReleaseValue.map((value) => (
+                            <FormControlLabel
+                              value={value.inputValue}
+                              control={<Radio />}
+                              label={value.inputLabel}
+                              onChange = {(e)=>setIsRelase(value.inputValue == "Yes"? true : false)}
+                            />
+                          ))
+                        : null}
+                    </RadioGroup>
+
+                    {isrelase == true ? 
+                        <TextField
+                        id="release-details"
+                        multiline
+                        variant="outlined"
+                        rows="3"
+                        label="Details of release"
+                        className={classes.fullWidth}
                         onChange={(e) => {
-                          setForm({
-                            ...form,
-                            isrelease: e.target.value,
+                          setReleaseData({
+                            envQuestionOption: "Yes",
+                            envQuestion:"Where there any relase?",
+                            envAnswerDetails:e.target.value,
+                            status: "Active",
+                            createdBy: 0,
+                            updatedBy: 0,
+                            fkIncidentId: localStorage.getItem("fkincidentId")
                           });
                         }}
-                      />
-                    )):null}
-                  </div>
+                        />
+                        :null}  
+                        {error && error.envQuestion && (
+                          <p>{error.envQuestion}</p>
+                        )}
+                        
+                      
+                   </div>
+                 </Grid>
                   
-                </Grid>
-
+                    {/* wildlife imapact question and answer */}
                 <Grid item md={12}>
-                  <div>
-                    {/* <p>Details of release</p> */}
-                    <TextField
-                      id="release-details"
-                      multiline
-                      variant="outlined"
-                      rows="3"
-                      label="Details of release"
-                      className={classes.fullWidth}
-                      onChange={(e)=> setForm({...form, envQuestion:e.target.value})}
-                    />
-                   {error && error.envQuestion && <p>{error.envQuestion}</p> }
-                  </div>
-                </Grid>
-
-                <Grid itemmd={6}>
                   <div className={classes.spacer}>
                     <p className={classes.customLabel}>
                       Where there any impact on wildlife?
                     </p>
 
-                    {/* {impactOnWildLife.length!==0?impactOnWildLife.map((value,index) => (
-                      <FormControlLabel
-                      key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                      />
-                    )):null} */}
-                  </div>
-                  
-
-                </Grid>
-
-                <Grid item md={12}>
-                  <div>
-                    {/* <p>Details of spills</p> */}
-                    <TextField
-                      id="wildlife-details"
-                      multiline
-                      rows="3"
-                      variant="outlined"
-                      label="Details of wildlife"
-                      className={classes.fullWidth}
-                      onChange={(e)=> setForm({...form, envQuestionOption:e.target.value})}
-                    />
-                    {error && error.envQuestionOption && <p>{error.envQuestionOption}</p> }
-                  </div>
-                  
-                </Grid>
-
-                <Grid item md={6}>
-                  <div className={classes.spacer}>
-                    <p className={classes.customLabel}>
-                      Where there any waterbody affected?
-                    </p>
-
-                    {/* {waterbodyAffectedValue!== 0 ? waterbodyAffectedValue.map((value) => (
-                      <FormControlLabel
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                      />
-                    )):null} */}
-                  </div>
-                  
-                </Grid>
-
-                <Grid item md={12}>
-                  <div>
-                    {/* <p>Details of spills</p> */}
+                    <RadioGroup
+                      aria-label="envAnswerDetails"
+                      name="envAnswerDetails"
+                      value={form.envAnswerDetails}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          envAnswerDetails: e.target.value,
+                        })
+                      }
+                    >
+                      {impactOnWildLife.length !== 0
+                        ? impactOnWildLife.map((value, index) => (
+                            <FormControlLabel
+                              value={value.inputValue}
+                              control={<Radio />}
+                              label={value.inputLabel}
+                              onChange = {(e)=>setIsWildlife(value.inputValue == "Yes"? true : false)}
+                            />
+                          ))
+                        : null}
+                    </RadioGroup>
+                    {isWildlife == true ? 
                     <TextField
                       id="waterbody-details"
                       multiline
@@ -324,14 +318,89 @@ const EnvironmentAffected = () => {
                       variant="outlined"
                       label="Details of waterbody affected"
                       className={classes.fullWidth}
-                      onChange={(e)=> setForm({...form, envAnswerDetails:e.target.value})}
+                      onChange={(e) => {
+                        setWildLifeData({
+                          envQuestionOption: "Yes",
+                          envQuestion:"Where there any impact on wildlife?",
+                          envAnswerDetails:e.target.value,
+                          status: "Active",
+                          createdBy: 0,
+                          updatedBy: 0,
+                          fkIncidentId: localStorage.getItem("fkincidentId")
+                        });
+                      }}
                     />
+                    :null}  
+                    {error && error.envAnswerDetails && (
+                      <p>{error.envAnswerDetails}</p>
+                    )}
                   </div>
-                  {error && error.envAnswerDetails && <p>{error.envAnswerDetails}</p> }
                 </Grid>
-                </>
-                :
-                null}
+
+                  {/* waterbody question and answer */}
+                <Grid item md={12}>
+                  <div />
+                </Grid>
+
+                <Grid item md={6}>
+                  <div className={classes.spacer}>
+                    <p className={classes.customLabel}>
+                      Where there any waterbody affected?
+                    </p>
+                    <RadioGroup
+                      aria-label="envQuestionOption"
+                      name="envQuestionOption"
+                      value={form.envQuestionOption}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          envQuestionOption: e.target.value,
+                        })
+                      }
+                    >
+                      {waterbodyAffectedValue !== 0
+                        ? waterbodyAffectedValue.map((value) => (
+                            <FormControlLabel
+                              value={value.inputValue}
+                              control={<Radio />}
+                              label={value.inputLabel}
+                              onChange = {(e)=>setIswaterBody(value.inputValue == "Yes"? true : false)}
+                            />
+                          ))
+                        : null}
+                    </RadioGroup>
+                  </div>
+                </Grid>
+
+                <Grid item md={12}>
+                  <div>
+                  {iswaterbody == true ? 
+                    <TextField
+                      id="waterbody-details"
+                      multiline
+                      rows="3"
+                      variant="outlined"
+                      label="Details of waterbody affected"
+                      className={classes.fullWidth}
+                      onChange={(e) => {
+                        setWaterBodyData({
+                          envQuestionOption: "Yes",
+                          envQuestion:"Where there any waterbody affected?",
+                          envAnswerDetails:e.target.value,
+                          status: "Active",
+                          createdBy: 0,
+                          updatedBy: 0,
+                          fkIncidentId: localStorage.getItem("fkincidentId")
+                        });
+                      }}
+                    />
+                    :null}  
+                  </div>
+                  {error && error.envAnswerDetails && (
+                    <p>{error.envAnswerDetails}</p>
+                  )}
+                </Grid>
+                  
                 <Grid item md={12}>
                   <div>
                     {/* <p>Comment if any</p> */}
@@ -342,12 +411,6 @@ const EnvironmentAffected = () => {
                       rows="3"
                       label="Comment if any"
                       className={classes.fullWidth}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          comment: e.target.value,
-                        });
-                      }}
                     />
                   </div>
                 </Grid>
@@ -355,18 +418,17 @@ const EnvironmentAffected = () => {
                 <Box marginTop={4}>
                   <Button
                     variant="contained"
+                    className={classes.button}
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                    href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
-                    Previouse    
+                    Previouse
                   </Button>
                   <Button
                     variant="contained"
                     color="primary"
-                    href={Object.keys(error).length === 0? 
-                      "http://localhost:3000/app/incident-management/registration/initial-notification/reporting-and-notification/" 
-                      : "#"}
-                    onClick={(e)=>handleNext(e)}
+                    onClick={(e) => handleNext(e)}
+                   
                   >
                     Next
                   </Button>

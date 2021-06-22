@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 import FormSideBar from "../FormSideBar";
@@ -156,20 +159,22 @@ const WhyAnalysis = () => {
                 </button>
               </Grid>
               <Grid item md={12}>
-              <Button
-                    variant="contained"
-                    color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/summary/summary/"
-                  >
-                    Submit
-                  </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  href="http://localhost:3000/app/incident-management/registration/summary/summary/"
+                >
+                  Submit
+                </Button>
               </Grid>
             </Grid>
             <Grid item md={3}>

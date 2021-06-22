@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const EquiptmentImpactDetails = () => {
@@ -153,6 +156,7 @@ const EquiptmentImpactDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/investigation/property-impact-details/"
                   >
                     Previous
@@ -160,6 +164,7 @@ const EquiptmentImpactDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
                   >
                     Next
@@ -167,10 +172,10 @@ const EquiptmentImpactDetails = () => {
                 </Grid>
               </Grid>
               <Grid item md={3}>
-                <FormSideBar
+                {/* <FormSideBar
                   listOfItems={INVESTIGATION_FORM}
                   selectedItem={"Equipment impact details"}
-                />
+                /> */}
               </Grid>
             </Grid>
           </Box>

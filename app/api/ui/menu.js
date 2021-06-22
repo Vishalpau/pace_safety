@@ -835,15 +835,46 @@ module.exports = [
   //   ]
   // },
   {
-    key: 'no_child',
-    name: 'Incident Listing',
-    icon: 'ion-ios-document-outline',
-    linkParent: '/app/pages/blank-page/',
+    key: "home",
+    name: "Home",
+    icon: "ion-ios-home",
+    linkParent: "/",
   },
   {
-    key: 'menu-level',
-    name: 'Incident',
-    icon: 'ion-ios-document-outline',
-    linkParent: '/app/incident-management/registration/initial-notification/incident-details/',
-  }
+    key: "Incidents",
+    name: "Incidents",
+    icon: "ion-md-body",
+    linkParent: "/app/pages/incident/",
+  },
+  {
+    key: "assessments",
+    name: "Assessments",
+    icon: "ion-ios-clipboard",
+    linkParent: "/app/pages/blank-page/",
+  },
+  {
+    key: "observations",
+    name: "Observations",
+    icon: "ion-md-eye",
+    linkParent: "/app/pages/blank-page/",
+  },
+  {
+    key: "inspections",
+    name: "Inspections",
+    icon: "ion-ios-checkbox",
+    linkParent: "/app/pages/blank-page/",
+  },
+  {
+    key: "menu-level",
+    name: "Incident",
+    icon: "ion-ios-document-outline",
+    linkParent:
+      "/app/incident-management/registration/initial-notification/incident-details/",
+  },
+  // {
+  //   key: "no_child",
+  //   name: "listIncident",
+  //   icon: "ion-ios-checkbox",
+  //   linkParent: "/app/pages/Incident/",
+  // },
 ];

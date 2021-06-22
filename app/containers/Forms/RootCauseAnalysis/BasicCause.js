@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const BasicCause = () => {
@@ -160,9 +163,10 @@ const BasicCause = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                <Button
+                  <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
                   >
                     Previous
@@ -170,6 +174,7 @@ const BasicCause = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
                   >
                     Next

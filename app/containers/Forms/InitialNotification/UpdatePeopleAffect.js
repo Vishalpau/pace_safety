@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-const PeoplesAffected = () => {
+const UpdatePeoplesAffected = () => {
   // const [form, setForm] = useState({
   //   detailindividualeffected: "",
   //   affectedpersons: {
@@ -91,14 +91,11 @@ const PeoplesAffected = () => {
   const classes = useStyles();
   const history = useHistory();
 
-  const [personAffect, setPersonAffect] = useState('')
+  const [personAffect, setPersonAffect] = useState('No')
   const [individualAffectValue, setIndividualAffecctValue] = useState([]);
   const [personTypeValue, setPersonTypeValue] = useState([]);
   const [departmentValue, setDepartmentValue] = useState([]);
   const [medicalCareValue, setMedicalCareValue] = useState([]);
-  
-  const [incidentsListData, setIncidentsListdata] = useState([]);
-  const [isLoading, setIsLoading]= useState([])
 
   const [form, setForm] = useState([
     {
@@ -114,6 +111,7 @@ const PeoplesAffected = () => {
     },
   ]);
   const addNewPeopleDetails = () => {
+    // alert('ram')
     setForm([
       ...form,
       {
@@ -201,12 +199,6 @@ const PeoplesAffected = () => {
       }
     }
   };
-  const handlePersonAffect = async()=>{
-    const temp = incidentsListData;
-    temp.isPersonAffected = personAffect
-    const res = await api.put(`/api/v1/incidents/${localStorage.getItem('fkincidentId')}`, temp);
-    console.log(res)
-  }
   const [error, setError] = useState({});
 
   const fetchIndividualAffectValue = async () => {
@@ -233,23 +225,12 @@ const PeoplesAffected = () => {
     console.log(result);
     setMedicalCareValue(result);
   };
-  const fetchIncidentsData = async () => {
-    if (id === undefined) {
-      await setIsLoading(true);
-    } else {
-      const res = await api.get(`/api/v1/incidents/${id}/`);
-      const result = res.data.data.results;
-      await setIncidentsListdata(result);
-      await setIsLoading(true);
-    }
-  };
 
   useEffect(() => {
     fetchIndividualAffectValue();
     fetchPersonTypeValue();
     fetchDepartmentValue();
     fetchPersonTakenMedicalCare();
-    fetchIncidentsData()
   }, []);
 
   return (
@@ -257,9 +238,9 @@ const PeoplesAffected = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            {/* <Box marginBottom={5}>
+            <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
-            </Box> */}
+            </Box>
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Details of Persons Affected
@@ -276,9 +257,7 @@ const PeoplesAffected = () => {
                     aria-label="personAffect"
                     name="personAffect"
                     value={personAffect}
-                    onChange={(e) => {setPersonAffect(e.target.value);
-                    handlePersonAffect();}
-                    }
+                    onChange={(e) => setPersonAffect(e.target.value)}
                   >
                   {individualAffectValue.map((value,key) => (
                     <FormControlLabel
@@ -452,7 +431,7 @@ const PeoplesAffected = () => {
                 </Grid>
                 <Grid item md={6}>
                   <Button
-                    href="/app/incident-management/registration/initial-notification/incident-details/"
+                    href="http://localhost:3000/app/incident-management/registration/initial-notification/incident-details/"
                     variant="contained"
                     color="primary"
                     className={classes.button}
@@ -488,4 +467,4 @@ const PeoplesAffected = () => {
     </div>
   );
 };
-export default PeoplesAffected;
+export default UpdatePeoplesAffected;

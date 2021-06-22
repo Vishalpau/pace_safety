@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     margin: "1rem 0",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const PersonalAndPpeDetails = () => {
@@ -333,6 +336,7 @@ const PersonalAndPpeDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/evidence/activity-detail/"
                   >
                     Previous
@@ -340,6 +344,7 @@ const PersonalAndPpeDetails = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/evidence/additional-details/"
                   >
                     Next

@@ -1,19 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
-import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import SearchIcon from '@material-ui/icons/Search';
-import Fab from '@material-ui/core/Fab';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import UserMenu from './UserMenu';
-import SearchUi from '../Search/SearchUi';
-import styles from './header-jss';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import classNames from "classnames";
+import Typography from "@material-ui/core/Typography";
+import Hidden from "@material-ui/core/Hidden";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import SearchIcon from "@material-ui/icons/Search";
+import Fab from "@material-ui/core/Fab";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import UserMenu from "./UserMenu";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import SearchUi from "../Search/SearchUi";
+import styles from "./header-jss";
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    minWidth: 180,
+    fontSize: 12,
+  },
+}));
 
 const elem = document.documentElement;
 
@@ -31,8 +45,8 @@ function Header(props) {
   const handleScroll = () => {
     const doc = document.documentElement;
     const scroll = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-    const newFlagDarker = (scroll > 30);
-    const newFlagTitle = (scroll > 40);
+    const newFlagDarker = scroll > 30;
+    const newFlagTitle = scroll > 40;
     if (flagDarker !== newFlagDarker) {
       setTurnDarker(newFlagDarker);
       flagDarker = newFlagDarker;
@@ -44,9 +58,9 @@ function Header(props) {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -54,11 +68,14 @@ function Header(props) {
     setFullScreen(true);
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { /* Firefox */
+    } else if (elem.mozRequestFullScreen) {
+      /* Firefox */
       elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+    } else if (elem.webkitRequestFullscreen) {
+      /* Chrome, Safari & Opera */
       elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    } else if (elem.msRequestFullscreen) {
+      /* IE/Edge */
       elem.msRequestFullscreen();
     }
   };
@@ -76,11 +93,11 @@ function Header(props) {
     }
   };
 
-  const turnMode = mode => {
-    if (mode === 'light') {
-      props.changeMode('dark');
+  const turnMode = (mode) => {
+    if (mode === "light") {
+      props.changeMode("dark");
     } else {
-      props.changeMode('light');
+      props.changeMode("light");
     }
   };
 
@@ -93,31 +110,37 @@ function Header(props) {
     mode,
     title,
     openGuide,
-    history
+    history,
   } = props;
 
   const setMargin = (sidebarPosition) => {
-    if (sidebarPosition === 'right-sidebar') {
+    if (sidebarPosition === "right-sidebar") {
       return classes.right;
     }
-    if (sidebarPosition === 'left-sidebar-big') {
+    if (sidebarPosition === "left-sidebar-big") {
       return classes.leftBig;
     }
     return classes.left;
   };
 
+  const [project, setProject] = React.useState("");
+
+  const handleProjectChange = (event) => {
+    setProject(event.target.value);
+  };
+
+  const classname = useStyles();
+
   return (
     <AppBar
-      className={
-        classNames(
-          classes.appBar,
-          classes.floatingBar,
-          margin && classes.appBarShift,
-          setMargin(position),
-          turnDarker && classes.darker,
-          gradient ? classes.gradientBg : classes.solidBg
-        )
-      }
+      className={classNames(
+        classes.appBar,
+        classes.floatingBar,
+        margin && classes.appBarShift,
+        setMargin(position),
+        turnDarker && classes.darker,
+        gradient ? classes.gradientBg : classes.solidBg
+      )}
     >
       <Toolbar disableGutters={!open}>
         <Fab
@@ -130,44 +153,83 @@ function Header(props) {
         </Fab>
         <Hidden smDown>
           <div className={classes.headerProperties}>
-            <div className={classNames(classes.headerAction, showTitle && classes.fadeOut)}>
-              {fullScreen ? (
+            <div
+              className={classNames(
+                classes.headerAction,
+                showTitle && classes.fadeOut
+              )}
+            >
+              <Paper>
+                <FormControl
+                  variant="outlined"
+                  size="small"
+                  className={classname.formControl}
+                >
+                  {/* <InputLabel id="project-switch-label">Project</InputLabel> */}
+                  <Select
+                    labelId="project-switch-label"
+                    id="project-switch"
+                    label="Project"
+                    value={project}
+                    onChange={handleProjectChange}
+                  >
+                    <MenuItem value={1}>Project 1</MenuItem>
+                    <MenuItem value={2}>Project 2</MenuItem>
+                    <MenuItem value={3}>Project 3</MenuItem>
+                  </Select>
+                </FormControl>
+              </Paper>
+              {/* {fullScreen ? (
                 <Tooltip title="Exit Full Screen" placement="bottom">
-                  <IconButton className={classes.button} onClick={closeFullScreen}>
+                  <IconButton
+                    className={classes.button}
+                    onClick={closeFullScreen}
+                  >
                     <i className="ion-ios-qr-scanner-outline" />
                   </IconButton>
                 </Tooltip>
               ) : (
                 <Tooltip title="Full Screen" placement="bottom">
-                  <IconButton className={classes.button} onClick={openFullScreen}>
+                  <IconButton
+                    className={classes.button}
+                    onClick={openFullScreen}
+                  >
                     <i className="ion-ios-qr-scanner-outline" />
                   </IconButton>
                 </Tooltip>
-              )}
-              <Tooltip title="Turn Dark/Light" placement="bottom">
+              )} */}
+              {/* <Tooltip title="Turn Dark/Light" placement="bottom">
                 <IconButton className={classes.button} onClick={() => turnMode(mode)}>
                   <i className="ion-ios-bulb-outline" />
                 </IconButton>
-              </Tooltip>
-              <Tooltip title="Show Guide" placement="bottom">
-                <IconButton className={classes.button} onClick={openGuide}>
-                  <i className="ion-ios-help-circle-outline" />
-                </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </div>
             {/* <Typography component="h2" className={classNames(classes.headerTitle, showTitle && classes.show)}>
               {title}
             </Typography> */}
           </div>
         </Hidden>
-        <div className={classes.searchWrapper}>
+        {/* <div className={classes.searchWrapper}>
           <div className={classNames(classes.wrapper, classes.light)}>
             <div className={classes.search}>
               <SearchIcon />
             </div>
             <SearchUi history={history} />
           </div>
+        </div> */}
+        <div
+          className={classNames(
+            classes.headerAction,
+            showTitle && classes.fadeOut
+          )}
+        >
+          <Tooltip title="Show Guide" placement="bottom">
+            <IconButton className={classes.button} onClick={openGuide}>
+              <i className="ion-ios-help-circle-outline" />
+            </IconButton>
+          </Tooltip>
         </div>
+
         <Hidden xsDown>
           <span className={classes.separatorV} />
         </Hidden>

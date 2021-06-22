@@ -36,12 +36,17 @@ import {
 export const FormSideBar = (props) => {
   let linkBreak = Object.keys(props.listOfItems).indexOf(props.selectedItem);
   const classes = useStyles();
+
+  const data = props.deleteForm || localStorage.getItem('deleteForm')
   return (
     <Paper elevation={1}>
       <Box padding={2} bgcolor="background.paper">
         <List dense>
+            {/* {props.deleteForm.map((value) => (
+                delete props.listOfItems[value]
+            ))} */}
           {Object.entries(props.listOfItems).map(([key, value], index) =>
-            index >= linkBreak ? (
+            !data.includes(key) ?(index >= linkBreak ? (
               index === linkBreak ? (
                 <ListItem className={classes.activeList}>
                   <ListItemIcon className={classes.icon}>
@@ -67,7 +72,7 @@ export const FormSideBar = (props) => {
                 {/* <a href={value}>{key}</a> */}
               </ListItem>
             )
-          )}
+          ):null)}
         </List>
       </Box>
     </Paper>

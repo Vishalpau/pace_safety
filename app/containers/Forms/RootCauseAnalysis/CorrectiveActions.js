@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const CorrectiveAction = () => {
@@ -118,9 +121,10 @@ const CorrectiveAction = () => {
                   />
                 </Grid>
                 <Grid item md={12}>
-                <Button
+                  <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
                   >
                     Previous
@@ -128,6 +132,7 @@ const CorrectiveAction = () => {
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
                   >
                     Next

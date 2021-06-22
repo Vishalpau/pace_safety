@@ -32,6 +32,7 @@ import { MaterialDropZone } from "dan-components";
 import { DropzoneDialogBase } from "material-ui-dropzone";
 import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
+import { useHistory } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -67,9 +68,13 @@ const useStyles = makeStyles((theme) => ({
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const ReportingAndNotification = () => {
+
   const [files, setFile] = React.useState([]);
   const [error, setError] = useState({});
 
@@ -87,6 +92,8 @@ const ReportingAndNotification = () => {
     additionaldetails: "",
   });
 
+  const history = useHistory()
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -101,6 +108,10 @@ const ReportingAndNotification = () => {
     new Date("2014-08-18T21:11:54")
   );
 
+  const [selectedTime, setSelectedTime] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
   const handleDateChange = (date) => {
     let onlyDate = moment(date).format("YYYY/MM/DD");
     setForm({
@@ -110,18 +121,15 @@ const ReportingAndNotification = () => {
   };
 
   const handelTimeChange = (date) => {
-    let onlyTime = moment(date).format("HH:mm");
-
+    console.log(date)
+    setSelectedTime(date);
     setForm({
       ...form,
-      reportingtime: onlyTime,
+      reportingtime: moment(date).format("HH:mm"),
     });
   };
 
-  const [selectedTime, setSelectedTime] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
+  
   const handleDrop = (acceptedFiles) => {
     setForm({
       ...form,
@@ -130,17 +138,25 @@ const ReportingAndNotification = () => {
     setFileNames(acceptedFiles.map((file) => file.name));
   };
 
+
+  
   const handelNext = async (e) => {
     console.log(form);
     const { error, isValid } = ReportingValidation(form);
+    const fkid = localStorage.getItem("fkincidentId")
     setError(error);
     console.log(error, isValid);
-    const res = await api.post("/api/v1/incidents/3/reports/", {
+    const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
       reportTo: form.reportedto,
       reportingNote: form.latereporting,
       createdBy: 0,
-      fkIncidentId: 0,
+      fkIncidentId: fkid,
     });
+    if(res.status === 201){
+      // localStorage.removeItem('fkincidentId')
+      history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem('fkincidentId')}`)
+    }
+     
   };
 
   const classes = useStyles();
@@ -149,9 +165,9 @@ const ReportingAndNotification = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
+            {/* <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
-            </Box>
+            </Box> */}
 
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
@@ -300,8 +316,7 @@ const ReportingAndNotification = () => {
                       margin="normal"
                       id="time-picker"
                       label="Time picker"
-                      // defaultValue="05:30 AM"
-                      value={selectedTime}
+                      value={new Date(selectedTime)}
                       onChange={(date) => handelTimeChange(date)}
                       KeyboardButtonProps={{
                         "aria-label": "change time",
@@ -400,13 +415,15 @@ const ReportingAndNotification = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                    className={classes.button}
+                    href="/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Previouse
                   </Button>
                   <Button
                     variant="contained"
                     color="primary"
+                    className={classes.button}
                     // href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
                     // href={Object.keys(error).length === 0?
                     //   "http://localhost:3000/app/incident-management/registration/investigation/initial-details/"

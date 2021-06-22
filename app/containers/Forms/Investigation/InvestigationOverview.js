@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Grid, Container, Input, Select } from "@material-ui/core";
 
 import Paper from "@material-ui/core/Paper";
@@ -10,6 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
+
+import investigationoverviewvalidate from "../../Validator/InvestigetionOverviewValidation";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -41,13 +43,48 @@ const InvestigationOverview = () => {
     "Other",
   ];
   const notificationSent = ["Manage", "SuperVisor"];
+  const [error, setError] = useState({});
+
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
+  const [form, setForm] = React.useState({
+    unitconstructionmanagername: "",
+    unitconstructionmanagercontact: "",
+    unithsespecialistname: "",
+    unithsespecialistcontactno: "",
+    actualseveritylevel: "",
+    potentialseveritylevel: "",
+    activity: "",
+    jobtask: "",
+    equipmentinvoked: "",
+    weather: "",
+    weather2: "",
+    temprature:"",
+    lighting: "",
+    windspeed: "",
+    fluidamount: "",
+    fluidtype: "",
+    ael: "",
+    pel:"",
+    pel:"",
+    pel:"",
+  });
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+  };
+
+  const handleNext = () => {
+    console.log('sagar',form);
+    const { error, isValid } = investigationoverviewvalidate(form);
+    setError(error);
+    console.log(error, isValid);
+    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
+    // console.log(nextPath)
+
+    
   };
 
   const radioDecide = ["Yes", "No"];
@@ -81,7 +118,13 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Unit Construction Manager Name"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unitconstructionmanagername: e.target.value,
+                        });
+                      }}
+                 /> {error && error.unitconstructionmanagername && <p>{error.unitconstructionmanagername}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit Construction Manager Contact </p> */}
@@ -90,7 +133,13 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Unit Construction Manager Contact"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unitconstructionmanagercontact: e.target.value,
+                        });
+                      }}
+                />{error && error.unitconstructionmanagercontact && <p>{error.unitconstructionmanagercontact}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Name </p> */}
@@ -99,7 +148,13 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Unit HSE Specialist Name"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unithsespecialistname: e.target.value,
+                        });
+                      }}
+                />{error && error.unithsespecialistname && <p>{error.unithsespecialistname}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Contact </p> */}
@@ -108,7 +163,13 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Unit HSE Specialist Contact"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          unithsespecialistcontactno: e.target.value,
+                        });
+                      }}
+                />{error && error.unithsespecialistcontactno && <p>{error.unithsespecialistcontactno}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Actual Severity Level </p> */}
@@ -117,7 +178,13 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Actual Severity Level "
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          actualseveritylevel: e.target.value,
+                        });
+                      }}
+                />{error && error.actualseveritylevel && <p>{error.actualseveritylevel}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Potential Severity Level </p> */}
@@ -126,7 +193,13 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Potential Severity Level"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          potentialseveritylevel: e.target.value,
+                        });
+                      }}
+                />{error && error.potentialseveritylevel && <p>{error.potentialseveritylevel}</p>}
               </Grid>
               <Grid item md={12}>
                 <Typography variant="h6">Event</Typography>
@@ -134,34 +207,56 @@ const InvestigationOverview = () => {
 
               <Grid item md={6}>
                 {/* <p>*Activity</p> */}
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl
+                  required
+                  variant="outlined"
+                  className={classes.formControl}
+                >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Activity</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
                     label="Activity"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          activity: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.activity && <p>{error.activity}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
-                {/* <p>*Job Task</p> */}
-                <FormControl variant="outlined" className={classes.formControl}>
+                {/* <p>Job Task</p> */}
+                <FormControl
+                  required
+                  variant="outlined"
+                  className={classes.formControl}
+                >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Job Task</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
                     label="Job Task"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          jobtask: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.jobtask && <p>{error.jobtask}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -171,22 +266,39 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Eqipment Invoked"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          equipmentinvoked: e.target.value,
+                        });
+                      }}
+                />{error && error.equipmentinvoked && <p>{error.equipmentinvoked}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p> Weather</p> */}
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl
+                  required
+                  variant="outlined"
+                  className={classes.formControl}
+                >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Weather</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
                     label="Weather"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          weather: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.weather && <p>{error.weather}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -198,6 +310,12 @@ const InvestigationOverview = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Weather2"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          weather: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -212,22 +330,39 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Temprature"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          temprature: e.target.value,
+                        });
+                      }}
+                />{error && error.temprature && <p>{error.temprature}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Lighting</p> */}
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl
+                  required
+                  variant="outlined"
+                  className={classes.formControl}
+                >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Lighting</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
                     label="Lighting"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          lighting: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.lighting && <p>{error.lighting}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -237,95 +372,143 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Wind Speed"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          windspeed: e.target.value,
+                        });
+                      }}
+                />{error && error.windspeed && <p>{error.windspeed}</p>}
               </Grid>
               <Grid item md={12}>
                 {/* <h4>Spills</h4> */}
                 <Typography variant="h6">Spills</Typography>
               </Grid>
-              <Grid item lg={6}>
+              <Grid item md={6}>
                 {/* <p>Fluid Amount</p> */}
                 <TextField
                   id="title"
                   variant="outlined"
                   label="Fluid Amount"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          fluidamount: e.target.value,
+                        });
+                      }}
+                />{error && error.fluidamount && <p>{error.fluidamount}</p>}
               </Grid>
-              <Grid item lg={6}>
+              <Grid item md={6}>
                 {/* <p>Fluid Type</p> */}
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl
+                  required
+                  variant="outlined"
+                  className={classes.formControl}
+                >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Fluid Type</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
                     label="Fluid Type"
+                    onChange={(e) => {
+                        setForm({
+                          ...form,
+                          fluidtype: e.target.value,
+                        });
+                      }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
+                  {error && error.fluidtype && <p>{error.fluidtype}</p>}
                 </FormControl>
               </Grid>
-              <Grid item lg={6} md={12} sm={12}>
+              <Grid item md={6}>
                 {/* <p>AEL </p> */}
                 <TextField
                   id="title"
                   variant="outlined"
                   label="AEL"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          ael: e.target.value,
+                        });
+                      }}
+                />{error && error.ael && <p>{error.ael}</p>}
               </Grid>
-              <Grid item lg={6} md={12} sm={12}>
+              <Grid item md={6}>
                 {/* <p>PEL </p> */}
                 <TextField
                   id="title"
                   variant="outlined"
                   label="PEL"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          pel: e.target.value,
+                        });
+                      }}
+                />{error && error.pel && <p>{error.pel}</p>}
               </Grid>
-              <Grid item lg={6} md={12} sm={12}>
+              <Grid item md={6}>
                 {/* <p>PEL </p> */}
                 <TextField
                   id="title"
                   variant="outlined"
                   label="PEL"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          pel: e.target.value,
+                        });
+                      }}
+                />{error && error.pel && <p>{error.pel}</p>}
               </Grid>
-              <Grid item lg={6} md={12} sm={12}>
+              <Grid item md={6}>
                 {/* <p>PEL </p> */}
                 <TextField
                   id="title"
                   variant="outlined"
                   label="PEL"
                   className={classes.fullWidth}
-                />
+                  onChange={(e) => {
+                        setForm({
+                          ...form,
+                          pel: e.target.value,
+                        });
+                      }}
+                />{error && error.pel && <p>{error.pel}</p>}
               </Grid>
               <Grid item md={12}>
                 <Button
                   variant="contained"
                   color="primary"
-                  href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
+                  // href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
                 >
                   Previous
                 </Button>
                 <Button
                   variant="contained"
                   color="primary"
-                  href="http://localhost:3000/app/incident-management/registration/investigation/worker-details/"
+                  onClick={()=>handleNext()}
+                  // href="http://localhost:3000/app/incident-management/registration/investigation/worker-details/"
                 >
                   Next
                 </Button>
               </Grid>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Investigation overview"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>

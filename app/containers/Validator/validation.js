@@ -26,19 +26,15 @@ function validate(data){
         isValid = true
     }
 
-    // if (validator.isEmpty(data.incidentdata)){
-    //     error.incidentdata = "this filed is empty"
-    //     isValid = false
-    // }else{
-    //     isValid = true
-    // }
+    if (data.incidentdate === null){
+        error.incidentdate = "this filed is empty"
+        isValid = false
+    }
 
-    // if (validator.isEmpty(data.incidenttime)){
-    //     error.incidenttime = "this filed is empty"
-    //     isValid = false
-    // }else{
-    //     isValid = true
-    // }
+    if (data.incidenttime === null){
+        error.incidenttime = "this filed is empty"
+        isValid = false
+    }
 
     if (validator.isEmpty(data.title)){
         error.title = "this filed is empty"

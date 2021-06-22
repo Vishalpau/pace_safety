@@ -64,7 +64,7 @@ function LeftSidebarLayout(props) {
         <section
           className={classNames(classes.mainWrap, classes.sidebarLayout)}
         >
-          {titleException.indexOf(history.location.pathname) < 0 && (
+          {/* {titleException.indexOf(history.location.pathname) < 0 && (
             <div className={classes.pageTitle}>
               <Typography
                 component="h4"
@@ -77,13 +77,13 @@ function LeftSidebarLayout(props) {
               >
                 {place}
               </Typography>
-              <BreadCrumb
+             <BreadCrumb
                 separator=" / "
                 theme={bgPosition === "header" ? "dark" : "light"}
                 location={history.location}
-              />
+              /> 
             </div>
-          )}
+          )} */}
           {!pageLoaded && (
             <img
               src="/images/spinner.gif"

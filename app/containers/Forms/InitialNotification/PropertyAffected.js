@@ -27,7 +27,6 @@ import api from "../../../utils/axios";
 import { useHistory } from "react-router";
 import PropertyValidate from "../../Validator/PropertyValidation";
 
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -53,20 +52,29 @@ const useStyles = makeStyles((theme) => ({
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const PropertyAffected = () => {
 
-  const [form, setForm] = useState([
-    {
-      propertyType: "",
-      propertyOtherType: "",
-      damageDetails: "",
-      fkIncidentId: 3,
-      createdBy:2
-    },
-  ]);
+  // const [form, setForm] = useState({
+  //   detailpropertyaffected:"",
+  //   affectedproperty:{
+  //                     propertytype:"",
+  //                     describe:"",
+  //                     damage:""
+  //                   },
+  //   describeactiontaken:""
+  // })
+  const classes = useStyles();
+  const history = useHistory();
 
+  const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
+  const [propertyTypeValue, setPropertyTypeValue] = useState([]);
+  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
+  
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -90,17 +98,18 @@ const PropertyAffected = () => {
   const radioDecide = ["Yes", "No"];
   const radioDecideNew = ["Yes", "No", "N/A"];
 
-  const [error,setError] = useState({})
+  const [error, setError] = useState({});
 
-
-  const classes = useStyles();
-  const history = useHistory();
-
-  const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
-  const [propertyTypeValue, setPropertyTypeValue] = useState([]);
-  const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("No");
   
-  
+  const [form, setForm] = useState([
+    {
+      propertyType: "",
+      propertyOtherType: "",
+      damageDetails: "",
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      createdBy:2
+    },
+  ]);
   const addNewPropertyDetails = () => {
     // alert('ram')
     setForm([
@@ -109,7 +118,7 @@ const PropertyAffected = () => {
         propertyType: "",
         propertyOtherType: "",
         damageDetails: "",
-        fkIncidentId: 3,
+        fkIncidentId: localStorage.getItem("fkincidentId"),
         createdBy:2
       },
     ]);
@@ -118,40 +127,70 @@ const PropertyAffected = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp)
+    console.log(temp);
     setForm(temp);
   };
   const handlePropertyOtherType = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp)
+    console.log(temp);
     setForm(temp);
   };
   const handleDamageDetails = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp)
+    console.log(temp);
     setForm(temp);
   };
   const handleNext = async () => {
-    console.log(form)
-    const { error, isValid } = PropertyValidate(form)
-    setError(error)
-    console.log(error,isValid)
+    console.log(form);
+    const { error, isValid } = PropertyValidate(form);
+    setError(error);
+    console.log(error, isValid);
+    const nextPath =  JSON.parse(localStorage.getItem("nextPath"))
 
     // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
     if (detailsOfPropertyAffect === "Yes") {
       console.log(form);
+      let status=0
       for(var i = 0; i < form.length;i++){
-        const res = await api.post("api/v1/incidents/3/properties/",form[i]);
+        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/properties/`,form[i]);
         console.log(res)
-        history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
+        status= res.status
+        
       }
-     
+      if(status === 201){
+       
+          if(nextPath.equipmentAffect === 'Yes'){
+            history.push('/app/incident-management/registration/initial-notification/eqiptment-affected/')
+          }
+          else{
+            if(nextPath.environmentAffect === 'Yes'){
+              history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+            }
+            else{
+              history.push('/app/incident-management/registration/summary/summary/')
+            }
+          }
+        
+        
+        // history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
+      }
+      
     } else {
-      history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
+      if(nextPath.equipmentAffect === 'Yes'){
+        history.push('/app/incident-management/registration/initial-notification/eqiptment-affected/')
+      }
+      else{
+        if(nextPath.environmentAffect === 'Yes'){
+          history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+        }
+        else{
+          history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
+        }
+      }
     }
   };
 
@@ -176,9 +215,9 @@ const PropertyAffected = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
+            {/* <Box marginBottom={5}>
               <FormHeader selectedHeader={"Initial notification"} />
-            </Box>
+            </Box> */}
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Details of proprties Affected?
@@ -251,7 +290,9 @@ const PropertyAffected = () => {
                                 : null}
                             </Select>
                           </FormControl>
-                          {error && error[`propertyType${[index]}`] && <p>{error[`propertyType${[index]}`]}</p>}
+                          {error && error[`propertyType${[index]}`] && (
+                            <p>{error[`propertyType${[index]}`]}</p>
+                          )}
                         </Grid>
 
                         <Grid item md={6}>
@@ -261,9 +302,17 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="if others, describe"
                             className={classes.formControl}
-                            onChange={(e) => handlePropertyOtherType(e,index, 'propertyOtherType')}
+                            onChange={(e) =>
+                              handlePropertyOtherType(
+                                e,
+                                index,
+                                "propertyOtherType"
+                              )
+                            }
                           />
-                          {error && error[`propertyOtherType${[index]}`] && <p>{error[`propertyOtherType${[index]}`]}</p>}
+                          {error && error[`propertyOtherType${[index]}`] && (
+                            <p>{error[`propertyOtherType${[index]}`]}</p>
+                          )}
                         </Grid>
 
                         {/* <Grid item md={6}>
@@ -272,9 +321,9 @@ const PropertyAffected = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="dep-label">if others, describe</InputLabel>
-                    <Select 
-                    labelId="dep-label" 
-                    id="dep" 
+                    <Select
+                    labelId="dep-label"
+                    id="dep"
                     label="Department"
                     onChange={(e) => {
                       setForm({
@@ -298,12 +347,14 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
-                            onChange={(e) => handleDamageDetails(e,index, 'damageDetails')}
-                            
+                            onChange={(e) =>
+                              handleDamageDetails(e, index, "damageDetails")
+                            }
                           />
-                          {error && error[`damageDetails${[index]}`] && <p>{error[`damageDetails${[index]}`]}</p>}
+                          {error && error[`damageDetails${[index]}`] && (
+                            <p>{error[`damageDetails${[index]}`]}</p>
+                          )}
                         </Grid>
-                        
                       </>
                     ))}
                     <Grid item md={12}>
@@ -325,23 +376,21 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        describeactiontaken: e.target.value,
-                      });
-                    }}
+                    // onChange={(e) => {
+                    //   setForm({
+                    //     ...form,
+                    //     describeactiontaken: e.target.value,
+                    //   });
+                    // }}
                   />
-                  {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> }
+                  {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
                 </Grid>
                 <Grid item md={6}>
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => {
-                      window.history.back();
-                    }}
-                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                    className={classes.button}
+                    href="/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
                     Previouse
                   </Button>
@@ -349,6 +398,7 @@ const PropertyAffected = () => {
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
+                    className={classes.button}
                     // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
                     Next

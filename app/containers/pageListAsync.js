@@ -329,6 +329,10 @@ export const BlankPage = loadable(() =>
   import('./Pages/BlankPage'), {
   fallback: <Loading />,
 });
+export const Incident = loadable(() =>
+  import('./Pages/Incident'), {
+    fallback: <Loading />,
+})
 export const Pricing = loadable(() =>
   import('./Pages/Pricing'), {
   fallback: <Loading />,
@@ -448,6 +452,11 @@ export const EqiptmentAffected = loadable(() =>
 
 export const IncidentDetails = loadable(() =>
   import('./Forms/InitialNotification/IncidentDetails'), {
+  fallback: <Loading />,
+});
+
+export const UpdateIncidentDetails = loadable(() =>
+  import('./Forms/InitialNotification/UpdateIncidentDetails'), {
   fallback: <Loading />,
 });
 
