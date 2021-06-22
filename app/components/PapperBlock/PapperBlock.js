@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import styles from './papperStyle-jss';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { withStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import styles from "./papperStyle-jss";
 
 function PapperBlock(props) {
   const {
@@ -16,15 +16,24 @@ function PapperBlock(props) {
     noMargin,
     colorMode,
     overflowX,
-    icon
+    icon,
   } = props;
   return (
     <div>
-      <Paper className={classNames(classes.root, noMargin && classes.noMargin, colorMode && classes.colorMode)} elevation={0}>
+      <Paper
+        className={classNames(
+          classes.root,
+          noMargin && classes.noMargin,
+          colorMode && classes.colorMode
+        )}
+        elevation={0}
+      >
         <div className={classes.descBlock}>
-          <span className={classes.iconTitle}>
-            <i className={icon} />
-          </span>
+          {icon && (
+            <span className={classes.iconTitle}>
+              <i className={icon} />
+            </span>
+          )}
           <div className={classes.titleText}>
             <Typography variant="h6" component="h2" className={classes.title}>
               {title}
@@ -34,7 +43,13 @@ function PapperBlock(props) {
             </Typography>
           </div>
         </div>
-        <section className={classNames(classes.content, whiteBg && classes.whiteBg, overflowX && classes.overflowX)}>
+        <section
+          className={classNames(
+            classes.content,
+            whiteBg && classes.whiteBg,
+            overflowX && classes.overflowX
+          )}
+        >
           {children}
         </section>
       </Paper>
@@ -45,7 +60,7 @@ function PapperBlock(props) {
 PapperBlock.propTypes = {
   classes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  desc: PropTypes.string.isRequired,
+  desc: PropTypes.string,
   icon: PropTypes.string,
   children: PropTypes.node.isRequired,
   whiteBg: PropTypes.bool,
@@ -59,7 +74,7 @@ PapperBlock.defaultProps = {
   noMargin: false,
   colorMode: false,
   overflowX: false,
-  icon: 'ion-ios-bookmark-outline'
+  // icon: 'ion-ios-bookmark-outline'
 };
 
 export default withStyles(styles)(PapperBlock);

@@ -44,7 +44,7 @@ import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
 
 import IncidentDetails from "../../Forms/InitialNotification/IncidentDetails";
-import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification"
+import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -72,14 +72,11 @@ function ListItemLink(props) {
 }
 
 const Summary = () => {
-
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
 
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(
-      `api/v1/incidents/${fkid}/`
-    );
+    const allIncidents = await api.get(`api/v1/incidents/${fkid}/`);
     await setIncidents(allIncidents.data.data.results);
   };
 
@@ -95,21 +92,21 @@ const Summary = () => {
     setSelectedDate(date);
   };
 
-
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
   useEffect(() => {
     fetchIncidentData();
-   
   }, []);
 
   return (
-    <div>
+    <PapperBlock
+      title={`Incident Number: ${incidents["incidentNumber"]}`}
+      icon="ion-md-list-box"
+    >
       {/* header */}
-
-      <Box paddingBottom={1}>
+      <Box paddingBottom={2}>
         <div className={Styles.incidents}>
           <div className={Styles.item}>
             <Button
@@ -122,7 +119,9 @@ const Summary = () => {
             >
               Initial Notification
             </Button>
-            <Typography variant="caption">Done</Typography>
+            <Typography variant="caption" display="block">
+              Done
+            </Typography>
           </div>
 
           <div className={Styles.item}>
@@ -132,11 +131,12 @@ const Summary = () => {
               size="small"
               endIcon={<CheckCircle />}
               className={classes.statusButton}
-              
             >
               Investigation
             </Button>
-            <Typography variant="caption">Done</Typography>
+            <Typography variant="caption" display="block">
+              Done
+            </Typography>
           </div>
 
           <div className={Styles.item}>
@@ -149,7 +149,9 @@ const Summary = () => {
             >
               Evidence
             </Button>
-            <Typography variant="caption">Pending</Typography>
+            <Typography variant="caption" display="block">
+              Pending
+            </Typography>
           </div>
           <div className={Styles.item}>
             <Button
@@ -157,10 +159,13 @@ const Summary = () => {
               variant="outlined"
               size="small"
               className={classes.statusButton}
+              endIcon={<AccessTime />}
             >
               Root Cause & Analysis
             </Button>
-            <Typography variant="caption">Pending</Typography>
+            <Typography variant="caption" display="block">
+              Pending
+            </Typography>
           </div>
           <div className={Styles.item}>
             <Button
@@ -172,7 +177,9 @@ const Summary = () => {
             >
               Lessions Learnt
             </Button>
-            <Typography variant="caption">Pending</Typography>
+            <Typography variant="caption" display="block">
+              Pending
+            </Typography>
           </div>
         </div>
       </Box>
@@ -180,114 +187,115 @@ const Summary = () => {
 
       {/* summary and part */}
       {initialNotification == false ? (
-       
-        <div>
-          <IncidentDetailsSummary />
-          <Grid container spacing={5}>
-  
-            {/* sidebar */}
-            <Grid item xs={12} md={3}>
-              <Paper>
-                <List
-                  dense
-                  subheader={
-                    <ListSubheader component="div">Actions</ListSubheader>
-                  }
-                >
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Edit />
-                    </ListItemIcon>
-                    <a
-                      href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-                        "fkincidentId"
-                      )}`}
-                    >
-                      <ListItemText primary="Modify Notification" />
-                    </a>
-                  </ListItem>
+        <>
+          <Box marginTop={5}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={9}>
+                <IncidentDetailsSummary />
+              </Grid>
+              {/* sidebar */}
+              <Grid item xs={12} md={3}>
+                <Paper>
+                  <List
+                    dense
+                    subheader={
+                      <ListSubheader component="div">Actions</ListSubheader>
+                    }
+                  >
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                      <a
+                        href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                          "fkincidentId"
+                        )}`}
+                      >
+                        <ListItemText primary="Modify Notification" />
+                      </a>
+                    </ListItem>
 
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Edit />
-                    </ListItemIcon>
-                    <a href="/app/incident-management/registration/investigation/initial-details/">
-                      <ListItemText primary="Modify Investigation" />
-                    </a>
-                  </ListItem>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                      <a href="/app/incident-management/registration/investigation/initial-details/">
+                        <ListItemText primary="Modify Investigation" />
+                      </a>
+                    </ListItem>
 
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Add />
-                    </ListItemIcon>
-                    <a href="/app/incident-management/registration/evidence/evidence/">
-                      <ListItemText primary="Add Evidence" />
-                    </a>
-                  </ListItem>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
+                      <a href="/app/incident-management/registration/evidence/evidence/">
+                        <ListItemText primary="Add Evidence" />
+                      </a>
+                    </ListItem>
 
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Add />
-                    </ListItemIcon>
-                    <a href="/app/incident-management/registration/root-cause-analysis/details/">
-                      <ListItemText primary="Perform RCA" />
-                    </a>
-                  </ListItem>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
+                      <a href="/app/incident-management/registration/root-cause-analysis/details/">
+                        <ListItemText primary="Perform RCA" />
+                      </a>
+                    </ListItem>
 
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Add />
-                    </ListItemIcon>
-                    <a href="/app/incident-management/registration/lession-learned/lession-learned/">
-                      <ListItemText primary="Lessions Learnt" />
-                    </a>
-                  </ListItem>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
+                      <a href="/app/incident-management/registration/lession-learned/lession-learned/">
+                        <ListItemText primary="Lessions Learnt" />
+                      </a>
+                    </ListItem>
 
-                  <ListItem button divider>
-                    <ListItemIcon>
-                      <Close />
-                    </ListItemIcon>
-                    <ListItemText primary="Close Out" />
-                  </ListItem>
+                    <ListItem button divider>
+                      <ListItemIcon>
+                        <Close />
+                      </ListItemIcon>
+                      <ListItemText primary="Close Out" />
+                    </ListItem>
 
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Comment />
-                    </ListItemIcon>
-                    <ListItemText primary="Comments" />
-                  </ListItem>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Comment />
+                      </ListItemIcon>
+                      <ListItemText primary="Comments" />
+                    </ListItem>
 
-                  <ListItem button>
-                    <ListItemIcon>
-                      <History />
-                    </ListItemIcon>
-                    <ListItemText primary="Activity History" />
-                  </ListItem>
-                </List>
-                <Divider />
-                <List dense>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Print />
-                    </ListItemIcon>
-                    <ListItemText primary="Print" />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemIcon>
-                      <Share />
-                    </ListItemIcon>
-                    <ListItemText primary="Share" />
-                  </ListItem>
-                </List>
-              </Paper>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <History />
+                      </ListItemIcon>
+                      <ListItemText primary="Activity History" />
+                    </ListItem>
+                  </List>
+                  <Divider />
+                  <List dense>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Print />
+                      </ListItemIcon>
+                      <ListItemText primary="Print" />
+                    </ListItem>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Share />
+                      </ListItemIcon>
+                      <ListItemText primary="Share" />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
-      
+          </Box>
+        </>
       ) : (
         <IncidentDetailsSummary />
       )}
-    </div>
+    </PapperBlock>
   );
 };
 
