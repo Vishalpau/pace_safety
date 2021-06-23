@@ -102,7 +102,7 @@ const Summary = () => {
 
   useEffect(() => {
     fetchIncidentData();
-   
+
   }, []);
 
   return (
@@ -118,7 +118,7 @@ const Summary = () => {
               size="small"
               endIcon={<CheckCircle />}
               className={classes.statusButton}
-              onClick={(e) => handelInitialNotification(e)}
+            // onClick={(e) => handelInitialNotification(e)}
             >
               Initial Notification
             </Button>
@@ -132,7 +132,7 @@ const Summary = () => {
               size="small"
               endIcon={<CheckCircle />}
               className={classes.statusButton}
-              
+
             >
               Investigation
             </Button>
@@ -180,11 +180,11 @@ const Summary = () => {
 
       {/* summary and part */}
       {initialNotification == false ? (
-       
+
         <div>
           <IncidentDetailsSummary />
           <Grid container spacing={5}>
-  
+
             {/* sidebar */}
             <Grid item xs={12} md={3}>
               <Paper>
@@ -283,7 +283,7 @@ const Summary = () => {
             </Grid>
           </Grid>
         </div>
-      
+
       ) : (
         <IncidentDetailsSummary />
       )}

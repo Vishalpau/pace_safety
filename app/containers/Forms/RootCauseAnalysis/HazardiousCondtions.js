@@ -198,10 +198,10 @@ const HazardiousCondition = () => {
               </Grid>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                 selectedItem={"Hazardious conditions"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>

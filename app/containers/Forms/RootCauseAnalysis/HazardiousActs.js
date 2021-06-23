@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Grid, Container } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
@@ -15,6 +15,8 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -24,83 +26,102 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
+
 
 const HazardiousActs = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  const [commonForm, setCommonForm] = useState({
+    rcaNumber: "string",
+    rcaType: "string",
+    status: "Active",
+    createdBy: 0,
+    updatedBy: 0,
+    fkIncidentId: parseInt(localStorage.getItem("fkincidentId"))
+  })
 
-  // const radioDecide = ['Yes', 'No'];
+  // const [supervision, setSuperVision] = useState({
+  //   rcaSubType: "",
+  //   rcaRemark: [],
+  // })
+
+  const [error, setError] = useState({})
+
+  const [form, setForm] = useState({
+    supervision: { rcaSubType: "", rcaRemark: [] },
+    workpackage: { rcaSubType: "", rcaRemark: [] },
+    equipmentMachinery: { rcaSubType: "", rcaRemark: [] },
+    behaviourIssue: { rcaSubType: "", rcaRemark: [] },
+    safetyIssues: { rcaSubType: "", rcaRemark: [] },
+    ergonimics: { rcaSubType: "", rcaRemark: [] },
+    procedures: { rcaSubType: "", rcaRemark: [] },
+    others: { rcaSubType: "", remarkType: "" }
+  }
+  )
+
+
+  const selectValues = ["Option1", "Option2", "...."];
+
   const classes = useStyles();
+
+  const handelNext = (e) => {
+    let supervisionData = { ...commonForm, ...form.supervision }
+    // console.log(supervisionData)
+    const { error, isValid } = HazardiousActsValidation(form);
+    setError(error);
+  }
+
   return (
     <Container>
       <Paper>
         <Box padding={3} bgcolor="background.paper">
-          <Box marginBottom={5}>
-            <FormHeader selectedHeader={"Root cause analysis"} />
-          </Box>
           <Typography variant="h6" gutterBottom>
             Immediate Causes - Hazardous acts
           </Typography>
           <Box marginBottom={4} borderBottom={1}>
             <Typography variant="body2" gutterBottom>
-              Incident number: nnnnnnnnnn
+              Incident number: {localStorage.getItem("fkincidentId")}
             </Typography>
           </Box>
           <Grid container spacing={3}>
+
             <Grid container item md={9} spacing={3}>
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Supervision</FormLabel>
+
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox name="option1" />}
-                      label="option1"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="option2" />}
-                      label="option2"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="antoine" />}
-                      label="..."
-                    />
+
+                    {selectValues.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        // onChange={(e) => setSuperVision({ rcaSubType: "Supervision", rcaRemark: [...supervision.rcaRemark, value] })}
+                        onChange={async (e) => setForm({
+                          ...form, supervision: {
+                            rcaSubType: "Supervision",
+                            rcaRemark: await [...form.supervision.rcaRemark, value]
+                          }
+                        })}
+                      />
+                    ))}
+
                   </FormGroup>
                 </FormControl>
+                {error && error.supervision && (
+                  <p>{error.supervision}</p>
+                )}
               </Grid>
+
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend"> Work package </FormLabel>
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox name="option1" />}
-                      label="option1"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="option2" />}
-                      label="option2"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="antoine" />}
-                      label="..."
-                    />
+                    {selectValues.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                      />
+                    ))}
                   </FormGroup>
                 </FormControl>
               </Grid>
@@ -112,97 +133,72 @@ const HazardiousActs = () => {
                     Equiptment & Machinery
                   </FormLabel>
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox name="option1" />}
-                      label="option1"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="option2" />}
-                      label="option2"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="antoine" />}
-                      label="..."
-                    />
+                    {selectValues.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                      />
+                    ))}
                   </FormGroup>
                 </FormControl>
               </Grid>
+
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend"> Behaviour Issue</FormLabel>
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox name="option1" />}
-                      label="option1"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="option2" />}
-                      label="option2"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="antoine" />}
-                      label="..."
-                    />
+                    {selectValues.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                      />
+                    ))}
                   </FormGroup>
                 </FormControl>
               </Grid>
+
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend"> Saftey Items</FormLabel>
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox name="option1" />}
-                      label="option1"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="option2" />}
-                      label="option2"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="antoine" />}
-                      label="..."
-                    />
+                    {selectValues.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                      />
+                    ))}
                   </FormGroup>
                 </FormControl>
               </Grid>
+
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Ergohomics</FormLabel>
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox name="option1" />}
-                      label="option1"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="option2" />}
-                      label="option2"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="antoine" />}
-                      label="..."
-                    />
+                    {selectValues.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                      />
+                    ))}
                   </FormGroup>
                 </FormControl>
               </Grid>
+
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Procedure</FormLabel>
                   <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox name="option1" />}
-                      label="option1"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="option2" />}
-                      label="option2"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="antoine" />}
-                      label="..."
-                    />
+                    {selectValues.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                      />
+                    ))}
                   </FormGroup>
                 </FormControl>
               </Grid>
+
               <Grid item md={12}>
                 {/* <p>others</p> */}
                 <TextField
@@ -214,6 +210,7 @@ const HazardiousActs = () => {
                   rows={3}
                 />
               </Grid>
+
               <Grid item md={12}>
                 <Box marginTop={4}>
                   <Button
@@ -228,7 +225,8 @@ const HazardiousActs = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+                    // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>
@@ -236,10 +234,10 @@ const HazardiousActs = () => {
               </Grid>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                 selectedItem={"Hazardious acts"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>

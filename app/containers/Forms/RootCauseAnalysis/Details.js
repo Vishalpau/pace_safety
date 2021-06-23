@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from "react";
 import { Container, Grid, Button } from "@material-ui/core";
-import React, { Fragment } from "react";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -23,6 +23,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import api from "../../../utils/axios";
+import DetailValidation from "../../Validator/RCAValidation/DetailsValidation"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -41,6 +44,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Details = () => {
+
+  const [incidents, setIncidents] = useState([]);
+
+  const [form, setForm] = useState({
+    evidenceSupport: "",
+    evidenceContradiction: "",
+    evidenceNotSupport: "",
+    rcaRecommended: "string",
+    status: "Active",
+    createdBy: 0,
+    updatedBy: 0,
+    fkIncidentId: parseInt(localStorage.getItem("fkincidentId"))
+  })
+
+  const [error, setError] = useState({})
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -55,20 +74,43 @@ const Details = () => {
     new Date("2014-08-18T21:11:54")
   );
 
+  const fetchIncidentData = async () => {
+    const allIncidents = await api.get(
+      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    console.log(allIncidents)
+    await setIncidents(allIncidents.data.data.results);
+  };
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+
+  const handelNext = async (e) => {
+    console.log(form)
+    const { error, isValid } = DetailValidation(form);
+    setError(error);
+    if (Object.keys(error).length == 0) {
+      const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/`, form);
+      if (res.status == 201) {
+        console.log("request done")
+        console.log(res)
+      }
+    }
+
+  }
+
+  useEffect(() => {
+    fetchIncidentData();
+  }, []);
+
   return (
     <Container>
       <Paper>
         <Box padding={3} bgcolor="background.paper">
-          <Box marginBottom={5}>
-            <FormHeader selectedHeader={"Root cause analysis"} />
-          </Box>
-
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               RCA details
@@ -76,41 +118,62 @@ const Details = () => {
           </Box>
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
+
               <Grid item md={12}>
                 <Box>
                   <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
+                    Incident number: {localStorage.getItem("fkincidentId")}
                   </Typography>
                 </Box>
               </Grid>
+
               <Grid item md={12}>
                 {/* <h6> Incident Description </h6> */}
                 <Typography variant="h6" gutterBottom>
-                  Incident Description
-                </Typography>
-                <Typography variant="body">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi
-                  eos autem fugit maiores, doloremque quo in neque iure,
-                  asperiores quasi, aut ipsa magni voluptates corrupti. Rerum
-                  repellendus eum dolore autem.
+                  Incident Description:{incidents.incidentDetails}
                 </Typography>
               </Grid>
+
               <Grid item md={6}>
                 <Typography component="p">Investigation start date</Typography>
-                <p>date formate</p>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DateTimePicker
+                    autoOk
+                    inputVariant="outlined"
+                    className={classes.formControl}
+                    ampm={false}
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    // label="Incident Date and Time"
+                    disabled
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
+
               <Grid item md={6}>
                 <Typography component="p">Investigation end date</Typography>
-                <p>date formate</p>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <DateTimePicker
+                    autoOk
+                    inputVariant="outlined"
+                    className={classes.formControl}
+                    ampm={false}
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    // label="Incident Date and Time"
+                    disabled
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
+
               <Grid item md={6}>
                 <Typography component="p">Level of Investigation</Typography>
                 <p> Value selected to be displayed</p>
               </Grid>
+
               <Grid item md={6}>
                 {/* <h6> RCA recommended</h6> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">
                     RCA recommended
                   </InputLabel>
@@ -125,25 +188,32 @@ const Details = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item md={6}>
-                <p>Equiptment type</p>
 
-                <FormControl>
-                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                  {/* <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select> */}
-                </FormControl>
-                <p>if other describe</p>
-                <TextField id="filled-basic" />
-              </Grid>
+
+
               <Grid item md={6}>
-                <p>Where there any release</p>
+                <p>Evidence collected supports the incident event took place</p>
+
+                <FormControl component="fieldset">
+                  <RadioGroup>
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                        onChange={(e) => setForm({ ...form, evidenceSupport: e.target.value })}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+                {error && error.evidenceSupport && (
+                  <p>{error.evidenceSupport}</p>
+                )}
+                <p><small>If no further investigation required i.e Part analysis,oil samples,data recordings from equipment computers etc.</small></p>
+              </Grid>
+
+              <Grid item md={6}>
+                <p>Contradictions between evidence and the description of incident</p>
 
                 <FormControl component="fieldset">
                   <RadioGroup aria-label="gender">
@@ -152,13 +222,18 @@ const Details = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        onChange={(e) => setForm({ ...form, evidenceContradiction: e.target.value })}
                       />
                     ))}
                   </RadioGroup>
                 </FormControl>
+                {error && error.evidenceContradiction && (
+                  <p>{error.evidenceContradiction}</p>
+                )}
               </Grid>
+
               <Grid item md={6}>
-                <p>Where there any release</p>
+                <p>Evidence does not supports the incident event as described</p>
 
                 <FormControl component="fieldset">
                   <RadioGroup aria-label="gender">
@@ -167,26 +242,16 @@ const Details = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        onChange={(e) => setForm({ ...form, evidenceNotSupport: e.target.value })}
                       />
                     ))}
                   </RadioGroup>
                 </FormControl>
+                {error && error.evidenceNotSupport && (
+                  <p>{error.evidenceNotSupport}</p>
+                )}
               </Grid>
-              <Grid item md={6}>
-                <p>Where there any release</p>
 
-                <FormControl component="fieldset">
-                  <RadioGroup aria-label="gender">
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
               <Grid>
                 <p>
                   Then investigation team to develop credble assumption and/or
@@ -195,22 +260,24 @@ const Details = () => {
                   on some assumption.
                 </p>
               </Grid>
+
               <Grid item md={12}>
-              
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
-                  >
-                    Next
-                  </Button>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(e) => handelNext(e)}
+                // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+                >
+                  Next
+                </Button>
               </Grid>
             </Grid>
             <Grid item md={3}>
-              <FormSideBar
+              {/* <FormSideBar
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                 selectedItem={"Details"}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Box>
