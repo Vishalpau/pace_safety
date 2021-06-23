@@ -312,7 +312,7 @@ const PeoplesAffected = () => {
                   <RadioGroup
                     aria-label="personAffect"
                     name="personAffect"
-                    value={personAffect}
+                    defaultValue={personAffect || incidentsListData.isPersonDetailsAvailable}
                     onChange={(e) => {
                       setPersonAffect(e.target.value);
                     }}

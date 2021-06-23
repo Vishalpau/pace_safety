@@ -78,6 +78,7 @@ const ReportingAndNotification = () => {
   const [files, setFile] = React.useState([]);
   const [error, setError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [reportsListData, setReportListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const {id} = useParams();
 
@@ -142,21 +143,19 @@ const ReportingAndNotification = () => {
     setFileNames(acceptedFiles.map((file) => file.name));
   };
 
-  const UpdateIncidentDetails = async (e) => {
-    
-  };
+  
   
   const handelNext = async (e) => {
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
     console.log("1", temp);
-    temp['supervisorByName']=form.supervisorname
+    temp['supervisorByName']=form.supervisorname || incidentsListData.supervisorByName
     temp['supervisorById']=1
     temp['incidentReportedOn']=moment(form.reportingdate).toISOString() 
-    temp['incidentReportedByName']=form.reportedby
+    temp['incidentReportedByName']=form.reportedby || incidentsListData.incidentReportedByName
     temp['incidentReportedById']=1
-    temp['reasonLateReporting']=form.latereporting
-    temp['notificationComments']=form.additionaldetails
+    temp['reasonLateReporting']=form.latereporting || incidentsListData.reasonLateReporting
+    temp['notificationComments']=form.additionaldetails || incidentsListData.notificationComments
     temp['updatedAt']=moment(new Date()).toISOString()
     temp['updatedBy']="0"
     console.log(temp)
@@ -165,13 +164,13 @@ const ReportingAndNotification = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
       temp
     );
-    if(id !== undefined){
-      const res = await api.put(`/api/v1/incidents/${fkid}/reports/`, {
-        reportTo: form.reportedto,
-        reportingNote: form.latereporting,
-        createdBy: 0,
-        fkIncidentId: fkid,
-      });
+    if(id === undefined){
+      // const res = await api.put(`/api/v1/incidents/${fkid}/reports/`, {
+      //   reportTo: form.reportedto,
+      //   reportingNote: form.latereporting,
+      //   createdBy: 0,
+      //   fkIncidentId: fkid,
+      // });
     }else{
       alert('jhh')
     const { error, isValid } = ReportingValidation(form);
@@ -198,8 +197,17 @@ const ReportingAndNotification = () => {
     await setIsLoading(true);
   }
 
+  const fetchReportsDataList = async () => {
+    const res = await api.get( `/api/v1/incidents/${id}/reports`);
+    
+    const result = res.data.data.results;
+    await setReportListData(result);
+    await setIsLoading(true);
+  }
+
   useEffect(()=>{
     fetchIncidentsData();
+    fetchReportsDataList();
   },[])
 
   const classes = useStyles();
@@ -219,11 +227,12 @@ const ReportingAndNotification = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
+                {reportsListData.length >0? reportsListData.map((report,key)=> <>
                 <Grid item lg={12} md={6} sm={6}>
                   <p>Reportable to</p>
 
                   <FormControl component="fieldset">
-                    <RadioGroup aria-label="gender">
+                    <RadioGroup aria-label="gender"  defaultValue={report.reportTo}>
                       {reportedTo.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -241,7 +250,7 @@ const ReportingAndNotification = () => {
                   </FormControl>
                   {error && error.reportedto && <p>{error.reportedto}</p>}
                 </Grid>
-
+                </>):null}
                 <Grid item lg={12} md={6} sm={6}>
                   <p>Notification to be sent</p>
 
@@ -266,9 +275,10 @@ const ReportingAndNotification = () => {
                     <p>{error.isnotificationsent}</p>
                   )}
                 </Grid>
+               
                 <Grid item lg={12} justify="flex-start">
                   {/* <p>Initial Evidences</p> */}
-
+                   
                   <Box marginTop={3} marginBottom={4}>
                     <Typography variant="h6" gutterBottom>
                       Initial Evidences
@@ -292,6 +302,7 @@ const ReportingAndNotification = () => {
                     id="supervisor-name"
                     variant="outlined"
                     label="Supervisor name"
+                    defaultValue={incidentsListData.supervisorByName}
                     className={classes.formControl}
                     onChange={(e) => {
                       setForm({
@@ -408,6 +419,7 @@ const ReportingAndNotification = () => {
                     label="Resaon for reporting later than 4 hours"
                     multiline
                     rows="4"
+                    defaultValue={incidentsListData.reasonLateReporting}
                     className={classes.fullWidth}
                     onChange={(e) => {
                       setForm({

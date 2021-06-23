@@ -558,10 +558,11 @@ const IncidentDetails = () => {
                       helperText={
                         error.incidentdate ? error.incidentdate : null
                       }
-                      value={
-                        form.incidentdate === null
-                          ? clearedDate
-                          : form.incidentdate || incidentsListData.incidentOccuredOn
+                      defaultValue={
+                        form.incidentdate|| incidentsListData.incidentOccuredOn
+                        // form.incidentdate === null
+                        //   ? clearedDate
+                        //   : form.incidentdate ||  moment().format("YYYY/MM/DD")
                       }
                       onChange={(e) => {
                         setForm({

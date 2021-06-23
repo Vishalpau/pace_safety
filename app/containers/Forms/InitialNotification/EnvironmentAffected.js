@@ -131,7 +131,7 @@ const EnvironmentAffected = () => {
 
     if(environmentListData.length >0){
       history.push(
-        `/app/incident-management/registration/initial-notification/reporting-and-notification/:id`
+        `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );
     }else{
     const { error, isValid } = EnvironmentValidate(form);
