@@ -15,7 +15,7 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { useHistory } from "react-router";
+import { useHistory,useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -73,6 +73,7 @@ const EqiptmentAffected = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const history = useHistory();
+  const { id } = useParams();
   const [error, setError] = useState({});
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
@@ -90,65 +91,21 @@ const EqiptmentAffected = () => {
         fkIncidentId: localStorage.getItem("fkincidentId")
     },
   ]);
-  const handleEquipmentDamageAvailable = async (e) => {
-    const formData = {
-      id: incidentsListData.id,
-      fkCompanyId: incidentsListData.fkCompanyId,
-      fkProjectId: incidentsListData.fkProjectId,
-      fkPhaseId: incidentsListData.fkPhaseId,
-      fkUnitId: incidentsListData.fkUnitId,
-      incidentNumber: incidentsListData.incidentNumber,
-      incidentTitle: incidentsListData.incidentTitle,
-      incidentDetails: incidentsListData.incidentDetails,
-      immediateActionsTaken: incidentsListData.immediateActionsTaken,
-      incidentOccuredOn: incidentsListData.incidentOccuredOn,
-      isPersonAffected: incidentsListData.isPersonAffected,
-      isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
-      personAffectedComments: incidentsListData.personAffectedComments,
-      isPropertyDamaged: incidentsListData.isPropertyDamaged,
-      isPropertyDamagedAvailable: incidentsListData.isPropertyDamagedAvailable,
-      propertyDamagedComments: incidentsListData.propertyDamagedComments,
-      isEquipmentDamaged: incidentsListData.isEquipmentDamaged,
-      isEquipmentDamagedAvailable:detailsOfEquipmentAffect || incidentsListData.isEquipmentDamagedAvailable,
-      equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
-      isEnviromentalImpacted: incidentsListData.isEnviromentalImpacted,
-      enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
-      supervisorByName: incidentsListData.supervisorByName,
-      supervisorById: incidentsListData.supervisorById,
-      incidentReportedOn: incidentsListData.incidentReportedOn,
-      incidentReportedByName: incidentsListData.incidentReportedByName,
-      incidentReportedById: incidentsListData.incidentReportedById,
-      reasonLateReporting: incidentsListData.reasonLateReporting,
-      notificationComments: incidentsListData.notificationComments,
-      reviewedBy: incidentsListData.reviewedBy,
-      reviewDate: incidentsListData.reviewDate,
-      closedBy: incidentsListData.closedBy,
-      closeDate: incidentsListData.closeDate,
-      status: incidentsListData.status,
-      incidentLocation: incidentsListData.incidentLocation,
-      latitude: incidentsListData.latitude,
-      longitude: incidentsListData.longitude,
-      createdAt: incidentsListData.createdAt,
-      updatedAt: moment(new Date()).toISOString(),
-      assignTo: incidentsListData.assignTo,
-      createdBy: incidentsListData.createdBy,
-      updatedBy: "0",
-      source: "Web",
-      vendor: "string",
-      vendorReferenceId: "string",
-      contractor: incidentsListData.contractor,
-      subContractor: incidentsListData.subContractor,
-    };
+  const handleUpdateEquipment = async(e,key,fieldname,equipmentId)=>{
+   
+    const temp = equipmentListdata;
+    console.log(temp)
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    temp[key]["updatedBy"] = 0;
+    console.log(temp[key])
 
-    const res = await api.put(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}`,
-      formData
-    );
-    console.log(res.data.data.results.isPersonDetailsAvailable);
-  };
+    const res = await api.put(`api/v1/incidents/${id}/equipments/${equipmentId}/`, temp[key]);
+    console.log(res);
+  }
 
   const addNewEquipmentDetails = () => {
-    // alert('ram')
+    
     setForm([
       ...form,
       {
@@ -170,11 +127,19 @@ const EqiptmentAffected = () => {
 
   const handleNext = async () => {
     console.log(form);
-    const { error, isValid } = EquipmentValidate(form);
-    setError(error);
+    
     const nextPath =  JSON.parse(localStorage.getItem("nextPath"))
-    console.log(error, isValid);
+  if(equipmentListdata.length > 0){
+    if(nextPath.environmentAffect === 'Yes'){
+      history.push(`/app/incident-management/registration/initial-notification/environment-affected/${id}`)
+    }
+    else{
+      history.push(`/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`)
+    }
+  }else{
     if (detailsOfEquipmentAffect === "Yes") {
+      const { error, isValid } = EquipmentValidate(form);
+    setError(error);
       console.log(form)
       var status = 0
       
@@ -195,54 +160,13 @@ const EqiptmentAffected = () => {
         
       }
     } else {
-      const formData = {
-        id: incidentsListData.id,
-        fkCompanyId: incidentsListData.fkCompanyId,
-        fkProjectId: incidentsListData.fkProjectId,
-        fkPhaseId: incidentsListData.fkPhaseId,
-        fkUnitId: incidentsListData.fkUnitId,
-        incidentNumber: incidentsListData.incidentNumber,
-        incidentTitle: incidentsListData.incidentTitle,
-        incidentDetails: incidentsListData.incidentDetails,
-        immediateActionsTaken: incidentsListData.immediateActionsTaken,
-        incidentOccuredOn: incidentsListData.incidentOccuredOn,
-        isPersonAffected: incidentsListData.isPersonAffected,
-        isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
-        personAffectedComments: incidentsListData.personAffectedComments,
-        isPropertyDamaged: incidentsListData.isPropertyDamaged,
-        isPropertyDamagedAvailable: incidentsListData.isPropertyDamagedAvailable,
-        propertyDamagedComments: incidentsListData.propertyDamagedComments,
-        isEquipmentDamaged: incidentsListData.isEquipmentDamaged,
-        isEquipmentDamagedAvailable:detailsOfEquipmentAffect,
-        equipmentDamagedComments: equipmentDamagedComments|| incidentsListData.equipmentDamagedComments,
-        isEnviromentalImpacted: incidentsListData.isEnviromentalImpacted,
-        enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
-        supervisorByName: incidentsListData.supervisorByName,
-        supervisorById: incidentsListData.supervisorById,
-        incidentReportedOn: incidentsListData.incidentReportedOn,
-        incidentReportedByName: incidentsListData.incidentReportedByName,
-        incidentReportedById: incidentsListData.incidentReportedById,
-        reasonLateReporting: incidentsListData.reasonLateReporting,
-        notificationComments: incidentsListData.notificationComments,
-        reviewedBy: incidentsListData.reviewedBy,
-        reviewDate: incidentsListData.reviewDate,
-        closedBy: incidentsListData.closedBy,
-        closeDate: incidentsListData.closeDate,
-        status: incidentsListData.status,
-        incidentLocation: incidentsListData.incidentLocation,
-        latitude: incidentsListData.latitude,
-        longitude: incidentsListData.longitude,
-        createdAt: incidentsListData.createdAt,
-        updatedAt: moment(new Date()).toISOString(),
-        assignTo: incidentsListData.assignTo,
-        createdBy: incidentsListData.createdBy,
-        updatedBy: "0",
-        source: "Web",
-        vendor: "string",
-        vendorReferenceId: "string",
-        contractor: incidentsListData.contractor,
-        subContractor: incidentsListData.subContractor,
-      };
+      const temp = incidentsListData;
+      temp["equipmentDamagedComments"] = equipmentDamagedComments;
+      temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect;
+      temp["updatedAt"] = moment(new Date()).toISOString();
+      const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
       if(nextPath.environmentAffect === 'Yes'){
         history.push('/app/incident-management/registration/initial-notification/environment-affected/')
       }
@@ -250,10 +174,12 @@ const EqiptmentAffected = () => {
         history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
       }
     }
+  }
   };
 
   const fetchEquipmentListData = async()=>{
-    const res = await api.get("api/v1/incidents/69/equipments/");
+    
+    const res = await api.get(`api/v1/incidents/${id}/equipments/`);
     const result = res.data.data.results;
     setEquipmentListData(result);
   }
@@ -282,6 +208,7 @@ const EqiptmentAffected = () => {
     fetchEquipmentAffectedValue();
     fetchEquipmentTypeValue();
     fetchEquipmentListData();
+    fetchIncidentsData();
   }, []);
   return (
     <div>
@@ -324,7 +251,7 @@ const EqiptmentAffected = () => {
                 </Grid>
                 {detailsOfEquipmentAffect === "Yes" ? (
                   <>
-                    {equipmentListdata.length >0? equipmentListdata.map((equipment)=> <>
+                    {equipmentListdata.length >0? equipmentListdata.map((equipment,key)=> <>
                         <Grid item md={6}>
                           {/* <p>Equiptment type</p> */}
                           <FormControl
@@ -339,9 +266,9 @@ const EqiptmentAffected = () => {
                               id="eq-type"
                               label="Equiptment type"
                               defaultValue={equipment.equipmentType}
-                              // onChange={(e) =>
-                              //   handleForm(e, key, "equipmentType")
-                              // }
+                              onChange={(e) =>
+                                handleUpdateEquipment(e, key, "equipmentType",equipment.id)
+                              }
                             >
                               {equipmentTypeValue.length !== 0
                                 ? equipmentTypeValue.map(
@@ -370,9 +297,9 @@ const EqiptmentAffected = () => {
                             label="If others, describe"
                             className={classes.formControl}
                             defaultValue={equipment.equipmentOtherType}
-                            // onChange={(e) =>
-                            //   handleForm(e, key, "equipmentOtherType")
-                            // }
+                            onChange={(e) =>
+                              handleUpdateEquipment(e, key, "equipmentOtherType",equipment.id)
+                            }
                           />
                           {/* {error && error[`equipmentOtherType${[key]}`] && (
                             <p>{error[`equipmentOtherType${[key]}`]}</p>
@@ -389,9 +316,9 @@ const EqiptmentAffected = () => {
                             label="Describe the damage"
                             className={classes.fullWidth}
                             defaultValue={equipment.equipmentDeatils}
-                            // onChange={(e) =>
-                            //   handleForm(e, key, "equipmentDeatils")
-                            // }
+                            onChange={(e) =>
+                              handleUpdateEquipment(e, key, "equipmentDeatils",equipment.id)
+                            }
                           />
                           {/* {error && error[`equipmentDeatils${[key]}`] && (
                             <p>{error[`equipmentDeatils${[key]}`]}</p>

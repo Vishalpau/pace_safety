@@ -32,7 +32,7 @@ import { MaterialDropZone } from "dan-components";
 import { DropzoneDialogBase } from "material-ui-dropzone";
 import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -79,6 +79,7 @@ const ReportingAndNotification = () => {
   const [error, setError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
+  const {id} = useParams();
 
   const [form, setForm] = useState({
     reportedto: "",
@@ -142,82 +143,51 @@ const ReportingAndNotification = () => {
   };
 
   const UpdateIncidentDetails = async (e) => {
-    const temp = incidentsListData;
-    console.log("1", temp);
-    const formData = {
-      id: incidentsListData.id,
-      fkCompanyId: incidentsListData.fkCompanyId,
-      fkProjectId: incidentsListData.fkProjectId,
-      fkPhaseId: incidentsListData.fkPhaseId,
-      fkUnitId: incidentsListData.fkUnitId,
-      incidentNumber: incidentsListData.incidentNumber,
-      incidentTitle: incidentsListData.incidentTitle,
-      incidentDetails: incidentsListData.incidentDetails,
-      immediateActionsTaken: incidentsListData.immediateActionsTaken,
-      incidentOccuredOn: incidentsListData.incidentOccuredOn,
-      isPersonAffected: incidentsListData.isPersonAffected,
-      isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
-      personAffectedComments: incidentsListData.personAffectedComments,
-      isPropertyDamaged: incidentsListData.isPropertyDamaged,
-      isPropertyDamagedAvailable: detailsOfPropertyAffect,
-      propertyDamagedComments: incidentsListData.propertyDamagedComments,
-      isEquipmentDamaged: incidentsListData.isEquipmentDamaged,
-      isEquipmentDamagedAvailable:
-        incidentsListData.isEquipmentDamagedAvailable,
-      equipmentDamagedComments: incidentsListData.equipmentDamagedComments,
-      isEnviromentalImpacted: incidentsListData.isEnviromentalImpacted,
-      enviromentalImpactComments: incidentsListData.enviromentalImpactComments,
-      supervisorByName: form.supervisorname,
-      supervisorById: form.othername,
-      incidentReportedOn: form.reportingdate,
-      incidentReportedByName: form.reportedby,
-      incidentReportedById: form.others,
-      reasonLateReporting: form.latereporting,
-      notificationComments: form.additionaldetails,
-      reviewedBy: incidentsListData.reviewedBy,
-      reviewDate: incidentsListData.reviewDate,
-      closedBy: incidentsListData.closedBy,
-      closeDate: incidentsListData.closeDate,
-      status: incidentsListData.status,
-      incidentLocation: incidentsListData.incidentLocation,
-      latitude: incidentsListData.latitude,
-      longitude: incidentsListData.longitude,
-      createdAt: incidentsListData.createdAt,
-      updatedAt: moment(new Date()).toISOString(),
-      assignTo: incidentsListData.assignTo,
-      createdBy: incidentsListData.createdBy,
-      updatedBy: "0",
-      source: "Web",
-      vendor: "",
-      vendorReferenceId: "",
-      contractor: incidentsListData.contractor,
-      subContractor: incidentsListData.subContractor,
-    };
-
-    const res = await api.put(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}`,
-      formData
-    );
-    console.log(res.data.data.results.isPersonDetailsAvailable);
+    
   };
   
   const handelNext = async (e) => {
-    console.log(form);
-    const { error, isValid } = ReportingValidation(form);
     const fkid = localStorage.getItem("fkincidentId");
-    UpdateIncidentDetails();
+    const temp = incidentsListData;
+    console.log("1", temp);
+    temp['supervisorByName']=form.supervisorname
+    temp['supervisorById']=1
+    temp['incidentReportedOn']=moment(form.reportingdate).toISOString() 
+    temp['incidentReportedByName']=form.reportedby
+    temp['incidentReportedById']=1
+    temp['reasonLateReporting']=form.latereporting
+    temp['notificationComments']=form.additionaldetails
+    temp['updatedAt']=moment(new Date()).toISOString()
+    temp['updatedBy']="0"
+    console.log(temp)
+
+    const res = await api.put(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+      temp
+    );
+    if(id !== undefined){
+      const res = await api.put(`/api/v1/incidents/${fkid}/reports/`, {
+        reportTo: form.reportedto,
+        reportingNote: form.latereporting,
+        createdBy: 0,
+        fkIncidentId: fkid,
+      });
+    }else{
+      alert('jhh')
+    const { error, isValid } = ReportingValidation(form);
     setError(error);
     console.log(error, isValid);
+    
     const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
       reportTo: form.reportedto,
-      reportingNote: form.fileupload,
+      reportingNote: form.latereporting,
       createdBy: 0,
       fkIncidentId: fkid,
     });
     if(res.status === 201){
-      // localStorage.removeItem('fkincidentId')
       history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem('fkincidentId')}`)
-    }     
+    }  
+  }   
   };
   const fetchIncidentsData = async () => {
     const res = await api.get(

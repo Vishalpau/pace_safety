@@ -174,10 +174,23 @@ function Application(props) {
         {/* form initialNotification */}
 
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/environment-affected/"
           component={EnvironmentAffected}
         />
+
         <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/environment-affected/:id"
+          component={EnvironmentAffected}
+        />
+        <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/eqiptment-affected/:id"
+          component={EqiptmentAffected}
+        />
+        <Route
+        exact
           path="/app/incident-management/registration/initial-notification/eqiptment-affected/"
           component={EqiptmentAffected}
         />
@@ -203,18 +216,22 @@ function Application(props) {
           component={PeoplesAfftected}
         />
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/property-affected/"
           component={PropertyAffected}
         />
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/property-affected/:id"
           component={PropertyAffected}
         />
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/reporting-and-notification/"
           component={ReportingAndNotification}
         />
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/reporting-and-notification/:id"
           component={ReportingAndNotification}
         />
