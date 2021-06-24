@@ -340,7 +340,13 @@ function Application(props) {
         {/* from leassionlearned */}
         {/* Done, topbar and sidebar pending  */}
         <Route
+        exact
           path="/app/incident-management/registration/lession-learned/lession-learned/"
+          component={LessionLearned}
+        />
+        <Route
+        exact
+          path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
         />
 
