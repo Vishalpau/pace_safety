@@ -19,6 +19,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormLabel from "@material-ui/core/FormLabel";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -192,7 +193,10 @@ const Details = () => {
 
 
               <Grid item md={6}>
-                <p>Evidence collected supports the incident event took place</p>
+                <FormLabel component="legend" error={error.evidenceSupport}>
+                  <p>Evidence collected supports the incident event took place</p>
+                </FormLabel>
+
 
                 <FormControl component="fieldset">
                   <RadioGroup>
@@ -207,13 +211,15 @@ const Details = () => {
                   </RadioGroup>
                 </FormControl>
                 {error && error.evidenceSupport && (
-                  <p>{error.evidenceSupport}</p>
+                  <p><small style={{ color: "red" }}>{error.evidenceSupport}</small></p>
                 )}
                 <p><small>If no further investigation required i.e Part analysis,oil samples,data recordings from equipment computers etc.</small></p>
               </Grid>
 
               <Grid item md={6}>
-                <p>Contradictions between evidence and the description of incident</p>
+                <FormLabel component="legend" error={error.evidenceContradiction}>
+                  <p>Contradictions between evidence and the description of incident</p>
+                </FormLabel>
 
                 <FormControl component="fieldset">
                   <RadioGroup aria-label="gender">
@@ -228,12 +234,14 @@ const Details = () => {
                   </RadioGroup>
                 </FormControl>
                 {error && error.evidenceContradiction && (
-                  <p>{error.evidenceContradiction}</p>
+                  <p><small style={{ color: "red" }}>{error.evidenceContradiction}</small></p>
                 )}
               </Grid>
 
               <Grid item md={6}>
-                <p>Evidence does not supports the incident event as described</p>
+                <FormLabel component="legend" error={error.evidenceContradiction}>
+                  <p>Evidence does not supports the incident event as described</p>
+                </FormLabel>
 
                 <FormControl component="fieldset">
                   <RadioGroup aria-label="gender">
@@ -248,7 +256,7 @@ const Details = () => {
                   </RadioGroup>
                 </FormControl>
                 {error && error.evidenceNotSupport && (
-                  <p>{error.evidenceNotSupport}</p>
+                  <p><small style={{ color: "red" }}>{error.evidenceNotSupport}</small></p>
                 )}
               </Grid>
 

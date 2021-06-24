@@ -21,6 +21,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
+import FormLabel from "@material-ui/core/FormLabel";
+
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
@@ -162,9 +164,7 @@ const RootCauseAnalysis = () => {
               <Grid item md={6}>
                 {/* <h6> RCA recommended</h6> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">
-                    RCA recommended
-                  </InputLabel>
+                  <FormLabel component="legend">RCA recommended</FormLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -234,27 +234,35 @@ const RootCauseAnalysis = () => {
                   id="filled-basic"
                   variant="outlined"
                   label="Details"
+                  error={error.causeOfIncident}
+                  helperText={error ? error.causeOfIncident : ""}
                   onChange={(e) => setForm({ ...form, causeOfIncident: e.target.value })}
                 />
-                {error && error.causeOfIncident && (
+                {/* {error && error.causeOfIncident && (
                   <p>{error.causeOfIncident}</p>
-                )}
+                )} */}
               </Grid>
+
               <Grid item lg={12} md={6} sm={6}>
                 <p>Corrective actions</p>
                 <TextField
                   id="filled-basic"
                   variant="outlined"
                   label="Details"
+                  error={error.correctiveAction}
+                  helperText={error ? error.correctiveAction : ""}
                   onChange={(e) => setForm({ ...form, correctiveAction: e.target.value })}
                 />
-                {error && error.correctiveAction && (
+                {/* {error && error.correctiveAction && (
                   <p>{error.correctiveAction}</p>
-                )}
+                )} */}
               </Grid>
+
               <Grid item md={12}>
                 <RadioGroup>
-                  <p>Would Corrective actions prevent simailar incidents in future?</p>
+                  <FormLabel component="legend" error={error.wouldItPreventIncident}>
+                    Would Corrective actions prevent simailar incidents in future?
+                  </FormLabel>
 
                   {radioDecide.map((value) => (
                     <FormControlLabel
@@ -266,11 +274,14 @@ const RootCauseAnalysis = () => {
                   ))}
                 </RadioGroup>
                 {error && error.wouldItPreventIncident && (
-                  <p>{error.wouldItPreventIncident}</p>
+                  <p><small style={{ color: "red" }}>{error.wouldItPreventIncident}</small></p>
                 )}
               </Grid>
+
               <Grid item md={12}>
-                <p>if No, please recommended correct solution ?</p>
+                <FormLabel component="legend" error={error.recommendSolution}>
+                  if No, please recommended correct solution ?
+                </FormLabel>
                 <TextField
                   className={classes.formControl}
                   id="filled-basic"
@@ -281,9 +292,10 @@ const RootCauseAnalysis = () => {
                   onChange={(e) => setForm({ ...form, recommendSolution: e.target.value })}
                 />
                 {error && error.recommendSolution && (
-                  <p>{error.recommendSolution}</p>
+                  <p><small style={{ color: "red" }}>{error.recommendSolution}</small></p>
                 )}
               </Grid>
+
               <Grid item md={12}>
                 <Button
                   variant="contained"

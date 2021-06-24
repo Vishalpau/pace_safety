@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -20,10 +20,14 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import Checkbox from "@material-ui/core/Checkbox";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import BasicCauseValidation from "../../Validator/RCAValidation/BasicCauseValidation"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -35,16 +39,131 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BasicCause = () => {
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  const [commonForm, setCommonForm] = useState({
+    rcaNumber: "string",
+    rcaType: "string",
+    status: "Active",
+    createdBy: 0,
+    updatedBy: 0,
+    fkIncidentId: parseInt(localStorage.getItem("fkincidentId"))
+  })
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+
+  const [error, setError] = useState({})
+
+  const [form, setForm] = useState({
+    personal: { rcaSubType: "", rcaRemark: [] },
+    wellnessFactors: { rcaSubType: "", rcaRemark: [] },
+    otherHumanFactor: { rcaSubType: "", remarkType: "" },
+    leadership: { rcaSubType: "", rcaRemark: [] },
+    processes: { rcaSubType: "", rcaRemark: [] },
+    otherJobFactors: { rcaSubType: "", remarkType: "" }
+  }
+  )
+
+  const handelPersonal = (e, value) => {
+    if (e.target.checked == false) {
+      let newData = form.personal.rcaRemark.filter(item => item !== value)
+      setForm({
+        ...form, personal: {
+          rcaSubType: "personal",
+          rcaRemark: newData
+        }
+      })
+    } else {
+      setForm({
+        ...form, personal: {
+          rcaSubType: "personal",
+          rcaRemark: [...form.personal.rcaRemark, value]
+        }
+      })
+    }
+  }
+
+  const handelWellnessFactors = (e, value) => {
+    if (e.target.checked == false) {
+      let newData = form.wellnessFactors.rcaRemark.filter(item => item !== value)
+      setForm({
+        ...form, wellnessFactors: {
+          rcaSubType: "wellnessFactors",
+          rcaRemark: newData
+        }
+      })
+    } else {
+      setForm({
+        ...form, wellnessFactors: {
+          rcaSubType: "wellnessFactors",
+          rcaRemark: [...form.wellnessFactors.rcaRemark, value]
+        }
+      })
+    }
+  }
+
+  const handelOtherHumanFactors = (e) => {
+    setForm({
+      ...form, otherHumanFactor: {
+        rcaSubType: "others human factors",
+        remarkType: e.target.value
+      }
+    })
+  }
+
+  const handelLeadership = (e, value) => {
+    if (e.target.checked == false) {
+      let newData = form.leadership.rcaRemark.filter(item => item !== value)
+      setForm({
+        ...form, leadership: {
+          rcaSubType: "leadership",
+          rcaRemark: newData
+        }
+      })
+    } else {
+      setForm({
+        ...form, leadership: {
+          rcaSubType: "leadership",
+          rcaRemark: [...form.leadership.rcaRemark, value]
+        }
+      })
+    }
+  }
+
+  const handelProcesses = (e, value) => {
+    if (e.target.checked == false) {
+      let newData = form.processes.rcaRemark.filter(item => item !== value)
+      setForm({
+        ...form, processes: {
+          rcaSubType: "processes",
+          rcaRemark: newData
+        }
+      })
+    } else {
+      setForm({
+        ...form, processes: {
+          rcaSubType: "processes",
+          rcaRemark: [...form.processes.rcaRemark, value]
+        }
+      })
+    }
+  }
+
+  const handelOtherJobFactors = (e) => {
+    setForm({
+      ...form, otherJobFactors: {
+        rcaSubType: "others job factors",
+        remarkType: e.target.value
+      }
+    })
+  }
+
+  const selectValues = ["Option1", "Option2", "...."];
+
   const classes = useStyles();
+
+  const handelNext = (e) => {
+    console.log(form)
+    const { error, isValid } = BasicCauseValidation(form);
+    setError(error);
+  }
 
   return (
     <div>
@@ -57,12 +176,14 @@ const BasicCause = () => {
                 Basic Cause
               </Typography>
             </Box>
+
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
+
                 <Grid item md={4}>
                   <Box>
                     <Typography variant="body2" gutterBottom>
-                      Incident number: nnnnnnnnnn
+                      Incident number:  {localStorage.getItem("fkincidentId")}
                     </Typography>
                   </Box>
                 </Grid>
@@ -84,25 +205,41 @@ const BasicCause = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  <Typography variant="subtitle1">Personal</Typography>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend" error={error.personal}>Personal</FormLabel>
+                    <FormGroup>
+
+                      {selectValues.map((value) => (
+                        <FormControlLabel
+                          control={<Checkbox name={value} />}
+                          label={value}
+                          onChange={async (e) => handelPersonal(e, value)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                  {error && error.personal && (
+                    <p><small style={{ color: "red" }}>{error.personal}</small></p>
+                  )}
                 </Grid>
 
                 <Grid item md={6}>
-                  <Typography variant="subtitle1">Welness Factor</Typography>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend" error={error.wellnessFactors}>Wellness factors</FormLabel>
+                    <FormGroup>
+
+                      {selectValues.map((value) => (
+                        <FormControlLabel
+                          control={<Checkbox name={value} />}
+                          label={value}
+                          onChange={async (e) => handelWellnessFactors(e, value)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                  {error && error.wellnessFactors && (
+                    <p><small style={{ color: "red" }}>{error.wellnessFactors}</small></p>
+                  )}
                 </Grid>
 
                 <Grid item md={12}>
@@ -112,8 +249,14 @@ const BasicCause = () => {
                     multiline
                     rows={4}
                     label="Other Human Factors"
+                    error={error.otherHumanFactor}
+                    helperText={error ? error.otherHumanFactor : ""}
                     className={classes.formControl}
+                    onChange={async (e) => handelOtherHumanFactors(e)}
                   />
+                  {/* {error && error.otherHumanFactor && (
+                    <p>{error.otherHumanFactor}</p>
+                  )} */}
                 </Grid>
 
                 <Grid item md={12}>
@@ -124,39 +267,63 @@ const BasicCause = () => {
                   </Box>
                 </Grid>
 
-                <Grid item md={6}>
-                  <Typography variant="subtitle1">Leadership</Typography>
-
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </Grid>
 
                 <Grid item md={6}>
-                  <Typography variant="subtitle1">Process</Typography>
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend" error={error.leadership}>Leadership</FormLabel>
+                    <FormGroup>
 
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                      {selectValues.map((value) => (
+                        <FormControlLabel
+                          control={<Checkbox name={value} />}
+                          label={value}
+                          onChange={async (e) => handelLeadership(e, value)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                  {error && error.leadership && (
+                    <p><small style={{ color: "red" }}>{error.leadership}</small></p>
+                  )}
                 </Grid>
+
+
+
+                <Grid item md={6}>
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend" error={error.processes}>Processes</FormLabel>
+                    <FormGroup>
+
+                      {selectValues.map((value) => (
+                        <FormControlLabel
+                          control={<Checkbox name={value} />}
+                          label={value}
+                          onChange={async (e) => handelProcesses(e, value)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                  {error && error.processes && (
+                    <p><small style={{ color: "red" }}>{error.processes}</small></p>
+                  )}
+                </Grid>
+
 
                 <Grid item md={12}>
                   <TextField
                     id="filled-basic"
                     variant="outlined"
                     multiline
+                    error={error.otherJobFactors}
+                    helperText={error ? error.otherJobFactors : ""}
                     rows={3}
                     label="Other job factors"
                     className={classes.formControl}
+                    onChange={async (e) => handelOtherJobFactors(e)}
                   />
+                  {/* {error && error.otherJobFactors && (
+                    <p>{error.otherJobFactors}</p>
+                  )} */}
                 </Grid>
 
                 <Grid item md={6}>
@@ -164,7 +331,7 @@ const BasicCause = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+                  // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
                   >
                     Previous
                   </Button>
@@ -172,7 +339,8 @@ const BasicCause = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+                    // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>

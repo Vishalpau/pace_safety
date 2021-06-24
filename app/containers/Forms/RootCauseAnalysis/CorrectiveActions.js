@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -24,11 +24,14 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import FormLabel from "@material-ui/core/FormLabel";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 // import Typography from "../../UiElements/Typography";
+import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -48,20 +51,65 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CorrectiveAction = () => {
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+  const [commonForm, setCommonForm] = useState({
+    rcaNumber: "string",
+    rcaType: "string",
+    status: "Active",
+    createdBy: 0,
+    updatedBy: 0,
+    fkIncidentId: parseInt(localStorage.getItem("fkincidentId"))
+  })
+
+
+  const [error, setError] = useState({})
+
+  const [form, setForm] = useState({
+    managementControl: { rcaSubType: "", rcaRemark: [] },
+    regionSupport: { rcaSubType: "", remarkType: "" }
+  }
+  )
+
+  const handelManagementControl = (e, value) => {
+    if (e.target.checked == false) {
+      let newData = form.managementControl.rcaRemark.filter(item => item !== value)
+      setForm({
+        ...form, managementControl: {
+          rcaSubType: "managementControl",
+          rcaRemark: newData
+        }
+      })
+    } else {
+      setForm({
+        ...form, managementControl: {
+          rcaSubType: "managementControl",
+          rcaRemark: [...form.managementControl.rcaRemark, value]
+        }
+      })
+    }
+  }
+
+  const handelRegionSupport = (e) => {
+    setForm({
+      ...form, regionSupport: {
+        rcaSubType: "Details the region to support above",
+        remarkType: e.target.value
+      }
+    })
+  }
+
   const checkBox = [
     "Inadequate System",
     "Inadequate standards",
     "Inadequate compilance and standards",
   ];
+
+  const handelNext = (e) => {
+    console.log(form)
+    const { error, isValid } = CorrectiveActionValidation(form);
+    setError(error);
+  }
+
 
   const classes = useStyles();
 
@@ -77,10 +125,11 @@ const CorrectiveAction = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
+
                 <Grid item md={4}>
                   <Box>
                     <Typography variant="body2" gutterBottom>
-                      Incident number: nnnnnnnnnn
+                      Incident number: {localStorage.getItem("fkincidentId")}
                     </Typography>
                   </Box>
                 </Grid>
@@ -93,17 +142,21 @@ const CorrectiveAction = () => {
                   </Box>
                 </Grid>
                 <Grid item md={12}>
-                  <Typography variant="h6">Management Control</Typography>
+                  <FormLabel component="legend" error={error.managementControl}>Management Control</FormLabel>
                 </Grid>
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset" >
                     {checkBox.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        onChange={async (e) => handelManagementControl(e, value)}
                       />
                     ))}
                   </FormControl>
+                  {error && error.managementControl && (
+                    <p><small style={{ color: "red" }}>{error.managementControl}</small></p>
+                  )}
                 </Grid>
 
                 <Grid item md={12}>
@@ -111,10 +164,16 @@ const CorrectiveAction = () => {
                     id="filled-basic"
                     variant="outlined"
                     multiline
+                    error={error.regionSupport}
+                    helperText={error ? error.regionSupport : ""}
                     rows={3}
                     label="Details the region to support above"
                     className={classes.formControl}
+                    onChange={async (e) => handelRegionSupport(e)}
                   />
+                  {/* {error && error.regionSupport && (
+                    <p>{error.regionSupport}</p>
+                  )} */}
                 </Grid>
                 <Grid item md={12}>
                   <Button
@@ -129,7 +188,8 @@ const CorrectiveAction = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+                    // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>
