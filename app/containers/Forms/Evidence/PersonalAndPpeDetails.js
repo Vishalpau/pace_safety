@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState}from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -12,6 +12,7 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
+import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailValidation";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
@@ -30,14 +31,61 @@ const useStyles = makeStyles((theme) => ({
 const PersonalAndPpeDetails = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+  const [error, setError] = useState({});
+  const [form , setForm] = useState({
+    ppeque1 : "PPE worn properly?",
+    ppeans1 : "",
+    ppeque2 : "PPE in good shape?",
+    ppeans2 : "",
+    ppeque3 : "PPE Proper fit?",
+    ppeans3 : "",
+    ppeque4 : "PPE appropriate for task?",
+    ppeans4 : "",
+
+    supervisionque1 : "Employee self supervised",
+    supervisionans1 : "",
+    supervisionque2 : "Supervisor present at site",
+    supervisionans2 : "",
+    supervisionque3 : "Supervisor provided clear detail of work", 
+    supervisionans3 : "",
+    supervisionque4 : "Supervisor provided detail work package",
+    supervisionans4 : "",
+    supervisionque5 : "Did supervisor conducted I-care observation",
+    supervisionans5 : "",
+
+    flagque1 : "Was flag person required for this job",
+    flagans1 : "",
+    flagque2 : "Flag person trained/competent",
+    flagans2 : "",
+    flagque3 : "Was flag person present", 
+    flagans3 : "",
+
+    otherque1 : "Metal on Metal incident",
+    otherans1 : "",
+    otherque2 : "Was person in the line of fire",
+    otherans2 : "",
+
+  })
+  console.log(form.otherans1)
+  const handleNext = () => {
+    console.log('sagar',form);
+    const { error, isValid } = PersonalAndPpeDetailValidate(form);
+    setError(error);
+    console.log(error, isValid);
+    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
+    // console.log(nextPath)
+
+    
+  };
+
   return (
     <div>
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
+            {/* <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
-            </Box>
+            </Box> */}
 
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
@@ -58,8 +106,14 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ppeans1}
                   >
                     <FormLabel component="legend">PPE worn properly?</FormLabel>
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, ppeans1: e.target.value })
+                      }
+                    >
                     {radioDecide.map((value) => (
                       <FormControlLabel
                         value={value}
@@ -67,6 +121,7 @@ const PersonalAndPpeDetails = () => {
                         label={value}
                       />
                     ))}
+                  </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -77,15 +132,21 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error ={error.ppeans2}
                   >
                     <FormLabel component="legend">PPE in good shape?</FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                    onChange={(e) =>
+                        setForm({ ...form, ppeans2: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -94,15 +155,21 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ppeans3}
                   >
                     <FormLabel component="legend">PPE Proper fit?</FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, ppeans3: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -112,17 +179,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ppeans4}
                   >
                     <FormLabel component="legend">
                       PPE appropriate for task?
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, ppeans4: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
@@ -135,17 +208,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.supervisionans1}
                   >
                     <FormLabel component="legend">
                       Employee self supervised
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, supervisionans1: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -155,17 +234,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error={error.supervisionans2}
                   >
                     <FormLabel component="legend">
                       Supervisor present at site
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, supervisionans2: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -175,17 +260,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.supervisionans3}
                   >
                     <FormLabel component="legend">
                       Supervisor provided clear detail of work
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, supervisionans3: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -194,17 +285,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.supervisionans4}
                   >
                     <FormLabel component="legend">
                       Supervisor provided detail work package
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, supervisionans4: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -213,17 +310,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.supervisionans5}
                   >
                     <FormLabel component="legend">
                       Did supervisor conducted I-care observation
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, supervisionans5 : e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
@@ -236,17 +339,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.flagans1}
                   >
                     <FormLabel component="legend">
                       Was flag person required for this job
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, flagans1: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -255,17 +364,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.flagans2}
                   >
                     <FormLabel component="legend">
                       Flag person trained/competent
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, flagans2: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -275,17 +390,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error={error.flagans3}
                   >
                     <FormLabel component="legend">
                       Was flag person present
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, flagans3: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
@@ -299,17 +420,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.otherans1}
                   >
                     <FormLabel component="legend">
                       Metal on Metal incident
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, otherans1: e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -319,17 +446,23 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.otherans2}
                   >
                     <FormLabel component="legend">
                       Was person in the line of fire
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup
+                    onChange={(e) =>
+                        setForm({ ...form, otherans2 : e.target.value })
+                      }>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
@@ -345,17 +478,18 @@ const PersonalAndPpeDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/evidence/additional-details/"
+                    onClick={() => handleNext()}
+                    href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
                   >
                     Next
                   </Button>
                 </Grid>
               </Grid>
               <Grid item md={3}>
-                <FormSideBar
+                {/* <FormSideBar
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Personal and Ppedetails"}
-                />
+                /> */}
               </Grid>
             </Grid>
           </Box>
