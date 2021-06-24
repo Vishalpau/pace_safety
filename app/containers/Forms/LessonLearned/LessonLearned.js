@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -21,6 +21,9 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
+
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -50,6 +53,27 @@ const LessionLearned = () => {
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+  const [error, setError] = useState({});
+  const [form, setForm] = useState({ team:'',teamLearning: "" });
+
+  const fetchLessonLerned = async()=>{
+    const res = await api.get(`api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`)
+  }
+
+  useEffect(()=>{
+
+  })
+  const handleNext = ()=>{
+    console.log(form)
+    const { error, isValid } = LessionLearnedValidator(form);
+    setError(error);
+    console.log(error, isValid);
+    if(isValid){
+      const res = api.post(`api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`)
+    }
+  }
+
+
   return (
     <div>
       <Container>
@@ -163,11 +187,13 @@ const LessionLearned = () => {
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       label="Key learnings"
+                      onChange={(e)=>setForm({...form,team:e.target.value})}
                     >
                       {selectValues.map((selectValues) => (
                         <MenuItem value={selectValues}>{selectValues}</MenuItem>
                       ))}
                     </Select>
+                    {error && error.team && <p>{error.team}</p>}
                   </FormControl>
                 </Grid>
 
@@ -183,7 +209,9 @@ const LessionLearned = () => {
                       variant="outlined"
                       rows="3"
                       multiline
+                      onChange={(e)=>setForm({...form,teamLearning:e.target.value})}
                     />
+                    {error && error.teamLearning && <p>{error.teamLearning}</p>}
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
@@ -191,7 +219,8 @@ const LessionLearned = () => {
                     <Button
                       variant="contained"
                       color="primary"
-                      href="#contained-buttons"
+                      // href="#contained-buttons"
+                      onClick={()=>handleNext()}
                     >
                       Next
                     </Button>

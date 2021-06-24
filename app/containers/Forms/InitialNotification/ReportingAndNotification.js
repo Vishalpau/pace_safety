@@ -74,13 +74,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ReportingAndNotification = () => {
-
   const [files, setFile] = React.useState([]);
   const [error, setError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [reportsListData, setReportListData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false)
-  const {id} = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const { id } = useParams();
 
   const [form, setForm] = useState({
     reportedto: "",
@@ -96,7 +95,7 @@ const ReportingAndNotification = () => {
     additionaldetails: "",
   });
 
-  const history = useHistory()
+  const history = useHistory();
 
   const reportedTo = [
     "Internal Leadership",
@@ -125,7 +124,7 @@ const ReportingAndNotification = () => {
   };
 
   const handelTimeChange = (date) => {
-    console.log(date)
+    console.log(date);
     setSelectedTime(date);
     setForm({
       ...form,
@@ -133,60 +132,76 @@ const ReportingAndNotification = () => {
     });
   };
 
-  
   const handleDrop = (acceptedFiles) => {
-    console.log(acceptedFiles)
+    console.log(acceptedFiles);
     setForm({
       ...form,
       fileupload: acceptedFiles,
     });
     setFileNames(acceptedFiles.map((file) => file.name));
   };
+  const handleUpdateEnvironement = async(e,key,fieldname,reportId)=>{
+   
+    const temp = reportsListData;
+    console.log(temp)
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    temp[key]["updatedBy"] = 0;
+    temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    console.log(temp[key])
 
-  
-  
+    const res = await api.put(`api/v1/incidents/${id}/reports/${reportId}/`, temp[key]);
+    console.log(res);
+  }
+
   const handelNext = async (e) => {
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
     console.log("1", temp);
-    temp['supervisorByName']=form.supervisorname || incidentsListData.supervisorByName
-    temp['supervisorById']=1
-    temp['incidentReportedOn']=moment(form.reportingdate).toISOString() 
-    temp['incidentReportedByName']=form.reportedby || incidentsListData.incidentReportedByName
-    temp['incidentReportedById']=1
-    temp['reasonLateReporting']=form.latereporting || incidentsListData.reasonLateReporting
-    temp['notificationComments']=form.additionaldetails || incidentsListData.notificationComments
-    temp['updatedAt']=moment(new Date()).toISOString()
-    temp['updatedBy']="0"
-    console.log(temp)
+    temp["supervisorByName"] =
+      form.supervisorname || incidentsListData.supervisorByName;
+    temp["supervisorById"] = 1;
+    temp["incidentReportedOn"] = moment(form.reportingdate).toISOString();
+    temp["incidentReportedByName"] =
+      form.reportedby || incidentsListData.incidentReportedByName;
+    temp["incidentReportedById"] = 1;
+    temp["reasonLateReporting"] =
+      form.latereporting || incidentsListData.reasonLateReporting;
+    temp["notificationComments"] =
+      form.additionaldetails || incidentsListData.notificationComments;
+    temp["updatedAt"] = moment(new Date()).toISOString();
+    temp["updatedBy"] = "0";
+    console.log(temp);
 
     const res = await api.put(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
       temp
     );
-    if(id === undefined){
-      // const res = await api.put(`/api/v1/incidents/${fkid}/reports/`, {
-      //   reportTo: form.reportedto,
-      //   reportingNote: form.latereporting,
-      //   createdBy: 0,
-      //   fkIncidentId: fkid,
-      // });
-    }else{
-      alert('jhh')
-    const { error, isValid } = ReportingValidation(form);
-    setError(error);
-    console.log(error, isValid);
-    
-    const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
-      reportTo: form.reportedto,
-      reportingNote: form.latereporting,
-      createdBy: 0,
-      fkIncidentId: fkid,
-    });
-    if(res.status === 201){
-      history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem('fkincidentId')}`)
-    }  
-  }   
+    if (id !== undefined) {
+      history.push(
+        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+          "fkincidentId"
+        )}`
+      );
+    } else {
+      const { error, isValid } = ReportingValidation(form);
+      setError(error);
+      console.log(error, isValid);
+
+      const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
+        reportTo: form.reportedto,
+        reportingNote: form.latereporting,
+        createdBy: 0,
+        fkIncidentId: fkid,
+      });
+      if (res.status === 201) {
+        history.push(
+          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+            "fkincidentId"
+          )}`
+        );
+      }
+    }
   };
   const fetchIncidentsData = async () => {
     const res = await api.get(
@@ -195,20 +210,20 @@ const ReportingAndNotification = () => {
     const result = res.data.data.results;
     await setIncidentsListdata(result);
     await setIsLoading(true);
-  }
+  };
 
   const fetchReportsDataList = async () => {
-    const res = await api.get( `/api/v1/incidents/${id}/reports`);
-    
+    const res = await api.get(`/api/v1/incidents/${id}/reports/`);
+
     const result = res.data.data.results;
     await setReportListData(result);
     await setIsLoading(true);
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchIncidentsData();
     fetchReportsDataList();
-  },[])
+  }, []);
 
   const classes = useStyles();
   return (
@@ -227,30 +242,57 @@ const ReportingAndNotification = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
-                {reportsListData.length >0? reportsListData.map((report,key)=> <>
-                <Grid item lg={12} md={6} sm={6}>
-                  <p>Reportable to</p>
+                {reportsListData.length > 0 ? (
+                  reportsListData.map((report, key) => (
+                    <>
+                      <Grid item lg={12} md={6} sm={6}>
+                        <p>Reportable to</p>
 
-                  <FormControl component="fieldset">
-                    <RadioGroup aria-label="gender"  defaultValue={report.reportTo}>
-                      {reportedTo.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              reportedto: e.target.value,
-                            });
-                          }}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  {error && error.reportedto && <p>{error.reportedto}</p>}
-                </Grid>
-                </>):null}
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            aria-label="gender"
+                            defaultValue={report.reportTo}
+                          >
+                            {reportedTo.map((value) => (
+                              <FormControlLabel
+                                value={value}
+                                control={<Radio />}
+                                label={value}
+                                onChange={(e) => {
+                                  handleUpdateEnvironement(e,key,'reportTo',report.id)
+                                }}
+                              />
+                            ))}
+                          </RadioGroup>
+                        </FormControl>
+                        {error && error.reportedto && <p>{error.reportedto}</p>}
+                      </Grid>
+                    </>
+                  ))
+                ) : (
+                  <Grid item lg={12} md={6} sm={6}>
+                    <p>Reportable to</p>
+
+                    <FormControl component="fieldset">
+                      <RadioGroup aria-label="gender">
+                        {reportedTo.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            control={<Radio />}
+                            label={value}
+                            onChange={(e) => {
+                              setForm({
+                                ...form,
+                                reportedto: e.target.value,
+                              });
+                            }}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    {error && error.reportedto && <p>{error.reportedto}</p>}
+                  </Grid>
+                )}
                 <Grid item lg={12} md={6} sm={6}>
                   <p>Notification to be sent</p>
 
@@ -275,10 +317,10 @@ const ReportingAndNotification = () => {
                     <p>{error.isnotificationsent}</p>
                   )}
                 </Grid>
-               
+
                 <Grid item lg={12} justify="flex-start">
                   {/* <p>Initial Evidences</p> */}
-                   
+
                   <Box marginTop={3} marginBottom={4}>
                     <Typography variant="h6" gutterBottom>
                       Initial Evidences
@@ -313,7 +355,7 @@ const ReportingAndNotification = () => {
                   />
                   {/* {error && error.others && <p>{error.others}</p>} */}
                 </Grid>
-               
+
                 <Grid item md={6}>
                   {/* <p>Others Name</p> */}
                   <TextField

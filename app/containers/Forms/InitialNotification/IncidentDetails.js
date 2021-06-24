@@ -430,6 +430,7 @@ const IncidentDetails = () => {
     // if(!id){
     //   setIsLoading(true)
     // }
+    console.log(hideAffect)
   }, []);
 
   return (
