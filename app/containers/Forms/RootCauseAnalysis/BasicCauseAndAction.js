@@ -89,9 +89,6 @@ const BasicCauseAndAction = () => {
     <Container>
       <Paper>
         <Box padding={3} bgcolor="background.paper">
-          <Box marginBottom={5}>
-            <FormHeader selectedHeader={"Root cause analysis"} />
-          </Box>
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               Actions against Basic Causes
@@ -252,7 +249,7 @@ const BasicCauseAndAction = () => {
               deleteForm={[1,2,3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                 selectedItem={"Basic cause and action"}
-              />
+              /> 
             </Grid>
           </Grid>
         </Box>

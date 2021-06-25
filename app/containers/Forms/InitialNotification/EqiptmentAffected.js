@@ -87,8 +87,8 @@ const EqiptmentAffected = () => {
       equipmentType: "",
       equipmentOtherType: "",
       equipmentDeatils: "",
-      createdBy: 1,     
-        fkIncidentId: localStorage.getItem("fkincidentId")
+      createdBy: 1,
+      fkIncidentId: localStorage.getItem("fkincidentId")
     },
   ]);
   const handleUpdateEquipment = async(e,key,fieldname,equipmentId)=>{
@@ -112,7 +112,7 @@ const EqiptmentAffected = () => {
         equipmentType: "",
         equipmentOtherType: "",
         equipmentDeatils: "",
-        createdBy: 1,     
+        createdBy: 1,
         fkIncidentId: localStorage.getItem("fkincidentId")
       },
     ]);
@@ -127,50 +127,37 @@ const EqiptmentAffected = () => {
 
   const handleNext = async () => {
     console.log(form);
-    
-    const nextPath =  JSON.parse(localStorage.getItem("nextPath"))
-  if(equipmentListdata.length > 0){
-    if(nextPath.environmentAffect === 'Yes'){
-      history.push(`/app/incident-management/registration/initial-notification/environment-affected/${id}`)
-    }
-    else{
-      history.push(`/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`)
-    }
-  }else{
+    const { error, isValid } = EquipmentValidate(form);
+    setError(error);
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"))
+    console.log(error, isValid);
     if (detailsOfEquipmentAffect === "Yes") {
       const { error, isValid } = EquipmentValidate(form);
     setError(error);
       console.log(form)
       var status = 0
-      
+
       for (var i = 0; i < form.length; i++) {
         const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/equipments/`, form[i]);
-        
+
         status = res.status
       }
-      if(status === 201){
+      if (status === 201) {
 
-        
-          if(nextPath.environmentAffect === 'Yes'){
-            history.push('/app/incident-management/registration/initial-notification/environment-affected/')
-          }
-          else{
-            history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
-          }
-        
+
+        if (nextPath.environmentAffect === 'Yes') {
+          history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+        }
+        else {
+          history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
+        }
+
       }
     } else {
-      const temp = incidentsListData;
-      temp["equipmentDamagedComments"] = equipmentDamagedComments;
-      temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect;
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      if(nextPath.environmentAffect === 'Yes'){
+      if (nextPath.environmentAffect === 'Yes') {
         history.push('/app/incident-management/registration/initial-notification/environment-affected/')
       }
-      else{
+      else {
         history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
       }
     }
@@ -240,12 +227,12 @@ const EqiptmentAffected = () => {
                   >
                     {equipmentAffected.length !== 0
                       ? equipmentAffected.map((value, index) => (
-                          <FormControlLabel
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
                       : null}
                   </RadioGroup>
                 </Grid>
@@ -345,15 +332,15 @@ const EqiptmentAffected = () => {
                             >
                               {equipmentTypeValue.length !== 0
                                 ? equipmentTypeValue.map(
-                                    (selectValues, index) => (
-                                      <MenuItem
-                                        key={index}
-                                        value={selectValues.inputValue}
-                                      >
-                                        {selectValues.inputLabel}
-                                      </MenuItem>
-                                    )
+                                  (selectValues, index) => (
+                                    <MenuItem
+                                      key={index}
+                                      value={selectValues.inputValue}
+                                    >
+                                      {selectValues.inputLabel}
+                                    </MenuItem>
                                   )
+                                )
                                 : null}
                             </Select>
                           </FormControl>
@@ -434,7 +421,7 @@ const EqiptmentAffected = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
-                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                  // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Next
                   </Button>

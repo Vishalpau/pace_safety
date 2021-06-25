@@ -45,7 +45,11 @@ import moment from "moment";
 import { useParams } from "react-router";
 
 import IncidentDetails from "../../Forms/InitialNotification/IncidentDetails";
-import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
+import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification"
+import InvestigationSummary from "../../SummaryDetails/Investigation"
+import EvidenceSummary from "../../SummaryDetails/Evidence";
+import RootCauseAnalysisSummary from "../../SummaryDetails/RootCauseAndAnalysis";
+import LessionLearnSummary from "../../SummaryDetails/LessionLearn";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -75,8 +79,11 @@ function ListItemLink(props) {
 const Summary = () => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
-  const { id } = useParams();
-
+  const [investigation, setInvestigation] = useState(false);
+  const [evidence, setEvidence] = useState(false);
+  const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
+  const [lessionlearn, setLessionlearn] = useState(false);
+  console.log(initialNotification)
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${fkid}/`);
     await setIncidents(allIncidents.data.data.results);
@@ -85,11 +92,7 @@ const Summary = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-
-  const handelInitialNotification = (e) => {
-    setInitialNotification(!initialNotification);
-  };
-
+  
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -117,7 +120,12 @@ const Summary = () => {
               size="small"
               endIcon={<CheckCircle />}
               className={classes.statusButton}
-              onClick={(e) => handelInitialNotification(e)}
+              onClick={(e) => {
+                setInitialNotification(true)
+                setInvestigation(false)
+                setEvidence(false)
+                setRootCauseAnalysis(false)
+                setLessionlearn(false)}}
             >
               Initial Notification
             </Button>
@@ -133,6 +141,13 @@ const Summary = () => {
               size="small"
               endIcon={<CheckCircle />}
               className={classes.statusButton}
+              onClick={(e) => {
+                setInitialNotification(false)
+                setInvestigation(true)
+                setEvidence(false)
+                setRootCauseAnalysis(false)
+                setLessionlearn(false)
+              }}
             >
               Investigation
             </Button>
@@ -148,6 +163,13 @@ const Summary = () => {
               size="small"
               className={classes.statusButton}
               endIcon={<AccessTime />}
+              onClick={(e) => {
+                setInitialNotification(false)
+                setInvestigation(false)
+                setEvidence(true)
+                setRootCauseAnalysis(false)
+                setLessionlearn(false)
+              }}
             >
               Evidence
             </Button>
@@ -161,7 +183,13 @@ const Summary = () => {
               variant="outlined"
               size="small"
               className={classes.statusButton}
-              endIcon={<AccessTime />}
+              onClick={(e) => {
+                setInitialNotification(false)
+                setInvestigation(false)
+                setEvidence(false)
+                setRootCauseAnalysis(true)
+                setLessionlearn(false)
+              }}
             >
               Root Cause & Analysis
             </Button>
@@ -176,6 +204,13 @@ const Summary = () => {
               size="small"
               endIcon={<AccessTime />}
               className={classes.statusButton}
+              onClick={(e) => {
+                setInitialNotification(false)
+                setInvestigation(false)
+                setEvidence(false)
+                setRootCauseAnalysis(false)
+                setLessionlearn(true)
+              }}
             >
               Lessions Learnt
             </Button>
@@ -188,116 +223,547 @@ const Summary = () => {
       <Divider />
 
       {/* summary and part */}
-      {initialNotification == false ? (
-        <>
-          <Box marginTop={5}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={9}>
-                <IncidentDetailsSummary />
+      <div>
+      {(() => {
+        if (initialNotification == true) {
+          return (
+            <div>
+              <IncidentDetailsSummary />
+              <Grid container spacing={5}>
+      
+                {/* sidebar */}
+                <Grid item xs={12} md={3}>
+                  <Paper>
+                    <List
+                      dense
+                      subheader={
+                        <ListSubheader component="div">Actions</ListSubheader>
+                      }
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a
+                          href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                            "fkincidentId"
+                          )}`}
+                        >
+                          <ListItemText primary="Modify Notification" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/investigation/initial-details/">
+                          <ListItemText primary="Modify Investigation" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/evidence/evidence/">
+                          <ListItemText primary="Add Evidence" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/root-cause-analysis/details/">
+                          <ListItemText primary="Perform RCA" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/lession-learned/lession-learned/">
+                          <ListItemText primary="Lessions Learnt" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button divider>
+                        <ListItemIcon>
+                          <Close />
+                        </ListItemIcon>
+                        <ListItemText primary="Close Out" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Comment />
+                        </ListItemIcon>
+                        <ListItemText primary="Comments" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <History />
+                        </ListItemIcon>
+                        <ListItemText primary="Activity History" />
+                      </ListItem>
+                    </List>
+                    <Divider />
+                    <List dense>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Print />
+                        </ListItemIcon>
+                        <ListItemText primary="Print" />
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Share />
+                        </ListItemIcon>
+                        <ListItemText primary="Share" />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
               </Grid>
-              {/* sidebar */}
-              <Grid item xs={12} md={3}>
-                <Paper>
-                  <List
-                    dense
-                    subheader={
-                      <ListSubheader component="div">Actions</ListSubheader>
-                    }
-                  >
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                      <a
-                        href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-                          "fkincidentId"
-                        )}`}
-                      >
-                        <ListItemText primary="Modify Notification" />
-                      </a>
-                    </ListItem>
+            </div>
+          )
+        } else if (investigation == true) {
+          return (
+            <div>
+              <InvestigationSummary />
+              <Grid container spacing={5}>
+      
+                {/* sidebar */}
+                <Grid item xs={12} md={3}>
+                  <Paper>
+                    <List
+                      dense
+                      subheader={
+                        <ListSubheader component="div">Actions</ListSubheader>
+                      }
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a
+                          href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                            "fkincidentId"
+                          )}`}
+                        >
+                          <ListItemText primary="Modify Notification" />
+                        </a>
+                      </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                      <a href="/app/incident-management/registration/investigation/initial-details/">
-                        <ListItemText primary="Modify Investigation" />
-                      </a>
-                    </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/investigation/initial-details/">
+                          <ListItemText primary="Modify Investigation" />
+                        </a>
+                      </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <a href="/app/incident-management/registration/evidence/evidence/">
-                        <ListItemText primary="Add Evidence" />
-                      </a>
-                    </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/evidence/evidence/">
+                          <ListItemText primary="Add Evidence" />
+                        </a>
+                      </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <a href="/app/incident-management/registration/root-cause-analysis/details/">
-                        <ListItemText primary="Perform RCA" />
-                      </a>
-                    </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/root-cause-analysis/details/">
+                          <ListItemText primary="Perform RCA" />
+                        </a>
+                      </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <a href="/app/incident-management/registration/lession-learned/lession-learned/">
-                        <ListItemText primary="Lessions Learnt" />
-                      </a>
-                    </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/lession-learned/lession-learned/">
+                          <ListItemText primary="Lessions Learnt" />
+                        </a>
+                      </ListItem>
 
-                    <ListItem button divider>
-                      <ListItemIcon>
-                        <Close />
-                      </ListItemIcon>
-                      <ListItemText primary="Close Out" />
-                    </ListItem>
+                      <ListItem button divider>
+                        <ListItemIcon>
+                          <Close />
+                        </ListItemIcon>
+                        <ListItemText primary="Close Out" />
+                      </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Comment />
-                      </ListItemIcon>
-                      <ListItemText primary="Comments" />
-                    </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Comment />
+                        </ListItemIcon>
+                        <ListItemText primary="Comments" />
+                      </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <History />
-                      </ListItemIcon>
-                      <ListItemText primary="Activity History" />
-                    </ListItem>
-                  </List>
-                  <Divider />
-                  <List dense>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Print />
-                      </ListItemIcon>
-                      <ListItemText primary="Print" />
-                    </ListItem>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Share />
-                      </ListItemIcon>
-                      <ListItemText primary="Share" />
-                    </ListItem>
-                  </List>
-                </Paper>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <History />
+                        </ListItemIcon>
+                        <ListItemText primary="Activity History" />
+                      </ListItem>
+                    </List>
+                    <Divider />
+                    <List dense>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Print />
+                        </ListItemIcon>
+                        <ListItemText primary="Print" />
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Share />
+                        </ListItemIcon>
+                        <ListItemText primary="Share" />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        </>
+            </div>
+          )
+        } else if (evidence == true) {
+          return (
+            <div>
+            <EvidenceSummary />
+              <Grid container spacing={5}>
+      
+                {/* sidebar */}
+                <Grid item xs={12} md={3}>
+                  <Paper>
+                    <List
+                      dense
+                      subheader={
+                        <ListSubheader component="div">Actions</ListSubheader>
+                      }
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a
+                          href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                            "fkincidentId"
+                          )}`}
+                        >
+                          <ListItemText primary="Modify Notification" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/investigation/initial-details/">
+                          <ListItemText primary="Modify Investigation" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/evidence/evidence/">
+                          <ListItemText primary="Add Evidence" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/root-cause-analysis/details/">
+                          <ListItemText primary="Perform RCA" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/lession-learned/lession-learned/">
+                          <ListItemText primary="Lessions Learnt" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button divider>
+                        <ListItemIcon>
+                          <Close />
+                        </ListItemIcon>
+                        <ListItemText primary="Close Out" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Comment />
+                        </ListItemIcon>
+                        <ListItemText primary="Comments" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <History />
+                        </ListItemIcon>
+                        <ListItemText primary="Activity History" />
+                      </ListItem>
+                    </List>
+                    <Divider />
+                    <List dense>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Print />
+                        </ListItemIcon>
+                        <ListItemText primary="Print" />
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Share />
+                        </ListItemIcon>
+                        <ListItemText primary="Share" />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </div>
+          )
+        } else if (rootcauseanalysis == true) {
+          return (
+            <div>
+            <RootCauseAnalysisSummary />
+              <Grid container spacing={5}>
+      
+                {/* sidebar */}
+                <Grid item xs={12} md={3}>
+                  <Paper>
+                    <List
+                      dense
+                      subheader={
+                        <ListSubheader component="div">Actions</ListSubheader>
+                      }
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a
+                          href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                            "fkincidentId"
+                          )}`}
+                        >
+                          <ListItemText primary="Modify Notification" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/investigation/initial-details/">
+                          <ListItemText primary="Modify Investigation" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/evidence/evidence/">
+                          <ListItemText primary="Add Evidence" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/root-cause-analysis/details/">
+                          <ListItemText primary="Perform RCA" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/lession-learned/lession-learned/">
+                          <ListItemText primary="Lessions Learnt" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button divider>
+                        <ListItemIcon>
+                          <Close />
+                        </ListItemIcon>
+                        <ListItemText primary="Close Out" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Comment />
+                        </ListItemIcon>
+                        <ListItemText primary="Comments" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <History />
+                        </ListItemIcon>
+                        <ListItemText primary="Activity History" />
+                      </ListItem>
+                    </List>
+                    <Divider />
+                    <List dense>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Print />
+                        </ListItemIcon>
+                        <ListItemText primary="Print" />
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Share />
+                        </ListItemIcon>
+                        <ListItemText primary="Share" />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </div>
+          )
+        } else if (lessionlearn == true) {
+          return (
+            <div>
+            <LessionLearnSummary />
+              <Grid container spacing={5}>
+      
+                {/* sidebar */}
+                <Grid item xs={12} md={3}>
+                  <Paper>
+                    <List
+                      dense
+                      subheader={
+                        <ListSubheader component="div">Actions</ListSubheader>
+                      }
+                    >
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a
+                          href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                            "fkincidentId"
+                          )}`}
+                        >
+                          <ListItemText primary="Modify Notification" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/investigation/initial-details/">
+                          <ListItemText primary="Modify Investigation" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/evidence/evidence/">
+                          <ListItemText primary="Add Evidence" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/root-cause-analysis/details/">
+                          <ListItemText primary="Perform RCA" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <a href="/app/incident-management/registration/lession-learned/lession-learned/">
+                          <ListItemText primary="Lessions Learnt" />
+                        </a>
+                      </ListItem>
+
+                      <ListItem button divider>
+                        <ListItemIcon>
+                          <Close />
+                        </ListItemIcon>
+                        <ListItemText primary="Close Out" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Comment />
+                        </ListItemIcon>
+                        <ListItemText primary="Comments" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <History />
+                        </ListItemIcon>
+                        <ListItemText primary="Activity History" />
+                      </ListItem>
+                    </List>
+                    <Divider />
+                    <List dense>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Print />
+                        </ListItemIcon>
+                        <ListItemText primary="Print" />
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Share />
+                        </ListItemIcon>
+                        <ListItemText primary="Share" />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </div>
+          )
+        } 
+      })()}
+    </div>
+      
+      {/* {(initialNotification == false )  ? (
+       
+        <div>
+          
+        </div>
+
       ) : (
-        <IncidentDetailsSummary fkid={id} />
-      )}
-    </PapperBlock>
+        <IncidentDetailsSummary />
+      )} */}
+    </div>
   );
 };
 

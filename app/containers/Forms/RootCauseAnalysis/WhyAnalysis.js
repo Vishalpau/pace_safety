@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Grid, Container } from "@material-ui/core";
-
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -15,6 +14,10 @@ import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Fab from "@material-ui/core/Fab";
+
+import api from "../../../utils/axios";
+import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -37,26 +40,66 @@ import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 
-const WhyAnalysis = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+const WhyAnalysis = () => {
+
+  const [incidents, setIncidents] = useState([]);
+
+  const [whyData, setWhyData] = useState({
+    hyCount: 0,
+    status: "Active",
+    createdBy: 0,
+    updatedBy: 0,
+    fkIncidentId: localStorage.getItem("fkincidentId")
+  })
+
+  const [error, setError] = useState({})
+
+  const [form, setForm] = useState([
+    { why: "" }
+  ])
+
+  const fetchIncidentData = async () => {
+    const allIncidents = await api.get(
+      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    await setIncidents(allIncidents.data.data.results);
   };
 
-  const radioDecide = ["Yes", "No"];
+  const handleForm = (e, key) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key]["why"] = value;
+    setForm(temp);
+  };
+
+  const handelAdd = (e) => {
+    if (Object.keys(form).length < 5) {
+      setForm([
+        ...form, { why: "", }])
+    }
+  }
+
+  const handelRemove = async (e, index) => {
+    if (form.length > 1) {
+      let temp = form
+      let newData = form.filter((item, key) => key !== index)
+      await setForm(newData)
+    }
+  }
+
+  const handelNext = (e) => {
+    const { error, isValid } = WhyAnalysisValidate(form);
+    setError(error);
+    console.log(form)
+  }
+
+  useEffect(() => {
+    fetchIncidentData();
+  }, []);
+
+
+
   const classes = useStyles();
   return (
     <Container>
@@ -69,13 +112,15 @@ const WhyAnalysis = () => {
           </Box>
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
+
               <Grid item md={4}>
                 <Box>
                   <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
+                    Incident number: {localStorage.getItem("fkincidentId")}
                   </Typography>
                 </Box>
               </Grid>
+
               <Grid item md={8}>
                 <Box>
                   <Typography variant="body2" gutterBottom>
@@ -83,16 +128,10 @@ const WhyAnalysis = () => {
                   </Typography>
                 </Box>
               </Grid>
+
               <Grid item md={12}>
                 <Typography variant="h6" gutterBottom>
-                  Incident Description
-                </Typography>
-
-                <Typography variant="body">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Laboriosam repellendus quaerat ullam nemo tempora voluptatem!
-                  Dolorum cum ab error rerum reiciendis, dolores incidunt ex,
-                  repellendus beatae ea qui, reprehenderit rem.
+                  Incident Description:<small>{incidents.incidentDetails}</small>
                 </Typography>
 
                 <Box marginTop={3}>
@@ -102,6 +141,7 @@ const WhyAnalysis = () => {
                   <Typography variant="body2">Level 5</Typography>
                 </Box>
               </Grid>
+
               <Grid item md={12}>
                 {/* <p>Evidence collection</p> */}
                 <TextField
@@ -113,48 +153,40 @@ const WhyAnalysis = () => {
                   className={classes.formControl}
                 />
               </Grid>
-              <Grid item md={12}>
-                {/* <p>why3</p> */}
 
-                <Grid container spacing={2}>
-                  <Grid item sm={11}>
-                    <TextField
-                      id="filled-basic"
-                      label="Why 1"
-                      variant="outlined"
-                      className={classes.formControl}
-                    />
-                  </Grid>
+              {form.map((item, index) => (
+                <Grid item md={12} >
+                  <Grid container spacing={2}>
 
-                  <Grid item sm={1} justify="center">
-                    <Fab size="small" color="secondary" aria-label="remove">
-                      <RemoveCircleOutlineIcon />
-                    </Fab>
+                    <Grid item sm={11}>
+                      <TextField
+                        id="filled-basic"
+                        label={`why ${index}`}
+                        variant="outlined"
+                        error={error[`why${[index]}`]}
+                        helperText={error ? error[`why${[index]}`] : ""}
+                        className={classes.formControl}
+                        onChange={(e) => handleForm(e, index)}
+                      />
+                    </Grid>
+                    {form.length > 1 ?
+                      <Grid item sm={1} justify="center">
+                        <Fab size="small" color="secondary" aria-label="remove">
+                          <RemoveCircleOutlineIcon onClick={(e) => handelRemove(e, index)} />
+                        </Fab>
+                      </Grid>
+                      : null}
                   </Grid>
+                  {/* {error && error[`why${[index]}`] && (
+                    <p>{error[`why${[index]}`]}</p>
+                  )} */}
                 </Grid>
-              </Grid>
-              <Grid item md={12}>
-                <Grid container spacing={2}>
-                  <Grid item sm={11}>
-                    <TextField
-                      id="filled-basic"
-                      label="Why 1"
-                      variant="outlined"
-                      className={classes.formControl}
-                    />
-                  </Grid>
+              ))}
 
-                  <Grid item sm={1}>
-                    <Fab size="small" color="secondary" aria-label="remove">
-                      <RemoveCircleOutlineIcon />
-                    </Fab>
-                  </Grid>
-                </Grid>
-              </Grid>
 
               <Grid item md={12}>
                 {/* This button will add another entry of why input  */}
-                <button className={classes.textButton}>
+                <button onClick={(e) => handelAdd(e)} className={classes.textButton}>
                   <AddIcon /> Add
                 </button>
               </Grid>
@@ -171,7 +203,8 @@ const WhyAnalysis = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  href="http://localhost:3000/app/incident-management/registration/summary/summary/"
+                  // href="http://localhost:3000/app/incident-management/registration/summary/summary/"
+                  onClick={(e) => handelNext(e)}
                 >
                   Submit
                 </Button>
