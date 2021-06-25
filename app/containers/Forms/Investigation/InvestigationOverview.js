@@ -48,32 +48,10 @@ const InvestigationOverview = () => {
   const [error, setError] = useState({});
 
   const selectValues = [1, 2, 3, 4];
-  const [error, setError] = useState({});
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-  const [form, setForm] = React.useState({
-    unitconstructionmanagername: "",
-    unitconstructionmanagercontact: "",
-    unithsespecialistname: "",
-    unithsespecialistcontactno: "",
-    actualseveritylevel: "",
-    potentialseveritylevel: "",
-    activity: "",
-    jobtask: "",
-    equipmentinvoked: "",
-    weather: "",
-    weather2: "",
-    temprature:"",
-    lighting: "",
-    windspeed: "",
-    fluidamount: "",
-    fluidtype: "",
-    ael: "",
-    pel:"",
-    pel:"",
-    pel:"",
-  });
+
 
   const [form, setForm] = useState({
     levelOfInvestigation: "",
@@ -113,8 +91,8 @@ const InvestigationOverview = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-  
-  
+
+
 
   return (
     <Container>
@@ -143,12 +121,12 @@ const InvestigationOverview = () => {
                   label="Unit Construction Manager Name"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          constructionManagerName: e.target.value,
-                        });
-                      }}
-                 />
+                    setForm({
+                      ...form,
+                      constructionManagerName: e.target.value,
+                    });
+                  }}
+                />
                 {error && error.constructionManagerName && <p>{error.constructionManagerName}</p>}
               </Grid>
               <Grid item md={6}>
@@ -159,11 +137,11 @@ const InvestigationOverview = () => {
                   label="Unit Construction Manager Contact"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          constructionManagerContactNo: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      constructionManagerContactNo: e.target.value,
+                    });
+                  }}
                 />{error && error.constructionManagerContactNo && <p>{error.constructionManagerContactNo}</p>}
               </Grid>
               <Grid item md={6}>
@@ -174,11 +152,11 @@ const InvestigationOverview = () => {
                   label="Unit HSE Specialist Name"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          hseSpecialistName: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      hseSpecialistName: e.target.value,
+                    });
+                  }}
                 />{error && error.hseSpecialistName && <p>{error.hseSpecialistName}</p>}
               </Grid>
               <Grid item md={6}>
@@ -189,11 +167,11 @@ const InvestigationOverview = () => {
                   label="Unit HSE Specialist Contact"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          hseSpecialistContactNo: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      hseSpecialistContactNo: e.target.value,
+                    });
+                  }}
                 />{error && error.hseSpecialistContactNo && <p>{error.hseSpecialistContactNo}</p>}
               </Grid>
               <Grid item md={6}>
@@ -204,11 +182,11 @@ const InvestigationOverview = () => {
                   label="Actual Severity Level "
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          actualSeverityLevel: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      actualSeverityLevel: e.target.value,
+                    });
+                  }}
                 />{error && error.actualSeverityLevel && <p>{error.actualSeverityLevel}</p>}
               </Grid>
               <Grid item md={6}>
@@ -219,11 +197,11 @@ const InvestigationOverview = () => {
                   label="Potential Severity Level"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          potentialSeverityLevel: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      potentialSeverityLevel: e.target.value,
+                    });
+                  }}
                 />{error && error.potentialSeverityLevel && <p>{error.potentialSeverityLevel}</p>}
               </Grid>
               <Grid item md={12}>
@@ -247,11 +225,11 @@ const InvestigationOverview = () => {
                     labelId="project-name-label"
                     label="Activity"
                     onChange={(e) => {
-                        setForm({
-                          ...form,
-                          activity: e.target.value,
-                        });
-                      }}
+                      setForm({
+                        ...form,
+                        activity: e.target.value,
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -273,11 +251,11 @@ const InvestigationOverview = () => {
                     labelId="project-name-label"
                     label="Project Name"
                     onChange={(e) => {
-                        setForm({
-                          ...form,
-                          projectname: e.target.value,
-                        });
-                      }}
+                      setForm({
+                        ...form,
+                        projectname: e.target.value,
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -300,11 +278,11 @@ const InvestigationOverview = () => {
                     labelId="project-name-label"
                     label="Job Task"
                     onChange={(e) => {
-                        setForm({
-                          ...form,
-                          jobtask: e.target.value,
-                        });
-                      }}
+                      setForm({
+                        ...form,
+                        jobtask: e.target.value,
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -321,11 +299,11 @@ const InvestigationOverview = () => {
                   label="Eqipment Invoked"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          equipmentinvoked: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      equipmentinvoked: e.target.value,
+                    });
+                  }}
                 />{error && error.equipmentinvoked && <p>{error.equipmentinvoked}</p>}
               </Grid>
               <Grid item md={6}>
@@ -342,11 +320,11 @@ const InvestigationOverview = () => {
                     labelId="project-name-label"
                     label="Weather"
                     onChange={(e) => {
-                        setForm({
-                          ...form,
-                          weather: e.target.value,
-                        });
-                      }}
+                      setForm({
+                        ...form,
+                        weather: e.target.value,
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -369,11 +347,11 @@ const InvestigationOverview = () => {
                     labelId="project-name-label"
                     label="Weather2"
                     onChange={(e) => {
-                        setForm({
-                          ...form,
-                          weather: e.target.value,
-                        });
-                      }}
+                      setForm({
+                        ...form,
+                        weather: e.target.value,
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -389,11 +367,11 @@ const InvestigationOverview = () => {
                   label="Temprature"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          temprature: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      temprature: e.target.value,
+                    });
+                  }}
                 />{error && error.temprature && <p>{error.temprature}</p>}
               </Grid>
               <Grid item md={6}>
@@ -410,11 +388,11 @@ const InvestigationOverview = () => {
                     labelId="project-name-label"
                     label="Lighting"
                     onChange={(e) => {
-                        setForm({
-                          ...form,
-                          lighting: e.target.value,
-                        });
-                      }}
+                      setForm({
+                        ...form,
+                        lighting: e.target.value,
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -431,11 +409,11 @@ const InvestigationOverview = () => {
                   label="Wind Speed"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          windspeed: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      windspeed: e.target.value,
+                    });
+                  }}
                 />{error && error.windspeed && <p>{error.windspeed}</p>}
               </Grid>
               <Grid item md={12}>
@@ -452,11 +430,11 @@ const InvestigationOverview = () => {
                   label="Fluid Amount"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          fluidamount: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      fluidamount: e.target.value,
+                    });
+                  }}
                 />{error && error.fluidamount && <p>{error.fluidamount}</p>}
               </Grid>
               <Grid item md={6}>
@@ -473,11 +451,11 @@ const InvestigationOverview = () => {
                     labelId="project-name-label"
                     label="Fluid Type"
                     onChange={(e) => {
-                        setForm({
-                          ...form,
-                          fluidtype: e.target.value,
-                        });
-                      }}
+                      setForm({
+                        ...form,
+                        fluidtype: e.target.value,
+                      });
+                    }}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -494,11 +472,11 @@ const InvestigationOverview = () => {
                   label="AEL"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          ael: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      ael: e.target.value,
+                    });
+                  }}
                 />{error && error.ael && <p>{error.ael}</p>}
               </Grid>
               <Grid item md={6}>
@@ -509,19 +487,19 @@ const InvestigationOverview = () => {
                   label="PEL"
                   className={classes.fullWidth}
                   onChange={(e) => {
-                        setForm({
-                          ...form,
-                          pel: e.target.value,
-                        });
-                      }}
+                    setForm({
+                      ...form,
+                      pel: e.target.value,
+                    });
+                  }}
                 />{error && error.pel && <p>{error.pel}</p>}
               </Grid>
               <Box marginTop={3}>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={()=>handleNext()}
-                  // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+                  onClick={() => handleNext()}
+                // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
                 >
                   Next
                 </Button>
@@ -529,10 +507,10 @@ const InvestigationOverview = () => {
             </Grid>
             <Grid item md={3}>
               <FormSideBar
-              deleteForm={[1,2,3]}
+                deleteForm={[1, 2, 3]}
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Initial details"}
-              /> 
+              />
             </Grid>
           </Grid>
         </Box>
