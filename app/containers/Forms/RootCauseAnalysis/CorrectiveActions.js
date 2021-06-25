@@ -142,6 +142,7 @@ const CorrectiveAction = () => {
 
               <Grid item md={3}>
                 <FormSideBar
+                deleteForm={[1,2,3]}
                   listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                   selectedItem={"Corrective action"}
                 />

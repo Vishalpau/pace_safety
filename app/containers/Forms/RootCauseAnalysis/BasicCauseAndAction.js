@@ -249,6 +249,7 @@ const BasicCauseAndAction = () => {
             </Grid>
             <Grid item md={3}>
               <FormSideBar
+              deleteForm={[1,2,3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                 selectedItem={"Basic cause and action"}
               />

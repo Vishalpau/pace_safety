@@ -145,6 +145,7 @@ const AdditionalDetails = () => {
 
               <Grid item md={3}>
                 <FormSideBar
+                deleteForm={[1,2,3]}
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Additional detail"}
                 />

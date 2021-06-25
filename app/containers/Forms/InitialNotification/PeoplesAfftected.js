@@ -17,6 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import FormSideBar from "../FormSideBar";
+import moment from "moment";
 
 import {
   INITIAL_NOTIFICATION,
@@ -24,7 +25,7 @@ import {
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,26 +58,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const PeoplesAffected = () => {
-  // const [form, setForm] = useState({
-  //   detailindividualeffected: "",
-  //   affectedpersons: {
-  //     persontype: "",
-  //     department: "",
-  //     name: "",
-  //     idnumber: "",
-  //     ismedicalcare: "",
-  //     offsiteassesment: "",
-  //     locationdetails: "",
-  //   },
-  //   describeactiontaken: "",
-  // });
   const reportedTo = [
     "Internal Leadership",
     "Police",
     "Environment Officer",
     "OHS",
-    "Mital Aid",
-    "Other",
+    moment,
   ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
@@ -90,15 +77,17 @@ const PeoplesAffected = () => {
   const radioDecideNew = ["Yes", "No", "N/A"];
   const classes = useStyles();
   const history = useHistory();
+  const { id } = useParams();
 
-  const [personAffect, setPersonAffect] = useState('')
+  const [personAffect, setPersonAffect] = useState("");
   const [individualAffectValue, setIndividualAffecctValue] = useState([]);
   const [personTypeValue, setPersonTypeValue] = useState([]);
   const [departmentValue, setDepartmentValue] = useState([]);
   const [medicalCareValue, setMedicalCareValue] = useState([]);
-  
+  const [personAffectedComments, setPersonAffectedComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
-  const [isLoading, setIsLoading]= useState([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [peopleData, setPeopleData] = useState([]);
 
   const [form, setForm] = useState([
     {
@@ -110,9 +99,10 @@ const PeoplesAffected = () => {
       workerOffsiteAssessment: "",
       locationAssessmentCenter: "",
       createdBy: 1,
-      fkIncidentId: 3,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
     },
   ]);
+
   const addNewPeopleDetails = () => {
     setForm([
       ...form,
@@ -123,12 +113,13 @@ const PeoplesAffected = () => {
         personIdentification: "",
         personMedicalCare: "",
         workerOffsiteAssessment: "",
-        locationAssessmentCenter: "",     
-        createdBy: 1,     
-        fkIncidentId: localStorage.getItem("fkincidentId")
+        locationAssessmentCenter: "",
+        createdBy: 1,
+        fkIncidentId: localStorage.getItem("fkincidentId"),
       },
     ]);
   };
+
   const handleForm = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
@@ -137,47 +128,91 @@ const PeoplesAffected = () => {
     setForm(temp);
   };
 
+  const handleUpdatePeople = async (e, key, fieldname, peopleId) => {
+    const temp = peopleData;
+    console.log(temp[key]);
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    temp[key]["updatedBy"] = 0;
+    console.log(temp, peopleId);
+
+    const res = await api.put(`api/v1/incidents/${id}/people/${peopleId}/`, temp[key]);
+    console.log(res);
+    // console.log(res)
+  };
+
   const handleNext = async () => {
-    console.log(form);
-    const { error, isValid } = PeopleValidate(form);
-    setError(error);
-    console.log(error, isValid);
-    const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
-    console.log(nextPath)
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-    //
-    // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-affected/'
-    if (personAffect === "Yes") {
-      // alert('ram')
-      for (var i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
-          form[i]
-        );
-      }
-
+    if (peopleData.length !== 0) {
       if (nextPath.propertyAffect === "Yes") {
         history.push(
-          "/app/incident-management/registration/initial-notification/property-affected/"
+          `/app/incident-management/registration/initial-notification/property-affected/${id}`
         );
       } else {
         if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+            `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
           );
         } else {
           if (nextPath.environmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
             );
           } else {
             history.push(
-              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
             );
           }
         }
       }
     } else {
+      if (personAffect === "Yes") {
+        const { error, isValid } = PeopleValidate(form);
+        setError(error);
+        console.log(error, isValid);
+        for (var i = 0; i < form.length; i++) {
+          console.log(form[i]);
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
+            form[i]
+          );
+        }
+
+        if (nextPath.propertyAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/property-affected/"
+          );
+        } else {
+          if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+            );
+          } else {
+            if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/environment-affected/"
+              );
+            } else {
+              history.push(
+                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+              );
+            }
+          }
+        }
+      } else {
+        const temp = incidentsListData;
+        temp["isPersonDetailsAvailable"] = personAffect;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        temp["personAffectedComments"] = personAffectedComments;
+        console.log(temp);
+
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+        console.log(res.data.data.results);
+      }
       if (nextPath.propertyAffect === "Yes") {
         history.push(
           "/app/incident-management/registration/initial-notification/property-affected/"
@@ -201,12 +236,7 @@ const PeoplesAffected = () => {
       }
     }
   };
-  const handlePersonAffect = async()=>{
-    const temp = incidentsListData;
-    temp.isPersonAffected = personAffect
-    const res = await api.put(`/api/v1/incidents/${localStorage.getItem('fkincidentId')}`, temp);
-    console.log(res)
-  }
+
   const [error, setError] = useState({});
 
   const fetchIndividualAffectValue = async () => {
@@ -230,18 +260,24 @@ const PeoplesAffected = () => {
   const fetchPersonTakenMedicalCare = async () => {
     const res = await api.get("api/v1/lists/11/value");
     const result = res.data.data.results;
-    console.log(result);
     setMedicalCareValue(result);
   };
+
   const fetchIncidentsData = async () => {
-    if (id === undefined) {
-      await setIsLoading(true);
-    } else {
-      const res = await api.get(`/api/v1/incidents/${id}/`);
-      const result = res.data.data.results;
-      await setIncidentsListdata(result);
-      await setIsLoading(true);
-    }
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentsListdata(result);
+    await setIsLoading(true);
+  };
+  const fetchPersonListData = async () => {
+    console.log("dsds");
+    const res = await api.get(`api/v1/incidents/${id}/people/`);
+    const result = res.data.data.results;
+    await setPeopleData(result);
+    await setIsLoading(true);
+    console.log(result);
   };
 
   useEffect(() => {
@@ -249,9 +285,10 @@ const PeoplesAffected = () => {
     fetchPersonTypeValue();
     fetchDepartmentValue();
     fetchPersonTakenMedicalCare();
-    fetchIncidentsData()
+    fetchIncidentsData();
+    // fetchPeopleData();
+    fetchPersonListData();
   }, []);
-
   return (
     <div>
       <Container>
@@ -275,167 +312,431 @@ const PeoplesAffected = () => {
                   <RadioGroup
                     aria-label="personAffect"
                     name="personAffect"
-                    value={personAffect}
-                    onChange={(e) => {setPersonAffect(e.target.value);
-                    handlePersonAffect();}
-                    }
+                    defaultValue={personAffect || incidentsListData.isPersonDetailsAvailable}
+                    onChange={(e) => {
+                      setPersonAffect(e.target.value);
+                    }}
                   >
-                  {individualAffectValue.map((value,key) => (
-                    <FormControlLabel
-                    key={key}
-                      value={value.inputValue}
-                      control={<Radio />}
-                      label={value.inputLabel}
-                     
-                    />
-                  ))}
-                  {/* {error && error.detailindividualeffected && (
+                    {individualAffectValue.map((value, key) => (
+                      <FormControlLabel
+                        key={key}
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))}
+                    {/* {error && error.detailindividualeffected && (
                     <p>{error.detailindividualeffected}</p>
                   )} */}
                   </RadioGroup>
                 </Grid>
-                {personAffect === 'Yes'?<>
-                <Grid item md={12}>
-                  <Box marginTop={2} marginBottom={2}>
-                    {/* <h4>Details of people affected</h4> */}
-                    <Typography variant="h6">
-                      Details of people affected
-                    </Typography>
-                  </Box>
-                </Grid>
-                {form.map((value,key)=><>
-                <Grid item md={6}>
-                  {/* <p>person type</p> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="person-type-label">Person type</InputLabel>
-                    <Select
-                      labelId="person-type-label"
-                      id="person-type"
-                      label="Person type"
-                      onChange={(e)=>handleForm(e,key,'personType')}
-                    >
-                      {personTypeValue.length!==0?personTypeValue.map((selectValues,key) => (
-                        <MenuItem key={key} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
-                      )):null}
-                    </Select>
-                  </FormControl>
-                  {error && error[`personType${[key]}`] && (
-                    <p>{error[`personType${[key]}`]}</p>
-                  )}
-                </Grid>
-                <Grid item md={6}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="dep-label">Department</InputLabel>
-                    <Select
-                      labelId="dep-label"
-                      id="dep"
-                      label="Department"
-                      onChange={(e)=>handleForm(e,key,'personDepartment')}
-                    >
-                      {departmentValue.length!==0?departmentValue.map((selectValues,index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>{selectValues.inputLabel}</MenuItem>
-                      )):null}
-                    </Select>
-                  </FormControl>
-                  {error && error[`personDepartment${[key]}`] && (
-                    <p>{error[`personDepartment${[key]}`]}</p>
-                  )}
-                </Grid>
-                <Grid item md={6}>
-                  {/* <p>Name of people affected</p> */}
-                  <TextField
-                    id="name-affected"
-                    variant="outlined"
-                    label="Name of people affected"
-                    className={classes.formControl}
-                    onChange={(e)=>handleForm(e,key,'personName')}
-                  />
-                  {error && error[`personName${[key]}`] && (
-                    <p>{error[`personName${[key]}`]}</p>
-                  )}
-                </Grid>
-                <Grid item md={6}>
-                  {/* <p>Identification number of person</p> */}
-                  <TextField
-                    id="id-num"
-                    variant="outlined"
-                    label="Identification number of person"
-                    className={classes.formControl}
-                    onChange={(e)=>handleForm(e,key,'personIdentification')}
+                {personAffect === "Yes" ? (
+                  <>
+                    <Grid item md={12}>
+                      <Box marginTop={2} marginBottom={2}>
+                        {/* <h4>Details of people affected</h4> */}
+                        <Typography variant="h6">
+                          Details of people affected
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    {peopleData.length > 0
+                      ? peopleData.map((people, key) => (
+                          <>
+                            <Grid item md={6}>
+                              {/* <p>person type</p> */}
+                              <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                              >
+                                <InputLabel id="person-type-label">
+                                  Person type
+                                </InputLabel>
+                                <Select
+                                  labelId="person-type-label"
+                                  id="person-type"
+                                  label="Person type"
+                                  defaultValue={people.personType}
+                                  onChange={(e) =>
+                                    handleUpdatePeople(
+                                      e,
+                                      key,
+                                      "personType",
+                                      people.id
+                                    )
+                                  }
+                                >
+                                  {personTypeValue.length !== 0
+                                    ? personTypeValue.map(
+                                        (selectValues, key) => (
+                                          <MenuItem
+                                            key={key}
+                                            value={selectValues.inputValue}
+                                          >
+                                            {selectValues.inputLabel}
+                                          </MenuItem>
+                                        )
+                                      )
+                                    : null}
+                                </Select>
+                              </FormControl>
+                              {error && error[`personType${[key]}`] && (
+                                <p>{error[`personType${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                              >
+                                <InputLabel id="dep-label">
+                                  Department
+                                </InputLabel>
+                                <Select
+                                  labelId="dep-label"
+                                  id="dep"
+                                  label="Department"
+                                  defaultValue={people.personDepartment}
+                                  onChange={(e) =>
+                                    handleUpdatePeople(
+                                      e,
+                                      key,
+                                      "personDepartment",
+                                      people.id
+                                    )
+                                  }
+                                >
+                                  {departmentValue.length !== 0
+                                    ? departmentValue.map(
+                                        (selectValues, index) => (
+                                          <MenuItem
+                                            key={index}
+                                            value={selectValues.inputValue}
+                                          >
+                                            {selectValues.inputLabel}
+                                          </MenuItem>
+                                        )
+                                      )
+                                    : null}
+                                </Select>
+                              </FormControl>
+                              {error && error[`personDepartment${[key]}`] && (
+                                <p>{error[`personDepartment${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Name of people affected</p> */}
+                              <TextField
+                                id="name-affected"
+                                variant="outlined"
+                                label="Name of people affected"
+                                className={classes.formControl}
+                                defaultValue={people.personName}
+                                onChange={(e) =>
+                                  handleUpdatePeople(
+                                    e,
+                                    key,
+                                    "personName",
+                                    people.id
+                                  )
+                                }
+                              />
+                              {error && error[`personName${[key]}`] && (
+                                <p>{error[`personName${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Identification number of person</p> */}
+                              <TextField
+                                id="id-num"
+                                variant="outlined"
+                                label="Identify number of person"
+                                className={classes.formControl}
+                                defaultValue={people.personIdentification}
+                                onChange={(e) =>
+                                  handleUpdatePeople(
+                                    e,
+                                    key,
+                                    "personIdentification",
+                                    people.id
+                                  )
+                                }
+                              />
+                              {error &&
+                                error[`personIdentification${[key]}`] && (
+                                  <p>{error[`personIdentification${[key]}`]}</p>
+                                )}
+                            </Grid>
+                            <Grid item md={12}>
+                              <div className={classes.spacer}>
+                                {/* <p>Was that person taken to medical care?</p> */}
+                                <Typography variant="body2">
+                                  Was that person taken to medical care?
+                                </Typography>
+                                <RadioGroup
+                                  aria-label="personAffect"
+                                  name="personAffect"
+                                  defaultValue={people.personMedicalCare}
+                                  // value={value.personMedicalCare}
+                                  onChange={(e) =>
+                                    handleUpdatePeople(
+                                      e,
+                                      key,
+                                      "personMedicalCare",
+                                      people.id
+                                    )
+                                  }
+                                >
+                                  {medicalCareValue.length !== 0
+                                    ? medicalCareValue.map((value, index) => (
+                                        <FormControlLabel
+                                          key={index}
+                                          value={value.inputValue}
+                                          control={<Radio />}
+                                          label={value.inputLabel}
+                                        />
+                                      ))
+                                    : null}
+                                </RadioGroup>
+                              </div>
+                              {error && error[`personMedicalCare${[key]}`] && (
+                                <p>{error[`personMedicalCare${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Worker taken offisite for further assesment?</p> */}
+                              <TextField
+                                id="worker-taken"
+                                variant="outlined"
+                                label="Worker taken offisite for further assesment?"
+                                className={classes.formControl}
+                                defaultValue={people.workerOffsiteAssessment}
+                                onChange={(e) =>
+                                  handleUpdatePeople(
+                                    e,
+                                    key,
+                                    "workerOffsiteAssessment",
+                                    people.id
+                                  )
+                                }
+                              />
+                              {error &&
+                                error[`workerOffsiteAssessment${[key]}`] && (
+                                  <p>
+                                    {error[`workerOffsiteAssessment${[key]}`]}
+                                  </p>
+                                )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Location details of assesment center</p> */}
+                              <TextField
+                                variant="outlined"
+                                id="location-details"
+                                label="Location details of assesment center?"
+                                className={classes.formControl}
+                                defaultValue={people.locationAssessmentCenter}
+                                onChange={(e) =>
+                                  handleUpdatePeople(
+                                    e,
+                                    key,
+                                    "locationAssessmentCenter",
+                                    people.id
+                                  )
+                                }
+                              />
+                              {error &&
+                                error[`locationAssessmentCenter${[key]}`] && (
+                                  <p>
+                                    {error[`locationAssessmentCenter${[key]}`]}
+                                  </p>
+                                )}
+                            </Grid>
+                          </>
+                        ))
+                      : form.map((value, key) => (
+                          <>
+                            <Grid item md={6}>
+                              {/* <p>person type</p> */}
+                              <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                              >
+                                <InputLabel id="person-type-label">
+                                  Person type
+                                </InputLabel>
+                                <Select
+                                  labelId="person-type-label"
+                                  id="person-type"
+                                  label="Person type"
+                                  onChange={(e) =>
+                                    handleForm(e, key, "personType")
+                                  }
+                                >
+                                  {personTypeValue.length !== 0
+                                    ? personTypeValue.map(
+                                        (selectValues, key) => (
+                                          <MenuItem
+                                            key={key}
+                                            value={selectValues.inputValue}
+                                          >
+                                            {selectValues.inputLabel}
+                                          </MenuItem>
+                                        )
+                                      )
+                                    : null}
+                                </Select>
+                              </FormControl>
+                              {error && error[`personType${[key]}`] && (
+                                <p>{error[`personType${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                              >
+                                <InputLabel id="dep-label">
+                                  Department
+                                </InputLabel>
+                                <Select
+                                  labelId="dep-label"
+                                  id="dep"
+                                  label="Department"
+                                  onChange={(e) =>
+                                    handleForm(e, key, "personDepartment")
+                                  }
+                                >
+                                  {departmentValue.length !== 0
+                                    ? departmentValue.map(
+                                        (selectValues, index) => (
+                                          <MenuItem
+                                            key={index}
+                                            value={selectValues.inputValue}
+                                          >
+                                            {selectValues.inputLabel}
+                                          </MenuItem>
+                                        )
+                                      )
+                                    : null}
+                                </Select>
+                              </FormControl>
+                              {error && error[`personDepartment${[key]}`] && (
+                                <p>{error[`personDepartment${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Name of people affected</p> */}
+                              <TextField
+                                id="name-affected"
+                                variant="outlined"
+                                label="Name of people affected"
+                                className={classes.formControl}
+                                onChange={(e) =>
+                                  handleForm(e, key, "personName")
+                                }
+                              />
+                              {error && error[`personName${[key]}`] && (
+                                <p>{error[`personName${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Identification number of person</p> */}
+                              <TextField
+                                id="id-num"
+                                variant="outlined"
+                                label="Identify number of person"
+                                className={classes.formControl}
+                                onChange={(e) =>
+                                  handleForm(e, key, "personIdentification")
+                                }
+                              />
+                              {error &&
+                                error[`personIdentification${[key]}`] && (
+                                  <p>{error[`personIdentification${[key]}`]}</p>
+                                )}
+                            </Grid>
+                            <Grid item md={12}>
+                              <div className={classes.spacer}>
+                                {/* <p>Was that person taken to medical care?</p> */}
+                                <Typography variant="body2">
+                                  Was that person taken to medical care?
+                                </Typography>
+                                <RadioGroup
+                                  aria-label="personAffect"
+                                  name="personAffect"
+                                  value={value.personMedicalCare}
+                                  onChange={(e) =>
+                                    handleForm(e, key, "personMedicalCare")
+                                  }
+                                >
+                                  {medicalCareValue.length !== 0
+                                    ? medicalCareValue.map((value, index) => (
+                                        <FormControlLabel
+                                          key={index}
+                                          value={value.inputValue}
+                                          control={<Radio />}
+                                          label={value.inputLabel}
+                                        />
+                                      ))
+                                    : null}
+                                </RadioGroup>
+                              </div>
+                              {error && error[`personMedicalCare${[key]}`] && (
+                                <p>{error[`personMedicalCare${[key]}`]}</p>
+                              )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Worker taken offisite for further assesment?</p> */}
+                              <TextField
+                                id="worker-taken"
+                                variant="outlined"
+                                label="Worker taken offisite for further assesment?"
+                                className={classes.formControl}
+                                onChange={(e) =>
+                                  handleForm(e, key, "workerOffsiteAssessment")
+                                }
+                              />
+                              {error &&
+                                error[`workerOffsiteAssessment${[key]}`] && (
+                                  <p>
+                                    {error[`workerOffsiteAssessment${[key]}`]}
+                                  </p>
+                                )}
+                            </Grid>
+                            <Grid item md={6}>
+                              {/* <p>Location details of assesment center</p> */}
+                              <TextField
+                                variant="outlined"
+                                id="location-details"
+                                label="Location details of assesment center?"
+                                className={classes.formControl}
+                                onChange={(e) =>
+                                  handleForm(e, key, "locationAssessmentCenter")
+                                }
+                              />
+                              {error &&
+                                error[`locationAssessmentCenter${[key]}`] && (
+                                  <p>
+                                    {error[`locationAssessmentCenter${[key]}`]}
+                                  </p>
+                                )}
+                            </Grid>
+                          </>
+                        ))}
 
-                  />
-                  {error && error[`personIdentification${[key]}`] && (
-                    <p>{error[`personIdentification${[key]}`]}</p>
-                  )}
-                </Grid>
-                <Grid item md={12}>
-                  <div className={classes.spacer}>
-                    {/* <p>Was that person taken to medical care?</p> */}
-                    <Typography variant="body2">
-                      Was that person taken to medical care?
-                    </Typography>
-                    <RadioGroup
-                    aria-label="personAffect"
-                    name="personAffect"
-                    value={value.personMedicalCare}
-                    onChange={(e)=>handleForm(e,key,'personMedicalCare')}
-                  >
-                    {medicalCareValue.length!==0?medicalCareValue.map((value,index) => (
-                      <FormControlLabel
-                      key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                        
-                      />
-                    )):null}
-                    </RadioGroup>
-                  </div>
-                  {error && error[`personMedicalCare${[key]}`] && (
-                    <p>{error[`personMedicalCare${[key]}`]}</p>
-                  )}
-                </Grid>
-                <Grid item md={6}>
-                  {/* <p>Worker taken offisite for further assesment?</p> */}
-                  <TextField
-                    id="worker-taken"
-                    variant="outlined"
-                    label="Worker taken offisite for further assesment?"
-                    className={classes.formControl}
-                    onChange={(e)=>handleForm(e,key,'workerOffsiteAssessment')}
-                  />
-                  {error &&
-                  error[`workerOffsiteAssessment${[key]}`] && (
-                    <p>{error[`workerOffsiteAssessment${[key]}`]}</p>
-                  )}
-                </Grid>
-                <Grid item md={6}>
-                  {/* <p>Location details of assesment center</p> */}
-                  <TextField
-                    variant="outlined"
-                    id="location-details"
-                    label="Location details of assesment center?"
-                    className={classes.formControl}
-                    onChange={(e)=>handleForm(e,key,'locationAssessmentCenter')}
-                  />
-                   {error &&
-                    error[`locationAssessmentCenter${[key]}`] && (
-                      <p>{error[`locationAssessmentCenter${[key]}`]}</p>
+                    {peopleData.length !== 0 ? null : (
+                      <Grid item md={12}>
+                        <button
+                          className={classes.textButton}
+                          onClick={() => addNewPeopleDetails()}
+                        >
+                          <PersonAddIcon /> Add details of another person
+                          affected
+                        </button>
+                      </Grid>
                     )}
-                </Grid>
-                </>)}
-                <Grid item md={12}>
-                  <button className={classes.textButton} onClick={()=>addNewPeopleDetails()}>
-                    <PersonAddIcon /> Add details of another person affected
-                  </button>
-                </Grid>
-                </>:null}
+                  </>
+                ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
                   <TextField
@@ -445,6 +746,7 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    onChange={(e) => setPersonAffectedComments(e.target.value)}
                   />
                   {/* {error && error.describeactiontaken && (
                     <p>{error.describeactiontaken}</p>
@@ -465,7 +767,7 @@ const PeoplesAffected = () => {
                     //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
                     //     : "#"
                     // }
-                    onClick={()=>handleNext()}
+                    onClick={() => handleNext()}
                     variant="contained"
                     color="primary"
                     className={classes.button}

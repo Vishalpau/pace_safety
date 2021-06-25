@@ -115,10 +115,13 @@ function BlankPage() {
     setListToggle(true);
   };
 
-
-  useEffect(async () => {
+  const fetchData = async()=>{
     const allIncidents = await api.get("api/v1/incidents/");
     await setIncidents(allIncidents.data.data.results);
+  }
+
+  useEffect( () => {
+   fetchData();
   }, []);
 
   // useEffect( () => {
@@ -275,8 +278,8 @@ function BlankPage() {
           {showIncident.length > 0 ? 
           
           <div className="gridView">
-            {showIncident.map((item) => (
-              <Card variant="outlined" className={Incidents.card}>
+            {showIncident.map((item, key) => (
+              <Card variant="outlined" className={Incidents.card} key={key}>
                 {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
                 <CardContent>
                   <Grid container spacing={3}>
