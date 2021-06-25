@@ -10,6 +10,7 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
@@ -29,10 +30,36 @@ const AdditionalDetails = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
+  const [error , setError] = React.useState({})
+
+  const [form , setForm] = React.useState({
+    que1 : "",
+    ans1 : "",
+    que2 : "",
+    ans2 : "",
+    que3 : "",
+    ans3 : "",
+    que4 : "",
+    ans4 : "",
+  })
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  
+
+  const handleNext = () => {
+    console.log('sagar',form);
+    const { error, isValid } = AdditionalDetailValidate(form);
+    setError(error);
+    console.log(error, isValid);
+    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
+    // console.log(nextPath)
+
+    
+  };
+
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
@@ -41,9 +68,9 @@ const AdditionalDetails = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
+            {/* <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
-            </Box>
+            </Box> */}
 
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
@@ -76,8 +103,13 @@ const AdditionalDetails = () => {
                       id="filled-basic"
                       variant="outlined"
                       label="Any Part/Equiptment sent for anlysis"
+                      error = {error.ans1}
+                      helperText = {error.ans1 ? error.ans1 : ""}
                       multiline
                       rows="4"
+                      onChange={(e) => {
+                        setForm({ ...form,ans1 : e.target.value})
+                      }}
                     />
                   </FormControl>
                 </Grid>
@@ -90,6 +122,11 @@ const AdditionalDetails = () => {
                       id="filled-basic"
                       variant="outlined"
                       label="Evidence analysis notes"
+                      error = {error.ans2}
+                      helperText = {error.ans2 ? error.ans2 : ""}
+                      onChange={(e) => {
+                        setForm({ ...form,ans2 : e.target.value})
+                      }}
                       multiline
                       rows="4"
                     />
@@ -104,6 +141,11 @@ const AdditionalDetails = () => {
                       id="filled-basic"
                       variant="outlined"
                       label="Evidence summary"
+                      error = {error.ans3}
+                      helperText = {error.ans3 ? error.ans3 : ""}
+                      onChange={(e) => {
+                        setForm({ ...form,ans3 : e.target.value})
+                      }}
                       multiline
                       rows="4"
                     />
@@ -118,6 +160,11 @@ const AdditionalDetails = () => {
                       id="filled-basic"
                       variant="outlined"
                       label="Additional notes if any"
+                      error = {error.ans4}
+                      helperText = {error.ans4 ? error.ans4 : ""}
+                      onChange={(e) => {
+                        setForm({ ...form,ans4 : e.target.value})
+                      }}
                       multiline
                       rows="4"
                     />
@@ -136,7 +183,8 @@ const AdditionalDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
+                    onClick={() => handleNext()}
+                    href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/" : "#"}
                   >
                     Submit
                   </Button>

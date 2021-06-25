@@ -118,6 +118,7 @@ const InvestigationOverview = () => {
                   variant="outlined"
                   label="Unit Construction Manager Name"
                   className={classes.fullWidth}
+                  error={error.un}
                   onChange={(e) => {
                         setForm({
                           ...form,
