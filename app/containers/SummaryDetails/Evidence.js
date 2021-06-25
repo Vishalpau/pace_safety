@@ -48,6 +48,7 @@ import moment from "moment";
 const EvidenceSummary = () => {
 
     const [evidence, setEvidence] = useState([]);
+    const [activity, setActivity] = useState([]);
    
     const [fkid,setFkid] = useState(91)
 
@@ -59,10 +60,18 @@ const EvidenceSummary = () => {
         await setEvidence(allEvidence.data.data.results);
       };
 
+    const fetchActivityData = async () => {
+        const allEvidence= await api.get(
+          `/api/v1/incidents/${fkid}/activities/`
+        );
+        await setActivity(allEvidence.data.data.results);
+      };
+
       
-      console.log(evidence)
+     
       useEffect(() => {
         fetchEvidanceData();
+        fetchActivityData();
         
         
       }, []);
@@ -81,7 +90,7 @@ const EvidenceSummary = () => {
                                     gutterBottom
                                     className={Fonts.labelName}
                                     >
-                                    Evidence
+                                    {key + 1} : Evidence
                                 </Typography>
                             </Grid>
                             <Grid item lg={6} md={6}>
@@ -118,11 +127,59 @@ const EvidenceSummary = () => {
                                     className={Fonts.labelName}
                                     >
                                     {" "}
-                                    Available :{evidence.evidenceCheck}{" "}
+                                    Available{" "}
+                                </Typography>
+                                <Typography
+                                    variant="body"
+                                    color="textSecondary"
+                                    className={Fonts.labelValue}
+                                    >
+                                    {evidence.evidenceCheck}
                                 </Typography>
                             </Grid>    
                         </Grid>
                     )): null}
+                    {activity.length !== 0 ? activity.map((ad,key) =>(
+                        <Grid container item md={9} spacing={3} key={key}>
+                            <Grid item md={12}>
+                            <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                    >
+                                    {key + 1} : Activity Details
+                                </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                    >
+                                    {" "}
+                                    Id : {ad.id}{" "}
+                                </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                    >
+                                    {" "}
+                                    {ad.question}{" "}
+                                </Typography>
+                                <Typography
+                                    variant="body"
+                                    color="textSecondary"
+                                    className={Fonts.labelValue}
+                                    >
+                                    {" "}
+                                    {ad.answer}{" "}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    )) : null}
                 </Grid>
             </Grid>
         </PapperBlock>

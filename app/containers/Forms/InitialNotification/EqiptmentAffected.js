@@ -162,7 +162,7 @@ const EqiptmentAffected = () => {
       }
     }
   }
-  };
+  ;
 
   const fetchEquipmentListData = async()=>{
     
@@ -438,7 +438,7 @@ const EqiptmentAffected = () => {
         </Paper>
       </Container>
     </div>
-  );
-};
+  )
+}
 
 export default EqiptmentAffected;

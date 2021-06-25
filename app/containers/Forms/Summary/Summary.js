@@ -753,18 +753,7 @@ const Summary = () => {
         } 
       })()}
     </div>
-      
-      {/* {(initialNotification == false )  ? (
-       
-        <div>
-          
-        </div>
-
-      ) : (
-        <IncidentDetailsSummary />
-      )} */}
-    </div>
-  );
+  </PapperBlock>);
 };
 
 export default Summary;

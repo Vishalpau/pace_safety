@@ -6,13 +6,13 @@ function LessionLearnedValidator(data){
     let isValid = true
     const error = {}
 
-    if (validator.isEmpty(data.team)){
+    if (validator.isEmpty(data.team.toString())){
       
         error.team = "this filed is empty"
         isValid = false
     } 
     
-    if (validator.isEmpty(data.teamLearning)){
+    if (validator.isEmpty(data.teamLearning.toString())){
         error.teamLearning = "this filed is empty"
         isValid = false
     }

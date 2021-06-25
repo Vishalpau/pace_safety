@@ -45,35 +45,13 @@ const InvestigationOverview = () => {
     "Other",
   ];
   const notificationSent = ["Manage", "SuperVisor"];
-  const [error, setError] = useState({});
+  
 
   const selectValues = [1, 2, 3, 4];
   const [error, setError] = useState({});
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-  const [form, setForm] = React.useState({
-    unitconstructionmanagername: "",
-    unitconstructionmanagercontact: "",
-    unithsespecialistname: "",
-    unithsespecialistcontactno: "",
-    actualseveritylevel: "",
-    potentialseveritylevel: "",
-    activity: "",
-    jobtask: "",
-    equipmentinvoked: "",
-    weather: "",
-    weather2: "",
-    temprature:"",
-    lighting: "",
-    windspeed: "",
-    fluidamount: "",
-    fluidtype: "",
-    ael: "",
-    pel:"",
-    pel:"",
-    pel:"",
-  });
 
   const [form, setForm] = useState({
     levelOfInvestigation: "",

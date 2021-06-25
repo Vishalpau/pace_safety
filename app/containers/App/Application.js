@@ -71,6 +71,8 @@ import {
   Contact,
   Chat,
   Email,
+  Login,
+  Register,
   TaskBoard,
   Ecommerce,
   Timeline,
@@ -170,6 +172,11 @@ function Application(props) {
         <Route path="/app/forms/autocomplete" component={Autocomplete} />
         <Route path="/app/forms/upload" component={Upload} />
         <Route path="/app/forms/wysiwyg-editor" component={TextEditor} />
+
+        {/* Login And Register */}
+
+        <Route path="/login" component={Login}></Route>
+        <Route path="/register" component={Register}></Route>
 
         {/* form initialNotification */}
 

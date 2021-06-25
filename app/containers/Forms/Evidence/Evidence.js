@@ -40,9 +40,7 @@ const Evidence = () => {
     comment : "", 
     document : ""
   })
-  console.log(form.available)
-  console.log(form.comment)
-  console.log(form.document)
+
   const handleNext = async () => {
     console.log(form);
     const { error } = EvidenceValidate(form);
@@ -89,7 +87,6 @@ const Evidence = () => {
   const selectValues = [1, 2, 3, 4];
   
   const radioDecide = ["Yes", "No", "N/A"];
-  console.log("b",form.available)
   return (
     <div>
       <Container>

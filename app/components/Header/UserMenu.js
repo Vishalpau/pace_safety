@@ -158,7 +158,7 @@ function UserMenu(props) {
           </ListItemIcon>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose} component={Link} to="/">
+        <MenuItem onClick={handleClose} component={Link} to={link.login}>
           <ListItemIcon>
             <ExitToApp />
           </ListItemIcon>

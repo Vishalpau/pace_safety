@@ -306,18 +306,17 @@ const ActivityDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick = {() => handleNext()}
-                    // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
+                    href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
                   >
                     Next
                   </Button>
                 </Grid>
               </Grid>
               <Grid item md={3}>
-                <FormSideBar
-                deleteForm={[1,2,3]}
+                {/* <FormSideBar
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Activity detail"}
-                />
+                /> */}
               </Grid>
             </Grid>
           </Box>
