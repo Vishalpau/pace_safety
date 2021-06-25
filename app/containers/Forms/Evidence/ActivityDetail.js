@@ -433,7 +433,7 @@ const ActivityDetails = () => {
                   deleteForm={[1, 2, 3]}
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Activity detail"}
-                />
+                /> 
               </Grid>
             </Grid>
           </Box>

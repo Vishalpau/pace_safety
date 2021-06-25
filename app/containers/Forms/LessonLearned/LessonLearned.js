@@ -62,7 +62,7 @@ const LessionLearned = () => {
   const history = useHistory();
   const { id } = useParams();
   const [error, setError] = useState({});
-  const [form, setForm] = useState({ team: 0, teamLearning: "" });
+  const [form, setForm] = useState({ team: "", teamLearning: "" });
   const [learningList, setLearningList] = useState([]);
   const [whyCount, setWhyCount] = useState(['ram','ram'])
 
@@ -231,6 +231,7 @@ const LessionLearned = () => {
                         <FormControl
                           variant="outlined"
                           className={classes.formControl}
+                          error = {error.team}
                         >
                           <InputLabel id="Team/Department">
                             Team/Department
@@ -250,7 +251,7 @@ const LessionLearned = () => {
                               </MenuItem>
                             ))}
                           </Select>
-                          {error && error.team && <p>{error.team}</p>}
+                          {error && error.team && <FormHelperText>{error.team}</FormHelperText>}
                         </FormControl>
                       </Grid>
                       <Grid item md={12}>
@@ -266,13 +267,15 @@ const LessionLearned = () => {
                             rows="3"
                             multiline
                             defaultValue={item.learnings}
+                            error = {error.teamLearning}
+                            helperText = {error ? error.teamLearning : ""}
                             onChange={(e) =>
                               handleUpdateLessonLearned(e,index,'learnings',item.id)
                             }
                           />
-                          {error && error.teamLearning && (
+                          {/* {error && error.teamLearning && (
                             <p>{error.teamLearning}</p>
-                          )}
+                          )} */}
                         </FormControl>
                       </Grid>
                     </>
@@ -283,6 +286,7 @@ const LessionLearned = () => {
                       <FormControl
                         variant="outlined"
                         className={classes.formControl}
+                        error = {error.team}
                       >
                         <InputLabel id="Team/Department">
                           Team/Department
@@ -301,7 +305,7 @@ const LessionLearned = () => {
                             </MenuItem>
                           ))}
                         </Select>
-                        {error && error.team && <p>{error.team}</p>}
+                        {error && error.team && <FormHelperText>{error.team}</FormHelperText>}
                       </FormControl>
                     </Grid>
                     <Grid item md={12}>
@@ -312,17 +316,19 @@ const LessionLearned = () => {
                       >
                         <TextField
                           id="outlined-search"
+                          error = {error.teamLearning}
                           label="Team/Department Learnings"
                           variant="outlined"
                           rows="3"
                           multiline
+                          helperText = {error ? error.teamLearning : ""}
                           onChange={(e) =>
                             setForm({ ...form, teamLearning: e.target.value })
                           }
                         />
-                        {error && error.teamLearning && (
+                        {/* {error && error.teamLearning && (
                           <p>{error.teamLearning}</p>
-                        )}
+                        )} */}
                       </FormControl>
                     </Grid>
                   </>
