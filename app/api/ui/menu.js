@@ -838,37 +838,37 @@ module.exports = [
     key: "home",
     name: "Home",
     icon: "ion-ios-home",
-    linkParent: "/",
+    link: "/",
   },
   {
     key: "Incidents",
     name: "Incidents",
     icon: "ion-md-body",
-    linkParent: "/app/pages/incident/",
+    link: "/app/pages/incident/",
   },
   {
     key: "assessments",
     name: "Assessments",
     icon: "ion-ios-clipboard",
-    linkParent: "/app/pages/blank-page/",
+    link: "/app/pages/blank-page/",
   },
   {
     key: "observations",
     name: "Observations",
     icon: "ion-md-eye",
-    linkParent: "/app/pages/blank-page/",
+    link: "/app/pages/blank-page/",
   },
   {
     key: "inspections",
     name: "Inspections",
     icon: "ion-ios-checkbox",
-    linkParent: "/app/pages/blank-page/",
+    link: "/app/pages/blank-page/",
   },
   {
     key: "menu-level",
     name: "Incident",
     icon: "ion-ios-document-outline",
-    linkParent:
+    link:
       "/app/incident-management/registration/initial-notification/incident-details/",
   },
   // {

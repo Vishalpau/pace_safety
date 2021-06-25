@@ -44,8 +44,8 @@ import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
 
 import IncidentDetails from "../../Forms/InitialNotification/IncidentDetails";
-import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification"
-import InvestigationSummary from "../../SummaryDetails/Investigation"
+import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
+import InvestigationSummary from "../../SummaryDetails/Investigation";
 import EvidenceSummary from "../../SummaryDetails/Evidence";
 import RootCauseAnalysisSummary from "../../SummaryDetails/RootCauseAndAnalysis";
 import LessionLearnSummary from "../../SummaryDetails/LessionLearn";
@@ -76,18 +76,15 @@ function ListItemLink(props) {
 }
 
 const Summary = () => {
-
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
   const [investigation, setInvestigation] = useState(false);
   const [evidence, setEvidence] = useState(false);
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearn, setLessionlearn] = useState(false);
-  console.log(initialNotification)
+  console.log(initialNotification);
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(
-      `api/v1/incidents/${fkid}/`
-    );
+    const allIncidents = await api.get(`api/v1/incidents/${fkid}/`);
     await setIncidents(allIncidents.data.data.results);
   };
 
@@ -99,18 +96,19 @@ const Summary = () => {
     setSelectedDate(date);
   };
 
-
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
   useEffect(() => {
     fetchIncidentData();
-
   }, []);
 
   return (
-    <div>
+    <PapperBlock
+      title={`Incident Number: ${incidents["incidentNumber"]}`}
+      icon="ion-md-list-box"
+    >
       {/* header */}
 
       <Box paddingBottom={1}>
@@ -123,11 +121,11 @@ const Summary = () => {
               endIcon={<CheckCircle />}
               className={classes.statusButton}
               onClick={(e) => {
-                setInitialNotification(true)
-                setInvestigation(false)
-                setEvidence(false)
-                setRootCauseAnalysis(false)
-                setLessionlearn(false)
+                setInitialNotification(true);
+                setInvestigation(false);
+                setEvidence(false);
+                setRootCauseAnalysis(false);
+                setLessionlearn(false);
               }}
             >
               Initial Notification
@@ -143,11 +141,11 @@ const Summary = () => {
               endIcon={<CheckCircle />}
               className={classes.statusButton}
               onClick={(e) => {
-                setInitialNotification(false)
-                setInvestigation(true)
-                setEvidence(false)
-                setRootCauseAnalysis(false)
-                setLessionlearn(false)
+                setInitialNotification(false);
+                setInvestigation(true);
+                setEvidence(false);
+                setRootCauseAnalysis(false);
+                setLessionlearn(false);
               }}
             >
               Investigation
@@ -163,11 +161,11 @@ const Summary = () => {
               className={classes.statusButton}
               endIcon={<AccessTime />}
               onClick={(e) => {
-                setInitialNotification(false)
-                setInvestigation(false)
-                setEvidence(true)
-                setRootCauseAnalysis(false)
-                setLessionlearn(false)
+                setInitialNotification(false);
+                setInvestigation(false);
+                setEvidence(true);
+                setRootCauseAnalysis(false);
+                setLessionlearn(false);
               }}
             >
               Evidence
@@ -181,11 +179,11 @@ const Summary = () => {
               size="small"
               className={classes.statusButton}
               onClick={(e) => {
-                setInitialNotification(false)
-                setInvestigation(false)
-                setEvidence(false)
-                setRootCauseAnalysis(true)
-                setLessionlearn(false)
+                setInitialNotification(false);
+                setInvestigation(false);
+                setEvidence(false);
+                setRootCauseAnalysis(true);
+                setLessionlearn(false);
               }}
             >
               Root Cause & Analysis
@@ -200,11 +198,11 @@ const Summary = () => {
               endIcon={<AccessTime />}
               className={classes.statusButton}
               onClick={(e) => {
-                setInitialNotification(false)
-                setInvestigation(false)
-                setEvidence(false)
-                setRootCauseAnalysis(false)
-                setLessionlearn(true)
+                setInitialNotification(false);
+                setInvestigation(false);
+                setEvidence(false);
+                setRootCauseAnalysis(false);
+                setLessionlearn(true);
               }}
             >
               Lessions Learnt
@@ -223,7 +221,6 @@ const Summary = () => {
               <div>
                 <IncidentDetailsSummary />
                 <Grid container spacing={5}>
-
                   {/* sidebar */}
                   <Grid item xs={12} md={3}>
                     <Paper>
@@ -322,13 +319,12 @@ const Summary = () => {
                   </Grid>
                 </Grid>
               </div>
-            )
+            );
           } else if (investigation == true) {
             return (
               <div>
                 <InvestigationSummary />
                 <Grid container spacing={5}>
-
                   {/* sidebar */}
                   <Grid item xs={12} md={3}>
                     <Paper>
@@ -427,13 +423,12 @@ const Summary = () => {
                   </Grid>
                 </Grid>
               </div>
-            )
+            );
           } else if (evidence == true) {
             return (
               <div>
                 <EvidenceSummary />
                 <Grid container spacing={5}>
-
                   {/* sidebar */}
                   <Grid item xs={12} md={3}>
                     <Paper>
@@ -532,13 +527,12 @@ const Summary = () => {
                   </Grid>
                 </Grid>
               </div>
-            )
+            );
           } else if (rootcauseanalysis == true) {
             return (
               <div>
                 <RootCauseAnalysisSummary />
                 <Grid container spacing={5}>
-
                   {/* sidebar */}
                   <Grid item xs={12} md={3}>
                     <Paper>
@@ -637,13 +631,12 @@ const Summary = () => {
                   </Grid>
                 </Grid>
               </div>
-            )
+            );
           } else if (lessionlearn == true) {
             return (
               <div>
                 <LessionLearnSummary />
                 <Grid container spacing={5}>
-
                   {/* sidebar */}
                   <Grid item xs={12} md={3}>
                     <Paper>
@@ -742,21 +735,11 @@ const Summary = () => {
                   </Grid>
                 </Grid>
               </div>
-            )
+            );
           }
         })()}
       </div>
-
-      {/* {(initialNotification == false )  ? (
-       
-        <div>
-          
-        </div>
-      
-      ) : (
-        <IncidentDetailsSummary />
-      )} */}
-    </div>
+    </PapperBlock>
   );
 };
 

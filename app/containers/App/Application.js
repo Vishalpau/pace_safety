@@ -71,6 +71,8 @@ import {
   Contact,
   Chat,
   Email,
+  Login,
+  Register,
   TaskBoard,
   Ecommerce,
   Timeline,
@@ -171,6 +173,11 @@ function Application(props) {
         <Route path="/app/forms/upload" component={Upload} />
         <Route path="/app/forms/wysiwyg-editor" component={TextEditor} />
 
+        {/* Login And Register */}
+
+        <Route path="/login" component={Login}></Route>
+        <Route path="/register" component={Register}></Route>
+
         {/* form initialNotification */}
 
         <Route
@@ -242,11 +249,23 @@ function Application(props) {
         {/* form Evidence */}
 
         <Route
+        exact
+          path="/app/incident-management/registration/evidence/activity-detail/:id"
+          component={ActivityDetail}
+        />
+         <Route
+         exact
           path="/app/incident-management/registration/evidence/activity-detail/"
           component={ActivityDetail}
         />
         <Route
+        exact
           path="/app/incident-management/registration/evidence/additional-details/"
+          component={AdditionalDetails}
+        />
+         <Route
+         exact
+          path="/app/incident-management/registration/evidence/additional-details/:id"
           component={AdditionalDetails}
         />
         <Route
@@ -336,7 +355,7 @@ function Application(props) {
           component={Summary}
         />
         
-
+        history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
         {/* from leassionlearned */}
         {/* Done, topbar and sidebar pending  */}
         <Route
