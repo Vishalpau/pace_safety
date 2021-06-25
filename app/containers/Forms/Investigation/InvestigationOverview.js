@@ -17,7 +17,6 @@ import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: ".5rem 0",
@@ -45,13 +44,11 @@ const InvestigationOverview = () => {
     "Other",
   ];
   const notificationSent = ["Manage", "SuperVisor"];
-  const [error, setError] = useState({});
 
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-
 
   const [form, setForm] = useState({
     levelOfInvestigation: "",
@@ -68,7 +65,7 @@ const InvestigationOverview = () => {
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: 92
+    fkIncidentId: 92,
   });
 
   const handleDateChange = (date) => {
@@ -84,15 +81,12 @@ const InvestigationOverview = () => {
     // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
     // console.log(nextPath)
     if (res.status === 200) {
-      console.log("request done")
+      console.log("request done");
     }
-
   };
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-
-
 
   return (
     <Container>
@@ -127,7 +121,9 @@ const InvestigationOverview = () => {
                     });
                   }}
                 />
-                {error && error.constructionManagerName && <p>{error.constructionManagerName}</p>}
+                {error && error.constructionManagerName && (
+                  <p>{error.constructionManagerName}</p>
+                )}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit Construction Manager Contact </p> */}
@@ -142,7 +138,10 @@ const InvestigationOverview = () => {
                       constructionManagerContactNo: e.target.value,
                     });
                   }}
-                />{error && error.constructionManagerContactNo && <p>{error.constructionManagerContactNo}</p>}
+                />
+                {error && error.constructionManagerContactNo && (
+                  <p>{error.constructionManagerContactNo}</p>
+                )}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Name </p> */}
@@ -157,7 +156,10 @@ const InvestigationOverview = () => {
                       hseSpecialistName: e.target.value,
                     });
                   }}
-                />{error && error.hseSpecialistName && <p>{error.hseSpecialistName}</p>}
+                />
+                {error && error.hseSpecialistName && (
+                  <p>{error.hseSpecialistName}</p>
+                )}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Contact </p> */}
@@ -172,7 +174,10 @@ const InvestigationOverview = () => {
                       hseSpecialistContactNo: e.target.value,
                     });
                   }}
-                />{error && error.hseSpecialistContactNo && <p>{error.hseSpecialistContactNo}</p>}
+                />
+                {error && error.hseSpecialistContactNo && (
+                  <p>{error.hseSpecialistContactNo}</p>
+                )}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Actual Severity Level </p> */}
@@ -187,7 +192,10 @@ const InvestigationOverview = () => {
                       actualSeverityLevel: e.target.value,
                     });
                   }}
-                />{error && error.actualSeverityLevel && <p>{error.actualSeverityLevel}</p>}
+                />
+                {error && error.actualSeverityLevel && (
+                  <p>{error.actualSeverityLevel}</p>
+                )}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Potential Severity Level </p> */}
@@ -202,7 +210,10 @@ const InvestigationOverview = () => {
                       potentialSeverityLevel: e.target.value,
                     });
                   }}
-                />{error && error.potentialSeverityLevel && <p>{error.potentialSeverityLevel}</p>}
+                />
+                {error && error.potentialSeverityLevel && (
+                  <p>{error.potentialSeverityLevel}</p>
+                )}
               </Grid>
               <Grid item md={12}>
                 {/* <h3>Event</h3> */}
@@ -304,7 +315,10 @@ const InvestigationOverview = () => {
                       equipmentinvoked: e.target.value,
                     });
                   }}
-                />{error && error.equipmentinvoked && <p>{error.equipmentinvoked}</p>}
+                />
+                {error && error.equipmentinvoked && (
+                  <p>{error.equipmentinvoked}</p>
+                )}
               </Grid>
               <Grid item md={6}>
                 {/* <p> Weather</p> */}
@@ -372,7 +386,8 @@ const InvestigationOverview = () => {
                       temprature: e.target.value,
                     });
                   }}
-                />{error && error.temprature && <p>{error.temprature}</p>}
+                />
+                {error && error.temprature && <p>{error.temprature}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Lighting</p> */}
@@ -414,7 +429,8 @@ const InvestigationOverview = () => {
                       windspeed: e.target.value,
                     });
                   }}
-                />{error && error.windspeed && <p>{error.windspeed}</p>}
+                />
+                {error && error.windspeed && <p>{error.windspeed}</p>}
               </Grid>
               <Grid item md={12}>
                 {/* <h3>Event</h3> */}
@@ -435,7 +451,8 @@ const InvestigationOverview = () => {
                       fluidamount: e.target.value,
                     });
                   }}
-                />{error && error.fluidamount && <p>{error.fluidamount}</p>}
+                />
+                {error && error.fluidamount && <p>{error.fluidamount}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Fluid Type</p> */}
@@ -477,7 +494,8 @@ const InvestigationOverview = () => {
                       ael: e.target.value,
                     });
                   }}
-                />{error && error.ael && <p>{error.ael}</p>}
+                />
+                {error && error.ael && <p>{error.ael}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>PEL </p> */}
@@ -492,14 +510,15 @@ const InvestigationOverview = () => {
                       pel: e.target.value,
                     });
                   }}
-                />{error && error.pel && <p>{error.pel}</p>}
+                />
+                {error && error.pel && <p>{error.pel}</p>}
               </Grid>
               <Box marginTop={3}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => handleNext()}
-                // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+                  // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
                 >
                   Next
                 </Button>

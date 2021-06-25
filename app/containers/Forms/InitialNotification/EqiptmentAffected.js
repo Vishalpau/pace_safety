@@ -78,34 +78,35 @@ const EqiptmentAffected = () => {
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
   const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState("");
-  const [equipmentListdata, setEquipmentListData] = useState([])
+  const [equipmentListdata, setEquipmentListData] = useState([]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
-  const [equipmentDamagedComments, setEequipmentDamagedComments] = useState('')
+  const [equipmentDamagedComments, setEequipmentDamagedComments] = useState("");
   const [form, setForm] = useState([
     {
       equipmentType: "",
       equipmentOtherType: "",
       equipmentDeatils: "",
       createdBy: 1,
-      fkIncidentId: localStorage.getItem("fkincidentId")
+      fkIncidentId: localStorage.getItem("fkincidentId"),
     },
   ]);
   const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
-
     const temp = equipmentListdata;
-    console.log(temp)
+    console.log(temp);
     const value = e.target.value;
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
-    console.log(temp[key])
+    console.log(temp[key]);
 
-    const res = await api.put(`api/v1/incidents/${id}/equipments/${equipmentId}/`, temp[key]);
+    const res = await api.put(
+      `api/v1/incidents/${id}/equipments/${equipmentId}/`,
+      temp[key]
+    );
     console.log(res);
-  }
+  };
 
   const addNewEquipmentDetails = () => {
-
     setForm([
       ...form,
       {
@@ -113,7 +114,7 @@ const EqiptmentAffected = () => {
         equipmentOtherType: "",
         equipmentDeatils: "",
         createdBy: 1,
-        fkIncidentId: localStorage.getItem("fkincidentId")
+        fkIncidentId: localStorage.getItem("fkincidentId"),
       },
     ]);
   };
@@ -128,61 +129,71 @@ const EqiptmentAffected = () => {
   const handleNext = async () => {
     console.log(form);
 
-    const nextPath = JSON.parse(localStorage.getItem("nextPath"))
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     if (equipmentListdata.length > 0) {
-      if (nextPath.environmentAffect === 'Yes') {
-        history.push(`/app/incident-management/registration/initial-notification/environment-affected/${id}`)
-      }
-      else {
-        history.push(`/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`)
+      if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        );
+      } else {
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
       }
     } else {
       if (detailsOfEquipmentAffect === "Yes") {
         const { error, isValid } = EquipmentValidate(form);
         setError(error);
-        console.log(form)
-        var status = 0
+        console.log(form);
+        var status = 0;
 
         for (var i = 0; i < form.length; i++) {
-          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/equipments/`, form[i]);
+          const res = await api.post(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/equipments/`,
+            form[i]
+          );
 
-          status = res.status
+          status = res.status;
         }
         if (status === 201) {
-
-
-          if (nextPath.environmentAffect === 'Yes') {
-            history.push('/app/incident-management/registration/initial-notification/environment-affected/')
+          if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/environment-affected/"
+            );
+          } else {
+            history.push(
+              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+            );
           }
-          else {
-            history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
-          }
-
         }
       } else {
         const temp = incidentsListData;
         temp["equipmentDamagedComments"] = equipmentDamagedComments;
         temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect;
         temp["updatedAt"] = moment(new Date()).toISOString();
-        const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-        if (nextPath.environmentAffect === 'Yes') {
-          history.push('/app/incident-management/registration/initial-notification/environment-affected/')
-        }
-        else {
-          history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
+        if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/environment-affected/"
+          );
+        } else {
+          history.push(
+            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          );
         }
       }
     }
   };
-
   const fetchEquipmentListData = async () => {
-
     const res = await api.get(`api/v1/incidents/${id}/equipments/`);
     const result = res.data.data.results;
     setEquipmentListData(result);
-  }
+  };
 
   const fetchEquipmentAffectedValue = async () => {
     const res = await api.get("api/v1/lists/14/value");
@@ -235,170 +246,188 @@ const EqiptmentAffected = () => {
                     value={detailsOfEquipmentAffect}
                     onChange={(e) => {
                       setDetailsOfEquipmentAffect(e.target.value);
-                      handleEquipmentDamageAvailable()
-                    }
-                    }
+                      handleEquipmentDamageAvailable();
+                    }}
                   >
                     {equipmentAffected.length !== 0
                       ? equipmentAffected.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                 </Grid>
                 {detailsOfEquipmentAffect === "Yes" ? (
                   <>
-                    {equipmentListdata.length > 0 ? equipmentListdata.map((equipment, key) => <>
-                      <Grid item md={6}>
-                        {/* <p>Equiptment type</p> */}
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControl}
-                        >
-                          <InputLabel id="eq-type-label">
-                            Equiptment type
-                          </InputLabel>
-                          <Select
-                            labelId="eq-type-label"
-                            id="eq-type"
-                            label="Equiptment type"
-                            defaultValue={equipment.equipmentType}
-                            onChange={(e) =>
-                              handleUpdateEquipment(e, key, "equipmentType", equipment.id)
-                            }
-                          >
-                            {equipmentTypeValue.length !== 0
-                              ? equipmentTypeValue.map(
-                                (selectValues, index) => (
-                                  <MenuItem
-                                    key={index}
-                                    value={selectValues.inputValue}
-                                  >
-                                    {selectValues.inputLabel}
-                                  </MenuItem>
-                                )
-                              )
-                              : null}
-                          </Select>
-                        </FormControl>
-                        {/* {error && error[`equipmentType${[key]}`] && (
+                    {equipmentListdata.length > 0
+                      ? equipmentListdata.map((equipment, key) => (
+                          <>
+                            <Grid item md={6}>
+                              {/* <p>Equiptment type</p> */}
+                              <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                              >
+                                <InputLabel id="eq-type-label">
+                                  Equiptment type
+                                </InputLabel>
+                                <Select
+                                  labelId="eq-type-label"
+                                  id="eq-type"
+                                  label="Equiptment type"
+                                  defaultValue={equipment.equipmentType}
+                                  onChange={(e) =>
+                                    handleUpdateEquipment(
+                                      e,
+                                      key,
+                                      "equipmentType",
+                                      equipment.id
+                                    )
+                                  }
+                                >
+                                  {equipmentTypeValue.length !== 0
+                                    ? equipmentTypeValue.map(
+                                        (selectValues, index) => (
+                                          <MenuItem
+                                            key={index}
+                                            value={selectValues.inputValue}
+                                          >
+                                            {selectValues.inputLabel}
+                                          </MenuItem>
+                                        )
+                                      )
+                                    : null}
+                                </Select>
+                              </FormControl>
+                              {/* {error && error[`equipmentType${[key]}`] && (
                             <p>{error[`equipmentType${[key]}`]}</p>
                           )} */}
-                      </Grid>
+                            </Grid>
 
-                      <Grid item md={6}>
-                        {/* <p>if other describe</p> */}
-                        <TextField
-                          variant="outlined"
-                          id="filled-basic"
-                          label="If others, describe"
-                          className={classes.formControl}
-                          defaultValue={equipment.equipmentOtherType}
-                          onChange={(e) =>
-                            handleUpdateEquipment(e, key, "equipmentOtherType", equipment.id)
-                          }
-                        />
-                        {/* {error && error[`equipmentOtherType${[key]}`] && (
-                            <p>{error[`equipmentOtherType${[key]}`]}</p>
-                          )} */}
-                      </Grid>
-
-                      <Grid item md={12}>
-                        {/* <p>Describe the damage</p> */}
-                        <TextField
-                          id="describe-damage"
-                          multiline
-                          variant="outlined"
-                          rows="3"
-                          label="Describe the damage"
-                          className={classes.fullWidth}
-                          defaultValue={equipment.equipmentDeatils}
-                          onChange={(e) =>
-                            handleUpdateEquipment(e, key, "equipmentDeatils", equipment.id)
-                          }
-                        />
-                        {/* {error && error[`equipmentDeatils${[key]}`] && (
-                            <p>{error[`equipmentDeatils${[key]}`]}</p>
-                          )} */}
-                      </Grid>
-                    </>) : form.map((value, key) => (
-                      <>
-                        <Grid item md={6}>
-                          {/* <p>Equiptment type</p> */}
-                          <FormControl
-                            variant="outlined"
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="eq-type-label">
-                              Equiptment type
-                            </InputLabel>
-                            <Select
-                              labelId="eq-type-label"
-                              id="eq-type"
-                              label="Equiptment type"
-                              onChange={(e) =>
-                                handleForm(e, key, "equipmentType")
-                              }
-                            >
-                              {equipmentTypeValue.length !== 0
-                                ? equipmentTypeValue.map(
-                                  (selectValues, index) => (
-                                    <MenuItem
-                                      key={index}
-                                      value={selectValues.inputValue}
-                                    >
-                                      {selectValues.inputLabel}
-                                    </MenuItem>
+                            <Grid item md={6}>
+                              {/* <p>if other describe</p> */}
+                              <TextField
+                                variant="outlined"
+                                id="filled-basic"
+                                label="If others, describe"
+                                className={classes.formControl}
+                                defaultValue={equipment.equipmentOtherType}
+                                onChange={(e) =>
+                                  handleUpdateEquipment(
+                                    e,
+                                    key,
+                                    "equipmentOtherType",
+                                    equipment.id
                                   )
-                                )
-                                : null}
-                            </Select>
-                          </FormControl>
-                          {error && error[`equipmentType${[key]}`] && (
-                            <p>{error[`equipmentType${[key]}`]}</p>
-                          )}
-                        </Grid>
-
-                        <Grid item md={6}>
-                          {/* <p>if other describe</p> */}
-                          <TextField
-                            variant="outlined"
-                            id="filled-basic"
-                            label="If others, describe"
-                            className={classes.formControl}
-                            onChange={(e) =>
-                              handleForm(e, key, "equipmentOtherType")
-                            }
-                          />
-                          {error && error[`equipmentOtherType${[key]}`] && (
+                                }
+                              />
+                              {/* {error && error[`equipmentOtherType${[key]}`] && (
                             <p>{error[`equipmentOtherType${[key]}`]}</p>
-                          )}
-                        </Grid>
+                          )} */}
+                            </Grid>
 
-                        <Grid item md={12}>
-                          {/* <p>Describe the damage</p> */}
-                          <TextField
-                            id="describe-damage"
-                            multiline
-                            variant="outlined"
-                            rows="3"
-                            label="Describe the damage"
-                            className={classes.fullWidth}
-                            onChange={(e) =>
-                              handleForm(e, key, "equipmentDeatils")
-                            }
-                          />
-                          {error && error[`equipmentDeatils${[key]}`] && (
+                            <Grid item md={12}>
+                              {/* <p>Describe the damage</p> */}
+                              <TextField
+                                id="describe-damage"
+                                multiline
+                                variant="outlined"
+                                rows="3"
+                                label="Describe the damage"
+                                className={classes.fullWidth}
+                                defaultValue={equipment.equipmentDeatils}
+                                onChange={(e) =>
+                                  handleUpdateEquipment(
+                                    e,
+                                    key,
+                                    "equipmentDeatils",
+                                    equipment.id
+                                  )
+                                }
+                              />
+                              {/* {error && error[`equipmentDeatils${[key]}`] && (
                             <p>{error[`equipmentDeatils${[key]}`]}</p>
-                          )}
-                        </Grid>
-                      </>
-                    ))}
-                    {equipmentListdata.length > 0 ? null :
+                          )} */}
+                            </Grid>
+                          </>
+                        ))
+                      : form.map((value, key) => (
+                          <>
+                            <Grid item md={6}>
+                              {/* <p>Equiptment type</p> */}
+                              <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                              >
+                                <InputLabel id="eq-type-label">
+                                  Equiptment type
+                                </InputLabel>
+                                <Select
+                                  labelId="eq-type-label"
+                                  id="eq-type"
+                                  label="Equiptment type"
+                                  onChange={(e) =>
+                                    handleForm(e, key, "equipmentType")
+                                  }
+                                >
+                                  {equipmentTypeValue.length !== 0
+                                    ? equipmentTypeValue.map(
+                                        (selectValues, index) => (
+                                          <MenuItem
+                                            key={index}
+                                            value={selectValues.inputValue}
+                                          >
+                                            {selectValues.inputLabel}
+                                          </MenuItem>
+                                        )
+                                      )
+                                    : null}
+                                </Select>
+                              </FormControl>
+                              {error && error[`equipmentType${[key]}`] && (
+                                <p>{error[`equipmentType${[key]}`]}</p>
+                              )}
+                            </Grid>
+
+                            <Grid item md={6}>
+                              {/* <p>if other describe</p> */}
+                              <TextField
+                                variant="outlined"
+                                id="filled-basic"
+                                label="If others, describe"
+                                className={classes.formControl}
+                                onChange={(e) =>
+                                  handleForm(e, key, "equipmentOtherType")
+                                }
+                              />
+                              {error && error[`equipmentOtherType${[key]}`] && (
+                                <p>{error[`equipmentOtherType${[key]}`]}</p>
+                              )}
+                            </Grid>
+
+                            <Grid item md={12}>
+                              {/* <p>Describe the damage</p> */}
+                              <TextField
+                                id="describe-damage"
+                                multiline
+                                variant="outlined"
+                                rows="3"
+                                label="Describe the damage"
+                                className={classes.fullWidth}
+                                onChange={(e) =>
+                                  handleForm(e, key, "equipmentDeatils")
+                                }
+                              />
+                              {error && error[`equipmentDeatils${[key]}`] && (
+                                <p>{error[`equipmentDeatils${[key]}`]}</p>
+                              )}
+                            </Grid>
+                          </>
+                        ))}
+                    {equipmentListdata.length > 0 ? null : (
                       <Grid item lg={12} md={6} sm={6}>
                         <button
                           className={classes.textButton}
@@ -406,7 +435,8 @@ const EqiptmentAffected = () => {
                         >
                           Add details of additional equiptment affected?
                         </button>
-                      </Grid>}
+                      </Grid>
+                    )}
                   </>
                 ) : null}
                 <Grid item lg={12} md={6} sm={6}>
@@ -417,7 +447,9 @@ const EqiptmentAffected = () => {
                     variant="outlined"
                     rows="4"
                     label="Describe any actions taken"
-                    onChange={(event) => setEequipmentDamagedComments(event.target.value)}
+                    onChange={(event) =>
+                      setEequipmentDamagedComments(event.target.value)
+                    }
                     className={classes.fullWidth}
                   />
                 </Grid>
@@ -435,7 +467,7 @@ const EqiptmentAffected = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
-                  // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
                   >
                     Next
                   </Button>
