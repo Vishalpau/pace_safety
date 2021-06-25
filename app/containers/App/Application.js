@@ -249,11 +249,23 @@ function Application(props) {
         {/* form Evidence */}
 
         <Route
+        exact
+          path="/app/incident-management/registration/evidence/activity-detail/:id"
+          component={ActivityDetail}
+        />
+         <Route
+         exact
           path="/app/incident-management/registration/evidence/activity-detail/"
           component={ActivityDetail}
         />
         <Route
+        exact
           path="/app/incident-management/registration/evidence/additional-details/"
+          component={AdditionalDetails}
+        />
+         <Route
+         exact
+          path="/app/incident-management/registration/evidence/additional-details/:id"
           component={AdditionalDetails}
         />
         <Route
@@ -343,7 +355,7 @@ function Application(props) {
           component={Summary}
         />
         
-
+        history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
         {/* from leassionlearned */}
         {/* Done, topbar and sidebar pending  */}
         <Route

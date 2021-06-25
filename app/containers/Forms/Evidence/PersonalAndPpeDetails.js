@@ -32,51 +32,61 @@ const PersonalAndPpeDetails = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const [error, setError] = useState({});
-  const [form , setForm] = useState({
-    ppeque1 : "PPE worn properly?",
-    ppeans1 : "",
-    ppeque2 : "PPE in good shape?",
-    ppeans2 : "",
-    ppeque3 : "PPE Proper fit?",
-    ppeans3 : "",
-    ppeque4 : "PPE appropriate for task?",
-    ppeans4 : "",
+  // const { id } = useParams();
+  // const history = useHistory();
+  // const [activtyList, setActvityList] = useState([])
+  // const [ad08, setAd01] = useState({});
+  // const [ad09, setAd02] = useState({});
+  // const [ad01, setAd03] = useState({});
+  // const [ad11, setAd04] = useState({});
+  // const [ad12, setAd05] = useState({});
+  // const [ad13, setAd06] = useState({});
+  // const [ad14, setAd07] = useState({});
 
-    supervisionque1 : "Employee self supervised",
-    supervisionans1 : "",
-    supervisionque2 : "Supervisor present at site",
-    supervisionans2 : "",
-    supervisionque3 : "Supervisor provided clear detail of work", 
-    supervisionans3 : "",
-    supervisionque4 : "Supervisor provided detail work package",
-    supervisionans4 : "",
-    supervisionque5 : "Did supervisor conducted I-care observation",
-    supervisionans5 : "",
 
-    flagque1 : "Was flag person required for this job",
-    flagans1 : "",
-    flagque2 : "Flag person trained/competent",
-    flagans2 : "",
-    flagque3 : "Was flag person present", 
-    flagans3 : "",
+  // const handleNext = async () => {
+  //   if(id !== undefined && activtyList.length > 0){
+  //     history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/");
+  //   }
+  //   else{
+  //   const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
+  //   console.log(selectedQuestion)
+  //   for (var i = 0; i < selectedQuestion.length; i++) {
+  //     const valdation = selectedQuestion[i];
+  //     console.log(valdation)
+  //     const { isValid, error } = ActivityDetailValidate(valdation);
+  //     setError(error);
+  //       const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+  //         selectedQuestion[i]
+  //       );
+  //       console.log(res);
+      
+  //   }
+  //   history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
+  // }
+  // };
+ 
+  // const handleUpdateActivityList = async(e,key,fieldname,activityId)=>{
+  //   const temp = activtyList;
+  //   console.log(temp)
+  //   const value = e.target.value;
+  //   temp[key][fieldname] = value;
+  //   temp[key]["updatedBy"] = 0;
+  //   temp[key]["updatedAt"] = moment(new Date()).toISOString();
+  //   console.log(temp[key])
 
-    otherque1 : "Metal on Metal incident",
-    otherans1 : "",
-    otherque2 : "Was person in the line of fire",
-    otherans2 : "",
-
-  })
-  console.log(form.otherans1)
-  const handleNext = () => {
-    console.log('sagar',form);
-    const { error, isValid } = PersonalAndPpeDetailValidate(form);
-    setError(error);
-    console.log(error, isValid);
-    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
-    // console.log(nextPath)
-
-    
-  };
+  //   const res = await api.put(`api/v1/incidents/${id}/activities/${activityId}/`, temp[key]);
+  //   console.log(res);
+  // }
+  // const fetchActivityList = async()=>{
+  //   const res = await api.get(`api/v1/incidents/${id}/activities/`);
+  //   const result = res.data.data.results;
+  //   await setActvityList(result);
+  //   console.log(result)
+  // }
+  // useEffect(()=>{
+  //   fetchActivityList();
+  // },[])
 
   return (
     <div>
