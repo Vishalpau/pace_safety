@@ -395,10 +395,11 @@ const HazardiousActs = () => {
               </Grid>
             </Grid>
             <Grid item md={3}>
-              {/* <FormSideBar
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                 selectedItem={"Hazardious acts"}
-              /> */}
+              />
             </Grid>
           </Grid>
         </Box>
