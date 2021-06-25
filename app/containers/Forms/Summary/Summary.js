@@ -759,7 +759,7 @@ const Summary = () => {
         <div>
           
         </div>
-      
+
       ) : (
         <IncidentDetailsSummary />
       )} */}

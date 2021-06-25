@@ -12,11 +12,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-
 import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import api from "../../../utils/axios";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -52,25 +53,40 @@ const InitialDetails = () => {
   );
 
   const [form, setForm] = useState({
-    unitconstructionmanagername: "",
-    unitconstructionmanagercontact: "",
-    unithsespecialistname: "",
-    unithsespecialistcontactno: "",
-    actualseveritylevel: "",
-    potentialseveritylevel: "",
-    activity: "",
-    projectname: "",
-    jobtask: "",
-    equipmentinvoked: "",
-    weather: "",
-    weather2: "",
-    temprature:"",
-    lighting: "",
-    windspeed: "",
-    fluidamount: "",
-    fluidtype: "",
-    ael: "",
-    pel:"",
+    // constructionManagerName: "",
+    // constructionManagerContactNo: "",
+    // hseSpecialistName: "",
+    // hseSpecialistContactNo: "",
+    // actualSeverityLevel: "",
+    // potentialSeverityLevel: "",
+    // activity: "",
+    // projectname: "",
+    // jobtask: "",
+    // equipmentinvoked: "",
+    // weather: "",
+    // weather2: "",
+    // temprature:"",
+    // lighting: "",
+    // windspeed: "",
+    // fluidamount: "",
+    // fluidtype: "",
+    // ael: "",
+    // pel:"",
+    levelOfInvestigation: "",
+    srartDate: "",
+    endDate: "",
+    constructionManagerName: "",
+    constructionManagerContactNo: "",
+    hseSpecialistName: "",
+    hseSpecialistContactNo: "",
+    actualSeverityLevel: "",
+    potentialSeverityLevel: "",
+    preEventMitigations: "string",
+    correctionActionClosedAt: "2021-06-21T16:00:11.983Z",
+    status: "Active",
+    createdBy: 0,
+    updatedBy: 0,
+    fkIncidentId: 82
   });
 
   const handleDateChange = (date) => {
@@ -78,14 +94,17 @@ const InitialDetails = () => {
   };
 
   const handleNext = () => {
-    console.log('sagar',form);
-    const { error, isValid } = initialdetailvalidate(form);
-    setError(error);
-    console.log(error, isValid);
+    console.log(form);
+    // const { error, isValid } = initialdetailvalidate(form);
+    // setError(error);
+    // console.log(error, isValid);
+    const res = api.post(`api/v1/incidents/${form.fkIncidentId}/investigations/`, form);
     // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
     // console.log(nextPath)
+    if (res.status === 200) {
+      console.log("request done")
+    }
 
-    
   };
 
   const radioDecide = ["Yes", "No"];
@@ -119,16 +138,14 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit Construction Manager Name"
                   className={classes.fullWidth}
-                  error = {error.unitconstructionmanagername}
-                  helperText = {error.unitconstructionmanagername ? error.unitconstructionmanagername : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
-                          unitconstructionmanagername: e.target.value,
+                          constructionManagerName: e.target.value,
                         });
                       }}
                  />
-                {/* {error && error.unitconstructionmanagername && <FormHelperText>{error.unitconstructionmanagername}</FormHelperText>} */}
+                {error && error.constructionManagerName && <p>{error.constructionManagerName}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit Construction Manager Contact </p> */}
@@ -137,16 +154,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit Construction Manager Contact"
                   className={classes.fullWidth}
-                  error = {error.unitconstructionmanagercontact}
-                  helperText = {error.unitconstructionmanagercontact ? error.unitconstructionmanagercontact : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
-                          unitconstructionmanagercontact: e.target.value,
+                          constructionManagerContactNo: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.unitconstructionmanagercontact && <p>{error.unitconstructionmanagercontact}</p>} */}
+                />{error && error.constructionManagerContactNo && <p>{error.constructionManagerContactNo}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Name </p> */}
@@ -155,16 +169,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit HSE Specialist Name"
                   className={classes.fullWidth}
-                  error = {error.unithsespecialistname}
-                  helperText = {error.unithsespecialistname ? error.unithsespecialistname : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
-                          unithsespecialistname: e.target.value,
+                          hseSpecialistName: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.unithsespecialistname && <p>{error.unithsespecialistname}</p>} */}
+                />{error && error.hseSpecialistName && <p>{error.hseSpecialistName}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Unit HSE Specialist Contact </p> */}
@@ -173,16 +184,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Unit HSE Specialist Contact"
                   className={classes.fullWidth}
-                  error={error.unithsespecialistcontactno}
-                  helperText = {error.unithsespecialistcontactno ? error.unithsespecialistcontactno : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
-                          unithsespecialistcontactno: e.target.value,
+                          hseSpecialistContactNo: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.unithsespecialistcontactno && <p>{error.unithsespecialistcontactno}</p>} */}
+                />{error && error.hseSpecialistContactNo && <p>{error.hseSpecialistContactNo}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Actual Severity Level </p> */}
@@ -191,16 +199,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Actual Severity Level "
                   className={classes.fullWidth}
-                  error = {error.actualseveritylevel}
-                  helperText = {error.actualseveritylevel ? error.actualseveritylevel : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
-                          actualseveritylevel: e.target.value,
+                          actualSeverityLevel: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.actualseveritylevel && <p>{error.actualseveritylevel}</p>} */}
+                />{error && error.actualSeverityLevel && <p>{error.actualSeverityLevel}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Potential Severity Level </p> */}
@@ -209,16 +214,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Potential Severity Level"
                   className={classes.fullWidth}
-                  error = {error.potentialseveritylevel}
-                  helperText = {error.potentialseveritylevel ? error.potentialseveritylevel : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
-                          potentialseveritylevel: e.target.value,
+                          potentialSeverityLevel: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.potentialseveritylevel && <p>{error.potentialseveritylevel}</p>} */}
+                />{error && error.potentialSeverityLevel && <p>{error.potentialSeverityLevel}</p>}
               </Grid>
               <Grid item md={12}>
                 {/* <h3>Event</h3> */}
@@ -252,7 +254,7 @@ const InitialDetails = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                  {error && error.activity && <FormHelperText>{error.activity}</FormHelperText>}
+                  {error && error.activity && <p>{error.activity}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -279,7 +281,7 @@ const InitialDetails = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                  {error && error.projectname && <FormHelperText>{error.projectname}</FormHelperText>}
+                  {error && error.projectname && <p>{error.projectname}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -307,7 +309,7 @@ const InitialDetails = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                  {error && error.jobtask && <FormHelperText>{error.jobtask}</FormHelperText>}
+                  {error && error.jobtask && <p>{error.jobtask}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -317,16 +319,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Eqipment Invoked"
                   className={classes.fullWidth}
-                  error = {error.equipmentinvoked}
-                  helperText = {error.equipmentinvoked ? error.equipmentinvoked : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
                           equipmentinvoked: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.equipmentinvoked && <FormHelperText>{error.equipmentinvoked}</FormHelperText>} */}
+                />{error && error.equipmentinvoked && <p>{error.equipmentinvoked}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p> Weather</p> */}
@@ -353,7 +352,7 @@ const InitialDetails = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                  {error && error.weather && <FormHelperText>{error.weather}</FormHelperText>}
+                  {error && error.weather && <p>{error.weather}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -389,16 +388,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Temprature"
                   className={classes.fullWidth}
-                  error = {error.temprature}
-                  helperText = {error.temprature ? error.temprature : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
                           temprature: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.temprature && <FormHelperText>{error.temprature}</FormHelperText>} */}
+                />{error && error.temprature && <p>{error.temprature}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Lighting</p> */}
@@ -425,7 +421,7 @@ const InitialDetails = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                  {error && error.lighting && <FormHelperText>{error.lighting}</FormHelperText>}
+                  {error && error.lighting && <p>{error.lighting}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -435,16 +431,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Wind Speed"
                   className={classes.fullWidth}
-                  error={error.windspeed}
-                  helperText = {error.windspeed ? error.windspeed : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
                           windspeed: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.windspeed && <FormHelperText>{error.windspeed}</FormHelperText>} */}
+                />{error && error.windspeed && <p>{error.windspeed}</p>}
               </Grid>
               <Grid item md={12}>
                 {/* <h3>Event</h3> */}
@@ -459,16 +452,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="Fluid Amount"
                   className={classes.fullWidth}
-                  error={error.fluidamount}
-                  helperText = {error.fluidamount ? error.fluidamount : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
                           fluidamount: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.fluidamount && <FormHelperText>{error.fluidamount}</FormHelperText>} */}
+                />{error && error.fluidamount && <p>{error.fluidamount}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>Fluid Type</p> */}
@@ -495,7 +485,7 @@ const InitialDetails = () => {
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
-                  {error && error.fluidtype && <FormHelperText>{error.fluidtype}</FormHelperText>}
+                  {error && error.fluidtype && <p>{error.fluidtype}</p>}
                 </FormControl>
               </Grid>
               <Grid item md={6}>
@@ -505,16 +495,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="AEL"
                   className={classes.fullWidth}
-                  error = {error.ael}
-                  helperText = {error.ael ? error.ael : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
                           ael: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.ael && <FormHelperText>{error.ael}</FormHelperText>} */}
+                />{error && error.ael && <p>{error.ael}</p>}
               </Grid>
               <Grid item md={6}>
                 {/* <p>PEL </p> */}
@@ -523,16 +510,13 @@ const InitialDetails = () => {
                   variant="outlined"
                   label="PEL"
                   className={classes.fullWidth}
-                  error = {error.pel}
-                  helperText = {error.pel ? error.pel : ""}
                   onChange={(e) => {
                         setForm({
                           ...form,
                           pel: e.target.value,
                         });
                       }}
-                />
-                {/* {error && error.pel && <FormHelperText>{error.pel}</FormHelperText>} */}
+                />{error && error.pel && <p>{error.pel}</p>}
               </Grid>
               <Box marginTop={3}>
                 <Button
@@ -557,6 +541,7 @@ const InitialDetails = () => {
       </Paper>
     </Container>
   );
-};
+  }
+
 
 export default InitialDetails;
