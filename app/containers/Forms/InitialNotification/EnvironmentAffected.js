@@ -148,11 +148,11 @@ const EnvironmentAffected = () => {
         );
       }
       
-      if(res.status === 201){
+      // if(res.status === 201){
       history.push(
         "/app/incident-management/registration/initial-notification/reporting-and-notification/"
       );
-      }
+      // }
     } else {
       history.push(
         "/app/incident-management/registration/initial-notification/reporting-and-notification/"
