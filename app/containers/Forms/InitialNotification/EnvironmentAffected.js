@@ -23,7 +23,8 @@ import FormSideBar from "../FormSideBar";
 import FormHeader from "../FormHeader";
 
 import api from "../../../utils/axios";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -68,6 +69,7 @@ const EnvironmentAffected = () => {
 
   const classes = useStyles();
   const history = useHistory();
+  const {id} = useParams();
   const [error, setError] = useState({});
 
   const [environmentAffectedValue, setEnvironmentAffectedValue] = useState([]);
@@ -79,11 +81,13 @@ const EnvironmentAffected = () => {
   const [isrelase,setIsRelase] = useState(false)
   const [isWildlife,setIsWildlife] = useState(false)
   const [iswaterbody,setIswaterBody] = useState(false)
+  const [environmentListData, setEnvironmentListData] = useState([])
 
   const [spillsData,setSpillsData] = useState({})
   const [relaseData,setReleaseData] = useState({})
   const [wildLifeData,setWildLifeData] = useState({})
   const [wateBodyData,setWaterBodyData] = useState({})
+  
 
 
 
@@ -109,19 +113,41 @@ const EnvironmentAffected = () => {
     ]);
   };
 
-  const handleNext = async () => {
-    
+  const handleUpdateEnvironement = async(e,key,fieldname,envId)=>{
+   
+    const temp = environmentListData;
+    console.log(temp)
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    temp[key]["updatedBy"] = 0;
+    temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    console.log(temp[key])
+
+    const res = await api.put(`api/v1/incidents/${id}/environment/${envId}/`, temp[key]);
+    console.log(res);
+  }
+
+  const handleNext = async () => {   
+
+    if(environmentListData.length >0){
+      history.push(
+        `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+      );
+    }else{
     const { error, isValid } = EnvironmentValidate(form);
     setError(error);
     console.log(error, isValid);
 
     if (detailsOfEnvAffect === "Yes") {
-      console.log(form);
-
-      const res = await api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
-        form
-      );
+      const envList = [spillsData, relaseData, wildLifeData, wateBodyData]
+      
+      for(var i =0; i< envList.length; i++){
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
+          envList[i]
+        );
+      }
+      
       // if(res.status === 201){
       history.push(
         "/app/incident-management/registration/initial-notification/reporting-and-notification/"
@@ -132,7 +158,10 @@ const EnvironmentAffected = () => {
         "/app/incident-management/registration/initial-notification/reporting-and-notification/"
       );
     }
+  }
   };
+
+
   const fetchWaterBodyAffectedValue = async () => {
     const res = await api.get("api/v1/lists/19/value");
     const result = res.data.data.results;
@@ -156,11 +185,18 @@ const EnvironmentAffected = () => {
     const result = res.data.data.results;
     setEnvironmentAffectedValue(result);
   };
+
+  const fetchEnviornmentListData = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/environment/`);
+    const result = res.data.data.results;
+    setEnvironmentListData(result);
+  };
   useEffect(() => {
     fetchEnviornmentAffectedValue();
     fetchAnyReleaseValue();
     fetchImpactOnWildLifeValue();
     fetchWaterBodyAffectedValue();
+    fetchEnviornmentListData();
   }, []);
 
   return (
@@ -176,7 +212,47 @@ const EnvironmentAffected = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
-
+                {environmentListData.length !==0?environmentListData.map((env,key)=>
+                <>
+                <Grid item md={6}>
+                  <p>Where there any spills</p>
+                  <RadioGroup
+                    aria-label="detailsOfPropertyAffect"
+                    name="detailsOfPropertyAffect"
+                    defaultValue={env.envQuestionOption}
+                    onChange={(e) => handleUpdateEnvironement(e,key,'envQuestionOption',env.id)}
+                  >
+                    {environmentAffectedValue.length !== 0
+                      ? environmentAffectedValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                            
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
+                </Grid>
+                <Grid item md={12}>
+                {env.envQuestionOption == 'Yes' ? 
+                    <TextField
+                      id="waterbody-details"
+                      multiline
+                      rows="3"
+                      variant="outlined"
+                      label="Details of waterbody affected"
+                      defaultValue={env.envAnswerDetails}
+                      className={classes.fullWidth}
+                      onChange={(e) => handleUpdateEnvironement(e,key,'envAnswerDetails',env.id)}
+                    />
+                    :null}  
+                    {error && error.envAnswerDetails && (
+                      <p>{error.envAnswerDetails}</p>
+                    )}
+                </Grid>
+                </>
+                ):<>
                 {/* spills question and option */}
                 <Grid item md={6}>
                   <p>Where there any spills</p>
@@ -371,7 +447,7 @@ const EnvironmentAffected = () => {
                     </RadioGroup>
                   </div>
                 </Grid>
-
+                </>} 
                 <Grid item md={12}>
                   <div>
                   {iswaterbody == true ? 
@@ -400,7 +476,7 @@ const EnvironmentAffected = () => {
                     <p>{error.envAnswerDetails}</p>
                   )}
                 </Grid>
-                  
+                 
                 <Grid item md={12}>
                   <div>
                     {/* <p>Comment if any</p> */}

@@ -23,7 +23,7 @@ export const EVIDENCE_FORM = {
 }
 
 export const INVESTIGATION_FORM = {
-    "Initial details":`${URL}app/incident-management/registration/investigation/initial-details/`,
+    // "Initial details":`${URL}app/incident-management/registration/investigation/initial-details/`,
     "Investigation overview":`${URL}app/incident-management/registration/investigation/investigation-overview/`,
     "Worker details":`${URL}app/incident-management/registration/investigation/worker-details/`,
     "Property impact details":`${URL}app/incident-management/registration/investigation/property-impact-details/`,

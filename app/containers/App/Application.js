@@ -71,6 +71,8 @@ import {
   Contact,
   Chat,
   Email,
+  Login,
+  Register,
   TaskBoard,
   Ecommerce,
   Timeline,
@@ -171,13 +173,31 @@ function Application(props) {
         <Route path="/app/forms/upload" component={Upload} />
         <Route path="/app/forms/wysiwyg-editor" component={TextEditor} />
 
+        {/* Login And Register */}
+
+        <Route path="/login" component={Login}></Route>
+        <Route path="/register" component={Register}></Route>
+
         {/* form initialNotification */}
 
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/environment-affected/"
           component={EnvironmentAffected}
         />
+
         <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/environment-affected/:id"
+          component={EnvironmentAffected}
+        />
+        <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/eqiptment-affected/:id"
+          component={EqiptmentAffected}
+        />
+        <Route
+        exact
           path="/app/incident-management/registration/initial-notification/eqiptment-affected/"
           component={EqiptmentAffected}
         />
@@ -193,15 +213,33 @@ function Application(props) {
           component={IncidentDetails}
         />
         <Route
+        exact
           path="/app/incident-management/registration/initial-notification/peoples-afftected/"
           component={PeoplesAfftected}
         />
         <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/peoples-afftected/:id"
+          component={PeoplesAfftected}
+        />
+        <Route
+        exact
           path="/app/incident-management/registration/initial-notification/property-affected/"
           component={PropertyAffected}
         />
         <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/property-affected/:id"
+          component={PropertyAffected}
+        />
+        <Route
+        exact
           path="/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          component={ReportingAndNotification}
+        />
+        <Route
+        exact
+          path="/app/incident-management/registration/initial-notification/reporting-and-notification/:id"
           component={ReportingAndNotification}
         />
         <Route
@@ -211,11 +249,23 @@ function Application(props) {
         {/* form Evidence */}
 
         <Route
+        exact
+          path="/app/incident-management/registration/evidence/activity-detail/:id"
+          component={ActivityDetail}
+        />
+         <Route
+         exact
           path="/app/incident-management/registration/evidence/activity-detail/"
           component={ActivityDetail}
         />
         <Route
+        exact
           path="/app/incident-management/registration/evidence/additional-details/"
+          component={AdditionalDetails}
+        />
+         <Route
+         exact
+          path="/app/incident-management/registration/evidence/additional-details/:id"
           component={AdditionalDetails}
         />
         <Route
@@ -301,16 +351,21 @@ function Application(props) {
         {/* form summary */}
         {/* Done, topbar and sidebar pending  */}
         <Route
-          path={`/app/incident-management/registration/summary/summary/:${localStorage.getItem(
-            "fkincidentId"
-          )}/`}
+          path={`/app/incident-management/registration/summary/summary/:id`}
           component={Summary}
         />
-
+        
+        history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
         {/* from leassionlearned */}
         {/* Done, topbar and sidebar pending  */}
         <Route
+        exact
           path="/app/incident-management/registration/lession-learned/lession-learned/"
+          component={LessionLearned}
+        />
+        <Route
+        exact
+          path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
         />
 

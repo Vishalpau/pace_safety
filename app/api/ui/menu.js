@@ -868,7 +868,8 @@ module.exports = [
     key: "menu-level",
     name: "Incident",
     icon: "ion-ios-document-outline",
-    link: "/app/incident-management/registration/initial-notification/incident-details/",
+    link:
+      "/app/incident-management/registration/initial-notification/incident-details/",
   },
   // {
   //   key: "no_child",
