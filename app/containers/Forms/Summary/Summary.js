@@ -42,6 +42,7 @@ import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
+import { useParams } from "react-router";
 
 import IncidentDetails from "../../Forms/InitialNotification/IncidentDetails";
 import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
@@ -74,6 +75,7 @@ function ListItemLink(props) {
 const Summary = () => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
+  const { id } = useParams();
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${fkid}/`);
@@ -293,7 +295,7 @@ const Summary = () => {
           </Box>
         </>
       ) : (
-        <IncidentDetailsSummary />
+        <IncidentDetailsSummary fkid={id} />
       )}
     </PapperBlock>
   );

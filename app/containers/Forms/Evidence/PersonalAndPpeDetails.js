@@ -355,6 +355,7 @@ const PersonalAndPpeDetails = () => {
                 <FormSideBar
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Personal and Ppedetails"}
+                  deleteForm={[1,2,3]}
                 />
               </Grid>
             </Grid>

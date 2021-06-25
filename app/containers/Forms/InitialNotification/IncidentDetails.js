@@ -12,7 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import DateFnsUtils from "@date-io/date-fns";
 import MomentUtils from "@date-io/moment";
 import {
-  TimePicker,
+  // TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
   KeyboardTimePicker,
@@ -22,9 +22,9 @@ import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
+// import InputAdornment from "@material-ui/core/InputAdornment";
+// import IconButton from "@material-ui/core/IconButton";
+// import Icon from "@material-ui/core/Icon";
 import FormLabel from "@material-ui/core/FormLabel";
 import moment from "moment";
 
@@ -203,7 +203,7 @@ const IncidentDetails = () => {
         contractor: form.contractor,
         subContractor: form.subcontractor,
       };
-      const res = await api.put(`/api/v1/incidents/${id}`, formData);
+      const res = await api.put(`/api/v1/incidents/${id}/`, formData);
       console.log(res);
       if (res.status === 200) {
         const fkincidentId = res.data.data.results.id;
@@ -212,25 +212,43 @@ const IncidentDetails = () => {
         localStorage.setItem("nextPath", JSON.stringify(nextPath));
         if (nextPath.personAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/property-affected/"
+            `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
           );
         } else {
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            );
+          } else {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+              `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
             );
           } else {
             if (nextPath.environmentAffect === "Yes") {
               history.push(
-                "/app/incident-management/registration/initial-notification/environment-affected/"
+                `/app/incident-management/registration/initial-notification/property-affected/${id}`
               );
             } else {
-              history.push(
-                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-              );
+              if (nextPath.equipmentAffect === "Yes") {
+                history.push(
+                  `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+                );
+              } else {
+                if (nextPath.environmentAffect === "Yes") {
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+                  );
+                } else {
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+                  );
+                }
+              }
             }
           }
         }
+      }
       }
     } else {
       const { error, isValid } = validate(form);
@@ -246,7 +264,7 @@ const IncidentDetails = () => {
           incidentNumber: form.incidenttype,
           incidentTitle: form.title,
           incidentDetails: form.description,
-          immediateActionsTaken: form.immediateActionsTaken,
+          immediateActionsTaken: form.immediateactiontaken,
           incidentOccuredOn: moment(form.incidentdate).toISOString(),
           isPersonAffected: form.personaffected,
           isPersonDetailsAvailable: "Yes",
@@ -283,11 +301,13 @@ const IncidentDetails = () => {
         };
         console.log(formData);
         const res = await api.post("/api/v1/incidents/", formData);
-        if (res.status === 200) {
-          const fkincidentId = res.data.data.results.id;
+        console.log(res)
+        if (res.status === 201) {
+          const fkincidentId = res.data.data.results.id
           localStorage.setItem("fkincidentId", fkincidentId);
           localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
           localStorage.setItem("nextPath", JSON.stringify(nextPath));
+          console.log(hideAffect)
           if (nextPath.personAffect === "Yes") {
             history.push(
               "/app/incident-management/registration/initial-notification/peoples-afftected/"
@@ -393,6 +413,7 @@ const IncidentDetails = () => {
       setHideAffect(newHideAffect);
     }
   };
+  
   useEffect(() => {
     localStorage.removeItem("deleteForm");
     localStorage.removeItem("nextPath");
@@ -409,6 +430,7 @@ const IncidentDetails = () => {
     // if(!id){
     //   setIsLoading(true)
     // }
+    console.log(hideAffect)
   }, []);
 
   return (
@@ -475,7 +497,11 @@ const IncidentDetails = () => {
                           unitname: toString(e.target.value),
                         });
                       }}
-                    />
+                    >
+                    {selectValues.map((selectValues) => (
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                      ))}
+                      </Select>
                   </FormControl>
                 </Grid>
 
@@ -533,10 +559,11 @@ const IncidentDetails = () => {
                       helperText={
                         error.incidentdate ? error.incidentdate : null
                       }
-                      value={
-                        form.incidentdate === null
-                          ? clearedDate
-                          : form.incidentdate
+                      defaultValue={
+                        form.incidentdate|| incidentsListData.incidentOccuredOn
+                        // form.incidentdate === null
+                        //   ? clearedDate
+                        //   : form.incidentdate ||  moment().format("YYYY/MM/DD")
                       }
                       onChange={(e) => {
                         setForm({
