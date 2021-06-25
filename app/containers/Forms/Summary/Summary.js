@@ -763,7 +763,8 @@ const Summary = () => {
       ) : (
         <IncidentDetailsSummary />
       )} */}
-    </div>
+    {/* </div> */}
+    </PapperBlock>
   );
 };
 
