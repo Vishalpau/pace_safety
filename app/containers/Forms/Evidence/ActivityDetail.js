@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -13,6 +13,9 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
+import api from "../../../utils/axios";
+import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
+
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
@@ -29,13 +32,57 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ActivityDetails = () => {
-  const [selectedDate, setSelectedDate] = React.useState(
+  const [selectedDate, setSelectedDate] = useState(
     new Date("2014-08-18T21:11:54")
   );
+  const [error, setError] = useState({});
+
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+  const [form , setForm] = useState({
+    que1 : "Did the job require work permit?",
+    ans1 : "",
+    que2 : "If yes ,was a permit complted prior of the job?",
+    ans2 : "",
+    que3 : "Was per-job safety discussed head?",
+    ans3 : "",
+    que4 : "Was JHA executed for the task?",
+    ans4 : "",
+    que5 : "Was FLA executed for the task?",
+    ans5 : "",
+    que6 : "Did pre-planning identified the hazard",
+    ans6 : "",
+    que7 : "was per-jon planning enhanced the post-event?", 
+    ans7 : "", 
+  })
+  
+  const handleNext = async () => {
+
+    const { error } = ActivityDetailValidate(form);
+    setError(error);
+
+    const formData ={
+      // "question": "string",
+      // "answer": "string",
+      "question": form.que1,
+      "answer": form.ans1,
+      "activityGroup": "string",
+      "status": "Active",
+      "createdBy": 0,
+      "updatedBy": 0,
+      "fkIncidentId": 91
+    }
+    console.log(formData)
+    const res = await api.post("/api/v1/incidents/91/activities/",formData);
+    console.log(res)
+    const result = res.data.data.results;
+    
+    await setEvidenceListdata(result);
+         
+  };
+      
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
@@ -44,9 +91,9 @@ const ActivityDetails = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
+            {/* <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
-            </Box>
+            </Box> */}
 
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
@@ -66,17 +113,23 @@ const ActivityDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ans1}
                   >
                     <FormLabel component="legend">
                       Did the job require work permit?
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                      onChange = {(e) => {
+                        setForm({ ...form,ans1 : e.target.value})
+                      }}>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -86,17 +139,23 @@ const ActivityDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ans2}
                   >
                     <FormLabel component="legend">
                       If yes ,was a permit complted prior of the job?
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                      onChange = {(e) => {
+                        setForm({ ...form,ans2 : e.target.value})
+                      }}>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -106,17 +165,23 @@ const ActivityDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ans3}
                   >
                     <FormLabel component="legend">
                       Was per-job safety discussed head?
                     </FormLabel>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                      onChange = {(e) => {
+                        setForm({ ...form,ans3 : e.target.value})
+                      }}>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -126,18 +191,24 @@ const ActivityDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ans4}
                   >
                     <FormLabel component="legend">
                       Was JHA executed for the task?
                     </FormLabel>
 
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                      onChange = {(e) => {
+                        setForm({ ...form,ans4: e.target.value})
+                      }}>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -147,18 +218,24 @@ const ActivityDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ans5}
                   >
                     <FormLabel component="legend">
                       Was FLA executed for the task?
                     </FormLabel>
 
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                      onChange = {(e) => {
+                        setForm({ ...form,ans5 : e.target.value})
+                      }}>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -168,18 +245,24 @@ const ActivityDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ans6}
                   >
                     <FormLabel component="legend">
                       Did pre-planning identified the hazard?
                     </FormLabel>
 
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                      onChange = {(e) => {
+                        setForm({ ...form,ans6 : e.target.value})
+                      }}>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -189,18 +272,24 @@ const ActivityDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    error = {error.ans7}
                   >
                     <FormLabel component="legend">
                       was per-jon planning enhanced the post-event?
                     </FormLabel>
 
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
+                    <RadioGroup 
+                      onChange = {(e) => {
+                        setForm({ ...form,ans7 : e.target.value})
+                      }}>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
@@ -216,7 +305,8 @@ const ActivityDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/"
+                    onClick = {() => handleNext()}
+                    // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
                   >
                     Next
                   </Button>
@@ -224,6 +314,7 @@ const ActivityDetails = () => {
               </Grid>
               <Grid item md={3}>
                 <FormSideBar
+                deleteForm={[1,2,3]}
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Activity detail"}
                 />

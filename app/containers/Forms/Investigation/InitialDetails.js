@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
@@ -234,6 +235,7 @@ const InitialDetails = () => {
                   required
                   variant="outlined"
                   className={classes.formControl}
+                  error = {error.activity}
                 >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Activity</InputLabel>
@@ -260,6 +262,7 @@ const InitialDetails = () => {
                   required
                   variant="outlined"
                   className={classes.formControl}
+                  error = {error.projectname}
                 >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Project Name</InputLabel>
@@ -287,6 +290,7 @@ const InitialDetails = () => {
                   required
                   variant="outlined"
                   className={classes.formControl}
+                  error = {error.jobtask}
                 >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Job Task</InputLabel>
@@ -329,6 +333,7 @@ const InitialDetails = () => {
                   required
                   variant="outlined"
                   className={classes.formControl}
+                  error = {error.weather}
                 >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Weather</InputLabel>
@@ -397,6 +402,7 @@ const InitialDetails = () => {
                   required
                   variant="outlined"
                   className={classes.formControl}
+                  error={error.lighting}
                 >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Lighting</InputLabel>
@@ -460,6 +466,7 @@ const InitialDetails = () => {
                   required
                   variant="outlined"
                   className={classes.formControl}
+                  error = {error.fluidtype}
                 >
                   {/* <Typography varint="p">Project Name</Typography> */}
                   <InputLabel id="project-name-label">Fluid Type</InputLabel>
@@ -523,16 +530,18 @@ const InitialDetails = () => {
               </Box>
             </Grid>
             <Grid item md={3}>
-              {/* <FormSideBar
+              <FormSideBar
+              deleteForm={[1,2,3]}
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Initial details"}
-              /> */}
+              />
             </Grid>
           </Grid>
         </Box>
       </Paper>
     </Container>
   );
-};
+  }
+
 
 export default InitialDetails;
