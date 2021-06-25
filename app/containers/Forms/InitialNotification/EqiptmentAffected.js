@@ -16,6 +16,7 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
+import moment from "moment";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -87,13 +88,8 @@ const EqiptmentAffected = () => {
       equipmentType: "",
       equipmentOtherType: "",
       equipmentDeatils: "",
-<<<<<<< HEAD
-      createdBy: 1,     
-        fkIncidentId: localStorage.getItem("fkincidentId")
-=======
       createdBy: 1,
       fkIncidentId: localStorage.getItem("fkincidentId"),
->>>>>>> origin/develop
     },
   ]);
   const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
@@ -118,13 +114,8 @@ const EqiptmentAffected = () => {
         equipmentType: "",
         equipmentOtherType: "",
         equipmentDeatils: "",
-<<<<<<< HEAD
-        createdBy: 1,     
-        fkIncidentId: localStorage.getItem("fkincidentId")
-=======
         createdBy: 1,
         fkIncidentId: localStorage.getItem("fkincidentId"),
->>>>>>> origin/develop
       },
     ]);
   };
@@ -138,55 +129,9 @@ const EqiptmentAffected = () => {
 
   const handleNext = async () => {
     console.log(form);
-<<<<<<< HEAD
-    
-    const nextPath =  JSON.parse(localStorage.getItem("nextPath"))
-  if(equipmentListdata.length > 0){
-    if(nextPath.environmentAffect === 'Yes'){
-      history.push(`/app/incident-management/registration/initial-notification/environment-affected/${id}`)
-    }
-    else{
-      history.push(`/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`)
-    }
-  }else{
-    if (detailsOfEquipmentAffect === "Yes") {
-      const { error, isValid } = EquipmentValidate(form);
-    setError(error);
-      console.log(form)
-      var status = 0
-      
-      for (var i = 0; i < form.length; i++) {
-        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/equipments/`, form[i]);
-        
-        status = res.status
-      }
-      if(status === 201){
-
-        
-          if(nextPath.environmentAffect === 'Yes'){
-            history.push('/app/incident-management/registration/initial-notification/environment-affected/')
-          }
-          else{
-            history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
-          }
-        
-      }
-    } else {
-      const temp = incidentsListData;
-      temp["equipmentDamagedComments"] = equipmentDamagedComments;
-      temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect;
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      if(nextPath.environmentAffect === 'Yes'){
-        history.push('/app/incident-management/registration/initial-notification/environment-affected/')
-      }
-      else{
-        history.push('/app/incident-management/registration/initial-notification/reporting-and-notification/')
-=======
 
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+    
     if (equipmentListdata.length > 0) {
       if (nextPath.environmentAffect === "Yes") {
         history.push(
@@ -212,9 +157,9 @@ const EqiptmentAffected = () => {
             form[i]
           );
 
-          status = res.status;
+         
         }
-        if (status === 201) {
+        // if (status === 201) {
           if (nextPath.environmentAffect === "Yes") {
             history.push(
               "/app/incident-management/registration/initial-notification/environment-affected/"
@@ -224,17 +169,20 @@ const EqiptmentAffected = () => {
               "/app/incident-management/registration/initial-notification/reporting-and-notification/"
             );
           }
-        }
+        // }
       } else {
+        
         const temp = incidentsListData;
+        console.log(temp)
         temp["equipmentDamagedComments"] = equipmentDamagedComments;
         temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect;
         temp["updatedAt"] = moment(new Date()).toISOString();
-        const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        console.log(temp)
+        const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
         if (nextPath.environmentAffect === "Yes") {
+         
           history.push(
             "/app/incident-management/registration/initial-notification/environment-affected/"
           );
@@ -243,7 +191,6 @@ const EqiptmentAffected = () => {
             "/app/incident-management/registration/initial-notification/reporting-and-notification/"
           );
         }
->>>>>>> origin/develop
       }
     }
   };
@@ -409,46 +356,6 @@ const EqiptmentAffected = () => {
                               {/* {error && error[`equipmentDeatils${[key]}`] && (
                             <p>{error[`equipmentDeatils${[key]}`]}</p>
                           )} */}
-<<<<<<< HEAD
-                        </Grid>
-                      </>):form.map((value, key) => (
-                      <>
-                        <Grid item md={6}>
-                          {/* <p>Equiptment type</p> */}
-                          <FormControl
-                            variant="outlined"
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="eq-type-label">
-                              Equiptment type
-                            </InputLabel>
-                            <Select
-                              labelId="eq-type-label"
-                              id="eq-type"
-                              label="Equiptment type"
-                              onChange={(e) =>
-                                handleForm(e, key, "equipmentType")
-                              }
-                            >
-                              {equipmentTypeValue.length !== 0
-                                ? equipmentTypeValue.map(
-                                    (selectValues, index) => (
-                                      <MenuItem
-                                        key={index}
-                                        value={selectValues.inputValue}
-                                      >
-                                        {selectValues.inputLabel}
-                                      </MenuItem>
-                                    )
-                                  )
-                                : null}
-                            </Select>
-                          </FormControl>
-                          {error && error[`equipmentType${[key]}`] && (
-                            <p>{error[`equipmentType${[key]}`]}</p>
-                          )}
-                        </Grid>
-=======
                             </Grid>
                           </>
                         ))
@@ -489,7 +396,6 @@ const EqiptmentAffected = () => {
                                 <p>{error[`equipmentType${[key]}`]}</p>
                               )}
                             </Grid>
->>>>>>> origin/develop
 
                             <Grid item md={6}>
                               {/* <p>if other describe</p> */}
