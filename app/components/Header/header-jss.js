@@ -15,11 +15,10 @@ const styles = (theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     "& $menuButton": {
-      // color: '#ffffff',
       color:
         theme.palette.type === "dark"
           ? theme.palette.primary.light
-          : theme.palette.primary.main,
+          : theme.palette.primary.contrastText,
       backgroundColor: "#ff8533",
       boxShadow: "none",
       zIndex: 10,
@@ -151,7 +150,7 @@ const styles = (theme) => ({
         color:
           theme.palette.type === "dark"
             ? theme.palette.primary.light
-            : theme.palette.primary.main,
+            : theme.palette.secondary.main,
       },
     },
   },
@@ -514,6 +513,10 @@ const styles = (theme) => ({
     flexDirection: "row-reverse",
     display: "flex",
     alignItems: "center",
+  },
+  projectSelect: {
+    minWidth: 150,
+    marginLeft: theme.spacing(2),
   },
 });
 
