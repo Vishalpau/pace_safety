@@ -12,7 +12,9 @@ import {
   PersonalDashboard
 } from "../../containers/pageListAsync";
 
-import axios from 'axios'
+import axios from 'axios';
+
+import { SSO_URL } from "../../utils/constants";
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
@@ -34,7 +36,7 @@ function App() {
 
       var config = {
       method: 'post',
-      url: 'http://35.154.225.124:31575/api/v1/user/auth/token/',
+      url: `${SSO_URL}/api/v1/user/auth/token/`,
       headers: { 
         'Content-Type': 'application/json', 
         'Cookie': 'sessionid=g2zt7cjcpjkf2qabggfwe14yzliwjz2x; csrftoken=NcsO8L9eWK1dLfWRGQ10t2b86GzdD9vSwmzDwc77Cc4luBmQAZiYbvtfgp3X845H'
