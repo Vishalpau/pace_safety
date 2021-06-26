@@ -531,7 +531,7 @@ const IncidentDetailsSummary = () => {
                       {envData.envQuestion}
                     </Typography>
                   </Grid>
-                  <Grid item lg={12}>
+              <Grid>
                     <Typography
                       variant="body"
                       color="textSecondary"

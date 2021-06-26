@@ -512,7 +512,7 @@ const PropertyAffected = () => {
                         </Grid>
                       </>
                     ))}
-                    {propertyListData.length >0? null:
+                    {propertyListData.length > 0? null:
                     <Grid item md={12}>
                       <button
                         className={classes.textButton}
@@ -521,10 +521,16 @@ const PropertyAffected = () => {
                         <PersonAddIcon /> Add details of another person affected
                       </button>
                     </Grid>}
+                    <Grid item md={12}>
+                  {/* <p>Comments</p> */}
+                  
+                  {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
+                </Grid>
                   </>
                 ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
+                  {detailsOfPropertyAffect === 'Yes'?null:
                   <TextField
                     id="comments"
                     multiline
@@ -536,7 +542,7 @@ const PropertyAffected = () => {
                     onChange={(e) => {
                       setPropertyDamagedComments(e.target.value);
                     }}
-                  />
+                  />}
                   {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
                 </Grid>
                 <Grid item md={6}>

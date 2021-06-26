@@ -267,7 +267,7 @@ const IncidentDetails = () => {
           immediateActionsTaken: form.immediateactiontaken,
           incidentOccuredOn: moment(form.incidentdate).toISOString(),
           isPersonAffected: form.personaffected,
-          isPersonDetailsAvailable: "Yes",
+          isPersonDetailsAvailable: "No",
           personAffectedComments: "string",
           isPropertyDamaged: form.propertyaffected,
           isPropertyDamagedAvailable: "Yes",
@@ -399,6 +399,8 @@ const IncidentDetails = () => {
       const res = await api.get(`/api/v1/incidents/${id}/`);
       const result = res.data.data.results;
       await setIncidentsListdata(result);
+      const resTime = new Date(result.incidentOccuredOn);
+      await setForm({...form,incidentdate:resTime})
       await setIsLoading(true);
     }
   };
@@ -559,16 +561,17 @@ const IncidentDetails = () => {
                       helperText={
                         error.incidentdate ? error.incidentdate : null
                       }
-                      defaultValue={
+                     value={
                         form.incidentdate|| incidentsListData.incidentOccuredOn
                         // form.incidentdate === null
                         //   ? clearedDate
                         //   : form.incidentdate ||  moment().format("YYYY/MM/DD")
                       }
                       onChange={(e) => {
+                        console.log(e)
                         setForm({
                           ...form,
-                          incidentdate: moment(e).format("YYYY/MM/DD"),
+                          incidentdate: moment(e).toDate(),
                         });
                       }}
                       format="yyyy/MM/dd"
@@ -595,6 +598,7 @@ const IncidentDetails = () => {
                         form.incidenttime === null ? clearedDate : selectedTime
                       }
                       onChange={(e) => {
+                        console.log(e)
                         setForm({
                           ...form,
                           incidenttime: moment(e).format("HH:mm"),

@@ -181,7 +181,6 @@ const PeoplesAffected = () => {
         const temp = incidentsListData;
         temp["isPersonDetailsAvailable"] = personAffect || incidentsListData.isPersonDetailsAvailable;
         temp["updatedAt"] = moment(new Date()).toISOString();
-        temp["personAffectedComments"] = personAffectedComments || incidentsListData.personAffectedComments;
         console.log(temp);
 
         const res = await api.put(
@@ -774,10 +773,12 @@ const PeoplesAffected = () => {
                         </button>
                       </Grid>
                     )}
+                    
                   </>
                 ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
+                  {personAffect === 'Yes'?null:
                   <TextField
                     id="comments"
                     multiline
@@ -787,7 +788,7 @@ const PeoplesAffected = () => {
                     className={classes.fullWidth}
                     defaultValue={incidentsListData.personAffectedComments}
                     onChange={(e) => setPersonAffectedComments(e.target.value)}
-                  />
+                  />}
                   {/* {error && error.describeactiontaken && (
                     <p>{error.describeactiontaken}</p>
                   )} */}

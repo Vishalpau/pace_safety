@@ -466,8 +466,10 @@ const EqiptmentAffected = () => {
                         </button>
                       </Grid>
                     )}
+                    
                   </>
                 ) : null}
+                {detailsOfEquipmentAffect === "Yes" ?null: (
                 <Grid item lg={12} md={6} sm={6}>
                   {/* <p>Comment </p> */}
                   <TextField
@@ -484,6 +486,7 @@ const EqiptmentAffected = () => {
                    
                   />
                 </Grid>
+                )}
                 <Box marginTop={4}>
                   <Button
                     variant="contained"
