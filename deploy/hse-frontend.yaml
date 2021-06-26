@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hse-frontend
+  namespace: ENVIRONMENT
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hse-frontend
+  template:
+    metadata:
+      labels:
+        app: hse-frontend
+        env: ENVIRONMENT
+    spec:
+      containers:
+      - name: hse-frontend
+        image: CONTAINER_IMAGE
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8087
+          name: frontend-port
+      nodeSelector:
+        beta.kubernetes.io/instance-type: t3.xlarge
