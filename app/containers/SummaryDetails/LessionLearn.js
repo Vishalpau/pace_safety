@@ -7,6 +7,9 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -42,8 +45,18 @@ import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: "100%",
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightMedium,
+    },
+  }));
 
 const LessionLearnSummary = () => {
 
@@ -70,12 +83,17 @@ const LessionLearnSummary = () => {
         
     
     }, []);
-
+    const classes = useStyles();
   return (
         <div>
             <PapperBlock>
                 <Grid container spacing={5}>
                     <Grid container item md={9} spacing={3}>
+                    <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography className={classes.heading}>Lession Learn</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
                         {lessionlearn.length !== 0 ? 
                             lessionlearn.map((lession,key) => (
                             <Grid container item md={9} spacing={3} key={key}>
@@ -118,6 +136,8 @@ const LessionLearnSummary = () => {
                                 </Grid>
                             </Grid>
                         )): null}
+                        </AccordionDetails>
+                        </Accordion>
                     </Grid>
                 </Grid>
             </PapperBlock>

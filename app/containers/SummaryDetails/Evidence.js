@@ -7,6 +7,9 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -42,7 +45,19 @@ import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: "100%",
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightMedium,
+    },
+  }));
 
 
 const EvidenceSummary = () => {
@@ -50,7 +65,7 @@ const EvidenceSummary = () => {
     const [evidence, setEvidence] = useState([]);
     const [activity, setActivity] = useState([]);
    
-    const [fkid,setFkid] = useState(91)
+    const [fkid,setFkid] = useState(95)
 
     
     const fetchEvidanceData = async () => {
@@ -75,24 +90,19 @@ const EvidenceSummary = () => {
         
         
       }, []);
-
-  return (
+      const classes = useStyles();
+    return (
     <div>
         <PapperBlock title={`Incident Number:${evidence["incidentNumber"]}`}
             icon="ion-md-list-box" >
-            <Grid container spacing={5}>
-                <Grid container item md={9} spacing={3}>
+            <Grid container spacing={3}>
+                <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography className={classes.heading}>Evidence</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
                     {evidence.length !== 0 ? evidence.map((evidence,key) =>(
-                        <Grid container item md={9} spacing={3} key={key}>
-                            <Grid item md={12}>
-                                <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                    >
-                                    {key + 1} : Evidence
-                                </Typography>
-                            </Grid>
+                        <Grid container item xs={12} spacing={3} key={key}>
                             <Grid item lg={6} md={6}>
                                 <Typography
                                     variant="h6"
@@ -139,18 +149,16 @@ const EvidenceSummary = () => {
                             </Grid>    
                         </Grid>
                     )): null}
+                    </AccordionDetails>
+                    </Accordion>
+                    <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography className={classes.heading}>Activity Details</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
                     {activity.length !== 0 ? activity.map((ad,key) =>(
-                        <Grid container item md={9} spacing={3} key={key}>
-                            <Grid item md={12}>
-                            <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                    >
-                                    {key + 1} : Activity Details
-                                </Typography>
-                            </Grid>
-                            <Grid item lg={6} md={6}>
+                        <Grid container item xs={12} spacing={3} key={key}>
+                            <Grid item lg={12}>
                                 <Typography
                                     variant="h6"
                                     gutterBottom
@@ -160,7 +168,7 @@ const EvidenceSummary = () => {
                                     Id : {ad.id}{" "}
                                 </Typography>
                             </Grid>
-                            <Grid item lg={6} md={6}>
+                            <Grid item lg={12}>
                                 <Typography
                                     variant="h6"
                                     gutterBottom
@@ -180,8 +188,9 @@ const EvidenceSummary = () => {
                             </Grid>
                         </Grid>
                     )) : null}
+                    </AccordionDetails>
+                    </Accordion>
                 </Grid>
-            </Grid>
         </PapperBlock>
     </div>
   );
