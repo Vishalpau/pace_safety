@@ -51,7 +51,8 @@ const RootCauseAnalysisSummary = () => {
     const [fiveWhy , setFiveWhy] = useState([]);
     const [causeanalysis , setCauseAnalysis] = useState([]);
     const [pacecauses , setPaceCauses] = useState([]);
-    const [fkid , setFkid] = useState(95);
+    
+    const fkid = localStorage.getItem("fkincidentId");
 
     const fetchRootCauseData = async () => {
         const allRootCause = await api.get(

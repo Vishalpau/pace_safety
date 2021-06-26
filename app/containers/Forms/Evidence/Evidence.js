@@ -55,12 +55,12 @@ const Evidence = () => {
       "evidenceCategory": "string",
       "evidenceRemark": "string",
       "createdBy": 0,
-      "fkIncidentId": 91,
+      "fkIncidentId": localStorage.getItem("fkincidentId"),
       "evidenceDocument" : form.document
       
       }
     console.log(formData)
-    const res = await api.post(`/api/v1/incidents/91/evidences/`,formData);
+    const res = await api.post(`/api/v1/${localStorage.getItem("fkincidentId")}/91/evidences/`,formData);
     console.log(res)
     const result = res.data.data.results;
     // console.log('sagar');
