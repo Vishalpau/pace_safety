@@ -319,7 +319,7 @@ function BlankPage() {
                           Number{" "}
                           <Link
                             href="#"
-                            variant="subtitle"
+                            variant="subtitle2"
                             className={Incidents.incidentNumber}
                             style={{ textDecoration: "underline" }}
                           >
@@ -556,7 +556,7 @@ function BlankPage() {
                           Number{" "}
                           <Link
                             href="#"
-                            variant="subtitle"
+                            variant="subtitle2"
                             className={Incidents.incidentNumber}
                             style={{ textDecoration: "underline" }}
                           >
