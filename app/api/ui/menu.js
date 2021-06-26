@@ -856,13 +856,13 @@ module.exports = [
     key: "observations",
     name: "Observations",
     icon: "ion-md-eye",
-    link: "/app/pages/blank-page/",
+    link: "/app/maps/map-marker",
   },
   {
     key: "inspections",
     name: "Inspections",
     icon: "ion-ios-checkbox",
-    link: "/app/pages/blank-page/",
+    link: "/app/charts/area-filled-charts",
   },
   {
     key: "menu-level",

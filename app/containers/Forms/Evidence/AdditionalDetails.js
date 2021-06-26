@@ -11,6 +11,7 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
+import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
@@ -32,37 +33,87 @@ const AdditionalDetails = () => {
   );
   const [error , setError] = React.useState({})
 
-  const [form , setForm] = React.useState({
-    que1 : "",
-    ans1 : "",
-    que2 : "",
-    ans2 : "",
-    que3 : "",
-    ans3 : "",
-    que4 : "",
-    ans4 : "",
-  })
+  
+  // const { id } = useParams();
+  // const history = useHistory();
+  // const [activtyList, setActvityList] = useState([]);
+  // const [ad01, setAd01] = useState({});
+  // const [ad02, setAd02] = useState({});
+  // const [ad03, setAd03] = useState({});
+  // const [ad04, setAd04] = useState({});
+  // const [ad05, setAd05] = useState({});
+  // const [ad06, setAd06] = useState({});
+  // const [ad07, setAd07] = useState({});
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  // const handleNext = async () => {
+  //   if (id !== undefined && activtyList.length > 0) {
+  //     history.push(
+  //       "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+  //     );
+  //   } else {
+  //     const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
+  //     console.log(selectedQuestion);
+  //     for (var i = 0; i < selectedQuestion.length; i++) {
+  //       const valdation = selectedQuestion[i];
+  //       console.log(valdation);
+  //       const { isValid, error } = ActivityDetailValidate(valdation);
+  //       setError(error);
+  //       const res = await api.post(
+  //         `api/v1/incidents/${localStorage.getItem(
+  //           "fkincidentId"
+  //         )}/activities/`,
+  //         selectedQuestion[i]
+  //       );
+  //       console.log(res);
+  //     }
+  //     history.push(
+  //       "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+  //     );
+  //   }
+  // };
+
+  // const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
+  //   const temp = activtyList;
+  //   console.log(temp);
+  //   const value = e.target.value;
+  //   temp[key][fieldname] = value;
+  //   temp[key]["updatedBy"] = 0;
+  //   temp[key]["updatedAt"] = moment(new Date()).toISOString();
+  //   console.log(temp[key]);
+
+  //   const res = await api.put(
+  //     `api/v1/incidents/${id}/activities/${activityId}/`,
+  //     temp[key]
+  //   );
+  //   console.log(res);
+  // };
+
 
   
 
-  const handleNext = () => {
-    console.log('sagar',form);
-    const { error, isValid } = AdditionalDetailValidate(form);
-    setError(error);
-    console.log(error, isValid);
-    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
-    // console.log(nextPath)
+  // const handleNext1 = () => {
+  //   console.log('sagar',form);
+  //   const { error, isValid } = AdditionalDetailValidate(form);
+  //   setError(error);
+  //   console.log(error, isValid);
+  //   // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
+  //   // console.log(nextPath)
 
     
-  };
+  // };
 
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
-  const classes = useStyles();
+  // const selectValues = [1, 2, 3, 4];
+  // const radioDecide = ["Yes", "No"];
+  // const classes = useStyles();
+  // const fetchActivityList = async () => {
+  //   const res = await api.get(`api/v1/incidents/${id}/activities/`);
+  //   const result = res.data.data.results;
+  //   await setActvityList(result);
+  //   console.log(result);
+  // };
+  // useEffect(() => {
+  //   fetchActivityList();
+  // }, []);
   return (
     <div>
       <Container>
