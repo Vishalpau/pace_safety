@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LessionLearnSummary = () => {
   const [lessionlearn, setLessionLearn] = useState([]);
-  const [fkid, setFkid] = useState(93);
+  const fkid = localStorage.getItem("fkincidentId");
 
   // // useEffect(() => {
   // //     setFkid(localStorage.getItem("fkincidentId"))

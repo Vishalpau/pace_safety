@@ -63,7 +63,7 @@ const EvidenceSummary = () => {
   const [evidence, setEvidence] = useState([]);
   const [activity, setActivity] = useState([]);
 
-  const [fkid, setFkid] = useState(95);
+  const fkid = localStorage.getItem("fkincidentId");
 
 
   const fetchEvidanceData = async () => {
