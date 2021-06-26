@@ -60,7 +60,7 @@ const Evidence = () => {
       
       }
     console.log(formData)
-    const res = await api.post(`/api/v1/${localStorage.getItem("fkincidentId")}/91/evidences/`,formData);
+    const res = await api.post(`/api/v1/${localStorage.getItem("fkincidentId")}/evidences/`,formData);
     console.log(res)
     const result = res.data.data.results;
     // console.log('sagar');
