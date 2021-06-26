@@ -42,6 +42,11 @@ function UserMenu(props) {
     setMenuState({ anchorEl: null, openMenu: null });
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "http://35.154.225.124:31575/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XF[…]CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code";
+  }
+
   const { classes, dark } = props;
   const { anchorEl, openMenu } = menuState;
   return (
@@ -158,11 +163,13 @@ function UserMenu(props) {
           </ListItemIcon>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose} component={Link} to={link.login}>
+        
+        <MenuItem onClick={handleClose} component={Link} >
           <ListItemIcon>
             <ExitToApp />
           </ListItemIcon>
-          Log Out
+          <Button onClick={handleLogout}>Log Out</Button>
+          
         </MenuItem>
       </Menu>
     </div>
