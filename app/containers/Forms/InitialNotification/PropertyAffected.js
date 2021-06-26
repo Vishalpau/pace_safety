@@ -220,7 +220,6 @@ const PropertyAffected = () => {
         // history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
       }
     } else {
-      alert(propertyDamagedComments)
       const temp = incidentsListData;
       temp["propertyDamagedComments"] = propertyDamagedComments;
       temp["isPropertyDamagedAvailable"] = detailsOfPropertyAffect;
