@@ -216,7 +216,7 @@ const Summary = () => {
       {/* summary and part */}
       <div>
         {(() => {
-          if (initialNotification == true) {
+          if (initialNotification == true || (investigation === false && evidence === false && rootcauseanalysis=== false && lessionlearn === false) ) {
             return (
               <div>
                 <IncidentDetailsSummary />

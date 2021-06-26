@@ -5,7 +5,7 @@ export const getToken = () => localStorage.getItem("token");
 export const removeToken = () => localStorage.removeItem("token");
 
 // export const apiUrl = "http://cors.digiqt.com/feature1-hseapi.paceos.io/";
-export const apiUrl = "https://feature1-hseapi.paceos.io/";
+export const apiUrl = "https://dev-safety-api.paceos.io/";
 export const capitalize = (s) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toUpperCase() + s.slice(1);
