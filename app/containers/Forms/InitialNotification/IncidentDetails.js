@@ -57,16 +57,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const IncidentDetails = () => {
+  // Props definations.
   const classes = useStyles();
-  // const [selectedDate, setSelectedDate] = React.useState(
-  //   new Date("2014-08-18")
-  // );
   const [selectedTime, setSelectedTime] = React.useState(new Date());
   const [error, setError] = useState({});
   const selectValues = [1, 2, 3, 4];
   const companyName = ["ABC Ltd", "XYZ steel", "ABA power", "XDA works"];
-  const radioDecide = ["Yes", "No", "N/A"];
-  const [listData, setListData] = useState([]);
   const [incidentsListData, setIncidentsListdata] = useState({
     incidentOccuredOn: null,
   });
@@ -90,6 +86,7 @@ const IncidentDetails = () => {
 
   const [clearedDate, handleClearedDateChange] = useState(null);
 
+  // Initial forms.
   const [form, setForm] = useState({
     projectname: "",
     unitname: "",
@@ -107,10 +104,12 @@ const IncidentDetails = () => {
     equiptmenteffected: "",
     environmentaffected: "",
   });
+
+  // Function called on next button click.
   const handelNext = async (e) => {
-    console.log(clearedDate);
-    console.log(form);
-    if (id !== undefined) {
+    // Create case if id is not null and means it is an update case.
+    if (id) {
+      // Set next path.
       const tempNextPath = nextPath;
       tempNextPath.propertyAffect =
         nextPath.propertyAffect || incidentsListData.isPropertyDamaged;
@@ -122,11 +121,15 @@ const IncidentDetails = () => {
         nextPath.environmentAffect || incidentsListData.isEnviromentalImpacted;
       await setNextPath(tempNextPath);
 
+      // Setup initial form.
+      // We are taking either form's default values or values returned from the API.
+
+      // TODO: Unable to find fkProjectID, fkUnitId, IncidentTypeValue.
       const tempForm = form;
       tempForm.projectname = form.projectname || incidentsListData.fkProjectId;
       tempForm.unitname = form.unitname || incidentsListData.fkUnitId;
       tempForm.incidenttype =
-        form.incidenttype || incidentsListData.incidentNumber;
+        form.incidenttype || incidentsListData.incidentTypeValue;
       tempForm.incidentdate =
         form.incidentdate || incidentsListData.incidentOccuredOn;
       tempForm.incidenttime =
@@ -150,10 +153,17 @@ const IncidentDetails = () => {
         form.environmentaffected || incidentsListData.isEnviromentalImpacted;
 
       await setForm(tempForm);
-      console.log(form);
+
+      // Validate the form for the validation errors before hitting it for the submit.
+      // TODO: Validations are not working for update.
       // const { error, isValid } = validate(tempForm);
       // setError(error);
-      // if(isValid === true){}
+
+      // Stop the execution of the function as, now form is not valid.
+      // if (!isValid) {
+      //   return;
+      // }
+
       const formData = {
         id: parseInt(id),
         fkCompanyId: 0,
@@ -205,51 +215,54 @@ const IncidentDetails = () => {
         contractor: form.contractor,
         subContractor: form.subcontractor,
       };
+
+      // Hit put request to backend as it is the update case.
       const res = await api.put(`/api/v1/incidents/${id}/`, formData);
-      console.log(res);
+      console.log("===> Incident update response > ", res);
+
+      // If we received the success from the API then.
       if (res.status === 200) {
         const fkincidentId = res.data.data.results.id;
+
+        // Set the fkincidentId and it will be used for future reference forms.
         localStorage.setItem("fkincidentId", fkincidentId);
         localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
+
+        // Next path variable contains JSON as below. It helps us to decide on which path to move next.
+        /*
+          {"personAffect":"Yes","propertyAffect":"Yes","equipmentAffect":"Yes","environmentAffect":"Yes"}
+        */
         localStorage.setItem("nextPath", JSON.stringify(nextPath));
+
+        // Decide on which path to go next.
         if (nextPath.personAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
           );
+        } else if (nextPath.propertyAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/property-affected/${id}`
+          );
+        } else if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/property-affected/${id}`
+          );
+        } else if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+          );
         } else {
-          if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/${id}`
-            );
-          } else {
-            if (nextPath.equipmentAffect === "Yes") {
-              history.push(
-                `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
-              );
-            } else {
-              if (nextPath.environmentAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/property-affected/${id}`
-                );
-              } else {
-                if (nextPath.equipmentAffect === "Yes") {
-                  history.push(
-                    `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
-                  );
-                } else {
-                  if (nextPath.environmentAffect === "Yes") {
-                    history.push(
-                      `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-                    );
-                  } else {
-                    history.push(
-                      `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-                    );
-                  }
-                }
-              }
-            }
-          }
+          history.push(
+            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+          );
         }
       }
     } else {
@@ -272,10 +285,10 @@ const IncidentDetails = () => {
           isPersonDetailsAvailable: "No",
           personAffectedComments: "string",
           isPropertyDamaged: form.propertyaffected,
-          isPropertyDamagedAvailable: "Yes",
+          isPropertyDamagedAvailable: "No",
           propertyDamagedComments: "string",
           isEquipmentDamaged: form.equiptmenteffected,
-          isEquipmentDamagedAvailable: "Yes",
+          isEquipmentDamagedAvailable: "No",
           equipmentDamagedComments: "string",
           isEnviromentalImpacted: form.environmentaffected,
           enviromentalImpactComments: "string",
@@ -572,7 +585,7 @@ const IncidentDetails = () => {
                   id="time-picker"
                   label="Time picker"
                   value={
-                    form.incidenttime === null ? clearedDate : selectedTime
+                    form.incidenttime === null ? new Date(clearedDate) : new Date(selectedTime)
                   }
                   onChange={(e) => {
                     console.log(e);
