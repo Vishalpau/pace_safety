@@ -43,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
   customLabel: {
     marginBottom: 0,
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const EnvironmentAffected = () => {
@@ -88,8 +92,7 @@ const EnvironmentAffected = () => {
   const [relaseData, setReleaseData] = useState({})
   const [wildLifeData, setWildLifeData] = useState({})
   const [wateBodyData, setWaterBodyData] = useState({})
-
-  const [incidentsListData, setIncidentsListdata] = useState([])
+  const [incidentsListData, setIncidentsListdata] = useState([]);
 
 
 
@@ -144,15 +147,18 @@ const EnvironmentAffected = () => {
         const envList = [spillsData, relaseData, wildLifeData, wateBodyData]
 
         for (var i = 0; i < envList.length; i++) {
-          if (envList[i].envQuestionOption == "Yes") {
-            console.log()
-            const res = await api.post(
-              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
-              envList[i]
-            );
-          }
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
+            envList[i]
+          );
         }
-
+        const temp = incidentsListData;
+        temp["equipmentDamagedComments"] = envComments || incidentsListData.equipmentDamagedComments;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
         // if(res.status === 201){
         history.push(
           "/app/incident-management/registration/initial-notification/reporting-and-notification/"
@@ -230,10 +236,10 @@ const EnvironmentAffected = () => {
               <Grid container item md={9} spacing={3}>
                 {environmentListData.length !== 0 ? environmentListData.map((env, key) =>
                   <>
-
                     <Grid item md={6}>
                       <p>Where there any spills</p>
                       <RadioGroup
+                        className={classes.inlineRadioGroup}
                         aria-label="detailsOfPropertyAffect"
                         name="detailsOfPropertyAffect"
                         defaultValue={env.envQuestionOption}
@@ -251,7 +257,6 @@ const EnvironmentAffected = () => {
                           : null}
                       </RadioGroup>
                     </Grid>
-
                     <Grid item md={12}>
                       {env.envQuestionOption == 'Yes' ?
                         <TextField
@@ -269,14 +274,13 @@ const EnvironmentAffected = () => {
                         <p>{error.envAnswerDetails}</p>
                       )}
                     </Grid>
-
                   </>
                 ) : <>
-
                   {/* spills question and option */}
                   <Grid item md={6}>
                     <p>Where there any spills</p>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                       aria-label="detailsOfPropertyAffect"
                       name="detailsOfPropertyAffect"
                       value={detailsOfEnvAffect}
@@ -329,6 +333,7 @@ const EnvironmentAffected = () => {
                       </p>
 
                       <RadioGroup
+                        className={classes.inlineRadioGroup}
                         aria-label="envQuestion"
                         name="envQuestion"
                         value={form.envQuestion}
@@ -385,6 +390,7 @@ const EnvironmentAffected = () => {
                       </p>
 
                       <RadioGroup
+                        className={classes.inlineRadioGroup}
                         aria-label="envAnswerDetails"
                         name="envAnswerDetails"
                         value={form.envAnswerDetails}
@@ -444,6 +450,7 @@ const EnvironmentAffected = () => {
                         Where there any waterbody affected?
                       </p>
                       <RadioGroup
+                        className={classes.inlineRadioGroup}
                         aria-label="envQuestionOption"
                         name="envQuestionOption"
                         value={form.envQuestionOption}
@@ -521,7 +528,7 @@ const EnvironmentAffected = () => {
                     onClick={() => history.goBack()}
                   // href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

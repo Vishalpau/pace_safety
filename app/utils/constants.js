@@ -5,9 +5,9 @@ export const DAEMON = "@@saga-injector/daemon";
 export const ONCE_TILL_UNMOUNT = "@@saga-injector/once-till-unmount";
 
 let URL = "https://dev-safety.pace-os.com/";
-export const SSO_URL = 'https://dev-accounts-api.paceos.io';
+export const SSO_URL = "https://dev-accounts-api.paceos.io";
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
-export const API_URL = 'https://dev-safety-api.paceos.io/';
+export const API_URL = "https://dev-safety-api.paceos.io/";
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details": `${URL}app/incident-management/registration/initial-notification/incident-details/`,
@@ -19,7 +19,7 @@ export const INITIAL_NOTIFICATION_FORM = {
 };
 
 export const EVIDENCE_FORM = {
-  Evidence: `${URL}app/incident-management/registration/evidence/evidence/`,
+  "Evidence": `${URL}app/incident-management/registration/evidence/evidence/`,
   "Activity detail": `${URL}app/incident-management/registration/evidence/activity-detail/`,
   "Personal and Ppedetails": `${URL}app/incident-management/registration/evidence/personal-and-ppedetails/`,
   "Additional detail": `${URL}app/incident-management/registration/evidence/additional-details/`,

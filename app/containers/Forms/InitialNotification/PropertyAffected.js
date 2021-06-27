@@ -56,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const PropertyAffected = () => {
@@ -334,6 +338,7 @@ const PropertyAffected = () => {
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfPropertyAffect}
@@ -512,7 +517,7 @@ const PropertyAffected = () => {
                         </Grid>
                       </>
                     ))}
-                    {propertyListData.length >0? null:
+                    {propertyListData.length > 0? null:
                     <Grid item md={12}>
                       <button
                         className={classes.textButton}
@@ -521,10 +526,16 @@ const PropertyAffected = () => {
                         <PersonAddIcon /> Add details of another person affected
                       </button>
                     </Grid>}
+                    <Grid item md={12}>
+                  {/* <p>Comments</p> */}
+                  
+                  {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
+                </Grid>
                   </>
                 ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
+                  {detailsOfPropertyAffect === 'Yes'?null:
                   <TextField
                     id="comments"
                     multiline
@@ -536,7 +547,7 @@ const PropertyAffected = () => {
                     onChange={(e) => {
                       setPropertyDamagedComments(e.target.value);
                     }}
-                  />
+                  />}
                   {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
                 </Grid>
                 <Grid item md={6}>
@@ -547,7 +558,7 @@ const PropertyAffected = () => {
                     onClick={()=>history.goBack()}
                     // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

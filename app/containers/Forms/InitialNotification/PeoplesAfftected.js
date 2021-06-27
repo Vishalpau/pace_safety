@@ -27,6 +27,7 @@ import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
+import "../../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -55,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(1),
+  },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
   },
 }));
 const PeoplesAffected = () => {
@@ -136,7 +141,10 @@ const PeoplesAffected = () => {
     temp[key]["updatedBy"] = 0;
     console.log(temp, peopleId);
 
-    const res = await api.put(`api/v1/incidents/${id}/people/${peopleId}/`, temp[key]);
+    const res = await api.put(
+      `api/v1/incidents/${id}/people/${peopleId}/`,
+      temp[key]
+    );
     console.log(res);
     // console.log(res)
   };
@@ -181,7 +189,6 @@ const PeoplesAffected = () => {
         const temp = incidentsListData;
         temp["isPersonDetailsAvailable"] = personAffect || incidentsListData.isPersonDetailsAvailable;
         temp["updatedAt"] = moment(new Date()).toISOString();
-        temp["personAffectedComments"] = personAffectedComments || incidentsListData.personAffectedComments;
         console.log(temp);
 
         const res = await api.put(
@@ -349,9 +356,13 @@ const PeoplesAffected = () => {
                   {/* <p>Do you have details of individual effected?</p>   */}
                   {console.log(personAffect)}
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="personAffect"
                     name="personAffect"
-                    defaultValue={personAffect }
+                    defaultValue={
+                      personAffect ||
+                      incidentsListData.isPersonDetailsAvailable
+                    }
                     onChange={(e) => {
                       setPersonAffect(e.target.value);
                     }}
@@ -381,7 +392,14 @@ const PeoplesAffected = () => {
                     </Grid>
                     {peopleData.length > 0
                       ? peopleData.map((people, key) => (
-                          <>
+                          <Grid
+                            container
+                            item
+                            md={12}
+                            key={key}
+                            spacing={3}
+                            className="repeatedGrid"
+                          >
                             <Grid item md={6}>
                               {/* <p>person type</p> */}
                               <FormControl
@@ -503,7 +521,9 @@ const PeoplesAffected = () => {
                               />
                               {error &&
                                 error[`personIdentification${[key]}`] && (
-                                  <p>{error[`personIdentification${[key]}`]}</p>
+                                  <p>
+                                    {error[`personIdentification${[key]}`]}
+                                  </p>
                                 )}
                             </Grid>
                             <Grid item md={12}>
@@ -513,6 +533,7 @@ const PeoplesAffected = () => {
                                   Was that person taken to medical care?
                                 </Typography>
                                 <RadioGroup
+                                  className={classes.inlineRadioGroup}
                                   aria-label="personAffect"
                                   name="personAffect"
                                   defaultValue={people.personMedicalCare}
@@ -538,9 +559,10 @@ const PeoplesAffected = () => {
                                     : null}
                                 </RadioGroup>
                               </div>
-                              {error && error[`personMedicalCare${[key]}`] && (
-                                <p>{error[`personMedicalCare${[key]}`]}</p>
-                              )}
+                              {error &&
+                                error[`personMedicalCare${[key]}`] && (
+                                  <p>{error[`personMedicalCare${[key]}`]}</p>
+                                )}
                             </Grid>
                             <Grid item md={6}>
                               {/* <p>Worker taken offisite for further assesment?</p> */}
@@ -586,14 +608,25 @@ const PeoplesAffected = () => {
                               {error &&
                                 error[`locationAssessmentCenter${[key]}`] && (
                                   <p>
-                                    {error[`locationAssessmentCenter${[key]}`]}
+                                    {
+                                      error[
+                                        `locationAssessmentCenter${[key]}`
+                                      ]
+                                    }
                                   </p>
                                 )}
                             </Grid>
-                          </>
+                          </Grid>
                         ))
                       : form.map((value, key) => (
-                          <>
+                          <Grid
+                            container
+                            item
+                            md={12}
+                            key={key}
+                            spacing={3}
+                            className="repeatedGrid"
+                          >
                             <Grid item md={6}>
                               {/* <p>person type</p> */}
                               <FormControl
@@ -691,7 +724,9 @@ const PeoplesAffected = () => {
                               />
                               {error &&
                                 error[`personIdentification${[key]}`] && (
-                                  <p>{error[`personIdentification${[key]}`]}</p>
+                                  <p>
+                                    {error[`personIdentification${[key]}`]}
+                                  </p>
                                 )}
                             </Grid>
                             <Grid item md={12}>
@@ -701,6 +736,7 @@ const PeoplesAffected = () => {
                                   Was that person taken to medical care?
                                 </Typography>
                                 <RadioGroup
+                                  className={classes.inlineRadioGroup}
                                   aria-label="personAffect"
                                   name="personAffect"
                                   value={value.personMedicalCare}
@@ -720,9 +756,10 @@ const PeoplesAffected = () => {
                                     : null}
                                 </RadioGroup>
                               </div>
-                              {error && error[`personMedicalCare${[key]}`] && (
-                                <p>{error[`personMedicalCare${[key]}`]}</p>
-                              )}
+                              {error &&
+                                error[`personMedicalCare${[key]}`] && (
+                                  <p>{error[`personMedicalCare${[key]}`]}</p>
+                                )}
                             </Grid>
                             <Grid item md={6}>
                               {/* <p>Worker taken offisite for further assesment?</p> */}
@@ -732,7 +769,11 @@ const PeoplesAffected = () => {
                                 label="Worker taken offisite for further assesment?"
                                 className={classes.formControl}
                                 onChange={(e) =>
-                                  handleForm(e, key, "workerOffsiteAssessment")
+                                  handleForm(
+                                    e,
+                                    key,
+                                    "workerOffsiteAssessment"
+                                  )
                                 }
                               />
                               {error &&
@@ -750,17 +791,25 @@ const PeoplesAffected = () => {
                                 label="Location details of assesment center?"
                                 className={classes.formControl}
                                 onChange={(e) =>
-                                  handleForm(e, key, "locationAssessmentCenter")
+                                  handleForm(
+                                    e,
+                                    key,
+                                    "locationAssessmentCenter"
+                                  )
                                 }
                               />
                               {error &&
                                 error[`locationAssessmentCenter${[key]}`] && (
                                   <p>
-                                    {error[`locationAssessmentCenter${[key]}`]}
+                                    {
+                                      error[
+                                        `locationAssessmentCenter${[key]}`
+                                      ]
+                                    }
                                   </p>
                                 )}
                             </Grid>
-                          </>
+                          </Grid>
                         ))}
 
                     {peopleData.length !== 0 ? null : (
@@ -774,10 +823,12 @@ const PeoplesAffected = () => {
                         </button>
                       </Grid>
                     )}
+                    
                   </>
                 ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
+                  {personAffect === 'Yes'?null:
                   <TextField
                     id="comments"
                     multiline
@@ -785,9 +836,10 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
-                    defaultValue={incidentsListData.personAffectedComments}
-                    onChange={(e) => setPersonAffectedComments(e.target.value)}
-                  />
+                    onChange={(e) =>
+                      setPersonAffectedComments(e.target.value)
+                    }
+                  />}
                   {/* {error && error.describeactiontaken && (
                     <p>{error.describeactiontaken}</p>
                   )} */}
@@ -799,7 +851,7 @@ const PeoplesAffected = () => {
                     color="primary"
                     className={classes.button}
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     // href={

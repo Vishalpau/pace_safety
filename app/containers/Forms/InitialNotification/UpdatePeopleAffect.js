@@ -55,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 const UpdatePeoplesAffected = () => {
   // const [form, setForm] = useState({
@@ -254,6 +258,7 @@ const UpdatePeoplesAffected = () => {
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="personAffect"
                     name="personAffect"
                     value={personAffect}
@@ -360,6 +365,7 @@ const UpdatePeoplesAffected = () => {
                       Was that person taken to medical care?
                     </Typography>
                     <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="personAffect"
                     name="personAffect"
                     value={value.personMedicalCare}
@@ -431,12 +437,12 @@ const UpdatePeoplesAffected = () => {
                 </Grid>
                 <Grid item md={6}>
                   <Button
-                    href="http://localhost:3000/app/incident-management/registration/initial-notification/incident-details/"
+                    href="/app/incident-management/registration/initial-notification/incident-details/"
                     variant="contained"
                     color="primary"
                     className={classes.button}
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     // href={

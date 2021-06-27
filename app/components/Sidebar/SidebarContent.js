@@ -61,7 +61,7 @@ function SidebarContent(props) {
   return (
     <div className={classNames(classes.drawerInner, !drawerPaper ? classes.drawerPaperClose : '')}>
       <div className={classes.drawerHeader}>
-        <NavLink to="/app">
+        <NavLink to="/">
           <img src={paceLogo} alt="Pace Logo" />
         </NavLink>
         {/* <NavLink to="/app" className={classNames(classes.brand, classes.brandBar, turnDarker && classes.darker)}>

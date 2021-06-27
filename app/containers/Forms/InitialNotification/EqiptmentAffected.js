@@ -55,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const EqiptmentAffected = () => {
@@ -270,6 +274,7 @@ const EqiptmentAffected = () => {
                     Do you have details to share about the equiptment accected?
                   </Typography>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfEquipmentAffect}
@@ -466,8 +471,10 @@ const EqiptmentAffected = () => {
                         </button>
                       </Grid>
                     )}
+                    
                   </>
                 ) : null}
+                {detailsOfEquipmentAffect === "Yes" ?null: (
                 <Grid item lg={12} md={6} sm={6}>
                   {/* <p>Comment </p> */}
                   <TextField
@@ -484,6 +491,7 @@ const EqiptmentAffected = () => {
                    
                   />
                 </Grid>
+                )}
                 <Box marginTop={4}>
                   <Button
                     variant="contained"
@@ -492,7 +500,7 @@ const EqiptmentAffected = () => {
                     onClick={()=>history.goBack()}
                     // href="/app/incident-management/registration/initial-notification/property-affected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

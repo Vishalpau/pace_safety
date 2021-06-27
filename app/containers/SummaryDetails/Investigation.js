@@ -43,19 +43,7 @@ import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
 
-
-
 const InvestigationSummary = () => {
-
-  
-  
-
-  return (
-    <div>
-        <PapperBlock>
-          Investigation Summary
-        </PapperBlock>
-    </div>
-  );
+  return <h1> Investigation Summary</h1>;
 };
 export default InvestigationSummary;
