@@ -1,45 +1,45 @@
-import React, { useState, useEffect } from "react";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import FormLabel from "@material-ui/core/FormLabel";
-import { PapperBlock } from "dan-components";
+import React, { useState, useEffect } from 'react';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import FormControl from '@material-ui/core/FormControl';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import FormLabel from '@material-ui/core/FormLabel';
+import { PapperBlock } from 'dan-components';
 
-import api from "../../../utils/axios";
-import { useHistory, useParams } from "react-router";
-import moment from "moment";
+import { useHistory, useParams } from 'react-router';
+import moment from 'moment';
+import api from '../../../utils/axios';
 
-import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailValidation";
+import PersonalAndPpeDetailValidate from '../../Validator/PersonalAndPpeDetailValidation';
 
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
+import FormSideBar from '../FormSideBar';
+import { EVIDENCE_FORM } from '../../../utils/constants';
+import FormHeader from '../FormHeader';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    flexDirection: "row",
-    margin: "1rem 0",
+    flexDirection: 'row',
+    margin: '1rem 0',
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
-    flexDirection: "row",
-    gap: "1.5rem",
+    flexDirection: 'row',
+    gap: '1.5rem',
   },
 }));
 
 const PersonalAndPpeDetails = () => {
-  const radioDecide = ["Yes", "No"];
+  const radioDecide = ['Yes', 'No'];
   const classes = useStyles();
   const [error, setError] = useState({});
   const { id } = useParams();
@@ -63,7 +63,7 @@ const PersonalAndPpeDetails = () => {
   const handleNext = async () => {
     if (id !== undefined && activtyList.length > 0) {
       history.push(
-        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+        '/app/incident-management/registration/evidence/personal-and-ppedetails/'
       );
     } else {
       const selectedQuestion = [
@@ -83,7 +83,7 @@ const PersonalAndPpeDetails = () => {
         ad21,
       ];
       console.log(selectedQuestion);
-      for (var i = 0; i < selectedQuestion.length; i++) {
+      for (let i = 0; i < selectedQuestion.length; i++) {
         const valdation = selectedQuestion[i];
         console.log(valdation);
         // const { isValid, error } = ActivityDetailValidate(valdation);
@@ -100,10 +100,10 @@ const PersonalAndPpeDetails = () => {
   const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
     const temp = activtyList;
     console.log(temp);
-    const value = e.target.value;
+    const { value } = e.target;
     temp[key][fieldname] = value;
-    temp[key]["updatedBy"] = 0;
-    temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    temp[key].updatedBy = 0;
+    temp[key].updatedAt = moment(new Date()).toISOString();
     console.log(temp[key]);
 
     const res = await api.put(
@@ -738,7 +738,7 @@ const PersonalAndPpeDetails = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={EVIDENCE_FORM}
-            selectedItem={"Personal and Ppedetails"}
+            selectedItem="Personal and Ppedetails"
             deleteForm={[1, 2, 3]}
           />
         </Grid>

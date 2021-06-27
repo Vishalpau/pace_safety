@@ -1,55 +1,55 @@
-import React, { useState } from "react";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { PapperBlock } from "dan-components";
-import InputLabel from "@material-ui/core/InputLabel";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import api from "../../../utils/axios";
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import EvidenceValidate from "../../Validator/EvidenceValidation";
-import FormHeader from "../FormHeader";
-import { FormHelperText } from "@material-ui/core";
+import React, { useState } from 'react';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { PapperBlock } from 'dan-components';
+import InputLabel from '@material-ui/core/InputLabel';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import { FormHelperText } from '@material-ui/core';
+import api from '../../../utils/axios';
+import FormSideBar from '../FormSideBar';
+import { EVIDENCE_FORM } from '../../../utils/constants';
+import EvidenceValidate from '../../Validator/EvidenceValidation';
+import FormHeader from '../FormHeader';
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    flexDirection: "row",
-    margin: "1rem 0",
+    flexDirection: 'row',
+    margin: '1rem 0',
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
-    flexDirection: "row",
-    gap: "1.5rem",
+    flexDirection: 'row',
+    gap: '1.5rem',
   },
 }));
 const Evidence = () => {
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+    new Date('2014-08-18T21:11:54')
   );
   const [evidenceListData, setEvidenceListdata] = useState([]);
   const [fileUploadData, setFileUploadData] = useState([]);
   const [error, setError] = useState({});
   const classes = useStyles();
-  const [detailsOfEnvAffect, setDetailsOfEnvAffect] = useState("");
+  const [detailsOfEnvAffect, setDetailsOfEnvAffect] = useState('');
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
   const [form, setForm] = React.useState({
-    available: "",
-    comment: "",
-    document: "",
+    available: '',
+    comment: '',
+    document: '',
   });
   const handleNext = async () => {
     console.log(form);
@@ -57,16 +57,16 @@ const Evidence = () => {
     setError(error);
     const formData = {
       evidenceCheck: form.available,
-      evidenceNumber: "string",
-      evidenceCategory: "string",
-      evidenceRemark: "string",
+      evidenceNumber: 'string',
+      evidenceCategory: 'string',
+      evidenceRemark: 'string',
       createdBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: localStorage.getItem('fkincidentId'),
       evidenceDocument: form.document,
     };
     console.log(formData);
     const res = await api.post(
-      `/api/v1/${localStorage.getItem("fkincidentId")}/evidences/`,
+      `/api/v1/${localStorage.getItem('fkincidentId')}/evidences/`,
       formData
     );
     console.log(res);
@@ -75,10 +75,10 @@ const Evidence = () => {
     await setEvidenceListdata(result);
   };
   const handleDocument = (e) => {
-    const file = e.target.value
-  }
+    const file = e.target.value;
+  };
   const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No", "N/A"];
+  const radioDecide = ['Yes', 'No', 'N/A'];
   return (
     <PapperBlock title=" Evidences" icon="ion-md-list-box">
       <Grid container spacing={3}>
@@ -160,8 +160,8 @@ const Evidence = () => {
               onClick={() => handleNext()}
               href={
                 Object.keys(error).length == 0
-                  ? "http://localhost:3000/app/incident-management/registration/evidence/activity-detail/"
-                  : "#"
+                  ? 'http://localhost:3000/app/incident-management/registration/evidence/activity-detail/'
+                  : '#'
               }
             >
               Next
@@ -172,7 +172,7 @@ const Evidence = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={EVIDENCE_FORM}
-            selectedItem={"Evidence"}
+            selectedItem="Evidence"
           />
         </Grid>
       </Grid>

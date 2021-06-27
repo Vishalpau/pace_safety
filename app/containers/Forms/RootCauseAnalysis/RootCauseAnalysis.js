@@ -1,44 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import React, { useEffect, useState } from 'react';
+import { Button, Grid, Container } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Paper from '@material-ui/core/Paper';
+import FormControl from '@material-ui/core/FormControl';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import {
   DateTimePicker,
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
-import DateFnsUtils from "@date-io/date-fns";
-import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import FormLabel from "@material-ui/core/FormLabel";
+} from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
+import DateFnsUtils from '@date-io/date-fns';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import FormLabel from '@material-ui/core/FormLabel';
 
-import FormHeader from "../FormHeader";
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import api from "../../../utils/axios";
-import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
+import FormHeader from '../FormHeader';
+import FormSideBar from '../FormSideBar';
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants';
+import api from '../../../utils/axios';
+import RootCauseValidation from '../../Validator/RCAValidation/RootCauseAnalysisValidation';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: "100%",
+    width: '100%',
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
-    flexDirection: "row",
-    gap: "1.5rem",
+    flexDirection: 'row',
+    gap: '1.5rem',
   },
 }));
 
@@ -46,44 +46,44 @@ const RootCauseAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
 
   const [form, setForm] = useState({
-    causeOfIncident: "",
-    correctiveAction: "",
-    wouldItPreventIncident: "",
-    recommendSolution: "",
-    status: "Active",
+    causeOfIncident: '',
+    correctiveAction: '',
+    wouldItPreventIncident: '',
+    recommendSolution: '',
+    status: 'Active',
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
+    fkIncidentId: parseInt(localStorage.getItem('fkincidentId')),
   });
 
   const [error, setError] = useState({});
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      `api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
     );
     console.log(allIncidents);
     await setIncidents(allIncidents.data.data.results);
   };
 
   const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
+    'Internal Leadership',
+    'Police',
+    'Environment Officer',
+    'OHS',
+    'Mital Aid',
+    'Other',
   ];
 
-  const notificationSent = ["Manage", "SuperVisor"];
+  const notificationSent = ['Manage', 'SuperVisor'];
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+    new Date('2014-08-18T21:11:54')
   );
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  const radioDecide = ["Yes", "No"];
+  const radioDecide = ['Yes', 'No'];
   const classes = useStyles();
 
   const handelNext = async (e) => {
@@ -91,11 +91,11 @@ const RootCauseAnalysis = () => {
     setError(error);
     if (Object.keys(error).length == 0) {
       const res = await api.post(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/rootcauses/`,
+        `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/rootcauses/`,
         form
       );
       if (res.status == 201) {
-        console.log("request done");
+        console.log('request done');
         console.log(res);
       }
     }
@@ -120,13 +120,16 @@ const RootCauseAnalysis = () => {
               <Grid item md={12}>
                 <Box>
                   <Typography variant="body2" gutterBottom>
-                    Incident number: {localStorage.getItem("fkincidentId")}
+                    Incident number:
+                    {' '}
+                    {localStorage.getItem('fkincidentId')}
                   </Typography>
                 </Box>
               </Grid>
               <Grid item md={12}>
                 <Typography variant="h6" gutterBottom>
-                  Incident Description:{incidents.incidentDetails}
+                  Incident Description:
+                  {incidents.incidentDetails}
                 </Typography>
               </Grid>
 
@@ -237,9 +240,8 @@ const RootCauseAnalysis = () => {
                   variant="outlined"
                   label="What caused the incident?"
                   error={error.causeOfIncident}
-                  helperText={error ? error.causeOfIncident : ""}
-                  onChange={(e) =>
-                    setForm({ ...form, causeOfIncident: e.target.value })
+                  helperText={error ? error.causeOfIncident : ''}
+                  onChange={(e) => setForm({ ...form, causeOfIncident: e.target.value })
                   }
                 />
               </Grid>
@@ -254,9 +256,8 @@ const RootCauseAnalysis = () => {
                   variant="outlined"
                   label="Corrective actions"
                   error={error.correctiveAction}
-                  helperText={error ? error.correctiveAction : ""}
-                  onChange={(e) =>
-                    setForm({ ...form, correctiveAction: e.target.value })
+                  helperText={error ? error.correctiveAction : ''}
+                  onChange={(e) => setForm({ ...form, correctiveAction: e.target.value })
                   }
                 />
               </Grid>
@@ -276,18 +277,17 @@ const RootCauseAnalysis = () => {
                       value={value}
                       control={<Radio />}
                       label={value}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          wouldItPreventIncident:
-                            e.target.value === "Yes" ? "Yes" : "No",
-                        })
+                      onChange={(e) => setForm({
+                        ...form,
+                        wouldItPreventIncident:
+                            e.target.value === 'Yes' ? 'Yes' : 'No',
+                      })
                       }
                     />
                   ))}
                 </RadioGroup>
                 {error && error.wouldItPreventIncident && (
-                  <small style={{ color: "red" }}>
+                  <small style={{ color: 'red' }}>
                     {error.wouldItPreventIncident}
                   </small>
                 )}
@@ -301,12 +301,11 @@ const RootCauseAnalysis = () => {
                   multiline
                   label="If no, please recommended correct solution ?"
                   rows="3"
-                  onChange={(e) =>
-                    setForm({ ...form, recommendSolution: e.target.value })
+                  onChange={(e) => setForm({ ...form, recommendSolution: e.target.value })
                   }
                 />
                 {error && error.recommendSolution && (
-                  <small style={{ color: "red" }}>
+                  <small style={{ color: 'red' }}>
                     {error.recommendSolution}
                   </small>
                 )}
@@ -336,7 +335,7 @@ const RootCauseAnalysis = () => {
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Root cause analysis"}
+                selectedItem="Root cause analysis"
               />
             </Grid>
           </Grid>

@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Paper from "@material-ui/core/Paper";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import React, { useEffect, useState } from 'react';
+import { Button, Grid, Container } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Paper from '@material-ui/core/Paper';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import api from "../../../utils/axios";
-import FormHeader from "../FormHeader";
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import HazardiousConditionsValidation from "../../Validator/RCAValidation/HazardiousConditonsValidation";
+import api from '../../../utils/axios';
+import FormHeader from '../FormHeader';
+import FormSideBar from '../FormSideBar';
+import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants';
+import HazardiousConditionsValidation from '../../Validator/RCAValidation/HazardiousConditonsValidation';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: "100%",
+    width: '100%',
   },
   button: {
     margin: theme.spacing(1),
@@ -31,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
 
 const HazardiousCondition = () => {
   const [commonForm, setCommonForm] = useState({
-    rcaNumber: "string",
-    rcaType: "string",
-    status: "Active",
+    rcaNumber: 'string',
+    rcaType: 'string',
+    status: 'Active',
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
+    fkIncidentId: parseInt(localStorage.getItem('fkincidentId')),
   });
 
   const [error, setError] = useState({});
@@ -44,33 +44,33 @@ const HazardiousCondition = () => {
   const [data, setData] = useState([]);
 
   const [form, setForm] = useState({
-    warningSystem: { rcaSubType: "", rcaRemark: [] },
-    energyTypes: { rcaSubType: "", rcaRemark: [] },
-    tools: { rcaSubType: "", rcaRemark: [] },
-    safetyitems: { rcaSubType: "", rcaRemark: [] },
-    others: { rcaSubType: "", remarkType: "" },
+    warningSystem: { rcaSubType: '', rcaRemark: [] },
+    energyTypes: { rcaSubType: '', rcaRemark: [] },
+    tools: { rcaSubType: '', rcaRemark: [] },
+    safetyitems: { rcaSubType: '', rcaRemark: [] },
+    others: { rcaSubType: '', remarkType: '' },
   });
 
   const handelWarningSystems = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.warningSystem.rcaRemark.filter(
+      const newData = form.warningSystem.rcaRemark.filter(
         (item) => item !== value
       );
       setForm({
         ...form,
         warningSystem: {
-          rcaSubType: "warningSystem",
+          rcaSubType: 'warningSystem',
           rcaRemark: newData,
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         warningSystem: {
-          rcaSubType: "warningSystem",
+          rcaSubType: 'warningSystem',
           rcaRemark: [...form.warningSystem.rcaRemark, value],
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     }
@@ -78,22 +78,22 @@ const HazardiousCondition = () => {
 
   const handelEnergyTypes = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.energyTypes.rcaRemark.filter((item) => item !== value);
+      const newData = form.energyTypes.rcaRemark.filter((item) => item !== value);
       setForm({
         ...form,
         energyTypes: {
-          rcaSubType: "energyTypes",
+          rcaSubType: 'energyTypes',
           rcaRemark: newData,
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         energyTypes: {
-          rcaSubType: "energyTypes",
+          rcaSubType: 'energyTypes',
           rcaRemark: [...form.energyTypes.rcaRemark, value],
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     }
@@ -101,22 +101,22 @@ const HazardiousCondition = () => {
 
   const handelTools = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.tools.rcaRemark.filter((item) => item !== value);
+      const newData = form.tools.rcaRemark.filter((item) => item !== value);
       setForm({
         ...form,
         tools: {
-          rcaSubType: "tools",
+          rcaSubType: 'tools',
           rcaRemark: newData,
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         tools: {
-          rcaSubType: "tools",
+          rcaSubType: 'tools',
           rcaRemark: [...form.tools.rcaRemark, value],
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     }
@@ -124,22 +124,22 @@ const HazardiousCondition = () => {
 
   const handelSafetyItems = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.safetyitems.rcaRemark.filter((item) => item !== value);
+      const newData = form.safetyitems.rcaRemark.filter((item) => item !== value);
       setForm({
         ...form,
         safetyitems: {
-          rcaSubType: "safetyitems",
+          rcaSubType: 'safetyitems',
           rcaRemark: newData,
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         safetyitems: {
-          rcaSubType: "safetyitems",
+          rcaSubType: 'safetyitems',
           rcaRemark: [...form.safetyitems.rcaRemark, value],
-          remarkType: "string",
+          remarkType: 'string',
         },
       });
     }
@@ -149,9 +149,9 @@ const HazardiousCondition = () => {
     setForm({
       ...form,
       others: {
-        rcaSubType: "others",
+        rcaSubType: 'others',
         remarkType: e.target.value,
-        rcaRemark: ["string"],
+        rcaRemark: ['string'],
       },
     });
   };
@@ -160,20 +160,20 @@ const HazardiousCondition = () => {
     const { error, isValid } = HazardiousConditionsValidation(form);
     setError(error);
 
-    let tempData = [];
+    const tempData = [];
     Object.entries(form).map((item) => {
-      let api_data = item[1];
-      let rcaRemark_one = api_data.rcaRemark;
+      const api_data = item[1];
+      const rcaRemark_one = api_data.rcaRemark;
 
       rcaRemark_one.map((value) => {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
+        const temp = {
+          createdBy: '0',
+          fkIncidentId: localStorage.getItem('fkincidentId'),
           rcaRemark: value,
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "string",
-          remarkType: api_data["remarkType"],
-          status: "Active",
+          rcaSubType: api_data.rcaSubType,
+          rcaType: 'string',
+          remarkType: api_data.remarkType,
+          status: 'Active',
         };
         tempData.push(temp);
       });
@@ -182,26 +182,26 @@ const HazardiousCondition = () => {
   };
 
   const handelApiCall = async (e) => {
-    let callObjects = data;
+    const callObjects = data;
 
-    for (let key in callObjects) {
+    for (const key in callObjects) {
       console.log(callObjects[key]);
       if (Object.keys(error).length == 0) {
         const res = await api.post(
           `/api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
+            'fkincidentId'
           )}/pacecauses/`,
           callObjects[key]
         );
         if (res.status == 201) {
-          console.log("request done");
+          console.log('request done');
           console.log(res);
         }
       }
     }
   };
 
-  const selectValues = ["Option1", "Option2", "...."];
+  const selectValues = ['Option1', 'Option2', '....'];
 
   const classes = useStyles();
   return (
@@ -218,7 +218,9 @@ const HazardiousCondition = () => {
               <Grid item md={4}>
                 <Box>
                   <Typography variant="body2" gutterBottom>
-                    Incident number: {localStorage.getItem("fkincidentId")}
+                    Incident number:
+                    {' '}
+                    {localStorage.getItem('fkincidentId')}
                   </Typography>
                 </Box>
               </Grid>
@@ -248,7 +250,7 @@ const HazardiousCondition = () => {
                 </FormControl>
                 {error && error.warningSystem && (
                   <p>
-                    <small style={{ color: "red" }}>
+                    <small style={{ color: 'red' }}>
                       {error.warningSystem}
                     </small>
                   </p>
@@ -258,7 +260,7 @@ const HazardiousCondition = () => {
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.energyTypes}>
-                    {" "}
+                    {' '}
                     Energy Types
                   </FormLabel>
                   <FormGroup>
@@ -273,7 +275,7 @@ const HazardiousCondition = () => {
                 </FormControl>
                 {error && error.energyTypes && (
                   <p>
-                    <small style={{ color: "red" }}>{error.energyTypes}</small>
+                    <small style={{ color: 'red' }}>{error.energyTypes}</small>
                   </p>
                 )}
               </Grid>
@@ -281,7 +283,7 @@ const HazardiousCondition = () => {
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.tools}>
-                    {" "}
+                    {' '}
                     Tools
                   </FormLabel>
                   <FormGroup>
@@ -296,7 +298,7 @@ const HazardiousCondition = () => {
                 </FormControl>
                 {error && error.tools && (
                   <p>
-                    <small style={{ color: "red" }}>{error.tools}</small>
+                    <small style={{ color: 'red' }}>{error.tools}</small>
                   </p>
                 )}
               </Grid>
@@ -304,7 +306,7 @@ const HazardiousCondition = () => {
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.safetyitems}>
-                    {" "}
+                    {' '}
                     Saftey Items
                   </FormLabel>
                   <FormGroup>
@@ -319,7 +321,7 @@ const HazardiousCondition = () => {
                 </FormControl>
                 {error && error.safetyitems && (
                   <p>
-                    <small style={{ color: "red" }}>{error.safetyitems}</small>
+                    <small style={{ color: 'red' }}>{error.safetyitems}</small>
                   </p>
                 )}
               </Grid>
@@ -332,7 +334,7 @@ const HazardiousCondition = () => {
                   label="Others"
                   multiline
                   error={error.others}
-                  helperText={error ? error.others : ""}
+                  helperText={error ? error.others : ''}
                   rows={3}
                   className={classes.formControl}
                   onChange={async (e) => handelOthers(e)}
@@ -371,7 +373,7 @@ const HazardiousCondition = () => {
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Hazardious conditions"}
+                selectedItem="Hazardious conditions"
               />
             </Grid>
           </Grid>

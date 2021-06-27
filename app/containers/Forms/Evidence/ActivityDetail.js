@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from "react";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import InputLabel from "@material-ui/core/InputLabel";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import FormLabel from "@material-ui/core/FormLabel";
-import { PapperBlock } from "dan-components";
+import React, { useEffect, useState } from 'react';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import FormControl from '@material-ui/core/FormControl';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputLabel from '@material-ui/core/InputLabel';
+import Box from '@material-ui/core/Box';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import FormLabel from '@material-ui/core/FormLabel';
+import { PapperBlock } from 'dan-components';
 
-import api from "../../../utils/axios";
-import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from 'react-router-dom';
+import api from '../../../utils/axios';
+import ActivityDetailValidate from '../../Validator/ActivityDetailValidation';
+import FormSideBar from '../FormSideBar';
+import { EVIDENCE_FORM } from '../../../utils/constants';
+import FormHeader from '../FormHeader';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    flexDirection: "row",
-    margin: "1rem 0",
+    flexDirection: 'row',
+    margin: '1rem 0',
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
-    flexDirection: "row",
-    gap: "1.5rem",
+    flexDirection: 'row',
+    gap: '1.5rem',
   },
 }));
 
 const ActivityDetails = () => {
   const [selectedDate, setSelectedDate] = useState(
-    new Date("2014-08-18T21:11:54")
+    new Date('2014-08-18T21:11:54')
   );
   const [error, setError] = useState({});
   const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+  const radioDecide = ['Yes', 'No'];
   const classes = useStyles();
   const { id } = useParams();
   const history = useHistory();
@@ -58,26 +58,26 @@ const ActivityDetails = () => {
   const handleNext = async () => {
     if (id !== undefined && activtyList.length > 0) {
       history.push(
-        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+        '/app/incident-management/registration/evidence/personal-and-ppedetails/'
       );
     } else {
       const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
       console.log(selectedQuestion);
-      for (var i = 0; i < selectedQuestion.length; i++) {
+      for (let i = 0; i < selectedQuestion.length; i++) {
         const valdation = selectedQuestion[i];
         console.log(valdation);
         const { isValid, error } = ActivityDetailValidate(valdation);
         setError(error);
         const res = await api.post(
           `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
+            'fkincidentId'
           )}/activities/`,
           selectedQuestion[i]
         );
         console.log(res);
       }
       history.push(
-        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+        '/app/incident-management/registration/evidence/personal-and-ppedetails/'
       );
     }
   };
@@ -85,13 +85,13 @@ const ActivityDetails = () => {
   const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
     const temp = activtyList;
     console.log(temp);
-    console.log((temp[key]["fkIncidentId"] = id));
-    const value = e.target.value;
-    temp[key]["id"] = parseInt(activityId);
+    console.log((temp[key].fkIncidentId = id));
+    const { value } = e.target;
+    temp[key].id = parseInt(activityId);
     temp[key][fieldname] = value;
-    temp[key]["updatedBy"] = 0;
+    temp[key].updatedBy = 0;
     // temp[key]["updatedAt"] = moment(new Date()).toISOString();
-    temp[key]["fkIncidentId"] = id;
+    temp[key].fkIncidentId = id;
 
     console.log(temp[key]);
 
@@ -139,7 +139,7 @@ const ActivityDetails = () => {
                       className={classes.inlineRadioGroup}
                       defaultValue={activity.answer}
                       onChange={(e) => {
-                        handleUpdateActivityList(e, key, "answer", activity.id);
+                        handleUpdateActivityList(e, key, 'answer', activity.id);
                       }}
                     >
                       {radioDecide.map((value) => (
@@ -170,14 +170,14 @@ const ActivityDetails = () => {
                     onChange={(e) => {
                       setAd01({
                         ...ad01,
-                        questionCode: "AD-01",
-                        question: "Did the job require work permit?",
+                        questionCode: 'AD-01',
+                        question: 'Did the job require work permit?',
                         answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
+                        activityGroup: 'Evidence',
+                        status: 'Active',
                         updatedBy: 0,
                         createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
+                        fkIncidentId: localStorage.getItem('fkincidentId'),
                       });
                     }}
                   >
@@ -208,15 +208,15 @@ const ActivityDetails = () => {
                     onChange={(e) => {
                       setAd02({
                         ...ad02,
-                        questionCode: "AD-02",
+                        questionCode: 'AD-02',
                         question:
-                          "If yes ,was a permit complted prior of the job?",
+                          'If yes ,was a permit complted prior of the job?',
                         answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
+                        activityGroup: 'Evidence',
+                        status: 'Active',
                         updatedBy: 0,
                         createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
+                        fkIncidentId: localStorage.getItem('fkincidentId'),
                       });
                     }}
                   >
@@ -247,14 +247,14 @@ const ActivityDetails = () => {
                     onChange={(e) => {
                       setAd03({
                         ...ad03,
-                        questionCode: "AD-03",
-                        question: "Was per-job safety discussed head?",
+                        questionCode: 'AD-03',
+                        question: 'Was per-job safety discussed head?',
                         answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
+                        activityGroup: 'Evidence',
+                        status: 'Active',
                         updatedBy: 0,
                         createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
+                        fkIncidentId: localStorage.getItem('fkincidentId'),
                       });
                     }}
                   >
@@ -286,14 +286,14 @@ const ActivityDetails = () => {
                     onChange={(e) => {
                       setAd04({
                         ...ad04,
-                        questionCode: "AD-04",
-                        question: "Was JHA executed for the task?",
+                        questionCode: 'AD-04',
+                        question: 'Was JHA executed for the task?',
                         answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
+                        activityGroup: 'Evidence',
+                        status: 'Active',
                         updatedBy: 0,
                         createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
+                        fkIncidentId: localStorage.getItem('fkincidentId'),
                       });
                     }}
                   >
@@ -325,14 +325,14 @@ const ActivityDetails = () => {
                     onChange={(e) => {
                       setAd05({
                         ...ad05,
-                        questionCode: "AD-05",
-                        question: "Was FLA executed for the task?",
+                        questionCode: 'AD-05',
+                        question: 'Was FLA executed for the task?',
                         answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
+                        activityGroup: 'Evidence',
+                        status: 'Active',
                         updatedBy: 0,
                         createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
+                        fkIncidentId: localStorage.getItem('fkincidentId'),
                       });
                     }}
                   >
@@ -364,14 +364,14 @@ const ActivityDetails = () => {
                     onChange={(e) => {
                       setAd06({
                         ...ad06,
-                        questionCode: "AD-06",
-                        question: " Did pre-planning identified the hazard?",
+                        questionCode: 'AD-06',
+                        question: ' Did pre-planning identified the hazard?',
                         answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
+                        activityGroup: 'Evidence',
+                        status: 'Active',
                         updatedBy: 0,
                         createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
+                        fkIncidentId: localStorage.getItem('fkincidentId'),
                       });
                     }}
                   >
@@ -403,15 +403,15 @@ const ActivityDetails = () => {
                     onChange={(e) => {
                       setAd07({
                         ...ad07,
-                        questionCode: "AD-07",
+                        questionCode: 'AD-07',
                         question:
-                          "was per-jon planning enhanced the post-event?",
+                          'was per-jon planning enhanced the post-event?',
                         answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
+                        activityGroup: 'Evidence',
+                        status: 'Active',
                         updatedBy: 0,
                         createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
+                        fkIncidentId: localStorage.getItem('fkincidentId'),
                       });
                     }}
                   >
@@ -451,7 +451,7 @@ const ActivityDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={EVIDENCE_FORM}
-            selectedItem={"Activity detail"}
+            selectedItem="Activity detail"
           />
         </Grid>
       </Grid>
