@@ -317,14 +317,6 @@ const ReportingAndNotification = () => {
                       value={value}
                       control={<Checkbox />}
                       label={value}
-                      // onChange={(e) => {
-                      //   handleUpdateEnvironement(
-                      //     e,
-                      //     key,
-                      //     "reportTo",
-                      //     report.id
-                      //   );
-                      // }}
                       onChange={(e) => handelReportedTo(e, value, 'option')}
                     />
                   ))}
@@ -358,23 +350,6 @@ const ReportingAndNotification = () => {
                 }}
               />
             ))}
-            {/* <FormControl component="fieldset">
-                    <RadioGroup aria-label="gender">
-                      {notificationSent.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              isnotificationsent: e.target.value,
-                            });
-                          }}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl> */}
             {error && error.isnotificationsent && (
               <p>{error.isnotificationsent}</p>
             )}
@@ -570,10 +545,6 @@ const ReportingAndNotification = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
-              // href={Object.keys(error).length === 0?
-              //   "http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
-              //   : "#"}
               onClick={(e) => handelNext(e)}
             >
               Submit
@@ -581,10 +552,10 @@ const ReportingAndNotification = () => {
           </Grid>
         </Grid>
         <Grid item md={3}>
-          {/* <FormSideBar
+          <FormSideBar
             listOfItems={INITIAL_NOTIFICATION_FORM}
             selectedItem={"Reporting and notification"}
-          /> */}
+          />
         </Grid>
       </Grid>
     </PapperBlock>
