@@ -98,264 +98,269 @@ const RootCauseAnalysisSummary = () => {
 
   const classes = useStyles();
   return (
-    <Grid container spacing={5}>
-      <Grid container item md={9} spacing={3}>
-      <Accordion>
+    <Grid container spacing={1}>
+      <Grid item md={12}>
+        <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Root Cause</Typography>
           </AccordionSummary>
           <AccordionDetails>
-        {rootCause.length !== 0
-          ? rootCause.map((root, key) => (
-              <Grid container item md={9} spacing={3} key={key}>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Id : {root.id}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Cause Of Incident
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {root.causeOfIncident}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Recomment Solution
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {root.recommendSolution}
-                  </Typography>
-                </Grid>
-              </Grid>
-            ))
-          : null}
+            {rootCause.length !== 0
+              ? rootCause.map((root, key) => (
+                  <Grid container item md={9} spacing={3} key={key}>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Id : {root.id}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Cause Of Incident
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {root.causeOfIncident}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Recomment Solution
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {root.recommendSolution}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))
+              : null}
           </AccordionDetails>
-          </Accordion>
-          <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+        </Accordion>
+      </Grid>
+      <Grid item md={12}>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Five Why</Typography>
           </AccordionSummary>
           <AccordionDetails>
-        {fiveWhy.length !== 0
-          ? fiveWhy.map((fw, key) => (
-              <Grid container item md={9} spacing={3} key={key}>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Id : {fw.id}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Why
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {fw.why}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Why Count
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {fw.whyCount}
-                  </Typography>
-                </Grid>
-              </Grid>
-            ))
-          : null}
-          </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Casue Analysis</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {causeanalysis.length !== 0
-                ? causeanalysis.map((cause, key) => (
-                <Grid container item md={9} spacing={3} key={key}>
-                  <Grid item lg={6} md={6}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
-                      Id : {cause.id}
-                    </Typography>
+            {fiveWhy.length !== 0
+              ? fiveWhy.map((fw, key) => (
+                  <Grid container item md={9} spacing={3} key={key}>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Id : {fw.id}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Why
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {fw.why}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Why Count
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {fw.whyCount}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item lg={6} md={6}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
-                      Evidence Support
-                    </Typography>
-                    <Typography
-                      variant="body"
-                      color="textSecondary"
-                      className={Fonts.labelValue}
-                    >
-                      {cause.evidenceSupport}
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={6} md={6}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
-                      Evidence Contradiction
-                    </Typography>
-                    <Typography
-                      variant="body"
-                      color="textSecondary"
-                      className={Fonts.labelValue}
-                    >
-                      {cause.evidenceContradiction}
-                    </Typography>
-                  </Grid>
-               </Grid>
-              ))
+                ))
               : null}
-            </AccordionDetails>
-          </Accordion>
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>Pace Cause</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-          {pacecauses.length !== 0
-          ? pacecauses.map((pc, key) => (
-              <Grid container item md={9} spacing={3} key={key}>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    RCA number
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {pc.rcaNumber}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    RCA type
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {pc.rcatype}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    RCA SubType
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {pc.rcaSubType}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    RCA Remark
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {pc.rcaRemark}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    RCA RemarkType
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {pc.remarkType}
-                  </Typography>
-                </Grid>
-              </Grid>
-              ))
-            : null}
           </AccordionDetails>
         </Accordion>
-       
+      </Grid>
+      <Grid item md={12}>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Casue Analysis</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {causeanalysis.length !== 0
+              ? causeanalysis.map((cause, key) => (
+                  <Grid container item md={9} spacing={3} key={key}>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Id : {cause.id}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Evidence Support
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {cause.evidenceSupport}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Evidence Contradiction
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {cause.evidenceContradiction}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))
+              : null}
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
+      <Grid item md={12}>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Pace Cause</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {pacecauses.length !== 0
+              ? pacecauses.map((pc, key) => (
+                  <Grid container item md={9} spacing={3} key={key}>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        RCA number
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {pc.rcaNumber}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        RCA type
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {pc.rcatype}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        RCA SubType
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {pc.rcaSubType}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        RCA Remark
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {pc.rcaRemark}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        RCA RemarkType
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {pc.remarkType}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))
+              : null}
+          </AccordionDetails>
+        </Accordion>
       </Grid>
     </Grid>
   );
