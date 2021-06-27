@@ -9,7 +9,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-
+import { PapperBlock } from "dan-components";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
@@ -50,11 +50,11 @@ const Evidence = () => {
     setSelectedDate(date);
   };
 
-  const [form , setForm] = React.useState({
-    available : "",
-    comment : "", 
-    document : ""
-  })
+  const [form, setForm] = React.useState({
+    available: "",
+    comment: "",
+    document: "",
+  });
 
   const handleNext = async () => {
     console.log(form);
@@ -64,7 +64,6 @@ const Evidence = () => {
   
    
     const formData = {
-      
       "evidenceCheck": form.available,
       "evidenceNumber": "string",
       "evidenceCategory": "string",
@@ -79,77 +78,66 @@ const Evidence = () => {
     console.log(res)
     const result = res.data.data.results;
     // console.log('sagar');
-    await setEvidenceListdata(result);        
+    await setEvidenceListdata(result);
   };
-  
- const handleDocument=(e)=>{
-   const file = e.target.value
- }
-  
+
+
   const selectValues = [1, 2, 3, 4];
-  
+
   const radioDecide = ["Yes", "No", "N/A"];
   return (
-    <div>
-      <Container>
-        <Paper>
-          <Box padding={3} bgcolor="background.paper">
-            {/* <Box marginBottom={5}>
-              <FormHeader selectedHeader={"Evidence collection"} />
-            </Box> */}
-
-            <Box borderBottom={1} marginBottom={2}>
-              <Typography variant="h6" gutterBottom>
-                Evidences
+    <PapperBlock title=" Evidences" icon="ion-md-list-box">
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={12}>
+            <Box>
+              <Typography variant="body2" gutterBottom>
+                Incident number: nnnnnnnnnn
               </Typography>
             </Box>
-            <Grid container spacing={3}>
-              <Grid container item md={9} spacing={3}>
-                <Grid item md={12}>
-                  <Box>
-                    <Typography variant="body2" gutterBottom>
-                      Incident number: nnnnnnnnnn
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item md={12}>
-                  <Typography variant="h6" gutterBottom>
-                    Incident Description
-                  </Typography>
-                  <Typography variant="body" gutterBottom>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Nobis debitis saepe corporis quo inventore similique fugiat
-                    voluptatem alias et quae temporibus necessitatibus ut, magni
-                    ea quisquam vel, officiis cupiditate aperiam.
-                  </Typography>
-                </Grid>
-                <Grid item md={2}>
-                  <Box marginBottom={2}>
-                    <Typography variant="body">Evidence Type</Typography>
-                  </Box>
-                  <Typography variant="body2">Evidence Type 1</Typography>
-                </Grid>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom>
+              Incident Description
+            </Typography>
+            <Typography variant="body" gutterBottom>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
+              debitis saepe corporis quo inventore similique fugiat voluptatem
+              alias et quae temporibus necessitatibus ut, magni ea quisquam vel,
+              officiis cupiditate aperiam.
+            </Typography>
+          </Grid>
+          <Grid item md={2}>
+            <Box marginBottom={2}>
+              <Typography variant="body">Evidence Type</Typography>
+            </Box>
+            <Typography variant="body2">Evidence Type 1</Typography>
+          </Grid>
 
-                <Grid item md={3} justify="center">
-                  <Box marginBottom={2}>
-                    <Typography variant="body">Available</Typography>
-                  </Box>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setForm({...form, available : e.target.value})
-                    }}
-                  >
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                      
-                    />
-                  ))}
-                  </RadioGroup>
-                  {error && error.available && <h1>{error.available}</h1>}
+          <Grid item md={3} justify="center">
+            <Box marginBottom={2}>
+              <Typography variant="body">Available</Typography>
+            </Box>
+            <RadioGroup
+              className={classes.inlineRadioGroup}
+              onChange={(e) => {
+                setForm({ ...form, available: e.target.value });
+              }}
+            >
+              {radioDecide.map((value) => (
+                <FormControlLabel
+                  value={value}
+                  control={<Radio />}
+                  label={value}
+                />
+              ))}
+            </RadioGroup>
+            {error && error.available && <h1>{error.available}</h1>}
+          </Grid>
+          <Grid item md={4}>
+            <Box marginBottom={2}>
+              <Typography variant="body">Comments</Typography>
+            </Box>
 
                 </Grid>
                 <Grid item md={4}>
@@ -172,7 +160,7 @@ const Evidence = () => {
                   <Box>
                   
                     <input type="file" name="file" onChange={(e)=> {
-                      handleDocument(e)
+                      setForm({ ...form,document : e.target.value})
                     }} />
 
                   </Box>

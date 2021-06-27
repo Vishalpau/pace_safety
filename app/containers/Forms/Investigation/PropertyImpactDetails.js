@@ -56,10 +56,6 @@ const PropertyImpacetDetails = () => {
     <Container>
       <Paper>
         <Box padding={3} bgcolor="background.paper">
-          <Box marginBottom={5}>
-            <FormHeader selectedHeader={"Investigation"} />
-          </Box>
-
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               Details of Properties affected
@@ -303,7 +299,7 @@ const PropertyImpacetDetails = () => {
             </Grid>
             <Grid item md={3}>
               <FormSideBar
-              deleteForm={[1,2,3]}
+                deleteForm={[1, 2, 3]}
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem={"Property impact details"}
               />
