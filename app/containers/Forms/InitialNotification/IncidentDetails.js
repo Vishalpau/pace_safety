@@ -88,7 +88,7 @@ const IncidentDetails = () => {
     environmentAffect: '',
   });
 
-  const [clearedDate, handleClearedDateChange] = useState(null);
+  const [clearedDate, setClearData] = useState(null);
 
   const [form, setForm] = useState({
     projectname: '',
