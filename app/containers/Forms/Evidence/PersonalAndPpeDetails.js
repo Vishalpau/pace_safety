@@ -68,17 +68,17 @@ const PersonalAndPpeDetails = () => {
       const selectedQuestion = [ad08, ad09, ad10, ad11, ad12, ad13, ad14, ad15, ad16, ad17, ad18, ad19, ad20, ad21];
       console.log(selectedQuestion)
       for (var i = 0; i < selectedQuestion.length; i++) {
-        const valdation = selectedQuestion[i];
-        console.log(valdation)
+        // const valdation = selectedQuestion[i];
+        // console.log(valdation)
         // const { isValid, error } = ActivityDetailValidate(valdation);
-        setError(error);
-        // const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        //   selectedQuestion[i]
-        // );
-        // console.log(res);
+        // setError(error);
+        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          selectedQuestion[i]
+        );
+        console.log(res);
 
       }
-      // history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
+      history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
     }
   };
 

@@ -84,6 +84,7 @@ const ReportingAndNotification = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [reportsListData, setReportListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [lateReport, SetLateReport] = useState(true);
   const { id } = useParams();
 
   const [form, setForm] = useState({
@@ -92,7 +93,7 @@ const ReportingAndNotification = () => {
     fileupload: "",
     supervisorname: "",
     othername: "",
-    reportingdate: "2021/09/06",
+    reportingdate: "2021/05/06",
     reportingtime: "",
     reportedby: "",
     others: "",
@@ -123,6 +124,26 @@ const ReportingAndNotification = () => {
   const [otherdata, setOtherData] = useState("")
 
   const [fileNames, setFileNames] = useState("")
+
+  const handelTimeCompare = (e) => {
+    console.log(form.reportingtime)
+    console.log(form.reportingdate)
+    let rpTime = form.reportingtime
+    let rpDate = form.reportingdate
+    let startDate = `${rpDate} ${rpTime}`
+    // let startDate = form.reportingdate.concat(form.reportingtime)
+    console.log(startDate)
+    var start_date = moment(startDate, 'YYYY-MM-DD HH:mm:ss');
+    var end_date = moment(new Date(), 'YYYY-MM-DD HH:mm:ss');
+    var duration = moment.duration(end_date.diff(start_date));
+    var Hours = duration.asHours();
+    if (Hours > 4) {
+      SetLateReport(false)
+    } else {
+      SetLateReport(true)
+    }
+  }
+
   const handleDateChange = (date) => {
     let onlyDate = moment(date).format("YYYY/MM/DD");
     setForm({
@@ -131,14 +152,15 @@ const ReportingAndNotification = () => {
     });
   };
 
-  const handelTimeChange = (date) => {
-    console.log(date);
-    setSelectedTime(date);
-    setForm({
+  const handelTimeChange = async (date) => {
+    let onlyTime = moment(date).format("HH:mm:ss")
+    await setForm({
       ...form,
-      reportingtime: moment(date).format("HH:mm"),
+      reportingtime: onlyTime,
     });
   };
+
+
 
   const handleDrop = (acceptedFiles) => {
     console.log(acceptedFiles);
@@ -167,6 +189,8 @@ const ReportingAndNotification = () => {
   };
 
   const handelNext = async (e) => {
+    const { error, isValid } = ReportingValidation(form);
+    setError(error);
     // getting fileds for update
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
@@ -199,9 +223,7 @@ const ReportingAndNotification = () => {
         )}`
       );
     } else {
-      const { error, isValid } = ReportingValidation(form);
-      setError(error);
-      console.log("reported to")
+
 
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
@@ -234,8 +256,6 @@ const ReportingAndNotification = () => {
         )
       }
     }
-
-    console.log(form.reportedto)
   }
 
   const fetchIncidentsData = async () => {
@@ -266,9 +286,7 @@ const ReportingAndNotification = () => {
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-            {/* <Box marginBottom={5}>
-              <FormHeader selectedHeader={"Initial notification"} />
-            </Box> */}
+
 
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
@@ -282,7 +300,7 @@ const ReportingAndNotification = () => {
                   component="fieldset"
                   className={classes.formControl}
                 >
-                  <FormLabel component="legend"> Reportable to </FormLabel>
+                  <FormLabel component="legend" error={error.reportedto}> Reportable to </FormLabel>
                   <FormGroup>
                     {reportsListData.length > 0
                       ? reportsListData.map((report, key) => (
@@ -327,11 +345,13 @@ const ReportingAndNotification = () => {
                       : null}
 
                   </FormGroup>
+                  {error && error.reportedto && (
+                    <p><small style={{ color: "red" }}>{error.reportedto}</small></p>
+                  )}
                 </FormControl>
 
                 <Grid item lg={12} md={6} sm={6}>
-                  <p>Notification to be sent</p>
-
+                  <FormLabel component="legend" error={error.isnotificationsent}> Notification to be sent </FormLabel>
                   {notificationSent.map((value) => (
                     <FormControlLabel
                       value={value}
@@ -345,25 +365,9 @@ const ReportingAndNotification = () => {
                       }}
                     />
                   ))}
-                  {/* <FormControl component="fieldset">
-                    <RadioGroup aria-label="gender">
-                      {notificationSent.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              isnotificationsent: e.target.value,
-                            });
-                          }}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl> */}
+
                   {error && error.isnotificationsent && (
-                    <p>{error.isnotificationsent}</p>
+                    <p><small style={{ color: "red" }}>{error.isnotificationsent}</small></p>
                   )}
                 </Grid>
 
@@ -450,7 +454,7 @@ const ReportingAndNotification = () => {
                       id="time-picker"
                       label="Time picker"
                       value={new Date(selectedTime)}
-                      onChange={(date) => handelTimeChange(date)}
+                      onChange={(date) => { handelTimeChange(date); handelTimeCompare() }}
                       KeyboardButtonProps={{
                         "aria-label": "change time",
                       }}
@@ -459,6 +463,7 @@ const ReportingAndNotification = () => {
                   </MuiPickersUtilsProvider>
                   {error && error.reportingtime && <p>{error.reportingtime}</p>}
                 </Grid>
+
 
                 <Grid item md={6}>
                   {/* <p>Reported by</p> */}
@@ -501,28 +506,30 @@ const ReportingAndNotification = () => {
                       });
                     }}
                   />
-                  {/* {error && error.others && <p>{error.others}</p>} */}
+                  {error && error.others && <p>{error.others}</p>}
                 </Grid>
 
-                <Grid item md={12}>
-                  {/* <p>Resaon for reporting later than 4 hours</p> */}
-                  <TextField
-                    id="reason"
-                    variant="outlined"
-                    label="Resaon for reporting later than 4 hours"
-                    multiline
-                    rows="4"
-                    defaultValue={incidentsListData.reasonLateReporting}
-                    className={classes.fullWidth}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        latereporting: e.target.value.toString(),
-                      });
-                    }}
-                  />
-                  {error && error.latereporting && <p>{error.latereporting}</p>}
-                </Grid>
+                {lateReport ?
+                  <Grid item md={12}>
+                    {/* <p>Resaon for reporting later than 4 hours</p> */}
+                    <TextField
+                      id="reason"
+                      variant="outlined"
+                      label="Reason for reporting later than 4 hours"
+                      multiline
+                      rows="4"
+                      defaultValue={incidentsListData.reasonLateReporting}
+                      className={classes.fullWidth}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          latereporting: e.target.value.toString(),
+                        });
+                      }}
+                    />
+                    {error && error.latereporting && <p>{error.latereporting}</p>}
+                  </Grid>
+                  : null}
 
                 <Grid item md={12}>
                   {/* <p>Additional details if any</p> */}
@@ -558,10 +565,6 @@ const ReportingAndNotification = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    // href="http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
-                    // href={Object.keys(error).length === 0?
-                    //   "http://localhost:3000/app/incident-management/registration/investigation/initial-details/"
-                    //   : "#"}
                     onClick={(e) => handelNext(e)}
                   >
                     Submit
