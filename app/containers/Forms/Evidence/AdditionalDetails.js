@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
+import { PapperBlock } from "dan-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
@@ -38,7 +39,7 @@ const AdditionalDetails = () => {
   const history = useHistory();
   const [activtyList, setActvityList] = useState([]);
 
-
+  const [ad22, setAd22] = useState({});
   const [ad23, setAd23] = useState({});
   const [ad24, setAd24] = useState({});
   const [ad25, setAd25] = useState({});
@@ -50,12 +51,12 @@ const AdditionalDetails = () => {
         "/app/incident-management/registration/evidence/personal-and-ppedetails/"
       );
     } else {
-      const selectedQuestion = [ad23, ad24, ad25, ad26];
+      const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
       console.log(selectedQuestion);
       for (var i = 0; i < selectedQuestion.length; i++) {
-        // const valdation = selectedQuestion[i];
-        // console.log(valdation);
-        // const { isValid, error } = ActivityDetailValidate(valdation);
+        const valdation = selectedQuestion[i];
+        console.log(valdation);
+        const { isValid, error } = ActivityDetailValidate(valdation);
         setError(error);
         const res = await api.post(
           `api/v1/incidents/${localStorage.getItem(
@@ -85,6 +86,15 @@ const AdditionalDetails = () => {
       temp[key]
     );
     console.log(res);
+  };
+
+  const handleNext1 = () => {
+    console.log("sagar", form);
+    const { error, isValid } = AdditionalDetailValidate(form);
+    setError(error);
+    console.log(error, isValid);
+    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
+    // console.log(nextPath)
   };
 
   const selectValues = [1, 2, 3, 4];
@@ -144,10 +154,10 @@ const AdditionalDetails = () => {
                       multiline
                       rows="4"
                       onChange={(e) => {
-                        setAd23({
-                          ...ad23,
-                          questionCode: "ADD-22",
-                          question: "Any Part/Equiptment sent for anlysis",
+                        setAd01({
+                          ...ad01,
+                          questionCode: "AD-01",
+                          question: "Did the job require work permit?",
                           answer: e.target.value,
                           activityGroup: "Evidence",
                           status: "Active",
@@ -173,19 +183,7 @@ const AdditionalDetails = () => {
                       error={error.ans2}
                       helperText={error.ans2 ? error.ans2 : ""}
                       onChange={(e) => {
-                        setAd24({
-                          ...ad24,
-                          questionCode: "ADD-23",
-                          question: "Evidence analysis notes",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
+                        setForm({ ...form, ans2: e.target.value })
                       }}
                       multiline
                       rows="4"
@@ -204,19 +202,7 @@ const AdditionalDetails = () => {
                       error={error.ans3}
                       helperText={error.ans3 ? error.ans3 : ""}
                       onChange={(e) => {
-                        setAd25({
-                          ...ad25,
-                          questionCode: "ADD-24",
-                          question: "Evidence summary",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
+                        setForm({ ...form, ans3: e.target.value })
                       }}
                       multiline
                       rows="4"
@@ -235,19 +221,7 @@ const AdditionalDetails = () => {
                       error={error.ans4}
                       helperText={error.ans4 ? error.ans4 : ""}
                       onChange={(e) => {
-                        setAd26({
-                          ...ad26,
-                          questionCode: "ADD-25",
-                          question: "Additional notes if any",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
+                        setForm({ ...form, ans4: e.target.value })
                       }}
                       multiline
                       rows="4"
@@ -259,8 +233,7 @@ const AdditionalDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={() => history.goBack()}
-                  // href="http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/"
+                    href="/app/incident-management/registration/evidence/personal-and-ppedetails/"
                   >
                     Previous
                   </Button>
@@ -269,7 +242,7 @@ const AdditionalDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
-                  // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/" : "#"}
+                    href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/" : "#"}
                   >
                     Submit
                   </Button>

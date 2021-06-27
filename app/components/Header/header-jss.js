@@ -518,6 +518,10 @@ const styles = (theme) => ({
     minWidth: 150,
     marginLeft: theme.spacing(2),
   },
+  projectSwitcher: {
+    display: "flex",
+    alignItems: "center",
+  },
 });
 
 export default styles;

@@ -14,6 +14,7 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { PapperBlock } from "dan-components";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -66,123 +67,103 @@ const EquiptmentImpactDetails = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   return (
-    <div>
-      <Container>
-        <Paper>
-          <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
-              <FormHeader selectedHeader={"Investigation"} />
-            </Box>
+    <PapperBlock title="Details of Equiptments Affected" icon="ion-md-list-box">
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={12}>
+            <p>Do you have details to share about the equipment affected?</p>
+            {radioDecide.map((value) => (
+              <FormControlLabel
+                value={value}
+                control={<Radio />}
+                label={value}
+              />
+            ))}
+          </Grid>
 
-            <Box borderBottom={1} marginBottom={2}>
-              <Typography variant="h6" gutterBottom>
-                Details of Equiptments Affected
-              </Typography>
-            </Box>
-            <Grid container spacing={3}>
-              <Grid container item md={9} spacing={3}>
-                <Grid item md={12}>
-                  <p>
-                    Do you have details to share about the equipment affected?
-                  </p>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </Grid>
+          <Grid item md={6}>
+            {/* <p>Equiptment type</p> */}
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="eq-type-label">Equiptment type</InputLabel>
+              <Select
+                labelId="eq-type-label"
+                id="eq-type"
+                label="Equiptment type"
+              >
+                {selectValues.map((selectValues) => (
+                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>Equiptment type</p> */}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="eq-type-label">Equiptment type</InputLabel>
-                    <Select
-                      labelId="eq-type-label"
-                      id="eq-type"
-                      label="Equiptment type"
-                    >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
+          <Grid item md={6}>
+            {/* <p>if other describe</p> */}
+            <TextField
+              variant="outlined"
+              id="filled-basic"
+              label="If others, describe"
+              className={classes.formControl}
+            />
+          </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>if other describe</p> */}
-                  <TextField
-                    variant="outlined"
-                    id="filled-basic"
-                    label="If others, describe"
-                    className={classes.formControl}
-                  />
-                </Grid>
+          <Grid item md={12}>
+            {/* <p>Describe the damage</p> */}
+            <TextField
+              id="describe-damage"
+              multiline
+              variant="outlined"
+              rows="3"
+              label="Describe the damage"
+              className={classes.fullWidth}
+            />
+          </Grid>
 
-                <Grid item md={12}>
-                  {/* <p>Describe the damage</p> */}
-                  <TextField
-                    id="describe-damage"
-                    multiline
-                    variant="outlined"
-                    rows="3"
-                    label="Describe the damage"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
+          <Grid item lg={12} md={6} sm={6}>
+            <button className={classes.textButton}>
+              Add details of additional equiptment affected?
+            </button>
+          </Grid>
 
-                <Grid item lg={12} md={6} sm={6}>
-                  <button className={classes.textButton}>
-                    Add details of additional equiptment affected?
-                  </button>
-                </Grid>
-
-                <Grid item lg={12} md={6} sm={6}>
-                  {/* <p>Comment </p> */}
-                  <TextField
-                    id="comments"
-                    multiline
-                    variant="outlined"
-                    rows="4"
-                    label="Editional details"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item md={6}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/investigation/property-impact-details/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
-                  >
-                    Next
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item md={3}>
-                <FormSideBar
-                deleteForm={[1,2,3]}
-                  listOfItems={INVESTIGATION_FORM}
-                  selectedItem={"Equipment impact details"}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Container>
-    </div>
+          <Grid item lg={12} md={6} sm={6}>
+            {/* <p>Comment </p> */}
+            <TextField
+              id="comments"
+              multiline
+              variant="outlined"
+              rows="4"
+              label="Editional details"
+              className={classes.fullWidth}
+            />
+          </Grid>
+          <Grid item md={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="http://localhost:3000/app/incident-management/registration/investigation/property-impact-details/"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
+            >
+              Next
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={INVESTIGATION_FORM}
+            selectedItem={"Equipment impact details"}
+          />
+        </Grid>
+      </Grid>
+    </PapperBlock>
   );
 };
 

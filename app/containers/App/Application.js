@@ -172,36 +172,30 @@ function Application(props) {
         <Route path="/app/forms/autocomplete" component={Autocomplete} />
         <Route path="/app/forms/upload" component={Upload} />
         <Route path="/app/forms/wysiwyg-editor" component={TextEditor} />
-
         {/* Login And Register */}
-
-        <Route path="/login" component={Login}></Route>
-        <Route path="/register" component={Register}></Route>
-
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
         {/* form initialNotification */}
-
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/environment-affected/"
           component={EnvironmentAffected}
         />
-
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/environment-affected/:id"
           component={EnvironmentAffected}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/eqiptment-affected/:id"
           component={EqiptmentAffected}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/eqiptment-affected/"
           component={EqiptmentAffected}
         />
-
         <Route
           exact
           path="/app/incident-management/registration/initial-notification/incident-details/"
@@ -213,32 +207,32 @@ function Application(props) {
           component={IncidentDetails}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/peoples-afftected/"
           component={PeoplesAfftected}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/peoples-afftected/:id"
           component={PeoplesAfftected}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/property-affected/"
           component={PropertyAffected}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/property-affected/:id"
           component={PropertyAffected}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/reporting-and-notification/"
           component={ReportingAndNotification}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/initial-notification/reporting-and-notification/:id"
           component={ReportingAndNotification}
         />
@@ -247,24 +241,23 @@ function Application(props) {
           component={UpdateIncidentDetails}
         />
         {/* form Evidence */}
-
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/evidence/activity-detail/:id"
           component={ActivityDetail}
         />
-         <Route
-         exact
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/activity-detail/"
           component={ActivityDetail}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/evidence/additional-details/"
           component={AdditionalDetails}
         />
-         <Route
-         exact
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/additional-details/:id"
           component={AdditionalDetails}
         />
@@ -276,9 +269,7 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/"
           component={PersonalAndPpeDetails}
         />
-
         {/* form investigation */}
-
         <Route
           path="/app/incident-management/registration/investigation/action-taken/"
           component={ActionTaken}
@@ -307,9 +298,7 @@ function Application(props) {
           path="/app/incident-management/registration/investigation/initial-details/"
           component={InitialDetails}
         />
-
         {/* form root cause analysis */}
-
         <Route
           path="/app/incident-management/registration/root-cause-analysis/basic-cause/"
           component={BasicCause}
@@ -326,7 +315,6 @@ function Application(props) {
           path="/app/incident-management/registration/root-cause-analysis/management-control/"
           component={ManagementControl}
         />
-
         <Route
           path="/app/incident-management/registration/root-cause-analysis/details/"
           component={Details}
@@ -347,28 +335,22 @@ function Application(props) {
           path="/app/incident-management/registration/root-cause-analysis/why-analysis/"
           component={WhyAnalysis}
         />
-
-        {/* form summary */}
-        {/* Done, topbar and sidebar pending  */}
         <Route
           path={`/app/incident-management/registration/summary/summary/:id`}
           component={Summary}
         />
-        
         history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
         {/* from leassionlearned */}
-        {/* Done, topbar and sidebar pending  */}
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/lession-learned/lession-learned/"
           component={LessionLearned}
         />
         <Route
-        exact
+          exact
           path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
         />
-
         {/* Ui Components */}
         <Route exact path="/app/ui" component={Parent} />
         <Route path="/app/ui/avatars" component={Avatars} />
