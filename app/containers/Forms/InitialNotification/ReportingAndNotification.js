@@ -30,6 +30,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { MaterialDropZone } from "dan-components";
 import { DropzoneDialogBase } from "material-ui-dropzone";
+
+import FormLabel from '@material-ui/core/FormLabel';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from '@material-ui/core/FormGroup';
+
 import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
@@ -140,19 +145,21 @@ const ReportingAndNotification = () => {
     });
     setFileNames(acceptedFiles.map((file) => file.name));
   };
-  const handleUpdateEnvironement = async(e,key,fieldname,reportId)=>{
-   
+  const handleUpdateEnvironement = async (e, key, fieldname, reportId) => {
     const temp = reportsListData;
-    console.log(temp)
+    console.log(temp);
     const value = e.target.value;
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
     temp[key]["updatedAt"] = moment(new Date()).toISOString();
-    console.log(temp[key])
+    console.log(temp[key]);
 
-    const res = await api.put(`api/v1/incidents/${id}/reports/${reportId}/`, temp[key]);
+    const res = await api.put(
+      `api/v1/incidents/${id}/reports/${reportId}/`,
+      temp[key]
+    );
     console.log(res);
-  }
+  };
 
   const handelNext = async (e) => {
     const fkid = localStorage.getItem("fkincidentId");
@@ -242,7 +249,44 @@ const ReportingAndNotification = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
-                {reportsListData.length > 0 ? (
+                <FormControl
+                  component="fieldset"
+                  className={classes.formControl}
+                >
+                  <FormLabel component="legend"> Reportable to </FormLabel>
+                  <FormGroup>
+                    {reportsListData.length > 0
+                      ? reportsListData.map((report, key) => (
+                          <FormControlLabel
+                          key={key}
+                            control={
+                              <Checkbox
+                                // checked={gilad}
+                                // onChange={(e)=>console.log(e.target.checked)}
+                                name="gilad"
+                              />
+                            }
+                            label="Gilad Gray"
+                          />
+                        ))
+                      :  reportedTo.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Checkbox />}
+                          label={value}
+                          onChange={(e) => {
+                            handleUpdateEnvironement(
+                              e,
+                              key,
+                              "reportTo",
+                              report.id
+                            );
+                          }}
+                        />
+                      ))}
+                  </FormGroup>
+                </FormControl>
+                {/* {reportsListData.length > 0 ? (
                   reportsListData.map((report, key) => (
                     <>
                       <Grid item lg={12} md={6} sm={6}>
@@ -259,7 +303,12 @@ const ReportingAndNotification = () => {
                                 control={<Radio />}
                                 label={value}
                                 onChange={(e) => {
-                                  handleUpdateEnvironement(e,key,'reportTo',report.id)
+                                  handleUpdateEnvironement(
+                                    e,
+                                    key,
+                                    "reportTo",
+                                    report.id
+                                  );
                                 }}
                               />
                             ))}
@@ -292,11 +341,24 @@ const ReportingAndNotification = () => {
                     </FormControl>
                     {error && error.reportedto && <p>{error.reportedto}</p>}
                   </Grid>
-                )}
+                )} */}
                 <Grid item lg={12} md={6} sm={6}>
                   <p>Notification to be sent</p>
-
-                  <FormControl component="fieldset">
+                  
+                  {notificationSent.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Checkbox />}
+                          label={value}
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              isnotificationsent: e.target.value,
+                            });
+                          }}
+                        />
+                      ))}
+                  {/* <FormControl component="fieldset">
                     <RadioGroup aria-label="gender">
                       {notificationSent.map((value) => (
                         <FormControlLabel
@@ -312,7 +374,7 @@ const ReportingAndNotification = () => {
                         />
                       ))}
                     </RadioGroup>
-                  </FormControl>
+                  </FormControl> */}
                   {error && error.isnotificationsent && (
                     <p>{error.isnotificationsent}</p>
                   )}

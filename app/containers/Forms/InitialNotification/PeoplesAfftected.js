@@ -178,7 +178,16 @@ const PeoplesAffected = () => {
             form[i]
           );
         }
+        const temp = incidentsListData;
+        temp["isPersonDetailsAvailable"] = personAffect || incidentsListData.isPersonDetailsAvailable;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        console.log(temp);
 
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+        console.log(res.data.data.results);
         if (nextPath.propertyAffect === "Yes") {
           history.push(
             "/app/incident-management/registration/initial-notification/property-affected/"
@@ -202,9 +211,9 @@ const PeoplesAffected = () => {
         }
       } else {
         const temp = incidentsListData;
-        temp["isPersonDetailsAvailable"] = personAffect;
+        temp["isPersonDetailsAvailable"] = personAffect || incidentsListData.isPersonDetailsAvailable;
         temp["updatedAt"] = moment(new Date()).toISOString();
-        temp["personAffectedComments"] = personAffectedComments;
+        temp["personAffectedComments"] = personAffectedComments || incidentsListData.personAffectedComments;
         console.log(temp);
 
         const res = await api.put(
@@ -213,6 +222,30 @@ const PeoplesAffected = () => {
         );
         console.log(res.data.data.results);
       }
+      if(id !== undefined){
+        if (nextPath.propertyAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/property-affected/${id}`
+          );
+        } else {
+          if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+            );
+          } else {
+            if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              );
+            } else {
+              history.push(
+                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+              );
+            }
+          }
+        }
+      }
+      else{
       if (nextPath.propertyAffect === "Yes") {
         history.push(
           "/app/incident-management/registration/initial-notification/property-affected/"
@@ -234,6 +267,7 @@ const PeoplesAffected = () => {
           }
         }
       }
+    }
     }
   };
 
@@ -269,6 +303,8 @@ const PeoplesAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
+    const isavailable = result.isPersonDetailsAvailable
+    await setPersonAffect(isavailable)
     await setIsLoading(true);
   };
   const fetchPersonListData = async () => {
@@ -276,7 +312,7 @@ const PeoplesAffected = () => {
     const res = await api.get(`api/v1/incidents/${id}/people/`);
     const result = res.data.data.results;
     await setPeopleData(result);
-    await setIsLoading(true);
+    
     console.log(result);
   };
 
@@ -291,6 +327,7 @@ const PeoplesAffected = () => {
   }, []);
   return (
     <div>
+      {isLoading?
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
@@ -309,10 +346,11 @@ const PeoplesAffected = () => {
                     Do you have details of individual effected?
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
+                  {console.log(personAffect)}
                   <RadioGroup
                     aria-label="personAffect"
                     name="personAffect"
-                    defaultValue={personAffect || incidentsListData.isPersonDetailsAvailable}
+                    defaultValue={personAffect }
                     onChange={(e) => {
                       setPersonAffect(e.target.value);
                     }}
@@ -735,10 +773,12 @@ const PeoplesAffected = () => {
                         </button>
                       </Grid>
                     )}
+                    
                   </>
                 ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
+                  {personAffect === 'Yes'?null:
                   <TextField
                     id="comments"
                     multiline
@@ -746,15 +786,16 @@ const PeoplesAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    defaultValue={incidentsListData.personAffectedComments}
                     onChange={(e) => setPersonAffectedComments(e.target.value)}
-                  />
+                  />}
                   {/* {error && error.describeactiontaken && (
                     <p>{error.describeactiontaken}</p>
                   )} */}
                 </Grid>
                 <Grid item md={6}>
                   <Button
-                    href="/app/incident-management/registration/initial-notification/incident-details/"
+                    onClick={()=> history.goBack()}
                     variant="contained"
                     color="primary"
                     className={classes.button}
@@ -786,7 +827,7 @@ const PeoplesAffected = () => {
             </Grid>
           </Box>
         </Paper>
-      </Container>
+      </Container>:<h1>Loading...</h1>}
     </div>
   );
 };

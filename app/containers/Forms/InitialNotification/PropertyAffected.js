@@ -200,6 +200,15 @@ const PropertyAffected = () => {
         console.log(res);
         status = res.status;
       }
+
+      const temp = incidentsListData;
+      temp["propertyDamagedComments"] = propertyDamagedComments || incidentsListData.propertyDamagedComments;
+      temp["isPropertyDamagedAvailable"] = detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
+      temp["updatedAt"] = moment(new Date()).toISOString();
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
       if (status === 201) {
         if (nextPath.equipmentAffect === "Yes") {
           history.push(
@@ -221,13 +230,30 @@ const PropertyAffected = () => {
       }
     } else {
       const temp = incidentsListData;
-      temp["propertyDamagedComments"] = propertyDamagedComments;
-      temp["isPropertyDamagedAvailable"] = detailsOfPropertyAffect;
+      temp["propertyDamagedComments"] = propertyDamagedComments || incidentsListData.propertyDamagedComments;
+      temp["isPropertyDamagedAvailable"] = detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
       temp["updatedAt"] = moment(new Date()).toISOString();
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
+      if(id !== undefined){
+        if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+          );
+        } else {
+          if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+        }
+      }else{
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
           "/app/incident-management/registration/initial-notification/eqiptment-affected/"
@@ -243,6 +269,7 @@ const PropertyAffected = () => {
           );
         }
       }
+    }
     }
   }
   };
@@ -267,6 +294,8 @@ const PropertyAffected = () => {
     const result = res.data.data.results;
     await setIncidentsListdata(result);
     await setIsLoading(true);
+    const isAvailable = result.isPropertyDamagedAvailable
+    await setDetailsOfPropertyAffect(isAvailable)
   };
 
   const fetchPropertyListData = async () => {
@@ -285,6 +314,7 @@ const PropertyAffected = () => {
 
   return (
     <div>
+      {isLoading?
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
@@ -482,7 +512,7 @@ const PropertyAffected = () => {
                         </Grid>
                       </>
                     ))}
-                    {propertyListData.length >0? null:
+                    {propertyListData.length > 0? null:
                     <Grid item md={12}>
                       <button
                         className={classes.textButton}
@@ -491,10 +521,16 @@ const PropertyAffected = () => {
                         <PersonAddIcon /> Add details of another person affected
                       </button>
                     </Grid>}
+                    <Grid item md={12}>
+                  {/* <p>Comments</p> */}
+                  
+                  {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
+                </Grid>
                   </>
                 ) : null}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
+                  {detailsOfPropertyAffect === 'Yes'?null:
                   <TextField
                     id="comments"
                     multiline
@@ -502,10 +538,11 @@ const PropertyAffected = () => {
                     variant="outlined"
                     label="Describe any actions taken"
                     className={classes.fullWidth}
+                    defaultValue={incidentsListData.propertyDamagedComments}
                     onChange={(e) => {
                       setPropertyDamagedComments(e.target.value);
                     }}
-                  />
+                  />}
                   {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
                 </Grid>
                 <Grid item md={6}>
@@ -513,7 +550,8 @@ const PropertyAffected = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="/app/incident-management/registration/initial-notification/peoples-afftected/"
+                    onClick={()=>history.goBack()}
+                    // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
                     Previous
                   </Button>
@@ -537,7 +575,7 @@ const PropertyAffected = () => {
             </Grid>
           </Box>
         </Paper>
-      </Container>
+      </Container>:<h1>Loading...</h1>}
     </div>
   );
 };
