@@ -64,25 +64,12 @@ const Evidence = () => {
     console.log(res)
     const result = res.data.data.results;
     // console.log('sagar');
-    await setEvidenceListdata(result);
-
-    
-    
-         
+    await setEvidenceListdata(result);        
   };
-  // const handleChange =(event)=>{ 
-    
-  //   setForm({...form, available : event.target.value})
-  //   console.log("a",event.target.value)   
-  // }
-
-  // const handleNext = () => {
-    
-  //   // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
-  //   // console.log(nextPath)
-
-    
-  // };
+  
+ const handleDocument=(e)=>{
+   const file = e.target.value
+ }
   
   const selectValues = [1, 2, 3, 4];
   
@@ -169,7 +156,7 @@ const Evidence = () => {
                   <Box>
                   
                     <input type="file" name="file" onChange={(e)=> {
-                      setForm({ ...form,document : e.target.value})
+                      handleDocument(e)
                     }} />
 
                   </Box>
