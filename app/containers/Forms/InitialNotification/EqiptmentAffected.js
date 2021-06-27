@@ -172,6 +172,18 @@ const EqiptmentAffected = () => {
         const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
+
+        if(id !== undefined){
+          if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+        }
         // if (status === 201) {
           if (nextPath.environmentAffect === "Yes") {
             history.push(

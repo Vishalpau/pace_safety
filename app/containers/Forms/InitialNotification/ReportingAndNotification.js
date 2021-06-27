@@ -142,6 +142,16 @@ const ReportingAndNotification = () => {
 
   const handleDrop = (acceptedFiles) => {
     console.log(acceptedFiles);
+      const formData = new FormData()
+      for( var i = 0; i< acceptedFiles.length; i++){
+        formData.append(`evidenceDocument`, acceptedFiles[i])
+        formData.append('evidenceCategory', 'Initial Evidence ');
+        formData.append('createdBy', '1');
+        formData.append('fkIncidentId', localStorage.getItem("fkincidentId"));
+      const evidanceResponse = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`, formData)
+      console.log(evidanceResponse)
+      }
+     
     setForm({
       ...form,
       fileupload: acceptedFiles,
@@ -167,6 +177,22 @@ const ReportingAndNotification = () => {
   };
 
   const handelNext = async (e) => {
+  
+
+    // post initial evidance
+    const data = {
+      evidenceCheck: "Yes",
+      evidenceNumber: 'string',
+      evidenceCategory: 'Initial Evidence',
+      evidenceRemark: 'remarks',
+      evidenceDocument:form.fileupload,
+      status: 'Active',
+      createdBy: 0,
+      updatedBy: 0,
+      fkIncidentId: 0
+    }
+
+   
     // getting fileds for update
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
@@ -187,10 +213,10 @@ const ReportingAndNotification = () => {
     console.log(temp);
 
     // put call for update
-    const res = await api.put(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-      temp
-    );
+    // const res = await api.put(
+    //   `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+    //   temp
+    // );
 
     if (id !== undefined) {
       history.push(
@@ -199,24 +225,24 @@ const ReportingAndNotification = () => {
         )}`
       );
     } else {
-      const { error, isValid } = ReportingValidation(form);
-      setError(error);
-      console.log("reported to")
+      // const { error, isValid } = ReportingValidation(form);
+      // setError(error);
+      // console.log("reported to")
 
       // reported to api call
-      const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
-        reportTo: form.reportedto.includes("Other") ? form.reportedto.concat([otherdata]).toString() : form.reportedto.toString(),
-        reportingNote: form.latereporting,
-        createdBy: 0,
-        fkIncidentId: fkid,
-      });
-      if (res.status === 201) {
-        history.push(
-          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-            "fkincidentId"
-          )}`
-        );
-      }
+      // const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
+      //   reportTo: form.reportedto.includes("Other") ? form.reportedto.concat([otherdata]).toString() : form.reportedto.toString(),
+      //   reportingNote: form.latereporting,
+      //   createdBy: 0,
+      //   fkIncidentId: fkid,
+      // });
+      // if (res.status === 201) {
+      //   history.push(
+      //     `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+      //       "fkincidentId"
+      //     )}`
+      //   );
+      // }
     }
   };
 
@@ -284,34 +310,22 @@ const ReportingAndNotification = () => {
                 >
                   <FormLabel component="legend"> Reportable to </FormLabel>
                   <FormGroup>
-                    {reportsListData.length > 0
-                      ? reportsListData.map((report, key) => (
+                    {id !== undefined
+                      ? reportedTo.map((value,index) => (
                         <FormControlLabel
-                          key={key}
-                          control={
-                            <Checkbox
-                              // checked={gilad}
-                              // onChange={(e) => handelReportedTo}
-
-                              name="gilad"
-                            />
-                          }
-                          label="Gilad Gray"
+                          value={value}
+                          control={<Checkbox />}
+                          label={value}
+                          onChange={(e) => handelReportedTo(e, value, "option")}
+                          // defaultChecked = { reportsListData[0].reportTo.toLowerCase().split(",").includes(value.toLowerCase())?true:false}
                         />
+                      
                       ))
                       : reportedTo.map((value) => (
                         <FormControlLabel
                           value={value}
                           control={<Checkbox />}
                           label={value}
-                          // onChange={(e) => {
-                          //   handleUpdateEnvironement(
-                          //     e,
-                          //     key,
-                          //     "reportTo",
-                          //     report.id
-                          //   );
-                          // }}
                           onChange={(e) => handelReportedTo(e, value, "option")}
                         />
                       ))}
@@ -376,9 +390,11 @@ const ReportingAndNotification = () => {
                     </Typography>
                   </Box>
 
+                   
                   <MaterialDropZone
                     files={files}
                     showPreviews={true}
+                    showFileNames
                     maxSize={5000000}
                     filesLimit={5}
                     text="Drag and drop file(s) here or click button bellow"
