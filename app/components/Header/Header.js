@@ -32,7 +32,12 @@ const useStyles = makeStyles((theme) => ({
 
 const elem = document.documentElement;
 
-const theme = createMuiTheme({ palette: { type: "dark" } });
+const theme = createMuiTheme({
+  palette: { type: "dark" },
+  typography: {
+    fontSize: 14,
+  },
+});
 
 function Header(props) {
   const [open] = useState(false);
@@ -164,18 +169,20 @@ function Header(props) {
             >
               <MuiThemeProvider theme={theme}>
                 <div className={classes.projectSwitcher}>
-                  {/* <Typography variant="body2">Project:</Typography> */}
+                  <Typography variant="body2" display="inline">
+                    Project:
+                  </Typography>
                   <FormControl
                     size="small"
-                    // variant="outlined"
+                    variant="outlined"
                     className={classes.projectSelect}
                   >
-                    <InputLabel id="projectSwitch-label">Project</InputLabel>
+                    {/* <InputLabel id="projectSwitch-label">Project</InputLabel> */}
                     <Select
                       labelId="projectSwitch-label"
                       id="projectSwitch"
                       value={project}
-                      label="Project"
+                      // label="Project"
                       aria-label="Project"
                       onChange={handleProjectChange}
                     >
