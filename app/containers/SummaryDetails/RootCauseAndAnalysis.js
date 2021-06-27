@@ -149,6 +149,22 @@ const RootCauseAnalysisSummary = () => {
                         {root.recommendSolution}
                       </Typography>
                     </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Corrective Action
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {root.correctiveAction}
+                      </Typography>
+                    </Grid>
                   </Grid>
                 ))
               : null}
@@ -261,6 +277,39 @@ const RootCauseAnalysisSummary = () => {
                         {cause.evidenceContradiction}
                       </Typography>
                     </Grid>
+
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Evidence NotSupport
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {cause.evidenceNotSupport}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        RCA Recommended
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {cause.rcaRecommended}
+                      </Typography>
+                    </Grid>
                   </Grid>
                 ))
               : null}
@@ -354,6 +403,22 @@ const RootCauseAnalysisSummary = () => {
                         className={Fonts.labelValue}
                       >
                         {pc.remarkType}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Status
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {pc.status}
                       </Typography>
                     </Grid>
                   </Grid>

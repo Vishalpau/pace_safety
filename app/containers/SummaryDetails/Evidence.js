@@ -120,7 +120,7 @@ const EvidenceSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Available
+                        Evidence Check
                       </Typography>
                       <Typography
                         variant="body"
@@ -129,7 +129,39 @@ const EvidenceSummary = () => {
                       >
                         {evidence.evidenceCheck}
                       </Typography>
-                    </Grid>
+                      </Grid>
+                      <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Evidence Category
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {evidence.evidenceCategory}
+                      </Typography>
+                      </Grid>
+                      <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Evidence Remark
+                      </Typography>
+                      <Typography
+                        variant="body"
+                        color="textSecondary"
+                        className={Fonts.labelValue}
+                      >
+                        {evidence.evidenceRemark}
+                      </Typography>
+                      </Grid>
                   </Grid>
                 ))
               : null}
