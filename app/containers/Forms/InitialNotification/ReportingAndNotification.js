@@ -115,6 +115,7 @@ const ReportingAndNotification = () => {
     new Date("2014-08-18T21:11:54")
   );
 
+  const [fileNames, setFileNames] = useState("")
   const handleDateChange = (date) => {
     let onlyDate = moment(date).format("YYYY/MM/DD");
     setForm({
@@ -140,8 +141,8 @@ const ReportingAndNotification = () => {
     });
     setFileNames(acceptedFiles.map((file) => file.name));
   };
-  const handleUpdateEnvironement = async(e,key,fieldname,reportId)=>{
-   
+  const handleUpdateEnvironement = async (e, key, fieldname, reportId) => {
+
     const temp = reportsListData;
     console.log(temp)
     const value = e.target.value;
@@ -259,7 +260,7 @@ const ReportingAndNotification = () => {
                                 control={<Radio />}
                                 label={value}
                                 onChange={(e) => {
-                                  handleUpdateEnvironement(e,key,'reportTo',report.id)
+                                  handleUpdateEnvironement(e, key, 'reportTo', report.id)
                                 }}
                               />
                             ))}
@@ -329,7 +330,7 @@ const ReportingAndNotification = () => {
 
                   <MaterialDropZone
                     files={files}
-                    showPreviews
+                    showPreviews={true}
                     maxSize={5000000}
                     filesLimit={5}
                     text="Drag and drop file(s) here or click button bellow"
@@ -338,6 +339,7 @@ const ReportingAndNotification = () => {
                   />
                   {error && error.fileupload && <p>{error.fileupload}</p>}
                 </Grid>
+
                 <Grid item md={6}>
                   {/* <p>Others Name</p> */}
                   <TextField

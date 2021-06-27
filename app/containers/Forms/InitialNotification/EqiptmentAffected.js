@@ -159,6 +159,15 @@ const EqiptmentAffected = () => {
 
          
         }
+        const temp = incidentsListData;
+        console.log(temp)
+        temp["equipmentDamagedComments"] = equipmentDamagedComments || incidentsListData.equipmentDamagedComments;
+        temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect || incidentsListData.isEquipmentDamagedAvailable;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        console.log(temp)
+        const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
         // if (status === 201) {
           if (nextPath.environmentAffect === "Yes") {
             history.push(
@@ -174,13 +183,24 @@ const EqiptmentAffected = () => {
         
         const temp = incidentsListData;
         console.log(temp)
-        temp["equipmentDamagedComments"] = equipmentDamagedComments;
-        temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect;
+        temp["equipmentDamagedComments"] = equipmentDamagedComments || incidentsListData.equipmentDamagedComments;
+        temp["isEquipmentDamagedAvailable"] = detailsOfEquipmentAffect || incidentsListData.isEquipmentDamagedAvailable;
         temp["updatedAt"] = moment(new Date()).toISOString();
         console.log(temp)
         const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
+        if( id!== undefined){
+          if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+        }else{
         if (nextPath.environmentAffect === "Yes") {
          
           history.push(
@@ -192,6 +212,7 @@ const EqiptmentAffected = () => {
           );
         }
       }
+    }
     }
   };
   const fetchEquipmentListData = async () => {
@@ -218,6 +239,8 @@ const EqiptmentAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
+    const isavailable = result.isPersonDetailsAvailable
+    await setDetailsOfEquipmentAffect(isavailable)
     await setIsLoading(true);
   };
   useEffect(() => {
@@ -228,6 +251,7 @@ const EqiptmentAffected = () => {
   }, []);
   return (
     <div>
+      {isLoading?
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
@@ -449,13 +473,15 @@ const EqiptmentAffected = () => {
                   <TextField
                     id="comments"
                     multiline
+                    rows="3"
                     variant="outlined"
-                    rows="4"
                     label="Describe any actions taken"
+                    className={classes.fullWidth}
+                    defaultValue={incidentsListData.equipmentDamagedComments}
                     onChange={(event) =>
                       setEequipmentDamagedComments(event.target.value)
                     }
-                    className={classes.fullWidth}
+                   
                   />
                 </Grid>
                 <Box marginTop={4}>
@@ -463,7 +489,8 @@ const EqiptmentAffected = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="/app/incident-management/registration/initial-notification/property-affected/"
+                    onClick={()=>history.goBack()}
+                    // href="/app/incident-management/registration/initial-notification/property-affected/"
                   >
                     Previouse
                   </Button>
@@ -487,7 +514,7 @@ const EqiptmentAffected = () => {
             </Grid>
           </Box>
         </Paper>
-      </Container>
+      </Container>:<h1>Loading...</h1>}
     </div>
   );
 };

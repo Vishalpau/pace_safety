@@ -82,12 +82,14 @@ const EnvironmentAffected = () => {
   const [isWildlife, setIsWildlife] = useState(false)
   const [iswaterbody, setIswaterBody] = useState(false)
   const [environmentListData, setEnvironmentListData] = useState([])
+  const [envComments, setEnvComments] = useState('')
 
   const [spillsData, setSpillsData] = useState({})
   const [relaseData, setReleaseData] = useState({})
   const [wildLifeData, setWildLifeData] = useState({})
   const [wateBodyData, setWaterBodyData] = useState({})
 
+  const [incidentsListData, setIncidentsListdata] = useState([])
 
 
 
@@ -142,10 +144,13 @@ const EnvironmentAffected = () => {
         const envList = [spillsData, relaseData, wildLifeData, wateBodyData]
 
         for (var i = 0; i < envList.length; i++) {
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
-            envList[i]
-          );
+          if (envList[i].envQuestionOption == "Yes") {
+            console.log()
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
+              envList[i]
+            );
+          }
         }
 
         // if(res.status === 201){
@@ -191,12 +196,23 @@ const EnvironmentAffected = () => {
     const result = res.data.data.results;
     setEnvironmentListData(result);
   };
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentsListdata(result);
+    // const isavailable = result.isPersonDetailsAvailable
+    // await setPersonAffect(isavailable)
+    // await setIsLoading(true);
+  };
   useEffect(() => {
     fetchEnviornmentAffectedValue();
     fetchAnyReleaseValue();
     fetchImpactOnWildLifeValue();
     fetchWaterBodyAffectedValue();
     fetchEnviornmentListData();
+    fetchIncidentsData()
   }, []);
 
   return (
@@ -491,6 +507,8 @@ const EnvironmentAffected = () => {
                       rows="3"
                       label="Comment if any"
                       className={classes.fullWidth}
+                      defaultValue={incidentsListData.equipmentDamagedComments}
+                      onChange={(e) => setEnvComments(e.target.value)}
                     />
                   </div>
                 </Grid>
@@ -500,7 +518,8 @@ const EnvironmentAffected = () => {
                     variant="contained"
                     className={classes.button}
                     color="primary"
-                    href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                    onClick={() => history.goBack()}
+                  // href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
                     Previouse
                   </Button>

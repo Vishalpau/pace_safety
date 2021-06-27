@@ -80,22 +80,7 @@ const IncidentDetailsSummary = () => {
   const classes = useStyles();
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>
-              Expansion Panel 1
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-      </Grid>
+     
       <Grid item xs={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident Overview
@@ -379,6 +364,9 @@ const IncidentDetailsSummary = () => {
           <Typography variant={12}>Property Affect</Typography>
         </Grid>
       ) : null} */}
+      <Grid item lg={12}>
+
+      
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}> Property Affected </Typography>
@@ -450,8 +438,10 @@ const IncidentDetailsSummary = () => {
         </AccordionDetails>
       </Accordion>
 
-      
+      </Grid>
 
+
+      <Grid item lg={12}>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}> Equipment Affected </Typography>
@@ -522,7 +512,8 @@ const IncidentDetailsSummary = () => {
             : null}
         </AccordionDetails>
       </Accordion>
-
+      </Grid>
+      <Grid item lg={12}>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}> Enviroment Affected </Typography>
@@ -531,32 +522,16 @@ const IncidentDetailsSummary = () => {
           {enviornmentData.length !== 0
             ? enviornmentData.map((envData) => (
                 <>
-                  <Grid item md={6}>
+                  <Grid item lg={12}>
                     <Typography
                       variant="h6"
                       gutterBottom
                       className={Fonts.labelName}
-                    >
-                      Where there any release?
-                    </Typography>
-
-                    <Typography
-                      variant="body"
-                      color="textSecondary"
-                      className={Fonts.labelValue}
                     >
                       {envData.envQuestion}
                     </Typography>
                   </Grid>
-                  <Grid item md={6}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
-                      Where there any impact on wildlife?
-                    </Typography>
-
+                  <Grid item lg={12}>
                     <Typography
                       variant="body"
                       color="textSecondary"
@@ -565,28 +540,13 @@ const IncidentDetailsSummary = () => {
                       {envData.envQuestionOption}
                     </Typography>
                   </Grid>
-                  <Grid item md={6}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
-                      Where there any waterbody affected?
-                    </Typography>
-
-                    <Typography
-                      variant="body"
-                      color="textSecondary"
-                      className={Fonts.labelValue}
-                    >
-                      {envData.envAnswerDetails}
-                    </Typography>
-                  </Grid>
                 </>
               ))
             : null}
         </AccordionDetails>
       </Accordion>
+      </Grid>
+
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
