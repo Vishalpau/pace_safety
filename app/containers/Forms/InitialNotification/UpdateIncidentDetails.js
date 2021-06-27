@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
   spacer: {
     padding: ".75rem 0",
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 const UpdateIncidentDetails = () => {
   const classes = useStyles();
@@ -617,6 +621,7 @@ const UpdateIncidentDetails = () => {
                   <p>Were any person affected during incident?</p>
 
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="personaffected"
                     name="personaffected"
                     name='personaffected'
@@ -649,6 +654,7 @@ const UpdateIncidentDetails = () => {
                 <div className={classes.spacer}>
                   <p>Was any propery damaged during incident?</p>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="propertyaffected"
                     name="propertyaffected"
                     defaultValue={incidentsData.isPropertyDamaged}
@@ -682,6 +688,7 @@ const UpdateIncidentDetails = () => {
                 <div className={classes.spacer}>
                   <p>Was there any equiptment damaged?</p>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="equiptmenteffected"
                     name="equiptmenteffected"
                     defaultValue={incidentsData.isEquipmentDamaged}
@@ -719,6 +726,7 @@ const UpdateIncidentDetails = () => {
               <Grid item md={12}>
                 <p>Was there any environment impact?</p>
                 <RadioGroup
+                  className={classes.inlineRadioGroup}
                   aria-label="environmentaffected"
                   name="environmentaffected"
                   defaultValue={incidentsData.isPersonAffected}

@@ -1,4 +1,4 @@
-import React , {useState, useEffect}from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const PersonalAndPpeDetails = () => {
@@ -57,28 +61,28 @@ const PersonalAndPpeDetails = () => {
 
 
   const handleNext = async () => {
-    if(id !== undefined && activtyList.length > 0){
+    if (id !== undefined && activtyList.length > 0) {
       history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/");
     }
-    else{
-    const selectedQuestion = [ad08, ad09, ad10, ad11, ad12, ad13, ad14, ad15, ad16, ad17, ad18, ad19, ad20, ad21];
-    console.log(selectedQuestion)
-    for (var i = 0; i < selectedQuestion.length; i++) {
-      const valdation = selectedQuestion[i];
-      console.log(valdation)
-      const { isValid, error } = ActivityDetailValidate(valdation);
-      setError(error);
-        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-          selectedQuestion[i]
-        );
-        console.log(res);
-      
+    else {
+      const selectedQuestion = [ad08, ad09, ad10, ad11, ad12, ad13, ad14, ad15, ad16, ad17, ad18, ad19, ad20, ad21];
+      console.log(selectedQuestion)
+      for (var i = 0; i < selectedQuestion.length; i++) {
+        const valdation = selectedQuestion[i];
+        console.log(valdation)
+        // const { isValid, error } = ActivityDetailValidate(valdation);
+        setError(error);
+        // const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        //   selectedQuestion[i]
+        // );
+        // console.log(res);
+
+      }
+      // history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
     }
-    history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
-  }
   };
- 
-  const handleUpdateActivityList = async(e,key,fieldname,activityId)=>{
+
+  const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
     const temp = activtyList;
     console.log(temp)
     const value = e.target.value;
@@ -91,15 +95,15 @@ const PersonalAndPpeDetails = () => {
     console.log(res);
   }
 
-  const fetchActivityList = async()=>{
+  const fetchActivityList = async () => {
     const res = await api.get(`api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
     await setActvityList(result);
     console.log(result)
   }
-  useEffect(()=>{
+  useEffect(() => {
     fetchActivityList();
-  },[])
+  }, [])
 
   return (
     <div>
@@ -129,10 +133,11 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.ppeans1}
+                    error={error.ppeans1}
                   >
                     <FormLabel component="legend">PPE worn properly?</FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd08({
@@ -151,14 +156,14 @@ const PersonalAndPpeDetails = () => {
                     //   }
                     //   }
                     >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -169,28 +174,29 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error ={error.ppeans2}
+                    error={error.ppeans2}
                   >
                     <FormLabel component="legend">PPE in good shape?</FormLabel>
-                    <RadioGroup 
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
-                      // {
-                      //   setAd09({
-                      //     ...ad09,
-                      //     questionCode: "PPE-09",
-                      //     question: "PPE in good shape?",
-                      //     answer: e.target.value,
-                      //     activityGroup: "Evidence",
-                      //     status: "Active",
-                      //     updatedBy: 0,
-                      //     createdBy: 0,
-                      //     fkIncidentId: localStorage.getItem(
-                      //       "fkincidentId"
-                      //     ),
-                      //   });
-                      // }
-                      // }
-                      >
+                    // {
+                    //   setAd09({
+                    //     ...ad09,
+                    //     questionCode: "PPE-09",
+                    //     question: "PPE in good shape?",
+                    //     answer: e.target.value,
+                    //     activityGroup: "Evidence",
+                    //     status: "Active",
+                    //     updatedBy: 0,
+                    //     createdBy: 0,
+                    //     fkIncidentId: localStorage.getItem(
+                    //       "fkincidentId"
+                    //     ),
+                    //   });
+                    // }
+                    // }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -207,10 +213,11 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.ppeans3}
+                    error={error.ppeans3}
                   >
                     <FormLabel component="legend">PPE Proper fit?</FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd09({
@@ -228,7 +235,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -246,12 +253,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.ppeans4}
+                    error={error.ppeans4}
                   >
                     <FormLabel component="legend">
                       PPE appropriate for task?
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd11({
@@ -269,7 +277,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -290,12 +298,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans1}
+                    error={error.supervisionans1}
                   >
                     <FormLabel component="legend">
                       Employee self supervised
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd12({
@@ -313,7 +322,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -337,6 +346,7 @@ const PersonalAndPpeDetails = () => {
                       Supervisor present at site
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd13({
@@ -354,7 +364,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -372,12 +382,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans3}
+                    error={error.supervisionans3}
                   >
                     <FormLabel component="legend">
                       Supervisor provided clear detail of work
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd14({
@@ -395,7 +406,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -412,12 +423,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans4}
+                    error={error.supervisionans4}
                   >
                     <FormLabel component="legend">
                       Supervisor provided detail work package
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd15({
@@ -435,7 +447,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -452,12 +464,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans5}
+                    error={error.supervisionans5}
                   >
                     <FormLabel component="legend">
                       Did supervisor conducted I-care observation
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd16({
@@ -475,7 +488,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -496,12 +509,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.flagans1}
+                    error={error.flagans1}
                   >
                     <FormLabel component="legend">
                       Was flag person required for this job
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd17({
@@ -519,7 +533,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -536,12 +550,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.flagans2}
+                    error={error.flagans2}
                   >
                     <FormLabel component="legend">
                       Flag person trained/competent
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd18({
@@ -559,7 +574,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -583,6 +598,7 @@ const PersonalAndPpeDetails = () => {
                       Was flag person present
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd19({
@@ -600,7 +616,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -622,12 +638,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.otherans1}
+                    error={error.otherans1}
                   >
                     <FormLabel component="legend">
                       Metal on Metal incident
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd20({
@@ -663,12 +680,13 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.otherans2}
+                    error={error.otherans2}
                   >
                     <FormLabel component="legend">
                       Was person in the line of fire
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd21({
@@ -686,7 +704,7 @@ const PersonalAndPpeDetails = () => {
                     //     });
                     //   }
                     //   }
-                      >
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -711,7 +729,7 @@ const PersonalAndPpeDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
-                    href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
+                  // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
                   >
                     Next
                   </Button>
@@ -721,7 +739,7 @@ const PersonalAndPpeDetails = () => {
                 <FormSideBar
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Personal and Ppedetails"}
-                  deleteForm={[1,2,3]}
+                  deleteForm={[1, 2, 3]}
                 />
               </Grid>
             </Grid>

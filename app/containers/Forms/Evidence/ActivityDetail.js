@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const ActivityDetails = () => {
@@ -80,14 +84,18 @@ const ActivityDetails = () => {
   const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
     const temp = activtyList;
     console.log(temp);
+    console.log(temp[key]['fkIncidentId'] = id)
     const value = e.target.value;
+    temp[key]['id'] = parseInt(activityId)
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
-    temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    // temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    temp[key]['fkIncidentId'] = id
+    
     console.log(temp[key]);
 
     const res = await api.put(
-      `api/v1/incidents/${id}/activities/${activityId}/`,
+      `api/v1/incidents/${id}/activities/`,
       temp[key]
     );
     console.log(res);
@@ -142,6 +150,7 @@ const ActivityDetails = () => {
                           </FormLabel>
 
                           <RadioGroup
+                            className={classes.inlineRadioGroup}
                             defaultValue={activity.answer}
                             onChange={(e) => {
                               handleUpdateActivityList(
@@ -176,6 +185,7 @@ const ActivityDetails = () => {
                           Did the job require work permit?
                         </FormLabel>
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd01({
                               ...ad01,
@@ -215,6 +225,7 @@ const ActivityDetails = () => {
                           If yes ,was a permit complted prior of the job?
                         </FormLabel>
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd02({
                               ...ad02,
@@ -255,6 +266,7 @@ const ActivityDetails = () => {
                           Was per-job safety discussed head?
                         </FormLabel>
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd03({
                               ...ad03,
@@ -295,6 +307,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd04({
                               ...ad04,
@@ -335,6 +348,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd05({
                               ...ad05,
@@ -375,6 +389,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd06({
                               ...ad06,
@@ -416,6 +431,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd07({
                               ...ad07,
