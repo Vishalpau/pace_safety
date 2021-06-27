@@ -20,6 +20,7 @@ import UserMenu from "./UserMenu";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import SearchUi from "../Search/SearchUi";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import styles from "./header-jss";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +31,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const elem = document.documentElement;
+
+const theme = createMuiTheme({ palette: { type: "dark" } });
 
 function Header(props) {
   const [open] = useState(false);
@@ -159,26 +162,31 @@ function Header(props) {
                 showTitle && classes.fadeOut
               )}
             >
-              <Paper>
-                <FormControl
-                  variant="outlined"
-                  size="small"
-                  className={classname.formControl}
-                >
-                  {/* <InputLabel id="project-switch-label">Project</InputLabel> */}
-                  <Select
-                    labelId="project-switch-label"
-                    id="project-switch"
-                    label="Project"
-                    value={project}
-                    onChange={handleProjectChange}
+              <MuiThemeProvider theme={theme}>
+                <div className={classes.projectSwitcher}>
+                  {/* <Typography variant="body2">Project:</Typography> */}
+                  <FormControl
+                    size="small"
+                    // variant="outlined"
+                    className={classes.projectSelect}
                   >
-                    <MenuItem value={1}>Project 1</MenuItem>
-                    <MenuItem value={2}>Project 2</MenuItem>
-                    <MenuItem value={3}>Project 3</MenuItem>
-                  </Select>
-                </FormControl>
-              </Paper>
+                    <InputLabel id="projectSwitch-label">Project</InputLabel>
+                    <Select
+                      labelId="projectSwitch-label"
+                      id="projectSwitch"
+                      value={project}
+                      label="Project"
+                      aria-label="Project"
+                      onChange={handleProjectChange}
+                    >
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+              </MuiThemeProvider>
+
               {/* {fullScreen ? (
                 <Tooltip title="Exit Full Screen" placement="bottom">
                   <IconButton
@@ -217,7 +225,7 @@ function Header(props) {
             <SearchUi history={history} />
           </div>
         </div> */}
-        <div
+        {/* <div
           className={classNames(
             classes.headerAction,
             showTitle && classes.fadeOut
@@ -228,7 +236,7 @@ function Header(props) {
               <i className="ion-ios-help-circle-outline" />
             </IconButton>
           </Tooltip>
-        </div>
+        </div> */}
 
         <Hidden xsDown>
           <span className={classes.separatorV} />

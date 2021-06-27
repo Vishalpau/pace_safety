@@ -45,7 +45,7 @@ const initialState = {
     { name: "Sultan", value: "goldTheme" },
     { name: "Monochrome", value: "greyTheme" },
   ]),
-  sidebarOpen: false,
+  sidebarOpen: true,
   pageLoaded: false,
   subMenuOpen: [],
 };

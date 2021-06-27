@@ -23,6 +23,20 @@ import EvidenceValidate from "../../Validator/EvidenceValidation";
 import FormHeader from "../FormHeader";
 import { FormHelperText } from "@material-ui/core";
 
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    flexDirection: "row",
+    margin: "1rem 0",
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
+}));
+
 const Evidence = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -30,6 +44,7 @@ const Evidence = () => {
   const [evidenceListData, setEvidenceListdata] = useState([]);
   const [fileUploadData, setFileUploadData] = useState([]);
   const [error, setError] = useState({});
+  const classes = useStyles();
   const [detailsOfEnvAffect, setDetailsOfEnvAffect] = useState("");
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -55,12 +70,12 @@ const Evidence = () => {
       "evidenceCategory": "string",
       "evidenceRemark": "string",
       "createdBy": 0,
-      "fkIncidentId": 91,
+      "fkIncidentId": localStorage.getItem("fkincidentId"),
       "evidenceDocument" : form.document
       
       }
     console.log(formData)
-    const res = await api.post(`/api/v1/incidents/91/evidences/`,formData);
+    const res = await api.post(`/api/v1/${localStorage.getItem("fkincidentId")}/evidences/`,formData);
     console.log(res)
     const result = res.data.data.results;
     // console.log('sagar');
@@ -120,6 +135,7 @@ const Evidence = () => {
                     <Typography variant="body">Available</Typography>
                   </Box>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     onChange={(e) => {
                       setForm({...form, available : e.target.value})
                     }}

@@ -55,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const EqiptmentAffected = () => {
@@ -168,6 +172,18 @@ const EqiptmentAffected = () => {
         const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
+
+        if(id !== undefined){
+          if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+        }
         // if (status === 201) {
           if (nextPath.environmentAffect === "Yes") {
             history.push(
@@ -270,6 +286,7 @@ const EqiptmentAffected = () => {
                     Do you have details to share about the equiptment accected?
                   </Typography>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfEquipmentAffect}
@@ -495,7 +512,7 @@ const EqiptmentAffected = () => {
                     onClick={()=>history.goBack()}
                     // href="/app/incident-management/registration/initial-notification/property-affected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

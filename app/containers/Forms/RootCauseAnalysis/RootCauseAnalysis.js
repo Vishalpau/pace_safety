@@ -23,9 +23,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormLabel from "@material-ui/core/FormLabel";
 
+import FormHeader from "../FormHeader";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation"
 
@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(1),
+  },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
   },
 }));
 
@@ -259,7 +263,7 @@ const RootCauseAnalysis = () => {
               </Grid>
 
               <Grid item md={12}>
-                <RadioGroup>
+                <RadioGroup className={classes.inlineRadioGroup}>
                   <FormLabel component="legend" error={error.wouldItPreventIncident}>
                     Would Corrective actions prevent simailar incidents in future?
                   </FormLabel>

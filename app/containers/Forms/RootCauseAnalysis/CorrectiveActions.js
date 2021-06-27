@@ -26,6 +26,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import FormLabel from "@material-ui/core/FormLabel";
 
+import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
@@ -64,6 +65,9 @@ const CorrectiveAction = () => {
 
   const [error, setError] = useState({})
 
+  const [data, setData] = useState([])
+
+
   const [form, setForm] = useState({
     managementControl: { rcaSubType: "", rcaRemark: [] },
     regionSupport: { rcaSubType: "", remarkType: "" }
@@ -76,14 +80,16 @@ const CorrectiveAction = () => {
       setForm({
         ...form, managementControl: {
           rcaSubType: "managementControl",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, managementControl: {
           rcaSubType: "managementControl",
-          rcaRemark: [...form.managementControl.rcaRemark, value]
+          rcaRemark: [...form.managementControl.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -93,7 +99,8 @@ const CorrectiveAction = () => {
     setForm({
       ...form, regionSupport: {
         rcaSubType: "Details the region to support above",
-        remarkType: e.target.value
+        remarkType: e.target.value,
+        rcaRemark: ["string"]
       }
     })
   }
@@ -105,11 +112,45 @@ const CorrectiveAction = () => {
   ];
 
   const handelNext = (e) => {
-    console.log(form)
+
     const { error, isValid } = CorrectiveActionValidation(form);
     setError(error);
+
+    let tempData = []
+    Object.entries(form).map((item) => {
+      let api_data = item[1]
+      let rcaRemark_one = api_data.rcaRemark
+
+      rcaRemark_one.map((value) => {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: value,
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "string",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+      })
+    })
+    setData(tempData)
   }
 
+  const handelApiCall = async (e) => {
+    let callObjects = data
+
+    for (let key in callObjects) {
+      console.log(callObjects[key])
+      if (Object.keys(error).length == 0) {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
+      }
+    }
+  }
 
   const classes = useStyles();
 
@@ -189,7 +230,7 @@ const CorrectiveAction = () => {
                     color="primary"
                     className={classes.button}
                     // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
-                    onClick={(e) => handelNext(e)}
+                    onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next
                   </Button>

@@ -42,6 +42,10 @@ const useStyles = makeStyles((theme) => ({
   spacer: {
     padding: ".75rem 0",
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const Details = () => {
@@ -199,7 +203,7 @@ const Details = () => {
 
 
                 <FormControl component="fieldset">
-                  <RadioGroup>
+                  <RadioGroup className={classes.inlineRadioGroup}>
                     {radioDecide.map((value) => (
                       <FormControlLabel
                         value={value}
@@ -222,7 +226,10 @@ const Details = () => {
                 </FormLabel>
 
                 <FormControl component="fieldset">
-                  <RadioGroup aria-label="gender">
+                  <RadioGroup 
+                    className={classes.inlineRadioGroup}
+                    aria-label="gender"
+                    >
                     {radioDecide.map((value) => (
                       <FormControlLabel
                         value={value}
@@ -244,7 +251,10 @@ const Details = () => {
                 </FormLabel>
 
                 <FormControl component="fieldset">
-                  <RadioGroup aria-label="gender">
+                  <RadioGroup 
+                    className={classes.inlineRadioGroup}
+                    aria-label="gender"
+                    >
                     {radioDecide.map((value) => (
                       <FormControlLabel
                         value={value}

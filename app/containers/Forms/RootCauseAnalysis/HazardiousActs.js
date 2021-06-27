@@ -16,7 +16,11 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
+import api from "../../../utils/axios";
+import FormSideBar from "../FormSideBar";
+import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation"
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,29 +35,21 @@ const useStyles = makeStyles((theme) => ({
 
 const HazardiousActs = () => {
 
-  const [commonForm, setCommonForm] = useState({
-    rcaNumber: "string",
-    rcaType: "string",
-    status: "Active",
-    createdBy: 0,
-    updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId"))
-  })
-
+  const [form, setForm] = useState({
+    supervision: { rcaSubType: "", rcaRemark: [], remarkType: "" },
+    workpackage: { rcaSubType: "", rcaRemark: [], remarkType: "" },
+    equipmentMachinery: { rcaSubType: "", rcaRemark: [], remarkType: "" },
+    behaviourIssue: { rcaSubType: "", rcaRemark: [], remarkType: "" },
+    safetyIssues: { rcaSubType: "", rcaRemark: [], remarkType: "" },
+    ergonimics: { rcaSubType: "", rcaRemark: [], remarkType: "" },
+    procedures: { rcaSubType: "", rcaRemark: [], remarkType: "" },
+    others: { rcaSubType: "", rcaRemark: [], remarkType: "" }
+  }
+  )
 
   const [error, setError] = useState({})
 
-  const [form, setForm] = useState({
-    supervision: { rcaSubType: "", rcaRemark: [] },
-    workpackage: { rcaSubType: "", rcaRemark: [] },
-    equipmentMachinery: { rcaSubType: "", rcaRemark: [] },
-    behaviourIssue: { rcaSubType: "", rcaRemark: [] },
-    safetyIssues: { rcaSubType: "", rcaRemark: [] },
-    ergonimics: { rcaSubType: "", rcaRemark: [] },
-    procedures: { rcaSubType: "", rcaRemark: [] },
-    others: { rcaSubType: "", remarkType: "" }
-  }
-  )
+  const [data, setData] = useState([])
 
   const handelSupervison = (e, value) => {
     if (e.target.checked == false) {
@@ -61,14 +57,16 @@ const HazardiousActs = () => {
       setForm({
         ...form, supervision: {
           rcaSubType: "Supervision",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, supervision: {
           rcaSubType: "Supervision",
-          rcaRemark: [...form.supervision.rcaRemark, value]
+          rcaRemark: [...form.supervision.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -80,14 +78,16 @@ const HazardiousActs = () => {
       setForm({
         ...form, workpackage: {
           rcaSubType: "Workpackage",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, workpackage: {
           rcaSubType: "Workpackage",
-          rcaRemark: [...form.workpackage.rcaRemark, value]
+          rcaRemark: [...form.workpackage.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -99,14 +99,16 @@ const HazardiousActs = () => {
       setForm({
         ...form, equipmentMachinery: {
           rcaSubType: "equipmentMachinery",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, equipmentMachinery: {
           rcaSubType: "equipmentMachinery",
-          rcaRemark: [...form.equipmentMachinery.rcaRemark, value]
+          rcaRemark: [...form.equipmentMachinery.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -118,14 +120,16 @@ const HazardiousActs = () => {
       setForm({
         ...form, behaviourIssue: {
           rcaSubType: "behaviourIssue",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, behaviourIssue: {
           rcaSubType: "behaviourIssue",
-          rcaRemark: [...form.behaviourIssue.rcaRemark, value]
+          rcaRemark: [...form.behaviourIssue.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -137,14 +141,16 @@ const HazardiousActs = () => {
       setForm({
         ...form, safetyIssues: {
           rcaSubType: "safetyIssues",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, safetyIssues: {
           rcaSubType: "safetyIssues",
-          rcaRemark: [...form.safetyIssues.rcaRemark, value]
+          rcaRemark: [...form.safetyIssues.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -156,14 +162,16 @@ const HazardiousActs = () => {
       setForm({
         ...form, ergonimics: {
           rcaSubType: "ergonimics",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, ergonimics: {
           rcaSubType: "ergonimics",
-          rcaRemark: [...form.ergonimics.rcaRemark, value]
+          rcaRemark: [...form.ergonimics.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -175,14 +183,16 @@ const HazardiousActs = () => {
       setForm({
         ...form, procedures: {
           rcaSubType: "procedures",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, procedures: {
           rcaSubType: "procedures",
-          rcaRemark: [...form.procedures.rcaRemark, value]
+          rcaRemark: [...form.procedures.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -192,27 +202,60 @@ const HazardiousActs = () => {
     setForm({
       ...form, others: {
         rcaSubType: "others",
-        remarkType: e.target.value
+        remarkType: e.target.value,
+        rcaRemark: ["string"]
       }
     })
   }
-
-
 
   const selectValues = ["Option1", "Option2", "...."];
 
   const classes = useStyles();
 
   const handelNext = (e) => {
-    console.log(form)
-    let supervisionData = { ...commonForm, ...form.supervision }
-    // console.log(supervisionData)
+
     const { error, isValid } = HazardiousActsValidation(form);
     setError(error);
+
+    let tempData = []
+    Object.entries(form).map((item) => {
+      let api_data = item[1]
+      let rcaRemark_one = api_data.rcaRemark
+
+      rcaRemark_one.map((value) => {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: value,
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "string",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+      })
+    })
+    setData(tempData)
+  }
+
+  const handelApiCall = async (e) => {
+    let callObjects = data
+
+    for (let key in callObjects) {
+      console.log(callObjects[key])
+      if (Object.keys(error).length == 0) {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
+      }
+    }
   }
 
   return (
     <Container>
+      {console.log(data)}
       <Paper>
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h6" gutterBottom>
@@ -231,7 +274,6 @@ const HazardiousActs = () => {
                   <FormLabel component="legend" error={error.supervision}>Supervision</FormLabel>
 
                   <FormGroup>
-
                     {selectValues.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
@@ -357,6 +399,7 @@ const HazardiousActs = () => {
                   <p><small style={{ color: "red" }}>{error.procedures}</small></p>
                 )}
               </Grid>
+
               <Grid item md={12}>
                 {/* <p>others</p> */}
                 <TextField
@@ -387,7 +430,7 @@ const HazardiousActs = () => {
                     color="primary"
                     className={classes.button}
                     // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
-                    onClick={(e) => handelNext(e)}
+                    onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next
                   </Button>

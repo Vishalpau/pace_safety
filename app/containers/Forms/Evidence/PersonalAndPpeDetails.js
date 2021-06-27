@@ -1,4 +1,4 @@
-import React , {useState, useEffect}from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const PersonalAndPpeDetails = () => {
@@ -57,7 +61,7 @@ const PersonalAndPpeDetails = () => {
 
 
   const handleNext = async () => {
-    if(id !== undefined && activtyList.length > 0){
+    if (id !== undefined && activtyList.length > 0) {
       history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/");
     }
     else{
@@ -77,8 +81,8 @@ const PersonalAndPpeDetails = () => {
     history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
   }
   };
- 
-  const handleUpdateActivityList = async(e,key,fieldname,activityId)=>{
+
+  const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
     const temp = activtyList;
     console.log(temp)
     const value = e.target.value;
@@ -91,15 +95,15 @@ const PersonalAndPpeDetails = () => {
     console.log(res);
   }
 
-  const fetchActivityList = async()=>{
+  const fetchActivityList = async () => {
     const res = await api.get(`api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
     await setActvityList(result);
     console.log(result)
   }
-  useEffect(()=>{
+  useEffect(() => {
     fetchActivityList();
-  },[])
+  }, [])
 
   return (
     <div>
@@ -129,36 +133,37 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.ppeans1}
+                    error={error.ppeans1}
                   >
                     <FormLabel component="legend">PPE worn properly?</FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd08({
-                          ...ad08,
-                          questionCode: "PPE-08",
-                          question: "PPE worn properly?",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd08({
+                    //       ...ad08,
+                    //       questionCode: "PPE-08",
+                    //       question: "PPE worn properly?",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
                     >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
                   </FormControl>
                 </Grid>
 
@@ -169,28 +174,29 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error ={error.ppeans2}
+                    error={error.ppeans2}
                   >
                     <FormLabel component="legend">PPE in good shape?</FormLabel>
-                    <RadioGroup 
-                    onChange={(e) =>
-                      {
-                        setAd09({
-                          ...ad09,
-                          questionCode: "PPE-09",
-                          question: "PPE in good shape?",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    // {
+                    //   setAd09({
+                    //     ...ad09,
+                    //     questionCode: "PPE-09",
+                    //     question: "PPE in good shape?",
+                    //     answer: e.target.value,
+                    //     activityGroup: "Evidence",
+                    //     status: "Active",
+                    //     updatedBy: 0,
+                    //     createdBy: 0,
+                    //     fkIncidentId: localStorage.getItem(
+                    //       "fkincidentId"
+                    //     ),
+                    //   });
+                    // }
+                    // }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -207,28 +213,29 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.ppeans3}
+                    error={error.ppeans3}
                   >
                     <FormLabel component="legend">PPE Proper fit?</FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd09({
-                          ...ad10,
-                          questionCode: "PPE-10",
-                          question: "PPE Proper fit?",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd09({
+                    //       ...ad10,
+                    //       questionCode: "PPE-10",
+                    //       question: "PPE Proper fit?",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -246,30 +253,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.ppeans4}
+                    error={error.ppeans4}
                   >
                     <FormLabel component="legend">
                       PPE appropriate for task?
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd11({
-                          ...ad11,
-                          questionCode: "PPE-11",
-                          question: " PPE appropriate for task?",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd11({
+                    //       ...ad11,
+                    //       questionCode: "PPE-11",
+                    //       question: " PPE appropriate for task?",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -290,30 +298,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans1}
+                    error={error.supervisionans1}
                   >
                     <FormLabel component="legend">
                       Employee self supervised
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd12({
-                          ...ad12,
-                          questionCode: "PPE-12",
-                          question: "Employee self supervised",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd12({
+                    //       ...ad12,
+                    //       questionCode: "PPE-12",
+                    //       question: "Employee self supervised",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -337,24 +346,25 @@ const PersonalAndPpeDetails = () => {
                       Supervisor present at site
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd13({
-                          ...ad13,
-                          questionCode: "PPE-13",
-                          question: "Supervisor present at site",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd13({
+                    //       ...ad13,
+                    //       questionCode: "PPE-13",
+                    //       question: "Supervisor present at site",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -372,30 +382,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans3}
+                    error={error.supervisionans3}
                   >
                     <FormLabel component="legend">
                       Supervisor provided clear detail of work
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd14({
-                          ...ad14,
-                          questionCode: "PPE-14",
-                          question: "Supervisor provided clear detail of work",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd14({
+                    //       ...ad14,
+                    //       questionCode: "PPE-14",
+                    //       question: "Supervisor provided clear detail of work",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -412,30 +423,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans4}
+                    error={error.supervisionans4}
                   >
                     <FormLabel component="legend">
                       Supervisor provided detail work package
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd15({
-                          ...ad15,
-                          questionCode: "PPE-15",
-                          question: "Supervisor provided detail work package",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd15({
+                    //       ...ad15,
+                    //       questionCode: "PPE-15",
+                    //       question: "Supervisor provided detail work package",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -452,30 +464,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.supervisionans5}
+                    error={error.supervisionans5}
                   >
                     <FormLabel component="legend">
                       Did supervisor conducted I-care observation
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd16({
-                          ...setAd16,
-                          questionCode: "PPE-16",
-                          question: "Did supervisor conducted I-care observation",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd16({
+                    //       ...setAd16,
+                    //       questionCode: "PPE-16",
+                    //       question: "Did supervisor conducted I-care observation",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -496,30 +509,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.flagans1}
+                    error={error.flagans1}
                   >
                     <FormLabel component="legend">
                       Was flag person required for this job
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd17({
-                          ...setAd17,
-                          questionCode: "PPE-17",
-                          question: "Was flag person required for this job",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd17({
+                    //       ...setAd17,
+                    //       questionCode: "PPE-17",
+                    //       question: "Was flag person required for this job",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -536,30 +550,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.flagans2}
+                    error={error.flagans2}
                   >
                     <FormLabel component="legend">
                       Flag person trained/competent
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd18({
-                          ...setAd18,
-                          questionCode: "PPE-18",
-                          question: "Flag person trained/competent",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd18({
+                    //       ...setAd18,
+                    //       questionCode: "PPE-18",
+                    //       question: "Flag person trained/competent",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -583,24 +598,25 @@ const PersonalAndPpeDetails = () => {
                       Was flag person present
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd19({
-                          ...setAd19,
-                          questionCode: "PPE-19",
-                          question: "Was flag person present",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd19({
+                    //       ...setAd19,
+                    //       questionCode: "PPE-19",
+                    //       question: "Was flag person present",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -622,29 +638,30 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.otherans1}
+                    error={error.otherans1}
                   >
                     <FormLabel component="legend">
                       Metal on Metal incident
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd20({
-                          ...setAd20,
-                          questionCode: "PPE-20",
-                          question: " Metal on Metal incident",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd20({
+                    //       ...setAd20,
+                    //       questionCode: "PPE-20",
+                    //       question: " Metal on Metal incident",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
                     >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -663,30 +680,31 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
-                    error = {error.otherans2}
+                    error={error.otherans2}
                   >
                     <FormLabel component="legend">
                       Was person in the line of fire
                     </FormLabel>
                     <RadioGroup
-                    onChange={(e) =>
-                      {
-                        setAd21({
-                          ...setAd21,
-                          questionCode: "PPE-21",
-                          question: " Metal on Metal incident",
-                          answer: e.target.value,
-                          activityGroup: "Evidence",
-                          status: "Active",
-                          updatedBy: 0,
-                          createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            "fkincidentId"
-                          ),
-                        });
-                      }
-                      }
-                      >
+                      className={classes.inlineRadioGroup}
+                    // onChange={(e) =>
+                    //   {
+                    //     setAd21({
+                    //       ...setAd21,
+                    //       questionCode: "PPE-21",
+                    //       question: " Metal on Metal incident",
+                    //       answer: e.target.value,
+                    //       activityGroup: "Evidence",
+                    //       status: "Active",
+                    //       updatedBy: 0,
+                    //       createdBy: 0,
+                    //       fkIncidentId: localStorage.getItem(
+                    //         "fkincidentId"
+                    //       ),
+                    //     });
+                    //   }
+                    //   }
+                    >
                       {radioDecide.map((value) => (
                         <FormControlLabel
                           value={value}
@@ -702,7 +720,7 @@ const PersonalAndPpeDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/evidence/activity-detail/"
+                    href="/app/incident-management/registration/evidence/activity-detail/"
                   >
                     Previous
                   </Button>
@@ -711,7 +729,7 @@ const PersonalAndPpeDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
-                    // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
+                  // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
                   >
                     Next
                   </Button>
@@ -721,7 +739,7 @@ const PersonalAndPpeDetails = () => {
                 <FormSideBar
                   listOfItems={EVIDENCE_FORM}
                   selectedItem={"Personal and Ppedetails"}
-                  deleteForm={[1,2,3]}
+                  deleteForm={[1, 2, 3]}
                 />
               </Grid>
             </Grid>

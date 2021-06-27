@@ -80,9 +80,8 @@ function PersonalDashboard(props) {
     //   <FilesWidget />
     // </div>
     
-       <PapperBlock>
-         <h1>Dashboard</h1>
-        <hr/>
+       <PapperBlock title="Dashboard">
+         <Divider />
       </PapperBlock>
     
   );

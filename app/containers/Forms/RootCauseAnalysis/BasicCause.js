@@ -24,6 +24,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 
+import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
@@ -51,6 +52,8 @@ const BasicCause = () => {
 
   const [error, setError] = useState({})
 
+  const [data, setData] = useState([])
+
   const [form, setForm] = useState({
     personal: { rcaSubType: "", rcaRemark: [] },
     wellnessFactors: { rcaSubType: "", rcaRemark: [] },
@@ -67,14 +70,16 @@ const BasicCause = () => {
       setForm({
         ...form, personal: {
           rcaSubType: "personal",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, personal: {
           rcaSubType: "personal",
-          rcaRemark: [...form.personal.rcaRemark, value]
+          rcaRemark: [...form.personal.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -86,14 +91,16 @@ const BasicCause = () => {
       setForm({
         ...form, wellnessFactors: {
           rcaSubType: "wellnessFactors",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, wellnessFactors: {
           rcaSubType: "wellnessFactors",
-          rcaRemark: [...form.wellnessFactors.rcaRemark, value]
+          rcaRemark: [...form.wellnessFactors.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -103,7 +110,8 @@ const BasicCause = () => {
     setForm({
       ...form, otherHumanFactor: {
         rcaSubType: "others human factors",
-        remarkType: e.target.value
+        remarkType: e.target.value,
+        rcaRemark: ["string"]
       }
     })
   }
@@ -114,14 +122,16 @@ const BasicCause = () => {
       setForm({
         ...form, leadership: {
           rcaSubType: "leadership",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, leadership: {
           rcaSubType: "leadership",
-          rcaRemark: [...form.leadership.rcaRemark, value]
+          rcaRemark: [...form.leadership.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -133,14 +143,16 @@ const BasicCause = () => {
       setForm({
         ...form, processes: {
           rcaSubType: "processes",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, processes: {
           rcaSubType: "processes",
-          rcaRemark: [...form.processes.rcaRemark, value]
+          rcaRemark: [...form.processes.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -150,7 +162,8 @@ const BasicCause = () => {
     setForm({
       ...form, otherJobFactors: {
         rcaSubType: "others job factors",
-        remarkType: e.target.value
+        remarkType: e.target.value,
+        rcaRemark: ["string"]
       }
     })
   }
@@ -160,9 +173,44 @@ const BasicCause = () => {
   const classes = useStyles();
 
   const handelNext = (e) => {
-    console.log(form)
+
     const { error, isValid } = BasicCauseValidation(form);
     setError(error);
+
+    let tempData = []
+    Object.entries(form).map((item) => {
+      let api_data = item[1]
+      let rcaRemark_one = api_data.rcaRemark
+
+      rcaRemark_one.map((value) => {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: value,
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "string",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+      })
+    })
+    setData(tempData)
+  }
+
+  const handelApiCall = async (e) => {
+    let callObjects = data
+
+    for (let key in callObjects) {
+      console.log(callObjects[key])
+      if (Object.keys(error).length == 0) {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
+      }
+    }
   }
 
   return (
@@ -331,7 +379,7 @@ const BasicCause = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                  // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
                   >
                     Previous
                   </Button>
@@ -339,8 +387,8 @@ const BasicCause = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
-                    onClick={(e) => handelNext(e)}
+                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+                    onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next
                   </Button>

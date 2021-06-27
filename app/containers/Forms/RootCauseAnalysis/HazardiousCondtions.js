@@ -14,9 +14,10 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
+import api from "../../../utils/axios";
+import FormHeader from "../FormHeader";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import HazardiousConditionsValidation from "../../Validator/RCAValidation/HazardiousConditonsValidation"
 
 
@@ -43,6 +44,8 @@ const HazardiousCondition = () => {
 
   const [error, setError] = useState({})
 
+  const [data, setData] = useState([])
+
   const [form, setForm] = useState({
     warningSystem: { rcaSubType: "", rcaRemark: [] },
     energyTypes: { rcaSubType: "", rcaRemark: [] },
@@ -58,14 +61,16 @@ const HazardiousCondition = () => {
       setForm({
         ...form, warningSystem: {
           rcaSubType: "warningSystem",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, warningSystem: {
           rcaSubType: "warningSystem",
-          rcaRemark: [...form.warningSystem.rcaRemark, value]
+          rcaRemark: [...form.warningSystem.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -77,14 +82,16 @@ const HazardiousCondition = () => {
       setForm({
         ...form, energyTypes: {
           rcaSubType: "energyTypes",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, energyTypes: {
           rcaSubType: "energyTypes",
-          rcaRemark: [...form.energyTypes.rcaRemark, value]
+          rcaRemark: [...form.energyTypes.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -96,14 +103,16 @@ const HazardiousCondition = () => {
       setForm({
         ...form, tools: {
           rcaSubType: "tools",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, tools: {
           rcaSubType: "tools",
-          rcaRemark: [...form.tools.rcaRemark, value]
+          rcaRemark: [...form.tools.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -115,14 +124,16 @@ const HazardiousCondition = () => {
       setForm({
         ...form, safetyitems: {
           rcaSubType: "safetyitems",
-          rcaRemark: newData
+          rcaRemark: newData,
+          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, safetyitems: {
           rcaSubType: "safetyitems",
-          rcaRemark: [...form.safetyitems.rcaRemark, value]
+          rcaRemark: [...form.safetyitems.rcaRemark, value],
+          remarkType: "string"
         }
       })
     }
@@ -132,15 +143,52 @@ const HazardiousCondition = () => {
     setForm({
       ...form, others: {
         rcaSubType: "others",
-        remarkType: e.target.value
+        remarkType: e.target.value,
+        rcaRemark: ["string"]
       }
     })
   }
 
+
   const handelNext = (e) => {
-    console.log(form)
+
     const { error, isValid } = HazardiousConditionsValidation(form);
     setError(error);
+
+    let tempData = []
+    Object.entries(form).map((item) => {
+      let api_data = item[1]
+      let rcaRemark_one = api_data.rcaRemark
+
+      rcaRemark_one.map((value) => {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: value,
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "string",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+      })
+    })
+    setData(tempData)
+  }
+
+  const handelApiCall = async (e) => {
+    let callObjects = data
+
+    for (let key in callObjects) {
+      console.log(callObjects[key])
+      if (Object.keys(error).length == 0) {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
+      }
+    }
   }
 
 
@@ -291,7 +339,7 @@ const HazardiousCondition = () => {
                     color="primary"
                     className={classes.button}
                     // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
-                    onClick={(e) => handelNext(e)}
+                    onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next
                   </Button>
