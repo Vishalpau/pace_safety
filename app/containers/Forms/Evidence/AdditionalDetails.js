@@ -226,7 +226,7 @@ const AdditionalDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/"
+                    href="/app/incident-management/registration/evidence/personal-and-ppedetails/"
                   >
                     Previous
                   </Button>

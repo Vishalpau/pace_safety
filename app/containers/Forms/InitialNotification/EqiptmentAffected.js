@@ -465,7 +465,7 @@ const EqiptmentAffected = () => {
                     className={classes.button}
                     href="/app/incident-management/registration/initial-notification/property-affected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

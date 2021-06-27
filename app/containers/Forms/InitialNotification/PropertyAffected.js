@@ -515,7 +515,7 @@ const PropertyAffected = () => {
                     className={classes.button}
                     href="/app/incident-management/registration/initial-notification/peoples-afftected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

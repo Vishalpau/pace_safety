@@ -501,7 +501,7 @@ const ReportingAndNotification = () => {
                     className={classes.button}
                     href="/app/incident-management/registration/initial-notification/environment-affected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

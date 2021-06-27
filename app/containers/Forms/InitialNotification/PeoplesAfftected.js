@@ -759,7 +759,7 @@ const PeoplesAffected = () => {
                     color="primary"
                     className={classes.button}
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     // href={

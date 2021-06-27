@@ -498,7 +498,7 @@ const EnvironmentAffected = () => {
                     color="primary"
                     href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

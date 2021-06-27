@@ -702,7 +702,7 @@ const PersonalAndPpeDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/evidence/activity-detail/"
+                    href="/app/incident-management/registration/evidence/activity-detail/"
                   >
                     Previous
                   </Button>

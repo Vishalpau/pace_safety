@@ -9,4 +9,12 @@ const api = axios.create({
   baseURL: apiUrl,
 });
 
+axios.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  // Do something with response error
+  console.log(error.response.status);
+  return Promise.reject(error);
+});
+
 export default api;
