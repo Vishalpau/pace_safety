@@ -79,7 +79,7 @@ const EvidenceSummary = () => {
   }, []);
   const classes = useStyles();
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={3}>
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -129,8 +129,8 @@ const EvidenceSummary = () => {
                       >
                         {evidence.evidenceCheck}
                       </Typography>
-                      </Grid>
-                      <Grid item lg={6} md={6}>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -145,8 +145,8 @@ const EvidenceSummary = () => {
                       >
                         {evidence.evidenceCategory}
                       </Typography>
-                      </Grid>
-                      <Grid item lg={6} md={6}>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -161,7 +161,7 @@ const EvidenceSummary = () => {
                       >
                         {evidence.evidenceRemark}
                       </Typography>
-                      </Grid>
+                    </Grid>
                   </Grid>
                 ))
               : null}

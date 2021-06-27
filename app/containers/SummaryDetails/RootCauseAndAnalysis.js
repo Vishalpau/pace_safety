@@ -98,7 +98,7 @@ const RootCauseAnalysisSummary = () => {
 
   const classes = useStyles();
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={3}>
       <Grid item md={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

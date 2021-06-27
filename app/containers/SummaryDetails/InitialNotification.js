@@ -79,7 +79,7 @@ const IncidentDetailsSummary = () => {
 
   const classes = useStyles();
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={3}>
       <Grid item xs={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident Overview
