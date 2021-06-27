@@ -84,6 +84,9 @@ const ReportingAndNotification = () => {
   const [reportsListData, setReportListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(true);
+  const [clearedDate, handleClearedDateChange] = useState(null);
+
+
   const { id } = useParams();
 
   const [form, setForm] = useState({
@@ -92,8 +95,8 @@ const ReportingAndNotification = () => {
     fileupload: '',
     supervisorname: '',
     othername: '',
-    reportingdate: '2021/05/06',
-    reportingtime: '',
+    reportingdate: null,
+    reportingtime: null,
     reportedby: '',
     others: '',
     latereporting: '',
@@ -111,7 +114,7 @@ const ReportingAndNotification = () => {
     'Other',
   ];
   const notificationSent = ['Manage', 'SuperVisor'];
-  const selectValues = [1, 2, 3, 4];
+  const selectValues = [1, 2, 3, 4, "Other"];
   const [selectedDate, setSelectedDate] = React.useState(
     new Date('2014-08-18T21:11:54')
   );
@@ -126,8 +129,6 @@ const ReportingAndNotification = () => {
 
 
   const handelTimeCompare = (e) => {
-    console.log(form.reportingtime)
-    console.log(form.reportingdate)
     let rpTime = form.reportingtime
     let rpDate = form.reportingdate
     let startDate = `${rpDate} ${rpTime}`
@@ -137,6 +138,7 @@ const ReportingAndNotification = () => {
     var end_date = moment(new Date(), 'YYYY-MM-DD HH:mm:ss');
     var duration = moment.duration(end_date.diff(start_date));
     var Hours = duration.asHours();
+    console.log(Hours)
     if (Hours > 4) {
       SetLateReport(false)
     } else {
@@ -158,6 +160,7 @@ const ReportingAndNotification = () => {
       ...form,
       reportingtime: onlyTime,
     });
+    setSelectedTime(date)
   };
 
 
@@ -439,7 +442,9 @@ const ReportingAndNotification = () => {
                 required
                 inputVariant="outlined"
                 label="Reporting Date"
-                value={new Date(form.reportingdate)}
+                value={
+                  form.reportingdate
+                }
                 onChange={(date) => handleDateChange(date)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
@@ -456,7 +461,9 @@ const ReportingAndNotification = () => {
                 id="time-picker"
                 inputVariant="outlined"
                 label="Time picker"
-                value={new Date(selectedTime)}
+                value={
+                  form.reportingtime === null ? clearedDate : selectedTime
+                }
                 onChange={(date) => { handelTimeChange(date); handelTimeCompare() }}
                 KeyboardButtonProps={{
                   'aria-label': 'change time',
@@ -505,6 +512,7 @@ const ReportingAndNotification = () => {
                   others: e.target.value.toString(),
                 });
               }}
+              disabled={form.reportedby !== "Other"}
             />
             {/* {error && error.others && <p>{error.others}</p>} */}
           </Grid>
