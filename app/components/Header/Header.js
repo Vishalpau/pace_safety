@@ -225,7 +225,7 @@ function Header(props) {
             <SearchUi history={history} />
           </div>
         </div> */}
-        <div
+        {/* <div
           className={classNames(
             classes.headerAction,
             showTitle && classes.fadeOut
@@ -236,7 +236,7 @@ function Header(props) {
               <i className="ion-ios-help-circle-outline" />
             </IconButton>
           </Tooltip>
-        </div>
+        </div> */}
 
         <Hidden xsDown>
           <span className={classes.separatorV} />

@@ -8,6 +8,10 @@ import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import {
@@ -42,6 +46,16 @@ import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+}));
 
 const RootCauseAnalysisSummary = () => {
   const [rootCause, setRootCause] = useState([]);
@@ -82,21 +96,18 @@ const RootCauseAnalysisSummary = () => {
     fetchPaceCausesData();
   }, []);
 
+  const classes = useStyles();
   return (
     <Grid container spacing={5}>
       <Grid container item md={9} spacing={3}>
+      <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Root Cause</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
         {rootCause.length !== 0
           ? rootCause.map((root, key) => (
               <Grid container item md={9} spacing={3} key={key}>
-                <Grid item md={12}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Root Cause
-                  </Typography>
-                </Grid>
                 <Grid item lg={6} md={6}>
                   <Typography
                     variant="h6"
@@ -141,18 +152,16 @@ const RootCauseAnalysisSummary = () => {
               </Grid>
             ))
           : null}
+          </AccordionDetails>
+          </Accordion>
+          <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+            <Typography className={classes.heading}>Five Why</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
         {fiveWhy.length !== 0
           ? fiveWhy.map((fw, key) => (
               <Grid container item md={9} spacing={3} key={key}>
-                <Grid item md={12}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Five Why
-                  </Typography>
-                </Grid>
                 <Grid item lg={6} md={6}>
                   <Typography
                     variant="h6"
@@ -197,74 +206,70 @@ const RootCauseAnalysisSummary = () => {
               </Grid>
             ))
           : null}
-        {causeanalysis.length !== 0
-          ? causeanalysis.map((cause, key) => (
-              <Grid container item md={9} spacing={3} key={key}>
-                <Grid item md={12}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Cause Analysis
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Id : {cause.id}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Evidence Support
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {cause.evidenceSupport}
-                  </Typography>
-                </Grid>
-                <Grid item lg={6} md={6}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Evidence Contradiction
-                  </Typography>
-                  <Typography
-                    variant="body"
-                    color="textSecondary"
-                    className={Fonts.labelValue}
-                  >
-                    {cause.evidenceContradiction}
-                  </Typography>
-                </Grid>
-              </Grid>
-            ))
-          : null}
-        {pacecauses.length !== 0
+          </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Casue Analysis</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {causeanalysis.length !== 0
+                ? causeanalysis.map((cause, key) => (
+                <Grid container item md={9} spacing={3} key={key}>
+                  <Grid item lg={6} md={6}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={Fonts.labelName}
+                    >
+                      Id : {cause.id}
+                    </Typography>
+                  </Grid>
+                  <Grid item lg={6} md={6}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={Fonts.labelName}
+                    >
+                      Evidence Support
+                    </Typography>
+                    <Typography
+                      variant="body"
+                      color="textSecondary"
+                      className={Fonts.labelValue}
+                    >
+                      {cause.evidenceSupport}
+                    </Typography>
+                  </Grid>
+                  <Grid item lg={6} md={6}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={Fonts.labelName}
+                    >
+                      Evidence Contradiction
+                    </Typography>
+                    <Typography
+                      variant="body"
+                      color="textSecondary"
+                      className={Fonts.labelValue}
+                    >
+                      {cause.evidenceContradiction}
+                    </Typography>
+                  </Grid>
+               </Grid>
+              ))
+              : null}
+            </AccordionDetails>
+          </Accordion>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className={classes.heading}>Pace Cause</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+          {pacecauses.length !== 0
           ? pacecauses.map((pc, key) => (
               <Grid container item md={9} spacing={3} key={key}>
-                <Grid item md={12}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    className={Fonts.labelName}
-                  >
-                    Pace Cause
-                  </Typography>
-                </Grid>
                 <Grid item lg={6} md={6}>
                   <Typography
                     variant="h6"
@@ -346,8 +351,11 @@ const RootCauseAnalysisSummary = () => {
                   </Typography>
                 </Grid>
               </Grid>
-            ))
-          : null}
+              ))
+            : null}
+          </AccordionDetails>
+        </Accordion>
+       
       </Grid>
     </Grid>
   );

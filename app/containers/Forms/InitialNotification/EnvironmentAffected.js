@@ -43,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
   customLabel: {
     marginBottom: 0,
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const EnvironmentAffected = () => {
@@ -82,12 +86,13 @@ const EnvironmentAffected = () => {
   const [isWildlife,setIsWildlife] = useState(false)
   const [iswaterbody,setIswaterBody] = useState(false)
   const [environmentListData, setEnvironmentListData] = useState([])
+  const [envComments, setEnvComments] = useState('')
 
   const [spillsData,setSpillsData] = useState({})
   const [relaseData,setReleaseData] = useState({})
   const [wildLifeData,setWildLifeData] = useState({})
   const [wateBodyData,setWaterBodyData] = useState({})
-  
+  const [incidentsListData, setIncidentsListdata] = useState([]);
 
 
 
@@ -147,7 +152,13 @@ const EnvironmentAffected = () => {
           envList[i]
         );
       }
-      
+      const temp = incidentsListData;
+      temp["equipmentDamagedComments"] = envComments || incidentsListData.equipmentDamagedComments;    
+      temp["updatedAt"] = moment(new Date()).toISOString();
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
       // if(res.status === 201){
       history.push(
         "/app/incident-management/registration/initial-notification/reporting-and-notification/"
@@ -191,12 +202,23 @@ const EnvironmentAffected = () => {
     const result = res.data.data.results;
     setEnvironmentListData(result);
   };
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentsListdata(result);
+    // const isavailable = result.isPersonDetailsAvailable
+    // await setPersonAffect(isavailable)
+    // await setIsLoading(true);
+  };
   useEffect(() => {
     fetchEnviornmentAffectedValue();
     fetchAnyReleaseValue();
     fetchImpactOnWildLifeValue();
     fetchWaterBodyAffectedValue();
     fetchEnviornmentListData();
+    fetchIncidentsData()
   }, []);
 
   return (
@@ -217,6 +239,7 @@ const EnvironmentAffected = () => {
                 <Grid item md={6}>
                   <p>Where there any spills</p>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     defaultValue={env.envQuestionOption}
@@ -257,6 +280,7 @@ const EnvironmentAffected = () => {
                 <Grid item md={6}>
                   <p>Where there any spills</p>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfEnvAffect}
@@ -309,6 +333,7 @@ const EnvironmentAffected = () => {
                     </p>
 
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                       aria-label="envQuestion"
                       name="envQuestion"
                       value={form.envQuestion}
@@ -365,6 +390,7 @@ const EnvironmentAffected = () => {
                     </p>
 
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                       aria-label="envAnswerDetails"
                       name="envAnswerDetails"
                       value={form.envAnswerDetails}
@@ -424,6 +450,7 @@ const EnvironmentAffected = () => {
                       Where there any waterbody affected?
                     </p>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                       aria-label="envQuestionOption"
                       name="envQuestionOption"
                       value={form.envQuestionOption}
@@ -487,6 +514,8 @@ const EnvironmentAffected = () => {
                       rows="3"
                       label="Comment if any"
                       className={classes.fullWidth}
+                      defaultValue={incidentsListData.equipmentDamagedComments}
+                      onChange={(e)=> setEnvComments(e.target.value)}
                     />
                   </div>
                 </Grid>
@@ -496,9 +525,10 @@ const EnvironmentAffected = () => {
                     variant="contained"
                     className={classes.button}
                     color="primary"
-                    href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                    onClick={()=>history.goBack()}
+                    // href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
                   >
-                    Previouse
+                    Previous
                   </Button>
                   <Button
                     variant="contained"

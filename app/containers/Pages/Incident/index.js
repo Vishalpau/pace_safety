@@ -45,6 +45,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
+import { useHistory, useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -106,6 +107,7 @@ function BlankPage() {
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident,setSeacrhIncident] = useState("")
   const [showIncident,setShowIncident] = useState([])
+  const history = useHistory() 
 
   const handelView = (e) => {
     setListToggle(false);
@@ -118,6 +120,10 @@ function BlankPage() {
   const fetchData = async()=>{
     const allIncidents = await api.get("api/v1/incidents/");
     await setIncidents(allIncidents.data.data.results);
+  }
+
+  const handlePush = async()=>{
+    history.push('/app/incident-management/registration/initial-notification/incident-details/')
   }
 
   useEffect( () => {
@@ -219,7 +225,7 @@ function BlankPage() {
                   startIcon={<AddCircleIcon />}
                   className={classes.newIncidentButton}
                   disableElevation
-                  href="/app/incident-management/registration/initial-notification/incident-details/"
+                  onClick={()=>handlePush()}
                 >
                   New Incident
                 </Button>

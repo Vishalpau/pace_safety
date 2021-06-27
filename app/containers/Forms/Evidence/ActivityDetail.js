@@ -450,7 +450,7 @@ const ActivityDetails = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/evidence/evidence/"
+                    href="/app/incident-management/registration/evidence/evidence/"
                   >
                     Previous
                   </Button>
