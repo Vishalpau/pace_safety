@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const PersonalAndPpeDetails = () => {
@@ -133,6 +137,7 @@ const PersonalAndPpeDetails = () => {
                   >
                     <FormLabel component="legend">PPE worn properly?</FormLabel>
                     <RadioGroup
+                    className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd08({
@@ -173,6 +178,7 @@ const PersonalAndPpeDetails = () => {
                   >
                     <FormLabel component="legend">PPE in good shape?</FormLabel>
                     <RadioGroup 
+                    className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                       // {
                       //   setAd09({
@@ -211,6 +217,7 @@ const PersonalAndPpeDetails = () => {
                   >
                     <FormLabel component="legend">PPE Proper fit?</FormLabel>
                     <RadioGroup
+                     className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd09({
@@ -252,6 +259,7 @@ const PersonalAndPpeDetails = () => {
                       PPE appropriate for task?
                     </FormLabel>
                     <RadioGroup
+                    className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd11({
@@ -296,6 +304,7 @@ const PersonalAndPpeDetails = () => {
                       Employee self supervised
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd12({
@@ -337,6 +346,7 @@ const PersonalAndPpeDetails = () => {
                       Supervisor present at site
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd13({
@@ -378,6 +388,7 @@ const PersonalAndPpeDetails = () => {
                       Supervisor provided clear detail of work
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd14({
@@ -418,6 +429,7 @@ const PersonalAndPpeDetails = () => {
                       Supervisor provided detail work package
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd15({
@@ -458,6 +470,7 @@ const PersonalAndPpeDetails = () => {
                       Did supervisor conducted I-care observation
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd16({
@@ -502,6 +515,7 @@ const PersonalAndPpeDetails = () => {
                       Was flag person required for this job
                     </FormLabel>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd17({
@@ -542,6 +556,7 @@ const PersonalAndPpeDetails = () => {
                       Flag person trained/competent
                     </FormLabel>
                     <RadioGroup
+                    className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd18({
@@ -583,6 +598,7 @@ const PersonalAndPpeDetails = () => {
                       Was flag person present
                     </FormLabel>
                     <RadioGroup
+                    className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd19({
@@ -628,6 +644,7 @@ const PersonalAndPpeDetails = () => {
                       Metal on Metal incident
                     </FormLabel>
                     <RadioGroup
+                    className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd20({
@@ -669,6 +686,7 @@ const PersonalAndPpeDetails = () => {
                       Was person in the line of fire
                     </FormLabel>
                     <RadioGroup
+                    className={classes.inlineRadioGroup}
                     // onChange={(e) =>
                     //   {
                     //     setAd21({
