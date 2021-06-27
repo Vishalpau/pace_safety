@@ -1,67 +1,67 @@
-import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
+import React, { useState, useEffect } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import DateFnsUtils from '@date-io/date-fns';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-} from "@material-ui/pickers";
-import { PapperBlock } from "dan-components";
-import CheckCircle from "@material-ui/icons/CheckCircle";
-import AccessTime from "@material-ui/icons/AccessTime";
-import Divider from "@material-ui/core/Divider";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import api from "../../../utils/axios";
+} from '@material-ui/pickers';
+import { PapperBlock } from 'dan-components';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import AccessTime from '@material-ui/icons/AccessTime';
+import Divider from '@material-ui/core/Divider';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 // List
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 // Icons
-import Print from "@material-ui/icons/Print";
-import Share from "@material-ui/icons/Share";
-import Close from "@material-ui/icons/Close";
-import Comment from "@material-ui/icons/Comment";
-import History from "@material-ui/icons/History";
-import Edit from "@material-ui/icons/Edit";
-import Add from "@material-ui/icons/Add";
+import Print from '@material-ui/icons/Print';
+import Share from '@material-ui/icons/Share';
+import Close from '@material-ui/icons/Close';
+import Comment from '@material-ui/icons/Comment';
+import History from '@material-ui/icons/History';
+import Edit from '@material-ui/icons/Edit';
+import Add from '@material-ui/icons/Add';
 
 // Styles
-import Styles from "dan-styles/Summary.scss";
-import Type from "dan-styles/Typography.scss";
-import Fonts from "dan-styles/Fonts.scss";
-import moment from "moment";
+import Styles from 'dan-styles/Summary.scss';
+import Type from 'dan-styles/Typography.scss';
+import Fonts from 'dan-styles/Fonts.scss';
+import moment from 'moment';
+import api from '../../../utils/axios';
 
-import IncidentDetails from "../../Forms/InitialNotification/IncidentDetails";
-import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
-import InvestigationSummary from "../../SummaryDetails/Investigation";
-import EvidenceSummary from "../../SummaryDetails/Evidence";
-import RootCauseAnalysisSummary from "../../SummaryDetails/RootCauseAndAnalysis";
-import LessionLearnSummary from "../../SummaryDetails/LessionLearn";
+import IncidentDetails from '../InitialNotification/IncidentDetails';
+import IncidentDetailsSummary from '../../SummaryDetails/InitialNotification';
+import InvestigationSummary from '../../SummaryDetails/Investigation';
+import EvidenceSummary from '../../SummaryDetails/Evidence';
+import RootCauseAnalysisSummary from '../../SummaryDetails/RootCauseAndAnalysis';
+import LessionLearnSummary from '../../SummaryDetails/LessionLearn';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: "100%",
+    width: '100%',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: "100%",
+    width: '100%',
   },
   spacer: {
-    padding: ".75rem 0",
+    padding: '.75rem 0',
   },
   statusButton: {
     borderRadius: 4,
@@ -89,7 +89,7 @@ const Summary = () => {
   };
 
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+    new Date('2014-08-18T21:11:54')
   );
 
   const handleDateChange = (date) => {
@@ -97,7 +97,7 @@ const Summary = () => {
   };
 
   const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+  const radioDecide = ['Yes', 'No'];
   const classes = useStyles();
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const Summary = () => {
 
   return (
     <PapperBlock
-      title={`Incident Number: ${incidents["incidentNumber"]}`}
+      title={`Incident Number: ${incidents.incidentNumber}`}
       icon="ion-md-list-box"
     >
       <Box paddingBottom={1}>
@@ -229,13 +229,13 @@ const Summary = () => {
               {(() => {
                 if (initialNotification == true || (investigation === false && evidence === false && rootcauseanalysis === false && lessionlearn === false)) {
                   return <IncidentDetailsSummary />;
-                } else if (investigation == true) {
+                } if (investigation == true) {
                   return <InvestigationSummary />;
-                } else if (evidence == true) {
+                } if (evidence == true) {
                   return <EvidenceSummary />;
-                } else if (rootcauseanalysis == true) {
+                } if (rootcauseanalysis == true) {
                   return <RootCauseAnalysisSummary />;
-                } else if (lessionlearn == true) {
+                } if (lessionlearn == true) {
                   return <LessionLearnSummary />;
                 }
               })()}
@@ -251,7 +251,7 @@ const Summary = () => {
               >
                 <ListItemLink
                   href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-                    "fkincidentId"
+                    'fkincidentId'
                   )}`}
                 >
                   <ListItemIcon>
