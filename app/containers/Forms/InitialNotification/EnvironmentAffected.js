@@ -133,7 +133,6 @@ const EnvironmentAffected = () => {
   }
 
   const handleNext = async () => {
-
     if (environmentListData.length > 0) {
       history.push(
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
@@ -142,23 +141,17 @@ const EnvironmentAffected = () => {
       const { error, isValid } = EnvironmentValidate(form);
       setError(error);
       console.log(error, isValid);
-
       if (detailsOfEnvAffect === "Yes") {
         const envList = [spillsData, relaseData, wildLifeData, wateBodyData]
-
         for (var i = 0; i < envList.length; i++) {
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
-            envList[i]
-          );
+          if (envList[i].envQuestionOption == "Yes") {
+            console.log()
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
+              envList[i]
+            );
+          }
         }
-        const temp = incidentsListData;
-        temp["equipmentDamagedComments"] = envComments || incidentsListData.equipmentDamagedComments;
-        temp["updatedAt"] = moment(new Date()).toISOString();
-        const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
         // if(res.status === 201){
         history.push(
           "/app/incident-management/registration/initial-notification/reporting-and-notification/"
@@ -514,7 +507,7 @@ const EnvironmentAffected = () => {
                       rows="3"
                       label="Comment if any"
                       className={classes.fullWidth}
-                      defaultValue={incidentsListData.equipmentDamagedComments}
+                      defaultValue={"" || incidentsListData.equipmentDamagedComments}
                       onChange={(e) => setEnvComments(e.target.value)}
                     />
                   </div>

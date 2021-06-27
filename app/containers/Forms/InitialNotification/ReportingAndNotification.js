@@ -87,7 +87,7 @@ const ReportingAndNotification = () => {
   const { id } = useParams();
 
   const [form, setForm] = useState({
-    reportedto: "",
+    reportedto: [],
     isnotificationsent: "",
     fileupload: "",
     supervisorname: "",
@@ -120,6 +120,8 @@ const ReportingAndNotification = () => {
     new Date("2014-08-18T21:11:54")
   );
 
+  const [otherdata, setOtherData] = useState("")
+
   const [fileNames, setFileNames] = useState("")
   const handleDateChange = (date) => {
     let onlyDate = moment(date).format("YYYY/MM/DD");
@@ -146,7 +148,9 @@ const ReportingAndNotification = () => {
     });
     setFileNames(acceptedFiles.map((file) => file.name));
   };
+
   const handleUpdateEnvironement = async (e, key, fieldname, reportId) => {
+
     const temp = reportsListData;
     console.log(temp);
     const value = e.target.value;
@@ -163,6 +167,7 @@ const ReportingAndNotification = () => {
   };
 
   const handelNext = async (e) => {
+    // getting fileds for update
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
     console.log("1", temp);
@@ -181,10 +186,12 @@ const ReportingAndNotification = () => {
     temp["updatedBy"] = "0";
     console.log(temp);
 
+    // put call for update
     const res = await api.put(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
       temp
     );
+
     if (id !== undefined) {
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
@@ -194,10 +201,11 @@ const ReportingAndNotification = () => {
     } else {
       const { error, isValid } = ReportingValidation(form);
       setError(error);
-      console.log(error, isValid);
+      console.log("reported to")
 
+      // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
-        reportTo: form.reportedto,
+        reportTo: form.reportedto.includes("Other") ? form.reportedto.concat([otherdata]).toString() : form.reportedto.toString(),
         reportingNote: form.latereporting,
         createdBy: 0,
         fkIncidentId: fkid,
@@ -211,6 +219,25 @@ const ReportingAndNotification = () => {
       }
     }
   };
+
+  const handelReportedTo = async (e, value, type) => {
+    if (type = "option") {
+      if (e.target.checked == false) {
+        let newData = form.reportedto.filter(item => item !== value)
+        await setForm({
+          ...form, reportedto: newData
+        })
+      } else {
+        await setForm({
+          ...form, reportedto: [...form.reportedto, value],
+        }
+        )
+      }
+    }
+
+    console.log(form.reportedto)
+  }
+
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -248,6 +275,7 @@ const ReportingAndNotification = () => {
                 Reporting and Notification
               </Typography>
             </Box>
+
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
                 <FormControl
@@ -263,7 +291,8 @@ const ReportingAndNotification = () => {
                           control={
                             <Checkbox
                               // checked={gilad}
-                              // onChange={(e)=>console.log(e.target.checked)}
+                              // onChange={(e) => handelReportedTo}
+
                               name="gilad"
                             />
                           }
@@ -275,69 +304,31 @@ const ReportingAndNotification = () => {
                           value={value}
                           control={<Checkbox />}
                           label={value}
-                          onChange={(e) => {
-                            handleUpdateEnvironement(
-                              e,
-                              key,
-                              "reportTo",
-                              report.id
-                            );
-                          }}
+                          // onChange={(e) => {
+                          //   handleUpdateEnvironement(
+                          //     e,
+                          //     key,
+                          //     "reportTo",
+                          //     report.id
+                          //   );
+                          // }}
+                          onChange={(e) => handelReportedTo(e, value, "option")}
                         />
                       ))}
+                    {form.reportedto.includes("Other") ?
+                      <TextField
+                        id="Other"
+                        variant="outlined"
+                        label="Other"
+                        // defaultValue={"Orher name"}
+                        className={classes.formControl}
+                        onChange={(e) => setOtherData(e.target.value)}
+                      />
+                      : null}
+
                   </FormGroup>
                 </FormControl>
-                {/* {reportsListData.length > 0 ? (
-                  reportsListData.map((report, key) => (
-                    <>
-                      <Grid item lg={12} md={6} sm={6}>
-                        <p>Reportable to</p>
 
-                        <FormControl component="fieldset">
-                          <RadioGroup
-                            aria-label="gender"
-                            defaultValue={report.reportTo}
-                          >
-                            {reportedTo.map((value) => (
-                              <FormControlLabel
-                                value={value}
-                                control={<Radio />}
-                                label={value}
-                                onChange={(e) => {
-                                  handleUpdateEnvironement(e, key, 'reportTo', report.id)
-                                }}
-                              />
-                            ))}
-                          </RadioGroup>
-                        </FormControl>
-                        {error && error.reportedto && <p>{error.reportedto}</p>}
-                      </Grid>
-                    </>
-                  ))
-                ) : (
-                  <Grid item lg={12} md={6} sm={6}>
-                    <p>Reportable to</p>
-
-                    <FormControl component="fieldset">
-                      <RadioGroup aria-label="gender">
-                        {reportedTo.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                            onChange={(e) => {
-                              setForm({
-                                ...form,
-                                reportedto: e.target.value,
-                              });
-                            }}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                    {error && error.reportedto && <p>{error.reportedto}</p>}
-                  </Grid>
-                )} */}
                 <Grid item lg={12} md={6} sm={6}>
                   <p>Notification to be sent</p>
 
@@ -398,6 +389,7 @@ const ReportingAndNotification = () => {
                 </Grid>
 
                 <Grid item md={6}>
+
                   {/* <p>Others Name</p> */}
                   <TextField
                     id="supervisor-name"
@@ -558,7 +550,7 @@ const ReportingAndNotification = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="/app/incident-management/registration/initial-notification/environment-affected/"
+                    onClick={(e) => history.goBack()}
                   >
                     Previous
                   </Button>

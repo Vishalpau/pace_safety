@@ -80,14 +80,18 @@ const ActivityDetails = () => {
   const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
     const temp = activtyList;
     console.log(temp);
+    console.log(temp[key]['fkIncidentId'] = id)
     const value = e.target.value;
+    temp[key]['id'] = parseInt(activityId)
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
-    temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    // temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    temp[key]['fkIncidentId'] = id
+    
     console.log(temp[key]);
 
     const res = await api.put(
-      `api/v1/incidents/${id}/activities/${activityId}/`,
+      `api/v1/incidents/${id}/activities/`,
       temp[key]
     );
     console.log(res);
