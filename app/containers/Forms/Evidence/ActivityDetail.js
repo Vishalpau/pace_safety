@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const ActivityDetails = () => {
@@ -142,6 +146,7 @@ const ActivityDetails = () => {
                           </FormLabel>
 
                           <RadioGroup
+                            className={classes.inlineRadioGroup}
                             defaultValue={activity.answer}
                             onChange={(e) => {
                               handleUpdateActivityList(
@@ -176,6 +181,7 @@ const ActivityDetails = () => {
                           Did the job require work permit?
                         </FormLabel>
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd01({
                               ...ad01,
@@ -215,6 +221,7 @@ const ActivityDetails = () => {
                           If yes ,was a permit complted prior of the job?
                         </FormLabel>
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd02({
                               ...ad02,
@@ -255,6 +262,7 @@ const ActivityDetails = () => {
                           Was per-job safety discussed head?
                         </FormLabel>
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd03({
                               ...ad03,
@@ -295,6 +303,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd04({
                               ...ad04,
@@ -335,6 +344,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd05({
                               ...ad05,
@@ -375,6 +385,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd06({
                               ...ad06,
@@ -416,6 +427,7 @@ const ActivityDetails = () => {
                         </FormLabel>
 
                         <RadioGroup
+                          className={classes.inlineRadioGroup}
                           onChange={(e) => {
                             setAd07({
                               ...ad07,
