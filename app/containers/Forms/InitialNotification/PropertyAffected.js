@@ -16,6 +16,8 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import { PapperBlock } from "dan-components";
+import moment from "moment";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -26,7 +28,6 @@ import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import { useHistory, useParams } from "react-router";
 import PropertyValidate from "../../Validator/PropertyValidation";
-import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -81,7 +82,7 @@ const PropertyAffected = () => {
   const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [propertyDamagedComments, setPropertyDamagedComments] = useState("");
-  const [propertyListData, setPropertyListData] = useState([])
+  const [propertyListData, setPropertyListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const reportedTo = [
     "Internal Leadership",
@@ -130,17 +131,19 @@ const PropertyAffected = () => {
     ]);
   };
 
-  const handleUpdateProperty = async(e,key,fieldname,propertyId)=>{
-   
+  const handleUpdateProperty = async (e, key, fieldname, propertyId) => {
     const temp = propertyListData;
-    console.log(temp)
+    console.log(temp);
     const value = e.target.value;
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
 
-    const res = await api.put(`api/v1/incidents/${id}/properties/${propertyId}/`, temp[key]);
+    const res = await api.put(
+      `api/v1/incidents/${id}/properties/${propertyId}/`,
+      temp[key]
+    );
     console.log(res);
-  }
+  };
 
   const handlePropertyType = (e, key, fieldname) => {
     const temp = [...form];
@@ -167,10 +170,9 @@ const PropertyAffected = () => {
   };
 
   const handleNext = async () => {
-  
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-    if(propertyListData.length > 0){
+    if (propertyListData.length > 0) {
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
           `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
@@ -186,96 +188,102 @@ const PropertyAffected = () => {
           );
         }
       }
-    }else{
-    if (detailsOfPropertyAffect === "Yes") {
-      console.log(form);
-      const { error, isValid } = PropertyValidate(form);
-      setError(error);
-      console.log(error, isValid);
-      console.log(form);
-      let status = 0;
-      for (var i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/properties/`,
-          form[i]
-        );
-        console.log(res);
-        status = res.status;
-      }
-
-      const temp = incidentsListData;
-      temp["propertyDamagedComments"] = propertyDamagedComments || incidentsListData.propertyDamagedComments;
-      temp["isPropertyDamagedAvailable"] = detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      if (status === 201) {
-        if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/eqiptment-affected/"
-          );
-        } else {
-          if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/summary/summary/"
-            );
-          }
-        }
-
-        // history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
-      }
     } else {
-      const temp = incidentsListData;
-      temp["propertyDamagedComments"] = propertyDamagedComments || incidentsListData.propertyDamagedComments;
-      temp["isPropertyDamagedAvailable"] = detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      if(id !== undefined){
-        if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+      if (detailsOfPropertyAffect === "Yes") {
+        console.log(form);
+        const { error, isValid } = PropertyValidate(form);
+        setError(error);
+        console.log(error, isValid);
+        console.log(form);
+        let status = 0;
+        for (var i = 0; i < form.length; i++) {
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/properties/`,
+            form[i]
           );
-        } else {
-          if (nextPath.environmentAffect === "Yes") {
+          console.log(res);
+          status = res.status;
+        }
+
+        const temp = incidentsListData;
+        temp["propertyDamagedComments"] =
+          propertyDamagedComments || incidentsListData.propertyDamagedComments;
+        temp["isPropertyDamagedAvailable"] =
+          detailsOfPropertyAffect ||
+          incidentsListData.isPropertyDamagedAvailable;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+        if (status === 201) {
+          if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
             );
           } else {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-            );
+            if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/environment-affected/"
+              );
+            } else {
+              history.push(
+                "/app/incident-management/registration/summary/summary/"
+              );
+            }
           }
+
+          // history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
         }
-      }else{
-      if (nextPath.equipmentAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/eqiptment-affected/"
-        );
       } else {
-        if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
+        const temp = incidentsListData;
+        temp["propertyDamagedComments"] =
+          propertyDamagedComments || incidentsListData.propertyDamagedComments;
+        temp["isPropertyDamagedAvailable"] =
+          detailsOfPropertyAffect ||
+          incidentsListData.isPropertyDamagedAvailable;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+        if (id !== undefined) {
+          if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+            );
+          } else {
+            if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              );
+            } else {
+              history.push(
+                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+              );
+            }
+          }
         } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
+          if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+            );
+          } else {
+            if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/environment-affected/"
+              );
+            } else {
+              history.push(
+                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+              );
+            }
+          }
         }
       }
     }
-    }
-  }
   };
 
   const fetchPropertyAffectedValue = async () => {
@@ -290,7 +298,6 @@ const PropertyAffected = () => {
     setPropertyTypeValue(result);
   };
 
-
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -298,8 +305,8 @@ const PropertyAffected = () => {
     const result = res.data.data.results;
     await setIncidentsListdata(result);
     await setIsLoading(true);
-    const isAvailable = result.isPropertyDamagedAvailable
-    await setDetailsOfPropertyAffect(isAvailable)
+    const isAvailable = result.isPropertyDamagedAvailable;
+    await setDetailsOfPropertyAffect(isAvailable);
   };
 
   const fetchPropertyListData = async () => {
@@ -317,130 +324,127 @@ const PropertyAffected = () => {
   }, []);
 
   return (
-    <div>
-      {isLoading?
-      <Container>
-        <Paper>
-          <Box padding={3} bgcolor="background.paper">
-            {/* <Box marginBottom={5}>
-              <FormHeader selectedHeader={"Initial notification"} />
-            </Box> */}
-            <Box borderBottom={1} marginBottom={2}>
-              <Typography variant="h6" gutterBottom>
-                Details of proprties Affected?
+    <PapperBlock title=" Details of proprties Affected?" icon="ion-md-list-box">
+      {isLoading ? (
+        <Grid container spacing={3}>
+          <Grid container item md={9} spacing={3}>
+            <Grid item md={12}>
+              <Typography variant="body2">
+                Do you have details to share about the properties affected?
               </Typography>
-            </Box>
-            <Grid container spacing={3}>
-              <Grid container item md={9} spacing={3}>
+              {/* <p>Do you have details of individual effected?</p>   */}
+              <RadioGroup
+                className={classes.inlineRadioGroup}
+                aria-label="detailsOfPropertyAffect"
+                name="detailsOfPropertyAffect"
+                value={detailsOfPropertyAffect}
+                onChange={(event) => {
+                  setDetailsOfPropertyAffect(event.target.value);
+                }}
+              >
+                {propertyAffectedValue !== 0
+                  ? propertyAffectedValue.map((value, index) => (
+                      <FormControlLabel
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
+                  : null}
+              </RadioGroup>
+            </Grid>
+            {detailsOfPropertyAffect === "Yes" ? (
+              <>
                 <Grid item md={12}>
-                  <Typography variant="body2">
-                    Do you have details to share about the properties affected?
-                  </Typography>
-                  {/* <p>Do you have details of individual effected?</p>   */}
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="detailsOfPropertyAffect"
-                    name="detailsOfPropertyAffect"
-                    value={detailsOfPropertyAffect}
-                    onChange={(event) => {
-                      setDetailsOfPropertyAffect(event.target.value);
-                    }}
-                  >
-                    {propertyAffectedValue !== 0
-                      ? propertyAffectedValue.map((value, index) => (
-                          <FormControlLabel
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                      : null}
-                  </RadioGroup>
+                  <Box marginTop={2} marginBottom={2}>
+                    {/* <h4>Details of people affected</h4> */}
+                    <Typography variant="h6">
+                      Details of properties affected
+                    </Typography>
+                  </Box>
                 </Grid>
-                {detailsOfPropertyAffect === "Yes" ? (
-                  <>
-                    <Grid item md={12}>
-                      <Box marginTop={2} marginBottom={2}>
-                        {/* <h4>Details of people affected</h4> */}
-                        <Typography variant="h6">
-                          Details of properties affected
-                        </Typography>
-                      </Box>
-                    </Grid>
-                    {propertyListData.length!==0?propertyListData.map((property, index)=>
+                {propertyListData.length !== 0
+                  ? propertyListData.map((property, index) => (
                       <>
-                      <Grid item md={6}>
-                        {/* <p>person type</p> */}
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControl}
-                        >
-                          <InputLabel id="person-type-label">
-                            Property type
-                          </InputLabel>
-                          <Select
-                            labelId="person-type-label"
-                            id="person-type"
-                            label="Person type"
-                            defaultValue={property.propertyType}
-                            onChange={(e) =>
-                              handleUpdateProperty(e, index, "propertyType", property.id)
-                            }
+                        <Grid item md={6}>
+                          {/* <p>person type</p> */}
+                          <FormControl
+                            variant="outlined"
+                            className={classes.formControl}
                           >
-                            {propertyTypeValue.length !== 0
-                              ? propertyTypeValue.map(
-                                  (selectValues, index) => (
-                                    <MenuItem
-                                      key={index}
-                                      value={selectValues.inputValue}
-                                    >
-                                      {selectValues.inputLabel}
-                                    </MenuItem>
-                                  )
+                            <InputLabel id="person-type-label">
+                              Property type
+                            </InputLabel>
+                            <Select
+                              labelId="person-type-label"
+                              id="person-type"
+                              label="Person type"
+                              defaultValue={property.propertyType}
+                              onChange={(e) =>
+                                handleUpdateProperty(
+                                  e,
+                                  index,
+                                  "propertyType",
+                                  property.id
                                 )
-                              : null}
-                          </Select>
-                        </FormControl>
-                       
-                      </Grid>
+                              }
+                            >
+                              {propertyTypeValue.length !== 0
+                                ? propertyTypeValue.map(
+                                    (selectValues, index) => (
+                                      <MenuItem
+                                        key={index}
+                                        value={selectValues.inputValue}
+                                      >
+                                        {selectValues.inputLabel}
+                                      </MenuItem>
+                                    )
+                                  )
+                                : null}
+                            </Select>
+                          </FormControl>
+                        </Grid>
 
-                      <Grid item md={6}>
-                        {/* <p>Name of people affected</p> */}
-                        <TextField
-                          id="name-affected"
-                          variant="outlined"
-                          label="if others, describe"
-                          className={classes.formControl}
-                          defaultValue={property.propertyOtherType}
-                          onChange={(e) =>
-                            handleUpdateProperty(
-                              e,
-                              index,
-                              "propertyOtherType",
-                              property.id
-                            )
-                          }
-                        />
-                        
-                      </Grid>
+                        <Grid item md={6}>
+                          {/* <p>Name of people affected</p> */}
+                          <TextField
+                            id="name-affected"
+                            variant="outlined"
+                            label="if others, describe"
+                            className={classes.formControl}
+                            defaultValue={property.propertyOtherType}
+                            onChange={(e) =>
+                              handleUpdateProperty(
+                                e,
+                                index,
+                                "propertyOtherType",
+                                property.id
+                              )
+                            }
+                          />
+                        </Grid>
 
-
-                      <Grid item md={12}>
-                        {/* <p>Name of people affected</p> */}
-                        <TextField
-                          id="name-affected"
-                          variant="outlined"
-                          label="Describe the damage"
-                          className={classes.formControl}
-                          defaultValue={property.damageDetails}
-                          onChange={(e) =>
-                            handleUpdateProperty(e, index, "damageDetails",property.id)
-                          }
-                        />
-                      </Grid>
-                    </>
-                  
-                    ): form.map((value, index) => (
+                        <Grid item md={12}>
+                          {/* <p>Name of people affected</p> */}
+                          <TextField
+                            id="name-affected"
+                            variant="outlined"
+                            label="Describe the damage"
+                            className={classes.formControl}
+                            defaultValue={property.damageDetails}
+                            onChange={(e) =>
+                              handleUpdateProperty(
+                                e,
+                                index,
+                                "damageDetails",
+                                property.id
+                              )
+                            }
+                          />
+                        </Grid>
+                      </>
+                    ))
+                  : form.map((value, index) => (
                       <>
                         <Grid item md={6}>
                           {/* <p>person type</p> */}
@@ -498,8 +502,6 @@ const PropertyAffected = () => {
                           )}
                         </Grid>
 
-                        
-
                         <Grid item md={12}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
@@ -517,71 +519,73 @@ const PropertyAffected = () => {
                         </Grid>
                       </>
                     ))}
-                    {propertyListData.length > 0? null:
-                    <Grid item md={12}>
-                      <button
-                        className={classes.textButton}
-                        onClick={() => addNewPropertyDetails()}
-                      >
-                        <PersonAddIcon /> Add details of another person affected
-                      </button>
-                    </Grid>}
-                    <Grid item md={12}>
-                  {/* <p>Comments</p> */}
-                  
-                  {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
-                </Grid>
-                  </>
-                ) : null}
+                {propertyListData.length > 0 ? null : (
+                  <Grid item md={12}>
+                    <button
+                      className={classes.textButton}
+                      onClick={() => addNewPropertyDetails()}
+                    >
+                      <PersonAddIcon /> Add details of another person affected
+                    </button>
+                  </Grid>
+                )}
                 <Grid item md={12}>
                   {/* <p>Comments</p> */}
-                  {detailsOfPropertyAffect === 'Yes'?null:
-                  <TextField
-                    id="comments"
-                    multiline
-                    rows="3"
-                    variant="outlined"
-                    label="Describe any actions taken"
-                    className={classes.fullWidth}
-                    defaultValue={incidentsListData.propertyDamagedComments}
-                    onChange={(e) => {
-                      setPropertyDamagedComments(e.target.value);
-                    }}
-                  />}
+
                   {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
                 </Grid>
-                <Grid item md={6}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={()=>history.goBack()}
-                    // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                    // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
-                  >
-                    Next
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item md={3}>
-                <FormSideBar
+              </>
+            ) : null}
+            <Grid item md={12}>
+              {/* <p>Comments</p> */}
+              {detailsOfPropertyAffect === "Yes" ? null : (
+                <TextField
+                  id="comments"
+                  multiline
+                  rows="3"
+                  variant="outlined"
+                  label="Describe any actions taken"
+                  className={classes.fullWidth}
+                  defaultValue={incidentsListData.propertyDamagedComments}
+                  onChange={(e) => {
+                    setPropertyDamagedComments(e.target.value);
+                  }}
+                />
+              )}
+              {/* {error && error.describeactiontaken && <p>{error.describeactiontaken}</p> } */}
+            </Grid>
+            <Grid item md={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => history.goBack()}
+                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                className={classes.button}
+                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+              >
+                Next
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item md={3}>
+            {/* <FormSideBar
                   listOfItems={INITIAL_NOTIFICATION_FORM}
                   selectedItem={"Property affected"}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Container>:<h1>Loading...</h1>}
-    </div>
+                /> */}
+          </Grid>
+        </Grid>
+      ) : (
+        <h1>Loading...</h1>
+      )}
+    </PapperBlock>
   );
 };
 

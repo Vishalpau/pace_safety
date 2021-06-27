@@ -129,8 +129,8 @@ const EvidenceSummary = () => {
                       >
                         {evidence.evidenceCheck}
                       </Typography>
-                      </Grid>
-                      <Grid item lg={6} md={6}>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -145,8 +145,8 @@ const EvidenceSummary = () => {
                       >
                         {evidence.evidenceCategory}
                       </Typography>
-                      </Grid>
-                      <Grid item lg={6} md={6}>
+                    </Grid>
+                    <Grid item lg={6} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -161,7 +161,7 @@ const EvidenceSummary = () => {
                       >
                         {evidence.evidenceRemark}
                       </Typography>
-                      </Grid>
+                    </Grid>
                   </Grid>
                 ))
               : null}

@@ -76,7 +76,7 @@ const LessionLearnSummary = () => {
   }, []);
   const classes = useStyles();
   return (
-    <Grid container spacing={5}>
+    <Grid container spacing={3}>
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
