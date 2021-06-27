@@ -355,8 +355,9 @@ const PeoplesAffected = () => {
     fetchDepartmentValue();
     fetchPersonTakenMedicalCare();
     fetchIncidentsData();
-    // fetchPeopleData();
-    fetchPersonListData();
+    if (id) {
+      fetchPersonListData();
+    }
   }, []);
   return (
     <PapperBlock title="Details of Persons Affected" icon="ion-md-list-box">
@@ -801,6 +802,7 @@ const PeoplesAffected = () => {
                   label="Describe any actions taken"
                   className={classes.fullWidth}
                   onChange={(e) => setPersonAffectedComments(e.target.value)}
+                  value={incidentsListData.personAffectedComments}
                 />
               )}
               {/* {error && error.describeactiontaken && (

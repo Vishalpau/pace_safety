@@ -480,7 +480,7 @@ const EqiptmentAffected = () => {
                   variant="outlined"
                   label="Describe any actions taken"
                   className={classes.fullWidth}
-                  defaultValue={incidentsListData.equipmentDamagedComments}
+                  value={incidentsListData.equipmentDamagedComments}
                   onChange={(event) => setEequipmentDamagedComments(event.target.value)
                   }
                 />
