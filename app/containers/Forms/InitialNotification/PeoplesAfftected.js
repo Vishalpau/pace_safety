@@ -277,7 +277,7 @@ const PeoplesAffected = () => {
       } else {
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            `/app/incident-management/registration/initial-notification/property-affected/`
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
@@ -817,11 +817,6 @@ const PeoplesAffected = () => {
                 Previous
               </Button>
               <Button
-                // href={
-                //   Object.keys(error).length === 0
-                //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/property-affected/"
-                //     : "#"
-                // }
                 onClick={() => handleNext()}
                 variant="contained"
                 color="primary"
