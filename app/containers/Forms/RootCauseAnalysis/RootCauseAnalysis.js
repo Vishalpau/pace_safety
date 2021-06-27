@@ -37,6 +37,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const RootCauseAnalysis = () => {
@@ -259,7 +263,7 @@ const RootCauseAnalysis = () => {
               </Grid>
 
               <Grid item md={12}>
-                <RadioGroup>
+                <RadioGroup className={classes.inlineRadioGroup}>
                   <FormLabel component="legend" error={error.wouldItPreventIncident}>
                     Would Corrective actions prevent simailar incidents in future?
                   </FormLabel>
