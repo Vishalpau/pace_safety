@@ -56,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const PropertyAffected = () => {
@@ -334,6 +338,7 @@ const PropertyAffected = () => {
                   </Typography>
                   {/* <p>Do you have details of individual effected?</p>   */}
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfPropertyAffect}

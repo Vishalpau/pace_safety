@@ -43,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
   customLabel: {
     marginBottom: 0,
   },
+  inlineRadioGroup: {
+    flexDirection: "row",
+    gap: "1.5rem",
+  },
 }));
 
 const EnvironmentAffected = () => {
@@ -235,6 +239,7 @@ const EnvironmentAffected = () => {
                 <Grid item md={6}>
                   <p>Where there any spills</p>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     defaultValue={env.envQuestionOption}
@@ -275,6 +280,7 @@ const EnvironmentAffected = () => {
                 <Grid item md={6}>
                   <p>Where there any spills</p>
                   <RadioGroup
+                    className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
                     name="detailsOfPropertyAffect"
                     value={detailsOfEnvAffect}
@@ -327,6 +333,7 @@ const EnvironmentAffected = () => {
                     </p>
 
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                       aria-label="envQuestion"
                       name="envQuestion"
                       value={form.envQuestion}
@@ -383,6 +390,7 @@ const EnvironmentAffected = () => {
                     </p>
 
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                       aria-label="envAnswerDetails"
                       name="envAnswerDetails"
                       value={form.envAnswerDetails}
@@ -442,6 +450,7 @@ const EnvironmentAffected = () => {
                       Where there any waterbody affected?
                     </p>
                     <RadioGroup
+                      className={classes.inlineRadioGroup}
                       aria-label="envQuestionOption"
                       name="envQuestionOption"
                       value={form.envQuestionOption}
