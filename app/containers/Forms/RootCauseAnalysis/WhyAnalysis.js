@@ -46,7 +46,6 @@ const WhyAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
 
   const [whyData, setWhyData] = useState({
-    hyCount: 0,
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
@@ -55,8 +54,10 @@ const WhyAnalysis = () => {
 
   const [error, setError] = useState({})
 
+  const [data, setData] = useState([])
+
   const [form, setForm] = useState([
-    { why: "" }
+    { why: "", whyCount: "" }
   ])
 
   const fetchIncidentData = async () => {
@@ -70,6 +71,7 @@ const WhyAnalysis = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key]["why"] = value;
+    temp[key]["whyCount"] = key;
     setForm(temp);
   };
 
@@ -89,9 +91,38 @@ const WhyAnalysis = () => {
   }
 
   const handelNext = (e) => {
+
     const { error, isValid } = WhyAnalysisValidate(form);
     setError(error);
-    console.log(form)
+
+    let tempData = []
+    Object.entries(form).map((item) => {
+      let api_data = item[1]
+      let temp = {
+        why: api_data["why"],
+        whyCount: api_data["whyCount"],
+        status: "Active",
+        createdBy: 0,
+        fkIncidentId: localStorage.getItem("fkincidentId")
+      }
+      tempData.push(temp)
+    })
+    setData(tempData)
+  }
+
+  const handelApiCall = async (e) => {
+    let callObjects = data
+
+    for (let key in callObjects) {
+      console.log(callObjects[key])
+      if (Object.keys(error).length == 0) {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, callObjects[key]);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
+      }
+    }
   }
 
   useEffect(() => {
@@ -204,7 +235,7 @@ const WhyAnalysis = () => {
                   color="primary"
                   className={classes.button}
                   // href="http://localhost:3000/app/incident-management/registration/summary/summary/"
-                  onClick={(e) => handelNext(e)}
+                  onClick={(e) => { handelNext(e); handelApiCall(e) }}
                 >
                   Submit
                 </Button>
