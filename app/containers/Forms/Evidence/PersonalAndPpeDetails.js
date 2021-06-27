@@ -66,15 +66,15 @@ const PersonalAndPpeDetails = () => {
     for (var i = 0; i < selectedQuestion.length; i++) {
       const valdation = selectedQuestion[i];
       console.log(valdation)
-      const { isValid, error } = ActivityDetailValidate(valdation);
+      // const { isValid, error } = ActivityDetailValidate(valdation);
       setError(error);
-        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-          selectedQuestion[i]
-        );
-        console.log(res);
+        // const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        //   selectedQuestion[i]
+        // );
+        // console.log(res);
       
     }
-    history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
+    // history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
   }
   };
  
@@ -133,23 +133,23 @@ const PersonalAndPpeDetails = () => {
                   >
                     <FormLabel component="legend">PPE worn properly?</FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd08({
-                    //       ...ad08,
-                    //       questionCode: "PPE-08",
-                    //       question: "PPE worn properly?",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd08({
+                          ...ad08,
+                          questionCode: "PPE-08",
+                          question: "PPE worn properly?",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                     >
                     {radioDecide.map((value) => (
                       <FormControlLabel
@@ -173,23 +173,23 @@ const PersonalAndPpeDetails = () => {
                   >
                     <FormLabel component="legend">PPE in good shape?</FormLabel>
                     <RadioGroup 
-                    // onChange={(e) =>
-                      // {
-                      //   setAd09({
-                      //     ...ad09,
-                      //     questionCode: "PPE-09",
-                      //     question: "PPE in good shape?",
-                      //     answer: e.target.value,
-                      //     activityGroup: "Evidence",
-                      //     status: "Active",
-                      //     updatedBy: 0,
-                      //     createdBy: 0,
-                      //     fkIncidentId: localStorage.getItem(
-                      //       "fkincidentId"
-                      //     ),
-                      //   });
-                      // }
-                      // }
+                    onChange={(e) =>
+                      {
+                        setAd09({
+                          ...ad09,
+                          questionCode: "PPE-09",
+                          question: "PPE in good shape?",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -211,23 +211,23 @@ const PersonalAndPpeDetails = () => {
                   >
                     <FormLabel component="legend">PPE Proper fit?</FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd09({
-                    //       ...ad10,
-                    //       questionCode: "PPE-10",
-                    //       question: "PPE Proper fit?",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd09({
+                          ...ad10,
+                          questionCode: "PPE-10",
+                          question: "PPE Proper fit?",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -252,23 +252,23 @@ const PersonalAndPpeDetails = () => {
                       PPE appropriate for task?
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd11({
-                    //       ...ad11,
-                    //       questionCode: "PPE-11",
-                    //       question: " PPE appropriate for task?",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd11({
+                          ...ad11,
+                          questionCode: "PPE-11",
+                          question: " PPE appropriate for task?",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -296,23 +296,23 @@ const PersonalAndPpeDetails = () => {
                       Employee self supervised
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd12({
-                    //       ...ad12,
-                    //       questionCode: "PPE-12",
-                    //       question: "Employee self supervised",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd12({
+                          ...ad12,
+                          questionCode: "PPE-12",
+                          question: "Employee self supervised",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -337,23 +337,23 @@ const PersonalAndPpeDetails = () => {
                       Supervisor present at site
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd13({
-                    //       ...ad13,
-                    //       questionCode: "PPE-13",
-                    //       question: "Supervisor present at site",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd13({
+                          ...ad13,
+                          questionCode: "PPE-13",
+                          question: "Supervisor present at site",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -378,23 +378,23 @@ const PersonalAndPpeDetails = () => {
                       Supervisor provided clear detail of work
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd14({
-                    //       ...ad14,
-                    //       questionCode: "PPE-14",
-                    //       question: "Supervisor provided clear detail of work",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd14({
+                          ...ad14,
+                          questionCode: "PPE-14",
+                          question: "Supervisor provided clear detail of work",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -418,23 +418,23 @@ const PersonalAndPpeDetails = () => {
                       Supervisor provided detail work package
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd15({
-                    //       ...ad15,
-                    //       questionCode: "PPE-15",
-                    //       question: "Supervisor provided detail work package",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd15({
+                          ...ad15,
+                          questionCode: "PPE-15",
+                          question: "Supervisor provided detail work package",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -458,23 +458,23 @@ const PersonalAndPpeDetails = () => {
                       Did supervisor conducted I-care observation
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd16({
-                    //       ...setAd16,
-                    //       questionCode: "PPE-16",
-                    //       question: "Did supervisor conducted I-care observation",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd16({
+                          ...setAd16,
+                          questionCode: "PPE-16",
+                          question: "Did supervisor conducted I-care observation",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -502,23 +502,23 @@ const PersonalAndPpeDetails = () => {
                       Was flag person required for this job
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd17({
-                    //       ...setAd17,
-                    //       questionCode: "PPE-17",
-                    //       question: "Was flag person required for this job",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd17({
+                          ...setAd17,
+                          questionCode: "PPE-17",
+                          question: "Was flag person required for this job",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -542,23 +542,23 @@ const PersonalAndPpeDetails = () => {
                       Flag person trained/competent
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd18({
-                    //       ...setAd18,
-                    //       questionCode: "PPE-18",
-                    //       question: "Flag person trained/competent",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd18({
+                          ...setAd18,
+                          questionCode: "PPE-18",
+                          question: "Flag person trained/competent",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -583,23 +583,23 @@ const PersonalAndPpeDetails = () => {
                       Was flag person present
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd19({
-                    //       ...setAd19,
-                    //       questionCode: "PPE-19",
-                    //       question: "Was flag person present",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd19({
+                          ...setAd19,
+                          questionCode: "PPE-19",
+                          question: "Was flag person present",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -628,23 +628,23 @@ const PersonalAndPpeDetails = () => {
                       Metal on Metal incident
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd20({
-                    //       ...setAd20,
-                    //       questionCode: "PPE-20",
-                    //       question: " Metal on Metal incident",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd20({
+                          ...setAd20,
+                          questionCode: "PPE-20",
+                          question: " Metal on Metal incident",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                     >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -669,23 +669,23 @@ const PersonalAndPpeDetails = () => {
                       Was person in the line of fire
                     </FormLabel>
                     <RadioGroup
-                    // onChange={(e) =>
-                    //   {
-                    //     setAd21({
-                    //       ...setAd21,
-                    //       questionCode: "PPE-21",
-                    //       question: " Metal on Metal incident",
-                    //       answer: e.target.value,
-                    //       activityGroup: "Evidence",
-                    //       status: "Active",
-                    //       updatedBy: 0,
-                    //       createdBy: 0,
-                    //       fkIncidentId: localStorage.getItem(
-                    //         "fkincidentId"
-                    //       ),
-                    //     });
-                    //   }
-                    //   }
+                    onChange={(e) =>
+                      {
+                        setAd21({
+                          ...setAd21,
+                          questionCode: "PPE-21",
+                          question: " Metal on Metal incident",
+                          answer: e.target.value,
+                          activityGroup: "Evidence",
+                          status: "Active",
+                          updatedBy: 0,
+                          createdBy: 0,
+                          fkIncidentId: localStorage.getItem(
+                            "fkincidentId"
+                          ),
+                        });
+                      }
+                      }
                       >
                       {radioDecide.map((value) => (
                         <FormControlLabel
@@ -711,7 +711,7 @@ const PersonalAndPpeDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
-                    href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
+                    // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
                   >
                     Next
                   </Button>

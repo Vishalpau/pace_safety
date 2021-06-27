@@ -416,6 +416,7 @@ const PeoplesAffected = () => {
                                         )
                                       )
                                     : null}
+                                    <MenuItem>Other</MenuItem>
                                 </Select>
                               </FormControl>
                               {error && error[`personType${[key]}`] && (

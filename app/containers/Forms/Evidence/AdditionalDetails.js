@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -34,86 +34,85 @@ const AdditionalDetails = () => {
   const [error , setError] = React.useState({})
 
   
-  // const { id } = useParams();
-  // const history = useHistory();
-  // const [activtyList, setActvityList] = useState([]);
-  // const [ad01, setAd01] = useState({});
-  // const [ad02, setAd02] = useState({});
-  // const [ad03, setAd03] = useState({});
-  // const [ad04, setAd04] = useState({});
-  // const [ad05, setAd05] = useState({});
-  // const [ad06, setAd06] = useState({});
-  // const [ad07, setAd07] = useState({});
+  const { id } = useParams();
+  const history = useHistory();
+  const [activtyList, setActvityList] = useState([]);
 
-  // const handleNext = async () => {
-  //   if (id !== undefined && activtyList.length > 0) {
-  //     history.push(
-  //       "/app/incident-management/registration/evidence/personal-and-ppedetails/"
-  //     );
-  //   } else {
-  //     const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
-  //     console.log(selectedQuestion);
-  //     for (var i = 0; i < selectedQuestion.length; i++) {
-  //       const valdation = selectedQuestion[i];
-  //       console.log(valdation);
-  //       const { isValid, error } = ActivityDetailValidate(valdation);
-  //       setError(error);
-  //       const res = await api.post(
-  //         `api/v1/incidents/${localStorage.getItem(
-  //           "fkincidentId"
-  //         )}/activities/`,
-  //         selectedQuestion[i]
-  //       );
-  //       console.log(res);
-  //     }
-  //     history.push(
-  //       "/app/incident-management/registration/evidence/personal-and-ppedetails/"
-  //     );
-  //   }
-  // };
+  const [ad22, setAd22] = useState({});
+  const [ad23, setAd23] = useState({});
+  const [ad24, setAd24] = useState({});
+  const [ad25, setAd25] = useState({});
+  const [ad26, setAd26] = useState({});
 
-  // const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
-  //   const temp = activtyList;
-  //   console.log(temp);
-  //   const value = e.target.value;
-  //   temp[key][fieldname] = value;
-  //   temp[key]["updatedBy"] = 0;
-  //   temp[key]["updatedAt"] = moment(new Date()).toISOString();
-  //   console.log(temp[key]);
+  const handleNext = async () => {
+    if (id !== undefined && activtyList.length > 0) {
+      history.push(
+        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+      );
+    } else {
+      const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
+      console.log(selectedQuestion);
+      for (var i = 0; i < selectedQuestion.length; i++) {
+        const valdation = selectedQuestion[i];
+        console.log(valdation);
+        const { isValid, error } = ActivityDetailValidate(valdation);
+        setError(error);
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/activities/`,
+          selectedQuestion[i]
+        );
+        console.log(res);
+      }
+      history.push(
+        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+      );
+    }
+  };
 
-  //   const res = await api.put(
-  //     `api/v1/incidents/${id}/activities/${activityId}/`,
-  //     temp[key]
-  //   );
-  //   console.log(res);
-  // };
+  const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
+    const temp = activtyList;
+    console.log(temp);
+    const value = e.target.value;
+    temp[key][fieldname] = value;
+    temp[key]["updatedBy"] = 0;
+    temp[key]["updatedAt"] = moment(new Date()).toISOString();
+    console.log(temp[key]);
+
+    const res = await api.put(
+      `api/v1/incidents/${id}/activities/${activityId}/`,
+      temp[key]
+    );
+    console.log(res);
+  };
 
 
   
 
-  // const handleNext1 = () => {
-  //   console.log('sagar',form);
-  //   const { error, isValid } = AdditionalDetailValidate(form);
-  //   setError(error);
-  //   console.log(error, isValid);
-  //   // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
-  //   // console.log(nextPath)
+  const handleNext1 = () => {
+    console.log('sagar',form);
+    const { error, isValid } = AdditionalDetailValidate(form);
+    setError(error);
+    console.log(error, isValid);
+    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
+    // console.log(nextPath)
 
     
-  // };
+  };
 
-  // const selectValues = [1, 2, 3, 4];
-  // const radioDecide = ["Yes", "No"];
-  // const classes = useStyles();
-  // const fetchActivityList = async () => {
-  //   const res = await api.get(`api/v1/incidents/${id}/activities/`);
-  //   const result = res.data.data.results;
-  //   await setActvityList(result);
-  //   console.log(result);
-  // };
-  // useEffect(() => {
-  //   fetchActivityList();
-  // }, []);
+  const selectValues = [1, 2, 3, 4];
+  const radioDecide = ["Yes", "No"];
+  const classes = useStyles();
+  const fetchActivityList = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/activities/`);
+    const result = res.data.data.results;
+    await setActvityList(result);
+    console.log(result);
+  };
+  useEffect(() => {
+    fetchActivityList();
+  }, []);
   return (
     <div>
       <Container>
@@ -159,7 +158,19 @@ const AdditionalDetails = () => {
                       multiline
                       rows="4"
                       onChange={(e) => {
-                        setForm({ ...form,ans1 : e.target.value})
+                        setAd01({
+                              ...ad01,
+                              questionCode: "AD-01",
+                              question: "Did the job require work permit?",
+                              answer: e.target.value,
+                              activityGroup: "Evidence",
+                              status: "Active",
+                              updatedBy: 0,
+                              createdBy: 0,
+                              fkIncidentId: localStorage.getItem(
+                                "fkincidentId"
+                              ),
+                            });
                       }}
                     />
                   </FormControl>

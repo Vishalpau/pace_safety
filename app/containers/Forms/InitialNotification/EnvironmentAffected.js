@@ -128,44 +128,37 @@ const EnvironmentAffected = () => {
     console.log(res);
   }
 
-  const handleNext = async () => {   
-
-    if(environmentListData.length >0){
+  const handleNext = async () => {
+    if (environmentListData.length > 0) {
       history.push(
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );
-    }else{
-    const { error, isValid } = EnvironmentValidate(form);
-    setError(error);
-    console.log(error, isValid);
-
-    if (detailsOfEnvAffect === "Yes") {
-      const envList = [spillsData, relaseData, wildLifeData, wateBodyData]
-      
-      for(var i =0; i< envList.length; i++){
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
-          envList[i]
+    } else {
+      const { error, isValid } = EnvironmentValidate(form);
+      setError(error);
+      console.log(error, isValid);
+      if (detailsOfEnvAffect === "Yes") {
+        const envList = [spillsData, relaseData, wildLifeData, wateBodyData]
+        for (var i = 0; i < envList.length; i++) {
+          if (envList[i].envQuestionOption == "Yes") {
+            console.log()
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/environment/`,
+              envList[i]
+            );
+          }
+        }
+        // if(res.status === 201){
+        history.push(
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+        );
+        // }
+      } else {
+        history.push(
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
         );
       }
-      const temp = incidentsListData;
-      temp["equipmentDamagedComments"] = envComments || incidentsListData.equipmentDamagedComments;    
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      // if(res.status === 201){
-      history.push(
-        "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-      );
-      // }
-    } else {
-      history.push(
-        "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-      );
     }
-  }
   };
 
 
