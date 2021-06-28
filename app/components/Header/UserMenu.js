@@ -30,6 +30,7 @@ import link from "dan-api/ui/link";
 import styles from "./header-jss";
 
 import "../../styles/custom/customheader.css";
+import { SSO_URL } from "../../utils/constants";
 
 function UserMenu(props) {
   const [menuState, setMenuState] = useState({
@@ -67,8 +68,7 @@ function UserMenu(props) {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href =
-      "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code";
+    window.location.href = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
   };
 
   return (
@@ -260,7 +260,6 @@ function UserMenu(props) {
       <Menu
         id="menu-appbar"
         anchorEl={anchorEl}
-        // getContentAnchorEl="undefined"
         anchorOrigin={{
           vertical: "top",
           horizontal: "right",
@@ -289,11 +288,16 @@ function UserMenu(props) {
           </ListItemIcon>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            handleLogout();
+          }}
+        >
           <ListItemIcon>
             <ExitToApp />
           </ListItemIcon>
-          <Button onClick={handleLogout}>Log Out</Button>
+          Log Out
         </MenuItem>
       </Menu>
     </div>
