@@ -280,7 +280,7 @@ const RootCauseAnalysis = () => {
                       onChange={(e) => setForm({
                         ...form,
                         wouldItPreventIncident:
-                            e.target.value === 'Yes' ? 'Yes' : 'No',
+                          e.target.value === 'Yes' ? 'Yes' : 'No',
                       })
                       }
                     />
@@ -324,7 +324,7 @@ const RootCauseAnalysis = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/why-analysis/"
+                  href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/why-analysis/"}
                   onClick={(e) => handelNext(e)}
                 >
                   Next

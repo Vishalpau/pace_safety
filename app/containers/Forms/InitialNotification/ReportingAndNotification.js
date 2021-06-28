@@ -128,7 +128,7 @@ const ReportingAndNotification = () => {
 
 
 
-  const handelTimeCompare = (e) => {
+  const handelTimeCompare = async (e) => {
     let rpTime = form.reportingtime
     let rpDate = form.reportingdate
     let startDate = `${rpDate} ${rpTime}`
@@ -140,9 +140,10 @@ const ReportingAndNotification = () => {
     var Hours = duration.asHours();
     console.log(Hours)
     if (Hours > 4) {
-      SetLateReport(false)
+      await SetLateReport(false)
+      console.log("here")
     } else {
-      SetLateReport(true)
+      await SetLateReport(true)
     }
   }
 
@@ -439,7 +440,7 @@ const ReportingAndNotification = () => {
                 value={
                   form.reportingtime === null ? clearedDate : selectedTime
                 }
-                onChange={(date) => { handelTimeChange(date); handelTimeCompare() }}
+                onChange={async (date) => { await handelTimeChange(date); await handelTimeCompare() }}
                 KeyboardButtonProps={{
                   'aria-label': 'change time',
                 }}
