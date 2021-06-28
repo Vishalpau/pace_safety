@@ -227,7 +227,13 @@ const Summary = () => {
             {/* summary and part */}
             <>
               {(() => {
-                if (initialNotification == true || (investigation === false && evidence === false && rootcauseanalysis === false && lessionlearn === false)) {
+                if (
+                  initialNotification == true ||
+                  (investigation === false &&
+                    evidence === false &&
+                    rootcauseanalysis === false &&
+                    lessionlearn === false)
+                ) {
                   return <IncidentDetailsSummary />;
                 } else if (investigation == true) {
                   return <InvestigationSummary />;
