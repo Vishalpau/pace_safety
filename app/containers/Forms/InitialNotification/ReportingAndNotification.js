@@ -30,10 +30,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { MaterialDropZone, PapperBlock } from "dan-components";
 import { DropzoneDialogBase } from "material-ui-dropzone";
-
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
@@ -299,7 +299,7 @@ const ReportingAndNotification = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
             <FormControl component="fieldset" className={classes.formControl}>
-              <FormLabel component="legend"> Reportable to </FormLabel>
+              <FormLabel component="legend">Reportable to</FormLabel>
               <FormGroup>
                 {reportsListData.length > 0
                   ? reportsListData.map((report, key) => (
@@ -339,24 +339,30 @@ const ReportingAndNotification = () => {
           </Grid>
 
           <Grid item lg={12} md={6} sm={6}>
-            <p>Notification to be sent</p>
-
-            {notificationSent.map((value) => (
-              <FormControlLabel
-                value={value}
-                control={<Checkbox />}
-                label={value}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    isnotificationsent: e.target.value,
-                  });
-                }}
-              />
-            ))}
-            {error && error.isnotificationsent && (
-              <p>{error.isnotificationsent}</p>
-            )}
+            {/* <p>Notification to be sent</p> */}
+            <FormControl
+              component="fieldset"
+              required
+              error={error && error.isnotificationsent}
+            >
+              <FormLabel component="legend">Notification to be sent</FormLabel>
+              {notificationSent.map((value) => (
+                <FormControlLabel
+                  value={value}
+                  control={<Checkbox />}
+                  label={value}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      isnotificationsent: e.target.value,
+                    });
+                  }}
+                />
+              ))}
+              {error && error.isnotificationsent && (
+                <FormHelperText>{error.isnotificationsent}</FormHelperText>
+              )}
+            </FormControl>
           </Grid>
 
           <Grid item lg={12} justify="flex-start">
@@ -417,6 +423,10 @@ const ReportingAndNotification = () => {
               <KeyboardDatePicker
                 className={classes.formControl}
                 id="date-picker-dialog"
+                error={error && error.reportingdate}
+                helperText={
+                  error && error.reportingdate ? error.reportingdate : null
+                }
                 format="yyyy/MM/dd"
                 required
                 inputVariant="outlined"
@@ -428,7 +438,6 @@ const ReportingAndNotification = () => {
                 }}
               />
             </MuiPickersUtilsProvider>
-            {error && error.reportingdate ? <p>{error.reportingdate}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -437,7 +446,12 @@ const ReportingAndNotification = () => {
                 className={classes.formControl}
                 id="time-picker"
                 inputVariant="outlined"
-                label="Time picker"
+                label="Reporting Time"
+                required
+                error={error && error.reportingtime}
+                helperText={
+                  error && error.reportingtime ? error.reportingtime : null
+                }
                 value={form.reportingtime === null ? clearedDate : selectedTime}
                 onChange={(date) => {
                   handelTimeChange(date);
@@ -449,7 +463,9 @@ const ReportingAndNotification = () => {
                 format="HH:mm"
               />
             </MuiPickersUtilsProvider>
-            {error && error.reportingtime ? <p>{error.reportingtime}</p> : null}
+            {/* {error && error.reportingtime ? (
+              <p>{error.reportingtime}</p>
+            ) : null} */}
           </Grid>
 
           <Grid item md={6}>
@@ -457,6 +473,7 @@ const ReportingAndNotification = () => {
               variant="outlined"
               required
               className={classes.formControl}
+              error={error && error.reportedby}
             >
               <InputLabel id="reportedBy-label">Reported By</InputLabel>
               <Select
@@ -474,8 +491,10 @@ const ReportingAndNotification = () => {
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
               </Select>
+              {error && error.reportedby ? (
+                <FormHelperText>{error.reportedby}</FormHelperText>
+              ) : null}
             </FormControl>
-            {error && error.reportedby ? <p>{error.reportedby}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -501,6 +520,11 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 label="Resaon for reporting later than 4 hours"
                 multiline
+                error={error && error.latereporting}
+                required
+                helperText={
+                  error && error.latereporting ? error.latereporting : null
+                }
                 rows="4"
                 defaultValue={incidentsListData.reasonLateReporting}
                 className={classes.fullWidth}
@@ -511,7 +535,6 @@ const ReportingAndNotification = () => {
                   });
                 }}
               />
-              {error && error.latereporting ? <p>{error.latereporting}</p> : null}
             </Grid>
           ) : null}
 

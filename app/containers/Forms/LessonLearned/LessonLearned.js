@@ -12,6 +12,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
+import { PapperBlock } from "dan-components";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -26,10 +27,9 @@ import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import {
-  LESSION_LEARNED_FORM,
-} from "../../../utils/constants";
+import { LESSION_LEARNED_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -64,7 +64,7 @@ const LessionLearned = () => {
   const [error, setError] = useState({});
   const [form, setForm] = useState({ team: "", teamLearning: "" });
   const [learningList, setLearningList] = useState([]);
-  const [whyCount, setWhyCount] = useState(['ram','ram'])
+  const [whyCount, setWhyCount] = useState(["ram", "ram"]);
 
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
@@ -72,41 +72,45 @@ const LessionLearned = () => {
     await setLearningList(result);
   };
 
-  const handleUpdateLessonLearned = (e,key,fieldname,lessonId)=>{
+  const handleUpdateLessonLearned = (e, key, fieldname, lessonId) => {
     const temp = learningList;
     const value = e.target.value.toString();
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
     // temp[key]["updatedAt"] = moment(new Date()).toISOString();
-    const res = api.put(`api/v1/incidents/${id}/learnings/${lessonId}/`,temp[key]);
-  // if (res.status === 200) {
-  //   history.push(
-  //     "/app/incident-management/registration/summary/summary/:id"
-  //   );
-  // }
-  }
+    const res = api.put(
+      `api/v1/incidents/${id}/learnings/${lessonId}/`,
+      temp[key]
+    );
+    // if (res.status === 200) {
+    //   history.push(
+    //     "/app/incident-management/registration/summary/summary/:id"
+    //   );
+    // }
+  };
   useEffect(() => {
     fetchLessonLerned();
   }, []);
   const handleNext = () => {
-    
     const { isValid, error } = LessionLearnedValidator(form);
-    
+
     setError(error);
     console.log(error, isValid);
 
     if (isValid === true) {
-      const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/learnings/`,{
+      const res = api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/learnings/`,
+        {
           teamOrDepartment: form.team,
           learnings: form.teamLearning,
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
-          fkIncidentId: localStorage.getItem("fkincidentId")
+          fkIncidentId: localStorage.getItem("fkincidentId"),
         }
       );
       if (res.status === 201) {
-        alert(ok)
+        alert(ok);
         history.push(
           "/app/incident-management/registration/summary/summary/:id"
         );
@@ -115,250 +119,240 @@ const LessionLearned = () => {
   };
 
   return (
-    <div>
-      <Container>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              Lessions Learned
+    <PapperBlock title="Lessions Learned" icon="ion-md-list-box">
+      <Grid container spacing={3}>
+        <Grid container item md={9} justify="flex-start" spacing={3}>
+          {whyCount.map((value, index) => {
+            {
+              console.log(value);
+            }
+            <Typography varint="body1">{value}</Typography>;
+          })}
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Number
             </Typography>
-          </Box>
 
-          <Paper>
-            <Grid container spacing={3}>
-              <Grid container item md={9} justify="flex-start" spacing={3}>
+            <Typography varint="body1" className={Type.labelValue}>
+              98865686
+            </Typography>
+          </Grid>
 
-              {whyCount.map((value, index) => {
-               
-                  {console.log(value)}
-                  <Typography varint="p">{value}</Typography>
-               
-              })}
-                <Grid item md={6}>
-                  <Typography varint="p">Incident Number</Typography>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident on
+            </Typography>
+            <Typography className={Type.labelValue}>
+              27th June 1985, 11:59 PM
+            </Typography>
+          </Grid>
 
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <p>nnnnnnnnn</p>
-                  </FormControl>
-                </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Reported on
+            </Typography>
+            <Typography className={Type.labelValue}>
+              27th June 1985, 11:59 PM
+            </Typography>
+          </Grid>
 
-                <Grid item md={6}>
-                  <Typography varint="p">Incident on</Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <p>Date and time</p>
-                  </FormControl>
-                </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Reported By
+            </Typography>
+            <Typography className={Type.labelValue}>11:59 PM</Typography>
+          </Grid>
 
-                <Grid item md={6}>
-                  <Typography varint="p">Repoted on</Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <p>Date and tiem</p>
-                  </FormControl>
-                </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Type
+            </Typography>
+            <Typography className={Type.labelValue}>Near Miss</Typography>
+          </Grid>
 
-                <Grid item md={6}>
-                  <Typography varint="p">Reported by</Typography>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <p>Time format</p>
-                  </FormControl>
-                </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Title
+            </Typography>
+            <Typography className={Type.labelValue}>
+              This is the Long Incident Title as a Sample
+            </Typography>
+          </Grid>
 
-                <Grid item md={12}>
-                  <Typography varint="p">Incident Type</Typography>
-                  <FormControl>
-                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                    <Typography varint="p">Near miss</Typography>
-                  </FormControl>
-                </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Description
+            </Typography>
+            <Typography className={Type.labelValue}>
+              Contrary to popular belief, Lorem Ipsum is not simply random text.
+              It has roots in a piece of classical Latin literature from 45 BC,
+              making it over 2000 years old. Richard McClintock, a Latin
+              professor at Hampden-Sydney College in Virginia, looked up one of
+              the more obscure Latin words, consectetur, from a Lorem Ipsum
+              passage, and going through the cites of the word in classical
+              literature, discovered the undoubtable source.
+            </Typography>
+          </Grid>
 
-                <Grid item md={12}>
-                  <Typography varint="p">Incidnet Title</Typography>
-                  <FormControl>
-                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                    <Typography varint="p">
-                      Lorem Ipsum is simply dummy text
-                    </Typography>
-                  </FormControl>
-                </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Location
+            </Typography>
+            <Typography className={Type.labelValue}>New Delhi</Typography>
+          </Grid>
 
-                <Grid item md={12}>
-                  <Typography varint="p">Incident description</Typography>
-                  <FormControl>
-                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                    <Typography varint="p">
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s, when an unknown
-                      printer took a galley of type and scrambled it to make a
-                      type specimen book. It has survived not only five
-                      centuries
-                    </Typography>
-                  </FormControl>
-                </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Key Learnings
+            </Typography>
 
-                <Grid item md={12}>
-                  <Typography varint="p">Incident Location</Typography>
-                  <FormControl>
-                    {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                    <Typography varint="p">
-                      Lorem Ipsum is simply dummy text
-                    </Typography>
-                  </FormControl>
-                </Grid>
-
-                <Grid item md={12}>
-                  <Typography variant="h6" gutterBottom spacing={2}>
-                    Key Learnings
-                  </Typography>
-                </Grid>
-                {/*<Typography varint="p">Team/Department</Typography>*/}
-                {learningList.length !== 0 ? (
-                  learningList.map((item, index) => (
-                    <>
-                      <Grid item md={12}>
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControl}
-                          error = {error.team}
-                        >
-                          <InputLabel id="Team/Department">
-                            Team/Department
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Key learnings"
-                            defaultValue = {item.learnings}
-                            onChange={(e) =>
-                              handleUpdateLessonLearned(e,index,'teamOrDepartment',item.id)
-                            }
-                          >
-                            {selectValues.map((selectValues) => (
-                              <MenuItem value={selectValues}>
-                                {selectValues}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          {error && error.team && <FormHelperText>{error.team}</FormHelperText>}
-                        </FormControl>
-                      </Grid>
-                      <Grid item md={12}>
-                        {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControl}
-                        >
-                          <TextField
-                            id="outlined-search"
-                            label="Team/Department Learnings"
-                            variant="outlined"
-                            rows="3"
-                            multiline
-                            defaultValue={item.learnings}
-                            error = {error.teamLearning}
-                            helperText = {error ? error.teamLearning : ""}
-                            onChange={(e) =>
-                              handleUpdateLessonLearned(e,index,'learnings',item.id)
-                            }
-                          />
-                          {/* {error && error.teamLearning && (
+            {learningList.length !== 0 ? (
+              learningList.map((item, index) => (
+                <>
+                  <Grid item md={12}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                      error={error.team}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        Team/Department
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Team/Department"
+                        defaultValue={item.learnings}
+                        onChange={(e) =>
+                          handleUpdateLessonLearned(
+                            e,
+                            index,
+                            "teamOrDepartment",
+                            item.id
+                          )
+                        }
+                      >
+                        {selectValues.map((selectValues) => (
+                          <MenuItem value={selectValues}>
+                            {selectValues}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {error && error.team && (
+                        <FormHelperText>{error.team}</FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+                  <Grid item md={12}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                    >
+                      <TextField
+                        id="outlined-search"
+                        label="Team/Department Learnings"
+                        variant="outlined"
+                        rows="3"
+                        multiline
+                        defaultValue={item.learnings}
+                        error={error.teamLearning}
+                        helperText={error ? error.teamLearning : ""}
+                        onChange={(e) =>
+                          handleUpdateLessonLearned(
+                            e,
+                            index,
+                            "learnings",
+                            item.id
+                          )
+                        }
+                      />
+                      {/* {error && error.teamLearning && (
                             <p>{error.teamLearning}</p>
                           )} */}
-                        </FormControl>
-                      </Grid>
-                    </>
-                  ))
-                ) : (
-                  <>
-                    <Grid item md={12}>
-                      <FormControl
-                        variant="outlined"
-                        className={classes.formControl}
-                        error = {error.team}
-                      >
-                        <InputLabel id="Team/Department">
-                          Team/Department
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          label="Key learnings"
-                          onChange={(e) =>
-                            setForm({ ...form, team: e.target.value.toString() })
-                          }
-                        >
-                          {selectValues.map((selectValues) => (
-                            <MenuItem value={selectValues}>
-                              {selectValues}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        {error && error.team && <FormHelperText>{error.team}</FormHelperText>}
-                      </FormControl>
-                    </Grid>
-                    <Grid item md={12}>
-                      {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-                      <FormControl
-                        variant="outlined"
-                        className={classes.formControl}
-                      >
-                        <TextField
-                          id="outlined-search"
-                          error = {error.teamLearning}
-                          label="Team/Department Learnings"
-                          variant="outlined"
-                          rows="3"
-                          multiline
-                          helperText = {error ? error.teamLearning : ""}
-                          onChange={(e) =>
-                            setForm({ ...form, teamLearning: e.target.value })
-                          }
-                        />
-                        {/* {error && error.teamLearning && (
+                    </FormControl>
+                  </Grid>
+                </>
+              ))
+            ) : (
+              <>
+                <Grid item md={12}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                    error={error.team}
+                  >
+                    <InputLabel id="demo-simple-select-label">
+                      Team/Department
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Team/Department"
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          team: e.target.value.toString(),
+                        })
+                      }
+                    >
+                      {selectValues.map((selectValues) => (
+                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                      ))}
+                    </Select>
+                    {error && error.team && (
+                      <FormHelperText>{error.team}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item md={12}>
+                  {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <TextField
+                      id="outlined-search"
+                      error={error.teamLearning}
+                      label="Team/Department Learnings"
+                      variant="outlined"
+                      rows="3"
+                      multiline
+                      helperText={error ? error.teamLearning : ""}
+                      onChange={(e) =>
+                        setForm({ ...form, teamLearning: e.target.value })
+                      }
+                    />
+                    {/* {error && error.teamLearning && (
                           <p>{error.teamLearning}</p>
                         )} */}
-                      </FormControl>
-                    </Grid>
-                  </>
-                )}
-
-                <Grid item md={12}>
-                  <Box marginTop={4}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      // href="#contained-buttons"
-                      onClick={() => handleNext()}
-                    >
-                      Next
-                    </Button>
-                  </Box>
+                  </FormControl>
                 </Grid>
-              </Grid>
-              <Grid item md={3}>
-              <FormSideBar
-              deleteForm={[1,2,3]}
-                  listOfItems={LESSION_LEARNED_FORM}
-                  selectedItem={"Lession learned"}
-                />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Box>
-      </Container>
-    </div>
+              </>
+            )}
+          </Grid>
+
+          <Grid item md={12}>
+            <Box marginTop={4}>
+              <Button
+                variant="contained"
+                color="primary"
+                // href="#contained-buttons"
+                onClick={() => handleNext()}
+              >
+                Next
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={LESSION_LEARNED_FORM}
+            selectedItem={"Lession learned"}
+          />
+        </Grid>
+      </Grid>
+    </PapperBlock>
   );
 };
 
