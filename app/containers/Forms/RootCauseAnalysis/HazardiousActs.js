@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid, Container } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
@@ -48,17 +48,21 @@ const HazardiousActs = () => {
   )
 
   const [error, setError] = useState({})
-
   const [data, setData] = useState([])
+  const checkUpdate = useRef(false);
+  const paceCauseData = useRef()
 
-  const [update, setUpdate] = useState(false)
-
-  const updateForm = () => {
+  const handelUpdateCheck = async () => {
     let page_url = window.location.href
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
     if (!isNaN(lastItem)) {
-      setUpdate(true)
+      checkUpdate.current = true;
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
+      paceCauseData.current = previousData.data.data.results
+      console.log(paceCauseData)
     }
+
   }
 
   const handelSupervison = (e, value) => {
@@ -262,9 +266,13 @@ const HazardiousActs = () => {
     }
   }
 
+
+  useEffect(() => {
+    handelUpdateCheck()
+  }, []);
+
   return (
     <Container>
-      {console.log(data)}
       <Paper>
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h6" gutterBottom>
