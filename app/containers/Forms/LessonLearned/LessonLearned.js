@@ -110,7 +110,6 @@ const LessionLearned = () => {
         }
       );
       if (res.status === 201) {
-        alert(ok);
         history.push(
           "/app/incident-management/registration/summary/summary/:id"
         );
