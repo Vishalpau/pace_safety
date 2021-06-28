@@ -30,12 +30,12 @@ function ReportingValidation(data) {
         isValid = false
     }
 
-    if (validator.isEmpty(data.reportingdate)) {
+    if (validator.isEmpty(data.reportingdate || "")) {
         error.reportingdate = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.reportingtime)) {
+    if (validator.isEmpty(data.reportingtime || "")) {
         error.reportingtime = "this filed is empty"
         isValid = false
     }

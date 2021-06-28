@@ -234,7 +234,7 @@ const WhyAnalysis = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  // href="http://localhost:3000/app/incident-management/registration/summary/summary/"
+                  href={Object.keys(error).length > 0 ? '#' : `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`}
                   onClick={(e) => { handelNext(e); handelApiCall(e) }}
                 >
                   Submit
@@ -247,7 +247,7 @@ const WhyAnalysis = () => {
           </Grid>
         </Box>
       </Paper>
-    </Container>
+    </Container >
   );
 };
 

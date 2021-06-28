@@ -65,6 +65,8 @@ const Details = () => {
 
   const [error, setError] = useState({})
 
+  const [nextPageUrl, setNextPageUrl] = useState("")
+
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -97,6 +99,7 @@ const Details = () => {
   const handelNext = async (e) => {
     console.log(form)
     const { error, isValid } = DetailValidation(form);
+
     setError(error);
     if (Object.keys(error).length == 0) {
       const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/`, form);
@@ -226,10 +229,10 @@ const Details = () => {
                 </FormLabel>
 
                 <FormControl component="fieldset">
-                  <RadioGroup 
+                  <RadioGroup
                     className={classes.inlineRadioGroup}
                     aria-label="gender"
-                    >
+                  >
                     {radioDecide.map((value) => (
                       <FormControlLabel
                         value={value}
@@ -251,10 +254,10 @@ const Details = () => {
                 </FormLabel>
 
                 <FormControl component="fieldset">
-                  <RadioGroup 
+                  <RadioGroup
                     className={classes.inlineRadioGroup}
                     aria-label="gender"
-                    >
+                  >
                     {radioDecide.map((value) => (
                       <FormControlLabel
                         value={value}
@@ -284,8 +287,8 @@ const Details = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"}
                   onClick={(e) => handelNext(e)}
-                // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
                 >
                   Next
                 </Button>
