@@ -36,14 +36,14 @@ const useStyles = makeStyles((theme) => ({
 const HazardiousActs = () => {
 
   const [form, setForm] = useState({
-    supervision: { rcaSubType: "", rcaRemark: [], remarkType: "" },
-    workpackage: { rcaSubType: "", rcaRemark: [], remarkType: "" },
-    equipmentMachinery: { rcaSubType: "", rcaRemark: [], remarkType: "" },
-    behaviourIssue: { rcaSubType: "", rcaRemark: [], remarkType: "" },
-    safetyIssues: { rcaSubType: "", rcaRemark: [], remarkType: "" },
-    ergonimics: { rcaSubType: "", rcaRemark: [], remarkType: "" },
-    procedures: { rcaSubType: "", rcaRemark: [], remarkType: "" },
-    others: { rcaSubType: "", rcaRemark: [], remarkType: "" }
+    supervision: {},
+    workpackage: {},
+    equipmentMachinery: {},
+    behaviourIssue: {},
+    safetyIssues: {},
+    ergonimics: {},
+    procedures: {},
+    others: {}
   }
   )
 
@@ -56,6 +56,7 @@ const HazardiousActs = () => {
       let newData = form.supervision.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, supervision: {
+          remarkType: "options",
           rcaSubType: "Supervision",
           rcaRemark: newData,
           remarkType: "string"
@@ -64,6 +65,7 @@ const HazardiousActs = () => {
     } else {
       setForm({
         ...form, supervision: {
+          rcaType: "options",
           rcaSubType: "Supervision",
           rcaRemark: [...form.supervision.rcaRemark, value],
           remarkType: "string"
@@ -77,6 +79,7 @@ const HazardiousActs = () => {
       let newData = form.workpackage.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, workpackage: {
+          remarkType: "options",
           rcaSubType: "Workpackage",
           rcaRemark: newData,
           remarkType: "string"
@@ -85,6 +88,7 @@ const HazardiousActs = () => {
     } else {
       setForm({
         ...form, workpackage: {
+          remarkType: "options",
           rcaSubType: "Workpackage",
           rcaRemark: [...form.workpackage.rcaRemark, value],
           remarkType: "string"
@@ -98,6 +102,7 @@ const HazardiousActs = () => {
       let newData = form.equipmentMachinery.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, equipmentMachinery: {
+          remarkType: "options",
           rcaSubType: "equipmentMachinery",
           rcaRemark: newData,
           remarkType: "string"
@@ -106,6 +111,7 @@ const HazardiousActs = () => {
     } else {
       setForm({
         ...form, equipmentMachinery: {
+          remarkType: "options",
           rcaSubType: "equipmentMachinery",
           rcaRemark: [...form.equipmentMachinery.rcaRemark, value],
           remarkType: "string"
@@ -119,6 +125,7 @@ const HazardiousActs = () => {
       let newData = form.behaviourIssue.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, behaviourIssue: {
+          remarkType: "options",
           rcaSubType: "behaviourIssue",
           rcaRemark: newData,
           remarkType: "string"
@@ -127,6 +134,7 @@ const HazardiousActs = () => {
     } else {
       setForm({
         ...form, behaviourIssue: {
+          remarkType: "options",
           rcaSubType: "behaviourIssue",
           rcaRemark: [...form.behaviourIssue.rcaRemark, value],
           remarkType: "string"
@@ -140,6 +148,7 @@ const HazardiousActs = () => {
       let newData = form.safetyIssues.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, safetyIssues: {
+          remarkType: "options",
           rcaSubType: "safetyIssues",
           rcaRemark: newData,
           remarkType: "string"
@@ -148,6 +157,7 @@ const HazardiousActs = () => {
     } else {
       setForm({
         ...form, safetyIssues: {
+          remarkType: "options",
           rcaSubType: "safetyIssues",
           rcaRemark: [...form.safetyIssues.rcaRemark, value],
           remarkType: "string"
@@ -161,6 +171,7 @@ const HazardiousActs = () => {
       let newData = form.ergonimics.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, ergonimics: {
+          remarkType: "options",
           rcaSubType: "ergonimics",
           rcaRemark: newData,
           remarkType: "string"
@@ -169,6 +180,7 @@ const HazardiousActs = () => {
     } else {
       setForm({
         ...form, ergonimics: {
+          remarkType: "options",
           rcaSubType: "ergonimics",
           rcaRemark: [...form.ergonimics.rcaRemark, value],
           remarkType: "string"
@@ -182,6 +194,7 @@ const HazardiousActs = () => {
       let newData = form.procedures.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, procedures: {
+          remarkType: "options",
           rcaSubType: "procedures",
           rcaRemark: newData,
           remarkType: "string"
@@ -190,6 +203,7 @@ const HazardiousActs = () => {
     } else {
       setForm({
         ...form, procedures: {
+          remarkType: "options",
           rcaSubType: "procedures",
           rcaRemark: [...form.procedures.rcaRemark, value],
           remarkType: "string"
@@ -201,6 +215,7 @@ const HazardiousActs = () => {
   const handelOthers = (e) => {
     setForm({
       ...form, others: {
+        remarkType: "remark",
         rcaSubType: "others",
         remarkType: e.target.value,
         rcaRemark: ["string"]
@@ -222,18 +237,18 @@ const HazardiousActs = () => {
       let api_data = item[1]
       let rcaRemark_one = api_data.rcaRemark
 
-      rcaRemark_one.map((value) => {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: value,
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "string",
-          remarkType: api_data["remarkType"],
-          status: "Active"
-        }
-        tempData.push(temp)
-      })
+
+      let temp = {
+        createdBy: "0",
+        fkIncidentId: localStorage.getItem("fkincidentId"),
+        rcaRemark: api_data["rcaRemark"].toString(),
+        rcaSubType: api_data["rcaSubType"],
+        rcaType: api_data["rcaType"],
+        remarkType: api_data["remarkType"],
+        status: "Active"
+      }
+      tempData.push(temp)
+
     })
     setData(tempData)
   }

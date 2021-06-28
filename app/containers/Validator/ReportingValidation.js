@@ -1,21 +1,21 @@
 import validator from 'validator';
 
-function ReportingValidation(data){
+function ReportingValidation(data) {
     console.log(data)
     let isValid = true
     const error = {}
 
-    if (validator.isEmpty(data.reportedto)){
+    if (validator.isEmpty(data.reportedto.toString())) {
         error.reportedto = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.isnotificationsent)){
+    if (validator.isEmpty(data.isnotificationsent)) {
         error.isnotificationsent = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.supervisorname)){
+    if (validator.isEmpty(data.supervisorname)) {
         error.supervisorname = "this filed is empty"
         isValid = false
     }
@@ -25,32 +25,32 @@ function ReportingValidation(data){
     //     isValid = false
     // }
 
-    if (data.fileupload.length == 0){
+    if (data.fileupload.length == 0) {
         error.fileupload = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.reportingdate)){
+    if (validator.isEmpty(data.reportingdate)) {
         error.reportingdate = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.reportingtime)){
+    if (validator.isEmpty(data.reportingtime)) {
         error.reportingtime = "this filed is empty"
         isValid = false
     }
 
-    if (validator.isEmpty(data.reportedby)){
+    if (validator.isEmpty(data.reportedby)) {
         error.reportedby = "this filed is empty"
         isValid = false
     }
 
-    // if (validator.isEmpty(data.others)){
-    //     error.others = "this filed is empty"
-    //     isValid = false
-    // }
+    if (data.reportedby == "Others" && validator.isEmpty(data.others)) {
+        error.others = "this filed is empty"
+        isValid = false
+    }
 
-    if (validator.isEmpty(data.latereporting)){
+    if (validator.isEmpty(data.latereporting)) {
         error.latereporting = "this filed is empty"
         isValid = false
     }
@@ -60,8 +60,8 @@ function ReportingValidation(data){
     //     isValid = false
     // }
 
-   
+
     return { error, isValid }
-} 
+}
 
 export default ReportingValidation

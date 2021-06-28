@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import classNames from "classnames";
-import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import SearchIcon from "@material-ui/icons/Search";
-import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import UserMenu from "./UserMenu";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import SearchUi from "../Search/SearchUi";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import styles from "./header-jss";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import {
+  withStyles, makeStyles, MuiThemeProvider, createMuiTheme
+} from '@material-ui/core/styles';
+import classNames from 'classnames';
+import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import SearchIcon from '@material-ui/icons/Search';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Paper from '@material-ui/core/Paper';
+import UserMenu from './UserMenu';
+
+import SearchUi from '../Search/SearchUi';
+
+import styles from './header-jss';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const elem = document.documentElement;
 
 const theme = createMuiTheme({
-  palette: { type: "dark" },
+  palette: { type: 'dark' },
   typography: {
     fontSize: 14,
   },
@@ -66,9 +68,9 @@ function Header(props) {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -102,10 +104,10 @@ function Header(props) {
   };
 
   const turnMode = (mode) => {
-    if (mode === "light") {
-      props.changeMode("dark");
+    if (mode === 'light') {
+      props.changeMode('dark');
     } else {
-      props.changeMode("light");
+      props.changeMode('light');
     }
   };
 
@@ -122,16 +124,16 @@ function Header(props) {
   } = props;
 
   const setMargin = (sidebarPosition) => {
-    if (sidebarPosition === "right-sidebar") {
+    if (sidebarPosition === 'right-sidebar') {
       return classes.right;
     }
-    if (sidebarPosition === "left-sidebar-big") {
+    if (sidebarPosition === 'left-sidebar-big') {
       return classes.leftBig;
     }
     return classes.left;
   };
 
-  const [project, setProject] = React.useState("");
+  const [project, setProject] = React.useState('');
 
   const handleProjectChange = (event) => {
     setProject(event.target.value);

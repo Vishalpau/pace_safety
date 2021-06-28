@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { PropTypes } from "prop-types";
-import { Switch, Route } from "react-router-dom";
-import { ThemeContext } from "./ThemeWrapper";
-import Dashboard from "../Templates/Dashboard";
+import React, { useContext } from 'react';
+import { PropTypes } from 'prop-types';
+import { Switch, Route } from 'react-router-dom';
+import { ThemeContext } from './ThemeWrapper';
+import Dashboard from '../Templates/Dashboard';
 import {
   PersonalDashboard,
   CrmDashboard,
@@ -123,7 +123,7 @@ import {
   Summary,
   LessionLearned,
   UpdateIncidentDetails,
-} from "../pageListAsync";
+} from '../pageListAsync';
 
 function Application(props) {
   const { history } = props;
@@ -336,7 +336,7 @@ function Application(props) {
           component={WhyAnalysis}
         />
         <Route
-          path={`/app/incident-management/registration/summary/summary/:id`}
+          path="/app/incident-management/registration/summary/summary/:id"
           component={Summary}
         />
         history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")

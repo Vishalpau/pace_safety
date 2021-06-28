@@ -64,19 +64,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PropertyAffected = () => {
-  // const [form, setForm] = useState({
-  //   detailpropertyaffected:"",
-  //   affectedproperty:{
-  //                     propertytype:"",
-  //                     describe:"",
-  //                     damage:""
-  //                   },
-  //   describeactiontaken:""
-  // })
+  // React defines
   const classes = useStyles();
   const history = useHistory();
+
+  // Id will have the value in case /id will be passed in the url.
   const { id } = useParams();
 
+  // State definations.
   const [propertyAffectedValue, setPropertyAffectedValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
   const [detailsOfPropertyAffect, setDetailsOfPropertyAffect] = useState("");
@@ -84,29 +79,9 @@ const PropertyAffected = () => {
   const [propertyDamagedComments, setPropertyDamagedComments] = useState("");
   const [propertyListData, setPropertyListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const radioDecide = ["Yes", "No"];
-  const radioDecideNew = ["Yes", "No", "N/A"];
-
   const [error, setError] = useState({});
 
+  // Default form.
   const [form, setForm] = useState([
     {
       propertyType: "",
@@ -169,32 +144,32 @@ const PropertyAffected = () => {
     setForm(temp);
   };
 
+  // On next click event capture.
   const handleNext = async () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
+    // If property data there then don't do anything as we are doing put request on each change.
     if (propertyListData.length > 0) {
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
           `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
         );
+      } else if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        );
       } else {
-        if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
-        } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
-        }
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
       }
+      // If that is not the case as if,
     } else {
+      // If yes selected.
       if (detailsOfPropertyAffect === "Yes") {
-        console.log(form);
+        // Validate property data.
         const { error, isValid } = PropertyValidate(form);
         setError(error);
-        console.log(error, isValid);
-        console.log(form);
         let status = 0;
         for (var i = 0; i < form.length; i++) {
           const res = await api.post(
@@ -203,7 +178,6 @@ const PropertyAffected = () => {
             )}/properties/`,
             form[i]
           );
-          console.log(res);
           status = res.status;
         }
 
@@ -218,25 +192,24 @@ const PropertyAffected = () => {
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
+        // If api success
         if (status === 201) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
               "/app/incident-management/registration/initial-notification/eqiptment-affected/"
             );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/environment-affected/"
+            );
           } else {
-            if (nextPath.environmentAffect === "Yes") {
-              history.push(
-                "/app/incident-management/registration/initial-notification/environment-affected/"
-              );
-            } else {
-              history.push(
-                "/app/incident-management/registration/summary/summary/"
-              );
-            }
+            history.push(
+              "/app/incident-management/registration/summary/summary/"
+            );
           }
-
-          // history.push("/app/incident-management/registration/initial-notification/eqiptment-affected/");
         }
+
+        // If no is selected on form.
       } else {
         const temp = incidentsListData;
         temp["propertyDamagedComments"] =
@@ -249,28 +222,29 @@ const PropertyAffected = () => {
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-        if (id !== undefined) {
+
+        // Update case
+        if (id) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
               `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
             );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
           } else {
-            if (nextPath.environmentAffect === "Yes") {
-              history.push(
-                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-              );
-            } else {
-              history.push(
-                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-              );
-            }
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
           }
+          // New entry case.
         } else {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
               "/app/incident-management/registration/initial-notification/eqiptment-affected/"
             );
-          } else {
+          } else if (nextPath.environmentAffect === "Yes") {
             if (nextPath.environmentAffect === "Yes") {
               history.push(
                 "/app/incident-management/registration/initial-notification/environment-affected/"
@@ -576,10 +550,10 @@ const PropertyAffected = () => {
             </Grid>
           </Grid>
           <Grid item md={3}>
-            {/* <FormSideBar
-                  listOfItems={INITIAL_NOTIFICATION_FORM}
-                  selectedItem={"Property affected"}
-                /> */}
+            <FormSideBar
+              listOfItems={INITIAL_NOTIFICATION_FORM}
+              selectedItem={"Property affected"}
+            />
           </Grid>
         </Grid>
       ) : (

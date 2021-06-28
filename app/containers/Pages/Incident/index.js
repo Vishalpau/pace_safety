@@ -105,9 +105,9 @@ const useStyles = makeStyles((theme) => ({
 function BlankPage() {
   const [incidents, setIncidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
-  const [searchIncident,setSeacrhIncident] = useState("")
-  const [showIncident,setShowIncident] = useState([])
-  const history = useHistory() 
+  const [searchIncident, setSeacrhIncident] = useState("");
+  const [showIncident, setShowIncident] = useState([]);
+  const history = useHistory();
 
   const handelView = (e) => {
     setListToggle(false);
@@ -117,17 +117,19 @@ function BlankPage() {
     setListToggle(true);
   };
 
-  const fetchData = async()=>{
-    const allIncidents = await api.get("api/v1/incidents/");
-    await setIncidents(allIncidents.data.data.results);
-  }
+  const fetchData = async () => {
+    const res = await api.get("api/v1/incidents/");
+    await setIncidents(res.data.data.results);
+  };
 
-  const handlePush = async()=>{
-    history.push('/app/incident-management/registration/initial-notification/incident-details/')
-  }
+  const handlePush = async () => {
+    history.push(
+      "/app/incident-management/registration/initial-notification/incident-details/"
+    );
+  };
 
-  useEffect( () => {
-   fetchData();
+  useEffect(() => {
+    fetchData();
   }, []);
 
   // useEffect( () => {
@@ -139,34 +141,33 @@ function BlankPage() {
   // }, []);
 
   const handelSearchIncident = async (e) => {
-    console.log('here')
-    let allSeacrh  = []
-    console.log(e.target.value.length)
-    if(e.target.value.length === 0){
-      setShowIncident([])
-    }else{
-      await setSeacrhIncident(e.target.value.toLowerCase())
-      console.log(searchIncident)
-       Object.entries(incidents).map((item) => 
-        {
-          if(item[1]["incidentNumber"].toLowerCase().includes(searchIncident)){
-            allSeacrh.push([
+    console.log("here");
+    let allSeacrh = [];
+    console.log(e.target.value.length);
+    if (e.target.value.length === 0) {
+      setShowIncident([]);
+    } else {
+      await setSeacrhIncident(e.target.value.toLowerCase());
+      console.log(searchIncident);
+      Object.entries(incidents).map((item) => {
+        if (item[1]["incidentNumber"].toLowerCase().includes(searchIncident)) {
+          allSeacrh.push([
             item[1]["incidentNumber"],
             item[1]["incidentReportedByName"],
             item[1]["incidentLocation"],
-            moment(item[1]["incidentReportedOn"]).format("Do MMMM YYYY, h:mm:ss a"),
-            item[1]["incidentReportedByName"]
-          ])
-          }
+            moment(item[1]["incidentReportedOn"]).format(
+              "Do MMMM YYYY, h:mm:ss a"
+            ),
+            item[1]["incidentReportedByName"],
+          ]);
         }
-        )
-        await setShowIncident(allSeacrh)
+      });
+      await setShowIncident(allSeacrh);
     }
 
-      console.log(showIncident)
- 
+    console.log(showIncident);
   };
-  
+
   const columns = [
     {
       name: "Incident Number",
@@ -193,11 +194,11 @@ function BlankPage() {
       },
     },
     {
-      name: "Incident reported by",
+      name: "link",
       options: {
-        filter: true,
+        filter: false,
       },
-    },
+    }
   ];
 
   const options = {
@@ -212,7 +213,7 @@ function BlankPage() {
 
   return (
     <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
-      {console.log('here')}
+      {console.log("here")}
       <Box>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
@@ -225,7 +226,7 @@ function BlankPage() {
                   startIcon={<AddCircleIcon />}
                   className={classes.newIncidentButton}
                   disableElevation
-                  onClick={()=>handlePush()}
+                  onClick={() => handlePush()}
                 >
                   New Incident
                 </Button>
@@ -241,7 +242,7 @@ function BlankPage() {
               <div className={classes.search}>
                 <Paper>
                   <div className={classes.searchIcon}>
-                    <SearchIcon/>
+                    <SearchIcon />
                   </div>
                   <InputBase
                     placeholder="Search…"
@@ -250,7 +251,7 @@ function BlankPage() {
                       input: classes.inputInput,
                     }}
                     inputProps={{ "aria-label": "search" }}
-                    onChange = {(e)=>handelSearchIncident(e)}
+                    onChange={(e) => handelSearchIncident(e)}
                   />
                 </Paper>
               </div>
@@ -261,7 +262,9 @@ function BlankPage() {
                 </Typography>
                 <IconButton
                   onClick={(e) => handelView(e)}
-                  aria-label="grid" className={classes.filterIcon}>
+                  aria-label="grid"
+                  className={classes.filterIcon}
+                >
                   <ViewAgendaIcon />
                 </IconButton>
 
@@ -279,203 +282,201 @@ function BlankPage() {
 
         {listToggle == false ? (
           <>
-          
-          
-          {showIncident.length > 0 ? 
-          
-          <div className="gridView">
-            {showIncident.map((item, key) => (
-              <Card variant="outlined" className={Incidents.card} key={key}>
-                {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item xs={10}>
+            {showIncident.length > 0 ? (
+              <div className="gridView">
+                {showIncident.map((item, key) => (
+                  <Card variant="outlined" className={Incidents.card} key={key}>
+                    {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
+                    <CardContent>
+                      <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3} alignItems="flex-start">
+                            <Grid item xs={10}>
+                              <Typography
+                                variant="h6"
+                                // display="inline"
+                                // color="textSecondary"
+                                // className={Fonts.labelValue}
+                              >
+                                {/* {item[1]["incidentTitle"]} */}
+                                Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Reprehenderit culpa voluptates
+                                iste.
+                              </Typography>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                              <Chip
+                                avatar={<Avatar src="/images/pp_boy.svg" />}
+                                label="John Doe"
+                                // onDelete={handleDelete}
+                                // className={classes.chip}
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <div className={Incidents.statusRow}>
+                            <Typography
+                              variant="h6"
+                              display="inline"
+                              className={Fonts.labelName}
+                            >
+                              Number{" "}
+                              <Link
+                                href={`/app/incident-management/registration/summary/summary/${item[1].id}`}
+                                variant="subtitle2"
+                                className={Incidents.incidentNumber}
+                                style={{ textDecoration: "underline" }}
+                              >
+                                {item[1]}
+                              </Link>
+                            </Typography>
+
+                            <Chip
+                              variant="outlined"
+                              label=" Initial Notification"
+                              color="primary"
+                              size="small"
+                            />
+
+                            <Typography
+                              variant="body1"
+                              // color="textSecondary"
+                              display="inline"
+                            >
+                              {/* {item[1]["incidentNumber"]} */}
+                              <i className="ion-ios-calendar-outline" />
+                              <span className={Incidents.dateValue}>
+                                {/* {item[1]["incidentOccuredOn"]} */}
+
+                                {moment(item[1]["incidentOccuredOn"]).format(
+                                  "Do MMM YYYY, h:mm a"
+                                )}
+                              </span>
+                            </Typography>
+                          </div>
+                        </Grid>
+
+                        <Grid item lg={3}>
                           <Typography
                             variant="h6"
-                            // display="inline"
-                            // color="textSecondary"
-                            // className={Fonts.labelValue}
+                            gutterBottom
+                            className={Fonts.labelName}
                           >
-                            {/* {item[1]["incidentTitle"]} */}
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Reprehenderit culpa voluptates iste.
+                            Incident Type
+                          </Typography>
+
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {/* {item[1]["incidentReportedByName"]} */}
+                            Not found
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            Incident location
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {item[1]}
                           </Typography>
                         </Grid>
 
-                        <Grid item xs={2}>
-                          <Chip
-                            avatar={<Avatar src="/images/pp_boy.svg" />}
-                            label="John Doe"
-                            // onDelete={handleDelete}
-                            // className={classes.chip}
-                          />
+                        <Grid item lg={3}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            Reported on
+                          </Typography>
+
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {item[3]}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item lg={3}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            Reported By
+                          </Typography>
+
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {item[1]}
+                          </Typography>
                         </Grid>
                       </Grid>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <div className={Incidents.statusRow}>
-                        <Typography
-                          variant="h6"
-                          display="inline"
-                          className={Fonts.labelName}
-                        >
-                          Number{" "}
-                          <Link
-                            href="#"
-                            variant="subtitle2"
-                            className={Incidents.incidentNumber}
-                            style={{ textDecoration: "underline" }}
+                    </CardContent>
+                    <Divider />
+                    <CardActions className={Incidents.cardActions}>
+                      <Grid
+                        container
+                        spacing={2}
+                        justify="flex-end"
+                        alignItems="center"
+                      >
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Typography
+                            variant="body2"
+                            display="inline"
+                            className={Incidents.actionsLabel}
                           >
-                            {item[0]}
-                          </Link>
-                        </Typography>
+                            <AttachmentIcon /> Comments:
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#">3</Link>
+                          </Typography>
+                        </Grid>
 
-                        <Chip
-                          variant="outlined"
-                          label=" Initial Notification"
-                          color="primary"
-                          size="small"
-                        />
-
-                        <Typography
-                          variant="body1"
-                          // color="textSecondary"
-                          display="inline"
-                        >
-                          {/* {item[1]["incidentNumber"]} */}
-                          <i className="ion-ios-calendar-outline" />
-                          <span className={Incidents.dateValue}>
-                            {/* {item[1]["incidentOccuredOn"]} */}
-
-                            {moment(item[1]["incidentOccuredOn"]).format(
-                              "Do MMM YYYY, h:mm a"
-                            )}
-                          </span>
-                        </Typography>
-                      </div>
-                    </Grid>
-
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Incident Type
-                      </Typography>
-
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {/* {item[1]["incidentReportedByName"]} */}
-                        Not found
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Incident location
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {item[1]}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Reported on
-                      </Typography>
-
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {item[3]}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Reported By
-                      </Typography>
-
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {item[2]}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="flex-end"
-                    alignItems="center"
-                  >
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Incidents.actionsLabel}
-                      >
-                        <AttachmentIcon /> Comments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#">3</Link>
-                      </Typography>
-                    </Grid>
-
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Incidents.actionsLabel}
-                      >
-                        <AttachmentIcon /> Actions:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#">3</Link>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Incidents.actionsLabel}
-                      >
-                        <AttachmentIcon /> Evidences:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#">3</Link>
-                      </Typography>
-                    </Grid>
-                    {/* <Grid item xs={6} md={3} lg={3}>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Typography
+                            variant="body2"
+                            display="inline"
+                            className={Incidents.actionsLabel}
+                          >
+                            <AttachmentIcon /> Actions:
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#">3</Link>
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Typography
+                            variant="body2"
+                            display="inline"
+                            className={Incidents.actionsLabel}
+                          >
+                            <AttachmentIcon /> Evidences:
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#">3</Link>
+                          </Typography>
+                        </Grid>
+                        {/* <Grid item xs={6} md={3} lg={3}>
                       <Typography
                         variant="body2"
                         display="inline"
@@ -492,229 +493,232 @@ function BlankPage() {
                         Initial Notification
                       </Typography>
                     </Grid> */}
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Button
-                        size="small"
-                        color="secondary"
-                        startIcon={<Print />}
-                        className={Incidents.actionButton}
-                      >
-                        Print
-                      </Button>
-                    </Grid>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            startIcon={<Print />}
+                            className={Incidents.actionButton}
+                          >
+                            Print
+                          </Button>
+                        </Grid>
 
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Button
-                        size="small"
-                        color="secondary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
-                        Share
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>
-            ))}
-          </div>
-          
-          : 
-          <div className="gridView">
-            {Object.entries(incidents).map((item,index) => (
-              <Card variant="outlined" className={Incidents.card} key={index}>
-                {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
-                <CardContent>
-                  {/* {console.log(item[index].incidentTitle)} */}
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item xs={10}>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            startIcon={<Share />}
+                            className={Incidents.actionButton}
+                          >
+                            Share
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </CardActions>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="gridView">
+                {Object.entries(incidents).map((item, index) => (
+                  <Card
+                    variant="outlined"
+                    className={Incidents.card}
+                    key={index}
+                  >
+                    {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
+                    <CardContent>
+                      {/* {console.log(item[index].incidentTitle)} */}
+                      <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3} alignItems="flex-start">
+                            <Grid item xs={10}>
+                              <Typography
+                                variant="h6"
+                                // display="inline"
+                                // color="textSecondary"
+                                // className={Fonts.labelValue}
+                              >
+                                {item[1]["incidentTitle"]}
+                                {/* {item[index]["incidentTitle"]} */}
+                              </Typography>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                              <Chip
+                                avatar={<Avatar src="/images/pp_boy.svg" />}
+                                label="John Doe"
+                                // onDelete={handleDelete}
+                                // className={classes.chip}
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <div className={Incidents.statusRow}>
+                            <Typography
+                              variant="h6"
+                              display="inline"
+                              className={Fonts.labelName}
+                            >
+                              Number{" "}
+                              <Link
+                                href={`/app/incident-management/registration/summary/summary/${item[1].id}`}
+                                variant="subtitle2"
+                                className={Incidents.incidentNumber}
+                                style={{ textDecoration: "underline" }}
+                              >
+                                {item[1]["incidentNumber"]}
+                              </Link>
+                            </Typography>
+
+                            <Chip
+                              variant="outlined"
+                              label=" Initial Notification"
+                              color="primary"
+                              size="small"
+                            />
+
+                            <Typography
+                              variant="body1"
+                              // color="textSecondary"
+                              display="inline"
+                            >
+                              {/* {item[1]["incidentNumber"]} */}
+                              <i className="ion-ios-calendar-outline" />
+                              <span className={Incidents.dateValue}>
+                                {/* {item[1]["incidentOccuredOn"]} */}
+
+                                {moment(item[1]["incidentOccuredOn"]).format(
+                                  "Do MMM YYYY, h:mm a"
+                                )}
+                              </span>
+                            </Typography>
+                          </div>
+                        </Grid>
+
+                        <Grid item lg={3}>
                           <Typography
                             variant="h6"
-                            // display="inline"
-                            // color="textSecondary"
-                            // className={Fonts.labelValue}
+                            gutterBottom
+                            className={Fonts.labelName}
                           >
-                            {item[1]["incidentTitle"]}
-                            {/* {item[index]["incidentTitle"]} */}
+                            Incident Type
+                          </Typography>
+
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {/* {item[1]["incidentReportedByName"]} */}
+                            Not found
+                          </Typography>
+                        </Grid>
+                        <Grid item lg={3}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            Incident location
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {item[1]["incidentLocation"]}
                           </Typography>
                         </Grid>
 
-                        <Grid item xs={2}>
-                          <Chip
-                            avatar={<Avatar src="/images/pp_boy.svg" />}
-                            label="John Doe"
-                            // onDelete={handleDelete}
-                            // className={classes.chip}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <div className={Incidents.statusRow}>
-                        <Typography
-                          variant="h6"
-                          display="inline"
-                          className={Fonts.labelName}
-                        >
-                          Number{" "}
-                          <Link
-                            href="#"
-                            variant="subtitle2"
-                            className={Incidents.incidentNumber}
-                            style={{ textDecoration: "underline" }}
+                        <Grid item lg={3}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
                           >
-                            {item[1]["incidentNumber"]}
-                          </Link>
-                        </Typography>
+                            Reported on
+                          </Typography>
 
-                        <Chip
-                          variant="outlined"
-                          label=" Initial Notification"
-                          color="primary"
-                          size="small"
-                        />
-
-                        <Typography
-                          variant="body1"
-                          // color="textSecondary"
-                          display="inline"
-                        >
-                          {/* {item[1]["incidentNumber"]} */}
-                          <i className="ion-ios-calendar-outline" />
-                          <span className={Incidents.dateValue}>
-                            {/* {item[1]["incidentOccuredOn"]} */}
-
-                            {moment(item[1]["incidentOccuredOn"]).format(
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {moment(item[1]["incidentReportedOn"]).format(
                               "Do MMM YYYY, h:mm a"
                             )}
-                          </span>
-                        </Typography>
-                      </div>
-                    </Grid>
+                          </Typography>
+                        </Grid>
 
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Incident Type
-                      </Typography>
+                        <Grid item lg={3}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            Reported By
+                          </Typography>
 
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className={Fonts.labelValue}
+                          >
+                            {item[1]["incidentReportedByName"]}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                    <Divider />
+                    <CardActions className={Incidents.cardActions}>
+                      <Grid
+                        container
+                        spacing={2}
+                        justify="flex-end"
+                        alignItems="center"
                       >
-                        {/* {item[1]["incidentReportedByName"]} */}
-                        Not found
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Incident location
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {item[1]["incidentLocation"]}
-                      </Typography>
-                    </Grid>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Typography
+                            variant="body2"
+                            display="inline"
+                            className={Incidents.actionsLabel}
+                          >
+                            <AttachmentIcon /> Comments:
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#">3</Link>
+                          </Typography>
+                        </Grid>
 
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Reported on
-                      </Typography>
-
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {moment(item[1]["incidentReportedOn"]).format(
-                          "Do MMM YYYY, h:mm a"
-                        )}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item lg={3}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Reported By
-                      </Typography>
-
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {item[1]["incidentReportedByName"]}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="flex-end"
-                    alignItems="center"
-                  >
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Incidents.actionsLabel}
-                      >
-                        <AttachmentIcon /> Comments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#">3</Link>
-                      </Typography>
-                    </Grid>
-
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Incidents.actionsLabel}
-                      >
-                        <AttachmentIcon /> Actions:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#">3</Link>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Incidents.actionsLabel}
-                      >
-                        <AttachmentIcon /> Evidences:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#">3</Link>
-                      </Typography>
-                    </Grid>
-                    {/* <Grid item xs={6} md={3} lg={3}>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Typography
+                            variant="body2"
+                            display="inline"
+                            className={Incidents.actionsLabel}
+                          >
+                            <AttachmentIcon /> Actions:
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#">3</Link>
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Typography
+                            variant="body2"
+                            display="inline"
+                            className={Incidents.actionsLabel}
+                          >
+                            <AttachmentIcon /> Evidences:
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#">3</Link>
+                          </Typography>
+                        </Grid>
+                        {/* <Grid item xs={6} md={3} lg={3}>
                       <Typography
                         variant="body2"
                         display="inline"
@@ -731,37 +735,37 @@ function BlankPage() {
                         Initial Notification
                       </Typography>
                     </Grid> */}
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Button
-                        size="small"
-                        color="secondary"
-                        startIcon={<Print />}
-                        className={Incidents.actionButton}
-                      >
-                        Print
-                      </Button>
-                    </Grid>
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            startIcon={<Print />}
+                            className={Incidents.actionButton}
+                          >
+                            Print
+                          </Button>
+                        </Grid>
 
-                    <Grid item xs={6} md={3} lg={2}>
-                      <Button
-                        size="small"
-                        color="secondary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
-                        Share
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>
-            ))}
-          </div>
-          }
+                        <Grid item xs={6} md={3} lg={2}>
+                          <Button
+                            size="small"
+                            color="secondary"
+                            startIcon={<Share />}
+                            className={Incidents.actionButton}
+                          >
+                            Share
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </CardActions>
+                  </Card>
+                ))}
+              </div>
+            )}
           </>
-          // listview end
-          
         ) : (
+          // listview end
+
           <div className="listView">
             <MUIDataTable
               // title="Incidents List"
