@@ -122,12 +122,6 @@ const LessionLearned = () => {
     <PapperBlock title="Lessions Learned" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} justify="flex-start" spacing={3}>
-          {whyCount.map((value, index) => {
-            {
-              console.log(value);
-            }
-            <Typography varint="body1">{value}</Typography>;
-          })}
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident Number

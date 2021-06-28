@@ -463,9 +463,6 @@ const ReportingAndNotification = () => {
                 format="HH:mm"
               />
             </MuiPickersUtilsProvider>
-            {/* {error && error.reportingtime ? (
-              <p>{error.reportingtime}</p>
-            ) : null} */}
           </Grid>
 
           <Grid item md={6}>
@@ -511,7 +508,6 @@ const ReportingAndNotification = () => {
               }}
               disabled={form.reportedby !== "Other"}
             />
-            {/* {error && error.others && <p>{error.others}</p>} */}
           </Grid>
           {lateReport ? (
             <Grid item md={12}>
@@ -553,9 +549,6 @@ const ReportingAndNotification = () => {
                 });
               }}
             />
-            {/* {error && error.additionaldetails && (
-                    <p>{error.additionaldetails}</p>
-                  )} */}
           </Grid>
 
           <Grid item md={6}>
