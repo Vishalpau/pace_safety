@@ -136,9 +136,9 @@ const Summary = () => {
           <div className={Styles.item}>
             <Button
               color="primary"
-              variant="contained"
+              variant="outlined"
               size="small"
-              endIcon={<CheckCircle />}
+              endIcon={<AccessTime />}
               className={classes.statusButton}
               onClick={(e) => {
                 setInitialNotification(false);
@@ -151,7 +151,7 @@ const Summary = () => {
               Investigation
             </Button>
             <Typography variant="caption" display="block">
-              Done
+              Pending
             </Typography>
           </div>
 
