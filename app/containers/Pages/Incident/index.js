@@ -119,6 +119,7 @@ function BlankPage() {
 
   const fetchData = async () => {
     const res = await api.get("api/v1/incidents/");
+    console.log(res.data.data.results)
     await setIncidents(res.data.data.results.results);
   };
 

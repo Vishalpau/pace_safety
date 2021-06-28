@@ -234,7 +234,7 @@ const WhyAnalysis = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  href={Object.keys(error).length > 0 ? '#' : `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`}
+                  // href={Object.keys(error).length > 0 ? '#' : `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`}
                   onClick={(e) => { handelNext(e); handelApiCall(e) }}
                 >
                   Submit

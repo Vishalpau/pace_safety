@@ -228,7 +228,7 @@ const CorrectiveAction = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"}
+                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"}
                     onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next
