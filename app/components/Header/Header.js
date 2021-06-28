@@ -1,45 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import {
-  withStyles, makeStyles, MuiThemeProvider, createMuiTheme
-} from '@material-ui/core/styles';
-import classNames from 'classnames';
-import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import SearchIcon from '@material-ui/icons/Search';
-import Fab from '@material-ui/core/Fab';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Paper from '@material-ui/core/Paper';
-import UserMenu from './UserMenu';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import classNames from "classnames";
+import Typography from "@material-ui/core/Typography";
+import Hidden from "@material-ui/core/Hidden";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import SearchIcon from "@material-ui/icons/Search";
+import Fab from "@material-ui/core/Fab";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import UserMenu from "./UserMenu";
+import SearchUi from "../Search/SearchUi";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import Popover from "@material-ui/core/Popover";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import { spacing } from "@material-ui/system";
+import Grid from "@material-ui/core/Grid";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Chip from "@material-ui/core/Chip";
+import Link from "@material-ui/core/Link";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
-import SearchUi from '../Search/SearchUi';
+import styles from "./header-jss";
 
-import styles from './header-jss';
-
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    minWidth: 180,
-    fontSize: 12,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   button: {
+//     color: theme.palette.primary.contrastText,
+//   },
+// }));
 
 const elem = document.documentElement;
 
-const theme = createMuiTheme({
-  palette: { type: 'dark' },
-  typography: {
-    fontSize: 14,
-  },
-});
+const theme = createMuiTheme({ palette: { type: "dark" } });
 
 function Header(props) {
   const [open] = useState(false);
@@ -68,9 +69,9 @@ function Header(props) {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -104,10 +105,10 @@ function Header(props) {
   };
 
   const turnMode = (mode) => {
-    if (mode === 'light') {
-      props.changeMode('dark');
+    if (mode === "light") {
+      props.changeMode("dark");
     } else {
-      props.changeMode('light');
+      props.changeMode("light");
     }
   };
 
@@ -124,22 +125,33 @@ function Header(props) {
   } = props;
 
   const setMargin = (sidebarPosition) => {
-    if (sidebarPosition === 'right-sidebar') {
+    if (sidebarPosition === "right-sidebar") {
       return classes.right;
     }
-    if (sidebarPosition === 'left-sidebar-big') {
+    if (sidebarPosition === "left-sidebar-big") {
       return classes.leftBig;
     }
     return classes.left;
   };
 
-  const [project, setProject] = React.useState('');
+  const [age, setAge] = React.useState("");
 
-  const handleProjectChange = (event) => {
-    setProject(event.target.value);
+  const handleChange = (event) => {
+    setAge(event.target.value);
   };
 
-  const classname = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const filterOpen = Boolean(anchorEl);
+  const id = filterOpen ? "simple-popover" : undefined;
 
   return (
     <AppBar
@@ -163,67 +175,153 @@ function Header(props) {
         </Fab>
         <Hidden smDown>
           <div className={classes.headerProperties}>
-            <div
-              className={classNames(
-                classes.headerAction,
-                showTitle && classes.fadeOut
-              )}
-            >
-              <MuiThemeProvider theme={theme}>
-                <div className={classes.projectSwitcher}>
-                  <Typography variant="body2" display="inline">
-                    Project:
-                  </Typography>
-                  <FormControl
-                    size="small"
-                    variant="outlined"
-                    className={classes.projectSelect}
+            <MuiThemeProvider theme={theme}>
+              <div className={classes.projectSwitcher}>
+                <Typography variant="body2">Project:</Typography>
+                <FormControl
+                  size="small"
+                  variant="outlined"
+                  className={classes.projectSelect}
+                >
+                  {/* <InputLabel id="projectSwitch-label">Project</InputLabel> */}
+                  <Select
+                    labelId="projectSwitch-label"
+                    id="projectSwitch"
+                    value={age}
+                    // label="Project"
+                    aria-label="Project"
+                    onChange={handleChange}
                   >
-                    {/* <InputLabel id="projectSwitch-label">Project</InputLabel> */}
-                    <Select
-                      labelId="projectSwitch-label"
-                      id="projectSwitch"
-                      value={project}
-                      // label="Project"
-                      aria-label="Project"
-                      onChange={handleProjectChange}
-                    >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-              </MuiThemeProvider>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </MuiThemeProvider>
 
-              {/* {fullScreen ? (
-                <Tooltip title="Exit Full Screen" placement="bottom">
-                  <IconButton
-                    className={classes.button}
-                    onClick={closeFullScreen}
-                  >
-                    <i className="ion-ios-qr-scanner-outline" />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Full Screen" placement="bottom">
-                  <IconButton
-                    className={classes.button}
-                    onClick={openFullScreen}
-                  >
-                    <i className="ion-ios-qr-scanner-outline" />
-                  </IconButton>
-                </Tooltip>
-              )} */}
-              {/* <Tooltip title="Turn Dark/Light" placement="bottom">
-                <IconButton className={classes.button} onClick={() => turnMode(mode)}>
-                  <i className="ion-ios-bulb-outline" />
-                </IconButton>
-              </Tooltip> */}
+            <div>
+              <IconButton
+                aria-describedby={id}
+                className={classes.filterIcon}
+                onClick={handleClick}
+              >
+                <FilterListIcon fontSize="small" />
+              </IconButton>
+              <Popover
+                id={id}
+                open={filterOpen}
+                anchorEl={anchorEl}
+                getContentAnchorEl={null}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                PaperProps={{
+                  style: {
+                    width: 200,
+                  },
+                }}
+              >
+                <Box p={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <FormControl
+                        variant="outlined"
+                        size="small"
+                        fullWidth={true}
+                        className={classes.filterSelect}
+                      >
+                        <InputLabel id="filter3-label">Phases</InputLabel>
+                        <Select
+                          labelId="filter3-label"
+                          id="filter3"
+                          value={age}
+                          onChange={handleChange}
+                          label="Phases"
+                          style={{ width: "100%" }}
+                        >
+                          <MenuItem value={10}>Ten</MenuItem>
+                          <MenuItem value={20}>Twenty</MenuItem>
+                          <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <FormControl
+                        variant="outlined"
+                        size="small"
+                        fullWidth={true}
+                        className={classes.filterSelect}
+                      >
+                        <InputLabel id="filter3-label">Phases</InputLabel>
+                        <Select
+                          labelId="filter3-label"
+                          id="filter3"
+                          value={age}
+                          onChange={handleChange}
+                          label="Phases"
+                          style={{ width: "100%" }}
+                        >
+                          <MenuItem value={10}>Ten</MenuItem>
+                          <MenuItem value={20}>Twenty</MenuItem>
+                          <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <FormControl
+                        variant="outlined"
+                        size="small"
+                        fullWidth={true}
+                        className={classes.filterSelect}
+                      >
+                        <InputLabel id="filter3-label">Phases</InputLabel>
+                        <Select
+                          labelId="filter3-label"
+                          id="filter3"
+                          value={age}
+                          onChange={handleChange}
+                          label="Phases"
+                          style={{ width: "100%" }}
+                        >
+                          <MenuItem value={10}>Ten</MenuItem>
+                          <MenuItem value={20}>Twenty</MenuItem>
+                          <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item md={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        disableElevation
+                      >
+                        Apply
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Popover>
             </div>
-            {/* <Typography component="h2" className={classNames(classes.headerTitle, showTitle && classes.show)}>
-              {title}
-            </Typography> */}
+
+            <Breadcrumbs
+              className={classes.projectBreadcrumbs}
+              separator={<NavigateNextIcon fontSize="small" />}
+            >
+              <Chip size="small" label="Phase 1" />
+              <Chip size="small" label="Unit 11" />
+              <Chip size="small" label="Work Area 11" />
+            </Breadcrumbs>
           </div>
         </Hidden>
         {/* <div className={classes.searchWrapper}>
@@ -234,22 +332,9 @@ function Header(props) {
             <SearchUi history={history} />
           </div>
         </div> */}
-        {/* <div
-          className={classNames(
-            classes.headerAction,
-            showTitle && classes.fadeOut
-          )}
-        >
-          <Tooltip title="Show Guide" placement="bottom">
-            <IconButton className={classes.button} onClick={openGuide}>
-              <i className="ion-ios-help-circle-outline" />
-            </IconButton>
-          </Tooltip>
-        </div> */}
-
-        <Hidden xsDown>
+        {/* <Hidden xsDown>
           <span className={classes.separatorV} />
-        </Hidden>
+        </Hidden> */}
         <UserMenu />
       </Toolbar>
     </AppBar>

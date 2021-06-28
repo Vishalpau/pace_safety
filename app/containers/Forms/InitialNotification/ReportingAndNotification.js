@@ -1,76 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import DateFnsUtils from '@date-io/date-fns';
-import MomentUtils from '@date-io/moment';
+import React, { useState, useEffect } from "react";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import DateFnsUtils from "@date-io/date-fns";
+import MomentUtils from "@date-io/moment";
 import {
   TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
   KeyboardTimePicker,
-} from '@material-ui/pickers';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Icon from '@material-ui/core/Icon';
-import Input from '@material-ui/core/Input';
-import IconButton from '@material-ui/core/IconButton';
-import InputLabel from '@material-ui/core/InputLabel';
-import Box from '@material-ui/core/Box';
-import { spacing } from '@material-ui/system';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { MaterialDropZone, PapperBlock } from 'dan-components';
-import { DropzoneDialogBase } from 'material-ui-dropzone';
+} from "@material-ui/pickers";
+import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Icon from "@material-ui/core/Icon";
+import Input from "@material-ui/core/Input";
+import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import Box from "@material-ui/core/Box";
+import { spacing } from "@material-ui/system";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import { MaterialDropZone, PapperBlock } from "dan-components";
+import { DropzoneDialogBase } from "material-ui-dropzone";
 
-import FormLabel from '@material-ui/core/FormLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import CloseIcon from '@material-ui/icons/Close';
-import moment from 'moment';
-import { useHistory, useParams } from 'react-router';
+import FormLabel from "@material-ui/core/FormLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from "@material-ui/core/FormGroup";
+import CloseIcon from "@material-ui/icons/Close";
+import moment from "moment";
+import { useHistory, useParams } from "react-router";
 
-import FormSideBar from '../FormSideBar';
+import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
-} from '../../../utils/constants';
-import FormHeader from '../FormHeader';
-import ReportingValidation from '../../Validator/ReportingValidation';
-import api from '../../../utils/axios';
+} from "../../../utils/constants";
+import FormHeader from "../FormHeader";
+import ReportingValidation from "../../Validator/ReportingValidation";
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    minWidth: '100%',
+    minWidth: "100%",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: '100%',
-    margin: '.5rem 0',
+    width: "100%",
+    margin: ".5rem 0",
   },
   spacer: {
-    marginTop: '1rem',
+    marginTop: "1rem",
   },
   customLabel: {
     marginBottom: 0,
   },
   textButton: {
-    color: '#3498db',
+    color: "#3498db",
     padding: 0,
-    textDecoration: 'underline',
-    display: 'inlineBlock',
-    marginBlock: '1.5rem',
-    backgroundColor: 'transparent',
+    textDecoration: "underline",
+    display: "inlineBlock",
+    marginBlock: "1.5rem",
+    backgroundColor: "transparent",
   },
   button: {
     margin: theme.spacing(1),
@@ -86,69 +86,66 @@ const ReportingAndNotification = () => {
   const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
 
-
   const { id } = useParams();
 
   const [form, setForm] = useState({
     reportedto: [],
-    isnotificationsent: '',
-    fileupload: '',
-    supervisorname: '',
-    othername: '',
+    isnotificationsent: "",
+    fileupload: "",
+    supervisorname: "",
+    othername: "",
     reportingdate: null,
     reportingtime: null,
-    reportedby: '',
-    others: '',
-    latereporting: '',
-    additionaldetails: '',
+    reportedby: "",
+    others: "",
+    latereporting: "",
+    additionaldetails: "",
   });
 
   const history = useHistory();
 
   const reportedTo = [
-    'Internal Leadership',
-    'Police',
-    'Environment Officer',
-    'OHS',
-    'Mital Aid',
-    'Other',
+    "Internal Leadership",
+    "Police",
+    "Environment Officer",
+    "OHS",
+    "Mital Aid",
+    "Other",
   ];
-  const notificationSent = ['Manage', 'SuperVisor'];
+  const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4, "Other"];
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
+    new Date("2014-08-18T21:11:54")
   );
 
   const [selectedTime, setSelectedTime] = React.useState(
-    new Date('2014-08-18T21:11:54')
+    new Date("2014-08-18T21:11:54")
   );
 
-  const [otherdata, setOtherData] = useState('');
-  const [fileNames, setFileNames] = useState('');
-
-
+  const [otherdata, setOtherData] = useState("");
+  const [fileNames, setFileNames] = useState("");
 
   const handelTimeCompare = async (e) => {
     let rpTime = form.reportingtime
     let rpDate = form.reportingdate
     let startDate = `${rpDate} ${rpTime}`
     // let startDate = form.reportingdate.concat(form.reportingtime)
-    console.log(startDate)
-    var start_date = moment(startDate, 'YYYY-MM-DD HH:mm:ss');
-    var end_date = moment(new Date(), 'YYYY-MM-DD HH:mm:ss');
+    console.log(startDate);
+    var start_date = moment(startDate, "YYYY-MM-DD HH:mm:ss");
+    var end_date = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
     var duration = moment.duration(end_date.diff(start_date));
     var Hours = duration.asHours();
-    console.log(Hours)
+    console.log(Hours);
     if (Hours > 4) {
       await SetLateReport(false)
       console.log("here")
     } else {
       await SetLateReport(true)
     }
-  }
+  };
 
   const handleDateChange = (date) => {
-    const onlyDate = moment(date).format('YYYY/MM/DD');
+    const onlyDate = moment(date).format("YYYY/MM/DD");
     setForm({
       ...form,
       reportingdate: onlyDate,
@@ -156,24 +153,26 @@ const ReportingAndNotification = () => {
   };
 
   const handelTimeChange = async (date) => {
-    const onlyTime = moment(date).format('HH:mm:ss');
+    const onlyTime = moment(date).format("HH:mm:ss");
     await setForm({
       ...form,
       reportingtime: onlyTime,
     });
-    setSelectedTime(date)
+    setSelectedTime(date);
   };
-
 
   const handleDrop = (acceptedFiles) => {
     console.log(acceptedFiles);
     const formData = new FormData();
     for (let i = 0; i < acceptedFiles.length; i++) {
-      formData.append('evidenceDocument', acceptedFiles[i]);
-      formData.append('evidenceCategory', 'Initial Evidence ');
-      formData.append('createdBy', '1');
-      formData.append('fkIncidentId', localStorage.getItem('fkincidentId'));
-      const evidanceResponse = api.post(`api/v1/incidents/${localStorage.getItem('fkincidentId')}/evidences/`, formData);
+      formData.append("evidenceDocument", acceptedFiles[i]);
+      formData.append("evidenceCategory", "Initial Evidence ");
+      formData.append("createdBy", "1");
+      formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
+      const evidanceResponse = api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`,
+        formData
+      );
       console.log(evidanceResponse);
     }
 
@@ -203,37 +202,42 @@ const ReportingAndNotification = () => {
   const handelNext = async (e) => {
     const { error, isValid } = ReportingValidation(form);
     setError(error);
+    console.log("ERROR => ", error);
     // getting fileds for update
-    const fkid = localStorage.getItem('fkincidentId');
+    const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
-    console.log('1', temp);
-    temp.supervisorByName = form.supervisorname || incidentsListData.supervisorByName;
+    console.log("1", temp);
+    temp.supervisorByName =
+      form.supervisorname || incidentsListData.supervisorByName;
     temp.supervisorById = 1;
     temp.incidentReportedOn = moment(form.reportingdate).toISOString();
-    temp.incidentReportedByName = form.reportedby || incidentsListData.incidentReportedByName;
+    temp.incidentReportedByName =
+      form.reportedby || incidentsListData.incidentReportedByName;
     temp.incidentReportedById = 1;
-    temp.reasonLateReporting = form.latereporting || incidentsListData.reasonLateReporting;
-    temp.notificationComments = form.additionaldetails || incidentsListData.notificationComments;
+    temp.reasonLateReporting =
+      form.latereporting || incidentsListData.reasonLateReporting;
+    temp.notificationComments =
+      form.additionaldetails || incidentsListData.notificationComments;
     temp.updatedAt = moment(new Date()).toISOString();
-    temp.updatedBy = '0';
+    temp.updatedBy = "0";
     console.log(temp);
 
     // put call for update
     const res = await api.put(
-      `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
       temp
     );
 
     if (id !== undefined) {
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-          'fkincidentId'
+          "fkincidentId"
         )}`
       );
     } else {
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
-        reportTo: form.reportedto.includes('Other')
+        reportTo: form.reportedto.includes("Other")
           ? form.reportedto.concat([otherdata]).toString()
           : form.reportedto.toString(),
         reportingNote: form.latereporting,
@@ -243,7 +247,7 @@ const ReportingAndNotification = () => {
       if (res.status === 201) {
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-            'fkincidentId'
+            "fkincidentId"
           )}`
         );
       }
@@ -251,7 +255,7 @@ const ReportingAndNotification = () => {
   };
 
   const handelReportedTo = async (e, value, type) => {
-    if ((type = 'option')) {
+    if ((type = "option")) {
       if (e.target.checked == false) {
         const newData = form.reportedto.filter((item) => item !== value);
         await setForm({
@@ -269,7 +273,7 @@ const ReportingAndNotification = () => {
 
   const fetchIncidentsData = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
@@ -302,14 +306,14 @@ const ReportingAndNotification = () => {
                   ? reportsListData.map((report, key) => (
                     <FormControlLabel
                       key={key}
-                      control={(
+                      control={
                         <Checkbox
                           // checked={gilad}
                           // onChange={(e) => handelReportedTo}
 
                           name="gilad"
                         />
-                      )}
+                      }
                       label="Gilad Gray"
                     />
                   ))
@@ -318,10 +322,10 @@ const ReportingAndNotification = () => {
                       value={value}
                       control={<Checkbox />}
                       label={value}
-                      onChange={(e) => handelReportedTo(e, value, 'option')}
+                      onChange={(e) => handelReportedTo(e, value, "option")}
                     />
                   ))}
-                {form.reportedto.includes('Other') ? (
+                {form.reportedto.includes("Other") ? (
                   <TextField
                     id="Other"
                     variant="outlined"
@@ -374,7 +378,7 @@ const ReportingAndNotification = () => {
               showButton
               onDrop={handleDrop}
             />
-            {error && error.fileupload && <p>{error.fileupload}</p>}
+            {error && error.fileupload ? <p>{error.fileupload}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -406,7 +410,7 @@ const ReportingAndNotification = () => {
                 });
               }}
             />
-            {/* {error && error.othername && <p>{error.othername}</p>} */}
+            {error && error.othername ? <p>{error.othername}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -418,16 +422,14 @@ const ReportingAndNotification = () => {
                 required
                 inputVariant="outlined"
                 label="Reporting Date"
-                value={
-                  form.reportingdate
-                }
+                value={form.reportingdate}
                 onChange={(date) => handleDateChange(date)}
                 KeyboardButtonProps={{
-                  'aria-label': 'change date',
+                  "aria-label": "change date",
                 }}
               />
             </MuiPickersUtilsProvider>
-            {error && error.reportingdate && <p>{error.reportingdate}</p>}
+            {error && error.reportingdate ? <p>{error.reportingdate}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -437,17 +439,18 @@ const ReportingAndNotification = () => {
                 id="time-picker"
                 inputVariant="outlined"
                 label="Time picker"
-                value={
-                  form.reportingtime === null ? clearedDate : selectedTime
-                }
-                onChange={async (date) => { await handelTimeChange(date); await handelTimeCompare() }}
+                value={form.reportingtime === null ? clearedDate : selectedTime}
+                onChange={(date) => {
+                  handelTimeChange(date);
+                  handelTimeCompare();
+                }}
                 KeyboardButtonProps={{
-                  'aria-label': 'change time',
+                  "aria-label": "change time",
                 }}
                 format="HH:mm"
               />
             </MuiPickersUtilsProvider>
-            {error && error.reportingtime && <p>{error.reportingtime}</p>}
+            {error && error.reportingtime ? <p>{error.reportingtime}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -473,7 +476,7 @@ const ReportingAndNotification = () => {
                 ))}
               </Select>
             </FormControl>
-            {error && error.reportedby && <p>{error.reportedby}</p>}
+            {error && error.reportedby ? <p>{error.reportedby}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -492,7 +495,7 @@ const ReportingAndNotification = () => {
             />
             {/* {error && error.others && <p>{error.others}</p>} */}
           </Grid>
-          {lateReport ?
+          {lateReport ? (
             <Grid item md={12}>
               <TextField
                 id="reason"
@@ -509,9 +512,9 @@ const ReportingAndNotification = () => {
                   });
                 }}
               />
-              {error && error.latereporting && <p>{error.latereporting}</p>}
+              {error && error.latereporting ? <p>{error.latereporting}</p> : null}
             </Grid>
-            : null}
+          ) : null}
 
           <Grid item md={12}>
             <TextField
