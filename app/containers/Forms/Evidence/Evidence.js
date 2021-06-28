@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -21,6 +21,11 @@ import FormSideBar from '../FormSideBar';
 import { EVIDENCE_FORM } from '../../../utils/constants';
 import EvidenceValidate from '../../Validator/EvidenceValidation';
 import FormHeader from '../FormHeader';
+import FormData from 'form-data';
+import fs from 'fs';
+import Upload from 'material-ui-upload/Upload';
+import {DropzoneArea} from 'material-ui-dropzone'
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: 'row',
@@ -51,22 +56,59 @@ const Evidence = () => {
     comment: '',
     document: '',
   });
+  // console.log(evidenceListData)
+  // const fetchEvidence= async () => {
+  //   const res = await api.get(`/api/v1/incidents/91/evidences/92/`);
+  //   const result = res.data.data.results;
+  //   await setEvidenceListdata(result);
+  // };
+
+  const handleUpdateEvidence = async ()=>{
+
+    var data = new FormData();
+    data.append('evidenceCheck', form.available);
+    data.append('evidenceCategory', 'string');
+    data.append('evidenceRemark', form.comment);
+    data.append('evidenceDocument', form.document);
+    data.append('status', 'Active');
+    data.append('updatedBy', '');
+    console.log(data);
+    const res = await api.put(`/api/v1/incidents/91/evidences/92/`,data)
+    console.log(res)
+  }
+  
+  // useEffect(() => {
+  //   fetchEvidence();
+  // }, []);
+
   const handleNext = async () => {
-    console.log(form);
+    
     const { error } = EvidenceValidate(form);
     setError(error);
     const formData = {
       evidenceCheck: form.available,
       evidenceNumber: 'string',
       evidenceCategory: 'string',
-      evidenceRemark: 'string',
+      evidenceRemark: form.comment,
       createdBy: 0,
-      fkIncidentId: localStorage.getItem('fkincidentId'),
-      evidenceDocument: form.document,
+      fkIncidentId: 91,
+      // evidenceDocument:  form.document,
     };
+    // var data = new FormData();
+    // data.append('evidenceCheck', form.available);
+    // data.append('evidenceCategory', 'string');
+    // data.append('evidenceRemark', form.comment);
+    // data.append('evidenceDocument', form.document);
+    // data.append('status', 'Active');
+    // data.append('createdAt', '');
+    // data.append('createdBy', '1');
+    // data.append('updatedAt', '');
+    // data.append('updatedBy', '');
+    // data.append('fkIncidentId', '91');
     console.log(formData);
+
     const res = await api.post(
-      `/api/v1/${localStorage.getItem('fkincidentId')}/evidences/`,
+      `/api/v1/incidents/91/evidences/`,
       formData
     );
     console.log(res);
@@ -74,9 +116,9 @@ const Evidence = () => {
     // console.log('sagar');
     await setEvidenceListdata(result);
   };
-  const handleDocument = (e) => {
-    const file = e.target.value;
-  };
+
+
+
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ['Yes', 'No', 'N/A'];
   return (
@@ -107,12 +149,15 @@ const Evidence = () => {
             </Box>
             <Typography variant="body2">Evidence Type 1</Typography>
           </Grid>
-          <Grid item md={3} justify="center">
+          
+            
+            <Grid item md={3} justify="center">
             <Box marginBottom={2}>
-              <Typography variant="body">Available</Typography>
+              <Typography variant="body">Available *</Typography>
             </Box>
             <RadioGroup
               className={classes.inlineRadioGroup}
+              error={error.available}
               onChange={(e) => {
                 setForm({ ...form, available: e.target.value });
               }}
@@ -125,16 +170,18 @@ const Evidence = () => {
                 />
               ))}
             </RadioGroup>
-            {error && error.available && <h1>{error.available}</h1>}
+            {error && error.available && <FormHelperText>{error.available}</FormHelperText>}
           </Grid>
           <Grid item md={4}>
             <Box marginBottom={2}>
-              <Typography variant="body">Comments</Typography>
+              <Typography variant="body">Comments *</Typography>
             </Box>
             <TextField
               id="filled-basic"
               variant="outlined"
               label="Type...."
+              error={error.comment}
+              helperText = {error.comment ? error.comment : ''}
               onChange={(e) => {
                 setForm({ ...form, comment: e.target.value });
               }}
@@ -143,28 +190,42 @@ const Evidence = () => {
           <Grid item md={3}>
             <p>Attachments</p>
             <Box>
-              <input
+            <input
                 type="file"
                 name="file"
-                onChange={(e) => {
-                  setForm({ ...form, document: e.target.value });
-                }}
+                onChange={(e) => setForm({...form , document: e.target.files[0] })}
               />
             </Box>
             <DeleteForeverIcon />
           </Grid>
+          
+          
           <Grid item md={12}>
             <Button
               variant="contained"
               color="primary"
               onClick={() => handleNext()}
-              href={
-                Object.keys(error).length == 0
-                  ? 'http://localhost:3000/app/incident-management/registration/evidence/activity-detail/'
-                  : '#'
-              }
+              
+              // href={
+              //   Object.keys(error).length == 0
+              //     ? 'http://localhost:3000/app/incident-management/registration/evidence/activity-detail/'
+              //     : '#'
+              // }
             >
               Next
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleUpdateEvidence()}
+              
+              // href={
+              //   Object.keys(error).length == 0
+              //     ? 'http://localhost:3000/app/incident-management/registration/evidence/activity-detail/'
+              //     : '#'
+              // }
+            >
+              update
             </Button>
           </Grid>
         </Grid>
