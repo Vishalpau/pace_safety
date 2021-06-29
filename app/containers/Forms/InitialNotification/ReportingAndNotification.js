@@ -86,6 +86,7 @@ const ReportingAndNotification = () => {
   const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
   const [reportedTo, setReportableTo] = useState([]);
+  const [reportId, setReportId] = useState([])
 
   const { id } = useParams();
 
@@ -120,15 +121,12 @@ const ReportingAndNotification = () => {
     let rpDate = form.reportingdate;
     let startDate = `${rpDate} ${rpTime}`;
     // let startDate = form.reportingdate.concat(form.reportingtime)
-    console.log(startDate);
     var start_date = moment(startDate, "YYYY-MM-DD HH:mm:ss");
     var end_date = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
     var duration = moment.duration(end_date.diff(start_date));
     var Hours = duration.asHours();
-    console.log(Hours);
     if (Hours > 4) {
       await SetLateReport(false);
-      console.log("here");
     } else {
       await SetLateReport(true);
     }
@@ -152,7 +150,6 @@ const ReportingAndNotification = () => {
   };
 
   const handleDrop = (acceptedFiles) => {
-    console.log(acceptedFiles);
     const formData = new FormData();
     for (let i = 0; i < acceptedFiles.length; i++) {
       formData.append("evidenceDocument", acceptedFiles[i]);
@@ -163,7 +160,6 @@ const ReportingAndNotification = () => {
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`,
         formData
       );
-      console.log(evidanceResponse);
     }
 
     setForm({
@@ -175,28 +171,23 @@ const ReportingAndNotification = () => {
 
   const handleUpdateEnvironement = async (e, key, fieldname, reportId) => {
     const temp = reportsListData;
-    console.log(temp);
     const { value } = e.target;
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
     temp[key].updatedAt = moment(new Date()).toISOString();
-    console.log(temp[key]);
 
     const res = await api.put(
       `api/v1/incidents/${id}/reports/${reportId}/`,
       temp[key]
     );
-    console.log(res);
   };
 
   const handelNext = async (e) => {
     const { error, isValid } = ReportingValidation(form);
     setError(error);
-    console.log("ERROR => ", error);
     // getting fileds for update
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
-    console.log("1", temp);
     temp.supervisorByName =
       form.supervisorname || incidentsListData.supervisorByName;
     temp.supervisorById = 1;
@@ -210,7 +201,6 @@ const ReportingAndNotification = () => {
       form.additionaldetails || incidentsListData.notificationComments;
     temp.updatedAt = moment(new Date()).toISOString();
     temp.updatedBy = "0";
-    console.log(temp);
 
     // put call for update
     const res = await api.put(
@@ -220,22 +210,33 @@ const ReportingAndNotification = () => {
 
     // Update case.
     if (id) {
+
+      // reported to api call
+      const res = await api.put(`/api/v1/incidents/${id}/reports/${reportId}/`, {
+        reportTo: form.reportedto.includes("Others")
+          ? form.reportedto.concat([otherdata]).toString()
+          : form.reportedto.toString(),
+        reportingNote: otherdata,
+        createdBy: 0,
+        fkIncidentId: id,
+      });
+      if(res.status === 200){
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
           "fkincidentId"
         )}`
       );
+        }
     } else {
       const { error, isValid } = ReportingValidation(form);
       setError(error);
-      console.log("reported to");
 
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
         reportTo: form.reportedto.includes("Others")
           ? form.reportedto.concat([otherdata]).toString()
           : form.reportedto.toString(),
-        reportingNote: form.latereporting,
+        reportingNote: otherdata,
         createdBy: 0,
         fkIncidentId: fkid,
       });
@@ -252,93 +253,56 @@ const ReportingAndNotification = () => {
   };
 
   const handelReportedTo = async (e, value, type) => {
+    console.log(e.target.checked)
     if ((type = "option")) {
       if (e.target.checked == false) {
+        
+        console.log(form.reportedto);
         const newData = form.reportedto.filter((item) => item !== value);
+        console.log(newData);
         await setForm({
           ...form,
           reportedto: newData,
         });
 
-        let newReportedTo = [];
-        for (let key in reportedTo) {
-          let newReportToObj = reportedTo[key];
-          if (newReportToObj.inputValue == value) {
-            newReportToObj.isSelected = 0;
-          }
-          newReportedTo.push(newReportToObj);
-        }
-
-        setReportData(newReportedTo);
-        console.log("****", newReportedTo);
+        // let newReportedTo = [];
       } else {
+        console.log(value);
         await setForm({
           ...form,
           reportedto: [...form.reportedto, value],
         });
-
-        let newReportedTo = [];
-        for (let key in reportedTo) {
-          let newReportToObj = reportedTo[key];
-          console.log(
-            newReportToObj.inputValue,
-            value,
-            newReportToObj.inputValue == value
-          );
-          if (newReportToObj.inputValue == value) {
-            newReportToObj.isSelected = 1;
-          }
-          newReportedTo.push(newReportToObj);
-        }
-        await setReportData(newReportedTo);
-        console.log("****", newReportedTo);
       }
     }
   };
 
-  const fetchIncidentsData = async () => {
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
+  // fetch reportList
+  const fetchReportsDataList = async () => {
+    const res = await api.get(`/api/v1/incidents/${id}/reports/`);
     const result = res.data.data.results;
-    await setIncidentsListdata(result);
-    await setIsLoading(true);
+    const report = result[0].reportTo;
+    await setForm({ ...form, reportedto: report.split(",") });
+    await setReportId(result[0].id)
+    // form.reportTo = report.split(',')
   };
 
+  //  Fetch checkbox value
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
     await setReportableTo(result);
   };
 
-  const fetchReportsDataList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/reports/`);
-
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
     const result = res.data.data.results;
-    console.log(result);
-    const report = result[0].reportTo;
-    const splitReport = report.split(",");
-    const usingArrayFrom = Array.from(splitReport);
-    await setReportListData(result);
-    await setReportData(usingArrayFrom);
+    const date = new date(result.incidentReportedOn)
+    // await setForm({...form,reportingdate:date})
+    await setIncidentsListdata(result);
     await setIsLoading(true);
-
-    // Loop over all the reported to and update the reportedTo state isSelected.
-    let newReportedTo = [];
-    for (let key in reportedTo) {
-      isSelected = 0;
-      for (let keyReport in result) {
-        if (result[keyReport].reportTo == reportedTo[key].inputValue) {
-          isSelected = 1;
-        }
-      }
-
-      let reportedToObj = reportedTo[key];
-      reportedToObj.isSelected = 1;
-      newReportedTo.push(reportedToObj);
-    }
-    setReportData(newReportedTo);
-    console.log(usingArrayFrom);
   };
 
   useEffect(() => {
@@ -350,305 +314,287 @@ const ReportingAndNotification = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
-            <FormControl component="fieldset" className={classes.formControl}>
-              <FormLabel component="legend">Reportable to</FormLabel>
-              {console.log(reportsListData)}
-              <FormGroup>
-                {reportData.length > 0
-                  ? reportedTo.map((value) => (
-                      <FormControlLabel
-                        value={value.inputValue}
-                        control={<Checkbox />}
-                        label={value.inputValue}
-                        onChange={(e) =>
-                          handelReportedTo(e, value.inputValue, "option")
-                        }
-                      />
-                    ))
-                  : // ? reportData.map((report, key) => (
-                    //   <FormControlLabel
-                    //     key={key}
-                    //     control={
-                    //       <Checkbox
-                    //         checked={true}
-                    //         // onChange={(e) => handelReportedTo}
-
-                    //         name = {report}
-                    //       />
-                    //     }
-                    //     label={report}
-                    //   />
-                    // ))
-                    reportedTo.map((value) => (
-                      <>
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Checkbox />}
-                          label={value.inputValue}
-                          checked={value.isSelected ? true : false}
-                          onChange={(e) =>
-                            handelReportedTo(e, value.inputValue, "option")
-                          }
-                        />
-                        {console.log(value, value.isSelected)}
-                      </>
-                    ))}
-                {form.reportedto.includes("Other") ? (
-                  <TextField
-                    id="Other"
-                    variant="outlined"
-                    label="Other"
-                    // defaultValue={"Orher name"}
-                    className={classes.formControl}
-                    onChange={(e) => setOtherData(e.target.value)}
-                  />
-                ) : null}
-              </FormGroup>
-            </FormControl>
-          </Grid>
-
-          <Grid item lg={12} md={6} sm={6}>
-            {/* <p>Notification to be sent</p> */}
-            <FormControl
-              component="fieldset"
-              required
-              error={error && error.isnotificationsent}
-            >
-              <FormLabel component="legend">Notification to be sent</FormLabel>
-              {notificationSent.map((value) => (
-                <FormControlLabel
-                  value={value}
-                  control={<Checkbox />}
-                  label={value}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      isnotificationsent: e.target.value,
-                    });
-                  }}
-                />
-              ))}
-              {error && error.isnotificationsent && (
-                <FormHelperText>{error.isnotificationsent}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
-
-          <Grid item lg={12} justify="flex-start">
-            {/* <p>Initial Evidences</p> */}
-
-            <Box marginTop={3} marginBottom={4}>
-              <Typography variant="h6" gutterBottom>
-                Initial Evidences
-              </Typography>
-            </Box>
-
-            <MaterialDropZone
-              files={files}
-              showPreviews
-              maxSize={5000000}
-              filesLimit={5}
-              text="Drag and drop file(s) here or click button bellow"
-              showButton
-              onDrop={handleDrop}
-            />
-            {error && error.fileupload ? <p>{error.fileupload}</p> : null}
-          </Grid>
-
-          <Grid item md={6}>
-            <TextField
-              id="supervisor-name"
-              variant="outlined"
-              label="Supervisor name"
-              defaultValue={incidentsListData.supervisorByName}
-              className={classes.formControl}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  supervisorname: e.target.value.toString(),
-                });
-              }}
-            />
-          </Grid>
-
-          <Grid item md={6}>
-            <TextField
-              id="othersName"
-              variant="outlined"
-              label="Others Name"
-              className={classes.formControl}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  othername: e.target.value.toString(),
-                });
-              }}
-            />
-            {error && error.othername ? <p>{error.othername}</p> : null}
-          </Grid>
-
-          <Grid item md={6}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                className={classes.formControl}
-                id="date-picker-dialog"
-                error={error && error.reportingdate}
-                helperText={
-                  error && error.reportingdate ? error.reportingdate : null
-                }
-                format="yyyy/MM/dd"
-                required
-                inputVariant="outlined"
-                label="Reporting Date"
-                value={form.reportingdate}
-                onChange={(date) => handleDateChange(date)}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-
-          <Grid item md={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <KeyboardTimePicker
-                className={classes.formControl}
-                id="time-picker"
-                inputVariant="outlined"
-                label="Reporting Time"
-                required
-                error={error && error.reportingtime}
-                helperText={
-                  error && error.reportingtime ? error.reportingtime : null
-                }
-                value={form.reportingtime === null ? clearedDate : selectedTime}
-                onChange={(date) => {
-                  handelTimeChange(date);
-                  handelTimeCompare();
-                }}
-                KeyboardButtonProps={{
-                  "aria-label": "change time",
-                }}
-                format="HH:mm"
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-
-          <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-              error={error && error.reportedby}
-            >
-              <InputLabel id="reportedBy-label">Reported By</InputLabel>
-              <Select
-                labelId="reportedBy-label"
-                id="reportedBy"
-                label="Reported By"
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    reportedby: e.target.value.toString(),
-                  });
-                }}
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select>
-              {error && error.reportedby ? (
-                <FormHelperText>{error.reportedby}</FormHelperText>
-              ) : null}
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            <TextField
-              id="others"
-              variant="outlined"
-              label="Others"
-              className={classes.formControl}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  others: e.target.value.toString(),
-                });
-              }}
-              disabled={form.reportedby !== "Others"}
-            />
-          </Grid>
-          {lateReport ? (
+      {isLoading ? (
+        <Grid container spacing={3}>
+          <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
-              <TextField
-                id="reason"
-                variant="outlined"
-                label="Resaon for reporting later than 4 hours"
-                multiline
-                error={error && error.latereporting}
+              <FormControl component="fieldset" className={classes.formControl}>
+                <FormLabel component="legend">Reportable to</FormLabel>
+                {/* {console.log(reportsListData)} */}
+                <FormGroup>
+                  {reportedTo.map((value) => (
+                    <FormControlLabel
+                      value={value.inputValue}
+                      control={<Checkbox />}
+                      label={value.inputValue}
+                      checked={
+                        form.reportedto.includes(value.inputValue) ? true : false
+                      }
+                      onChange={(e) =>
+                        handelReportedTo(e, value.inputValue, "option")
+                      }
+                    />
+                  ))}
+                  {form.reportedto.includes("Other") ? (
+                    <TextField
+                      id="Other"
+                      variant="outlined"
+                      label="Other"
+                      // defaultValue={"Orher name"}
+                      className={classes.formControl}
+                      onChange={(e) => setOtherData(e.target.value)}
+                    />
+                  ) : null}
+                </FormGroup>
+              </FormControl>
+            </Grid>
+
+            <Grid item lg={12} md={6} sm={6}>
+              {/* <p>Notification to be sent</p> */}
+              <FormControl
+                component="fieldset"
                 required
-                helperText={
-                  error && error.latereporting ? error.latereporting : null
-                }
-                rows="4"
-                defaultValue={incidentsListData.reasonLateReporting}
-                className={classes.fullWidth}
+                error={error && error.isnotificationsent}
+              >
+                <FormLabel component="legend">
+                  Notification to be sent
+                </FormLabel>
+                {notificationSent.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Checkbox />}
+                    label={value}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        isnotificationsent: e.target.value,
+                      });
+                    }}
+                  />
+                ))}
+                {error && error.isnotificationsent && (
+                  <FormHelperText>{error.isnotificationsent}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item lg={12} justify="flex-start">
+              {/* <p>Initial Evidences</p> */}
+
+              <Box marginTop={3} marginBottom={4}>
+                <Typography variant="h6" gutterBottom>
+                  Initial Evidences
+                </Typography>
+              </Box>
+
+              <MaterialDropZone
+                files={files}
+                showPreviews
+                maxSize={5000000}
+                filesLimit={5}
+                text="Drag and drop file(s) here or click button bellow"
+                showButton
+                onDrop={handleDrop}
+              />
+              {error && error.fileupload ? <p>{error.fileupload}</p> : null}
+            </Grid>
+
+            <Grid item md={6}>
+              <TextField
+                id="supervisor-name"
+                variant="outlined"
+                label="Supervisor name"
+                defaultValue={incidentsListData.supervisorByName}
+                className={classes.formControl}
                 onChange={(e) => {
                   setForm({
                     ...form,
-                    latereporting: e.target.value.toString(),
+                    supervisorname: e.target.value.toString(),
                   });
                 }}
               />
             </Grid>
-          ) : null}
 
-          <Grid item md={12}>
-            <TextField
-              id="additionalDetails"
-              variant="outlined"
-              label="Additional details if any"
-              multiline
-              rows="4"
-              className={classes.fullWidth}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  additionaldetails: e.target.value.toString(),
-                });
-              }}
+            <Grid item md={6}>
+              <TextField
+                id="othersName"
+                variant="outlined"
+                label="Others Name"
+                className={classes.formControl}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    othername: e.target.value.toString(),
+                  });
+                }}
+              />
+              {error && error.othername ? <p>{error.othername}</p> : null}
+            </Grid>
+
+            <Grid item md={6}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  className={classes.formControl}
+                  id="date-picker-dialog"
+                  error={error && error.reportingdate}
+                  helperText={
+                    error && error.reportingdate ? error.reportingdate : null
+                  }
+                  format="yyyy/MM/dd"
+                  required
+                  inputVariant="outlined"
+                  label="Reporting Date"
+                  value={form.reportingdate}
+                  onChange={(date) => handleDateChange(date)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            <Grid item md={6}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <KeyboardTimePicker
+                  className={classes.formControl}
+                  id="time-picker"
+                  inputVariant="outlined"
+                  label="Reporting Time"
+                  required
+                  error={error && error.reportingtime}
+                  helperText={
+                    error && error.reportingtime ? error.reportingtime : null
+                  }
+                  value={
+                    form.reportingtime === null ? clearedDate : selectedTime
+                  }
+                  onChange={(date) => {
+                    handelTimeChange(date);
+                    handelTimeCompare();
+                  }}
+                  KeyboardButtonProps={{
+                    "aria-label": "change time",
+                  }}
+                  format="HH:mm"
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl
+                variant="outlined"
+                required
+                className={classes.formControl}
+                error={error && error.reportedby}
+              >
+                <InputLabel id="reportedBy-label">Reported By</InputLabel>
+                <Select
+                  labelId="reportedBy-label"
+                  id="reportedBy"
+                  label="Reported By"
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      reportedby: e.target.value.toString(),
+                    });
+                  }}
+                >
+                  {selectValues.map((selectValues) => (
+                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  ))}
+                </Select>
+                {error && error.reportedby ? (
+                  <FormHelperText>{error.reportedby}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              <TextField
+                id="others"
+                variant="outlined"
+                label="Others"
+                className={classes.formControl}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    others: e.target.value.toString(),
+                  });
+                }}
+                disabled={form.reportedby !== "Others"}
+              />
+            </Grid>
+            {lateReport ? (
+              <Grid item md={12}>
+                <TextField
+                  id="reason"
+                  variant="outlined"
+                  label="Resaon for reporting later than 4 hours"
+                  multiline
+                  error={error && error.latereporting}
+                  required
+                  helperText={
+                    error && error.latereporting ? error.latereporting : null
+                  }
+                  rows="4"
+                  defaultValue={incidentsListData.reasonLateReporting}
+                  className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      latereporting: e.target.value.toString(),
+                    });
+                  }}
+                />
+              </Grid>
+            ) : null}
+
+            <Grid item md={12}>
+              <TextField
+                id="additionalDetails"
+                variant="outlined"
+                label="Additional details if any"
+                multiline
+                rows="4"
+                className={classes.fullWidth}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    additionaldetails: e.target.value.toString(),
+                  });
+                }}
+              />
+            </Grid>
+
+            <Grid item md={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => history.goBack()}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelNext(e)}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={INITIAL_NOTIFICATION_FORM}
+              selectedItem={"Reporting and notification"}
             />
           </Grid>
-
-          <Grid item md={6}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => history.goBack()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNext(e)}
-            >
-              Submit
-            </Button>
-          </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={INITIAL_NOTIFICATION_FORM}
-            selectedItem={"Reporting and notification"}
-          />
-        </Grid>
-      </Grid>
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </PapperBlock>
   );
 };

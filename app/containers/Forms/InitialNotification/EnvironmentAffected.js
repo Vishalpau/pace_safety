@@ -136,7 +136,7 @@ const EnvironmentAffected = () => {
   };
 
   const handleNext = async () => {
-    if (environmentListData.length > 0) {
+    if (environmentListData.length > 0 || id !==undefined) {
       history.push(
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );

@@ -155,15 +155,15 @@ const IncidentDetails = () => {
 
       const formData = {
         id: parseInt(id),
-        fkCompanyId: 0,
-        fkProjectId: 0,
-        fkPhaseId: 0,
-        fkUnitId: 0,
+        fkCompanyId: incidentsListData.fkCompanyId || 1,
+        fkProjectId: incidentsListData.fkProjectId || 1,
+        fkPhaseId: incidentsListData.fkPhaseId || 1,
+        fkUnitId: incidentsListData.fkUnitId || 1,
         incidentNumber: form.incidenttype,
         incidentTitle: form.title,
         incidentDetails: form.description,
-        immediateActionsTaken: 'jdf',
-        incidentOccuredOn: null,
+        immediateActionsTaken: form.immediateactiontaken || incidentsListData.immediateActionsTaken,
+        incidentOccuredOn: moment(form.incidenttime).toISOString(),
         isPersonAffected: form.personaffected,
         isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
         personAffectedComments: incidentsListData.personAffectedComments,
@@ -273,22 +273,22 @@ const IncidentDetails = () => {
           incidentOccuredOn: null,
           isPersonAffected: form.personaffected,
           isPersonDetailsAvailable: 'No',
-          personAffectedComments: 'string',
+          personAffectedComments: '',
           isPropertyDamaged: form.propertyaffected,
           isPropertyDamagedAvailable: "No",
-          propertyDamagedComments: "string",
+          propertyDamagedComments: "",
           isEquipmentDamaged: form.equiptmenteffected,
           isEquipmentDamagedAvailable: "No",
-          equipmentDamagedComments: "string",
+          equipmentDamagedComments: "",
           isEnviromentalImpacted: form.environmentaffected,
-          enviromentalImpactComments: 'string',
-          supervisorByName: 'string',
+          enviromentalImpactComments: '',
+          supervisorByName: '',
           supervisorById: 0,
           incidentReportedOn: moment(form.incidentdate).toISOString(),
-          incidentReportedByName: 'string',
+          incidentReportedByName: '',
           incidentReportedById: 0,
-          reasonLateReporting: 'string',
-          notificationComments: 'string',
+          reasonLateReporting: '',
+          notificationComments: '',
           reviewedBy: 0,
           reviewDate: '2021-06-17T01:02:49.099Z',
           closedBy: 0,
@@ -399,7 +399,21 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setIncidentsListdata(result);
       const resTime = new Date(result.incidentOccuredOn);
+      await setForm({ ...form, projectname: result.projectname });
+      await setForm({ ...form, unitname: result.unitname });
+      await setForm({ ...form, incidenttype: result.incidenttype });
       await setForm({ ...form, incidentdate: resTime });
+      await setForm({ ...form, title: result.incidentTitle });
+      await setForm({ ...form, description: result.incidentDetails });
+      await setForm({ ...form, immediateactiontaken: result.immediateActionsTaken });
+      await setForm({ ...form, location: result.incidentLocation });
+      await setForm({ ...form, contractor: result.contractor });
+      await setForm({ ...form, subcontractor: result.subContractor });
+      await setForm({ ...form, personaffected: result.isPersonAffected });
+      await setForm({ ...form, propertyaffected: result.isPropertyDamaged });
+      await setForm({ ...form, equiptmenteffected: result.isEquipmentDamaged });
+      await setForm({ ...form, environmentaffected: result.isEnviromentalImpacted });
+      
       await setIsLoading(true);
     }
   };
