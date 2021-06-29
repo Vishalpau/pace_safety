@@ -352,11 +352,11 @@ function Application(props) {
         <Route
           path="/app/incident-management/registration/root-cause-analysis/management-control/"
           component={ManagementControl}
-        />
-        <Route
-          path="/app/incident-management/registration/root-cause-analysis/details/"
-          component={Details}
         /> */}
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/details/:id"
+          component={Details}
+        />
         <Route
           path="/app/incident-management/registration/root-cause-analysis/hazardious-acts/:id"
           component={HazardiousActs}
@@ -364,12 +364,12 @@ function Application(props) {
         {/* <Route
           path="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
           component={HazardiousCondtions}
-        />
+        /> */}
         <Route
-          path="/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+          path="/app/incident-management/registration/root-cause-analysis/root-cause-analysis/:id"
           component={RootCauseAnalysis}
         />
-        <Route
+        {/* <Route
           path="/app/incident-management/registration/root-cause-analysis/why-analysis/"
           component={WhyAnalysis}
         /> */}

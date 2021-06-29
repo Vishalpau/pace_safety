@@ -287,16 +287,18 @@ const HazardiousActs = () => {
 
   const classes = useStyles();
 
-  const handelNext = (e) => {
+  // 
+  const handelNext = async (e) => {
+    console.log("here")
+    // const { error, isValid } = HazardiousActsValidation(form);
 
-    const { error, isValid } = HazardiousActsValidation(form);
-    setError(error);
+    // await setError(error);
 
     let tempData = []
-    Object.entries(form).map((item, index) => {
+
+    Object.entries(form).forEach(async (item, index) => {
 
       let api_data = item[1]
-      let rcaRemark_one = api_data.rcaRemark
 
       // post request object
       if (putId.current == "") {
@@ -310,7 +312,7 @@ const HazardiousActs = () => {
           status: "Active"
         }
         tempData.push(temp)
-        setData(tempData)
+        await setData(tempData)
         // put request object
       } else {
         let temp = {
@@ -324,9 +326,10 @@ const HazardiousActs = () => {
           pk: updateIds.current[index]
         }
         tempData.push(temp)
-        setData(tempData)
+        await setData(tempData)
       }
     })
+    await handelApiCall()
   }
 
   // api call
@@ -549,7 +552,7 @@ const HazardiousActs = () => {
                     color="primary"
                     className={classes.button}
                     // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"}
-                    onClick={async (e) => { await handelNext(e); await handelApiCall(e) }}
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>
