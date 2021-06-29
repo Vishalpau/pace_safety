@@ -230,7 +230,7 @@ const BasicCauseAndAction = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause/"
+                  href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
                 >
                   Previous
                 </Button>
@@ -238,7 +238,7 @@ const BasicCauseAndAction = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+                  href="/app/incident-management/registration/root-cause-analysis/management-control/"
                 >
                   Next
                 </Button>

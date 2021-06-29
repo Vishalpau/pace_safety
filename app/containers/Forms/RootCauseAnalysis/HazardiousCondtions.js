@@ -44,11 +44,11 @@ const HazardiousCondition = () => {
   const [data, setData] = useState([]);
 
   const [form, setForm] = useState({
-    warningSystem: { rcaSubType: '', rcaRemark: [] },
-    energyTypes: { rcaSubType: '', rcaRemark: [] },
-    tools: { rcaSubType: '', rcaRemark: [] },
-    safetyitems: { rcaSubType: '', rcaRemark: [] },
-    others: { rcaSubType: '', remarkType: '' },
+    warningSystem: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    energyTypes: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    tools: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    safetyitems: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    others: { remarkType: "", rcaSubType: "", rcaRemark: "" },
   });
 
   const handelWarningSystems = (e, value) => {
@@ -59,18 +59,18 @@ const HazardiousCondition = () => {
       setForm({
         ...form,
         warningSystem: {
+          remarkType: 'options',
           rcaSubType: 'warningSystem',
           rcaRemark: newData,
-          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         warningSystem: {
+          remarkType: 'options',
           rcaSubType: 'warningSystem',
           rcaRemark: [...form.warningSystem.rcaRemark, value],
-          remarkType: 'string',
         },
       });
     }
@@ -82,18 +82,18 @@ const HazardiousCondition = () => {
       setForm({
         ...form,
         energyTypes: {
+          remarkType: 'options',
           rcaSubType: 'energyTypes',
           rcaRemark: newData,
-          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         energyTypes: {
+          remarkType: 'options',
           rcaSubType: 'energyTypes',
           rcaRemark: [...form.energyTypes.rcaRemark, value],
-          remarkType: 'string',
         },
       });
     }
@@ -105,18 +105,18 @@ const HazardiousCondition = () => {
       setForm({
         ...form,
         tools: {
+          remarkType: 'options',
           rcaSubType: 'tools',
           rcaRemark: newData,
-          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         tools: {
+          remarkType: 'options',
           rcaSubType: 'tools',
           rcaRemark: [...form.tools.rcaRemark, value],
-          remarkType: 'string',
         },
       });
     }
@@ -128,18 +128,18 @@ const HazardiousCondition = () => {
       setForm({
         ...form,
         safetyitems: {
+          remarkType: 'options',
           rcaSubType: 'safetyitems',
           rcaRemark: newData,
-          remarkType: 'string',
         },
       });
     } else {
       setForm({
         ...form,
         safetyitems: {
+          remarkType: 'options',
           rcaSubType: 'safetyitems',
           rcaRemark: [...form.safetyitems.rcaRemark, value],
-          remarkType: 'string',
         },
       });
     }
@@ -149,9 +149,9 @@ const HazardiousCondition = () => {
     setForm({
       ...form,
       others: {
+        remarkType: 'remark',
         rcaSubType: 'others',
-        remarkType: e.target.value,
-        rcaRemark: ['string'],
+        rcaRemark: e.target.value,
       },
     });
   };
@@ -162,23 +162,22 @@ const HazardiousCondition = () => {
 
     const tempData = [];
     Object.entries(form).map((item) => {
-      const api_data = item[1];
-      const rcaRemark_one = api_data.rcaRemark;
+      let api_data = item[1]
 
-      rcaRemark_one.map((value) => {
-        const temp = {
-          createdBy: '0',
-          fkIncidentId: localStorage.getItem('fkincidentId'),
-          rcaRemark: value,
-          rcaSubType: api_data.rcaSubType,
-          rcaType: 'string',
-          remarkType: api_data.remarkType,
-          status: 'Active',
-        };
-        tempData.push(temp);
-      });
-    });
-    setData(tempData);
+      console.log(item)
+      let temp = {
+        createdBy: "0",
+        fkIncidentId: localStorage.getItem("fkincidentId"),
+        rcaRemark: api_data["rcaRemark"].toString(),
+        rcaSubType: api_data["rcaSubType"],
+        rcaType: "Basic",
+        remarkType: api_data["remarkType"],
+        status: "Active"
+      }
+      tempData.push(temp)
+
+    })
+    setData(tempData)
   };
 
   const handelApiCall = async (e) => {
@@ -358,7 +357,7 @@ const HazardiousCondition = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/cause-and-action/"}
                     onClick={(e) => {
                       handelNext(e);
                       handelApiCall(e);

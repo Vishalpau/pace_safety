@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid, Container } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
@@ -36,20 +36,50 @@ const useStyles = makeStyles((theme) => ({
 const HazardiousActs = () => {
 
   const [form, setForm] = useState({
-    supervision: {},
-    workpackage: {},
-    equipmentMachinery: {},
-    behaviourIssue: {},
-    safetyIssues: {},
-    ergonimics: {},
-    procedures: {},
-    others: {}
+    supervision: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    workpackage: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    equipmentMachinery: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    behaviourIssue: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    safetyIssues: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    ergonimics: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    procedures: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    others: { remarkType: "", rcaSubType: "", rcaRemark: "" }
   }
   )
 
   const [error, setError] = useState({})
-
   const [data, setData] = useState([])
+  const putId = useRef("")
+  const checkUpdate = useRef(false);
+  const paceCauseData = useRef()
+  const [fetchApiData, setFetchApiData] = useState({})
+
+
+
+  const handelUpdateCheck = async () => {
+    let allrcaSubType = ["Supervision", "Workpackage", "equipmentMachinery", "behaviourIssue", "safetyIssues", "ergonimics", "procedures", "otheracts"]
+    let tempApiData = {}
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
+    if (!isNaN(lastItem)) {
+      checkUpdate.current = true;
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
+      putId.current = lastItem
+      let allApiData = previousData.data.data.results
+
+      allApiData.map(value => {
+        if (allrcaSubType.includes(value.rcaSubType)) {
+          let valueQuestion = value.rcaSubType
+          // let valueAnser = value.rcaRemark.includes(',') ? value.rcaRemark.split(',') : value.rcaRemark
+          let valueAnser = value.rcaRemark
+          tempApiData[valueQuestion] = valueAnser
+        }
+      })
+      paceCauseData.current = tempApiData
+      await setFetchApiData(tempApiData)
+    }
+  }
 
   const handelSupervison = (e, value) => {
     if (e.target.checked == false) {
@@ -59,16 +89,14 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "Supervision",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, supervision: {
-          rcaType: "options",
+          remarkType: "options",
           rcaSubType: "Supervision",
           rcaRemark: [...form.supervision.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -82,7 +110,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "Workpackage",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
@@ -91,7 +118,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "Workpackage",
           rcaRemark: [...form.workpackage.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -105,7 +131,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "equipmentMachinery",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
@@ -114,7 +139,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "equipmentMachinery",
           rcaRemark: [...form.equipmentMachinery.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -128,7 +152,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "behaviourIssue",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
@@ -137,7 +160,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "behaviourIssue",
           rcaRemark: [...form.behaviourIssue.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -151,7 +173,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "safetyIssues",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
@@ -160,7 +181,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "safetyIssues",
           rcaRemark: [...form.safetyIssues.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -174,7 +194,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "ergonimics",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
@@ -183,7 +202,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "ergonimics",
           rcaRemark: [...form.ergonimics.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -197,7 +215,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "procedures",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
@@ -206,7 +223,6 @@ const HazardiousActs = () => {
           remarkType: "options",
           rcaSubType: "procedures",
           rcaRemark: [...form.procedures.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -217,8 +233,7 @@ const HazardiousActs = () => {
       ...form, others: {
         remarkType: "remark",
         rcaSubType: "others",
-        remarkType: e.target.value,
-        rcaRemark: ["string"]
+        rcaRemark: e.target.value
       }
     })
   }
@@ -236,14 +251,13 @@ const HazardiousActs = () => {
     Object.entries(form).map((item) => {
       let api_data = item[1]
       let rcaRemark_one = api_data.rcaRemark
-
-
+      console.log(item)
       let temp = {
         createdBy: "0",
         fkIncidentId: localStorage.getItem("fkincidentId"),
         rcaRemark: api_data["rcaRemark"].toString(),
         rcaSubType: api_data["rcaSubType"],
-        rcaType: api_data["rcaType"],
+        rcaType: "Basic",
         remarkType: api_data["remarkType"],
         status: "Active"
       }
@@ -259,19 +273,34 @@ const HazardiousActs = () => {
     for (let key in callObjects) {
       console.log(callObjects[key])
       if (Object.keys(error).length == 0) {
-        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
-        if (res.status == 201) {
-          console.log("request done")
-          console.log(res)
+
+        if (putId.current !== "") {
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
+        } else {
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
         }
       }
     }
   }
 
+
+  useEffect(() => {
+    handelUpdateCheck()
+  }, []);
+
   return (
     <Container>
-      {console.log(data)}
+      {console.log(form)}
       <Paper>
+        {console.log(fetchApiData.Supervision !== "undefined" ? "String" : "")}
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h6" gutterBottom>
             Immediate Causes - Hazardous acts
@@ -293,6 +322,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.Supervision !== "undefined" && fetchApiData.Supervision.includes(value) ? true : false}
                         onChange={async (e) => handelSupervison(e, value)}
                       />
                     ))}
@@ -312,6 +342,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.Workpackage !== "undefined" && fetchApiData.Workpackage.includes(value) ? true : false}
                         onChange={async (e) => handelWorkpackage(e, value)}
                       />
                     ))}
@@ -333,6 +364,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.equipmentMachinery !== "undefined" && fetchApiData.equipmentMachinery.includes(value) ? true : false}
                         onChange={async (e) => handelEquipmentMachinary(e, value)}
                       />
                     ))}
@@ -351,6 +383,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.behaviourIssue !== "undefined" && fetchApiData.behaviourIssue.includes(value) ? true : false}
                         onChange={async (e) => handelBehaviousIssues(e, value)}
                       />
                     ))}
@@ -369,6 +402,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.safetyIssues !== "undefined" && fetchApiData.safetyIssues.includes(value) ? true : false}
                         onChange={async (e) => handelSafetyIssues(e, value)}
                       />
                     ))}
@@ -387,6 +421,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.ergonimics !== "undefined" && fetchApiData.ergonimics.includes(value) ? true : false}
                         onChange={async (e) => handelErgonomics(e, value)}
                       />
                     ))}
@@ -405,6 +440,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.procedures !== "undefined" && fetchApiData.procedures.includes(value) ? true : false}
                         onChange={async (e) => handelProcedures(e, value)}
                       />
                     ))}
@@ -424,6 +460,7 @@ const HazardiousActs = () => {
                   variant="outlined"
                   multiline
                   error={error.others}
+                  // value={typeof fetchApiData.Supervision !== "undefined" && fetchApiData.ergonimics.includes(value) ? true : false}
                   helperText={error ? error.others : ""}
                   rows={3}
                   onChange={async (e) => handelOthers(e)}
@@ -444,7 +481,7 @@ const HazardiousActs = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"}
                     onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next

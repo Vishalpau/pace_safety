@@ -339,10 +339,53 @@ function Application(props) {
           path="/app/incident-management/registration/root-cause-analysis/why-analysis/"
           component={WhyAnalysis}
         />
+
+        {/* form root cause analysis get and put */}
+        {/* <Route
+          path="/app/incident-management/registration/root-cause-analysis/basic-cause/"
+          component={BasicCause}
+        />
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+          component={BasicCauseAndAction}
+        />
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+          component={CauseAndAction}
+        />
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/management-control/"
+          component={ManagementControl}
+        />
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/details/"
+          component={Details}
+        /> */}
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/hazardious-acts/:id"
+          component={HazardiousActs}
+        />
+        {/* <Route
+          path="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+          component={HazardiousCondtions}
+        />
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+          component={RootCauseAnalysis}
+        />
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/why-analysis/"
+          component={WhyAnalysis}
+        /> */}
+
+        {/* summary */}
+
         <Route
           path="/app/incident-management/registration/summary/summary/:id"
           component={Summary}
         />
+
+
         history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
         {/* from leassionlearned */}
         <Route

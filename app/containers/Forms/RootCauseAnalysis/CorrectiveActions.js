@@ -69,8 +69,8 @@ const CorrectiveAction = () => {
 
 
   const [form, setForm] = useState({
-    managementControl: { rcaSubType: "", rcaRemark: [] },
-    regionSupport: { rcaSubType: "", remarkType: "" }
+    managementControl: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    regionSupport: { remarkType: "", rcaSubType: "", rcaRemark: "" }
   }
   )
 
@@ -79,17 +79,17 @@ const CorrectiveAction = () => {
       let newData = form.managementControl.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, managementControl: {
-          rcaSubType: "managementControl",
+          remarkType: 'options',
+          rcaSubType: "management control",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, managementControl: {
-          rcaSubType: "managementControl",
+          remarkType: 'options',
+          rcaSubType: "management control",
           rcaRemark: [...form.managementControl.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -98,9 +98,9 @@ const CorrectiveAction = () => {
   const handelRegionSupport = (e) => {
     setForm({
       ...form, regionSupport: {
+        remarkType: 'remark',
         rcaSubType: "Details the region to support above",
-        remarkType: e.target.value,
-        rcaRemark: ["string"]
+        rcaRemark: e.target.value
       }
     })
   }
@@ -119,20 +119,19 @@ const CorrectiveAction = () => {
     let tempData = []
     Object.entries(form).map((item) => {
       let api_data = item[1]
-      let rcaRemark_one = api_data.rcaRemark
 
-      rcaRemark_one.map((value) => {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: value,
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "string",
-          remarkType: api_data["remarkType"],
-          status: "Active"
-        }
-        tempData.push(temp)
-      })
+      console.log(item)
+      let temp = {
+        createdBy: "0",
+        fkIncidentId: localStorage.getItem("fkincidentId"),
+        rcaRemark: api_data["rcaRemark"].toString(),
+        rcaSubType: api_data["rcaSubType"],
+        rcaType: "Basic",
+        remarkType: api_data["remarkType"],
+        status: "Active"
+      }
+      tempData.push(temp)
+
     })
     setData(tempData)
   }
@@ -229,7 +228,7 @@ const CorrectiveAction = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    // href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"}
                     onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next
