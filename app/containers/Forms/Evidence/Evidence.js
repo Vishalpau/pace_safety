@@ -99,24 +99,77 @@ const Evidence = () => {
     <PapperBlock title=" Evidences" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
-              </Typography>
-            </Box>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Number
+            </Typography>
+
+            <Typography varint="body1" className={Type.labelValue}>
+              98865686
+            </Typography>
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident Description
             </Typography>
-            <Typography variant="body" gutterBottom>
+            <Typography className={Type.labelValue}>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
               debitis saepe corporis quo inventore similique fugiat voluptatem
               alias et quae temporibus necessitatibus ut, magni ea quisquam vel,
               officiis cupiditate aperiam.
             </Typography>
           </Grid>
+
+          {/* <Grid item md={12}>
+            <TableContainer component={Paper}>
+              <Table size="small" className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Evidence Type</TableCell>
+                    <TableCell>Available</TableCell>
+                    <TableCell>Comments</TableCell>
+                    <TableCell>Attatchments</TableCell>
+                    <TableCell>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Evidence Type 1</TableCell>
+                    <TableCell>
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        onChange={(e) => {
+                          setForm({ ...form, available: e.target.value });
+                        }}
+                      >
+                        {radioDecide.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            control={<Radio />}
+                            label={value}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </TableCell>
+                    <TableCell>
+                      <TextField size="small" />
+                    </TableCell>
+                    <TableCell>Sample</TableCell>
+                    <TableCell align="right">
+                      <Chip
+                        // icon={<InsertDriveFileIcon />}
+                        onClick={() => alert("Uploaded")}
+                        size="small"
+                        color="primary"
+                        label="Upload"
+                      />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid> */}
+
           <Grid item md={2}>
             <Box marginBottom={2}>
               <Typography variant="body">Evidence Type</Typography>
