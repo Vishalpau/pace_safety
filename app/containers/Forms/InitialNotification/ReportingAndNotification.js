@@ -85,6 +85,7 @@ const ReportingAndNotification = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
+  const [reportableTo, setReportableTo] = useState([]);
 
   const { id } = useParams();
 
@@ -104,20 +105,8 @@ const ReportingAndNotification = () => {
 
   const history = useHistory();
 
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4, "Other"];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
   const [selectedTime, setSelectedTime] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -126,9 +115,9 @@ const ReportingAndNotification = () => {
   const [fileNames, setFileNames] = useState("");
 
   const handelTimeCompare = async (e) => {
-    let rpTime = form.reportingtime
-    let rpDate = form.reportingdate
-    let startDate = `${rpDate} ${rpTime}`
+    let rpTime = form.reportingtime;
+    let rpDate = form.reportingdate;
+    let startDate = `${rpDate} ${rpTime}`;
     // let startDate = form.reportingdate.concat(form.reportingtime)
     console.log(startDate);
     var start_date = moment(startDate, "YYYY-MM-DD HH:mm:ss");
@@ -137,10 +126,10 @@ const ReportingAndNotification = () => {
     var Hours = duration.asHours();
     console.log(Hours);
     if (Hours > 4) {
-      await SetLateReport(false)
-      console.log("here")
+      await SetLateReport(false);
+      console.log("here");
     } else {
-      await SetLateReport(true)
+      await SetLateReport(true);
     }
   };
 
@@ -228,7 +217,8 @@ const ReportingAndNotification = () => {
       temp
     );
 
-    if (id !== undefined) {
+    // Update case.
+    if (id) {
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
           "fkincidentId"
@@ -237,7 +227,7 @@ const ReportingAndNotification = () => {
     } else {
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
-        reportTo: form.reportedto.includes("Other")
+        reportTo: form.reportedto.includes("Others")
           ? form.reportedto.concat([otherdata]).toString()
           : form.reportedto.toString(),
         reportingNote: form.latereporting,
@@ -245,6 +235,9 @@ const ReportingAndNotification = () => {
         fkIncidentId: fkid,
       });
       if (res.status === 201) {
+
+        // Hit another API call.
+
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -280,6 +273,12 @@ const ReportingAndNotification = () => {
     await setIsLoading(true);
   };
 
+  const fetchReportableTo = async () => {
+    const res = await api.get("/api/v1/lists/20/value");
+    const result = res.data.data.results;
+    await setReportableTo(result);
+  };
+
   const fetchReportsDataList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
 
@@ -291,6 +290,7 @@ const ReportingAndNotification = () => {
   useEffect(() => {
     fetchIncidentsData();
     fetchReportsDataList();
+    fetchReportableTo();
   }, []);
 
   const classes = useStyles();
@@ -302,30 +302,15 @@ const ReportingAndNotification = () => {
             <FormControl component="fieldset" className={classes.formControl}>
               <FormLabel component="legend">Reportable to</FormLabel>
               <FormGroup>
-                {reportsListData.length > 0
-                  ? reportsListData.map((report, key) => (
-                    <FormControlLabel
-                      key={key}
-                      control={
-                        <Checkbox
-                          // checked={gilad}
-                          // onChange={(e) => handelReportedTo}
-
-                          name="gilad"
-                        />
-                      }
-                      label="Gilad Gray"
-                    />
-                  ))
-                  : reportedTo.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Checkbox />}
-                      label={value}
-                      onChange={(e) => handelReportedTo(e, value, "option")}
-                    />
-                  ))}
-                {form.reportedto.includes("Other") ? (
+                {reportableTo.map((value, index) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Checkbox />}
+                    label={value.inputValue}
+                    onChange={(e) => handelReportedTo(e, value.inputValue, "option")}
+                  />
+                ))}
+                {form.reportedto.includes("Others") ? (
                   <TextField
                     id="Other"
                     variant="outlined"
@@ -507,7 +492,7 @@ const ReportingAndNotification = () => {
                   others: e.target.value.toString(),
                 });
               }}
-              disabled={form.reportedby !== "Other"}
+              disabled={form.reportedby !== "Others"}
             />
           </Grid>
           {lateReport ? (
