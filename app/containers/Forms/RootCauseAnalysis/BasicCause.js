@@ -55,12 +55,12 @@ const BasicCause = () => {
   const [data, setData] = useState([])
 
   const [form, setForm] = useState({
-    personal: { rcaSubType: "", rcaRemark: [] },
-    wellnessFactors: { rcaSubType: "", rcaRemark: [] },
-    otherHumanFactor: { rcaSubType: "", remarkType: "" },
-    leadership: { rcaSubType: "", rcaRemark: [] },
-    processes: { rcaSubType: "", rcaRemark: [] },
-    otherJobFactors: { rcaSubType: "", remarkType: "" }
+    personal: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    wellnessFactors: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    otherHumanFactor: { remarkType: "", rcaSubType: "", rcaRemark: "" },
+    leadership: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    processes: { remarkType: "", rcaSubType: "", rcaRemark: [] },
+    otherJobFactors: { remarkType: "", rcaSubType: "", rcaRemark: "" }
   }
   )
 
@@ -69,17 +69,17 @@ const BasicCause = () => {
       let newData = form.personal.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, personal: {
+          remarkType: 'options',
           rcaSubType: "personal",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, personal: {
+          remarkType: 'options',
           rcaSubType: "personal",
           rcaRemark: [...form.personal.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -90,17 +90,17 @@ const BasicCause = () => {
       let newData = form.wellnessFactors.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, wellnessFactors: {
+          remarkType: 'options',
           rcaSubType: "wellnessFactors",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, wellnessFactors: {
+          remarkType: 'options',
           rcaSubType: "wellnessFactors",
           rcaRemark: [...form.wellnessFactors.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -109,9 +109,9 @@ const BasicCause = () => {
   const handelOtherHumanFactors = (e) => {
     setForm({
       ...form, otherHumanFactor: {
+        remarkType: 'remark',
         rcaSubType: "others human factors",
-        remarkType: e.target.value,
-        rcaRemark: ["string"]
+        rcaRemark: e.target.value
       }
     })
   }
@@ -121,17 +121,17 @@ const BasicCause = () => {
       let newData = form.leadership.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, leadership: {
+          remarkType: 'options',
           rcaSubType: "leadership",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, leadership: {
+          remarkType: 'options',
           rcaSubType: "leadership",
           rcaRemark: [...form.leadership.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -142,17 +142,17 @@ const BasicCause = () => {
       let newData = form.processes.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, processes: {
+          remarkType: 'options',
           rcaSubType: "processes",
           rcaRemark: newData,
-          remarkType: "string"
         }
       })
     } else {
       setForm({
         ...form, processes: {
+          remarkType: 'options',
           rcaSubType: "processes",
           rcaRemark: [...form.processes.rcaRemark, value],
-          remarkType: "string"
         }
       })
     }
@@ -161,9 +161,9 @@ const BasicCause = () => {
   const handelOtherJobFactors = (e) => {
     setForm({
       ...form, otherJobFactors: {
+        remarkType: 'remark',
         rcaSubType: "others job factors",
-        remarkType: e.target.value,
-        rcaRemark: ["string"]
+        rcaRemark: e.target.value
       }
     })
   }
@@ -180,20 +180,19 @@ const BasicCause = () => {
     let tempData = []
     Object.entries(form).map((item) => {
       let api_data = item[1]
-      let rcaRemark_one = api_data.rcaRemark
 
-      rcaRemark_one.map((value) => {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: value,
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "string",
-          remarkType: api_data["remarkType"],
-          status: "Active"
-        }
-        tempData.push(temp)
-      })
+      console.log(item)
+      let temp = {
+        createdBy: "0",
+        fkIncidentId: localStorage.getItem("fkincidentId"),
+        rcaRemark: api_data["rcaRemark"].toString(),
+        rcaSubType: api_data["rcaSubType"],
+        rcaType: "Basic",
+        remarkType: api_data["remarkType"],
+        status: "Active"
+      }
+      tempData.push(temp)
+
     })
     setData(tempData)
   }
@@ -387,7 +386,7 @@ const BasicCause = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"}
                     onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next

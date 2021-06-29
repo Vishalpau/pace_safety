@@ -30,10 +30,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { MaterialDropZone, PapperBlock } from "dan-components";
 import { DropzoneDialogBase } from "material-ui-dropzone";
-
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
@@ -85,6 +85,7 @@ const ReportingAndNotification = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
+  const [reportableTo, setReportableTo] = useState([]);
 
   const { id } = useParams();
 
@@ -104,20 +105,8 @@ const ReportingAndNotification = () => {
 
   const history = useHistory();
 
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4, "Other"];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
   const [selectedTime, setSelectedTime] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -125,7 +114,7 @@ const ReportingAndNotification = () => {
   const [otherdata, setOtherData] = useState("");
   const [fileNames, setFileNames] = useState("");
 
-  const handelTimeCompare = (e) => {
+  const handelTimeCompare = async (e) => {
     let rpTime = form.reportingtime;
     let rpDate = form.reportingdate;
     let startDate = `${rpDate} ${rpTime}`;
@@ -137,9 +126,10 @@ const ReportingAndNotification = () => {
     var Hours = duration.asHours();
     console.log(Hours);
     if (Hours > 4) {
-      SetLateReport(false);
+      await SetLateReport(false);
+      console.log("here");
     } else {
-      SetLateReport(true);
+      await SetLateReport(true);
     }
   };
 
@@ -227,7 +217,8 @@ const ReportingAndNotification = () => {
       temp
     );
 
-    if (id !== undefined) {
+    // Update case.
+    if (id) {
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
           "fkincidentId"
@@ -236,7 +227,7 @@ const ReportingAndNotification = () => {
     } else {
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
-        reportTo: form.reportedto.includes("Other")
+        reportTo: form.reportedto.includes("Others")
           ? form.reportedto.concat([otherdata]).toString()
           : form.reportedto.toString(),
         reportingNote: form.latereporting,
@@ -244,6 +235,9 @@ const ReportingAndNotification = () => {
         fkIncidentId: fkid,
       });
       if (res.status === 201) {
+
+        // Hit another API call.
+
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -279,6 +273,12 @@ const ReportingAndNotification = () => {
     await setIsLoading(true);
   };
 
+  const fetchReportableTo = async () => {
+    const res = await api.get("/api/v1/lists/20/value");
+    const result = res.data.data.results;
+    await setReportableTo(result);
+  };
+
   const fetchReportsDataList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
 
@@ -290,6 +290,7 @@ const ReportingAndNotification = () => {
   useEffect(() => {
     fetchIncidentsData();
     fetchReportsDataList();
+    fetchReportableTo();
   }, []);
 
   const classes = useStyles();
@@ -299,32 +300,17 @@ const ReportingAndNotification = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
             <FormControl component="fieldset" className={classes.formControl}>
-              <FormLabel component="legend"> Reportable to </FormLabel>
+              <FormLabel component="legend">Reportable to</FormLabel>
               <FormGroup>
-                {reportsListData.length > 0
-                  ? reportsListData.map((report, key) => (
-                      <FormControlLabel
-                        key={key}
-                        control={
-                          <Checkbox
-                            // checked={gilad}
-                            // onChange={(e) => handelReportedTo}
-
-                            name="gilad"
-                          />
-                        }
-                        label="Gilad Gray"
-                      />
-                    ))
-                  : reportedTo.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Checkbox />}
-                        label={value}
-                        onChange={(e) => handelReportedTo(e, value, "option")}
-                      />
-                    ))}
-                {form.reportedto.includes("Other") ? (
+                {reportableTo.map((value, index) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Checkbox />}
+                    label={value.inputValue}
+                    onChange={(e) => handelReportedTo(e, value.inputValue, "option")}
+                  />
+                ))}
+                {form.reportedto.includes("Others") ? (
                   <TextField
                     id="Other"
                     variant="outlined"
@@ -339,24 +325,30 @@ const ReportingAndNotification = () => {
           </Grid>
 
           <Grid item lg={12} md={6} sm={6}>
-            <p>Notification to be sent</p>
-
-            {notificationSent.map((value) => (
-              <FormControlLabel
-                value={value}
-                control={<Checkbox />}
-                label={value}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    isnotificationsent: e.target.value,
-                  });
-                }}
-              />
-            ))}
-            {error && error.isnotificationsent && (
-              <p>{error.isnotificationsent}</p>
-            )}
+            {/* <p>Notification to be sent</p> */}
+            <FormControl
+              component="fieldset"
+              required
+              error={error && error.isnotificationsent}
+            >
+              <FormLabel component="legend">Notification to be sent</FormLabel>
+              {notificationSent.map((value) => (
+                <FormControlLabel
+                  value={value}
+                  control={<Checkbox />}
+                  label={value}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      isnotificationsent: e.target.value,
+                    });
+                  }}
+                />
+              ))}
+              {error && error.isnotificationsent && (
+                <FormHelperText>{error.isnotificationsent}</FormHelperText>
+              )}
+            </FormControl>
           </Grid>
 
           <Grid item lg={12} justify="flex-start">
@@ -417,6 +409,10 @@ const ReportingAndNotification = () => {
               <KeyboardDatePicker
                 className={classes.formControl}
                 id="date-picker-dialog"
+                error={error && error.reportingdate}
+                helperText={
+                  error && error.reportingdate ? error.reportingdate : null
+                }
                 format="yyyy/MM/dd"
                 required
                 inputVariant="outlined"
@@ -428,7 +424,6 @@ const ReportingAndNotification = () => {
                 }}
               />
             </MuiPickersUtilsProvider>
-            {error && error.reportingdate ? <p>{error.reportingdate}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -437,7 +432,12 @@ const ReportingAndNotification = () => {
                 className={classes.formControl}
                 id="time-picker"
                 inputVariant="outlined"
-                label="Time picker"
+                label="Reporting Time"
+                required
+                error={error && error.reportingtime}
+                helperText={
+                  error && error.reportingtime ? error.reportingtime : null
+                }
                 value={form.reportingtime === null ? clearedDate : selectedTime}
                 onChange={(date) => {
                   handelTimeChange(date);
@@ -449,7 +449,6 @@ const ReportingAndNotification = () => {
                 format="HH:mm"
               />
             </MuiPickersUtilsProvider>
-            {error && error.reportingtime ? <p>{error.reportingtime}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -457,6 +456,7 @@ const ReportingAndNotification = () => {
               variant="outlined"
               required
               className={classes.formControl}
+              error={error && error.reportedby}
             >
               <InputLabel id="reportedBy-label">Reported By</InputLabel>
               <Select
@@ -474,8 +474,10 @@ const ReportingAndNotification = () => {
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
               </Select>
+              {error && error.reportedby ? (
+                <FormHelperText>{error.reportedby}</FormHelperText>
+              ) : null}
             </FormControl>
-            {error && error.reportedby ? <p>{error.reportedby}</p> : null}
           </Grid>
 
           <Grid item md={6}>
@@ -490,9 +492,8 @@ const ReportingAndNotification = () => {
                   others: e.target.value.toString(),
                 });
               }}
-              disabled={form.reportedby !== "Other"}
+              disabled={form.reportedby !== "Others"}
             />
-            {/* {error && error.others && <p>{error.others}</p>} */}
           </Grid>
           {lateReport ? (
             <Grid item md={12}>
@@ -501,6 +502,11 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 label="Resaon for reporting later than 4 hours"
                 multiline
+                error={error && error.latereporting}
+                required
+                helperText={
+                  error && error.latereporting ? error.latereporting : null
+                }
                 rows="4"
                 defaultValue={incidentsListData.reasonLateReporting}
                 className={classes.fullWidth}
@@ -511,7 +517,6 @@ const ReportingAndNotification = () => {
                   });
                 }}
               />
-              {error && error.latereporting ? <p>{error.latereporting}</p> : null}
             </Grid>
           ) : null}
 
@@ -530,9 +535,6 @@ const ReportingAndNotification = () => {
                 });
               }}
             />
-            {/* {error && error.additionaldetails && (
-                    <p>{error.additionaldetails}</p>
-                  )} */}
           </Grid>
 
           <Grid item md={6}>

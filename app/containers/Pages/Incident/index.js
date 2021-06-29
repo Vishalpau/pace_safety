@@ -119,7 +119,8 @@ function BlankPage() {
 
   const fetchData = async () => {
     const res = await api.get("api/v1/incidents/");
-    await setIncidents(res.data.data.results);
+    console.log(res.data.data.results)
+    await setIncidents(res.data.data.results.results);
   };
 
   const handlePush = async () => {
@@ -141,14 +142,14 @@ function BlankPage() {
   // }, []);
 
   const handelSearchIncident = async (e) => {
-    console.log("here");
+    // console.log("here");
     let allSeacrh = [];
-    console.log(e.target.value.length);
+    // console.log(e.target.value.length);
     if (e.target.value.length === 0) {
       setShowIncident([]);
     } else {
       await setSeacrhIncident(e.target.value.toLowerCase());
-      console.log(searchIncident);
+      // console.log(searchIncident);
       Object.entries(incidents).map((item) => {
         if (item[1]["incidentNumber"].toLowerCase().includes(searchIncident)) {
           allSeacrh.push([
@@ -165,7 +166,7 @@ function BlankPage() {
       await setShowIncident(allSeacrh);
     }
 
-    console.log(showIncident);
+    // console.log(showIncident);
   };
 
   const columns = [
@@ -213,7 +214,7 @@ function BlankPage() {
 
   return (
     <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
-      {console.log("here")}
+
       <Box>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
@@ -294,9 +295,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                                // display="inline"
-                                // color="textSecondary"
-                                // className={Fonts.labelValue}
+                              // display="inline"
+                              // color="textSecondary"
+                              // className={Fonts.labelValue}
                               >
                                 {/* {item[1]["incidentTitle"]} */}
                                 Lorem ipsum dolor sit amet consectetur
@@ -309,8 +310,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="John Doe"
-                                // onDelete={handleDelete}
-                                // className={classes.chip}
+                              // onDelete={handleDelete}
+                              // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -536,9 +537,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                                // display="inline"
-                                // color="textSecondary"
-                                // className={Fonts.labelValue}
+                              // display="inline"
+                              // color="textSecondary"
+                              // className={Fonts.labelValue}
                               >
                                 {item[1]["incidentTitle"]}
                                 {/* {item[index]["incidentTitle"]} */}
@@ -549,8 +550,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="John Doe"
-                                // onDelete={handleDelete}
-                                // className={classes.chip}
+                              // onDelete={handleDelete}
+                              // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
