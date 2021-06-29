@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -20,6 +20,7 @@ import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import EvidenceValidate from "../../Validator/EvidenceValidation";
+import { useHistory, useParams } from 'react-router';
 import FormHeader from "../FormHeader";
 // import FormData from "form-data";
 import fs from "fs";
@@ -45,25 +46,49 @@ const Evidence = () => {
     new Date("2014-08-18T21:11:54")
   );
   let [error, setError] = useState({});
+  const { id } = useParams();
+  const history = useHistory();
+
+  const [evideceData, setEvideceData] = useState ({
+  evidenceCheck: "",
+  evidenceDocument: "",
+  evidenceRemark: "",
+  evidenceCategory : ""
+  });
   const classes = useStyles();
   const [form, setForm] = React.useState({
+    evidenceType: "",
     available: "",
     comment: "",
     document: "",
   });
-
+  const [isLoading , setIsLoading] = React.useState(false)
+ 
+  const fetchEvidenceList = async () => {
+    const res = await api.get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/${id}/`);
+    const result = res.data.data.results;
+    await setForm({ ...form, available: result.evidenceCheck})
+    await setForm({ ...form, comment : result.evidenceRemark})
+    await setForm({ ...form, evidenceType : result.evidenceCategory})
+    await setEvideceData(result);
+    await setIsLoading(true);
+    
+  }
+  
+  useEffect(() => {
+      if (id){
+        fetchEvidenceList();       
+      }
+      else{setIsLoading(true);} 
+  }, []);
   // On the next button click function call.
   const handleNext = async () => {
-    error, isValid = EvidenceValidate(form);
+    const {error, isValid} = EvidenceValidate(form);
     setError(error);
-
-    if (!isValid) {
-      return;
-    }
-
+    
     let data = new FormData();
     data.append("evidenceCheck", form.available);
-    data.append("evidenceCategory", "string");
+    data.append("evidenceCategory", form.evidenceType);
     data.append("evidenceRemark", form.comment);
     data.append("evidenceDocument", form.document);
     data.append("status", "Active");
@@ -71,28 +96,34 @@ const Evidence = () => {
 
     // If update is the case.
     if (id) {
-      const res = await api.put(`/api/v1/incidents/91/evidences/92/`, data);
+      const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/${id}/`, data);
+      if (res.status === 200){
+        history.push(`/app/incident-management/registration/evidence/activity-detail/${id}`)
+      }
       // If non update case is there.
     } else {
       data.append("createdAt", "");
       data.append("createdBy", "1");
       data.append("updatedAt", "");
       data.append("updatedBy", "");
-      data.append("fkIncidentId", "91");
-      const res = await api.post(`/api/v1/incidents/91/evidences/92/`, data);
+      data.append("fkIncidentId", localStorage.getItem('fkincidentId'));
+      
+      if (Object.keys(error).length == 0) {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`, data);
+      
+        if( res.status === 201 ) {
+        history.push(
+          '/app/incident-management/registration/evidence/activity-detail/'
+        );
+        }  
+      }    
     }
-
-    const res = await api.post(`/api/v1/incidents/91/evidences/`, formData);
-    console.log(res);
-    const result = res.data.data.results;
-    // console.log('sagar');
-    await setEvidenceListdata(result);
   };
 
-  const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No", "N/A"];
   return (
     <PapperBlock title=" Evidences" icon="ion-md-list-box">
+    {isLoading ? 
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
@@ -117,7 +148,17 @@ const Evidence = () => {
             <Box marginBottom={2}>
               <Typography variant="body">Evidence Type</Typography>
             </Box>
-            <Typography variant="body2">Evidence Type 1</Typography>
+            <TextField
+              id="filled-basic"
+              variant="outlined"
+              label="Evidence Type"
+              error={error.evidenceType}
+              helperText={error.evidenceType ? error.evidenceType : ""}
+              defaultValue = {form.evidenceType || evideceData.evidenceCategory}
+              onChange={(e) => {
+                setForm({ ...form, evidenceType : e.target.value });
+              }}
+            />
           </Grid>
 
           <Grid item md={3} justify="center">
@@ -127,6 +168,7 @@ const Evidence = () => {
             <RadioGroup
               className={classes.inlineRadioGroup}
               error={error.available}
+              defaultValue = {form.available || evideceData.evidenceCheck}
               onChange={(e) => {
                 setForm({ ...form, available: e.target.value });
               }}
@@ -134,6 +176,7 @@ const Evidence = () => {
               {radioDecide.map((value) => (
                 <FormControlLabel
                   value={value}
+                  
                   control={<Radio />}
                   label={value}
                 />
@@ -153,6 +196,7 @@ const Evidence = () => {
               label="Type...."
               error={error.comment}
               helperText={error.comment ? error.comment : ""}
+              defaultValue = {form.comment || evideceData.evidenceRemark}
               onChange={(e) => {
                 setForm({ ...form, comment: e.target.value });
               }}
@@ -177,27 +221,8 @@ const Evidence = () => {
               variant="contained"
               color="primary"
               onClick={() => handleNext()}
-
-              // href={
-              //   Object.keys(error).length == 0
-              //     ? 'http://localhost:3000/app/incident-management/registration/evidence/activity-detail/'
-              //     : '#'
-              // }
             >
               Next
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleUpdateEvidence()}
-
-              // href={
-              //   Object.keys(error).length == 0
-              //     ? 'http://localhost:3000/app/incident-management/registration/evidence/activity-detail/'
-              //     : '#'
-              // }
-            >
-              update
             </Button>
           </Grid>
         </Grid>
@@ -209,6 +234,7 @@ const Evidence = () => {
           />
         </Grid>
       </Grid>
+       : <h1>Loading...</h1>}
     </PapperBlock>
   );
 };
