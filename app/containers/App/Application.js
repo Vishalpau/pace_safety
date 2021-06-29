@@ -261,8 +261,12 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/additional-details/:id"
           component={AdditionalDetails}
         />
-        <Route
+        <Route exact
           path="/app/incident-management/registration/evidence/evidence/"
+          component={Evidence}
+        /> 
+        <Route exact
+          path="/app/incident-management/registration/evidence/evidence/:id"
           component={Evidence}
         />
         <Route
