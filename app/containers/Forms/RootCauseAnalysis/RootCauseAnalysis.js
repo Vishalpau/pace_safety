@@ -324,7 +324,7 @@ const RootCauseAnalysis = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/why-analysis/"}
+                  // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/why-analysis/"}
                   onClick={(e) => handelNext(e)}
                 >
                   Next

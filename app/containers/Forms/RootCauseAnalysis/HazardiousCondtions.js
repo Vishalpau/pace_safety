@@ -357,7 +357,7 @@ const HazardiousCondition = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/cause-and-action/"}
+                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/cause-and-action/"}
                     onClick={(e) => {
                       handelNext(e);
                       handelApiCall(e);

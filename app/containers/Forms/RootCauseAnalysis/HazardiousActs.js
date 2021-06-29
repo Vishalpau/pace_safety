@@ -49,20 +49,36 @@ const HazardiousActs = () => {
 
   const [error, setError] = useState({})
   const [data, setData] = useState([])
+  const putId = useRef("")
   const checkUpdate = useRef(false);
   const paceCauseData = useRef()
+  const [fetchApiData, setFetchApiData] = useState({})
+
+
 
   const handelUpdateCheck = async () => {
+    let allrcaSubType = ["Supervision", "Workpackage", "equipmentMachinery", "behaviourIssue", "safetyIssues", "ergonimics", "procedures", "otheracts"]
+    let tempApiData = {}
     let page_url = window.location.href
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
 
     if (!isNaN(lastItem)) {
       checkUpdate.current = true;
       let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
-      paceCauseData.current = previousData.data.data.results
-      console.log(paceCauseData)
-    }
+      putId.current = lastItem
+      let allApiData = previousData.data.data.results
 
+      allApiData.map(value => {
+        if (allrcaSubType.includes(value.rcaSubType)) {
+          let valueQuestion = value.rcaSubType
+          // let valueAnser = value.rcaRemark.includes(',') ? value.rcaRemark.split(',') : value.rcaRemark
+          let valueAnser = value.rcaRemark
+          tempApiData[valueQuestion] = valueAnser
+        }
+      })
+      paceCauseData.current = tempApiData
+      await setFetchApiData(tempApiData)
+    }
   }
 
   const handelSupervison = (e, value) => {
@@ -257,10 +273,19 @@ const HazardiousActs = () => {
     for (let key in callObjects) {
       console.log(callObjects[key])
       if (Object.keys(error).length == 0) {
-        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
-        if (res.status == 201) {
-          console.log("request done")
-          console.log(res)
+
+        if (putId.current !== "") {
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
+        } else {
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
         }
       }
     }
@@ -273,7 +298,9 @@ const HazardiousActs = () => {
 
   return (
     <Container>
+      {console.log(form)}
       <Paper>
+        {console.log(fetchApiData.Supervision !== "undefined" ? "String" : "")}
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h6" gutterBottom>
             Immediate Causes - Hazardous acts
@@ -295,6 +322,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.Supervision !== "undefined" && fetchApiData.Supervision.includes(value) ? true : false}
                         onChange={async (e) => handelSupervison(e, value)}
                       />
                     ))}
@@ -314,6 +342,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.Workpackage !== "undefined" && fetchApiData.Workpackage.includes(value) ? true : false}
                         onChange={async (e) => handelWorkpackage(e, value)}
                       />
                     ))}
@@ -335,6 +364,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.equipmentMachinery !== "undefined" && fetchApiData.equipmentMachinery.includes(value) ? true : false}
                         onChange={async (e) => handelEquipmentMachinary(e, value)}
                       />
                     ))}
@@ -353,6 +383,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.behaviourIssue !== "undefined" && fetchApiData.behaviourIssue.includes(value) ? true : false}
                         onChange={async (e) => handelBehaviousIssues(e, value)}
                       />
                     ))}
@@ -371,6 +402,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.safetyIssues !== "undefined" && fetchApiData.safetyIssues.includes(value) ? true : false}
                         onChange={async (e) => handelSafetyIssues(e, value)}
                       />
                     ))}
@@ -389,6 +421,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.ergonimics !== "undefined" && fetchApiData.ergonimics.includes(value) ? true : false}
                         onChange={async (e) => handelErgonomics(e, value)}
                       />
                     ))}
@@ -407,6 +440,7 @@ const HazardiousActs = () => {
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={typeof fetchApiData.procedures !== "undefined" && fetchApiData.procedures.includes(value) ? true : false}
                         onChange={async (e) => handelProcedures(e, value)}
                       />
                     ))}
@@ -426,6 +460,7 @@ const HazardiousActs = () => {
                   variant="outlined"
                   multiline
                   error={error.others}
+                  // value={typeof fetchApiData.Supervision !== "undefined" && fetchApiData.ergonimics.includes(value) ? true : false}
                   helperText={error ? error.others : ""}
                   rows={3}
                   onChange={async (e) => handelOthers(e)}
@@ -446,7 +481,7 @@ const HazardiousActs = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"}
+                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"}
                     onClick={(e) => { handelNext(e); handelApiCall(e) }}
                   >
                     Next

@@ -287,7 +287,7 @@ const Details = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"}
+                  // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"}
                   onClick={(e) => handelNext(e)}
                 >
                   Next
