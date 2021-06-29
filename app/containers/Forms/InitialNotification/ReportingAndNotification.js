@@ -124,6 +124,7 @@ const ReportingAndNotification = () => {
 
   const [otherdata, setOtherData] = useState("");
   const [fileNames, setFileNames] = useState("");
+  const [reportData, setReportData] = useState([])
 
   const handelTimeCompare = async (e) => {
     let rpTime = form.reportingtime
@@ -288,8 +289,14 @@ const ReportingAndNotification = () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
 
     const result = res.data.data.results;
+    console.log(result)
+    const report = result[0].reportTo;
+    const splitReport = report.split(',')
+    const usingArrayFrom = Array.from(splitReport);
     await setReportListData(result);
+    await setReportData(usingArrayFrom)
     await setIsLoading(true);
+    console.log(usingArrayFrom)
   };
 
   useEffect(() => {
@@ -305,22 +312,31 @@ const ReportingAndNotification = () => {
           <Grid item md={12}>
             <FormControl component="fieldset" className={classes.formControl}>
               <FormLabel component="legend">Reportable to</FormLabel>
+              {console.log(reportsListData)}
               <FormGroup>
-                {reportsListData.length > 0
-                  ? reportsListData.map((report, key) => (
-                    <FormControlLabel
-                      key={key}
-                      control={
-                        <Checkbox
-                          // checked={gilad}
-                          // onChange={(e) => handelReportedTo}
+                {reportData.length > 0
+                ?reportedTo.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Checkbox />}
+                    label={value}
+                    onChange={(e) => handelReportedTo(e, value, "option")}
+                  />
+                ))
+                  // ? reportData.map((report, key) => (
+                  //   <FormControlLabel
+                  //     key={key}
+                  //     control={
+                  //       <Checkbox
+                  //         checked={true}
+                  //         // onChange={(e) => handelReportedTo}
 
-                          name="gilad"
-                        />
-                      }
-                      label="Gilad Gray"
-                    />
-                  ))
+                  //         name = {report}
+                  //       />
+                  //     }
+                  //     label={report}
+                  //   />
+                  // ))
                   : reportedTo.map((value) => (
                     <FormControlLabel
                       value={value}
