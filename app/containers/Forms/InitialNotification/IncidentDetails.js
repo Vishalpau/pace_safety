@@ -255,10 +255,11 @@ const IncidentDetails = () => {
         }
       }
     } else {
+       // Create case if id is not null and means it is an add new registration case.
       const { error, isValid } = validate(form);
       setError(error);
 
-      console.log(error);
+      
       if (isValid === true) {
         const formData = {
           fkCompanyId: 1,
@@ -303,7 +304,7 @@ const IncidentDetails = () => {
           contractor: form.contractor,
           subContractor: form.subcontractor,
         };
-        console.log(formData);
+        // sent post api
         const res = await api.post('/api/v1/incidents/', formData);
         console.log(res);
         if (res.status === 201) {
@@ -311,7 +312,7 @@ const IncidentDetails = () => {
           localStorage.setItem('fkincidentId', fkincidentId);
           localStorage.setItem('deleteForm', JSON.stringify(hideAffect));
           localStorage.setItem('nextPath', JSON.stringify(nextPath));
-          console.log(hideAffect);
+          
           if (nextPath.personAffect === 'Yes') {
             history.push(
               '/app/incident-management/registration/initial-notification/peoples-afftected/'

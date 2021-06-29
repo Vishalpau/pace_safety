@@ -85,6 +85,7 @@ const ReportingAndNotification = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
+  const [reportedTo, setReportableTo] = useState([]);
 
   const { id } = useParams();
 
@@ -104,31 +105,20 @@ const ReportingAndNotification = () => {
 
   const history = useHistory();
 
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4, "Other"];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
   const [selectedTime, setSelectedTime] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
 
   const [otherdata, setOtherData] = useState("");
   const [fileNames, setFileNames] = useState("");
+  const [reportData, setReportData] = useState([]);
 
   const handelTimeCompare = async (e) => {
-    let rpTime = form.reportingtime
-    let rpDate = form.reportingdate
-    let startDate = `${rpDate} ${rpTime}`
+    let rpTime = form.reportingtime;
+    let rpDate = form.reportingdate;
+    let startDate = `${rpDate} ${rpTime}`;
     // let startDate = form.reportingdate.concat(form.reportingtime)
     console.log(startDate);
     var start_date = moment(startDate, "YYYY-MM-DD HH:mm:ss");
@@ -137,10 +127,10 @@ const ReportingAndNotification = () => {
     var Hours = duration.asHours();
     console.log(Hours);
     if (Hours > 4) {
-      await SetLateReport(false)
-      console.log("here")
+      await SetLateReport(false);
+      console.log("here");
     } else {
-      await SetLateReport(true)
+      await SetLateReport(true);
     }
   };
 
@@ -228,16 +218,21 @@ const ReportingAndNotification = () => {
       temp
     );
 
-    if (id !== undefined) {
+    // Update case.
+    if (id) {
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
           "fkincidentId"
         )}`
       );
     } else {
+      const { error, isValid } = ReportingValidation(form);
+      setError(error);
+      console.log("reported to");
+
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
-        reportTo: form.reportedto.includes("Other")
+        reportTo: form.reportedto.includes("Others")
           ? form.reportedto.concat([otherdata]).toString()
           : form.reportedto.toString(),
         reportingNote: form.latereporting,
@@ -245,6 +240,8 @@ const ReportingAndNotification = () => {
         fkIncidentId: fkid,
       });
       if (res.status === 201) {
+        // Hit another API call.
+
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -262,11 +259,39 @@ const ReportingAndNotification = () => {
           ...form,
           reportedto: newData,
         });
+
+        let newReportedTo = [];
+        for (let key in reportedTo) {
+          let newReportToObj = reportedTo[key];
+          if (newReportToObj.inputValue == value) {
+            newReportToObj.isSelected = 0;
+          }
+          newReportedTo.push(newReportToObj);
+        }
+
+        setReportData(newReportedTo);
+        console.log("****", newReportedTo);
       } else {
         await setForm({
           ...form,
           reportedto: [...form.reportedto, value],
         });
+
+        let newReportedTo = [];
+        for (let key in reportedTo) {
+          let newReportToObj = reportedTo[key];
+          console.log(
+            newReportToObj.inputValue,
+            value,
+            newReportToObj.inputValue == value
+          );
+          if (newReportToObj.inputValue == value) {
+            newReportToObj.isSelected = 1;
+          }
+          newReportedTo.push(newReportToObj);
+        }
+        await setReportData(newReportedTo);
+        console.log("****", newReportedTo);
       }
     }
   };
@@ -280,17 +305,46 @@ const ReportingAndNotification = () => {
     await setIsLoading(true);
   };
 
+  const fetchReportableTo = async () => {
+    const res = await api.get("/api/v1/lists/20/value");
+    const result = res.data.data.results;
+    await setReportableTo(result);
+  };
+
   const fetchReportsDataList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
 
     const result = res.data.data.results;
+    console.log(result);
+    const report = result[0].reportTo;
+    const splitReport = report.split(",");
+    const usingArrayFrom = Array.from(splitReport);
     await setReportListData(result);
+    await setReportData(usingArrayFrom);
     await setIsLoading(true);
+
+    // Loop over all the reported to and update the reportedTo state isSelected.
+    let newReportedTo = [];
+    for (let key in reportedTo) {
+      isSelected = 0;
+      for (let keyReport in result) {
+        if (result[keyReport].reportTo == reportedTo[key].inputValue) {
+          isSelected = 1;
+        }
+      }
+
+      let reportedToObj = reportedTo[key];
+      reportedToObj.isSelected = 1;
+      newReportedTo.push(reportedToObj);
+    }
+    setReportData(newReportedTo);
+    console.log(usingArrayFrom);
   };
 
   useEffect(() => {
     fetchIncidentsData();
     fetchReportsDataList();
+    fetchReportableTo();
   }, []);
 
   const classes = useStyles();
@@ -301,30 +355,47 @@ const ReportingAndNotification = () => {
           <Grid item md={12}>
             <FormControl component="fieldset" className={classes.formControl}>
               <FormLabel component="legend">Reportable to</FormLabel>
+              {console.log(reportsListData)}
               <FormGroup>
-                {reportsListData.length > 0
-                  ? reportsListData.map((report, key) => (
-                    <FormControlLabel
-                      key={key}
-                      control={
-                        <Checkbox
-                          // checked={gilad}
-                          // onChange={(e) => handelReportedTo}
+                {reportData.length > 0
+                  ? reportedTo.map((value) => (
+                      <FormControlLabel
+                        value={value.inputValue}
+                        control={<Checkbox />}
+                        label={value.inputValue}
+                        onChange={(e) =>
+                          handelReportedTo(e, value.inputValue, "option")
+                        }
+                      />
+                    ))
+                  : // ? reportData.map((report, key) => (
+                    //   <FormControlLabel
+                    //     key={key}
+                    //     control={
+                    //       <Checkbox
+                    //         checked={true}
+                    //         // onChange={(e) => handelReportedTo}
 
-                          name="gilad"
+                    //         name = {report}
+                    //       />
+                    //     }
+                    //     label={report}
+                    //   />
+                    // ))
+                    reportedTo.map((value) => (
+                      <>
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Checkbox />}
+                          label={value.inputValue}
+                          checked={value.isSelected ? true : false}
+                          onChange={(e) =>
+                            handelReportedTo(e, value.inputValue, "option")
+                          }
                         />
-                      }
-                      label="Gilad Gray"
-                    />
-                  ))
-                  : reportedTo.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Checkbox />}
-                      label={value}
-                      onChange={(e) => handelReportedTo(e, value, "option")}
-                    />
-                  ))}
+                        {console.log(value, value.isSelected)}
+                      </>
+                    ))}
                 {form.reportedto.includes("Other") ? (
                   <TextField
                     id="Other"
@@ -507,7 +578,7 @@ const ReportingAndNotification = () => {
                   others: e.target.value.toString(),
                 });
               }}
-              disabled={form.reportedby !== "Other"}
+              disabled={form.reportedby !== "Others"}
             />
           </Grid>
           {lateReport ? (

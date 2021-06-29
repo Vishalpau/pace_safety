@@ -125,12 +125,14 @@ const EnvironmentAffected = () => {
     temp[key].updatedBy = 0;
     temp[key].updatedAt = moment(new Date()).toISOString();
     console.log(temp[key]);
-
+    await setEnvironmentListData(temp)
     const res = await api.put(
       `api/v1/incidents/${id}/environment/${envId}/`,
       temp[key]
     );
-    console.log(res);
+    console.log(res)
+    
+    console.log(environmentListData)
   };
 
   const handleNext = async () => {
@@ -222,9 +224,9 @@ const EnvironmentAffected = () => {
         <Grid container item md={9} spacing={3}>
           {environmentListData.length !== 0 ? (
             environmentListData.map((env, key) => (
-              <>
+              <Grid container item md= {12} key={key}>
                 <Grid item md={6}>
-                  <p>Where there any spills</p>
+                  <p>{env.envQuestion}</p>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
                     aria-label="detailsOfPropertyAffect"
@@ -272,7 +274,7 @@ const EnvironmentAffected = () => {
                     <p>{error.envAnswerDetails}</p>
                   )}
                 </Grid>
-              </>
+              </Grid>
             ))
           ) : (
             <>

@@ -110,6 +110,9 @@ const EqiptmentAffected = () => {
       temp[key]
     );
     console.log(res);
+    equipmentListdata = temp 
+    console.log(equipmentListdata)
+
   };
 
   const addNewEquipmentDetails = () => {
