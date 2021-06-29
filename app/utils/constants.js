@@ -36,7 +36,7 @@ export const INVESTIGATION_FORM = {
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
-  Details: '/app/incident-management/registration/root-cause-analysis/details/',
+  "Details": '/app/incident-management/registration/root-cause-analysis/details/',
   'Hazardious acts': '/app/incident-management/registration/root-cause-analysis/hazardious-acts/',
   'Hazardious conditions': '/app/incident-management/registration/root-cause-analysis/hazardious-condtions/',
   'Cause and action': '/app/incident-management/registration/root-cause-analysis/cause-and-action/',
