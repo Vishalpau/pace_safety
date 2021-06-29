@@ -9,6 +9,10 @@ function EvidenceValidate(data){
         error.available = "this filed is empty"
     
     }
+    if (validator.isEmpty(data.comment.toString())){
+        error.comment = "this filed is empty"
+    
+    }
 
 
     console.log(error)
