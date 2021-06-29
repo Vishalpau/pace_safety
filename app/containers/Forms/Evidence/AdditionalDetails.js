@@ -88,15 +88,6 @@ const AdditionalDetails = () => {
     console.log(res);
   };
 
-  const handleNext1 = () => {
-    console.log('sagar', form);
-    const { error, isValid } = AdditionalDetailValidate(form);
-    setError(error);
-    console.log(error, isValid);
-    // const nextPath =  JSON.parse(localStorage.getItem("nextPath"));
-    // console.log(nextPath)
-  };
-
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ['Yes', 'No'];
   const classes = useStyles();

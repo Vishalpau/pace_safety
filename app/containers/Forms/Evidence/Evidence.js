@@ -54,7 +54,7 @@ const Evidence = () => {
 
   // On the next button click function call.
   const handleNext = async () => {
-    error, isValid = EvidenceValidate(form);
+    error, (isValid = EvidenceValidate(form));
     setError(error);
 
     if (!isValid) {
@@ -86,7 +86,11 @@ const Evidence = () => {
     console.log(res);
     const result = res.data.data.results;
     // console.log('sagar');
-    await setEvidenceListdata(result);
+    // await setEvidenceListdata(result);
+  };
+
+  const handleDocument = (e) => {
+    const file = e.target.value;
   };
 
   const selectValues = [1, 2, 3, 4];
