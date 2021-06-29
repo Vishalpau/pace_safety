@@ -142,16 +142,18 @@ function BlankPage() {
   // }, []);
 
   const handelSearchIncident = async (e) => {
-    // console.log("here");
+    console.log(e.target.value);
     let allSeacrh = [];
     // console.log(e.target.value.length);
     if (e.target.value.length === 0) {
       setShowIncident([]);
     } else {
+      console.log(searchIncident)
       await setSeacrhIncident(e.target.value.toLowerCase());
       // console.log(searchIncident);
       Object.entries(incidents).map((item) => {
         if (item[1]["incidentNumber"].toLowerCase().includes(searchIncident)) {
+          console.log(item[1]["incidentNumber"])
           allSeacrh.push([
             item[1]["incidentNumber"],
             item[1]["incidentReportedByName"],
