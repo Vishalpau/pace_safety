@@ -1,22 +1,23 @@
 import validator from 'validator';
 
 function EvidenceValidate(data){
-    console.log(data)
-    
+    let isValid = true
     const error = {}
 
-    if (validator.isEmpty(data.available.toString())){
+    if (validator.isEmpty(data.evidenceType.toString())){
+        error.evidenceType = "this filed is empty"
+        isValid = false   
+    }
+    else if (validator.isEmpty(data.available.toString())){
         error.available = "this filed is empty"
-    
+        isValid = false   
     }
-    if (validator.isEmpty(data.comment.toString())){
+    else if (validator.isEmpty(data.comment.toString())){
         error.comment = "this filed is empty"
-    
+        isValid = false   
     }
 
-
-    console.log(error)
-    return { error}
+    return { error , isValid }
 } 
 
 export default EvidenceValidate
