@@ -85,7 +85,7 @@ const ReportingAndNotification = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
-  const [reportableTo, setReportableTo] = useState([]);
+  const [reportedTo, setReportableTo] = useState([]);
 
   const { id } = useParams();
 
@@ -113,6 +113,7 @@ const ReportingAndNotification = () => {
 
   const [otherdata, setOtherData] = useState("");
   const [fileNames, setFileNames] = useState("");
+  const [reportData, setReportData] = useState([]);
 
   const handelTimeCompare = async (e) => {
     let rpTime = form.reportingtime;
@@ -225,6 +226,10 @@ const ReportingAndNotification = () => {
         )}`
       );
     } else {
+      const { error, isValid } = ReportingValidation(form);
+      setError(error);
+      console.log("reported to");
+
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
         reportTo: form.reportedto.includes("Others")
@@ -235,7 +240,6 @@ const ReportingAndNotification = () => {
         fkIncidentId: fkid,
       });
       if (res.status === 201) {
-
         // Hit another API call.
 
         history.push(
@@ -255,11 +259,39 @@ const ReportingAndNotification = () => {
           ...form,
           reportedto: newData,
         });
+
+        let newReportedTo = [];
+        for (let key in reportedTo) {
+          let newReportToObj = reportedTo[key];
+          if (newReportToObj.inputValue == value) {
+            newReportToObj.isSelected = 0;
+          }
+          newReportedTo.push(newReportToObj);
+        }
+
+        setReportData(newReportedTo);
+        console.log("****", newReportedTo);
       } else {
         await setForm({
           ...form,
           reportedto: [...form.reportedto, value],
         });
+
+        let newReportedTo = [];
+        for (let key in reportedTo) {
+          let newReportToObj = reportedTo[key];
+          console.log(
+            newReportToObj.inputValue,
+            value,
+            newReportToObj.inputValue == value
+          );
+          if (newReportToObj.inputValue == value) {
+            newReportToObj.isSelected = 1;
+          }
+          newReportedTo.push(newReportToObj);
+        }
+        await setReportData(newReportedTo);
+        console.log("****", newReportedTo);
       }
     }
   };
@@ -283,8 +315,30 @@ const ReportingAndNotification = () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
 
     const result = res.data.data.results;
+    console.log(result);
+    const report = result[0].reportTo;
+    const splitReport = report.split(",");
+    const usingArrayFrom = Array.from(splitReport);
     await setReportListData(result);
+    await setReportData(usingArrayFrom);
     await setIsLoading(true);
+
+    // Loop over all the reported to and update the reportedTo state isSelected.
+    let newReportedTo = [];
+    for (let key in reportedTo) {
+      isSelected = 0;
+      for (let keyReport in result) {
+        if (result[keyReport].reportTo == reportedTo[key].inputValue) {
+          isSelected = 1;
+        }
+      }
+
+      let reportedToObj = reportedTo[key];
+      reportedToObj.isSelected = 1;
+      newReportedTo.push(reportedToObj);
+    }
+    setReportData(newReportedTo);
+    console.log(usingArrayFrom);
   };
 
   useEffect(() => {
@@ -301,16 +355,48 @@ const ReportingAndNotification = () => {
           <Grid item md={12}>
             <FormControl component="fieldset" className={classes.formControl}>
               <FormLabel component="legend">Reportable to</FormLabel>
+              {console.log(reportsListData)}
               <FormGroup>
-                {reportableTo.map((value, index) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Checkbox />}
-                    label={value.inputValue}
-                    onChange={(e) => handelReportedTo(e, value.inputValue, "option")}
-                  />
-                ))}
-                {form.reportedto.includes("Others") ? (
+                {reportData.length > 0
+                  ? reportedTo.map((value) => (
+                      <FormControlLabel
+                        value={value.inputValue}
+                        control={<Checkbox />}
+                        label={value.inputValue}
+                        onChange={(e) =>
+                          handelReportedTo(e, value.inputValue, "option")
+                        }
+                      />
+                    ))
+                  : // ? reportData.map((report, key) => (
+                    //   <FormControlLabel
+                    //     key={key}
+                    //     control={
+                    //       <Checkbox
+                    //         checked={true}
+                    //         // onChange={(e) => handelReportedTo}
+
+                    //         name = {report}
+                    //       />
+                    //     }
+                    //     label={report}
+                    //   />
+                    // ))
+                    reportedTo.map((value) => (
+                      <>
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Checkbox />}
+                          label={value.inputValue}
+                          checked={value.isSelected ? true : false}
+                          onChange={(e) =>
+                            handelReportedTo(e, value.inputValue, "option")
+                          }
+                        />
+                        {console.log(value, value.isSelected)}
+                      </>
+                    ))}
+                {form.reportedto.includes("Other") ? (
                   <TextField
                     id="Other"
                     variant="outlined"
