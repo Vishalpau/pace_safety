@@ -108,7 +108,7 @@ const PropertyAffected = () => {
 
   const handleUpdateProperty = async (e, key, fieldname, propertyId) => {
     const temp = propertyListData;
-    console.log(temp);
+  
     const value = e.target.value;
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
@@ -117,14 +117,14 @@ const PropertyAffected = () => {
       `api/v1/incidents/${id}/properties/${propertyId}/`,
       temp[key]
     );
-    console.log(res);
+   
   };
 
   const handlePropertyType = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp);
+  
     setForm(temp);
   };
 
@@ -132,7 +132,7 @@ const PropertyAffected = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp);
+  
     setForm(temp);
   };
 
@@ -140,7 +140,7 @@ const PropertyAffected = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp);
+  
     setForm(temp);
   };
 
@@ -287,7 +287,7 @@ const PropertyAffected = () => {
     const res = await api.get(`api/v1/incidents/${id}/properties/`);
     const result = res.data.data.results;
     await setPropertyListData(result);
-    console.log(result);
+   
   };
 
   useEffect(() => {

@@ -442,7 +442,7 @@ const EqiptmentAffected = () => {
                           <p>{error[`equipmentOtherType${[key]}`]}</p>
                         )}
                       </Grid>
-
+                    {/* {form[key].equipmentType === ''} */}
                       <Grid item md={12}>
                         {/* <p>Describe the damage</p> */}
                         <TextField
@@ -483,7 +483,7 @@ const EqiptmentAffected = () => {
                   variant="outlined"
                   label="Describe any actions taken"
                   className={classes.fullWidth}
-                  value={incidentsListData.equipmentDamagedComments}
+                  defaultValue={incidentsListData.equipmentDamagedComments}
                   onChange={(event) => setEequipmentDamagedComments(event.target.value)
                   }
                 />

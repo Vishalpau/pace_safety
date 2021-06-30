@@ -144,30 +144,24 @@ const EnvironmentAffected = () => {
       const { error, isValid } = EnvironmentValidate(form);
       setError(error);
       console.log(error, isValid);
-      if (detailsOfEnvAffect === 'Yes') {
+      if(spillsData.envQuestionOption !== undefined && relaseData.envQuestionOption !== undefined && wildLifeData.envQuestionOption !== undefined && wateBodyData.envQuestionOption !== undefined){
+     
         const envList = [spillsData, relaseData, wildLifeData, wateBodyData];
         for (let i = 0; i < envList.length; i++) {
           if (envList[i].envQuestionOption == 'Yes') {
             console.log();
-            const res = await api.post(
-              `api/v1/incidents/${localStorage.getItem(
-                'fkincidentId'
-              )}/environment/`,
+            const res = await api.post(`api/v1/incidents/${localStorage.getItem('fkincidentId')}/environment/`,
               envList[i]
             );
           }
         }
-        // if(res.status === 201){
+        
         history.push(
           '/app/incident-management/registration/initial-notification/reporting-and-notification/'
         );
-        // }
-      } else {
-        history.push(
-          '/app/incident-management/registration/initial-notification/reporting-and-notification/'
-        );
-      }
     }
+      }
+    
   };
 
   const fetchWaterBodyAffectedValue = async () => {
@@ -214,7 +208,9 @@ const EnvironmentAffected = () => {
     fetchAnyReleaseValue();
     fetchImpactOnWildLifeValue();
     fetchWaterBodyAffectedValue();
-    fetchEnviornmentListData();
+    if(id){
+      fetchEnviornmentListData();
+    }
     fetchIncidentsData();
   }, []);
 
@@ -286,7 +282,15 @@ const EnvironmentAffected = () => {
                   aria-label="detailsOfPropertyAffect"
                   name="detailsOfPropertyAffect"
                   value={detailsOfEnvAffect}
-                  onChange={(e) => setDetailsOfEnvAffect(e.target.value)}
+                  onChange={(e) => {setDetailsOfEnvAffect(e.target.value); setSpillsData({
+                    envQuestionOption: e.target.value,
+                    envQuestion: 'Where there any spills',
+                    envAnswerDetails: e.target.value,
+                    status: 'Active',
+                    createdBy: 0,
+                    updatedBy: 0,
+                    fkIncidentId: localStorage.getItem('fkincidentId'),
+                  })}}
                 >
                   {environmentAffectedValue.length !== 0
                     ? environmentAffectedValue.map((value, index) => (
@@ -340,7 +344,17 @@ const EnvironmentAffected = () => {
                     aria-label="envQuestion"
                     name="envQuestion"
                     value={form.envQuestion}
-                    onChange={(e) => setForm({ ...form, envQuestion: e.target.value })
+                    onChange={(e) => {setForm({ ...form, envQuestion: e.target.value });
+                    setReleaseData({
+                      envQuestionOption: e.target.value,
+                      envQuestion: 'Where there any relase?',
+                      envAnswerDetails: e.target.value,
+                      status: 'Active',
+                      createdBy: 0,
+                      updatedBy: 0,
+                      fkIncidentId: localStorage.getItem('fkincidentId'),
+                    });
+                  }
                     }
                   >
                     {anyReleaseValue.length !== 0
@@ -395,10 +409,21 @@ const EnvironmentAffected = () => {
                     aria-label="envAnswerDetails"
                     name="envAnswerDetails"
                     value={form.envAnswerDetails}
-                    onChange={(e) => setForm({
+                    onChange={(e) => {
+                      setForm({
                       ...form,
                       envAnswerDetails: e.target.value,
-                    })
+                    });
+                    setWildLifeData({
+                      envQuestionOption: e.target.value,
+                      envQuestion: 'Where there any impact on wildlife?',
+                      envAnswerDetails: e.target.value,
+                      status: 'Active',
+                      createdBy: 0,
+                      updatedBy: 0,
+                      fkIncidentId: localStorage.getItem('fkincidentId'),
+                    });
+                  }
                     }
                   >
                     {impactOnWildLife.length !== 0
@@ -457,10 +482,20 @@ const EnvironmentAffected = () => {
                     aria-label="envQuestionOption"
                     name="envQuestionOption"
                     value={form.envQuestionOption}
-                    onChange={(e) => setForm({
+                    onChange={(e) => {setForm({
                       ...form,
                       envQuestionOption: e.target.value,
-                    })
+                    });
+                    setWaterBodyData({
+                      envQuestionOption: e.target.value,
+                      envQuestion: 'Where there any waterbody affected?',
+                      envAnswerDetails: e.target.value,
+                      status: 'Active',
+                      createdBy: 0,
+                      updatedBy: 0,
+                      fkIncidentId: localStorage.getItem('fkincidentId'),
+                    });
+                  }
                     }
                   >
                     {waterbodyAffectedValue !== 0

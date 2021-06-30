@@ -802,7 +802,7 @@ const PeoplesAffected = () => {
                   label="Describe any actions taken"
                   className={classes.fullWidth}
                   onChange={(e) => setPersonAffectedComments(e.target.value)}
-                  value={incidentsListData.personAffectedComments}
+                  defaultValue={incidentsListData.personAffectedComments}
                 />
               )}
               {/* {error && error.describeactiontaken && (

@@ -169,19 +169,6 @@ const ReportingAndNotification = () => {
     setFileNames(acceptedFiles.map((file) => file.name));
   };
 
-  const handleUpdateEnvironement = async (e, key, fieldname, reportId) => {
-    const temp = reportsListData;
-    const { value } = e.target;
-    temp[key][fieldname] = value;
-    temp[key].updatedBy = 0;
-    temp[key].updatedAt = moment(new Date()).toISOString();
-
-    const res = await api.put(
-      `api/v1/incidents/${id}/reports/${reportId}/`,
-      temp[key]
-    );
-  };
-
   const handelNext = async (e) => {
     const { error, isValid } = ReportingValidation(form);
     setError(error);
@@ -202,7 +189,7 @@ const ReportingAndNotification = () => {
     temp.updatedAt = moment(new Date()).toISOString();
     temp.updatedBy = "0";
 
-    // put call for update
+    // put call for update incident Details
     const res = await api.put(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
       temp
@@ -253,13 +240,13 @@ const ReportingAndNotification = () => {
   };
 
   const handelReportedTo = async (e, value, type) => {
-    console.log(e.target.checked)
+   
     if ((type = "option")) {
       if (e.target.checked == false) {
         
-        console.log(form.reportedto);
+       
         const newData = form.reportedto.filter((item) => item !== value);
-        console.log(newData);
+       
         await setForm({
           ...form,
           reportedto: newData,
@@ -267,7 +254,7 @@ const ReportingAndNotification = () => {
 
         // let newReportedTo = [];
       } else {
-        console.log(value);
+      
         await setForm({
           ...form,
           reportedto: [...form.reportedto, value],
@@ -281,9 +268,9 @@ const ReportingAndNotification = () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
     const result = res.data.data.results;
     const report = result[0].reportTo;
+    // form.reportedto = report.split(",")
     await setForm({ ...form, reportedto: report.split(",") });
     await setReportId(result[0].id)
-    // form.reportTo = report.split(',')
   };
 
   //  Fetch checkbox value
@@ -299,15 +286,17 @@ const ReportingAndNotification = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
-    const date = new date(result.incidentReportedOn)
-    // await setForm({...form,reportingdate:date})
+    const date = new Date(result.incidentReportedOn)
+    await setForm({...form,reportingdate:date})
     await setIncidentsListdata(result);
     await setIsLoading(true);
   };
 
   useEffect(() => {
     fetchIncidentsData();
-    fetchReportsDataList();
+    if(id){
+      fetchReportsDataList();
+    }  
     fetchReportableTo();
   }, []);
 
@@ -320,10 +309,12 @@ const ReportingAndNotification = () => {
             <Grid item md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
                 <FormLabel component="legend">Reportable to</FormLabel>
-                {/* {console.log(reportsListData)} */}
+                
                 <FormGroup>
-                  {reportedTo.map((value) => (
+                  {reportedTo.map((value,key) => (
                     <FormControlLabel
+                    id={key}
+                    key={key}
                       value={value.inputValue}
                       control={<Checkbox />}
                       label={value.inputValue}
@@ -331,11 +322,15 @@ const ReportingAndNotification = () => {
                         form.reportedto.includes(value.inputValue) ? true : false
                       }
                       onChange={(e) =>
-                        handelReportedTo(e, value.inputValue, "option")
+                        {
+                          handelReportedTo(e, value.inputValue, "option");
+                          console.log(e.target.value)
+                        }
+
                       }
                     />
                   ))}
-                  {form.reportedto.includes("Other") ? (
+                  {form.reportedto.includes("Others") ? (
                     <TextField
                       id="Other"
                       variant="outlined"
@@ -444,7 +439,7 @@ const ReportingAndNotification = () => {
                   required
                   inputVariant="outlined"
                   label="Reporting Date"
-                  value={form.reportingdate}
+                  value={form.reportingdate || incidentsListData.incidentReportedOn}
                   onChange={(date) => handleDateChange(date)}
                   KeyboardButtonProps={{
                     "aria-label": "change date",
@@ -499,8 +494,8 @@ const ReportingAndNotification = () => {
                     });
                   }}
                 >
-                  {selectValues.map((selectValues) => (
-                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  {selectValues.map((selectValues,index) => (
+                    <MenuItem key={index} value={selectValues}>{selectValues}</MenuItem>
                   ))}
                 </Select>
                 {error && error.reportedby ? (
