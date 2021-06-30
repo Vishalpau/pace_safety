@@ -86,6 +86,7 @@ const Evidence = () => {
     }
   }, []);
   // On the next button click function call.
+  console.log(form)
   const handleNext = async () => {
     const { error, isValid } = EvidenceValidate(form);
     setError(error);

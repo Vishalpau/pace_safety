@@ -8,11 +8,11 @@ function EvidenceValidate(data){
         error.evidenceType = "this filed is empty"
         isValid = false   
     }
-    else if (validator.isEmpty(data.available.toString())){
+    if (validator.isEmpty(data.available.toString())){
         error.available = "this filed is empty"
         isValid = false   
     }
-    else if (validator.isEmpty(data.comment.toString())){
+    if (validator.isEmpty(data.comment.toString())){
         error.comment = "this filed is empty"
         isValid = false   
     }
