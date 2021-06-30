@@ -1,18 +1,16 @@
-import validator from 'validator';
+import validator from "validator";
 
-function ActivityDetailValidate(data){
-    console.log('data',data)
-    
-    const error = {}
+function ActivityDetailValidate(data) {
+  console.log("data", data);
 
-    if (validator.isEmpty(data.answer.toString())){
-        error.answer = "this filed is empty"
-    }
+  const error = {};
 
+  if (validator.isEmpty(data.answer.toString())) {
+    error.answer = "This Field is Empty";
+  }
 
+  console.log(error);
+  return { error };
+}
 
-    console.log(error)
-    return { error}
-} 
-
-export default ActivityDetailValidate
+export default ActivityDetailValidate;

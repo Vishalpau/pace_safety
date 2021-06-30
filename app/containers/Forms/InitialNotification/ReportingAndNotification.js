@@ -417,7 +417,7 @@ const ReportingAndNotification = () => {
               required
               error={error && error.isnotificationsent}
             >
-              <FormLabel component="legend">Notification to be sent</FormLabel>
+              <FormLabel component="legend">Notification to Be Sent</FormLabel>
               {notificationSent.map((value) => (
                 <FormControlLabel
                   value={value}
@@ -451,7 +451,7 @@ const ReportingAndNotification = () => {
               showPreviews
               maxSize={5000000}
               filesLimit={5}
-              text="Drag and drop file(s) here or click button bellow"
+              text="Drag and Drop File(s) Here or Click the Button Below"
               showButton
               onDrop={handleDrop}
             />
@@ -462,7 +462,7 @@ const ReportingAndNotification = () => {
             <TextField
               id="supervisor-name"
               variant="outlined"
-              label="Supervisor name"
+              label="Supervisor Name"
               defaultValue={incidentsListData.supervisorByName}
               className={classes.formControl}
               onChange={(e) => {
@@ -586,7 +586,7 @@ const ReportingAndNotification = () => {
               <TextField
                 id="reason"
                 variant="outlined"
-                label="Resaon for reporting later than 4 hours"
+                label="Resaon for Reporting Later Than 4 Hours"
                 multiline
                 error={error && error.latereporting}
                 required
@@ -610,7 +610,7 @@ const ReportingAndNotification = () => {
             <TextField
               id="additionalDetails"
               variant="outlined"
-              label="Additional details if any"
+              label="Additional Details If Any"
               multiline
               rows="4"
               className={classes.fullWidth}
