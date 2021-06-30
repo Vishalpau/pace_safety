@@ -1,26 +1,24 @@
-import React from 'react';
-import {
-  Button, Grid, Container, Input, Select
-} from '@material-ui/core';
+import React from "react";
+import { Button, Grid, Container, Input, Select } from "@material-ui/core";
 
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import FormControl from '@material-ui/core/FormControl';
-import { spacing } from '@material-ui/system';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import { PapperBlock } from 'dan-components';
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import FormControl from "@material-ui/core/FormControl";
+import { spacing } from "@material-ui/system";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
+import { PapperBlock } from "dan-components";
 
-import FormSideBar from '../FormSideBar';
-import { INVESTIGATION_FORM } from '../../../utils/constants';
-import FormHeader from '../FormHeader';
+import FormSideBar from "../FormSideBar";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: '100%',
+    width: "100%",
   },
   button: {
     margin: theme.spacing(1),
@@ -29,24 +27,24 @@ const useStyles = makeStyles((theme) => ({
 
 const EventDetails = () => {
   const reportedTo = [
-    'Internal Leadership',
-    'Police',
-    'Environment Officer',
-    'OHS',
-    'Mital Aid',
-    'Other',
+    "Internal Leadership",
+    "Police",
+    "Environment Officer",
+    "OHS",
+    "Mital Aid",
+    "Other",
   ];
-  const notificationSent = ['Manage', 'SuperVisor'];
+  const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
+    new Date("2014-08-18T21:11:54")
   );
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const radioDecide = ['Yes', 'No'];
+  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
@@ -204,7 +202,7 @@ const EventDetails = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/investigation/equiptment-impact-details/"
+              href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
             >
               Previous
             </Button>

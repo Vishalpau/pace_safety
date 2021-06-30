@@ -220,7 +220,7 @@ const IncidentDetailsSummary = () => {
           {incidents["subContractor"]}
         </Typography>
       </Grid>
-{/* People Affected */}
+      {/* People Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -357,7 +357,7 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-{/* Property Affected */}
+      {/* Property Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -432,7 +432,7 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-{/* Equipment Affected */}
+      {/* Equipment Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -559,7 +559,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Where there any waterbody affected?
+                        Where there any waterbody Affected?
                       </Typography>
 
                       <Typography
@@ -576,7 +576,7 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-{/* Reports & Noticefication */}
+      {/* Reports & Noticefication */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

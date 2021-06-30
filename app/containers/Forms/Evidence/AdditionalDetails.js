@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import Box from '@material-ui/core/Box';
-import { spacing } from '@material-ui/system';
-import { PapperBlock } from 'dan-components';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { useHistory, useParams } from 'react-router';
-import AdditionalDetailValidate from '../../Validator/AdditionalDetailsValidation';
+import React, { useEffect, useState } from "react";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import Box from "@material-ui/core/Box";
+import { spacing } from "@material-ui/system";
+import { PapperBlock } from "dan-components";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import { useHistory, useParams } from "react-router";
+import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 
-import FormSideBar from '../FormSideBar';
-import { EVIDENCE_FORM } from '../../../utils/constants';
-import FormHeader from '../FormHeader';
+import FormSideBar from "../FormSideBar";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import FormHeader from "../FormHeader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: '100%',
-    margin: '1rem 0',
+    width: "100%",
+    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),
@@ -30,10 +30,9 @@ const useStyles = makeStyles((theme) => ({
 
 const AdditionalDetails = () => {
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
+    new Date("2014-08-18T21:11:54")
   );
   const [error, setError] = React.useState({});
-
 
   const { id } = useParams();
   const history = useHistory();
@@ -48,7 +47,7 @@ const AdditionalDetails = () => {
   const handleNext = async () => {
     if (id !== undefined && activtyList.length > 0) {
       history.push(
-        '/app/incident-management/registration/evidence/personal-and-ppedetails/'
+        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
       );
     } else {
       const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
@@ -60,14 +59,14 @@ const AdditionalDetails = () => {
         setError(error);
         const res = await api.post(
           `api/v1/incidents/${localStorage.getItem(
-            'fkincidentId'
+            "fkincidentId"
           )}/activities/`,
           selectedQuestion[i]
         );
         console.log(res);
       }
       history.push(
-        '/app/incident-management/registration/evidence/personal-and-ppedetails/'
+        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
       );
     }
   };
@@ -89,7 +88,7 @@ const AdditionalDetails = () => {
   };
 
   const selectValues = [1, 2, 3, 4];
-  const radioDecide = ['Yes', 'No'];
+  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const fetchActivityList = async () => {
     const res = await api.get(`api/v1/incidents/${id}/activities/`);
@@ -139,24 +138,22 @@ const AdditionalDetails = () => {
                     <TextField
                       id="filled-basic"
                       variant="outlined"
-                      label="Any Part/Equiptment sent for anlysis"
+                      label="Any Part/Equipment sent for anlysis"
                       error={error.ans1}
-                      helperText={error.ans1 ? error.ans1 : ''}
+                      helperText={error.ans1 ? error.ans1 : ""}
                       multiline
                       rows="4"
                       onChange={(e) => {
                         setAd01({
                           ...ad01,
-                          questionCode: 'AD-01',
-                          question: 'Did the job require work permit?',
+                          questionCode: "AD-01",
+                          question: "Did the job require work permit?",
                           answer: e.target.value,
-                          activityGroup: 'Evidence',
-                          status: 'Active',
+                          activityGroup: "Evidence",
+                          status: "Active",
                           updatedBy: 0,
                           createdBy: 0,
-                          fkIncidentId: localStorage.getItem(
-                            'fkincidentId'
-                          ),
+                          fkIncidentId: localStorage.getItem("fkincidentId"),
                         });
                       }}
                     />
@@ -172,7 +169,7 @@ const AdditionalDetails = () => {
                       variant="outlined"
                       label="Evidence analysis notes"
                       error={error.ans2}
-                      helperText={error.ans2 ? error.ans2 : ''}
+                      helperText={error.ans2 ? error.ans2 : ""}
                       onChange={(e) => {
                         setForm({ ...form, ans2: e.target.value });
                       }}
@@ -191,7 +188,7 @@ const AdditionalDetails = () => {
                       variant="outlined"
                       label="Evidence summary"
                       error={error.ans3}
-                      helperText={error.ans3 ? error.ans3 : ''}
+                      helperText={error.ans3 ? error.ans3 : ""}
                       onChange={(e) => {
                         setForm({ ...form, ans3: e.target.value });
                       }}
@@ -210,7 +207,7 @@ const AdditionalDetails = () => {
                       variant="outlined"
                       label="Additional notes if any"
                       error={error.ans4}
-                      helperText={error.ans4 ? error.ans4 : ''}
+                      helperText={error.ans4 ? error.ans4 : ""}
                       onChange={(e) => {
                         setForm({ ...form, ans4: e.target.value });
                       }}
@@ -233,7 +230,11 @@ const AdditionalDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
-                    href={Object.keys(error).length == 0 ? 'http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/' : '#'}
+                    href={
+                      Object.keys(error).length == 0
+                        ? "http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
+                        : "#"
+                    }
                   >
                     Submit
                   </Button>
