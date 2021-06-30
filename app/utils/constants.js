@@ -63,3 +63,156 @@ export const FORM_HEADER = {
   Summary: '/app/incident-management/registration/summary/summary/',
   'Lession learned': '/app/incident-management/registration/lession-learned/lession-learned/',
 };
+
+// option in root cause and anlysis
+
+export const HAZARDIOUS_ACTS = [
+  "Supervison",
+  "Workpackage",
+  "Equimentmachinary",
+  "Behaviousissues",
+  "Safetyitems",
+  "Ergonomics",
+  "Procedure"
+]
+
+export const SUPERVISON = [
+  "No supervision at work site",
+  "Lack of communication between supervisor & Workers",
+  "Lack of Management of Change Processes - (failure to manage change)"
+]
+
+export const EQUIMENTMACHINARY = [
+  "Operating machinery - mobile equipment without  permission",
+  "Operating at excessive speed / over speed / above set limits - without authority",
+  "Using a nonfunctioning / defective / out of order machinery / equip",
+  "Using equipment beyond limits company policy or manufacturer recommendations",
+  "Working on equipment / machinery while in operation",
+]
+
+
+export const SAFETYITEMS = [
+  "Misuse of PPE",
+  "Failure to conduct risk assessment - JHA / FLHA / workplace observation",
+  "Failure to inspect – pre job inspection / FLHA",
+  "Failure to activate safety critical devices",
+]
+
+export const PROCEDURES = [
+  "Failure to follow standards- procedures or guidelines",
+  "No or improper securing devices used",
+  "Wrong loading - lifting or improper placement techniques used",
+]
+
+export const WORKPACKAGE = [
+  "Work package incomplete",
+  "Work package not available",
+]
+
+export const BEHAVIOURISSUES = [
+  "Fighting or being bullied at work place",
+  "Under the influence of drug or alcohol",
+  "Physical or mental stress",
+  "Complacent Behavior(worker / supervisor)",
+  "Intentional harmfully act",
+]
+
+export const ERGONOMICS = [
+  "Poor posture",
+  "Poor lifting techniques",
+  "Repetitious movements",
+  "Over reaching",
+]
+
+export const WARNINGSYSTEM = [
+  "No visual warning signs at point of operation",
+  "Warning labels faded not legible",
+  "Warning devices not functioning",
+  "No caution signs - barriers - guards - traffic signs a & signals",
+  "Lack of visual or auditable signs",
+]
+
+export const TOOLS = [
+  "Wrong tool for the job",
+  "Using home made tools",
+  "Worn out tools - material  or improperly cared for equipment",
+  "Wrong equipment for the job",
+]
+
+export const CONDITIONSAFETYITEMS = [
+  "Inadequate PPE for specific hazards",
+  "Defective PPE",
+  "Bypassing safety critical devices",
+  "Poor housekeeping - untidy or congested areas",
+  "Improper storage – (flammable material close to ignition sources etc.)",
+  "Combustible dusts - chemical fumes, mists, smoke",
+  "Inadequate ventilation",
+  "Poor lighting - wrong type of lighting - glare",
+]
+
+export const ENERGIES = [
+  "Kinetic Energy",
+  "Potential Energy",
+  "Thermal Energy",
+  "Electrical Energy",
+  "Chemical Energy",
+  "Nuclear Energy",
+  "Radiation Energy",
+  "Gravtiational Energy",
+  "Pressure",
+  "Hydraulic Energy",
+  "Pneumatic Energy",
+  "Temperature",
+  "Sound",
+]
+
+export const PERSONAL = [
+  "Physical limitation",
+  "Not engaged psychological",
+  "Personal Stress",
+  "Under the influence of illicit substances",
+  "Multitasking",
+  "Lack of training or knowledge",
+  "Lack of competency or skill",
+  "Complacent Behavior – no accountability",
+  "Adequate skill / knowledge – but  took short cut",
+  "Done it wrong previously without consequences",
+  "Operational discipline not followed",
+  "Company Risk Tolerance",
+  "Personal risk Tolerance",
+]
+
+export const PERSONALWELNESSFACTORS = [
+  "Lack of rest- working long hors(overtime)",
+  "Relationship issues",
+  "Financial difficulties",
+  "Peer pressure",
+  "Time Constraints",
+  "Personal or family medical issues",
+]
+
+
+export const LEADERSHIP = [
+  "Work package incomplete",
+  "Work package not available",
+  "Fighting or being bullied at work place",
+  "Under the influence of drug or alcohol",
+  "Physical or mental stress",
+  "Complacent Behavior(worker / supervisor)",
+  "Intentional harmfully act",
+]
+
+export const PROCESSES = [
+  "Poor posture",
+  "Poor lifting techniques",
+  "Repetitious movements",
+  "Over reaching",
+  "No or improper securing devices used",
+  "Wrong loading- lifting or improper placement techniques used",
+]
+
+export const MANAGEMENTCONTROL = [
+  "Inadequate System",
+  "Inadequate standards",
+  "Inadequate compilance and standards",
+];

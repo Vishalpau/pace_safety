@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -23,12 +23,14 @@ import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
+import { useHistory, useParams } from 'react-router';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import BasicCauseValidation from "../../Validator/RCAValidation/BasicCauseValidation"
+import { PERSONAL, PERSONALWELNESSFACTORS, LEADERSHIP, PROCESSES } from "../../../utils/constants"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -63,6 +65,71 @@ const BasicCause = () => {
     otherJobFactors: { remarkType: "", rcaSubType: "", rcaRemark: "" }
   }
   )
+
+  const putId = useRef("")
+  const [fetchApiData, setFetchApiData] = useState({})
+  const { id } = useParams();
+  const history = useHistory();
+  const updateIds = useRef()
+
+
+  // get data and set to states
+  const handelUpdateCheck = async () => {
+    let allrcaSubType = ["personal", "wellnessFactors", "othershumanfactors", "leadership", "processes", "othersjobfactors"]
+    let tempApiData = {}
+    let tempApiDataId = []
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
+    if (!isNaN(lastItem)) {
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
+      putId.current = lastItem
+      let allApiData = previousData.data.data.results
+
+      allApiData.map(value => {
+        if (allrcaSubType.includes(value.rcaSubType)) {
+          let valueQuestion = value.rcaSubType
+          let valueAnser = value.rcaRemark
+          tempApiData[valueQuestion] = valueAnser
+          tempApiDataId.push(value.id)
+        }
+      })
+      updateIds.current = tempApiDataId.reverse()
+      console.log(tempApiData)
+      await setFetchApiData(tempApiData)
+
+
+      // set fetched spervised data
+      form.personal.remarkType = "options"
+      form.personal.rcaSubType = "personal"
+      form.personal.rcaRemark = tempApiData.personal.includes(',') ? tempApiData.personal.split(",") : [tempApiData.personal]
+
+      // set fetched spervised data
+      form.wellnessFactors.remarkType = "options"
+      form.wellnessFactors.rcaSubType = "wellnessFactors"
+      form.wellnessFactors.rcaRemark = tempApiData.wellnessFactors.includes(',') ? tempApiData.wellnessFactors.split(",") : [tempApiData.wellnessFactors]
+
+      // set fetched others data
+      form.otherHumanFactor.remarkType = "remark"
+      form.otherHumanFactor.rcaSubType = "othershumanfactors"
+      form.otherHumanFactor.rcaRemark = tempApiData.othershumanfactors
+
+      // set fetched spervised data
+      form.leadership.remarkType = "options"
+      form.leadership.rcaSubType = "leadership"
+      form.leadership.rcaRemark = tempApiData.leadership.includes(',') ? tempApiData.leadership.split(",") : [tempApiData.leadership]
+
+      // set fetched spervised data
+      form.processes.remarkType = "options"
+      form.processes.rcaSubType = "processes"
+      form.processes.rcaRemark = tempApiData.processes.includes(',') ? tempApiData.processes.split(",") : [tempApiData.processes]
+
+      // set fetched others data
+      form.otherJobFactors.remarkType = "remark"
+      form.otherJobFactors.rcaSubType = "othersjobfactors"
+      form.otherJobFactors.rcaRemark = tempApiData.othersjobfactors
+    }
+  }
 
   const handelPersonal = (e, value) => {
     if (e.target.checked == false) {
@@ -110,7 +177,7 @@ const BasicCause = () => {
     setForm({
       ...form, otherHumanFactor: {
         remarkType: 'remark',
-        rcaSubType: "others human factors",
+        rcaSubType: "othershumanfactors",
         rcaRemark: e.target.value
       }
     })
@@ -162,7 +229,7 @@ const BasicCause = () => {
     setForm({
       ...form, otherJobFactors: {
         remarkType: 'remark',
-        rcaSubType: "others job factors",
+        rcaSubType: "othersjobfactors",
         rcaRemark: e.target.value
       }
     })
@@ -172,45 +239,68 @@ const BasicCause = () => {
 
   const classes = useStyles();
 
-  const handelNext = (e) => {
+  const handelNext = async (e) => {
 
     const { error, isValid } = BasicCauseValidation(form);
-    setError(error);
-
+    await setError(error);
     let tempData = []
-    Object.entries(form).map((item) => {
+
+    Object.entries(form).map(async (item, index) => {
       let api_data = item[1]
-
-      console.log(item)
-      let temp = {
-        createdBy: "0",
-        fkIncidentId: localStorage.getItem("fkincidentId"),
-        rcaRemark: api_data["rcaRemark"].toString(),
-        rcaSubType: api_data["rcaSubType"],
-        rcaType: "Basic",
-        remarkType: api_data["remarkType"],
-        status: "Active"
+      // post request object
+      if (putId.current == "") {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+        // put request object
+      } else {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active",
+          pk: updateIds.current[index]
+        }
+        tempData.push(temp)
       }
-      tempData.push(temp)
-
     })
-    setData(tempData)
-  }
 
-  const handelApiCall = async (e) => {
-    let callObjects = data
-
+    // api call //
+    let callObjects = tempData
     for (let key in callObjects) {
-      console.log(callObjects[key])
       if (Object.keys(error).length == 0) {
-        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
-        if (res.status == 201) {
-          console.log("request done")
-          console.log(res)
+
+        if (putId.current !== "") {
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
+        } else {
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
         }
       }
     }
+    // api call //  
   }
+
+  useEffect(() => {
+    handelUpdateCheck()
+  }, []);
 
   return (
     <div>
@@ -251,15 +341,17 @@ const BasicCause = () => {
                   </Box>
                 </Grid>
 
+                {/* perosonal */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
                     <FormLabel component="legend" error={error.personal}>Personal</FormLabel>
                     <FormGroup>
 
-                      {selectValues.map((value) => (
+                      {PERSONAL.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
-                          label={value}
+                          label={<small>{value}</small>}
+                          checked={form.personal.rcaRemark.includes(value)}
                           onChange={async (e) => handelPersonal(e, value)}
                         />
                       ))}
@@ -270,15 +362,17 @@ const BasicCause = () => {
                   )}
                 </Grid>
 
+                {/* wellness factors */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
                     <FormLabel component="legend" error={error.wellnessFactors}>Wellness factors</FormLabel>
                     <FormGroup>
 
-                      {selectValues.map((value) => (
+                      {PERSONALWELNESSFACTORS.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
-                          label={value}
+                          label={<small>{value}</small>}
+                          checked={form.wellnessFactors.rcaRemark.includes(value)}
                           onChange={async (e) => handelWellnessFactors(e, value)}
                         />
                       ))}
@@ -289,6 +383,7 @@ const BasicCause = () => {
                   )}
                 </Grid>
 
+                {/* other human factors */}
                 <Grid item md={12}>
                   <TextField
                     id="filled-basic"
@@ -297,6 +392,7 @@ const BasicCause = () => {
                     rows={4}
                     label="Other Human Factors"
                     error={error.otherHumanFactor}
+                    defaultValue={form.otherHumanFactor.rcaRemark}
                     helperText={error ? error.otherHumanFactor : ""}
                     className={classes.formControl}
                     onChange={async (e) => handelOtherHumanFactors(e)}
@@ -314,16 +410,17 @@ const BasicCause = () => {
                   </Box>
                 </Grid>
 
-
+                {/* leadership */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
                     <FormLabel component="legend" error={error.leadership}>Leadership</FormLabel>
                     <FormGroup>
 
-                      {selectValues.map((value) => (
+                      {LEADERSHIP.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
-                          label={value}
+                          label={<small>{value}</small>}
+                          checked={form.leadership.rcaRemark.includes(value)}
                           onChange={async (e) => handelLeadership(e, value)}
                         />
                       ))}
@@ -335,16 +432,17 @@ const BasicCause = () => {
                 </Grid>
 
 
-
+                {/* processes */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
                     <FormLabel component="legend" error={error.processes}>Processes</FormLabel>
                     <FormGroup>
 
-                      {selectValues.map((value) => (
+                      {PROCESSES.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
-                          label={value}
+                          label={<small>{value}</small>}
+                          checked={form.processes.rcaRemark.includes(value)}
                           onChange={async (e) => handelProcesses(e, value)}
                         />
                       ))}
@@ -355,13 +453,14 @@ const BasicCause = () => {
                   )}
                 </Grid>
 
-
+                {/* other job factors */}
                 <Grid item md={12}>
                   <TextField
                     id="filled-basic"
                     variant="outlined"
                     multiline
                     error={error.otherJobFactors}
+                    defaultValue={form.otherJobFactors.rcaRemark}
                     helperText={error ? error.otherJobFactors : ""}
                     rows={3}
                     label="Other job factors"
@@ -387,7 +486,7 @@ const BasicCause = () => {
                     color="primary"
                     className={classes.button}
                     // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"}
-                    onClick={(e) => { handelNext(e); handelApiCall(e) }}
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>

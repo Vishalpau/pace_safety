@@ -78,6 +78,7 @@ const Details = () => {
   ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
+  const rcaOption = ["Cause analysis", "Pace cause", "Root cause"]
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -148,13 +149,17 @@ const Details = () => {
 
   return (
     <Container>
+
+      {console.log(rcaOption.indexOf(form.rcaRecommended))}
       <Paper>
         <Box padding={3} bgcolor="background.paper">
+
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               RCA details
             </Typography>
           </Box>
+
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
 
@@ -220,19 +225,21 @@ const Details = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="RCA recommended"
+                  // defaultValue={"Pace cause"}
                   >
-                    {selectValues.map((selectValues) => (
+                    {rcaOption.map((selectValues) => (
                       <MenuItem
-                        value={selectValues || parseInt(form.rcaRecommended)}
+                        value={selectValues}
                         onClick={(e) => setForm({ ...form, rcaRecommended: selectValues })}
                       >{selectValues}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+                {error && error.rcaRecommended && (
+                  <p><small style={{ color: "red" }}>{error.rcaRecommended}</small></p>
+                )}
               </Grid>
-
-
 
               <Grid item md={6}>
                 <FormLabel component="legend" error={error.evidenceSupport}>
@@ -340,7 +347,7 @@ const Details = () => {
           </Grid>
         </Box>
       </Paper>
-    </Container>
+    </Container >
   );
 };
 

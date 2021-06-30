@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -25,6 +25,7 @@ import { spacing } from "@material-ui/system";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import FormLabel from "@material-ui/core/FormLabel";
+import { useHistory, useParams } from 'react-router';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -32,6 +33,7 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 // import Typography from "../../UiElements/Typography";
 import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation"
+import { MANAGEMENTCONTROL } from "../../../utils/constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,13 +76,57 @@ const CorrectiveAction = () => {
   }
   )
 
+  const putId = useRef("")
+  const [fetchApiData, setFetchApiData] = useState({})
+  const { id } = useParams();
+  const history = useHistory();
+  const updateIds = useRef()
+
+
+  // get data and set to states
+  const handelUpdateCheck = async () => {
+    let allrcaSubType = ["managementcontrol", "regionsupportabove"]
+    let tempApiData = {}
+    let tempApiDataId = []
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
+    if (!isNaN(lastItem)) {
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
+      putId.current = lastItem
+      let allApiData = previousData.data.data.results
+
+      allApiData.map(value => {
+        if (allrcaSubType.includes(value.rcaSubType)) {
+          let valueQuestion = value.rcaSubType
+          let valueAnser = value.rcaRemark
+          tempApiData[valueQuestion] = valueAnser
+          tempApiDataId.push(value.id)
+        }
+      })
+      updateIds.current = tempApiDataId.reverse()
+      await setFetchApiData(tempApiData)
+
+
+      // set fetched spervised data
+      form.managementControl.remarkType = "options"
+      form.managementControl.rcaSubType = "managementcontrol"
+      form.managementControl.rcaRemark = tempApiData.managementcontrol.includes(',') ? tempApiData.managementcontrol.split(",") : [tempApiData.managementcontrol]
+
+      // set fetched others data
+      form.regionSupport.remarkType = "remark"
+      form.regionSupport.rcaSubType = "regionsupportabove"
+      form.regionSupport.rcaRemark = tempApiData.regionsupportabove
+    }
+  }
+
   const handelManagementControl = (e, value) => {
     if (e.target.checked == false) {
       let newData = form.managementControl.rcaRemark.filter(item => item !== value)
       setForm({
         ...form, managementControl: {
           remarkType: 'options',
-          rcaSubType: "management control",
+          rcaSubType: "managementcontrol",
           rcaRemark: newData,
         }
       })
@@ -88,7 +134,7 @@ const CorrectiveAction = () => {
       setForm({
         ...form, managementControl: {
           remarkType: 'options',
-          rcaSubType: "management control",
+          rcaSubType: "managementcontrol",
           rcaRemark: [...form.managementControl.rcaRemark, value],
         }
       })
@@ -99,59 +145,77 @@ const CorrectiveAction = () => {
     setForm({
       ...form, regionSupport: {
         remarkType: 'remark',
-        rcaSubType: "Details the region to support above",
+        rcaSubType: "regionsupportabove",
         rcaRemark: e.target.value
       }
     })
   }
 
-  const checkBox = [
-    "Inadequate System",
-    "Inadequate standards",
-    "Inadequate compilance and standards",
-  ];
 
-  const handelNext = (e) => {
+  const handelNext = async (e) => {
 
     const { error, isValid } = CorrectiveActionValidation(form);
-    setError(error);
-
+    await setError(error);
     let tempData = []
-    Object.entries(form).map((item) => {
+
+    Object.entries(form).map(async (item, index) => {
       let api_data = item[1]
-
-      console.log(item)
-      let temp = {
-        createdBy: "0",
-        fkIncidentId: localStorage.getItem("fkincidentId"),
-        rcaRemark: api_data["rcaRemark"].toString(),
-        rcaSubType: api_data["rcaSubType"],
-        rcaType: "Basic",
-        remarkType: api_data["remarkType"],
-        status: "Active"
+      // post request object
+      if (putId.current == "") {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+        // put request object
+      } else {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active",
+          pk: updateIds.current[index]
+        }
+        tempData.push(temp)
       }
-      tempData.push(temp)
-
     })
-    setData(tempData)
-  }
 
-  const handelApiCall = async (e) => {
-    let callObjects = data
-
+    // api call //
+    let callObjects = tempData
     for (let key in callObjects) {
-      console.log(callObjects[key])
       if (Object.keys(error).length == 0) {
-        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
-        if (res.status == 201) {
-          console.log("request done")
-          console.log(res)
+
+        if (putId.current !== "") {
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
+        } else {
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            console.log(res)
+          }
         }
       }
     }
+    // api call //  
   }
 
   const classes = useStyles();
+
+  useEffect(() => {
+    handelUpdateCheck()
+  }, []);
 
   return (
     <div>
@@ -186,10 +250,11 @@ const CorrectiveAction = () => {
                 </Grid>
                 <Grid item md={12}>
                   <FormControl component="fieldset" >
-                    {checkBox.map((value) => (
+                    {MANAGEMENTCONTROL.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
                         label={value}
+                        checked={form.managementControl.rcaRemark.includes(value)}
                         onChange={async (e) => handelManagementControl(e, value)}
                       />
                     ))}
@@ -205,6 +270,7 @@ const CorrectiveAction = () => {
                     variant="outlined"
                     multiline
                     error={error.regionSupport}
+                    defaultValue={form.regionSupport.rcaRemark}
                     helperText={error ? error.regionSupport : ""}
                     rows={3}
                     label="Details the region to support above"
@@ -229,7 +295,7 @@ const CorrectiveAction = () => {
                     color="primary"
                     className={classes.button}
                     // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"}
-                    onClick={(e) => { handelNext(e); handelApiCall(e) }}
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>

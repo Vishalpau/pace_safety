@@ -1,7 +1,6 @@
 import validator from 'validator';
 
 function WhyAnalysisValidate(data) {
-    console.log(data)
     let isValid = true
     const error = {}
 
@@ -18,8 +17,6 @@ function WhyAnalysisValidate(data) {
         // }
 
     }
-
-    console.log(error)
     return { error, isValid }
 }
 

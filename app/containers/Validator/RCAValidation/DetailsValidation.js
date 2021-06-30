@@ -21,6 +21,13 @@ function DetailValidation(data) {
         isValid = false
     }
 
+    if (validator.isEmpty(data.rcaRecommended)) {
+        error.rcaRecommended = "this filed is empty"
+        isValid = false
+    }
+
+
+
     return { error, isValid }
 }
 

@@ -22,6 +22,7 @@ import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation"
 import { call } from "file-loader";
+import { SUPERVISON, WORKPACKAGE, EQUIMENTMACHINARY, BEHAVIOURISSUES, SAFETYITEMS, ERGONOMICS, PROCEDURES } from "../../../utils/constants"
 
 
 
@@ -70,7 +71,6 @@ const HazardiousActs = () => {
       let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
       putId.current = lastItem
       let allApiData = previousData.data.data.results
-
       allApiData.map(value => {
         if (allrcaSubType.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType
@@ -81,41 +81,42 @@ const HazardiousActs = () => {
       })
       updateIds.current = tempApiDataId.reverse()
       await setFetchApiData(tempApiData)
+      console.log(tempApiData)
 
       // set fetched spervised data
       form.supervision.remarkType = "options"
       form.supervision.rcaSubType = "Supervision"
-      form.supervision.rcaRemark = tempApiData.Supervision.includes(',') ? tempApiData.Supervision.split(",") : tempApiData.Supervision.split(" ")
+      form.supervision.rcaRemark = tempApiData.Supervision.includes(',') ? tempApiData.Supervision.split(",") : [tempApiData.Supervision]
 
       // set fetched workpackage data
       form.workpackage.remarkType = "options"
       form.workpackage.rcaSubType = "Workpackage"
-      form.workpackage.rcaRemark = tempApiData.Workpackage.includes(',') ? tempApiData.Workpackage.split(",") : tempApiData.Workpackage.split(" ")
+      form.workpackage.rcaRemark = tempApiData.Workpackage.includes(',') ? tempApiData.Workpackage.split(",") : [tempApiData.Workpackage]
 
       // set fetched equiment machinary data
       form.equipmentMachinery.remarkType = "options"
       form.equipmentMachinery.rcaSubType = "equipmentMachinery"
-      form.equipmentMachinery.rcaRemark = tempApiData.equipmentMachinery.includes(',') ? tempApiData.equipmentMachinery.split(",") : tempApiData.equipmentMachinery.split(" ")
+      form.equipmentMachinery.rcaRemark = tempApiData.equipmentMachinery.includes(',') ? tempApiData.equipmentMachinery.split(",") : [tempApiData.equipmentMachinery]
 
       // set fetched behaviour issues data
       form.behaviourIssue.remarkType = "options"
       form.behaviourIssue.rcaSubType = "behaviourIssue"
-      form.behaviourIssue.rcaRemark = tempApiData.behaviourIssue.includes(',') ? tempApiData.behaviourIssue.split(",") : tempApiData.behaviourIssue.split(" ")
+      form.behaviourIssue.rcaRemark = tempApiData.behaviourIssue.includes(',') ? tempApiData.behaviourIssue.split(",") : [tempApiData.behaviourIssue]
 
       // set fetched safety issues data
       form.safetyIssues.remarkType = "options"
       form.safetyIssues.rcaSubType = "safetyIssues"
-      form.safetyIssues.rcaRemark = tempApiData.safetyIssues.includes(',') ? tempApiData.safetyIssues.split(",") : tempApiData.safetyIssues.split(" ")
+      form.safetyIssues.rcaRemark = tempApiData.safetyIssues.includes(',') ? tempApiData.safetyIssues.split(",") : [tempApiData.safetyIssues]
 
       // set fetched ergonimics data
       form.ergonimics.remarkType = "options"
       form.ergonimics.rcaSubType = "ergonimics"
-      form.ergonimics.rcaRemark = tempApiData.ergonimics.includes(',') ? tempApiData.ergonimics.split(",") : tempApiData.ergonimics.split(" ")
+      form.ergonimics.rcaRemark = tempApiData.ergonimics.includes(',') ? tempApiData.ergonimics.split(",") : [tempApiData.ergonimics]
 
       // set fetched procedures data
       form.procedures.remarkType = "options"
       form.procedures.rcaSubType = "procedures"
-      form.procedures.rcaRemark = tempApiData.procedures.includes(',') ? tempApiData.procedures.split(",") : tempApiData.procedures.split(" ")
+      form.procedures.rcaRemark = tempApiData.procedures.includes(',') ? tempApiData.procedures.split(",") : [tempApiData.procedures]
 
       // set fetched others data
       form.others.remarkType = "remark"
@@ -287,19 +288,14 @@ const HazardiousActs = () => {
 
   const classes = useStyles();
 
-  // 
   const handelNext = async (e) => {
-    console.log("here")
-    // const { error, isValid } = HazardiousActsValidation(form);
 
-    // await setError(error);
-
+    const { error, isValid } = HazardiousActsValidation(form);
+    await setError(error);
     let tempData = []
 
-    Object.entries(form).forEach(async (item, index) => {
-
+    Object.entries(form).map(async (item, index) => {
       let api_data = item[1]
-
       // post request object
       if (putId.current == "") {
         let temp = {
@@ -312,7 +308,6 @@ const HazardiousActs = () => {
           status: "Active"
         }
         tempData.push(temp)
-        await setData(tempData)
         // put request object
       } else {
         let temp = {
@@ -326,18 +321,14 @@ const HazardiousActs = () => {
           pk: updateIds.current[index]
         }
         tempData.push(temp)
-        await setData(tempData)
       }
     })
-    await handelApiCall()
-  }
 
-  // api call
-  const handelApiCall = async (e) => {
-    let callObjects = data
-
+    // api call //
+    let callObjects = tempData
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
+
         if (putId.current !== "") {
           const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
           if (res.status == 201) {
@@ -354,7 +345,6 @@ const HazardiousActs = () => {
       }
     }
   }
-
 
   useEffect(() => {
     handelUpdateCheck()
@@ -382,10 +372,10 @@ const HazardiousActs = () => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.supervision}>Supervision</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {SUPERVISON.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
                         checked={form.supervision.rcaRemark.includes(value)}
                         onChange={async (e) => await handelSupervison(e, value)}
                       />
@@ -402,10 +392,10 @@ const HazardiousActs = () => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.workpackage}> Work package </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {WORKPACKAGE.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
                         checked={form.workpackage.rcaRemark.includes(value)}
                         onChange={async (e) => handelWorkpackage(e, value)}
                       />
@@ -425,10 +415,10 @@ const HazardiousActs = () => {
                     Equiptment & Machinery
                   </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {EQUIMENTMACHINARY.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
                         checked={form.equipmentMachinery.rcaRemark.includes(value)}
                         onChange={async (e) => handelEquipmentMachinary(e, value)}
                       />
@@ -445,11 +435,11 @@ const HazardiousActs = () => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.behaviourIssue}> Behaviour Issue</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {BEHAVIOURISSUES.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.behaviourIssue !== "undefined" && fetchApiData.behaviourIssue.includes(value) ? true : false}
+                        label={<small>{value}</small>}
+                        checked={form.behaviourIssue.rcaRemark.includes(value)}
                         onChange={async (e) => handelBehaviousIssues(e, value)}
                       />
                     ))}
@@ -465,10 +455,10 @@ const HazardiousActs = () => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.safetyIssues}> Saftey Items</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {SAFETYITEMS.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
                         checked={form.safetyIssues.rcaRemark.includes(value)}
                         onChange={async (e) => handelSafetyIssues(e, value)}
                       />
@@ -483,12 +473,12 @@ const HazardiousActs = () => {
               {/* ergonomics */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" error={error.procedures}>Ergohomics</FormLabel>
+                  <FormLabel component="legend" error={error.procedures}>Ergonomics</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {ERGONOMICS.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
                         checked={form.ergonimics.rcaRemark.includes(value)}
                         onChange={async (e) => handelErgonomics(e, value)}
                       />
@@ -505,10 +495,10 @@ const HazardiousActs = () => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.procedures}>Procedure</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {PROCEDURES.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
                         checked={form.procedures.rcaRemark.includes(value)}
                         onChange={async (e) => handelProcedures(e, value)}
                       />
@@ -543,7 +533,7 @@ const HazardiousActs = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
+                    href="/app/incident-management/registration/root-cause-analysis/details/"
                   >
                     Previous
                   </Button>
