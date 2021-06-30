@@ -178,22 +178,22 @@ function Application(props) {
         {/* form initialNotification */}
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/environment-Affected/"
+          path="/app/incident-management/registration/initial-notification/environment-affected/"
           component={EnvironmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/environment-Affected/:id"
+          path="/app/incident-management/registration/initial-notification/environment-affected/:id"
           component={EnvironmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/eqiptment-Affected/:id"
+          path="/app/incident-management/registration/initial-notification/equipment-affected/:id"
           component={EqiptmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+          path="/app/incident-management/registration/initial-notification/equipment-affected/"
           component={EqiptmentAffected}
         />
         <Route
@@ -218,12 +218,12 @@ function Application(props) {
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/property-Affected/"
+          path="/app/incident-management/registration/initial-notification/property-affected/"
           component={PropertyAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/property-Affected/:id"
+          path="/app/incident-management/registration/initial-notification/property-affected/:id"
           component={PropertyAffected}
         />
         <Route
@@ -281,7 +281,7 @@ function Application(props) {
           component={ActionTaken}
         />
         <Route
-          path="/app/incident-management/registration/investigation/Equipment-impact-details/"
+          path="/app/incident-management/registration/investigation/equipment-impact-details/"
           component={EquiptmentImpactDetails}
         />
         <Route
