@@ -26,6 +26,7 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation"
+import { RCAOPTION } from "../../../utils/constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -78,7 +79,6 @@ const Details = () => {
   ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
-  const rcaOption = ["Cause analysis", "Pace cause", "Root cause"]
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -149,8 +149,6 @@ const Details = () => {
 
   return (
     <Container>
-
-      {console.log(rcaOption.indexOf(form.rcaRecommended))}
       <Paper>
         <Box padding={3} bgcolor="background.paper">
 
@@ -227,7 +225,7 @@ const Details = () => {
                     label="RCA recommended"
                   // defaultValue={"Pace cause"}
                   >
-                    {rcaOption.map((selectValues) => (
+                    {RCAOPTION.map((selectValues) => (
                       <MenuItem
                         value={selectValues}
                         onClick={(e) => setForm({ ...form, rcaRecommended: selectValues })}

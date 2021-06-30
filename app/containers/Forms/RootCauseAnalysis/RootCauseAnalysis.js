@@ -28,6 +28,7 @@ import FormSideBar from '../FormSideBar';
 import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants';
 import api from '../../../utils/axios';
 import RootCauseValidation from '../../Validator/RCAValidation/RootCauseAnalysisValidation';
+import { RCAOPTION } from "../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -207,7 +208,7 @@ const RootCauseAnalysis = () => {
                     labelId="project-name-label"
                     label="Project Name"
                   >
-                    {selectValues.map((selectValues) => (
+                    {RCAOPTION.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>

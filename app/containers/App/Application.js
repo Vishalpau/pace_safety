@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { PropTypes } from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
-import { ThemeContext } from './ThemeWrapper';
-import Dashboard from '../Templates/Dashboard';
+import React, { useContext } from "react";
+import { PropTypes } from "prop-types";
+import { Switch, Route } from "react-router-dom";
+import { ThemeContext } from "./ThemeWrapper";
+import Dashboard from "../Templates/Dashboard";
 import {
   PersonalDashboard,
   CrmDashboard,
@@ -123,7 +123,7 @@ import {
   Summary,
   LessionLearned,
   UpdateIncidentDetails,
-} from '../pageListAsync';
+} from "../pageListAsync";
 
 function Application(props) {
   const { history } = props;
@@ -188,12 +188,12 @@ function Application(props) {
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/eqiptment-affected/:id"
+          path="/app/incident-management/registration/initial-notification/equipment-affected/:id"
           component={EqiptmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/eqiptment-affected/"
+          path="/app/incident-management/registration/initial-notification/equipment-affected/"
           component={EqiptmentAffected}
         />
         <Route
@@ -261,7 +261,8 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/additional-details/:id"
           component={AdditionalDetails}
         />
-        <Route exact
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/evidence/"
           component={Evidence}
         />
@@ -279,7 +280,7 @@ function Application(props) {
           component={ActionTaken}
         />
         <Route
-          path="/app/incident-management/registration/investigation/equiptment-impact-details/"
+          path="/app/incident-management/registration/investigation/equipment-impact-details/"
           component={EquiptmentImpactDetails}
         />
         <Route
@@ -339,7 +340,6 @@ function Application(props) {
           path="/app/incident-management/registration/root-cause-analysis/why-analysis/"
           component={WhyAnalysis}
         />
-
         {/* form root cause analysis get and put */}
         <Route
           path="/app/incident-management/registration/root-cause-analysis/basic-cause/:id"
@@ -379,13 +379,10 @@ function Application(props) {
         />
 
         {/* summary */}
-
         <Route
           path="/app/incident-management/registration/summary/summary/:id"
           component={Summary}
         />
-
-
         history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
         {/* from leassionlearned */}
         <Route
