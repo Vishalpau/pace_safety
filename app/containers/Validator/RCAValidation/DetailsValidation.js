@@ -25,8 +25,6 @@ function DetailValidation(data) {
         isValid = false
     }
 
-
-
     return { error, isValid }
 }
 
