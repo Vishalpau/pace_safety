@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Container, Grid, Button } from "@material-ui/core";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -26,6 +26,7 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation"
+import { RCAOPTION } from "../../../utils/constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -56,7 +57,7 @@ const Details = () => {
     evidenceSupport: "",
     evidenceContradiction: "",
     evidenceNotSupport: "",
-    rcaRecommended: "string",
+    rcaRecommended: "",
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
@@ -66,7 +67,8 @@ const Details = () => {
   const [error, setError] = useState({})
 
   const [nextPageUrl, setNextPageUrl] = useState("")
-
+  const putId = useRef("")
+  const pkValue = useRef("")
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -81,11 +83,30 @@ const Details = () => {
     new Date("2014-08-18T21:11:54")
   );
 
+  // get data for put
+  const handelUpdateCheck = async () => {
+    let tempApiData = {}
+    let tempApiDataId = []
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
+    if (!isNaN(lastItem)) {
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/causeanalysis/`)
+      let allApiData = previousData.data.data.results[0]
+      pkValue.current = allApiData.id
+      form.evidenceSupport = allApiData.evidenceSupport
+      form.evidenceContradiction = allApiData.evidenceContradiction
+      form.evidenceNotSupport = allApiData.evidenceNotSupport
+      form.rcaRecommended = allApiData.rcaRecommended
+      putId.current = lastItem
+    }
+  }
+
+
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
       `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
-    console.log(allIncidents)
     await setIncidents(allIncidents.data.data.results);
   };
 
@@ -102,16 +123,27 @@ const Details = () => {
 
     setError(error);
     if (Object.keys(error).length == 0) {
-      const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/`, form);
-      if (res.status == 201) {
-        console.log("request done")
-        console.log(res)
+      console.log(form)
+      if (putId.current == "") {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/`, form);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
+      } else {
+        form["pk"] = pkValue.current
+        const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/${pkValue.current}/`, form);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
       }
     }
 
   }
 
   useEffect(() => {
+    handelUpdateCheck();
     fetchIncidentData();
   }, []);
 
@@ -119,11 +151,13 @@ const Details = () => {
     <Container>
       <Paper>
         <Box padding={3} bgcolor="background.paper">
+
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               RCA details
             </Typography>
           </Box>
+
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
 
@@ -189,22 +223,26 @@ const Details = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="RCA recommended"
+                  // defaultValue={"Pace cause"}
                   >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                    {RCAOPTION.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => setForm({ ...form, rcaRecommended: selectValues })}
+                      >{selectValues}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+                {error && error.rcaRecommended && (
+                  <p><small style={{ color: "red" }}>{error.rcaRecommended}</small></p>
+                )}
               </Grid>
-
-
 
               <Grid item md={6}>
                 <FormLabel component="legend" error={error.evidenceSupport}>
                   <p>Evidence collected supports the incident event took place</p>
                 </FormLabel>
-
-
                 <FormControl component="fieldset">
                   <RadioGroup className={classes.inlineRadioGroup}>
                     {radioDecide.map((value) => (
@@ -212,6 +250,7 @@ const Details = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        checked={form.evidenceSupport == value}
                         onChange={(e) => setForm({ ...form, evidenceSupport: e.target.value })}
                       />
                     ))}
@@ -238,6 +277,7 @@ const Details = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        checked={form.evidenceContradiction == value}
                         onChange={(e) => setForm({ ...form, evidenceContradiction: e.target.value })}
                       />
                     ))}
@@ -263,6 +303,7 @@ const Details = () => {
                         value={value}
                         control={<Radio />}
                         label={value}
+                        checked={form.evidenceNotSupport == value}
                         onChange={(e) => setForm({ ...form, evidenceNotSupport: e.target.value })}
                       />
                     ))}
@@ -304,7 +345,7 @@ const Details = () => {
           </Grid>
         </Box>
       </Paper>
-    </Container>
+    </Container >
   );
 };
 

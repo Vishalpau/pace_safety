@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Grid, Container } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
@@ -28,6 +28,7 @@ import FormSideBar from '../FormSideBar';
 import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants';
 import api from '../../../utils/axios';
 import RootCauseValidation from '../../Validator/RCAValidation/RootCauseAnalysisValidation';
+import { RCAOPTION } from "../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -62,7 +63,6 @@ const RootCauseAnalysis = () => {
     const allIncidents = await api.get(
       `api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
     );
-    console.log(allIncidents);
     await setIncidents(allIncidents.data.data.results);
   };
 
@@ -80,6 +80,26 @@ const RootCauseAnalysis = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date('2014-08-18T21:11:54')
   );
+  const putId = useRef("")
+  const pkValue = useRef("")
+
+  const handelUpdateCheck = async () => {
+    let tempApiData = {}
+    let tempApiDataId = []
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
+    if (!isNaN(lastItem)) {
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/rootcauses/`)
+      let allApiData = previousData.data.data.results[0]
+      pkValue.current = allApiData.id
+      form.causeOfIncident = allApiData.causeOfIncident
+      form.correctiveAction = allApiData.correctiveAction
+      form.wouldItPreventIncident = allApiData.wouldItPreventIncident
+      form.recommendSolution = allApiData.recommendSolution
+      putId.current = lastItem
+    }
+  }
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -90,18 +110,30 @@ const RootCauseAnalysis = () => {
     const { error, isValid } = RootCauseValidation(form);
     setError(error);
     if (Object.keys(error).length == 0) {
-      const res = await api.post(
-        `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/rootcauses/`,
-        form
-      );
-      if (res.status == 201) {
-        console.log('request done');
-        console.log(res);
+      if (putId.current == "") {
+        const res = await api.post(
+          `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/rootcauses/`,
+          form
+        );
+        if (res.status == 201) {
+          console.log('request done');
+          console.log(res);
+        }
+      } else {
+        form["pk"] = pkValue.current
+        const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/rootcauses/${pkValue.current}/`, form);
+        if (res.status == 201) {
+          console.log("request done")
+          console.log(res)
+        }
       }
+
+
     }
   };
 
   useEffect(() => {
+    handelUpdateCheck()
     fetchIncidentData();
   }, []);
 
@@ -117,6 +149,7 @@ const RootCauseAnalysis = () => {
 
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
+
               <Grid item md={12}>
                 <Box>
                   <Typography variant="body2" gutterBottom>
@@ -126,6 +159,7 @@ const RootCauseAnalysis = () => {
                   </Typography>
                 </Box>
               </Grid>
+
               <Grid item md={12}>
                 <Typography variant="h6" gutterBottom>
                   Incident Description:
@@ -163,10 +197,9 @@ const RootCauseAnalysis = () => {
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
+
               <Grid item md={6}>
-                {/* <h6> RCA recommended</h6> */}
                 <FormControl variant="outlined" className={classes.formControl}>
-                  {/* <FormLabel component="legend">RCA recommended</FormLabel> */}
                   <InputLabel id="project-name-label">
                     RCA recommended
                   </InputLabel>
@@ -175,7 +208,7 @@ const RootCauseAnalysis = () => {
                     labelId="project-name-label"
                     label="Project Name"
                   >
-                    {selectValues.map((selectValues) => (
+                    {RCAOPTION.map((selectValues) => (
                       <MenuItem value={selectValues}>{selectValues}</MenuItem>
                     ))}
                   </Select>
@@ -240,6 +273,7 @@ const RootCauseAnalysis = () => {
                   variant="outlined"
                   label="What caused the incident?"
                   error={error.causeOfIncident}
+                  defaultValue={form.causeOfIncident}
                   helperText={error ? error.causeOfIncident : ''}
                   onChange={(e) => setForm({ ...form, causeOfIncident: e.target.value })
                   }
@@ -256,6 +290,7 @@ const RootCauseAnalysis = () => {
                   variant="outlined"
                   label="Corrective actions"
                   error={error.correctiveAction}
+                  defaultValue={form.correctiveAction}
                   helperText={error ? error.correctiveAction : ''}
                   onChange={(e) => setForm({ ...form, correctiveAction: e.target.value })
                   }
@@ -277,6 +312,7 @@ const RootCauseAnalysis = () => {
                       value={value}
                       control={<Radio />}
                       label={value}
+                      checked={form.wouldItPreventIncident == value}
                       onChange={(e) => setForm({
                         ...form,
                         wouldItPreventIncident:
@@ -301,6 +337,7 @@ const RootCauseAnalysis = () => {
                   multiline
                   label="If no, please recommended correct solution ?"
                   rows="3"
+                  defaultValue={form.recommendSolution}
                   onChange={(e) => setForm({ ...form, recommendSolution: e.target.value })
                   }
                 />

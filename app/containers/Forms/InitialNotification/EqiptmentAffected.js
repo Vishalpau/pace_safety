@@ -83,7 +83,7 @@ const EqiptmentAffected = () => {
   const [error, setError] = useState({});
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
-  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState('');
+  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState('No');
   const [equipmentListdata, setEquipmentListData] = useState([]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
@@ -101,11 +101,9 @@ const EqiptmentAffected = () => {
   // set state for update
   const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
     const temp = equipmentListdata;
-    console.log(temp);
     const { value } = e.target;
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
-    console.log(temp[key]);
     setEquipmentListData(temp)
 
   
@@ -114,15 +112,19 @@ const EqiptmentAffected = () => {
 
   // hablde Remove
 
-  const handleRemove = (key) => {
-    if(peopleData.length>1){
-      const temp = peopleData
+  const handleRemove = async(key) => {
+    if(equipmentListdata.length>1){
+      const temp = equipmentListdata
       const newData = temp.filter(item=> item.id !== key);
-      setPeopleData(newData)
+      await setPeopleData(newData)
     }
-    const temp = form;
-    const newData = form.filter((item, index) => index !== key);
-    setForm(newData);
+    else{
+      const temp = form;
+      console.log(temp)
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
+    }
+    
   };
 
 
@@ -142,19 +144,16 @@ const EqiptmentAffected = () => {
     const temp = [...form];
     const { value } = e.target;
     temp[key][fieldname] = value;
-    console.log(temp);
     setForm(temp);
   };
 
   const handleNext = async () => {
-    console.log(form);
     if(id){
       for(var i=0; i<equipmentListdata.length;i++){
         const res = await api.put(
           `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`,
           equipmentListdata[i]
         );
-        console.log(res);
       }
     }
 
@@ -173,7 +172,6 @@ const EqiptmentAffected = () => {
     } else if (detailsOfEquipmentAffect === 'Yes') {
       const { error, isValid } = EquipmentValidate(form);
       setError(error);
-      console.log(form);
       const status = 0;
 
       for (let i = 0; i < form.length; i++) {
@@ -185,19 +183,17 @@ const EqiptmentAffected = () => {
         );
       }
       const temp = incidentsListData;
-      console.log(temp);
       temp.equipmentDamagedComments = equipmentDamagedComments
           || incidentsListData.equipmentDamagedComments;
       temp.isEquipmentDamagedAvailable = detailsOfEquipmentAffect
           || incidentsListData.isEquipmentDamagedAvailable;
       temp.updatedAt = moment(new Date()).toISOString();
-      console.log(temp);
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
         temp
       );
 
-      if (id !== undefined) {
+      if (id) {
         if (nextPath.environmentAffect === 'Yes') {
           history.push(
             `/app/incident-management/registration/initial-notification/environment-affected/${id}`
@@ -208,26 +204,27 @@ const EqiptmentAffected = () => {
           );
         }
       }
-      // if (status === 201) {
-      if (nextPath.environmentAffect === 'Yes') {
-        history.push(
-          '/app/incident-management/registration/initial-notification/environment-affected/'
-        );
-      } else {
-        history.push(
-          '/app/incident-management/registration/initial-notification/reporting-and-notification/'
-        );
+      else{
+        if (nextPath.environmentAffect === 'Yes') {
+          history.push(
+            '/app/incident-management/registration/initial-notification/environment-affected/'
+          );
+        } else {
+          history.push(
+            '/app/incident-management/registration/initial-notification/reporting-and-notification/'
+          );
+        }
       }
+      // if (status === 201) {
+     
       // }
     } else {
       const temp = incidentsListData;
-      console.log(temp);
       temp.equipmentDamagedComments = equipmentDamagedComments
           || incidentsListData.equipmentDamagedComments;
       temp.isEquipmentDamagedAvailable = detailsOfEquipmentAffect
           || incidentsListData.isEquipmentDamagedAvailable;
       temp.updatedAt = moment(new Date()).toISOString();
-      console.log(temp);
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
         temp
@@ -278,7 +275,7 @@ const EqiptmentAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-    const isavailable = result.isPersonDetailsAvailable;
+    const isavailable = result.isEquipmentDamagedAvailable;
     await setDetailsOfEquipmentAffect(isavailable);
   
   };
@@ -304,14 +301,14 @@ const EqiptmentAffected = () => {
               <Typography variant="body" component="p" gutterBottom>
                 Do you have details to share about the equiptment accected?
               </Typography>
+              {console.log(detailsOfEquipmentAffect,incidentsListData.isEquipmentDamagedAvailable)}
               <RadioGroup
                 className={classes.inlineRadioGroup}
                 aria-label="detailsOfPropertyAffect"
                 name="detailsOfPropertyAffect"
-                value={detailsOfEquipmentAffect}
+                value={detailsOfEquipmentAffect || incidentsListData.isEquipmentDamagedAvailable}
                 onChange={(e) => {
                   setDetailsOfEquipmentAffect(e.target.value);
-                  handleEquipmentDamageAvailable();
                 }}
               >
                 {equipmentAffected.length !== 0
@@ -414,7 +411,7 @@ const EqiptmentAffected = () => {
                             <p>{error[`equipmentDeatils${[key]}`]}</p>
                           )} */}
                       </Grid>
-                      {equipmentListdata.length > 1 ? (
+                      {/* {equipmentListdata.length > 1 ? (
                           <Grid item md={3}>
                             <Button
                               onClick={() => handleRemove(equipment.id)}
@@ -425,7 +422,7 @@ const EqiptmentAffected = () => {
                               Remove
                             </Button>
                           </Grid>
-                        ) : null}
+                        ) : null} */}
                     </>
                   ))
                   : form.map((value, key) => (
@@ -443,6 +440,7 @@ const EqiptmentAffected = () => {
                             labelId="eq-type-label"
                             id="eq-type"
                             label="Equiptment type"
+                            value = {value.equipmentType || ""}
                             onChange={(e) => handleForm(e, key, 'equipmentType')
                             }
                           >
@@ -472,6 +470,7 @@ const EqiptmentAffected = () => {
                           id="filled-basic"
                           label="If others, describe"
                           className={classes.formControl}
+                          value = {value.equipmentOtherType || ""}
                           onChange={(e) => handleForm(e, key, 'equipmentOtherType')
                           }
                         />
@@ -489,6 +488,7 @@ const EqiptmentAffected = () => {
                           rows="3"
                           label="Describe the damage"
                           className={classes.fullWidth}
+                          value = {value.equipmentDeatils || ""}
                           onChange={(e) => handleForm(e, key, 'equipmentDeatils')
                           }
                         />

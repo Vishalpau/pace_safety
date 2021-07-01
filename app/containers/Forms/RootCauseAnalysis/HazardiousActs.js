@@ -15,11 +15,14 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { useHistory, useParams } from 'react-router';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation"
+import { call } from "file-loader";
+import { SUPERVISON, WORKPACKAGE, EQUIMENTMACHINARY, BEHAVIOURISSUES, SAFETYITEMS, ERGONOMICS, PROCEDURES } from "../../../utils/constants"
 
 
 
@@ -50,38 +53,81 @@ const HazardiousActs = () => {
   const [error, setError] = useState({})
   const [data, setData] = useState([])
   const putId = useRef("")
-  const checkUpdate = useRef(false);
-  const paceCauseData = useRef()
   const [fetchApiData, setFetchApiData] = useState({})
+  const { id } = useParams();
+  const history = useHistory();
+  const updateIds = useRef()
 
 
-
+  // get data and set to states
   const handelUpdateCheck = async () => {
     let allrcaSubType = ["Supervision", "Workpackage", "equipmentMachinery", "behaviourIssue", "safetyIssues", "ergonimics", "procedures", "otheracts"]
     let tempApiData = {}
+    let tempApiDataId = []
     let page_url = window.location.href
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
 
     if (!isNaN(lastItem)) {
-      checkUpdate.current = true;
       let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
       putId.current = lastItem
       let allApiData = previousData.data.data.results
-
       allApiData.map(value => {
         if (allrcaSubType.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType
-          // let valueAnser = value.rcaRemark.includes(',') ? value.rcaRemark.split(',') : value.rcaRemark
           let valueAnser = value.rcaRemark
           tempApiData[valueQuestion] = valueAnser
+          tempApiDataId.push(value.id)
         }
       })
-      paceCauseData.current = tempApiData
+      updateIds.current = tempApiDataId.reverse()
       await setFetchApiData(tempApiData)
+      console.log(tempApiData)
+
+      // set fetched spervised data
+      form.supervision.remarkType = "options"
+      form.supervision.rcaSubType = "Supervision"
+      form.supervision.rcaRemark = tempApiData.Supervision.includes(',') ? tempApiData.Supervision.split(",") : [tempApiData.Supervision]
+
+      // set fetched workpackage data
+      form.workpackage.remarkType = "options"
+      form.workpackage.rcaSubType = "Workpackage"
+      form.workpackage.rcaRemark = tempApiData.Workpackage.includes(',') ? tempApiData.Workpackage.split(",") : [tempApiData.Workpackage]
+
+      // set fetched equiment machinary data
+      form.equipmentMachinery.remarkType = "options"
+      form.equipmentMachinery.rcaSubType = "equipmentMachinery"
+      form.equipmentMachinery.rcaRemark = tempApiData.equipmentMachinery.includes(',') ? tempApiData.equipmentMachinery.split(",") : [tempApiData.equipmentMachinery]
+
+      // set fetched behaviour issues data
+      form.behaviourIssue.remarkType = "options"
+      form.behaviourIssue.rcaSubType = "behaviourIssue"
+      form.behaviourIssue.rcaRemark = tempApiData.behaviourIssue.includes(',') ? tempApiData.behaviourIssue.split(",") : [tempApiData.behaviourIssue]
+
+      // set fetched safety issues data
+      form.safetyIssues.remarkType = "options"
+      form.safetyIssues.rcaSubType = "safetyIssues"
+      form.safetyIssues.rcaRemark = tempApiData.safetyIssues.includes(',') ? tempApiData.safetyIssues.split(",") : [tempApiData.safetyIssues]
+
+      // set fetched ergonimics data
+      form.ergonimics.remarkType = "options"
+      form.ergonimics.rcaSubType = "ergonimics"
+      form.ergonimics.rcaRemark = tempApiData.ergonimics.includes(',') ? tempApiData.ergonimics.split(",") : [tempApiData.ergonimics]
+
+      // set fetched procedures data
+      form.procedures.remarkType = "options"
+      form.procedures.rcaSubType = "procedures"
+      form.procedures.rcaRemark = tempApiData.procedures.includes(',') ? tempApiData.procedures.split(",") : [tempApiData.procedures]
+
+      // set fetched others data
+      form.others.remarkType = "remark"
+      form.others.rcaSubType = "otheracts"
+      form.others.rcaRemark = tempApiData.otheracts
     }
+
   }
 
   const handelSupervison = (e, value) => {
+
     if (e.target.checked == false) {
       let newData = form.supervision.rcaRemark.filter(item => item !== value)
       setForm({
@@ -232,7 +278,7 @@ const HazardiousActs = () => {
     setForm({
       ...form, others: {
         remarkType: "remark",
-        rcaSubType: "others",
+        rcaSubType: "otheracts",
         rcaRemark: e.target.value
       }
     })
@@ -242,40 +288,49 @@ const HazardiousActs = () => {
 
   const classes = useStyles();
 
-  const handelNext = (e) => {
+  const handelNext = async (e) => {
 
     const { error, isValid } = HazardiousActsValidation(form);
-    setError(error);
-
+    await setError(error);
     let tempData = []
-    Object.entries(form).map((item) => {
+
+    Object.entries(form).map(async (item, index) => {
       let api_data = item[1]
-      let rcaRemark_one = api_data.rcaRemark
-      console.log(item)
-      let temp = {
-        createdBy: "0",
-        fkIncidentId: localStorage.getItem("fkincidentId"),
-        rcaRemark: api_data["rcaRemark"].toString(),
-        rcaSubType: api_data["rcaSubType"],
-        rcaType: "Basic",
-        remarkType: api_data["remarkType"],
-        status: "Active"
+      // post request object
+      if (putId.current == "") {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+        // put request object
+      } else {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active",
+          pk: updateIds.current[index]
+        }
+        tempData.push(temp)
       }
-      tempData.push(temp)
-
     })
-    setData(tempData)
-  }
 
-  const handelApiCall = async (e) => {
-    let callObjects = data
-
+    // api call //
+    let callObjects = tempData
     for (let key in callObjects) {
-      console.log(callObjects[key])
       if (Object.keys(error).length == 0) {
 
         if (putId.current !== "") {
-          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
           if (res.status == 201) {
             console.log("request done")
             console.log(res)
@@ -291,16 +346,14 @@ const HazardiousActs = () => {
     }
   }
 
-
   useEffect(() => {
     handelUpdateCheck()
   }, []);
 
   return (
     <Container>
-      {console.log(form)}
       <Paper>
-        {console.log(fetchApiData.Supervision !== "undefined" ? "String" : "")}
+        {/* {console.log(fetchApiData.Supervision !== "undefined" ? fetchApiData : "")} */}
         <Box padding={3} bgcolor="background.paper">
           <Typography variant="h6" gutterBottom>
             Immediate Causes - Hazardous acts
@@ -313,20 +366,20 @@ const HazardiousActs = () => {
           <Grid container spacing={3}>
 
             <Grid container item md={9} spacing={3}>
+
+              {/* supervision */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.supervision}>Supervision</FormLabel>
-
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {SUPERVISON.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.Supervision !== "undefined" && fetchApiData.Supervision.includes(value) ? true : false}
-                        onChange={async (e) => handelSupervison(e, value)}
+                        label={<small>{value}</small>}
+                        checked={form.supervision.rcaRemark.includes(value)}
+                        onChange={async (e) => await handelSupervison(e, value)}
                       />
                     ))}
-
                   </FormGroup>
                 </FormControl>
                 {error && error.supervision && (
@@ -334,15 +387,16 @@ const HazardiousActs = () => {
                 )}
               </Grid>
 
+              {/* workpackage */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.workpackage}> Work package </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {WORKPACKAGE.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.Workpackage !== "undefined" && fetchApiData.Workpackage.includes(value) ? true : false}
+                        label={<small>{value}</small>}
+                        checked={form.workpackage.rcaRemark.includes(value)}
                         onChange={async (e) => handelWorkpackage(e, value)}
                       />
                     ))}
@@ -353,6 +407,7 @@ const HazardiousActs = () => {
                 )}
               </Grid>
 
+              {/* equiment machinary     */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.equipmentMachinery}>
@@ -360,11 +415,11 @@ const HazardiousActs = () => {
                     Equiptment & Machinery
                   </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {EQUIMENTMACHINARY.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.equipmentMachinery !== "undefined" && fetchApiData.equipmentMachinery.includes(value) ? true : false}
+                        label={<small>{value}</small>}
+                        checked={form.equipmentMachinery.rcaRemark.includes(value)}
                         onChange={async (e) => handelEquipmentMachinary(e, value)}
                       />
                     ))}
@@ -375,15 +430,16 @@ const HazardiousActs = () => {
                 )}
               </Grid>
 
+              {/* behaviour issues      */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.behaviourIssue}> Behaviour Issue</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {BEHAVIOURISSUES.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.behaviourIssue !== "undefined" && fetchApiData.behaviourIssue.includes(value) ? true : false}
+                        label={<small>{value}</small>}
+                        checked={form.behaviourIssue.rcaRemark.includes(value)}
                         onChange={async (e) => handelBehaviousIssues(e, value)}
                       />
                     ))}
@@ -394,15 +450,16 @@ const HazardiousActs = () => {
                 )}
               </Grid>
 
+              {/* safety issues    */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.safetyIssues}> Saftey Items</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {SAFETYITEMS.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.safetyIssues !== "undefined" && fetchApiData.safetyIssues.includes(value) ? true : false}
+                        label={<small>{value}</small>}
+                        checked={form.safetyIssues.rcaRemark.includes(value)}
                         onChange={async (e) => handelSafetyIssues(e, value)}
                       />
                     ))}
@@ -413,15 +470,16 @@ const HazardiousActs = () => {
                 )}
               </Grid>
 
+              {/* ergonomics */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" error={error.procedures}>Ergohomics</FormLabel>
+                  <FormLabel component="legend" error={error.procedures}>Ergonomics</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {ERGONOMICS.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.ergonimics !== "undefined" && fetchApiData.ergonimics.includes(value) ? true : false}
+                        label={<small>{value}</small>}
+                        checked={form.ergonimics.rcaRemark.includes(value)}
                         onChange={async (e) => handelErgonomics(e, value)}
                       />
                     ))}
@@ -432,15 +490,16 @@ const HazardiousActs = () => {
                 )}
               </Grid>
 
+              {/* procedures */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.procedures}>Procedure</FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {PROCEDURES.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
-                        checked={typeof fetchApiData.procedures !== "undefined" && fetchApiData.procedures.includes(value) ? true : false}
+                        label={<small>{value}</small>}
+                        checked={form.procedures.rcaRemark.includes(value)}
                         onChange={async (e) => handelProcedures(e, value)}
                       />
                     ))}
@@ -451,8 +510,8 @@ const HazardiousActs = () => {
                 )}
               </Grid>
 
+              {/* others */}
               <Grid item md={12}>
-                {/* <p>others</p> */}
                 <TextField
                   className={classes.formControl}
                   id="filled-basic"
@@ -460,20 +519,21 @@ const HazardiousActs = () => {
                   variant="outlined"
                   multiline
                   error={error.others}
-                  // value={typeof fetchApiData.Supervision !== "undefined" && fetchApiData.ergonimics.includes(value) ? true : false}
+                  defaultValue={form.others.rcaRemark}
                   helperText={error ? error.others : ""}
                   rows={3}
                   onChange={async (e) => handelOthers(e)}
                 />
               </Grid>
 
+              {/* buttons */}
               <Grid item md={12}>
                 <Box marginTop={4}>
                   <Button
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
+                    href="/app/incident-management/registration/root-cause-analysis/details/"
                   >
                     Previous
                   </Button>
@@ -482,12 +542,13 @@ const HazardiousActs = () => {
                     color="primary"
                     className={classes.button}
                     // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"}
-                    onClick={(e) => { handelNext(e); handelApiCall(e) }}
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>
                 </Box>
               </Grid>
+
             </Grid>
             <Grid item md={3}>
               <FormSideBar

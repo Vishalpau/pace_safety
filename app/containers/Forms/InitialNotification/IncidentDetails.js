@@ -110,7 +110,6 @@ const IncidentDetails = () => {
   };
   // Function called on next button click.
   const handelNext = async (e) => {
-    console.log(form.incidentDate);
     // Create case if id is not null and means it is an update case.
     if (id) {
       // Set next path.
@@ -224,7 +223,6 @@ const IncidentDetails = () => {
 
       // Hit put request to backend as it is the update case.
       const res = await api.put(`/api/v1/incidents/${id}/`, formData);
-      console.log("===> Incident update response > ", res);
 
       // If we received the success from the API then.
       if (res.status === 200) {
@@ -323,7 +321,6 @@ const IncidentDetails = () => {
         };
         // sent post api
         const res = await api.post("/api/v1/incidents/", formData);
-        console.log(res);
         if (res.status === 201) {
           const fkincidentId = res.data.data.results.id;
           localStorage.setItem("fkincidentId", fkincidentId);
@@ -357,7 +354,6 @@ const IncidentDetails = () => {
   };
 
   const handelTimeChange = (date) => {
-    console.log(date);
     const onlyTime = moment(date).format("HH:mm");
     setForm({
       ...form,
@@ -424,7 +420,6 @@ const IncidentDetails = () => {
   };
 
   const handleHideAffect = (e, name, key) => {
-    console.log("set hide affecct", hideAffect);
     if (e !== "Yes") {
       setHideAffect([...hideAffect, name]);
     } else {
@@ -437,7 +432,6 @@ const IncidentDetails = () => {
   useEffect(() => {
     localStorage.removeItem("deleteForm");
     localStorage.removeItem("nextPath");
-    console.log(nextPath);
     fetchListData();
     fetchContractorValue();
     fetchIncidentTypeValue();
@@ -450,7 +444,7 @@ const IncidentDetails = () => {
     // if(!id){
     //   setIsLoading(true)
     // }
-    console.log(hideAffect);
+    
   }, []);
 
   return (
@@ -548,10 +542,10 @@ const IncidentDetails = () => {
                 )}
               </FormControl>
             </Grid>
-                  {console.log(incidentsListData.incidentOccuredOn)}
+                 
             {/* date */}
             <Grid item md={6}>
-              {console.log(incidentsListData.incidentOccuredOn)}
+              
               
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
@@ -564,7 +558,6 @@ const IncidentDetails = () => {
                     form.incidentdate || incidentsListData.incidentOccuredOn
                   }
                   onChange={(e) => {
-                    console.log(moment(e).toISOString())
                     setForm({
                       ...form,
                       incidentdate: moment(e).toISOString(),
@@ -576,35 +569,7 @@ const IncidentDetails = () => {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            {/* time */}
-            {/* <Grid item md={6}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardTimePicker
-                  required
-                  error={error.incidenttime}
-                  inputVariant="outlined"
-                  helperText={error.incidentdate ? error.incidenttime : null}
-                  className={classes.formControl}
-                  id="time-picker"
-                  label="Time picker"
-                  value={
-                    form.incidenttime === null ? new Date(clearedDate) : new Date(selectedTime)
-                  }
-                  onChange={(e) => {
-                    console.log(e);
-                    setForm({
-                      ...form,
-                      incidenttime: moment(e).format('HH:mm'),
-                    });
-                    setSelectedTime(e);
-                  }}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change time',
-                  }}
-                  format="HH:mm"
-                />
-              </MuiPickersUtilsProvider>
-            </Grid> */}
+            
 
             {/* title */}
             <Grid item lg={12} md={6} sm={6}>

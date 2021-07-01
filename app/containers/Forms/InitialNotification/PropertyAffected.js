@@ -108,20 +108,20 @@ const PropertyAffected = () => {
 
   // hablde Remove
 
-  const handleRemove = (key) => {
-    debugger;
+  const handleRemove = async(key) => {
+    // if this condition when update the data
     if(propertyListData.length>1){
       const temp = propertyListData
       const newData = temp.filter(item=> item.id !== key);
-      setPropertyListData(newData)
+      await setPropertyListData(newData)
+    }else{
+      // this condition use when create the data
+      const temp = form
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
     }
-    console.log(key)
-    console.log(form)
     
-    const newData = form.filter((item, index) => index !== key);
-    console.log(newData)
-    setForm(newData);
-    console.log(form)
+    
   };
 
 // set state when update 
@@ -175,7 +175,7 @@ const PropertyAffected = () => {
      
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
         );
       } else if (nextPath.environmentAffect === "Yes") {
         history.push(
@@ -217,19 +217,39 @@ const PropertyAffected = () => {
         );
         // If api success
         if (status === 201) {
-          if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/summary/summary/"
-            );
+          // if id is avialable
+          if(id){
+            if (nextPath.equipmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+              );
+            } else if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              );
+            } else {
+              history.push(
+                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+              );
+            }
           }
+          else{
+            if (nextPath.equipmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/equipment-affected/"
+              );
+            } else if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/environment-affected/"
+              );
+            } else {
+              history.push(
+                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+              );
+            }
+          }
+
+          
         }
 
         // If no is selected on form.
@@ -250,7 +270,7 @@ const PropertyAffected = () => {
         if (id) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
@@ -265,7 +285,7 @@ const PropertyAffected = () => {
         } else {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
             );
           } else if (nextPath.environmentAffect === "Yes") {
             if (nextPath.environmentAffect === "Yes") {
@@ -381,7 +401,7 @@ const PropertyAffected = () => {
                               labelId="person-type-label"
                               id="person-type"
                               label="Person type"
-                              defaultValue={property.propertyType}
+                              value={property.propertyType || ""}
                               onChange={(e) =>
                                 handleUpdateProperty(
                                   e,
@@ -414,7 +434,7 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="if others, describe"
                             className={classes.formControl}
-                            defaultValue={property.propertyOtherType}
+                            value={property.propertyOtherType || ""}
                             onChange={(e) =>
                               handleUpdateProperty(
                                 e,
@@ -433,7 +453,7 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
-                            defaultValue={property.damageDetails}
+                            value={property.damageDetails || ""}
                             onChange={(e) =>
                               handleUpdateProperty(
                                 e,
@@ -444,7 +464,7 @@ const PropertyAffected = () => {
                             }
                           />
                         </Grid>
-                        {propertyListData.length > 1 ? (
+                        {/* {propertyListData.length > 1 ? (
                           <Grid item md={3}>
                             <Button
                               onClick={() => handleRemove(property.id)}
@@ -455,7 +475,7 @@ const PropertyAffected = () => {
                               Remove
                             </Button>
                           </Grid>
-                        ) : null}
+                        ) : null} */}
                       </>
                     ))
                   : form.map((value, index) => (
@@ -473,6 +493,7 @@ const PropertyAffected = () => {
                               labelId="person-type-label"
                               id="person-type"
                               label="Person type"
+                              value = {value.propertyType || ''}
                               onChange={(e) =>
                                 handlePropertyType(e, index, "propertyType")
                               }
@@ -502,6 +523,7 @@ const PropertyAffected = () => {
                             id="name-affected"
                             variant="outlined"
                             label="if others, describe"
+                            value = {value.propertyOtherType || ''}
                             className={classes.formControl}
                             onChange={(e) =>
                               handlePropertyOtherType(
@@ -523,6 +545,7 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
+                            value = {value.damageDetails || ''}
                             onChange={(e) =>
                               handleDamageDetails(e, index, "damageDetails")
                             }
@@ -595,7 +618,7 @@ const PropertyAffected = () => {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                // href="http://localhost:3000/app/incident-management/registration/initial-notification/equipment-affected/"
               >
                 Next
               </Button>

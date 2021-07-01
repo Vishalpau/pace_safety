@@ -30,6 +30,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
 import {MaterialDropZone} from 'dan-components';
+import { DropzoneArea } from "material-ui-dropzone";
 import { DropzoneDialogBase } from "material-ui-dropzone";
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -144,14 +145,14 @@ const ReportingAndNotification = () => {
     let rpDate = form.reportingdate;
     let startDate = `${rpDate} ${rpTime}`;
     // let startDate = form.reportingdate.concat(form.reportingtime)
-    var start_date = moment(startDate, "YYYY-MM-DD HH:mm:ss");
+    var start_date = moment(form.reportingdate || incidentsListData.incidentReportedOn, "YYYY-MM-DD HH:mm:ss");
     var end_date = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
     var duration = moment.duration(end_date.diff(start_date));
     var Hours = duration.asHours();
     if (Hours > 4) {
-      await SetLateReport(false);
-    } else {
       await SetLateReport(true);
+    } else {
+      await SetLateReport(false);
     }
   };
 
@@ -172,7 +173,7 @@ const ReportingAndNotification = () => {
   };
 
   const handleDrop = (acceptedFiles) => {
-    alert('ram')
+  
     const formData = new FormData();
     for (let i = 0; i < acceptedFiles.length; i++) {
       setFiles(acceptedFiles[i])
@@ -180,10 +181,10 @@ const ReportingAndNotification = () => {
       formData.append("evidenceCategory", "Initial Evidence ");
       formData.append("createdBy", "1");
       formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
-      // const evidanceResponse = api.post(
-      //   `api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`,
-      //   formData
-      // );
+      const evidanceResponse = api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`,
+        formData
+      );
     }
    
     setForm({
@@ -196,7 +197,6 @@ const ReportingAndNotification = () => {
   const handelNext = async (e) => {
     // const { error, isValid } = ReportingValidation(form);
     // setError(error);
-    // console.log(error, isValid)
     // getting fileds for update
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
@@ -298,6 +298,7 @@ const ReportingAndNotification = () => {
     // form.reportedto = report.split(",")
     await setForm({ ...form, reportedto: report.split(",") });
     await setReportId(result[0].id)
+    await setIsLoading(true);
   };
 
   //  Fetch checkbox value
@@ -316,15 +317,17 @@ const ReportingAndNotification = () => {
     const date = new Date(result.incidentReportedOn)
     await setForm({...form,reportingdate:date})
     await setIncidentsListdata(result);
-    await setIsLoading(true);
+   
   };
 
   useEffect(() => {
+    fetchReportableTo();
     fetchIncidentsData();
     if(id){
       fetchReportsDataList();
     }  
-    fetchReportableTo();
+    else{  setIsLoading(true);}
+    
   }, []);
 
   const classes = useStyles();
@@ -351,7 +354,6 @@ const ReportingAndNotification = () => {
                       onChange={(e) =>
                         {
                           handelReportedTo(e, value.inputValue, "option");
-                          console.log(e.target.value)
                         }
 
                       }
@@ -409,19 +411,11 @@ const ReportingAndNotification = () => {
                 </Typography>
               </Box>
               {/* <UploadInputAll/> */}
-              <>
-              <div>
-              <MaterialDropZone
-                files={files}
-                showPreviews = {true}
-                maxSize={5000000}
-                filesLimit={5}
-                text="Drag and drop file(s) here or click button bellow"
-                showButton
-                onChange={handleDrop}
-              />
-              </div>
-              </>
+              <DropzoneArea
+        onChange={(e)=>handleDrop(e)}
+        showPreviews
+       
+        />
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
             </Grid>
 
@@ -472,7 +466,7 @@ const ReportingAndNotification = () => {
                   inputVariant="outlined"
                   label="Reporting Date"
                   value={form.reportingdate || incidentsListData.incidentReportedOn}
-                  onChange={(date) => handleDateChange(date)}
+                  onChange={(date) => {handleDateChange(date);handelTimeCompare()}}
                   KeyboardButtonProps={{
                     "aria-label": "change date",
                   }}
