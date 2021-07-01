@@ -37,66 +37,135 @@ const AdditionalDetails = () => {
 
   const { id } = useParams();
   const history = useHistory();
-  const [activtyList, setActvityList] = useState({});
+  // const [activtyList, setActvityList] = useState({});
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [activtyList, setActvityList] = useState([
+    {
+      questionCode: "ADD-22",
+      question: "Any Part/Equiptment sent for anlysis",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "ADD-23",
+      question: "Evidence analysis notes",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "ADD-24",
+      question: "Evidence summary",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "ADD-25",
+      question: "Additional notes if any",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+  ]);
 
-  const [ad22, setAd22] = useState({});
-  const [ad23, setAd23] = useState({});
-  const [ad24, setAd24] = useState({});
-  const [ad25, setAd25] = useState({});
+  const fetchActivityList = async () => {
+    
+    console.log("sagar")
+    
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
+    );
+    const result = res.data.data.results;
+    console.log(result)
+    console.log(result.length)
+    if(result.length){
+      await setActvityList(result);
+    }
+    await setIsLoading(true)
+    
+    
+    console.log(activtyList.length)
+};
 
   const handleNext = async () => {
-    console.log("sagar");
-    if (activtyList.length > 23) {
+    
+    if (id && activtyList.length > 0) {
+      console.log("in put")
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
       );
-    } else {
-      const selectedQuestion = [ad22, ad23, ad24, ad25];
-      console.log(selectedQuestion);
-      for (let i = 0; i < selectedQuestion.length; i++) {
-        // const valdation = selectedQuestion[i];
-        // console.log(valdation);
-        // const { isValid, error } = ActivityDetailValidate(valdation);
-        // setError(error);
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/activities/`,
-          selectedQuestion[i]
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`
         );
-        console.log(res);
       }
+    } else {
+      console.log("in Post")
+      const { error, isValid } = AdditionalDetailValidate(activtyList);
+      console.log(error)
+      // setActvityList(activityState);
+      if (!isValid) {
+        return;
+      }
+      const res = await api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        activtyList
+      );
+      history.push(
+        `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`
+      );
     }
   };
 
-  const handleUpdateActivityList = (e, index) => {
-    const TempActivity = activtyList;
-    const TempIndexData = activtyList[index];
-    TempIndexData.answer = e.target.value;
-    TempActivity[index] = TempIndexData;
-    console.log("ac", TempActivity);
+  const handleRadioData = (e, questionCode) => {
+    let TempActivity = [];
+    for (let key in activtyList) {
+      let activityObj = activtyList[key];
+      if (questionCode == activityObj.questionCode) {
+        activityObj.answer = e.target.value;
+      }
+      TempActivity.push(activityObj);
+    }
+    console.log(TempActivity)
     setActvityList(TempActivity);
   };
 
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-  const fetchActivityList = async () => {
-    const res = await api.get(
-      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-    );
-    const result = res.data.data.results;
-    await setActvityList(result);
-    console.log(result);
-  };
+
   useEffect(() => {
-    fetchActivityList();
-  }, []);
+    if (id) {
+      fetchActivityList();
+    } else {
+      setIsLoading(true);
+    } 
+    
+  }, [id]);
   return (
     <div>
       <Container>
         <Paper>
+        {isLoading ? (
           <Box padding={3} bgcolor="background.paper">
             {/* <Box marginBottom={5}>
               <FormHeader selectedHeader={"Evidence collection"} />
@@ -112,7 +181,7 @@ const AdditionalDetails = () => {
                 <Grid item md={12}>
                   <Box>
                     <Typography variant="body2" gutterBottom>
-                      Incident number: nnnnnnnnnn
+                      Incident number: {localStorage.getItem("fkincidentId")}
                     </Typography>
                   </Box>
                 </Grid>
@@ -127,207 +196,64 @@ const AdditionalDetails = () => {
                     ea quisquam vel, officiis cupiditate aperiam.
                   </Typography>
                 </Grid>
-                {activtyList.length < 25 ? (
-                  <>
-                    <Grid item md={12}>
-                      <FormControl className={classes.formControl}>
+                {activtyList.length > 22  ? (
+                <>
+                {Object.entries(activtyList).slice(21,25).map(([key, value] ) => (
+                  
+                  <Grid item md={12}>
+                    
+                    <FormControl className={classes.formControl}>
                         <TextField
                           id="filled-basic"
                           variant="outlined"
-                          label="Any Part/Equiptment sent for anlysis"
-                          error={error.ans1}
-                          helperText={error.ans1 ? error.ans1 : ""}
+                          label={value.question}
                           multiline
                           rows="4"
+                          defaultValue={value.answer}
                           onChange={(e) => {
-                            setAd22({
-                              ...ad22,
-                              questionCode: "ADD-22",
-                              question: "Any Part/Equiptment sent for anlysis",
-                              answer: e.target.value,
-                              activityGroup: "Evidence",
-                              status: "Active",
-                              updatedBy: 0,
-                              createdBy: 0,
-                              fkIncidentId: localStorage.getItem(
-                                "fkincidentId"
-                              ),
-                            });
-                          }}
+                          handleRadioData(e, value.questionCode);
+                          
+                          console.log(value.answer)
+                        }}
                         />
                       </FormControl>
-                    </Grid>
-
-                    <Grid item md={12}>
-                      {/* <p>Evidence analysis notes</p> */}
-
-                      <FormControl className={classes.formControl}>
+                    {value.error ? <p>{value.error}</p> : null}
+                    
+                  </Grid>
+                  
+                  
+                ))}
+              </>
+            ) : 
+           ( 
+              <>
+                {Object.entries(activtyList).map(([key, value] ) => (
+                  
+                  <Grid item md={12}>
+                    
+                    <FormControl className={classes.formControl}>
                         <TextField
                           id="filled-basic"
                           variant="outlined"
-                          label="Evidence analysis notes"
-                          error={error.ans2}
-                          helperText={error.ans2 ? error.ans2 : ""}
-                          onChange={(e) => {
-                            setAd23({
-                              ...ad23,
-                              questionCode: "ADD-23",
-                              question: "Evidence analysis notes",
-                              answer: e.target.value,
-                              activityGroup: "Evidence",
-                              status: "Active",
-                              updatedBy: 0,
-                              createdBy: 0,
-                              fkIncidentId: localStorage.getItem(
-                                "fkincidentId"
-                              ),
-                            });
-                          }}
-                          multiline
-                          rows="4"
-                        />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item md={12}>
-                      {/* <p>Evidence summary</p> */}
-
-                      <FormControl className={classes.formControl}>
-                        <TextField
-                          id="filled-basic"
-                          variant="outlined"
-                          label="Evidence summary"
-                          error={error.ans3}
-                          helperText={error.ans3 ? error.ans3 : ""}
-                          onChange={(e) => {
-                            setAd24({
-                              ...ad24,
-                              questionCode: "ADD-24",
-                              question: "Evidence summary",
-                              answer: e.target.value,
-                              activityGroup: "Evidence",
-                              status: "Active",
-                              updatedBy: 0,
-                              createdBy: 0,
-                              fkIncidentId: localStorage.getItem(
-                                "fkincidentId"
-                              ),
-                            });
-                          }}
-                          multiline
-                          rows="4"
-                        />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item md={12}>
-                      {/* <p>Additional notes if any</p> */}
-
-                      <FormControl className={classes.formControl}>
-                        <TextField
-                          id="filled-basic"
-                          variant="outlined"
-                          label="Additional notes if any"
-                          error={error.ans4}
-                          helperText={error.ans4 ? error.ans4 : ""}
-                          onChange={(e) => {
-                            setAd25({
-                              ...ad25,
-                              questionCode: "ADD-25",
-                              question: "Additional notes if any",
-                              answer: e.target.value,
-                              activityGroup: "Evidence",
-                              status: "Active",
-                              updatedBy: 0,
-                              createdBy: 0,
-                              fkIncidentId: localStorage.getItem(
-                                "fkincidentId"
-                              ),
-                            });
-                          }}
-                          multiline
-                          rows="4"
-                        />
-                      </FormControl>
-                    </Grid>
-                  </>
-                ) : (
-                  <>
-                    <Grid item md={12}>
-                      <FormControl className={classes.formControl}>
-                        <TextField
-                          id="filled-basic"
-                          variant="outlined"
-                          label="Any Part/Equiptment sent for anlysis"
-                          error={error.ans1}
-                          helperText={error.ans1 ? error.ans1 : ""}
+                          label={value.question}
                           multiline
                           rows="4"
                           onChange={(e) => {
-                            handleUpdateActivityList(e, 21);
-                          }}
+                          handleRadioData(e, value.questionCode);
+                          
+                          console.log(value.answer)
+                        }}
                         />
                       </FormControl>
-                    </Grid>
-
-                    <Grid item md={12}>
-                      {/* <p>Evidence analysis notes</p> */}
-
-                      <FormControl className={classes.formControl}>
-                        <TextField
-                          id="filled-basic"
-                          variant="outlined"
-                          label="Evidence analysis notes"
-                          error={error.ans2}
-                          helperText={error.ans2 ? error.ans2 : ""}
-                          onChange={(e) => {
-                            handleUpdateActivityList(e, 22);
-                          }}
-                          multiline
-                          rows="4"
-                        />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item md={12}>
-                      {/* <p>Evidence summary</p> */}
-
-                      <FormControl className={classes.formControl}>
-                        <TextField
-                          id="filled-basic"
-                          variant="outlined"
-                          label="Evidence summary"
-                          error={error.ans3}
-                          helperText={error.ans3 ? error.ans3 : ""}
-                          onChange={(e) => {
-                            handleUpdateActivityList(e, 23);
-                          }}
-                          multiline
-                          rows="4"
-                        />
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item md={12}>
-                      {/* <p>Additional notes if any</p> */}
-
-                      <FormControl className={classes.formControl}>
-                        <TextField
-                          id="filled-basic"
-                          variant="outlined"
-                          label="Additional notes if any"
-                          error={error.ans4}
-                          helperText={error.ans4 ? error.ans4 : ""}
-                          onChange={(e) => {
-                            handleUpdateActivityList(e, 24);
-                          }}
-                          multiline
-                          rows="4"
-                        />
-                      </FormControl>
-                    </Grid>
-                  </>
-                )}
+                    {value.error ? <p>{value.error}</p> : null}
+                    
+                  </Grid>
+                  
+                  
+                ))}
+              </> )}
+              
+                
                 <Grid item md={12}>
                   <Button
                     variant="contained"
@@ -358,7 +284,7 @@ const AdditionalDetails = () => {
                 />
               </Grid>
             </Grid>
-          </Box>
+          </Box>):(<h1>Loading...</h1>)}
         </Paper>
       </Container>
     </div>

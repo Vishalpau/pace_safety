@@ -9,7 +9,7 @@ function ActivityDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        error.error = "This filed is empty";
+        dataObj.error = "This filed is empty";
         error.push(dataObj);
         isValid = false;
         continue;

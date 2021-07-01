@@ -130,7 +130,7 @@ const Evidence = () => {
           )}/evidences/`,
           data
         );
-
+        console.log(res.data.data.result);
         if (res.status === 201) {
           history.push(
             "/app/incident-management/registration/evidence/activity-detail/"
@@ -149,7 +149,7 @@ const Evidence = () => {
             <Grid item md={12}>
               <Box>
                 <Typography variant="body2" gutterBottom>
-                  Incident number: nnnnnnnnnn
+                  Incident number: {localStorage.getItem("fkincidentId")}
                 </Typography>
               </Box>
             </Grid>

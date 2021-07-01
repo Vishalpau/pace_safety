@@ -1,26 +1,31 @@
-import validator from 'validator';
+import validator from "validator";
 
-function AdditionalDetailValidate(data){
-    console.log(data)
-    
-    const error = {}
+function AdditionalDetailValidate(data) {
+  console.log("data", data);
 
-    if (validator.isEmpty(data.ans1.toString())){
-        error.ans1 = "this filed is empty"
-    
-    }if (validator.isEmpty(data.ans2.toString())){
-        error.ans2 = "this filed is empty"
-    
-    }if (validator.isEmpty(data.ans3.toString())){
-        error.ans3 = "this filed is empty"
-    
-    }if (validator.isEmpty(data.ans4.toString())){
-        error.ans4 = "this filed is empty"
-    
+  const error = [];
+  let isValid = true;
+  for (let key in data) {
+    const dataObj = data[key];
+    if (dataObj) {
+      if (validator.isEmpty(dataObj.answer.toString())) {
+        dataObj.error = "This filed is empty";
+        error.push(dataObj);
+        isValid = false;
+        continue;
+      }
     }
 
-    console.log(error)
-    return { error}
-} 
+    error.push(dataObj);
+  }
 
-export default AdditionalDetailValidate
+  // if(data[1]){
+  //     {if (validator.isEmpty(data[1].answer.toString()))
+  //         error.answer = "this filed is empty"
+  //     }
+  // }
+  console.log("------", error, isValid);
+  return { error, isValid };
+}
+
+export default AdditionalDetailValidate;

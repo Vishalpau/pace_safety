@@ -91,9 +91,9 @@ const PersonalAndPpeDetails = () => {
 
       console.log(selectedQuestion);
      
-      // const valdation = selectedQuestion[i];
-      // console.log(valdation);
-      // // const { isValid, error } = ActivityDetailValidate(valdation);
+      const valdation = selectedQuestion;
+      console.log(valdation);
+      const { isValid, error } = ActivityDetailValidate(valdation);
       // setError(error);
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
@@ -135,7 +135,7 @@ const PersonalAndPpeDetails = () => {
           <Grid item md={12}>
             <Box>
               <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
+                Incident number: {localStorage.getItem("fkincidentId")}
               </Typography>
             </Box>
           </Grid>
@@ -675,6 +675,7 @@ const PersonalAndPpeDetails = () => {
             </>
           ) : (
             <>
+            
               <Grid item md={6}>
                 {/* <p>PPE worn properly</p> */}
                 <FormControl
@@ -685,6 +686,7 @@ const PersonalAndPpeDetails = () => {
                   <FormLabel component="legend">PPE worn properly?</FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
+                    
                     onChange={(e) => {
                       handleUpdateActivityList(e, 7);
                     }}
