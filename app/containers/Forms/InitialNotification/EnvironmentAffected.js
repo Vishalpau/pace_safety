@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     gap: "1.5rem",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
 }));
 
 const EnvironmentAffected = () => {
@@ -565,6 +568,7 @@ const EnvironmentAffected = () => {
             <Button
               variant="contained"
               color="primary"
+              className={classes.button}
               onClick={(e) => handleNext(e)}
             >
               Next

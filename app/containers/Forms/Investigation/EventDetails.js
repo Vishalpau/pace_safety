@@ -51,7 +51,6 @@ const EventDetails = () => {
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
-            {/* <p>*Activity</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Activity</InputLabel>
               <Select
@@ -66,7 +65,6 @@ const EventDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p>*Job Task</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Job Task</InputLabel>
               <Select
@@ -85,7 +83,7 @@ const EventDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Equipment involved"
+              label="Equipment Involved"
               className={classes.formControl}
             />
           </Grid>

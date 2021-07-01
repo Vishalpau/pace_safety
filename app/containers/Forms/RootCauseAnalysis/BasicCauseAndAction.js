@@ -27,6 +27,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import { PapperBlock } from "dan-components";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -86,175 +87,166 @@ const BasicCauseAndAction = () => {
   let form_link = window.location.href;
   const classes = useStyles();
   return (
-    <Container>
-      <Paper>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              Actions against Basic Causes
-            </Typography>
-          </Box>
-          <Grid container spacing={3}>
-            <Grid container item md={9} spacing={3}>
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item md={8}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Method: 5 Why Analysis
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Box>
-                  <Typography variant="h5" gutterBottom>
-                    Actions
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">
-                    Option selected from Hazardous Acts and conditions
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <List className={classes.list} dense disablePadding>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                  </List>
-
-                  <button className={classes.textButton}>
-                    <AddCircleOutlineIcon /> Add a new action
-                  </button>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">
-                    Option selected from Hazardous Acts and conditions
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <List className={classes.list} dense disablePadding>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                  </List>
-
-                  <button className={classes.textButton}>
-                    <AddCircleOutlineIcon /> Add a new action
-                  </button>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">
-                    Option selected from Hazardous Acts and conditions
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <List className={classes.list} dense disablePadding>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                  </List>
-
-                  <button className={classes.textButton}>
-                    <AddCircleOutlineIcon /> Add a new action
-                  </button>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  href="/app/incident-management/registration/root-cause-analysis/management-control/"
-                >
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item md={3}>
-              <FormSideBar
-                deleteForm={[1, 2, 3]}
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Basic cause and action"}
-              />
-            </Grid>
+    <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={4}>
+            <Box>
+              <Typography variant="body2" gutterBottom>
+                Incident number: nnnnnnnnnn
+              </Typography>
+            </Box>
           </Grid>
-        </Box>
-      </Paper>
-    </Container>
+
+          <Grid item md={8}>
+            <Box>
+              <Typography variant="body2" gutterBottom>
+                Method: 5 Why Analysis
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item md={12}>
+            <Box>
+              <Typography variant="h5" gutterBottom>
+                Actions
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item md={12}>
+            <Box marginBottom={2}>
+              <Typography variant="body">
+                Option selected from Hazardous Acts and conditions
+              </Typography>
+            </Box>
+
+            <Box>
+              <List className={classes.list} dense disablePadding>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+              </List>
+
+              <button className={classes.textButton}>
+                <AddCircleOutlineIcon /> Add a new action
+              </button>
+            </Box>
+          </Grid>
+
+          <Grid item md={12}>
+            <Box marginBottom={2}>
+              <Typography variant="body">
+                Option selected from Hazardous Acts and conditions
+              </Typography>
+            </Box>
+
+            <Box>
+              <List className={classes.list} dense disablePadding>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+              </List>
+
+              <button className={classes.textButton}>
+                <AddCircleOutlineIcon /> Add a new action
+              </button>
+            </Box>
+          </Grid>
+
+          <Grid item md={12}>
+            <Box marginBottom={2}>
+              <Typography variant="body">
+                Option selected from Hazardous Acts and conditions
+              </Typography>
+            </Box>
+
+            <Box>
+              <List className={classes.list} dense disablePadding>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+                <ListItem>
+                  <ListItemText primary="Action Title" />
+                </ListItem>
+                <ListItemLink href="#">
+                  <ListItemText primary="AL-nnnnnn" />
+                </ListItemLink>
+              </List>
+
+              <button className={classes.textButton}>
+                <AddCircleOutlineIcon /> Add a new action
+              </button>
+            </Box>
+          </Grid>
+
+          <Grid item md={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="/app/incident-management/registration/root-cause-analysis/management-control/"
+            >
+              Next
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem={"Basic cause and action"}
+          />
+        </Grid>
+      </Grid>
+    </PapperBlock>
   );
 };
 

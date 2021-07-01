@@ -56,15 +56,14 @@ const WorkerDetails = () => {
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
-            {/* <p>Healthy and Saftey - Actual consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Healthy and Saftey - Actual consquence
+                Healthy and Saftey - Actual Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="Healthy and Saftey - Actual consquence"
+                label="Healthy and Saftey - Actual Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -73,16 +72,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Healthy & Saftey - Potential consquence</p> */}
-
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Healthy & Saftey - Potential consquence
+                Healthy and Saftey - Potential Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label=" Healthy & Saftey - Potential consquence"
+                label="Healthy and Saftey - Potential Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -91,15 +88,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Environment - Actual consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Environment - Actual consquence
+                Environment - Actual Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="Environment - Actual consquence"
+                label="Environment - Actual Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -108,15 +104,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Environment - Potential consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Environment - Potential consquence
+                Environment - Potential Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="Environment - Potential consquence"
+                label="Environment - Potential Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -125,15 +120,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Regulatory - Actual consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Regulatory - Actual consquence
+                Regulatory - Actual Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="Regulatory - Actual consquence"
+                label=" Regulatory - Actual Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -142,15 +136,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Regulatory - Potential consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Regulatory - Potential consquence
+                Regulatory - Potential Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label=" Regulatory - Potential consquence"
+                label="Regulatory - Potential Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -159,15 +152,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Reputation - Actual consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Reputation - Actual consquence
+                Reputation - Actual Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="Reputation - Actual consquence"
+                label="Reputation - Actual Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -176,15 +168,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Reputation - Potential consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Reputation - Potential consquence
+                Reputation - Potential Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="Reputation - Potential consquence"
+                label="Reputation - Potential Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -193,15 +184,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Financial - actual consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Financial - actual consquence
+                Financial - Actual Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="Financial - actual consquence"
+                label=" Financial - Actual Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -210,15 +200,14 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Financial - Potential consquence</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
-                Financial - Potential consquence
+                Financial - Potential Consquence
               </InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label=" Financial - Potential consquence"
+                label="Financial - Potential Consquence"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -227,7 +216,6 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Higest Potential Impactor Receptor</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">
                 Higest Potential Impactor Receptor
@@ -244,7 +232,6 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p> Classification</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">Classification</InputLabel>
               <Select
@@ -258,14 +245,13 @@ const WorkerDetails = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item lg={6} md={6} sm={6}>
-            {/* <p> RCA recommended</p> */}
+          <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="eq-type-label">RCA recommended</InputLabel>
+              <InputLabel id="eq-type-label">RCA Recommended</InputLabel>
               <Select
                 labelId="eq-type-label"
                 id="eq-type"
-                label="RCA recommended"
+                label="RCA Recommended"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -273,7 +259,7 @@ const WorkerDetails = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item lg={12} md={6} sm={6}>
+          <Grid item md={12}>
             <TextField
               className={classes.formControl}
               id="filled-basic"
