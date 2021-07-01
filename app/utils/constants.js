@@ -93,6 +93,9 @@ export const FORM_HEADER = {
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 
+export const HAZARDIOUS_ACTS_SUB_TYPES = ["Supervision", "Workpackage", "equipmentMachinery", "behaviourIssue", "safetyIssues", "ergonimics", "procedures", "otheracts"]
+export const HAZARDIOUS_CONDITION_SUB_TYPES = ["warningSystem", "energyTypes", "tools", "safetyitems", "othersconditions"]
+
 // option in root cause and anlysis
 
 export const HAZARDIOUS_ACTS = [

@@ -70,8 +70,10 @@ const HazardiousCondition = () => {
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
 
     if (!isNaN(lastItem)) {
+
       let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
       putId.current = lastItem
+      console.log(putId)
       let allApiData = previousData.data.data.results
 
       allApiData.map(value => {

@@ -289,7 +289,6 @@ const HazardiousActs = () => {
   const classes = useStyles();
 
   const handelNext = async (e) => {
-
     const { error, isValid } = HazardiousActsValidation(form);
     await setError(error);
     let tempData = []
@@ -325,25 +324,32 @@ const HazardiousActs = () => {
     })
 
     // api call //
+    let nextPageLink = 0
     let callObjects = tempData
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
 
         if (putId.current !== "") {
           const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
-          if (res.status == 201) {
+          if (res.status == 200) {
             console.log("request done")
-            console.log(res)
+            nextPageLink = res.status
           }
         } else {
           const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
           if (res.status == 201) {
             console.log("request done")
-            console.log(res)
+            nextPageLink = res.status
           }
         }
       }
+      console.log(nextPageLink)
     }
+    // if (nextPageLink == 201) {
+    //   history.push("/app/incident-management/registration/root-cause-analysis/hazardious-condtions/")
+    // } else {
+    //   history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current}`)
+    // }
   }
 
   useEffect(() => {

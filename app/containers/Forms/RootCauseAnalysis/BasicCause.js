@@ -282,7 +282,7 @@ const BasicCause = () => {
 
         if (putId.current !== "") {
           const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
-          if (res.status == 201) {
+          if (res.status == 200) {
             console.log("request done")
             console.log(res)
           }

@@ -133,7 +133,7 @@ const Details = () => {
       } else {
         form["pk"] = pkValue.current
         const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/${pkValue.current}/`, form);
-        if (res.status == 201) {
+        if (res.status == 200) {
           console.log("request done")
           console.log(res)
         }
