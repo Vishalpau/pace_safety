@@ -27,6 +27,7 @@ import FormHeader from "../FormHeader";
 import fs from "fs";
 // import Upload from "material-ui-upload/Upload";
 import { DropzoneArea } from "material-ui-dropzone";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -169,13 +170,14 @@ const Evidence = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={2}>
+            <Grid item md={3}>
               <Box marginBottom={2}>
-                <Typography variant="body">Evidence Type</Typography>
+                <Typography variant="subtitle1">Evidence Type</Typography>
               </Box>
               <TextField
                 id="filled-basic"
                 variant="outlined"
+                size="small"
                 label="Evidence Type"
                 error={error.evidenceType}
                 helperText={error.evidenceType ? error.evidenceType : ""}
@@ -187,35 +189,42 @@ const Evidence = () => {
             </Grid>
 
             <Grid item md={3} justify="center">
-              <Box marginBottom={2}>
-                <Typography variant="body">Available *</Typography>
-              </Box>
-              <RadioGroup
-                className={classes.inlineRadioGroup}
-                error={error.available}
-                defaultValue={form.available || evideceData.evidenceCheck}
-                onChange={(e) => {
-                  setForm({ ...form, available: e.target.value });
-                }}
+              <FormControl
+                component="fieldset"
+                required
+                size="small"
+                error={error && error.available}
               >
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </RadioGroup>
-              {error && error.available && (
-                <FormHelperText>{error.available}</FormHelperText>
-              )}
+                <FormLabel component="legend">Available</FormLabel>
+                <RadioGroup
+                  className={classes.inlineRadioGroup}
+                  // error={error.available}
+                  defaultValue={form.available || evideceData.evidenceCheck}
+                  onChange={(e) => {
+                    setForm({ ...form, available: e.target.value });
+                  }}
+                >
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+                {error && error.available && (
+                  <FormHelperText>{error.available}</FormHelperText>
+                )}
+              </FormControl>
             </Grid>
-            <Grid item md={4}>
+            <Grid item md={3}>
               <Box marginBottom={2}>
-                <Typography variant="body">Comments *</Typography>
+                <Typography variant="body">Comments</Typography>
               </Box>
               <TextField
                 id="filled-basic"
+                required
+                size="small"
                 variant="outlined"
                 label="Type...."
                 error={error.comment}
@@ -227,17 +236,19 @@ const Evidence = () => {
               />
             </Grid>
             <Grid item md={3}>
-              <p>Attachments</p>
-              <Box>
-                <input
-                  type="file"
-                  name="file"
-                  onChange={(e) =>
-                    setForm({ ...form, document: e.target.files[0] })
-                  }
-                />
+              <Box marginBottom={2}>
+                <Typography variant="body">Attatchments</Typography>
               </Box>
-              <DeleteForeverIcon />
+
+              <input
+                type="file"
+                name="file"
+                onChange={(e) =>
+                  setForm({ ...form, document: e.target.files[0] })
+                }
+              />
+
+              {/* <DeleteForeverIcon /> */}
             </Grid>
 
             <Grid item md={12}>

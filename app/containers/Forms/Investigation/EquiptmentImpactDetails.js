@@ -15,6 +15,8 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
+import FormLabel from "@material-ui/core/FormLabel";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -86,7 +88,6 @@ const EquiptmentImpactDetails = () => {
           </Grid>
 
           <Grid item md={6}>
-            {/* <p>Equipment Type</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="eq-type-label">Equipment Type</InputLabel>
               <Select
@@ -102,41 +103,38 @@ const EquiptmentImpactDetails = () => {
           </Grid>
 
           <Grid item md={6}>
-            {/* <p>if other Describe</p> */}
             <TextField
               variant="outlined"
               id="filled-basic"
-              label="If others, Describe"
+              label="If Others, Describe"
               className={classes.formControl}
             />
           </Grid>
 
           <Grid item md={12}>
-            {/* <p>Describe the damage</p> */}
             <TextField
               id="Describe-damage"
               multiline
               variant="outlined"
               rows="3"
-              label="Describe the damage"
+              label="Describe the Damage"
               className={classes.fullWidth}
             />
           </Grid>
 
           <Grid item lg={12} md={6} sm={6}>
             <button className={classes.textButton}>
-              Add details of additional Equipment Affected?
+              <AddCircleIcon /> Add Details of Additional Equipment Affected ?
             </button>
           </Grid>
 
           <Grid item lg={12} md={6} sm={6}>
-            {/* <p>Comment </p> */}
             <TextField
               id="comments"
               multiline
               variant="outlined"
               rows="4"
-              label="Editional details"
+              label="Additional Details"
               className={classes.fullWidth}
             />
           </Grid>

@@ -23,15 +23,18 @@ import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
-import { useHistory, useParams } from 'react-router';
-
+import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import BasicCauseValidation from "../../Validator/RCAValidation/BasicCauseValidation"
-import { PERSONAL, PERSONALWELNESSFACTORS, LEADERSHIP, PROCESSES } from "../../../utils/constants"
-
+import BasicCauseValidation from "../../Validator/RCAValidation/BasicCauseValidation";
+import {
+  PERSONAL,
+  PERSONALWELNESSFACTORS,
+  LEADERSHIP,
+  PROCESSES,
+} from "../../../utils/constants";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -40,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-
 const BasicCause = () => {
   const [commonForm, setCommonForm] = useState({
     rcaNumber: "string",
@@ -48,205 +50,208 @@ const BasicCause = () => {
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId"))
-  })
-
-
-  const [error, setError] = useState({})
-
-  const [data, setData] = useState([])
-
+    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
+  });
+  const [error, setError] = useState({});
+  const [data, setData] = useState([]);
   const [form, setForm] = useState({
     personal: { remarkType: "", rcaSubType: "", rcaRemark: [] },
     wellnessFactors: { remarkType: "", rcaSubType: "", rcaRemark: [] },
     otherHumanFactor: { remarkType: "", rcaSubType: "", rcaRemark: "" },
     leadership: { remarkType: "", rcaSubType: "", rcaRemark: [] },
     processes: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    otherJobFactors: { remarkType: "", rcaSubType: "", rcaRemark: "" }
-  }
-  )
-
-  const putId = useRef("")
-  const [fetchApiData, setFetchApiData] = useState({})
+    otherJobFactors: { remarkType: "", rcaSubType: "", rcaRemark: "" },
+  });
+  const putId = useRef("");
+  const [fetchApiData, setFetchApiData] = useState({});
   const { id } = useParams();
   const history = useHistory();
-  const updateIds = useRef()
-
-
+  const updateIds = useRef();
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let allrcaSubType = ["personal", "wellnessFactors", "othershumanfactors", "leadership", "processes", "othersjobfactors"]
-    let tempApiData = {}
-    let tempApiDataId = []
-    let page_url = window.location.href
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
-
+    let allrcaSubType = [
+      "personal",
+      "wellnessFactors",
+      "othershumanfactors",
+      "leadership",
+      "processes",
+      "othersjobfactors",
+    ];
+    let tempApiData = {};
+    let tempApiDataId = [];
+    let page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
     if (!isNaN(lastItem)) {
-      let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
-      putId.current = lastItem
-      let allApiData = previousData.data.data.results
-
-      allApiData.map(value => {
+      let previousData = await api.get(
+        `/api/v1/incidents/${lastItem}/pacecauses/`
+      );
+      putId.current = lastItem;
+      let allApiData = previousData.data.data.results;
+      allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
-          let valueQuestion = value.rcaSubType
-          let valueAnser = value.rcaRemark
-          tempApiData[valueQuestion] = valueAnser
-          tempApiDataId.push(value.id)
+          let valueQuestion = value.rcaSubType;
+          let valueAnser = value.rcaRemark;
+          tempApiData[valueQuestion] = valueAnser;
+          tempApiDataId.push(value.id);
         }
-      })
-      updateIds.current = tempApiDataId.reverse()
-      console.log(tempApiData)
-      await setFetchApiData(tempApiData)
-
-
+      });
+      updateIds.current = tempApiDataId.reverse();
+      console.log(tempApiData);
+      await setFetchApiData(tempApiData);
       // set fetched spervised data
-      form.personal.remarkType = "options"
-      form.personal.rcaSubType = "personal"
-      form.personal.rcaRemark = tempApiData.personal.includes(',') ? tempApiData.personal.split(",") : [tempApiData.personal]
-
+      form.personal.remarkType = "options";
+      form.personal.rcaSubType = "personal";
+      form.personal.rcaRemark = tempApiData.personal.includes(",")
+        ? tempApiData.personal.split(",")
+        : [tempApiData.personal];
       // set fetched spervised data
-      form.wellnessFactors.remarkType = "options"
-      form.wellnessFactors.rcaSubType = "wellnessFactors"
-      form.wellnessFactors.rcaRemark = tempApiData.wellnessFactors.includes(',') ? tempApiData.wellnessFactors.split(",") : [tempApiData.wellnessFactors]
-
+      form.wellnessFactors.remarkType = "options";
+      form.wellnessFactors.rcaSubType = "wellnessFactors";
+      form.wellnessFactors.rcaRemark = tempApiData.wellnessFactors.includes(",")
+        ? tempApiData.wellnessFactors.split(",")
+        : [tempApiData.wellnessFactors];
       // set fetched others data
-      form.otherHumanFactor.remarkType = "remark"
-      form.otherHumanFactor.rcaSubType = "othershumanfactors"
-      form.otherHumanFactor.rcaRemark = tempApiData.othershumanfactors
-
+      form.otherHumanFactor.remarkType = "remark";
+      form.otherHumanFactor.rcaSubType = "othershumanfactors";
+      form.otherHumanFactor.rcaRemark = tempApiData.othershumanfactors;
       // set fetched spervised data
-      form.leadership.remarkType = "options"
-      form.leadership.rcaSubType = "leadership"
-      form.leadership.rcaRemark = tempApiData.leadership.includes(',') ? tempApiData.leadership.split(",") : [tempApiData.leadership]
-
+      form.leadership.remarkType = "options";
+      form.leadership.rcaSubType = "leadership";
+      form.leadership.rcaRemark = tempApiData.leadership.includes(",")
+        ? tempApiData.leadership.split(",")
+        : [tempApiData.leadership];
       // set fetched spervised data
-      form.processes.remarkType = "options"
-      form.processes.rcaSubType = "processes"
-      form.processes.rcaRemark = tempApiData.processes.includes(',') ? tempApiData.processes.split(",") : [tempApiData.processes]
-
+      form.processes.remarkType = "options";
+      form.processes.rcaSubType = "processes";
+      form.processes.rcaRemark = tempApiData.processes.includes(",")
+        ? tempApiData.processes.split(",")
+        : [tempApiData.processes];
       // set fetched others data
-      form.otherJobFactors.remarkType = "remark"
-      form.otherJobFactors.rcaSubType = "othersjobfactors"
-      form.otherJobFactors.rcaRemark = tempApiData.othersjobfactors
+      form.otherJobFactors.remarkType = "remark";
+      form.otherJobFactors.rcaSubType = "othersjobfactors";
+      form.otherJobFactors.rcaRemark = tempApiData.othersjobfactors;
     }
-  }
-
+  };
   const handelPersonal = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.personal.rcaRemark.filter(item => item !== value)
+      let newData = form.personal.rcaRemark.filter((item) => item !== value);
       setForm({
-        ...form, personal: {
-          remarkType: 'options',
+        ...form,
+        personal: {
+          remarkType: "options",
           rcaSubType: "personal",
           rcaRemark: newData,
-        }
-      })
+        },
+      });
     } else {
       setForm({
-        ...form, personal: {
-          remarkType: 'options',
+        ...form,
+        personal: {
+          remarkType: "options",
           rcaSubType: "personal",
           rcaRemark: [...form.personal.rcaRemark, value],
-        }
-      })
+        },
+      });
     }
-  }
-
+  };
   const handelWellnessFactors = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.wellnessFactors.rcaRemark.filter(item => item !== value)
+      let newData = form.wellnessFactors.rcaRemark.filter(
+        (item) => item !== value
+      );
       setForm({
-        ...form, wellnessFactors: {
-          remarkType: 'options',
+        ...form,
+        wellnessFactors: {
+          remarkType: "options",
           rcaSubType: "wellnessFactors",
           rcaRemark: newData,
-        }
-      })
+        },
+      });
     } else {
       setForm({
-        ...form, wellnessFactors: {
-          remarkType: 'options',
+        ...form,
+        wellnessFactors: {
+          remarkType: "options",
           rcaSubType: "wellnessFactors",
           rcaRemark: [...form.wellnessFactors.rcaRemark, value],
-        }
-      })
+        },
+      });
     }
-  }
-
+  };
   const handelOtherHumanFactors = (e) => {
     setForm({
-      ...form, otherHumanFactor: {
-        remarkType: 'remark',
+      ...form,
+      otherHumanFactor: {
+        remarkType: "remark",
         rcaSubType: "othershumanfactors",
-        rcaRemark: e.target.value
-      }
-    })
-  }
-
+        rcaRemark: e.target.value,
+      },
+    });
+  };
   const handelLeadership = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.leadership.rcaRemark.filter(item => item !== value)
+      let newData = form.leadership.rcaRemark.filter((item) => item !== value);
       setForm({
-        ...form, leadership: {
-          remarkType: 'options',
+        ...form,
+        leadership: {
+          remarkType: "options",
           rcaSubType: "leadership",
           rcaRemark: newData,
-        }
-      })
+        },
+      });
     } else {
       setForm({
-        ...form, leadership: {
-          remarkType: 'options',
+        ...form,
+        leadership: {
+          remarkType: "options",
           rcaSubType: "leadership",
           rcaRemark: [...form.leadership.rcaRemark, value],
-        }
-      })
+        },
+      });
     }
-  }
-
+  };
   const handelProcesses = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.processes.rcaRemark.filter(item => item !== value)
+      let newData = form.processes.rcaRemark.filter((item) => item !== value);
       setForm({
-        ...form, processes: {
-          remarkType: 'options',
+        ...form,
+        processes: {
+          remarkType: "options",
           rcaSubType: "processes",
           rcaRemark: newData,
-        }
-      })
+        },
+      });
     } else {
       setForm({
-        ...form, processes: {
-          remarkType: 'options',
+        ...form,
+        processes: {
+          remarkType: "options",
           rcaSubType: "processes",
           rcaRemark: [...form.processes.rcaRemark, value],
-        }
-      })
+        },
+      });
     }
-  }
-
+  };
   const handelOtherJobFactors = (e) => {
     setForm({
-      ...form, otherJobFactors: {
-        remarkType: 'remark',
+      ...form,
+      otherJobFactors: {
+        remarkType: "remark",
         rcaSubType: "othersjobfactors",
-        rcaRemark: e.target.value
-      }
-    })
-  }
-
+        rcaRemark: e.target.value,
+      },
+    });
+  };
   const selectValues = ["Option1", "Option2", "...."];
-
   const classes = useStyles();
-
   const handelNext = async (e) => {
-
     const { error, isValid } = BasicCauseValidation(form);
     await setError(error);
-    let tempData = []
-
+    let tempData = [];
     Object.entries(form).map(async (item, index) => {
-      let api_data = item[1]
+      let api_data = item[1];
       // post request object
       if (putId.current == "") {
         let temp = {
@@ -256,9 +261,9 @@ const BasicCause = () => {
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
-          status: "Active"
-        }
-        tempData.push(temp)
+          status: "Active",
+        };
+        tempData.push(temp);
         // put request object
       } else {
         let temp = {
@@ -269,17 +274,15 @@ const BasicCause = () => {
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
           status: "Active",
-          pk: updateIds.current[index]
-        }
-        tempData.push(temp)
+          pk: updateIds.current[index],
+        };
+        tempData.push(temp);
       }
-    })
-
+    });
     // api call //
-    let callObjects = tempData
+    let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-
         if (putId.current !== "") {
           const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
           if (res.status == 200) {
@@ -287,44 +290,43 @@ const BasicCause = () => {
             console.log(res)
           }
         } else {
-          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          const res = await api.post(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/pacecauses/`,
+            callObjects[key]
+          );
           if (res.status == 201) {
-            console.log("request done")
-            console.log(res)
+            console.log("request done");
+            console.log(res);
           }
         }
       }
     }
-    // api call //  
-  }
-
+    // api call //
+  };
   useEffect(() => {
-    handelUpdateCheck()
+    handelUpdateCheck();
   }, []);
-
   return (
     <div>
       <Container>
         <Paper>
           <Box padding={3} bgcolor="background.paper">
-
             <Box borderBottom={1} marginBottom={2}>
               <Typography variant="h6" gutterBottom>
                 Basic Cause
               </Typography>
             </Box>
-
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
-
                 <Grid item md={4}>
                   <Box>
                     <Typography variant="body2" gutterBottom>
-                      Incident number:  {localStorage.getItem("fkincidentId")}
+                      Incident number: {localStorage.getItem("fkincidentId")}
                     </Typography>
                   </Box>
                 </Grid>
-
                 <Grid item md={4}>
                   <Box>
                     <Typography variant="body2" gutterBottom>
@@ -332,7 +334,6 @@ const BasicCause = () => {
                     </Typography>
                   </Box>
                 </Grid>
-
                 <Grid item md={12}>
                   <Box>
                     <Typography variant="h5" gutterBottom>
@@ -340,13 +341,13 @@ const BasicCause = () => {
                     </Typography>
                   </Box>
                 </Grid>
-
                 {/* perosonal */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.personal}>Personal</FormLabel>
+                    <FormLabel component="legend" error={error.personal}>
+                      Personal
+                    </FormLabel>
                     <FormGroup>
-
                       {PERSONAL.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
@@ -358,31 +359,40 @@ const BasicCause = () => {
                     </FormGroup>
                   </FormControl>
                   {error && error.personal && (
-                    <p><small style={{ color: "red" }}>{error.personal}</small></p>
+                    <p>
+                      <small style={{ color: "red" }}>{error.personal}</small>
+                    </p>
                   )}
                 </Grid>
-
                 {/* wellness factors */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.wellnessFactors}>Wellness factors</FormLabel>
+                    <FormLabel component="legend" error={error.wellnessFactors}>
+                      Wellness factors
+                    </FormLabel>
                     <FormGroup>
-
                       {PERSONALWELNESSFACTORS.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
                           label={<small>{value}</small>}
-                          checked={form.wellnessFactors.rcaRemark.includes(value)}
-                          onChange={async (e) => handelWellnessFactors(e, value)}
+                          checked={form.wellnessFactors.rcaRemark.includes(
+                            value
+                          )}
+                          onChange={async (e) =>
+                            handelWellnessFactors(e, value)
+                          }
                         />
                       ))}
                     </FormGroup>
                   </FormControl>
                   {error && error.wellnessFactors && (
-                    <p><small style={{ color: "red" }}>{error.wellnessFactors}</small></p>
+                    <p>
+                      <small style={{ color: "red" }}>
+                        {error.wellnessFactors}
+                      </small>
+                    </p>
                   )}
                 </Grid>
-
                 {/* other human factors */}
                 <Grid item md={12}>
                   <TextField
@@ -401,7 +411,6 @@ const BasicCause = () => {
                     <p>{error.otherHumanFactor}</p>
                   )} */}
                 </Grid>
-
                 <Grid item md={12}>
                   <Box>
                     <Typography variant="h5" gutterBottom>
@@ -409,13 +418,13 @@ const BasicCause = () => {
                     </Typography>
                   </Box>
                 </Grid>
-
                 {/* leadership */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.leadership}>Leadership</FormLabel>
+                    <FormLabel component="legend" error={error.leadership}>
+                      Leadership
+                    </FormLabel>
                     <FormGroup>
-
                       {LEADERSHIP.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
@@ -427,17 +436,18 @@ const BasicCause = () => {
                     </FormGroup>
                   </FormControl>
                   {error && error.leadership && (
-                    <p><small style={{ color: "red" }}>{error.leadership}</small></p>
+                    <p>
+                      <small style={{ color: "red" }}>{error.leadership}</small>
+                    </p>
                   )}
                 </Grid>
-
-
                 {/* processes */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.processes}>Processes</FormLabel>
+                    <FormLabel component="legend" error={error.processes}>
+                      Processes
+                    </FormLabel>
                     <FormGroup>
-
                       {PROCESSES.map((value) => (
                         <FormControlLabel
                           control={<Checkbox name={value} />}
@@ -449,10 +459,11 @@ const BasicCause = () => {
                     </FormGroup>
                   </FormControl>
                   {error && error.processes && (
-                    <p><small style={{ color: "red" }}>{error.processes}</small></p>
+                    <p>
+                      <small style={{ color: "red" }}>{error.processes}</small>
+                    </p>
                   )}
                 </Grid>
-
                 {/* other job factors */}
                 <Grid item md={12}>
                   <TextField
@@ -471,7 +482,6 @@ const BasicCause = () => {
                     <p>{error.otherJobFactors}</p>
                   )} */}
                 </Grid>
-
                 <Grid item md={6}>
                   <Button
                     variant="contained"
@@ -506,5 +516,4 @@ const BasicCause = () => {
     </div>
   );
 };
-
 export default BasicCause;

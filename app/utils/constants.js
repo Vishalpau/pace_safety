@@ -93,8 +93,28 @@ export const FORM_HEADER = {
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 
-export const HAZARDIOUS_ACTS_SUB_TYPES = ["Supervision", "Workpackage", "equipmentMachinery", "behaviourIssue", "safetyIssues", "ergonimics", "procedures", "otheracts"]
-export const HAZARDIOUS_CONDITION_SUB_TYPES = ["warningSystem", "energyTypes", "tools", "safetyitems", "othersconditions"]
+export const HAZARDIOUS_ACTS_SUB_TYPES = ["Supervision",
+  "Workpackage",
+  "equipmentMachinery",
+  "behaviourIssue",
+  "safetyIssues",
+  "ergonimics",
+  "procedures",
+  "otheracts"]
+export const HAZARDIOUS_CONDITION_SUB_TYPES = [
+  "warningSystem",
+  "energyTypes",
+  "tools",
+  "safetyitems",
+  "othersconditions"]
+export const BASIC_CAUSE_SUB_TYPES = [
+  "personal",
+  "wellnessFactors",
+  "othershumanfactors",
+  "leadership",
+  "processes",
+  "othersjobfactors",
+];
 
 // option in root cause and anlysis
 

@@ -67,11 +67,10 @@ const ActionTaken = () => {
       <Grid container spacing={3} alignItems="flex-start">
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
-            {/* <p>if other Describe</p> */}
             <TextField
               variant="outlined"
               id="filled-basic"
-              label="Pre event mitigation"
+              label="Pre Event Mitigation"
               className={classes.formControl}
             />
           </Grid>

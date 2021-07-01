@@ -25,16 +25,16 @@ import { spacing } from "@material-ui/system";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import FormLabel from "@material-ui/core/FormLabel";
-import { useHistory, useParams } from 'react-router';
+import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from "react-router";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 // import Typography from "../../UiElements/Typography";
-import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation"
+import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation";
 import { MANAGEMENTCONTROL } from "../../../utils/constants";
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -54,112 +54,117 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CorrectiveAction = () => {
-
   const [commonForm, setCommonForm] = useState({
     rcaNumber: "string",
     rcaType: "string",
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId"))
-  })
+    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
+  });
 
+  const [error, setError] = useState({});
 
-  const [error, setError] = useState({})
-
-  const [data, setData] = useState([])
-
+  const [data, setData] = useState([]);
 
   const [form, setForm] = useState({
     managementControl: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    regionSupport: { remarkType: "", rcaSubType: "", rcaRemark: "" }
-  }
-  )
+    regionSupport: { remarkType: "", rcaSubType: "", rcaRemark: "" },
+  });
 
-  const putId = useRef("")
-  const [fetchApiData, setFetchApiData] = useState({})
+  const putId = useRef("");
+  const [fetchApiData, setFetchApiData] = useState({});
   const { id } = useParams();
   const history = useHistory();
-  const updateIds = useRef()
-
+  const updateIds = useRef();
 
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let allrcaSubType = ["managementcontrol", "regionsupportabove"]
-    let tempApiData = {}
-    let tempApiDataId = []
-    let page_url = window.location.href
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+    let allrcaSubType = ["managementcontrol", "regionsupportabove"];
+    let tempApiData = {};
+    let tempApiDataId = [];
+    let page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
 
     if (!isNaN(lastItem)) {
-      let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
-      putId.current = lastItem
-      let allApiData = previousData.data.data.results
+      let previousData = await api.get(
+        `/api/v1/incidents/${lastItem}/pacecauses/`
+      );
+      putId.current = lastItem;
+      let allApiData = previousData.data.data.results;
 
-      allApiData.map(value => {
+      allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
-          let valueQuestion = value.rcaSubType
-          let valueAnser = value.rcaRemark
-          tempApiData[valueQuestion] = valueAnser
-          tempApiDataId.push(value.id)
+          let valueQuestion = value.rcaSubType;
+          let valueAnser = value.rcaRemark;
+          tempApiData[valueQuestion] = valueAnser;
+          tempApiDataId.push(value.id);
         }
-      })
-      updateIds.current = tempApiDataId.reverse()
-      await setFetchApiData(tempApiData)
-
+      });
+      updateIds.current = tempApiDataId.reverse();
+      await setFetchApiData(tempApiData);
 
       // set fetched spervised data
-      form.managementControl.remarkType = "options"
-      form.managementControl.rcaSubType = "managementcontrol"
-      form.managementControl.rcaRemark = tempApiData.managementcontrol.includes(',') ? tempApiData.managementcontrol.split(",") : [tempApiData.managementcontrol]
+      form.managementControl.remarkType = "options";
+      form.managementControl.rcaSubType = "managementcontrol";
+      form.managementControl.rcaRemark = tempApiData.managementcontrol.includes(
+        ","
+      )
+        ? tempApiData.managementcontrol.split(",")
+        : [tempApiData.managementcontrol];
 
       // set fetched others data
-      form.regionSupport.remarkType = "remark"
-      form.regionSupport.rcaSubType = "regionsupportabove"
-      form.regionSupport.rcaRemark = tempApiData.regionsupportabove
+      form.regionSupport.remarkType = "remark";
+      form.regionSupport.rcaSubType = "regionsupportabove";
+      form.regionSupport.rcaRemark = tempApiData.regionsupportabove;
     }
-  }
+  };
 
   const handelManagementControl = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.managementControl.rcaRemark.filter(item => item !== value)
+      let newData = form.managementControl.rcaRemark.filter(
+        (item) => item !== value
+      );
       setForm({
-        ...form, managementControl: {
-          remarkType: 'options',
+        ...form,
+        managementControl: {
+          remarkType: "options",
           rcaSubType: "managementcontrol",
           rcaRemark: newData,
-        }
-      })
+        },
+      });
     } else {
       setForm({
-        ...form, managementControl: {
-          remarkType: 'options',
+        ...form,
+        managementControl: {
+          remarkType: "options",
           rcaSubType: "managementcontrol",
           rcaRemark: [...form.managementControl.rcaRemark, value],
-        }
-      })
+        },
+      });
     }
-  }
+  };
 
   const handelRegionSupport = (e) => {
     setForm({
-      ...form, regionSupport: {
-        remarkType: 'remark',
+      ...form,
+      regionSupport: {
+        remarkType: "remark",
         rcaSubType: "regionsupportabove",
-        rcaRemark: e.target.value
-      }
-    })
-  }
-
+        rcaRemark: e.target.value,
+      },
+    });
+  };
 
   const handelNext = async (e) => {
-
     const { error, isValid } = CorrectiveActionValidation(form);
     await setError(error);
-    let tempData = []
+    let tempData = [];
 
     Object.entries(form).map(async (item, index) => {
-      let api_data = item[1]
+      let api_data = item[1];
       // post request object
       if (putId.current == "") {
         let temp = {
@@ -169,9 +174,9 @@ const CorrectiveAction = () => {
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
-          status: "Active"
-        }
-        tempData.push(temp)
+          status: "Active",
+        };
+        tempData.push(temp);
         // put request object
       } else {
         let temp = {
@@ -182,138 +187,148 @@ const CorrectiveAction = () => {
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
           status: "Active",
-          pk: updateIds.current[index]
-        }
-        tempData.push(temp)
+          pk: updateIds.current[index],
+        };
+        tempData.push(temp);
       }
-    })
+    });
 
     // api call //
-    let callObjects = tempData
+    let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-
         if (putId.current !== "") {
-          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/pacecauses/${callObjects[key].pk}/`,
+            callObjects[key]
+          );
           if (res.status == 201) {
-            console.log("request done")
-            console.log(res)
+            console.log("request done");
+            console.log(res);
           }
         } else {
-          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          const res = await api.post(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/pacecauses/`,
+            callObjects[key]
+          );
           if (res.status == 201) {
-            console.log("request done")
-            console.log(res)
+            console.log("request done");
+            console.log(res);
           }
         }
       }
     }
-    // api call //  
-  }
+    // api call //
+  };
 
   const classes = useStyles();
 
   useEffect(() => {
-    handelUpdateCheck()
+    handelUpdateCheck();
   }, []);
 
   return (
-    <div>
-      <Container>
-        <Paper>
-          <Box padding={3} bgcolor="background.paper">
-            <Box borderBottom={1} marginBottom={2}>
-              <Typography variant="h6" gutterBottom>
-                Corrective Actions
+    <PapperBlock title=" Corrective Actions" icon="ion-md-list-box">
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={4}>
+            <Box>
+              <Typography variant="body2" gutterBottom>
+                Incident number: {localStorage.getItem("fkincidentId")}
               </Typography>
             </Box>
-            <Grid container spacing={3}>
-              <Grid container item md={9} spacing={3}>
+          </Grid>
 
-                <Grid item md={4}>
-                  <Box>
-                    <Typography variant="body2" gutterBottom>
-                      Incident number: {localStorage.getItem("fkincidentId")}
-                    </Typography>
-                  </Box>
-                </Grid>
+          <Grid item md={4}>
+            <Box>
+              <Typography variant="body2" gutterBottom>
+                Incident number: {localStorage.getItem("fkincidentId")}
+              </Typography>
+            </Box>
+          </Grid>
 
-                <Grid item md={8}>
-                  <Box>
-                    <Typography variant="body2" gutterBottom>
-                      RCA Method: PACE Cause Analysis
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item md={12}>
-                  <FormLabel component="legend" error={error.managementControl}>Management Control</FormLabel>
-                </Grid>
-                <Grid item md={12}>
-                  <FormControl component="fieldset" >
-                    {MANAGEMENTCONTROL.map((value) => (
-                      <FormControlLabel
-                        control={<Checkbox name={value} />}
-                        label={value}
-                        checked={form.managementControl.rcaRemark.includes(value)}
-                        onChange={async (e) => handelManagementControl(e, value)}
-                      />
-                    ))}
-                  </FormControl>
-                  {error && error.managementControl && (
-                    <p><small style={{ color: "red" }}>{error.managementControl}</small></p>
-                  )}
-                </Grid>
+          <Grid item md={8}>
+            <Box>
+              <Typography variant="body2" gutterBottom>
+                RCA Method: PACE Cause Analysis
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item md={12}>
+            <FormLabel component="legend" error={error.managementControl}>
+              Management Control
+            </FormLabel>
+          </Grid>
+          <Grid item md={12}>
+            <FormControl component="fieldset">
+              {MANAGEMENTCONTROL.map((value) => (
+                <FormControlLabel
+                  control={<Checkbox name={value} />}
+                  label={value}
+                  checked={form.managementControl.rcaRemark.includes(value)}
+                  onChange={async (e) => handelManagementControl(e, value)}
+                />
+              ))}
+            </FormControl>
+            {error && error.managementControl && (
+              <p>
+                <small style={{ color: "red" }}>
+                  {error.managementControl}
+                </small>
+              </p>
+            )}
+          </Grid>
 
-                <Grid item md={12}>
-                  <TextField
-                    id="filled-basic"
-                    variant="outlined"
-                    multiline
-                    error={error.regionSupport}
-                    defaultValue={form.regionSupport.rcaRemark}
-                    helperText={error ? error.regionSupport : ""}
-                    rows={3}
-                    label="Details the region to support above"
-                    className={classes.formControl}
-                    onChange={async (e) => handelRegionSupport(e)}
-                  />
-                  {/* {error && error.regionSupport && (
+          <Grid item md={12}>
+            <TextField
+              id="filled-basic"
+              variant="outlined"
+              multiline
+              error={error.regionSupport}
+              defaultValue={form.regionSupport.rcaRemark}
+              helperText={error ? error.regionSupport : ""}
+              rows={3}
+              label="Details the region to support above"
+              className={classes.formControl}
+              onChange={async (e) => handelRegionSupport(e)}
+            />
+            {/* {error && error.regionSupport && (
                     <p>{error.regionSupport}</p>
                   )} */}
-                </Grid>
-                <Grid item md={12}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"}
-                    onClick={(e) => handelNext(e)}
-                  >
-                    Next
-                  </Button>
-                </Grid>
-              </Grid>
-
-              <Grid item md={3}>
-                <FormSideBar
-                  deleteForm={[1, 2, 3]}
-                  listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                  selectedItem={"Corrective action"}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Container>
-    </div>
+          </Grid>
+          <Grid item md={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"}
+              onClick={(e) => handelNext(e)}
+            >
+              Next
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem={"Corrective action"}
+          />
+        </Grid>
+      </Grid>
+    </PapperBlock>
   );
 };
 

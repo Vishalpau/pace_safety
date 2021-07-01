@@ -19,6 +19,7 @@ import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
 import FormLabel from "@material-ui/core/FormLabel";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -501,6 +502,7 @@ const EqiptmentAffected = () => {
                       className={classes.textButton}
                       onClick={() => addNewEquipmentDetails()}
                     >
+                      <PersonAddIcon />
                       Add Details of Additional Equipment Affected?
                     </button>
                   </Grid>
