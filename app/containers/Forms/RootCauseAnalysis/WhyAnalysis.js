@@ -14,6 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Fab from "@material-ui/core/Fab";
+import { useHistory, useParams } from 'react-router';
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation"
@@ -55,7 +56,7 @@ const WhyAnalysis = () => {
   const [error, setError] = useState({})
 
   const [data, setData] = useState([])
-
+  const history = useHistory();
   const [form, setForm] = useState([
     { why: "", whyCount: "" }
   ])
@@ -114,7 +115,7 @@ const WhyAnalysis = () => {
   }
 
   const handelApiCall = async (e) => {
-
+    let nextPageLink = 0
     let callObjects = form
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
@@ -124,7 +125,7 @@ const WhyAnalysis = () => {
           const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, postObject);
           if (res.status == 201) {
             console.log("request done")
-            console.log(res)
+            nextPageLink = res.status
           }
         } else {
           let dataID = callObjects[key].whyId
@@ -134,10 +135,15 @@ const WhyAnalysis = () => {
             const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
             if (res.status == 200) {
               console.log("request done")
-              console.log(res)
+              nextPageLink = res.status
             }
           }
         }
+      }
+      if (nextPageLink == 201) {
+        history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
+      } else {
+        history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
       }
     }
   }

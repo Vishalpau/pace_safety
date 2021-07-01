@@ -28,6 +28,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from 'react-router';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -74,16 +75,14 @@ const BasicCauseAndAction = () => {
     new Date("2014-08-18T21:11:54")
   );
   const [data, setData] = useState([])
-
+  const history = useHistory();
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
+  const putId = useRef("")
   const handelShowData = async () => {
     let tempApiData = {}
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(HAZARDIOUS_CONDITION_SUB_TYPES)
-    let acts = ["Supervision", "Workpackage", "Equipment and Machinery", "Behaviour Issue", "Safety Issues", "Ergonimics", "Procedures", "Other in acts",
-      "Warning system", "Energy types", "Tools", "Safety items", "Others in conditions"]
 
     let previousData = await api.get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`)
 
@@ -95,9 +94,7 @@ const BasicCauseAndAction = () => {
         tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser]
       }
     })
-    // Object.entries(tempApiData).forEach(([key, value], index) => {
-    //   tempApiData[acts[index]] = tempApiData[key]
-    // });
+
     await setData(tempApiData)
   }
 
@@ -111,6 +108,13 @@ const BasicCauseAndAction = () => {
 
   let form_link = window.location.href;
   const classes = useStyles();
+
+  const handelNext = () => {
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+    putId.current = lastItem
+    history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current}`)
+  }
 
   useEffect(() => {
     handelShowData()
@@ -191,7 +195,7 @@ const BasicCauseAndAction = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+                  href="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
                 >
                   Previous
                 </Button>
@@ -199,7 +203,8 @@ const BasicCauseAndAction = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause/"
+                  // href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
+                  onClick={(e) => handelNext()}
                 >
                   Next
                 </Button>

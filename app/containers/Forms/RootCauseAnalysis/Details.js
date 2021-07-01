@@ -20,6 +20,7 @@ import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormLabel from "@material-ui/core/FormLabel";
+import { useHistory, useParams } from 'react-router';
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -69,6 +70,7 @@ const Details = () => {
   const [nextPageUrl, setNextPageUrl] = useState("")
   const putId = useRef("")
   const pkValue = useRef("")
+  const history = useHistory();
   const reportedTo = [
     "Internal Leadership",
     "Police",
@@ -94,10 +96,13 @@ const Details = () => {
       let previousData = await api.get(`/api/v1/incidents/${lastItem}/causeanalysis/`)
       let allApiData = previousData.data.data.results[0]
       pkValue.current = allApiData.id
-      form.evidenceSupport = allApiData.evidenceSupport
-      form.evidenceContradiction = allApiData.evidenceContradiction
-      form.evidenceNotSupport = allApiData.evidenceNotSupport
-      form.rcaRecommended = allApiData.rcaRecommended
+      setForm({
+        ...form,
+        evidenceSupport: allApiData.evidenceSupport,
+        evidenceContradiction: allApiData.evidenceContradiction,
+        evidenceNotSupport: allApiData.evidenceNotSupport,
+        rcaRecommended: allApiData.rcaRecommended
+      })
       putId.current = lastItem
     }
   }
@@ -120,7 +125,7 @@ const Details = () => {
   const handelNext = async (e) => {
     console.log(form)
     const { error, isValid } = DetailValidation(form);
-
+    let nextPageLink = 0
     setError(error);
     if (Object.keys(error).length == 0) {
       console.log(form)
@@ -128,16 +133,21 @@ const Details = () => {
         const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/`, form);
         if (res.status == 201) {
           console.log("request done")
-          console.log(res)
+          nextPageLink = res.status
         }
       } else {
         form["pk"] = pkValue.current
         const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/${pkValue.current}/`, form);
         if (res.status == 200) {
           console.log("request done")
-          console.log(res)
+          nextPageLink = res.status
         }
       }
+    }
+    if (nextPageLink == 201) {
+      history.push("/app/incident-management/registration/root-cause-analysis/hazardious-acts/")
+    } else {
+      history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`)
     }
 
   }

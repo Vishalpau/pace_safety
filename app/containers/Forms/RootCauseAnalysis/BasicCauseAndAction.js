@@ -28,6 +28,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from 'react-router';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -61,8 +62,8 @@ function ListItemLink(props) {
 
 const BasicCauseAndAction = () => {
   const [data, setData] = useState([])
-
-
+  const history = useHistory();
+  const putId = useRef("")
   const handelShowData = async () => {
     let tempApiData = {}
     let subTypes = BASIC_CAUSE_SUB_TYPES
@@ -87,7 +88,12 @@ const BasicCauseAndAction = () => {
       <ListItem className={classes.titleLink} button component="a" {...props} />
     );
   }
-
+  const handelNext = () => {
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+    putId.current = lastItem
+    history.push(`/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem("fkincidentId")}`)
+  }
 
   let form_link = window.location.href;
 
@@ -170,7 +176,8 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="/app/incident-management/registration/root-cause-analysis/management-control/"
+              // href="/app/incident-management/registration/root-cause-analysis/management-control/"
+              onClick={(e) => handelNext()}
             >
               Next
             </Button>

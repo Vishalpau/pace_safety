@@ -85,33 +85,36 @@ const HazardiousCondition = () => {
         }
       })
       updateIds.current = tempApiDataId.reverse()
-      await setFetchApiData(tempApiData)
 
+      setForm({
+        ...form,
+        warningSystem: {
+          remarkType: 'options',
+          rcaSubType: 'warningSystem',
+          rcaRemark: tempApiData.warningSystem.includes(',') ? tempApiData.warningSystem.split(",") : [tempApiData.warningSystem],
+        },
+        energyTypes: {
+          remarkType: 'options',
+          rcaSubType: 'energyTypes',
+          rcaRemark: tempApiData.energyTypes.includes(',') ? tempApiData.energyTypes.split(",") : [tempApiData.energyTypes],
+        },
+        tools: {
+          remarkType: 'options',
+          rcaSubType: 'tools',
+          rcaRemark: tempApiData.tools.includes(',') ? tempApiData.tools.split(",") : [tempApiData.tools],
+        },
+        safetyitems: {
+          remarkType: 'options',
+          rcaSubType: 'safetyitems',
+          rcaRemark: tempApiData.safetyitems.includes(',') ? tempApiData.safetyitems.split(",") : [tempApiData.safetyitems],
+        },
+        others: {
+          remarkType: 'remark',
+          rcaSubType: 'othersconditions',
+          rcaRemark: tempApiData.othersconditions,
+        }
+      });
 
-      // set fetched spervised data
-      form.warningSystem.remarkType = "options"
-      form.warningSystem.rcaSubType = "warningSystem"
-      form.warningSystem.rcaRemark = tempApiData.warningSystem.includes(',') ? tempApiData.warningSystem.split(",") : [tempApiData.warningSystem]
-
-      // set fetched workpackage data
-      form.energyTypes.remarkType = "options"
-      form.energyTypes.rcaSubType = "energyTypes"
-      form.energyTypes.rcaRemark = tempApiData.energyTypes.includes(',') ? tempApiData.energyTypes.split(",") : [tempApiData.energyTypes]
-
-      // set fetched equiment machinary data
-      form.tools.remarkType = "options"
-      form.tools.rcaSubType = "tools"
-      form.tools.rcaRemark = tempApiData.tools.includes(',') ? tempApiData.tools.split(",") : [tempApiData.tools]
-
-      // set fetched behaviour issues data
-      form.safetyitems.remarkType = "options"
-      form.safetyitems.rcaSubType = "safetyitems"
-      form.safetyitems.rcaRemark = tempApiData.safetyitems.includes(',') ? tempApiData.safetyitems.split(",") : [tempApiData.safetyitems]
-
-      // set fetched others data
-      form.others.remarkType = "remark"
-      form.others.rcaSubType = "othersconditions"
-      form.others.rcaRemark = tempApiData.othersconditions
     }
   }
 
@@ -257,23 +260,29 @@ const HazardiousCondition = () => {
     })
 
     // api call //
+    let nextPageLink = 0
     let callObjects = tempData
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
 
         if (putId.current !== "") {
           const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
-          if (res.status == 201) {
+          if (res.status == 200) {
             console.log("request done")
-            console.log(res)
+            nextPageLink = res.status
           }
         } else {
           const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
           if (res.status == 201) {
             console.log("request done")
-            console.log(res)
+            nextPageLink = res.status
           }
         }
+      }
+      if (nextPageLink == 201) {
+        history.push("/app/incident-management/registration/root-cause-analysis/cause-and-action/")
+      } else {
+        history.push(`/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`)
       }
     }
     // api call //  
@@ -285,11 +294,11 @@ const HazardiousCondition = () => {
 
   useEffect(() => {
     handelUpdateCheck()
+    // location.reload()
   }, []);
 
   return (
     <Container>
-      {console.log(form)}
       <Paper>
         <Box padding={3} bgcolor="background.paper">
           <Box borderBottom={1} marginBottom={2}>
