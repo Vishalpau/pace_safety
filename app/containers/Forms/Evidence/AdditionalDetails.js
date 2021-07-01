@@ -17,11 +17,11 @@ import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidatio
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
-    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),
@@ -104,17 +104,16 @@ const AdditionalDetails = () => {
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
-              </Typography>
-            </Box>
+            <Typography variant="h6" gutterBottom className={Type.labelName}>
+              Incident number
+            </Typography>
+            <Typography className={Type.labelValue}>4878694</Typography>
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={Type.labelName}>
               Incident Description
             </Typography>
-            <Typography variant="body1">
+            <Typography className={Type.labelValue}>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
               debitis saepe corporis quo inventore similique fugiat voluptatem
               alias et quae temporibus necessitatibus ut, magni ea quisquam vel,

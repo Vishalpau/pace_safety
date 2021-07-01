@@ -21,11 +21,11 @@ import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
-    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),
@@ -126,12 +126,14 @@ const ActivityDetails = () => {
       error: "",
     },
   ]);
-  const activityPutID = useRef()
+  const activityPutID = useRef();
 
   const fetchActivityList = async () => {
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
     if (lastItem != "") {
-      activityPutID.current == lastItem
+      activityPutID.current == lastItem;
       const res = await api.get(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
       );
@@ -145,7 +147,7 @@ const ActivityDetails = () => {
 
   const handleNext = async () => {
     if (activityPutID.current != "") {
-      console.log("in post")
+      console.log("in post");
       // const res = await api.put(
       //   `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
       //   activtyList
@@ -156,7 +158,7 @@ const ActivityDetails = () => {
         );
       }
     } else {
-      console.log("in Post")
+      console.log("in Post");
       const { activityState, isValid } = ActivityDetailValidate(activtyList);
       setActvityList(activityState);
       if (!isValid) {
@@ -188,10 +190,7 @@ const ActivityDetails = () => {
   };
   console.log(activtyList[0].answer);
 
-
-
   useEffect(() => {
-
     fetchActivityList();
   }, []);
 
@@ -214,7 +213,6 @@ const ActivityDetails = () => {
                     <FormControl
                       component="fieldset"
                       className={classes.formControl}
-
                     >
                       <FormLabel component="legend">{value.question}</FormLabel>
                       <RadioGroup
@@ -222,10 +220,9 @@ const ActivityDetails = () => {
                         // defaultValue = {activtyList[0].answer === Yes ? "Yes" : "No"}
                         onChange={(e) => {
                           handleRadioData(e, value.questionCode);
-                          console.log(value.answer)
+                          console.log(value.answer);
                         }}
                         defaultValue={value.answer}
-
                       >
                         {radioDecide.map((value) => (
                           <FormControlLabel
@@ -247,7 +244,7 @@ const ActivityDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => history.goBack()}
-              // href="/app/incident-management/registration/evidence/evidence/"
+                // href="/app/incident-management/registration/evidence/evidence/"
               >
                 Previous
               </Button>
@@ -256,7 +253,7 @@ const ActivityDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-              // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
+                // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
               >
                 Next
               </Button>
