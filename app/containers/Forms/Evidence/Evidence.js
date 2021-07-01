@@ -28,6 +28,9 @@ import fs from "fs";
 // import Upload from "material-ui-upload/Upload";
 import { DropzoneArea } from "material-ui-dropzone";
 import FormLabel from "@material-ui/core/FormLabel";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -40,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
   inlineRadioGroup: {
     flexDirection: "row",
     gap: "1.5rem",
+  },
+  evidenceCard: {
+    padding: "1rem",
+  },
+  fullWidth: {
+    width: "100%",
   },
 }));
 const Evidence = () => {
@@ -170,85 +179,105 @@ const Evidence = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={3}>
-              <Box marginBottom={2}>
+            <Grid item md={12}>
+              <Card variant="outlined" className={classes.evidenceCard}>
+                <CardContent>
+                  <Grid container spacing={4} alignItems="center">
+                    <Grid item md={6}>
+                      {/* <Box marginBottom={2}>
                 <Typography variant="subtitle1">Evidence Type</Typography>
-              </Box>
-              <TextField
-                id="filled-basic"
-                variant="outlined"
-                size="small"
-                label="Evidence Type"
-                error={error.evidenceType}
-                helperText={error.evidenceType ? error.evidenceType : ""}
-                defaultValue={form.evidenceType || evideceData.evidenceCategory}
-                onChange={(e) => {
-                  setForm({ ...form, evidenceType: e.target.value });
-                }}
-              />
-            </Grid>
+              </Box> */}
+                      <TextField
+                        id="filled-basic"
+                        variant="outlined"
+                        size="small"
+                        className={classes.fullWidth}
+                        label="Evidence Type"
+                        error={error.evidenceType}
+                        helperText={
+                          error.evidenceType ? error.evidenceType : ""
+                        }
+                        defaultValue={
+                          form.evidenceType || evideceData.evidenceCategory
+                        }
+                        onChange={(e) => {
+                          setForm({ ...form, evidenceType: e.target.value });
+                        }}
+                      />
+                    </Grid>
 
-            <Grid item md={3} justify="center">
-              <FormControl
-                component="fieldset"
-                required
-                size="small"
-                error={error && error.available}
-              >
-                <FormLabel component="legend">Available</FormLabel>
-                <RadioGroup
-                  className={classes.inlineRadioGroup}
-                  // error={error.available}
-                  defaultValue={form.available || evideceData.evidenceCheck}
-                  onChange={(e) => {
-                    setForm({ ...form, available: e.target.value });
-                  }}
-                >
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-                {error && error.available && (
-                  <FormHelperText>{error.available}</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item md={3}>
-              <Box marginBottom={2}>
+                    <Grid item md={6} justify="center">
+                      <FormControl
+                        component="fieldset"
+                        required
+                        size="small"
+                        className={classes.fullWidth}
+                        error={error && error.available}
+                      >
+                        <FormLabel component="legend">Available</FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          // error={error.available}
+                          defaultValue={
+                            form.available || evideceData.evidenceCheck
+                          }
+                          onChange={(e) => {
+                            setForm({ ...form, available: e.target.value });
+                          }}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
+                        {error && error.available && (
+                          <FormHelperText>{error.available}</FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item md={6}>
+                      {/* <Box marginBottom={2}>
                 <Typography variant="body">Comments</Typography>
-              </Box>
-              <TextField
-                id="filled-basic"
-                required
-                size="small"
-                variant="outlined"
-                label="Type...."
-                error={error.comment}
-                helperText={error.comment ? error.comment : ""}
-                defaultValue={form.comment || evideceData.evidenceRemark}
-                onChange={(e) => {
-                  setForm({ ...form, comment: e.target.value });
-                }}
-              />
-            </Grid>
-            <Grid item md={3}>
-              <Box marginBottom={2}>
+              </Box> */}
+                      <TextField
+                        id="filled-basic"
+                        required
+                        size="small"
+                        className={classes.fullWidth}
+                        variant="outlined"
+                        label="Comments"
+                        error={error.comment}
+                        helperText={error.comment ? error.comment : ""}
+                        defaultValue={
+                          form.comment || evideceData.evidenceRemark
+                        }
+                        onChange={(e) => {
+                          setForm({ ...form, comment: e.target.value });
+                        }}
+                      />
+                    </Grid>
+                    <Grid item md={6}>
+                      {/* <Box marginBottom={2}>
                 <Typography variant="body">Attatchments</Typography>
-              </Box>
+              </Box> */}
 
-              <input
-                type="file"
-                name="file"
-                onChange={(e) =>
-                  setForm({ ...form, document: e.target.files[0] })
-                }
-              />
+                      <input
+                        type="file"
+                        className={classes.fullWidth}
+                        name="file"
+                        onChange={(e) =>
+                          setForm({ ...form, document: e.target.files[0] })
+                        }
+                      />
 
-              {/* <DeleteForeverIcon /> */}
+                      {/* <DeleteForeverIcon /> */}
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
             </Grid>
 
             <Grid item md={12}>

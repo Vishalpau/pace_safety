@@ -17,7 +17,7 @@ const styles = (theme) => ({
     "& $menuButton": {
       color:
         theme.palette.type === "dark"
-          ? theme.palette.primary.light
+          ? theme.palette.primary.contrastText
           : theme.palette.primary.contrastText,
       backgroundColor: "#ff8533",
       boxShadow: "none",
@@ -149,8 +149,8 @@ const styles = (theme) => ({
       "& $menuButton": {
         color:
           theme.palette.type === "dark"
-            ? theme.palette.primary.light
-            : theme.palette.secondary.main,
+            ? theme.palette.primary.contrastText
+            : theme.palette.secondary.contrastText,
       },
     },
   },
