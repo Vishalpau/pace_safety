@@ -135,7 +135,7 @@ const PeoplesAffected = () => {
   };
 
   // Function just like handleform but on the change we are hitting the API.
-  // TODO: This is wrong we should update on Next button click.
+  // set the state in update time
   const handleUpdatePeople = async (e, key, fieldname, peopleId) => {
     const temp = peopleData;
     console.log(temp[key]);
@@ -143,12 +143,8 @@ const PeoplesAffected = () => {
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
     console.log(temp, peopleId);
+    await setPeopleData(temp);
 
-    const res = await api.put(
-      `api/v1/incidents/${id}/people/${peopleId}/`,
-      temp[key]
-    );
-    console.log(res);
     // console.log(res)
   };
 
@@ -166,6 +162,13 @@ const PeoplesAffected = () => {
       This is wrong implementation.
     */
     if (peopleData.length !== 0) {
+      for (var i = 0; i < peopleData.length; i++) {
+        const res = await api.put(
+          `api/v1/incidents/${id}/people/${peopleData[i].id}/`,
+          peopleData[i]
+        );
+      }
+
       if (nextPath.propertyAffect === "Yes") {
         history.push(
           `/app/incident-management/registration/initial-notification/property-affected/${id}`
@@ -296,6 +299,24 @@ const PeoplesAffected = () => {
     }
   };
 
+  // hablde Remove
+
+  const handleRemove = (key) => {
+    if(peopleData.length>1){
+      const temp = peopleData
+      const newData = temp.filter(item=> item.id !== key);
+      setPeopleData(newData)
+    }
+    const temp = form;
+    console.log(temp)
+    console.log(key)
+    setIsLoading(false)
+    const newData = form.filter((item, index) => index !== key);
+    console.log(newData)
+    setForm(newData);
+    setIsLoading(true)
+  };
+
   // State for the error defination.
   const [error, setError] = useState({});
 
@@ -337,7 +358,6 @@ const PeoplesAffected = () => {
     await setIncidentsListdata(result);
     const isavailable = result.isPersonDetailsAvailable;
     await setPersonAffect(isavailable);
-    await setIsLoading(true);
   };
 
   // Fetch the individual page data in case of the update.
@@ -346,7 +366,7 @@ const PeoplesAffected = () => {
     const result = res.data.data.results;
     await setPeopleData(result);
 
-    console.log(result);
+    await setIsLoading(true);
   };
 
   useEffect(() => {
@@ -613,6 +633,18 @@ const PeoplesAffected = () => {
                               <p>{error[`locationAssessmentCenter${[key]}`]}</p>
                             )}
                         </Grid>
+                        {peopleData.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(people.id)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </Grid>
                     ))
                   : form.map((value, key) => (
@@ -776,6 +808,18 @@ const PeoplesAffected = () => {
                               <p>{error[`locationAssessmentCenter${[key]}`]}</p>
                             )}
                         </Grid>
+                        {form.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(key)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </Grid>
                     ))}
 

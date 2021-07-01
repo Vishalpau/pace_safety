@@ -106,18 +106,25 @@ const PropertyAffected = () => {
     ]);
   };
 
+  // hablde Remove
+
+  const handleRemove = (key) => {
+    if(propertyListData.length>1){
+      const temp = propertyListData
+      const newData = temp.filter(item=> item.id !== key);
+      setPropertyListData(newData)
+    }
+    const newData = form.filter((item, index) => index !== key);
+    setForm(newData);
+  };
+
+// set state when update 
   const handleUpdateProperty = async (e, key, fieldname, propertyId) => {
     const temp = propertyListData;
-  
     const value = e.target.value;
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
-
-    const res = await api.put(
-      `api/v1/incidents/${id}/properties/${propertyId}/`,
-      temp[key]
-    );
-   
+    await setPropertyListData(temp)
   };
 
   const handlePropertyType = (e, key, fieldname) => {
@@ -148,8 +155,18 @@ const PropertyAffected = () => {
   const handleNext = async () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
+    
     // If property data there then don't do anything as we are doing put request on each change.
+
+    // if check property have or not . if property data have then put else create new
     if (propertyListData.length > 0) {
+      for (var i =0; i<propertyListData.length;i++){
+        const res = await api.put(
+          `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
+          propertyListData[i]
+        );
+      }
+     
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
           `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
@@ -278,7 +295,7 @@ const PropertyAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-    await setIsLoading(true);
+   
     const isAvailable = result.isPropertyDamagedAvailable;
     await setDetailsOfPropertyAffect(isAvailable);
   };
@@ -287,6 +304,7 @@ const PropertyAffected = () => {
     const res = await api.get(`api/v1/incidents/${id}/properties/`);
     const result = res.data.data.results;
     await setPropertyListData(result);
+    await setIsLoading(true);
    
   };
 
@@ -294,7 +312,11 @@ const PropertyAffected = () => {
     fetchPropertyAffectedValue();
     fetchPropertyTypeValue();
     fetchIncidentsData();
+    if(id){
     fetchPropertyListData();
+    }else{
+       setIsLoading(true);
+    }
   }, []);
 
   return (
@@ -416,6 +438,18 @@ const PropertyAffected = () => {
                             }
                           />
                         </Grid>
+                        {propertyListData.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(property.id)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </>
                     ))
                   : form.map((value, index) => (
@@ -491,6 +525,18 @@ const PropertyAffected = () => {
                             <p>{error[`damageDetails${[index]}`]}</p>
                           )}
                         </Grid>
+                        {form.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(index)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </>
                     ))}
                 {propertyListData.length > 0 ? null : (

@@ -1,59 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import Typography from '@material-ui/core/Typography';
-import DateFnsUtils from '@date-io/date-fns';
-import MomentUtils from '@date-io/moment';
+import React, { useEffect, useState } from "react";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import Typography from "@material-ui/core/Typography";
+import DateFnsUtils from "@date-io/date-fns";
+import MomentUtils from "@date-io/moment";
 import {
   // TimePicker,
   MuiPickersUtilsProvider,
-  KeyboardDatePicker,
+  KeyboardDateTimePicker,
   KeyboardTimePicker,
-} from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+} from "@material-ui/pickers";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import InputAdornment from "@material-ui/core/InputAdornment";
 // import IconButton from "@material-ui/core/IconButton";
 // import Icon from "@material-ui/core/Icon";
-import FormLabel from '@material-ui/core/FormLabel';
-import moment from 'moment';
-import { PapperBlock } from 'dan-components';
-import { func } from 'prop-types';
-import { useHistory, useParams } from 'react-router';
-import FormSideBar from '../FormSideBar';
+import FormLabel from "@material-ui/core/FormLabel";
+import moment from "moment";
+import { PapperBlock } from "dan-components";
+import { func } from "prop-types";
+import { useHistory, useParams } from "react-router";
+import FormSideBar from "../FormSideBar";
 
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
-} from '../../../utils/constants';
-import FormHeader from '../FormHeader';
-import validate from '../../Validator/validation';
-import api from '../../../utils/axios';
-
+} from "../../../utils/constants";
+import FormHeader from "../FormHeader";
+import validate from "../../Validator/validation";
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: '100%',
+    width: "100%",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   inlineRadioGroup: {
-    flexDirection: 'row',
-    gap: '1.5rem',
+    flexDirection: "row",
+    gap: "1.5rem",
   },
 }));
 const IncidentDetails = () => {
@@ -78,43 +77,52 @@ const IncidentDetails = () => {
   const { id } = useParams();
   const [hideAffect, setHideAffect] = useState([]);
   const [nextPath, setNextPath] = useState({
-    personAffect: '',
-    propertyAffect: '',
-    equipmentAffect: '',
-    environmentAffect: '',
+    personAffect: "",
+    propertyAffect: "",
+    equipmentAffect: "",
+    environmentAffect: "",
   });
 
   const [clearedDate, setClearData] = useState(null);
 
   // Initial forms.
   const [form, setForm] = useState({
-    projectname: '',
-    unitname: '',
-    incidenttype: '',
+    projectname: 0,
+    unitname: 0,
+    incidenttype: "",
     incidentdate: null,
     incidenttime: null,
-    title: '',
-    description: '',
-    immediateactiontaken: '',
-    location: '',
-    contractor: '',
-    subcontractor: '',
-    personaffected: '',
-    propertyaffected: '',
-    equiptmenteffected: '',
-    environmentaffected: '',
+    title: "",
+    description: "",
+    immediateactiontaken: "",
+    location: "",
+    contractor: "",
+    subcontractor: "",
+    personaffected: "",
+    propertyaffected: "",
+    equiptmenteffected: "",
+    environmentaffected: "",
   });
 
+  // handle date
+  const handledate = async (e) => {
+    await setForm({ ...form, incidentdate: moment(e).toISOString() });
+  };
   // Function called on next button click.
   const handelNext = async (e) => {
+    console.log(form.incidentDate);
     // Create case if id is not null and means it is an update case.
     if (id) {
       // Set next path.
       const tempNextPath = nextPath;
-      tempNextPath.propertyAffect = nextPath.propertyAffect || incidentsListData.isPropertyDamaged;
-      tempNextPath.personAffect = nextPath.personAffect || incidentsListData.isPersonAffected;
-      tempNextPath.equipmentAffect = nextPath.equipmentAffect || incidentsListData.isEquipmentDamaged;
-      tempNextPath.environmentAffect = nextPath.environmentAffect || incidentsListData.isEnviromentalImpacted;
+      tempNextPath.propertyAffect =
+        nextPath.propertyAffect || incidentsListData.isPropertyDamaged;
+      tempNextPath.personAffect =
+        nextPath.personAffect || incidentsListData.isPersonAffected;
+      tempNextPath.equipmentAffect =
+        nextPath.equipmentAffect || incidentsListData.isEquipmentDamaged;
+      tempNextPath.environmentAffect =
+        nextPath.environmentAffect || incidentsListData.isEnviromentalImpacted;
       await setNextPath(tempNextPath);
 
       // Setup initial form.
@@ -131,15 +139,22 @@ const IncidentDetails = () => {
       tempForm.incidenttime =
         form.incidenttime || incidentsListData.incidentReportedOn;
       tempForm.title = form.title || incidentsListData.incidentTitle;
-      tempForm.description = form.description || incidentsListData.incidentDetails;
-      tempForm.immediateactiontaken = form.immediateactiontaken || incidentsListData.immediateActionsTaken;
+      tempForm.description =
+        form.description || incidentsListData.incidentDetails;
+      tempForm.immediateactiontaken =
+        form.immediateactiontaken || incidentsListData.immediateActionsTaken;
       tempForm.location = form.location || incidentsListData.incidentLocation;
       tempForm.contractor = form.contractor || incidentsListData.contractor;
-      tempForm.subcontractor = form.subcontractor || incidentsListData.subContractor;
-      tempForm.personaffected = form.personaffected || incidentsListData.isPersonAffected;
-      tempForm.propertyaffected = form.propertyaffected || incidentsListData.isPropertyDamaged;
-      tempForm.equiptmenteffected = form.equiptmenteffected || incidentsListData.isEquipmentDamaged;
-      tempForm.environmentaffected = form.environmentaffected || incidentsListData.isEnviromentalImpacted;
+      tempForm.subcontractor =
+        form.subcontractor || incidentsListData.subContractor;
+      tempForm.personaffected =
+        form.personaffected || incidentsListData.isPersonAffected;
+      tempForm.propertyaffected =
+        form.propertyaffected || incidentsListData.isPropertyDamaged;
+      tempForm.equiptmenteffected =
+        form.equiptmenteffected || incidentsListData.isEquipmentDamaged;
+      tempForm.environmentaffected =
+        form.environmentaffected || incidentsListData.isEnviromentalImpacted;
 
       await setForm(tempForm);
 
@@ -159,11 +174,13 @@ const IncidentDetails = () => {
         fkProjectId: incidentsListData.fkProjectId || 1,
         fkPhaseId: incidentsListData.fkPhaseId || 1,
         fkUnitId: incidentsListData.fkUnitId || 1,
-        incidentNumber: form.incidenttype,
+        incidentNumber: incidentsListData.incidentNumber,
+        incidentType: form.incidenttype,
         incidentTitle: form.title,
         incidentDetails: form.description,
-        immediateActionsTaken: form.immediateactiontaken || incidentsListData.immediateActionsTaken,
-        incidentOccuredOn: moment(form.incidenttime).toISOString(),
+        immediateActionsTaken:
+          form.immediateactiontaken || incidentsListData.immediateActionsTaken,
+        incidentOccuredOn: form.incidentdate,
         isPersonAffected: form.personaffected,
         isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
         personAffectedComments: incidentsListData.personAffectedComments,
@@ -197,10 +214,10 @@ const IncidentDetails = () => {
         updatedAt: moment(new Date()).toISOString(),
         assignTo: incidentsListData.assignTo,
         createdBy: incidentsListData.createdBy,
-        updatedBy: '0',
-        source: 'Web',
-        vendor: 'string',
-        vendorReferenceId: 'string',
+        updatedBy: "0",
+        source: "Web",
+        vendor: "string",
+        vendorReferenceId: "string",
         contractor: form.contractor,
         subContractor: form.subcontractor,
       };
@@ -255,25 +272,25 @@ const IncidentDetails = () => {
         }
       }
     } else {
-       // Create case if id is not null and means it is an add new registration case.
+      // Create case if id is not null and means it is an add new registration case.
       const { error, isValid } = validate(form);
       setError(error);
 
-      
       if (isValid === true) {
         const formData = {
           fkCompanyId: 1,
           fkProjectId: 1,
           fkPhaseId: 1,
           fkUnitId: 1,
-          incidentNumber: form.incidenttype,
+          incidentNumber: "",
+          incidentType: form.incidenttype,
           incidentTitle: form.title,
           incidentDetails: form.description,
           immediateActionsTaken: form.immediateactiontaken,
-          incidentOccuredOn: null,
+          incidentOccuredOn: form.incidentdate,
           isPersonAffected: form.personaffected,
-          isPersonDetailsAvailable: 'No',
-          personAffectedComments: '',
+          isPersonDetailsAvailable: "No",
+          personAffectedComments: "",
           isPropertyDamaged: form.propertyaffected,
           isPropertyDamagedAvailable: "No",
           propertyDamagedComments: "",
@@ -281,57 +298,57 @@ const IncidentDetails = () => {
           isEquipmentDamagedAvailable: "No",
           equipmentDamagedComments: "",
           isEnviromentalImpacted: form.environmentaffected,
-          enviromentalImpactComments: '',
-          supervisorByName: '..',
+          enviromentalImpactComments: "",
+          supervisorByName: "..",
           supervisorById: 0,
-          incidentReportedOn: moment(form.incidentdate).toISOString(),
-          incidentReportedByName: '..',
+          incidentReportedOn: new Date().toISOString(),
+          incidentReportedByName: "..",
           incidentReportedById: 0,
-          reasonLateReporting: '',
-          notificationComments: '',
+          reasonLateReporting: "",
+          notificationComments: "",
           reviewedBy: 0,
-          reviewDate: '2021-06-17T01:02:49.099Z',
+          reviewDate: "2021-06-17T01:02:49.099Z",
           closedBy: 0,
-          closeDate: '2021-06-17T01:02:49.099Z',
-          status: 'Active',
+          closeDate: "2021-06-17T01:02:49.099Z",
+          status: "Active",
           incidentLocation: form.location,
           assignTo: 0,
           createdBy: 0,
           updatedBy: 0,
-          source: 'Web',
-          vendor: 'string',
-          vendorReferenceId: 'string',
+          source: "Web",
+          vendor: "string",
+          vendorReferenceId: "string",
           contractor: form.contractor,
           subContractor: form.subcontractor,
         };
         // sent post api
-        const res = await api.post('/api/v1/incidents/', formData);
+        const res = await api.post("/api/v1/incidents/", formData);
         console.log(res);
         if (res.status === 201) {
           const fkincidentId = res.data.data.results.id;
-          localStorage.setItem('fkincidentId', fkincidentId);
-          localStorage.setItem('deleteForm', JSON.stringify(hideAffect));
-          localStorage.setItem('nextPath', JSON.stringify(nextPath));
-          
-          if (nextPath.personAffect === 'Yes') {
+          localStorage.setItem("fkincidentId", fkincidentId);
+          localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
+          localStorage.setItem("nextPath", JSON.stringify(nextPath));
+
+          if (nextPath.personAffect === "Yes") {
             history.push(
-              '/app/incident-management/registration/initial-notification/peoples-afftected/'
+              "/app/incident-management/registration/initial-notification/peoples-afftected/"
             );
-          } else if (nextPath.propertyAffect === 'Yes') {
+          } else if (nextPath.propertyAffect === "Yes") {
             history.push(
-              '/app/incident-management/registration/initial-notification/property-affected/'
+              "/app/incident-management/registration/initial-notification/property-affected/"
             );
-          } else if (nextPath.equipmentAffect === 'Yes') {
+          } else if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              '/app/incident-management/registration/initial-notification/eqiptment-affected/'
+              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
             );
-          } else if (nextPath.environmentAffect === 'Yes') {
+          } else if (nextPath.environmentAffect === "Yes") {
             history.push(
-              '/app/incident-management/registration/initial-notification/environment-affected/'
+              "/app/incident-management/registration/initial-notification/environment-affected/"
             );
           } else {
             history.push(
-              '/app/incident-management/registration/initial-notification/reporting-and-notification/'
+              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
             );
           }
         }
@@ -341,7 +358,7 @@ const IncidentDetails = () => {
 
   const handelTimeChange = (date) => {
     console.log(date);
-    const onlyTime = moment(date).format('HH:mm');
+    const onlyTime = moment(date).format("HH:mm");
     setForm({
       ...form,
       incidenttime: onlyTime,
@@ -349,43 +366,43 @@ const IncidentDetails = () => {
     setSelectedTime(date);
   };
   const fetchIncidentTypeValue = async () => {
-    const res = await api.get('api/v1/lists/1/value');
+    const res = await api.get("api/v1/lists/1/value");
     const result = res.data.data.results;
     await setIncidentTypeValue(result);
   };
   const fetchContractorValue = async () => {
-    const res = await api.get('api/v1/lists/2/value');
+    const res = await api.get("api/v1/lists/2/value");
     const result = res.data.data.results;
     await setContractorValue(result);
   };
   const fetchSubContractorValue = async () => {
-    const res = await api.get('api/v1/lists/3/value');
+    const res = await api.get("api/v1/lists/3/value");
     const result = res.data.data.results;
     await setSubContractorValue(result);
   };
   const fetchPersonAffectValue = async () => {
-    const res = await api.get('api/v1/lists/4/value');
+    const res = await api.get("api/v1/lists/4/value");
     const result = res.data.data.results;
     await setPersonAffectedValue(result);
   };
   const fetchPropertiesValue = async () => {
-    const res = await api.get('api/v1/lists/5/value');
+    const res = await api.get("api/v1/lists/5/value");
     const result = res.data.data.results;
     await setPropertiesAffectValue(result);
   };
 
   const fetchEquipmentAffectValue = async () => {
-    const res = await api.get('api/v1/lists/6/value');
+    const res = await api.get("api/v1/lists/6/value");
     const result = res.data.data.results;
     await setEquipmentAffectValue(result);
   };
   const fetchEnviornmentAffectValue = async () => {
-    const res = await api.get('api/v1/lists/7/value');
+    const res = await api.get("api/v1/lists/7/value");
     const result = res.data.data.results;
     await setEnvironmentAffectValue(result);
   };
   const fetchListData = async () => {
-    const res = await api.get('api/v1/lists/');
+    const res = await api.get("api/v1/lists/");
 
     const result = res.data.data.results;
     await setListData(result);
@@ -399,28 +416,16 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setIncidentsListdata(result);
       const resTime = new Date(result.incidentOccuredOn);
-      await setForm({ ...form, projectname: result.projectname });
-      await setForm({ ...form, unitname: result.unitname });
-      await setForm({ ...form, incidenttype: result.incidenttype });
-      await setForm({ ...form, incidentdate: resTime });
-      await setForm({ ...form, title: result.incidentTitle });
-      await setForm({ ...form, description: result.incidentDetails });
-      await setForm({ ...form, immediateactiontaken: result.immediateActionsTaken });
-      await setForm({ ...form, location: result.incidentLocation });
-      await setForm({ ...form, contractor: result.contractor });
-      await setForm({ ...form, subcontractor: result.subContractor });
-      await setForm({ ...form, personaffected: result.isPersonAffected });
-      await setForm({ ...form, propertyaffected: result.isPropertyDamaged });
-      await setForm({ ...form, equiptmenteffected: result.isEquipmentDamaged });
-      await setForm({ ...form, environmentaffected: result.isEnviromentalImpacted });
-      
+      form.incidentDate = result.incidentOccuredOn;
+      form.incidenttype = result.incidentType;
+
       await setIsLoading(true);
     }
   };
 
   const handleHideAffect = (e, name, key) => {
-    console.log('set hide affecct', hideAffect);
-    if (e !== 'Yes') {
+    console.log("set hide affecct", hideAffect);
+    if (e !== "Yes") {
       setHideAffect([...hideAffect, name]);
     } else {
       const newHideAffect = hideAffect.filter((item) => item !== name);
@@ -430,8 +435,8 @@ const IncidentDetails = () => {
   };
 
   useEffect(() => {
-    localStorage.removeItem('deleteForm');
-    localStorage.removeItem('nextPath');
+    localStorage.removeItem("deleteForm");
+    localStorage.removeItem("nextPath");
     console.log(nextPath);
     fetchListData();
     fetchContractorValue();
@@ -501,8 +506,10 @@ const IncidentDetails = () => {
                     });
                   }}
                 >
-                  {selectValues.map((selectValues) => (
-                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  {selectValues.map((selectValues, key) => (
+                    <MenuItem key={key} value={selectValues}>
+                      {selectValues}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -523,20 +530,17 @@ const IncidentDetails = () => {
                   labelId="incident-type-label"
                   id="incident-type"
                   label="Incident Type"
-                  defaultValue={incidentsListData.incidentNumber}
+                  defaultValue={incidentsListData.incidentType}
                   onChange={(e) => {
-                    setForm({
-                      ...form,
-                      incidenttype: toString(e.target.value),
-                    });
+                    setForm({...form, incidenttype:e.target.value})
                   }}
                 >
                   {incidentTypeValue.length !== 0
                     ? incidentTypeValue.map((selectValues, index) => (
-                      <MenuItem key={index} value={selectValues.inputValue}>
-                        {selectValues.inputLabel}
-                      </MenuItem>
-                    ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                     : null}
                 </Select>
                 {error && error.incidenttype && (
@@ -544,11 +548,13 @@ const IncidentDetails = () => {
                 )}
               </FormControl>
             </Grid>
-
+                  {console.log(incidentsListData.incidentOccuredOn)}
             {/* date */}
             <Grid item md={6}>
+              {console.log(incidentsListData.incidentOccuredOn)}
+              
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-                <KeyboardDatePicker
+                <KeyboardDateTimePicker
                   error={error.incidentdate}
                   required
                   className={classes.formControl}
@@ -558,21 +564,20 @@ const IncidentDetails = () => {
                     form.incidentdate || incidentsListData.incidentOccuredOn
                   }
                   onChange={(e) => {
-                    console.log(e);
+                    console.log(moment(e).toISOString())
                     setForm({
                       ...form,
-                      incidentdate: moment(e).toDate(),
+                      incidentdate: moment(e).toISOString(),
                     });
                   }}
-                  format="yyyy/MM/dd"
+                  format="yyyy/MM/dd HH:mm"
                   inputVariant="outlined"
                 />
               </MuiPickersUtilsProvider>
-              {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
             </Grid>
 
             {/* time */}
-            <Grid item md={6}>
+            {/* <Grid item md={6}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardTimePicker
                   required
@@ -599,8 +604,7 @@ const IncidentDetails = () => {
                   format="HH:mm"
                 />
               </MuiPickersUtilsProvider>
-              {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
-            </Grid>
+            </Grid> */}
 
             {/* title */}
             <Grid item lg={12} md={6} sm={6}>
@@ -612,7 +616,7 @@ const IncidentDetails = () => {
                 label="Title"
                 className={classes.fullWidth}
                 defaultValue={incidentsListData.incidentTitle}
-                helperText={error.title ? error.title : ''}
+                helperText={error.title ? error.title : ""}
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -673,7 +677,7 @@ const IncidentDetails = () => {
                 required
                 variant="outlined"
                 label="Location"
-                helperText={error.location ? error.location : ''}
+                helperText={error.location ? error.location : ""}
                 className={classes.fullWidth}
                 defaultValue={incidentsListData.incidentLocation}
                 onChange={(e) => {
@@ -710,10 +714,10 @@ const IncidentDetails = () => {
                 >
                   {contractorValue.length !== 0
                     ? contractorValue.map((selectValues, index) => (
-                      <MenuItem key={index} value={selectValues.inputValue}>
-                        {selectValues.inputLabel}
-                      </MenuItem>
-                    ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                     : null}
                 </Select>
                 {error && error.contractor && (
@@ -762,10 +766,10 @@ const IncidentDetails = () => {
                 >
                   {subContractorValue.length !== 0
                     ? subContractorValue.map((selectValues, index) => (
-                      <MenuItem key={index} value={selectValues.inputValue}>
-                        {selectValues.inputLabel}
-                      </MenuItem>
-                    ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                     : null}
                 </Select>
                 {/* <FormHelperText>Required</FormHelperText> */}
@@ -799,8 +803,8 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        'Peoples affected',
-                        'personAffect'
+                        "Peoples affected",
+                        "personAffect"
                       );
                       setNextPath({
                         ...nextPath,
@@ -810,13 +814,13 @@ const IncidentDetails = () => {
                   >
                     {personAffectedValue.length !== 0
                       ? personAffectedValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                 </FormControl>
@@ -849,8 +853,8 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        'Property affected',
-                        'propertyAffect'
+                        "Property affected",
+                        "propertyAffect"
                       );
                       setNextPath({
                         ...nextPath,
@@ -860,13 +864,13 @@ const IncidentDetails = () => {
                   >
                     {propertiesAffectValue.length !== 0
                       ? propertiesAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                 </FormControl>
@@ -899,8 +903,8 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        'Equipment affected',
-                        'equipmentAffect'
+                        "Equipment affected",
+                        "equipmentAffect"
                       );
                       setNextPath({
                         ...nextPath,
@@ -910,18 +914,18 @@ const IncidentDetails = () => {
                   >
                     {eqiptmentAffectValue.length !== 0
                       ? eqiptmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              equiptmenteffected: e.target.value,
-                            });
-                          }}
-                        />
-                      ))
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                            onChange={(e) => {
+                              setForm({
+                                ...form,
+                                equiptmenteffected: e.target.value,
+                              });
+                            }}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                 </FormControl>
@@ -949,8 +953,8 @@ const IncidentDetails = () => {
                     });
                     handleHideAffect(
                       e.target.value,
-                      'Environment affected',
-                      'environmentAffect'
+                      "Environment affected",
+                      "environmentAffect"
                     );
                     setNextPath({
                       ...nextPath,
@@ -960,19 +964,19 @@ const IncidentDetails = () => {
                 >
                   {environmentAffectValue.length !== 0
                     ? environmentAffectValue.map((value, index) => (
-                      <FormControlLabel
-                        key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                        onChange={(e) => {
-                          setForm({
-                            ...form,
-                            environmentaffected: e.target.value,
-                          });
-                        }}
-                      />
-                    ))
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              environmentaffected: e.target.value,
+                            });
+                          }}
+                        />
+                      ))
                     : null}
                 </RadioGroup>
                 {/* {error && error.environmentaffected && (

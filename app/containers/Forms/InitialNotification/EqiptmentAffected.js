@@ -97,6 +97,8 @@ const EqiptmentAffected = () => {
       fkIncidentId: localStorage.getItem('fkincidentId'),
     },
   ]);
+
+  // set state for update
   const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
     const temp = equipmentListdata;
     console.log(temp);
@@ -104,16 +106,25 @@ const EqiptmentAffected = () => {
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
     console.log(temp[key]);
+    setEquipmentListData(temp)
 
-    const res = await api.put(
-      `api/v1/incidents/${id}/equipments/${equipmentId}/`,
-      temp[key]
-    );
-    console.log(res);
-    equipmentListdata = temp 
-    console.log(equipmentListdata)
+  
 
   };
+
+  // hablde Remove
+
+  const handleRemove = (key) => {
+    if(peopleData.length>1){
+      const temp = peopleData
+      const newData = temp.filter(item=> item.id !== key);
+      setPeopleData(newData)
+    }
+    const temp = form;
+    const newData = form.filter((item, index) => index !== key);
+    setForm(newData);
+  };
+
 
   const addNewEquipmentDetails = () => {
     setForm([
@@ -137,6 +148,15 @@ const EqiptmentAffected = () => {
 
   const handleNext = async () => {
     console.log(form);
+    if(id){
+      for(var i=0; i<equipmentListdata.length;i++){
+        const res = await api.put(
+          `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`,
+          equipmentListdata[i]
+        );
+        console.log(res);
+      }
+    }
 
     const nextPath = JSON.parse(localStorage.getItem('nextPath'));
 
@@ -243,6 +263,7 @@ const EqiptmentAffected = () => {
     const res = await api.get('api/v1/lists/14/value');
     const result = res.data.data.results;
     setequipmentAffected(result);
+    await setIsLoading(true);
   };
 
   const fetchEquipmentTypeValue = async () => {
@@ -259,12 +280,16 @@ const EqiptmentAffected = () => {
     await setIncidentsListdata(result);
     const isavailable = result.isPersonDetailsAvailable;
     await setDetailsOfEquipmentAffect(isavailable);
-    await setIsLoading(true);
+  
   };
   useEffect(() => {
     fetchEquipmentAffectedValue();
     fetchEquipmentTypeValue();
+    if(id){
     fetchEquipmentListData();
+    }else{
+       setIsLoading(true);
+    }
     fetchIncidentsData();
   }, []);
   return (
@@ -389,6 +414,18 @@ const EqiptmentAffected = () => {
                             <p>{error[`equipmentDeatils${[key]}`]}</p>
                           )} */}
                       </Grid>
+                      {equipmentListdata.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(equipment.id)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                     </>
                   ))
                   : form.map((value, key) => (
@@ -459,6 +496,18 @@ const EqiptmentAffected = () => {
                           <p>{error[`equipmentDeatils${[key]}`]}</p>
                         )}
                       </Grid>
+                      {form.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(key)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                     </>
                   ))}
                 {equipmentListdata.length > 0 ? null : (
@@ -489,26 +538,26 @@ const EqiptmentAffected = () => {
                 />
               </Grid>
             )}
-            <Box marginTop={4}>
+           <Grid item md={6}>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/property-affected/"
+                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
               >
                 Previous
               </Button>
               <Button
                 variant="contained"
                 color="primary"
+                onClick={handleNext}
                 className={classes.button}
-                onClick={() => handleNext()}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
+                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
               >
                 Next
               </Button>
-            </Box>
+            </Grid>
           </Grid>
           <Grid item md={3}>
             <FormSideBar

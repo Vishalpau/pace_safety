@@ -28,7 +28,8 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { MaterialDropZone, PapperBlock } from "dan-components";
+import { PapperBlock } from "dan-components";
+import {MaterialDropZone} from 'dan-components';
 import { DropzoneDialogBase } from "material-ui-dropzone";
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -38,6 +39,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
 
+import { DateTimePicker, KeyboardDateTimePicker, } from '@material-ui/pickers';
+
 import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
@@ -46,6 +49,7 @@ import {
 import FormHeader from "../FormHeader";
 import ReportingValidation from "../../Validator/ReportingValidation";
 import api from "../../../utils/axios";
+import UploadInputAll from "../demos/UploadInputAll";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -77,8 +81,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const UploadInputImg=()=> {
+  const [files] = useState([]);
+
+  return (
+    <Fragment>
+      <div>
+        <MaterialDropZone
+          acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+          files={files}
+          showPreviews
+          maxSize={5000000}
+          filesLimit={5}
+          text="Drag and drop image(s) here or click"
+        />
+      </div>
+    </Fragment>
+  );
+}
+
 const ReportingAndNotification = () => {
-  const [files, setFile] = React.useState([]);
+  const [files, setFiles] = useState([]);
   const [error, setError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [reportsListData, setReportListData] = useState([]);
@@ -133,10 +156,9 @@ const ReportingAndNotification = () => {
   };
 
   const handleDateChange = (date) => {
-    const onlyDate = moment(date).format("YYYY/MM/DD");
     setForm({
       ...form,
-      reportingdate: onlyDate,
+      reportingdate: date,
     });
   };
 
@@ -150,18 +172,20 @@ const ReportingAndNotification = () => {
   };
 
   const handleDrop = (acceptedFiles) => {
+    alert('ram')
     const formData = new FormData();
     for (let i = 0; i < acceptedFiles.length; i++) {
+      setFiles(acceptedFiles[i])
       formData.append("evidenceDocument", acceptedFiles[i]);
       formData.append("evidenceCategory", "Initial Evidence ");
       formData.append("createdBy", "1");
       formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
-      const evidanceResponse = api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`,
-        formData
-      );
+      // const evidanceResponse = api.post(
+      //   `api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`,
+      //   formData
+      // );
     }
-
+   
     setForm({
       ...form,
       fileupload: acceptedFiles,
@@ -170,15 +194,16 @@ const ReportingAndNotification = () => {
   };
 
   const handelNext = async (e) => {
-    const { error, isValid } = ReportingValidation(form);
-    setError(error);
+    // const { error, isValid } = ReportingValidation(form);
+    // setError(error);
+    // console.log(error, isValid)
     // getting fileds for update
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
     temp.supervisorByName =
       form.supervisorname || incidentsListData.supervisorByName;
     temp.supervisorById = 1;
-    temp.incidentReportedOn = moment(form.reportingdate).toISOString();
+    temp.incidentReportedOn = moment(form.reportingdate).toISOString() || incidentsListData.incidentReportedOn;
     temp.incidentReportedByName =
       form.reportedby || incidentsListData.incidentReportedByName;
     temp.incidentReportedById = 1;
@@ -196,7 +221,7 @@ const ReportingAndNotification = () => {
     );
 
     // Update case.
-    if (id) {
+    if (reportData.length>0) {
 
       // reported to api call
       const res = await api.put(`/api/v1/incidents/${id}/reports/${reportId}/`, {
@@ -215,8 +240,8 @@ const ReportingAndNotification = () => {
       );
         }
     } else {
-      const { error, isValid } = ReportingValidation(form);
-      setError(error);
+      // const { error, isValid } = ReportingValidation(form);
+      // setError(error);
 
       // reported to api call
       const res = await api.post(`/api/v1/incidents/${fkid}/reports/`, {
@@ -262,6 +287,8 @@ const ReportingAndNotification = () => {
       }
     }
   };
+
+  
 
   // fetch reportList
   const fetchReportsDataList = async () => {
@@ -381,16 +408,20 @@ const ReportingAndNotification = () => {
                   Initial Evidences
                 </Typography>
               </Box>
-
+              {/* <UploadInputAll/> */}
+              <>
+              <div>
               <MaterialDropZone
                 files={files}
-                showPreviews
+                showPreviews = {true}
                 maxSize={5000000}
                 filesLimit={5}
                 text="Drag and drop file(s) here or click button bellow"
                 showButton
-                onDrop={handleDrop}
+                onChange={handleDrop}
               />
+              </div>
+              </>
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
             </Grid>
 
@@ -428,14 +459,15 @@ const ReportingAndNotification = () => {
 
             <Grid item md={6}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
+             
+                <KeyboardDateTimePicker
                   className={classes.formControl}
                   id="date-picker-dialog"
                   error={error && error.reportingdate}
                   helperText={
                     error && error.reportingdate ? error.reportingdate : null
                   }
-                  format="yyyy/MM/dd"
+                  format="yyyy/MM/dd HH:mm"
                   required
                   inputVariant="outlined"
                   label="Reporting Date"
@@ -446,35 +478,10 @@ const ReportingAndNotification = () => {
                   }}
                 />
               </MuiPickersUtilsProvider>
+
             </Grid>
 
-            <Grid item md={6}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardTimePicker
-                  className={classes.formControl}
-                  id="time-picker"
-                  inputVariant="outlined"
-                  label="Reporting Time"
-                  required
-                  error={error && error.reportingtime}
-                  helperText={
-                    error && error.reportingtime ? error.reportingtime : null
-                  }
-                  value={
-                    form.reportingtime === null ? clearedDate : selectedTime
-                  }
-                  onChange={(date) => {
-                    handelTimeChange(date);
-                    handelTimeCompare();
-                  }}
-                  KeyboardButtonProps={{
-                    "aria-label": "change time",
-                  }}
-                  format="HH:mm"
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-
+           
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -516,7 +523,7 @@ const ReportingAndNotification = () => {
                     others: e.target.value.toString(),
                   });
                 }}
-                disabled={form.reportedby !== "Others"}
+                disabled={form.reportedby !== "Other"}
               />
             </Grid>
             {lateReport ? (

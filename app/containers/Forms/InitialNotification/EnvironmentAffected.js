@@ -117,6 +117,7 @@ const EnvironmentAffected = () => {
     ]);
   };
 
+  // set State when u want to update
   const handleUpdateEnvironement = async (e, key, fieldname, envId) => {
     const temp = environmentListData;
     console.log(temp);
@@ -126,17 +127,26 @@ const EnvironmentAffected = () => {
     temp[key].updatedAt = moment(new Date()).toISOString();
     console.log(temp[key]);
     await setEnvironmentListData(temp)
-    const res = await api.put(
-      `api/v1/incidents/${id}/environment/${envId}/`,
-      temp[key]
-    );
-    console.log(res)
-    
-    console.log(environmentListData)
   };
 
   const handleNext = async () => {
+    // check condition id is defined or env data not less than 0 other wise post data
     if (environmentListData.length > 0 || id !==undefined) {
+      for(var i = 0;i<environmentListData.length;i++){
+        const res = await api.put(
+          `api/v1/incidents/${id}/environment/${environmentListData[i].id}/`,
+          environmentListData[i]
+        );
+      }
+      const temp = incidentsListData;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        temp["enviromentalImpactComments"] =
+          envComments || incidentsListData.enviromentalImpactComments;
+
+        await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
       history.push(
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );
@@ -155,7 +165,15 @@ const EnvironmentAffected = () => {
             );
           }
         }
-        
+        const temp = incidentsListData;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        temp["enviromentalImpactComments"] =
+          envComments || incidentsListData.enviromentalImpactComments;
+
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
         history.push(
           '/app/incident-management/registration/initial-notification/reporting-and-notification/'
         );
@@ -553,30 +571,33 @@ const EnvironmentAffected = () => {
                 rows="3"
                 label="Comment if any"
                 className={classes.fullWidth}
-                defaultValue={'' || incidentsListData.equipmentDamagedComments}
+                defaultValue={incidentsListData.enviromentalImpactComments}
                 onChange={(e) => setEnvComments(e.target.value)}
               />
             </div>
           </Grid>
 
-          <Box marginTop={4}>
-            <Button
-              variant="contained"
-              className={classes.button}
-              color="primary"
-              onClick={() => history.goBack()}
-              // href="/app/incident-management/registration/initial-notification/eqiptment-affected/"
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={(e) => handleNext(e)}
-            >
-              Next
-            </Button>
-          </Box>
+          <Grid item md={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => history.goBack()}
+                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                className={classes.button}
+                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+              >
+                Next
+              </Button>
+            </Grid>
+        
         </Grid>
         <Grid item md={3}>
           <FormSideBar
