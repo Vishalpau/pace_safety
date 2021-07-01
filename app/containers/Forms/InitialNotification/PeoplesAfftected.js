@@ -301,20 +301,22 @@ const PeoplesAffected = () => {
 
   // hablde Remove
 
-  const handleRemove = (key) => {
+  const handleRemove = async(key) => {
+    debugger;
     if(peopleData.length>1){
       const temp = peopleData
       const newData = temp.filter(item=> item.id !== key);
-      setPeopleData(newData)
+      await setPeopleData(newData)
     }
-    const temp = form;
-    console.log(temp)
-    console.log(key)
-    setIsLoading(false)
-    const newData = form.filter((item, index) => index !== key);
-    console.log(newData)
-    setForm(newData);
-    setIsLoading(true)
+    else{
+      const temp = form;
+      console.log(temp)
+      console.log(key)
+      // await setIsLoading(false)
+      const newData = form.filter((item, index) => index !== key);
+      console.log(newData)
+      await setForm(newData);
+    }
   };
 
   // State for the error defination.
@@ -377,6 +379,9 @@ const PeoplesAffected = () => {
     fetchIncidentsData();
     if (id) {
       fetchPersonListData();
+    }
+    else{
+      setIsLoading(true)
     }
   }, []);
   return (

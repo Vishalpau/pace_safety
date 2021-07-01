@@ -109,13 +109,19 @@ const PropertyAffected = () => {
   // hablde Remove
 
   const handleRemove = (key) => {
+    debugger;
     if(propertyListData.length>1){
       const temp = propertyListData
       const newData = temp.filter(item=> item.id !== key);
       setPropertyListData(newData)
     }
+    console.log(key)
+    console.log(form)
+    
     const newData = form.filter((item, index) => index !== key);
+    console.log(newData)
     setForm(newData);
+    console.log(form)
   };
 
 // set state when update 
