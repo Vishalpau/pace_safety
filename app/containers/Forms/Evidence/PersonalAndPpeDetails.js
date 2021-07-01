@@ -23,11 +23,11 @@ import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailVa
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
-    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),
@@ -132,11 +132,10 @@ const PersonalAndPpeDetails = () => {
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
-              </Typography>
-            </Box>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident number
+            </Typography>
+            <Typography className={Type.labelValue}>989542468</Typography>
           </Grid>
           <Grid item md={6}>
             <FormControl
@@ -460,6 +459,7 @@ const PersonalAndPpeDetails = () => {
               </RadioGroup>
             </FormControl>
           </Grid>
+
           <Grid item md={12}>
             <Typography variant="h6">Flag Person</Typography>
           </Grid>

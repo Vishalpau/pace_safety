@@ -443,10 +443,9 @@ const IncidentDetails = () => {
   return (
     <PapperBlock icon="ion-md-list-box" title="Initial Notification">
       {isLoading ? (
-        <Grid container spacing={3} alignItems="flex-start">
-          <Grid container item md={9} spacing={3}>
-            {/* project name */}
-            <Grid item md={6}>
+        <Grid container spacing={3}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12} md={6}>
               <FormControl
                 error={error.projectname}
                 required
@@ -477,8 +476,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-            {/* unit name */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Unit Name</InputLabel>
                 <Select
@@ -500,8 +498,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-            {/* incident type */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl
                 error={error.incidenttype}
                 variant="outlined"
@@ -537,8 +534,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-            {/* date */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   error={error.incidentdate}
@@ -563,8 +559,7 @@ const IncidentDetails = () => {
               {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
             </Grid>
 
-            {/* time */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardTimePicker
                   required
@@ -596,8 +591,7 @@ const IncidentDetails = () => {
               {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
             </Grid>
 
-            {/* title */}
-            <Grid item lg={12} md={6} sm={6}>
+            <Grid item xs={12} md={12}>
               <TextField
                 required
                 id="title"
@@ -616,8 +610,7 @@ const IncidentDetails = () => {
               />
             </Grid>
 
-            {/* description */}
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <TextField
                 error={error.description}
                 multiline
@@ -638,8 +631,7 @@ const IncidentDetails = () => {
               />
             </Grid>
 
-            {/* immediate-actions */}
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <TextField
                 variant="outlined"
                 id="immediate-actions"
@@ -657,8 +649,7 @@ const IncidentDetails = () => {
               />
             </Grid>
 
-            {/* location */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 error={error.title}
@@ -676,8 +667,8 @@ const IncidentDetails = () => {
                 }}
               />
             </Grid>
-            {/* contractor */}
-            <Grid item md={6}>
+
+            <Grid item xs={12} md={6}>
               <FormControl
                 variant="outlined"
                 error={error.contractor}
@@ -713,8 +704,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-            {/* sub contractor */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl
                 variant="outlined"
                 error={error.subcontractor}
@@ -744,15 +734,13 @@ const IncidentDetails = () => {
                       ))
                     : null}
                 </Select>
-                {/* <FormHelperText>Required</FormHelperText> */}
                 {error && error.subcontractor && (
                   <FormHelperText>{error.subcontractor}</FormHelperText>
                 )}
               </FormControl>
             </Grid>
 
-            {/* person Affected */}
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <div>
                 <FormControl
                   component="fieldset"
@@ -797,8 +785,8 @@ const IncidentDetails = () => {
                 </FormControl>
               </div>
             </Grid>
-            {/* propery damaged */}
-            <Grid item md={12}>
+
+            <Grid item xs={12} md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
                 <FormLabel component="legend">
                   Was Any Property Damaged During the Incident ?
@@ -837,8 +825,8 @@ const IncidentDetails = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            {/* Equipment damaged */}
-            <Grid item md={12}>
+
+            <Grid item xs={12} md={12}>
               <div>
                 <FormControl
                   component="fieldset"
@@ -887,8 +875,8 @@ const IncidentDetails = () => {
                 </FormControl>
               </div>
             </Grid>
-            {/* environment impact */}
-            <Grid item md={12}>
+
+            <Grid item xs={12} md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
                 <FormLabel component="legend">
                   Was There Any Environment Impact ?
@@ -933,7 +921,8 @@ const IncidentDetails = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item md={12}>
+
+            <Grid item xs={12} md={12}>
               <Box marginTop={4}>
                 <Button
                   type="button"
@@ -947,7 +936,8 @@ const IncidentDetails = () => {
               </Box>
             </Grid>
           </Grid>
-          <Grid item md={3}>
+
+          <Grid item xs={12} md={3}>
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}

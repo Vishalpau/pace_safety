@@ -119,7 +119,7 @@ function BlankPage() {
 
   const fetchData = async () => {
     const res = await api.get("api/v1/incidents/");
-    console.log(res.data.data.results)
+    console.log(res.data.data.results);
     await setIncidents(res.data.data.results.results);
   };
 
@@ -148,12 +148,12 @@ function BlankPage() {
     if (e.target.value.length === 0) {
       setShowIncident([]);
     } else {
-      console.log(searchIncident)
+      console.log(searchIncident);
       await setSeacrhIncident(e.target.value.toLowerCase());
       // console.log(searchIncident);
       Object.entries(incidents).map((item) => {
         if (item[1]["incidentNumber"].toLowerCase().includes(searchIncident)) {
-          console.log(item[1]["incidentNumber"])
+          console.log(item[1]["incidentNumber"]);
           allSeacrh.push([
             item[1]["incidentNumber"],
             item[1]["incidentReportedByName"],
@@ -201,7 +201,7 @@ function BlankPage() {
       options: {
         filter: false,
       },
-    }
+    },
   ];
 
   const options = {
@@ -216,7 +216,6 @@ function BlankPage() {
 
   return (
     <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
-
       <Box>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
@@ -297,9 +296,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                              // display="inline"
-                              // color="textSecondary"
-                              // className={Fonts.labelValue}
+                                // display="inline"
+                                // color="textSecondary"
+                                // className={Fonts.labelValue}
                               >
                                 {/* {item[1]["incidentTitle"]} */}
                                 Lorem ipsum dolor sit amet consectetur
@@ -312,8 +311,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="John Doe"
-                              // onDelete={handleDelete}
-                              // className={classes.chip}
+                                // onDelete={handleDelete}
+                                // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -326,9 +325,11 @@ function BlankPage() {
                               display="inline"
                               className={Fonts.labelName}
                             >
-                              Number{" "}
+                              Number
                               <Link
-                                href={`/app/incident-management/registration/summary/summary/${item[1].id}`}
+                                href={`/app/incident-management/registration/summary/summary/${
+                                  item[1].id
+                                }`}
                                 variant="subtitle2"
                                 className={Incidents.incidentNumber}
                                 style={{ textDecoration: "underline" }}
@@ -364,9 +365,9 @@ function BlankPage() {
 
                         <Grid item lg={3}>
                           <Typography
-                            variant="h6"
+                            // variant="h6"
                             gutterBottom
-                            className={Fonts.labelName}
+                            // className={Fonts.labelName}
                           >
                             Incident Type
                           </Typography>
@@ -381,11 +382,7 @@ function BlankPage() {
                           </Typography>
                         </Grid>
                         <Grid item lg={3}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
+                          <Typography gutterBottom>
                             Incident location
                           </Typography>
                           <Typography
@@ -398,13 +395,7 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Reported on
-                          </Typography>
+                          <Typography gutterBottom>Reported on</Typography>
 
                           <Typography
                             variant="body1"
@@ -416,13 +407,7 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Reported By
-                          </Typography>
+                          <Typography gutterBottom>Reported By</Typography>
 
                           <Typography
                             variant="body1"
@@ -539,9 +524,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                              // display="inline"
-                              // color="textSecondary"
-                              // className={Fonts.labelValue}
+                                // display="inline"
+                                // color="textSecondary"
+                                // className={Fonts.labelValue}
                               >
                                 {item[1]["incidentTitle"]}
                                 {/* {item[index]["incidentTitle"]} */}
@@ -552,8 +537,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="John Doe"
-                              // onDelete={handleDelete}
-                              // className={classes.chip}
+                                // onDelete={handleDelete}
+                                // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -568,7 +553,9 @@ function BlankPage() {
                             >
                               Number{" "}
                               <Link
-                                href={`/app/incident-management/registration/summary/summary/${item[1].id}`}
+                                href={`/app/incident-management/registration/summary/summary/${
+                                  item[1].id
+                                }`}
                                 variant="subtitle2"
                                 className={Incidents.incidentNumber}
                                 style={{ textDecoration: "underline" }}
@@ -603,13 +590,7 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Incident Type
-                          </Typography>
+                          <Typography gutterBottom>Incident Type</Typography>
 
                           <Typography
                             variant="body1"
@@ -621,11 +602,7 @@ function BlankPage() {
                           </Typography>
                         </Grid>
                         <Grid item lg={3}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
+                          <Typography gutterBottom>
                             Incident location
                           </Typography>
                           <Typography
@@ -638,13 +615,7 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Reported on
-                          </Typography>
+                          <Typography gutterBottom>Reported on</Typography>
 
                           <Typography
                             variant="body1"
@@ -658,13 +629,7 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Reported By
-                          </Typography>
+                          <Typography gutterBottom>Reported By</Typography>
 
                           <Typography
                             variant="body1"
