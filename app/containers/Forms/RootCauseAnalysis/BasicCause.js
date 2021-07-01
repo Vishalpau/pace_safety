@@ -284,15 +284,10 @@ const BasicCause = () => {
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
         if (putId.current !== "") {
-          const res = await api.put(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/${callObjects[key].pk}/`,
-            callObjects[key]
-          );
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
           if (res.status == 200) {
-            console.log("request done");
-            console.log(res);
+            console.log("request done")
+            console.log(res)
           }
         } else {
           const res = await api.post(
