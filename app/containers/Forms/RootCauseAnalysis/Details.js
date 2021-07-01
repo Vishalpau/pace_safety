@@ -26,6 +26,7 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation"
+import { RCAOPTION } from "../../../utils/constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -150,11 +151,13 @@ const Details = () => {
     <Container>
       <Paper>
         <Box padding={3} bgcolor="background.paper">
+
           <Box borderBottom={1} marginBottom={2}>
             <Typography variant="h6" gutterBottom>
               RCA details
             </Typography>
           </Box>
+
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
 
@@ -220,19 +223,21 @@ const Details = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="RCA recommended"
+                  // defaultValue={"Pace cause"}
                   >
-                    {selectValues.map((selectValues) => (
+                    {RCAOPTION.map((selectValues) => (
                       <MenuItem
-                        value={selectValues || parseInt(form.rcaRecommended)}
+                        value={selectValues}
                         onClick={(e) => setForm({ ...form, rcaRecommended: selectValues })}
                       >{selectValues}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+                {error && error.rcaRecommended && (
+                  <p><small style={{ color: "red" }}>{error.rcaRecommended}</small></p>
+                )}
               </Grid>
-
-
 
               <Grid item md={6}>
                 <FormLabel component="legend" error={error.evidenceSupport}>
@@ -340,7 +345,7 @@ const Details = () => {
           </Grid>
         </Box>
       </Paper>
-    </Container>
+    </Container >
   );
 };
 

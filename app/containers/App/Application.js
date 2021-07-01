@@ -266,8 +266,7 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/evidence/"
           component={Evidence}
         />
-        <Route
-          exact
+        <Route exact
           path="/app/incident-management/registration/evidence/evidence/:id"
           component={Evidence}
         />
@@ -342,22 +341,22 @@ function Application(props) {
           component={WhyAnalysis}
         />
         {/* form root cause analysis get and put */}
-        {/* <Route
-          path="/app/incident-management/registration/root-cause-analysis/basic-cause/"
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/basic-cause/:id"
           component={BasicCause}
         />
-        <Route
+        {/* <Route
           path="/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
           component={BasicCauseAndAction}
         />
         <Route
           path="/app/incident-management/registration/root-cause-analysis/cause-and-action/"
           component={CauseAndAction}
-        />
-        <Route
-          path="/app/incident-management/registration/root-cause-analysis/management-control/"
-          component={ManagementControl}
         /> */}
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/management-control/:id"
+          component={ManagementControl}
+        />
         <Route
           path="/app/incident-management/registration/root-cause-analysis/details/:id"
           component={Details}
@@ -366,18 +365,19 @@ function Application(props) {
           path="/app/incident-management/registration/root-cause-analysis/hazardious-acts/:id"
           component={HazardiousActs}
         />
-        {/* <Route
-          path="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/:id"
           component={HazardiousCondtions}
-        /> */}
+        />
         <Route
           path="/app/incident-management/registration/root-cause-analysis/root-cause-analysis/:id"
           component={RootCauseAnalysis}
         />
-        {/* <Route
-          path="/app/incident-management/registration/root-cause-analysis/why-analysis/"
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/why-analysis/:id"
           component={WhyAnalysis}
-        /> */}
+        />
+
         {/* summary */}
         <Route
           path="/app/incident-management/registration/summary/summary/:id"
