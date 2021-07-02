@@ -294,10 +294,13 @@ const ReportingAndNotification = () => {
   const fetchReportsDataList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
     const result = res.data.data.results;
-    const report = result[0].reportTo;
-    // form.reportedto = report.split(",")
-    await setForm({ ...form, reportedto: report.split(",") });
-    await setReportId(result[0].id)
+    if(result.length>0){
+      const report = result[0].reportTo;
+      // form.reportedto = report.split(",")
+      await setForm({ ...form, reportedto: report.split(",") });
+      await setReportId(result[0].id)
+    }
+    
     await setIsLoading(true);
   };
 
@@ -317,6 +320,9 @@ const ReportingAndNotification = () => {
     const date = new Date(result.incidentReportedOn)
     await setForm({...form,reportingdate:date})
     await setIncidentsListdata(result);
+    if(!id){
+      setIsLoading(true)
+    }
    
   };
 
@@ -326,7 +332,7 @@ const ReportingAndNotification = () => {
     if(id){
       fetchReportsDataList();
     }  
-    else{  setIsLoading(true);}
+   
     
   }, []);
 
@@ -588,9 +594,9 @@ const ReportingAndNotification = () => {
             />
           </Grid>
         </Grid>
-      ) : (
-        <h1>Loading...</h1>
-      )}
+      ) : ( 
+         <h1>Loading...</h1> 
+      )} 
     </PapperBlock>
   );
 };

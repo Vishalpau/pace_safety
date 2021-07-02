@@ -18,10 +18,10 @@ function EquipmentValidate(data) {
       isValid = false;
     }
 
-    if (validator.isEmpty(data[i].equipmentOtherType.toString())) {
-      error[`equipmentOtherType${[i]}`] = "This Field is Empty";
-      isValid = false;
-    }
+    // if (validator.isEmpty(data[i].equipmentOtherType.toString())) {
+    //   error[`equipmentOtherType${[i]}`] = "This Field is Empty";
+    //   isValid = false;
+    // }
 
     if (validator.isEmpty(data[i].equipmentDeatils.toString())) {
       error[`equipmentDeatils${[i]}`] = "This Field is Empty";

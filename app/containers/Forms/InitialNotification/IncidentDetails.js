@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
 const IncidentDetails = () => {
   // Props definations.
   const classes = useStyles();
-  const [selectedTime, setSelectedTime] = React.useState(new Date());
   const [error, setError] = useState({});
   const selectValues = [1, 2, 3, 4];
   const companyName = ["ABC Ltd", "XYZ steel", "ABA power", "XDA works"];
@@ -91,7 +90,6 @@ const IncidentDetails = () => {
     unitname: 0,
     incidenttype: "",
     incidentdate: null,
-    incidenttime: null,
     title: "",
     description: "",
     immediateactiontaken: "",
@@ -135,8 +133,7 @@ const IncidentDetails = () => {
         form.incidenttype || incidentsListData.incidentTypeValue;
       tempForm.incidentdate =
         form.incidentdate || incidentsListData.incidentOccuredOn;
-      tempForm.incidenttime =
-        form.incidenttime || incidentsListData.incidentReportedOn;
+     
       tempForm.title = form.title || incidentsListData.incidentTitle;
       tempForm.description =
         form.description || incidentsListData.incidentDetails;
@@ -277,9 +274,9 @@ const IncidentDetails = () => {
       if (isValid === true) {
         const formData = {
           fkCompanyId: 1,
-          fkProjectId: 1,
+          fkProjectId: parseInt(form.projectname),
           fkPhaseId: 1,
-          fkUnitId: 1,
+          fkUnitId: parseInt(form.unitname),
           incidentNumber: "",
           incidentType: form.incidenttype,
           incidentTitle: form.title,
@@ -353,14 +350,7 @@ const IncidentDetails = () => {
     }
   };
 
-  const handelTimeChange = (date) => {
-    const onlyTime = moment(date).format("HH:mm");
-    setForm({
-      ...form,
-      incidenttime: onlyTime,
-    });
-    setSelectedTime(date);
-  };
+
   const fetchIncidentTypeValue = async () => {
     const res = await api.get("api/v1/lists/1/value");
     const result = res.data.data.results;
@@ -469,12 +459,12 @@ const IncidentDetails = () => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      projectname: e.target.value,
+                      projectname: e.target.value.toString(),
                     });
                   }}
                 >
-                  {companyName.map((selectValues) => (
-                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  {companyName.map((selectValues, key) => (
+                    <MenuItem key={key} value={key+1}>{selectValues}</MenuItem>
                   ))}
                 </Select>
                 {error && error.projectname && (
@@ -494,7 +484,7 @@ const IncidentDetails = () => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      unitname: toString(e.target.value),
+                      unitname: e.target.value.toString(),
                     });
                   }}
                 >
@@ -612,7 +602,7 @@ const IncidentDetails = () => {
                 id="immediate-actions"
                 multiline
                 rows="4"
-                label="Any immediate actions taken"
+                label="Any Immediate Actions Taken"
                 defaultValue={incidentsListData.incidentLocation}
                 className={classes.fullWidth}
                 onChange={(e) => {
@@ -739,7 +729,7 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Peoples affected",
+                        "People Affected",
                         "personAffect"
                       );
                       setNextPath({
@@ -784,7 +774,7 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Property affected",
+                        "Property Affected",
                         "propertyAffect"
                       );
                       setNextPath({
@@ -834,7 +824,7 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Equipment affected",
+                        "Equipment Affected",
                         "equipmentAffect"
                       );
                       setNextPath({
@@ -883,7 +873,7 @@ const IncidentDetails = () => {
                     });
                     handleHideAffect(
                       e.target.value,
-                      "Environment affected",
+                      "Environment Affected",
                       "environmentAffect"
                     );
                     setNextPath({

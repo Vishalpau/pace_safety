@@ -80,6 +80,7 @@ const PropertyAffected = () => {
   const [propertyListData, setPropertyListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
+  const [isOther, setIsOther] = useState(true)
 
   // Default form.
   const [form, setForm] = useState([
@@ -310,6 +311,7 @@ const PropertyAffected = () => {
   const fetchPropertyTypeValue = async () => {
     const res = await api.get("api/v1/lists/13/value");
     const result = res.data.data.results;
+    result.push({inputValue:'other',inputLabel:'other'})
     setPropertyTypeValue(result);
   };
 
@@ -327,6 +329,7 @@ const PropertyAffected = () => {
   const fetchPropertyListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/properties/`);
     const result = res.data.data.results;
+   
     await setPropertyListData(result);
     await setIsLoading(true);
    
@@ -492,8 +495,10 @@ const PropertyAffected = () => {
                               id="person-type"
                               label="Person type"
                               value = {value.propertyType || ''}
-                              onChange={(e) =>
-                                handlePropertyType(e, index, "propertyType")
+                              onChange={(e) =>{
+                                handlePropertyType(e, index, "propertyType");
+                                setIsOther(e.target.value !== 'other')
+                              }
                               }
                             >
                               {propertyTypeValue.length !== 0
@@ -523,6 +528,7 @@ const PropertyAffected = () => {
                             label="if others, describe"
                             value = {value.propertyOtherType || ''}
                             className={classes.formControl}
+                            disabled={value.propertyType === 'other'?false:true}
                             onChange={(e) =>
                               handlePropertyOtherType(
                                 e,
@@ -531,6 +537,7 @@ const PropertyAffected = () => {
                               )
                             }
                           />
+                          {console.log(value.propertyType)}
                           {error && error[`propertyOtherType${[index]}`] && (
                             <p>{error[`propertyOtherType${[index]}`]}</p>
                           )}

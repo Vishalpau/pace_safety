@@ -135,7 +135,7 @@ const PeoplesAffected = () => {
     setForm(temp);
   };
 
-  // Function just like handleform but on the change we are hitting the API.
+
   // set the state in update time
   const handleUpdatePeople = async (e, key, fieldname, peopleId) => {
     const temp = peopleData;
@@ -215,24 +215,44 @@ const PeoplesAffected = () => {
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-
-        // Redirect user to next page.
-        if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
+        // check condition id 
+        if (id) {
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+          // Here it is the new entry create case. We will redirect to next pages without ids.
         } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/environment-affected/"
+            );
+          } else {
+            history.push(
+              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+            );
+          }
         }
 
         // Case when form has No option selected.
@@ -249,49 +269,53 @@ const PeoplesAffected = () => {
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-      }
 
       // Case when id is available. Update case. Redirect user to specific page.
       // Here if we see, we are redirecting user to urls with /id/ in the end.
       // Therefore, next page will get the input from the id and pre-fill the details.
-      if (id) {
-        if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/property-affected/${id}`
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
+         if (id) {
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+          // Here it is the new entry create case. We will redirect to next pages without ids.
         } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/environment-affected/"
+            );
+          } else {
+            history.push(
+              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+            );
+          }
         }
-        // Here it is the new entry create case. We will redirect to next pages without ids.
-      } else {
-        if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/property-affected/`
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
-        } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
-        }
+
       }
+
+     
+      
     }
   };
 
@@ -354,9 +378,13 @@ const PeoplesAffected = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
-    await setIncidentsListdata(result);
+
     const isavailable = result.isPersonDetailsAvailable;
     await setPersonAffect(isavailable);
+    await setIncidentsListdata(result);
+    if(!id){
+      await setIsLoading(true);
+    }
   };
 
   // Fetch the individual page data in case of the update.
@@ -369,17 +397,15 @@ const PeoplesAffected = () => {
   };
 
   useEffect(() => {
+    fetchIncidentsData();
     fetchIndividualAffectValue();
     fetchPersonTypeValue();
     fetchDepartmentValue();
     fetchPersonTakenMedicalCare();
-    fetchIncidentsData();
     if (id) {
       fetchPersonListData();
     }
-    else{
-      setIsLoading(true)
-    }
+    
   }, []);
   return (
     <PapperBlock title="Details of People Affected" icon="ion-md-list-box">
@@ -396,7 +422,7 @@ const PeoplesAffected = () => {
                   aria-label="personAffect"
                   name="personAffect"
                   defaultValue={
-                    personAffect || incidentsListData.isPersonDetailsAvailable
+                    personAffect 
                   }
                   onChange={(e) => {
                     setPersonAffect(e.target.value);
@@ -855,7 +881,7 @@ const PeoplesAffected = () => {
                             }
                           />
                         </Grid>
-                        {/* {form.length > 1 ? (
+                        {form.length > 1 ? (
                           <Grid item md={3}>
                             <Button
                               onClick={() => handleRemove(key)}
@@ -866,7 +892,7 @@ const PeoplesAffected = () => {
                               Remove
                             </Button>
                           </Grid>
-                        ) : null} */}
+                        ) : null}
                       </Grid>
                     ))}
 
@@ -889,7 +915,7 @@ const PeoplesAffected = () => {
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe Any Actions Taken"
+                  label="Details of People Affected"
                   className={classes.fullWidth}
                   onChange={(e) => setPersonAffectedComments(e.target.value)}
                   defaultValue={incidentsListData.personAffectedComments}

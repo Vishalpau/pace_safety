@@ -120,7 +120,6 @@ const EqiptmentAffected = () => {
     }
     else{
       const temp = form;
-      console.log(temp)
       const newData = temp.filter((item, index) => index !== key);
       await setForm(newData);
     }
@@ -249,25 +248,7 @@ const EqiptmentAffected = () => {
       }
     }
   };
-  const fetchEquipmentListData = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/equipments/`);
-    const result = res.data.data.results;
-    setEquipmentListData(result);
-  };
-
-  const fetchEquipmentAffectedValue = async () => {
-    const res = await api.get('api/v1/lists/14/value');
-    const result = res.data.data.results;
-    setequipmentAffected(result);
-    await setIsLoading(true);
-  };
-
-  const fetchEquipmentTypeValue = async () => {
-    const res = await api.get('api/v1/lists/15/value');
-    const result = res.data.data.results;
-    setEquipmentTypeValue(result);
-  };
-
+  // fetch incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
@@ -276,21 +257,48 @@ const EqiptmentAffected = () => {
     await setIncidentsListdata(result);
     const isavailable = result.isEquipmentDamagedAvailable;
     await setDetailsOfEquipmentAffect(isavailable);
-  
+    if(!id){
+      await setIsLoading(true);
+    }
   };
+
+  // fetch equipment List data
+  const fetchEquipmentListData = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/equipments/`);
+    const result = res.data.data.results;
+    setEquipmentListData(result);
+    await setIsLoading(true);
+  };
+
+  // fetch equipment type value for dropdown 
+  const fetchEquipmentTypeValue = async () => {
+    const res = await api.get('api/v1/lists/15/value');
+    const result = res.data.data.results;
+    setEquipmentTypeValue(result);
+  };
+
+  // fetch equipment afftected radio button value
+  const fetchEquipmentAffectedValue = async () => {
+    const res = await api.get('api/v1/lists/14/value');
+    const result = res.data.data.results;
+    await setequipmentAffected(result);
+    
+  };
+
+  
   useEffect(() => {
+    
     fetchEquipmentAffectedValue();
     fetchEquipmentTypeValue();
+    fetchIncidentsData();
     if(id){
     fetchEquipmentListData();
-    }else{
-       setIsLoading(true);
     }
-    fetchIncidentsData();
+    
   }, []);
   return (
     <PapperBlock
-      title=" Details of Equiptments Affected"
+      title=" Details of Equipment Affected"
       icon="ion-md-list-box"
     >
       {isLoading ? (
@@ -298,9 +306,8 @@ const EqiptmentAffected = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="body" component="p" gutterBottom>
-                Do you have details to share about the equiptment accected?
+                Do you have details to share about the equipment accected?
               </Typography>
-              {console.log(detailsOfEquipmentAffect,incidentsListData.isEquipmentDamagedAvailable)}
               <RadioGroup
                 className={classes.inlineRadioGroup}
                 aria-label="detailsOfPropertyAffect"
@@ -333,12 +340,12 @@ const EqiptmentAffected = () => {
                           className={classes.formControl}
                         >
                           <InputLabel id="eq-type-label">
-                              Equiptment type
+                              Equipment type
                           </InputLabel>
                           <Select
                             labelId="eq-type-label"
                             id="eq-type"
-                            label="Equiptment type"
+                            label="Equipment type"
                             defaultValue={equipment.equipmentType}
                             onChange={(e) => handleUpdateEquipment(
                               e,
@@ -433,12 +440,12 @@ const EqiptmentAffected = () => {
                           className={classes.formControl}
                         >
                           <InputLabel id="eq-type-label">
-                              Equiptment type
+                              Equipment type
                           </InputLabel>
                           <Select
                             labelId="eq-type-label"
                             id="eq-type"
-                            label="Equiptment type"
+                            label="Equipment type"
                             value = {value.equipmentType || ""}
                             onChange={(e) => handleForm(e, key, 'equipmentType')
                             }
@@ -516,7 +523,7 @@ const EqiptmentAffected = () => {
                       className={classes.textButton}
                       onClick={() => addNewEquipmentDetails()}
                     >
-                      Add details of additional equiptment affected?
+                      Add details of additional equipment affected?
                     </button>
                   </Grid>
                 )}
@@ -530,7 +537,7 @@ const EqiptmentAffected = () => {
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe any actions taken"
+                  label="Describe Any Equipment Affect"
                   className={classes.fullWidth}
                   defaultValue={incidentsListData.equipmentDamagedComments}
                   onChange={(event) => setEequipmentDamagedComments(event.target.value)
