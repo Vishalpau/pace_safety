@@ -83,45 +83,49 @@ const HazardiousActs = () => {
       await setFetchApiData(tempApiData)
       console.log(tempApiData)
 
-      // set fetched spervised data
-      form.supervision.remarkType = "options"
-      form.supervision.rcaSubType = "Supervision"
-      form.supervision.rcaRemark = tempApiData.Supervision.includes(',') ? tempApiData.Supervision.split(",") : [tempApiData.Supervision]
-
-      // set fetched workpackage data
-      form.workpackage.remarkType = "options"
-      form.workpackage.rcaSubType = "Workpackage"
-      form.workpackage.rcaRemark = tempApiData.Workpackage.includes(',') ? tempApiData.Workpackage.split(",") : [tempApiData.Workpackage]
-
-      // set fetched equiment machinary data
-      form.equipmentMachinery.remarkType = "options"
-      form.equipmentMachinery.rcaSubType = "equipmentMachinery"
-      form.equipmentMachinery.rcaRemark = tempApiData.equipmentMachinery.includes(',') ? tempApiData.equipmentMachinery.split(",") : [tempApiData.equipmentMachinery]
-
-      // set fetched behaviour issues data
-      form.behaviourIssue.remarkType = "options"
-      form.behaviourIssue.rcaSubType = "behaviourIssue"
-      form.behaviourIssue.rcaRemark = tempApiData.behaviourIssue.includes(',') ? tempApiData.behaviourIssue.split(",") : [tempApiData.behaviourIssue]
-
-      // set fetched safety issues data
-      form.safetyIssues.remarkType = "options"
-      form.safetyIssues.rcaSubType = "safetyIssues"
-      form.safetyIssues.rcaRemark = tempApiData.safetyIssues.includes(',') ? tempApiData.safetyIssues.split(",") : [tempApiData.safetyIssues]
-
-      // set fetched ergonimics data
-      form.ergonimics.remarkType = "options"
-      form.ergonimics.rcaSubType = "ergonimics"
-      form.ergonimics.rcaRemark = tempApiData.ergonimics.includes(',') ? tempApiData.ergonimics.split(",") : [tempApiData.ergonimics]
-
-      // set fetched procedures data
-      form.procedures.remarkType = "options"
-      form.procedures.rcaSubType = "procedures"
-      form.procedures.rcaRemark = tempApiData.procedures.includes(',') ? tempApiData.procedures.split(",") : [tempApiData.procedures]
-
-      // set fetched others data
-      form.others.remarkType = "remark"
-      form.others.rcaSubType = "otheracts"
-      form.others.rcaRemark = tempApiData.otheracts
+      setForm({
+        ...form,
+        supervision: {
+          remarkType: "options",
+          rcaSubType: "Supervision",
+          rcaRemark: tempApiData.Supervision.includes(',') ? tempApiData.Supervision.split(",") : [tempApiData.Supervision],
+        },
+        workpackage: {
+          remarkType: "options",
+          rcaSubType: "Workpackage",
+          rcaRemark: tempApiData.Workpackage.includes(',') ? tempApiData.Workpackage.split(",") : [tempApiData.Workpackage],
+        },
+        equipmentMachinery: {
+          remarkType: "options",
+          rcaSubType: "equipmentMachinery",
+          rcaRemark: tempApiData.equipmentMachinery.includes(',') ? tempApiData.equipmentMachinery.split(",") : [tempApiData.equipmentMachinery],
+        },
+        behaviourIssue: {
+          remarkType: "options",
+          rcaSubType: "behaviourIssue",
+          rcaRemark: tempApiData.behaviourIssue.includes(',') ? tempApiData.behaviourIssue.split(",") : [tempApiData.behaviourIssue],
+        },
+        safetyIssues: {
+          remarkType: "options",
+          rcaSubType: "safetyIssues",
+          rcaRemark: tempApiData.safetyIssues.includes(',') ? tempApiData.safetyIssues.split(",") : [tempApiData.safetyIssues],
+        },
+        ergonimics: {
+          remarkType: "options",
+          rcaSubType: "ergonimics",
+          rcaRemark: tempApiData.ergonimics.includes(',') ? tempApiData.ergonimics.split(",") : [tempApiData.ergonimics],
+        },
+        procedures: {
+          remarkType: "options",
+          rcaSubType: "procedures",
+          rcaRemark: tempApiData.procedures.includes(',') ? tempApiData.procedures.split(",") : [tempApiData.procedures],
+        },
+        others: {
+          remarkType: "remark",
+          rcaSubType: "otheracts",
+          rcaRemark: tempApiData.otheracts
+        }
+      })
     }
 
   }
@@ -289,7 +293,6 @@ const HazardiousActs = () => {
   const classes = useStyles();
 
   const handelNext = async (e) => {
-
     const { error, isValid } = HazardiousActsValidation(form);
     await setError(error);
     let tempData = []
@@ -325,24 +328,31 @@ const HazardiousActs = () => {
     })
 
     // api call //
+    let nextPageLink = 0
     let callObjects = tempData
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
 
         if (putId.current !== "") {
           const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
-          if (res.status == 201) {
+          if (res.status == 200) {
             console.log("request done")
-            console.log(res)
+            nextPageLink = res.status
           }
         } else {
           const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
           if (res.status == 201) {
             console.log("request done")
-            console.log(res)
+            nextPageLink = res.status
           }
         }
       }
+      console.log(nextPageLink)
+    }
+    if (nextPageLink == 201) {
+      history.push("/app/incident-management/registration/root-cause-analysis/hazardious-condtions/")
+    } else {
+      history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current}`)
     }
   }
 

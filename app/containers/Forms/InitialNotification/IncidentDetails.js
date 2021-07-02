@@ -450,10 +450,9 @@ const IncidentDetails = () => {
   return (
     <PapperBlock icon="ion-md-list-box" title="Initial Notification">
       {isLoading ? (
-        <Grid container spacing={3} alignItems="flex-start">
-          <Grid container item md={9} spacing={3}>
-            {/* project name */}
-            <Grid item md={6}>
+        <Grid container spacing={3}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12} md={6}>
               <FormControl
                 error={error.projectname}
                 required
@@ -484,8 +483,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-            {/* unit name */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Unit Name</InputLabel>
                 <Select
@@ -509,8 +507,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-            {/* incident type */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl
                 error={error.incidenttype}
                 variant="outlined"
@@ -542,11 +539,8 @@ const IncidentDetails = () => {
                 )}
               </FormControl>
             </Grid>
-                 
-            {/* date */}
-            <Grid item md={6}>
-              
-              
+
+            <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   error={error.incidentdate}
@@ -570,9 +564,7 @@ const IncidentDetails = () => {
             </Grid>
 
             
-
-            {/* title */}
-            <Grid item lg={12} md={6} sm={6}>
+            <Grid item xs={12} md={12}>
               <TextField
                 required
                 id="title"
@@ -592,8 +584,7 @@ const IncidentDetails = () => {
               {/* {error && error.title && <FormHelperText>{error.title}</FormHelperText>} */}
             </Grid>
 
-            {/* description */}
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <TextField
                 error={error.description}
                 multiline
@@ -615,8 +606,7 @@ const IncidentDetails = () => {
               {/* {error && error.description && <p>{error.description}</p>} */}
             </Grid>
 
-            {/* immediate-actions */}
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <TextField
                 variant="outlined"
                 id="immediate-actions"
@@ -634,8 +624,7 @@ const IncidentDetails = () => {
               />
             </Grid>
 
-            {/* location */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 error={error.title}
@@ -654,8 +643,8 @@ const IncidentDetails = () => {
               />
               {/* {error && error.location && <p>{error.location}</p>} */}
             </Grid>
-            {/* contractor */}
-            <Grid item md={6}>
+
+            <Grid item xs={12} md={6}>
               <FormControl
                 variant="outlined"
                 error={error.contractor}
@@ -690,24 +679,8 @@ const IncidentDetails = () => {
                 )}
               </FormControl>
             </Grid>
-            {/* <Grid item md={6}>
-                <TextField
-                  variant="outlined"
-                  id="contractor"
-                  label="Contractor"
-                  required
-                  className={classes.formControl}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      contractor: e.target.value,
-                    });
-                  }}
-                />
-                {error && error.contractor && <p>{error.contractor}</p> }
-              </Grid> */}
-            {/* sub contractor */}
-            <Grid item md={6}>
+
+            <Grid item xs={12} md={6}>
               <FormControl
                 variant="outlined"
                 error={error.subcontractor}
@@ -737,15 +710,13 @@ const IncidentDetails = () => {
                       ))
                     : null}
                 </Select>
-                {/* <FormHelperText>Required</FormHelperText> */}
                 {error && error.subcontractor && (
                   <FormHelperText>{error.subcontractor}</FormHelperText>
                 )}
               </FormControl>
             </Grid>
 
-            {/* person affected */}
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <div>
                 <FormControl
                   component="fieldset"
@@ -794,15 +765,10 @@ const IncidentDetails = () => {
                     <p>{error.personaffected}</p>
                   )} */}
             </Grid>
-            {/* propery damaged */}
-            <Grid item md={12}>
-              <div>
-                {/* <p>Was any propery damaged during incident?</p> */}
 
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
+            <Grid item xs={12} md={12}>
+              <FormControl component="fieldset" className={classes.formControl}>
+               
                   <FormLabel component="legend">
                     Was any propery damaged during incident?
                   </FormLabel>
@@ -839,13 +805,13 @@ const IncidentDetails = () => {
                       : null}
                   </RadioGroup>
                 </FormControl>
-              </div>
+              
               {/* {error && error.propertyaffected && (
                     <p>{error.propertyaffected}</p>
                   )} */}
             </Grid>
-            {/* equiptment damaged */}
-            <Grid item md={12}>
+
+            <Grid item xs={12} md={12}>
               <div>
                 {/* <p>Was there any equiptment damaged?</p> */}
 
@@ -899,9 +865,8 @@ const IncidentDetails = () => {
                     <p>{error.equiptmenteffected}</p>
                   )} */}
             </Grid>
-            {/* environment impact */}
-            <Grid item md={12}>
-              {/* <p>Was there any environment impact?</p> */}
+
+            <Grid item xs={12} md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
                 <FormLabel component="legend">
                   Was there any environment impact?
@@ -949,7 +914,8 @@ const IncidentDetails = () => {
                   )} */}
               </FormControl>
             </Grid>
-            <Grid item md={12}>
+
+            <Grid item xs={12} md={12}>
               <Box marginTop={4}>
                 <Button
                   // href={
@@ -968,7 +934,8 @@ const IncidentDetails = () => {
               </Box>
             </Grid>
           </Grid>
-          <Grid item md={3}>
+
+          <Grid item xs={12} md={3}>
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}

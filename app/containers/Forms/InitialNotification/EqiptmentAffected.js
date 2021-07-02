@@ -471,6 +471,7 @@ const EqiptmentAffected = () => {
                           label="If others, describe"
                           className={classes.formControl}
                           value = {value.equipmentOtherType || ""}
+                          disabled = {value.equipmentType === 'other'?false:true}
                           onChange={(e) => handleForm(e, key, 'equipmentOtherType')
                           }
                         />

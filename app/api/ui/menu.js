@@ -869,14 +869,14 @@ module.exports = [
     multilevel: false,
     linkParent: "/app/charts/area-filled-charts",
   },
-  {
-    key: "menu-level",
-    name: "Incident",
-    icon: "ion-ios-document-outline",
-    multilevel: false,
-    linkParent:
-      "/app/incident-management/registration/initial-notification/incident-details/",
-  },
+  // {
+  //   key: "menu-level",
+  //   name: "Incident",
+  //   icon: "ion-ios-document-outline",
+  //   multilevel: false,
+  //   linkParent:
+  //     "/app/incident-management/registration/initial-notification/incident-details/",
+  // },
   // {
   //   key: "no_child",
   //   name: "listIncident",

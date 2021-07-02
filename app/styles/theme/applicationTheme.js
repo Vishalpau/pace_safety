@@ -226,6 +226,12 @@ const applicationTheme = (color, mode, direction) => ({
         fontSize: "1.2rem",
       },
     },
+    MuiListItemIcon: {
+      root: {
+        minWidth: 0,
+        marginRight: ".75rem",
+      },
+    },
     MuiFormHelperText: {
       root: {
         marginLeft: "0 !important",

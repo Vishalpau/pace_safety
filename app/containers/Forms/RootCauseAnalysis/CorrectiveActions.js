@@ -66,7 +66,6 @@ const CorrectiveAction = () => {
   const [error, setError] = useState({});
 
   const [data, setData] = useState([]);
-
   const [form, setForm] = useState({
     managementControl: { remarkType: "", rcaSubType: "", rcaRemark: [] },
     regionSupport: { remarkType: "", rcaSubType: "", rcaRemark: "" },
@@ -107,18 +106,21 @@ const CorrectiveAction = () => {
       await setFetchApiData(tempApiData);
 
       // set fetched spervised data
-      form.managementControl.remarkType = "options";
-      form.managementControl.rcaSubType = "managementcontrol";
-      form.managementControl.rcaRemark = tempApiData.managementcontrol.includes(
-        ","
-      )
-        ? tempApiData.managementcontrol.split(",")
-        : [tempApiData.managementcontrol];
+      setForm({
+        ...form,
+        managementControl: {
+          remarkType: "options",
+          rcaSubType: "managementcontrol",
+          rcaRemark: tempApiData.managementcontrol.includes(",") ? tempApiData.managementcontrol.split(",") : [tempApiData.managementcontrol],
+        },
+        regionSupport: {
+          remarkType: "remark",
+          rcaSubType: "regionsupportabove",
+          rcaRemark: tempApiData.regionsupportabove,
+        },
 
-      // set fetched others data
-      form.regionSupport.remarkType = "remark";
-      form.regionSupport.rcaSubType = "regionsupportabove";
-      form.regionSupport.rcaRemark = tempApiData.regionsupportabove;
+      });
+
     }
   };
 
@@ -194,6 +196,7 @@ const CorrectiveAction = () => {
     });
 
     // api call //
+    let nextPageLink = 0
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
@@ -206,7 +209,7 @@ const CorrectiveAction = () => {
           );
           if (res.status == 201) {
             console.log("request done");
-            console.log(res);
+            nextPageLink = res.status
           }
         } else {
           const res = await api.post(
@@ -217,9 +220,14 @@ const CorrectiveAction = () => {
           );
           if (res.status == 201) {
             console.log("request done");
-            console.log(res);
+            nextPageLink = res.status
           }
         }
+      }
+      if (nextPageLink == 201) {
+        history.push("/app/incident-management/registration/root-cause-analysis/root-cause-analysis/")
+      } else {
+        history.push(`/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current}`)
       }
     }
     // api call //

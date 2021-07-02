@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -28,10 +28,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from 'react-router';
 
+import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -58,33 +61,45 @@ function ListItemLink(props) {
 }
 
 const BasicCauseAndAction = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  const [data, setData] = useState([])
+  const history = useHistory();
+  const putId = useRef("")
+  const handelShowData = async () => {
+    let tempApiData = {}
+    let subTypes = BASIC_CAUSE_SUB_TYPES
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+
+    let previousData = await api.get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`)
+
+    let allApiData = previousData.data.data.results
+    allApiData.map((value, index) => {
+      if (subTypes.includes(value.rcaSubType)) {
+        let valueQuestion = value.rcaSubType
+        let valueAnser = value.rcaRemark
+        tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser]
+      }
+    })
+
+    await setData(tempApiData)
+  }
 
   function ListItemLink(props) {
     return (
       <ListItem className={classes.titleLink} button component="a" {...props} />
     );
   }
-
-  const radioDecide = ["Yes", "No"];
+  const handelNext = () => {
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+    putId.current = lastItem
+    history.push(`/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem("fkincidentId")}`)
+  }
 
   let form_link = window.location.href;
+
+  useEffect(() => {
+    handelShowData()
+  }, []);
   const classes = useStyles();
   return (
     <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
@@ -93,7 +108,7 @@ const BasicCauseAndAction = () => {
           <Grid item md={4}>
             <Box>
               <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
+                Incident number: {localStorage.getItem("fkincidentId")}
               </Typography>
             </Box>
           </Grid>
@@ -117,107 +132,36 @@ const BasicCauseAndAction = () => {
           <Grid item md={12}>
             <Box marginBottom={2}>
               <Typography variant="body">
-                Option selected from Hazardous Acts and conditions
+                Option selected from basic cause
               </Typography>
             </Box>
 
             <Box>
               <List className={classes.list} dense disablePadding>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
+                {/* console.log(`${key}: ${value}`) */}
+
+                {Object.entries(data).map(([key, value]) => (
+                  < div>
+                    <ListItem>
+                      <ListItemText primary={key} />
+                    </ListItem>
+                    {value.map((value) => (
+                      <ListItemLink href="#">
+                        <ListItemText primary={<small>{value}</small>} />
+                      </ListItemLink>
+                    ))}
+                    <button className={classes.textButton}>
+                      <AddCircleOutlineIcon /> Add a new action
+                    </button>
+                  </div>
+                ))}
+
               </List>
 
-              <button className={classes.textButton}>
-                <AddCircleOutlineIcon /> Add a new action
-              </button>
+
             </Box>
           </Grid>
 
-          <Grid item md={12}>
-            <Box marginBottom={2}>
-              <Typography variant="body">
-                Option selected from Hazardous Acts and conditions
-              </Typography>
-            </Box>
-
-            <Box>
-              <List className={classes.list} dense disablePadding>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-              </List>
-
-              <button className={classes.textButton}>
-                <AddCircleOutlineIcon /> Add a new action
-              </button>
-            </Box>
-          </Grid>
-
-          <Grid item md={12}>
-            <Box marginBottom={2}>
-              <Typography variant="body">
-                Option selected from Hazardous Acts and conditions
-              </Typography>
-            </Box>
-
-            <Box>
-              <List className={classes.list} dense disablePadding>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-                <ListItem>
-                  <ListItemText primary="Action Title" />
-                </ListItem>
-                <ListItemLink href="#">
-                  <ListItemText primary="AL-nnnnnn" />
-                </ListItemLink>
-              </List>
-
-              <button className={classes.textButton}>
-                <AddCircleOutlineIcon /> Add a new action
-              </button>
-            </Box>
-          </Grid>
 
           <Grid item md={12}>
             <Button
@@ -232,7 +176,8 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="/app/incident-management/registration/root-cause-analysis/management-control/"
+              // href="/app/incident-management/registration/root-cause-analysis/management-control/"
+              onClick={(e) => handelNext()}
             >
               Next
             </Button>

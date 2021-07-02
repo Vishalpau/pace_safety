@@ -22,6 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormLabel from '@material-ui/core/FormLabel';
+import { useHistory, useParams } from 'react-router';
 
 import FormHeader from '../FormHeader';
 import FormSideBar from '../FormSideBar';
@@ -58,7 +59,7 @@ const RootCauseAnalysis = () => {
   });
 
   const [error, setError] = useState({});
-
+  const history = useHistory();
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
       `api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
@@ -93,10 +94,13 @@ const RootCauseAnalysis = () => {
       let previousData = await api.get(`/api/v1/incidents/${lastItem}/rootcauses/`)
       let allApiData = previousData.data.data.results[0]
       pkValue.current = allApiData.id
-      form.causeOfIncident = allApiData.causeOfIncident
-      form.correctiveAction = allApiData.correctiveAction
-      form.wouldItPreventIncident = allApiData.wouldItPreventIncident
-      form.recommendSolution = allApiData.recommendSolution
+      setForm({
+        ...form,
+        causeOfIncident: allApiData.causeOfIncident,
+        correctiveAction: allApiData.correctiveAction,
+        wouldItPreventIncident: allApiData.wouldItPreventIncident,
+        recommendSolution: allApiData.recommendSolution
+      })
       putId.current = lastItem
     }
   }
@@ -109,6 +113,7 @@ const RootCauseAnalysis = () => {
   const handelNext = async (e) => {
     const { error, isValid } = RootCauseValidation(form);
     setError(error);
+    let nextPageLink = 0
     if (Object.keys(error).length == 0) {
       if (putId.current == "") {
         const res = await api.post(
@@ -117,18 +122,21 @@ const RootCauseAnalysis = () => {
         );
         if (res.status == 201) {
           console.log('request done');
-          console.log(res);
+          nextPageLink = res.status;
         }
       } else {
         form["pk"] = pkValue.current
         const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/rootcauses/${pkValue.current}/`, form);
-        if (res.status == 201) {
+        if (res.status == 200) {
           console.log("request done")
-          console.log(res)
+          nextPageLink = res.status
         }
       }
-
-
+      if (nextPageLink == 201) {
+        history.push("/app/incident-management/registration/root-cause-analysis/why-analysis/")
+      } else {
+        history.push(`/app/incident-management/registration/root-cause-analysis/why-analysis/${putId.current}`)
+      }
     }
   };
 

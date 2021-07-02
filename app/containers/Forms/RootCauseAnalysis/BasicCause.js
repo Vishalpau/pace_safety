@@ -24,6 +24,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import { useHistory, useParams } from "react-router";
+
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -68,6 +69,7 @@ const BasicCause = () => {
   const history = useHistory();
   const updateIds = useRef();
   // get data and set to states
+
   const handelUpdateCheck = async () => {
     let allrcaSubType = [
       "personal",
@@ -98,42 +100,44 @@ const BasicCause = () => {
         }
       });
       updateIds.current = tempApiDataId.reverse();
-      console.log(tempApiData);
       await setFetchApiData(tempApiData);
       // set fetched spervised data
-      form.personal.remarkType = "options";
-      form.personal.rcaSubType = "personal";
-      form.personal.rcaRemark = tempApiData.personal.includes(",")
-        ? tempApiData.personal.split(",")
-        : [tempApiData.personal];
-      // set fetched spervised data
-      form.wellnessFactors.remarkType = "options";
-      form.wellnessFactors.rcaSubType = "wellnessFactors";
-      form.wellnessFactors.rcaRemark = tempApiData.wellnessFactors.includes(",")
-        ? tempApiData.wellnessFactors.split(",")
-        : [tempApiData.wellnessFactors];
-      // set fetched others data
-      form.otherHumanFactor.remarkType = "remark";
-      form.otherHumanFactor.rcaSubType = "othershumanfactors";
-      form.otherHumanFactor.rcaRemark = tempApiData.othershumanfactors;
-      // set fetched spervised data
-      form.leadership.remarkType = "options";
-      form.leadership.rcaSubType = "leadership";
-      form.leadership.rcaRemark = tempApiData.leadership.includes(",")
-        ? tempApiData.leadership.split(",")
-        : [tempApiData.leadership];
-      // set fetched spervised data
-      form.processes.remarkType = "options";
-      form.processes.rcaSubType = "processes";
-      form.processes.rcaRemark = tempApiData.processes.includes(",")
-        ? tempApiData.processes.split(",")
-        : [tempApiData.processes];
-      // set fetched others data
-      form.otherJobFactors.remarkType = "remark";
-      form.otherJobFactors.rcaSubType = "othersjobfactors";
-      form.otherJobFactors.rcaRemark = tempApiData.othersjobfactors;
+      setForm({
+        ...form,
+        personal: {
+          remarkType: "options",
+          rcaSubType: "personal",
+          rcaRemark: tempApiData.personal.includes(",") ? tempApiData.personal.split(",") : [tempApiData.personal]
+        },
+        wellnessFactors: {
+          remarkType: "options",
+          rcaSubType: "wellnessFactors",
+          rcaRemark: tempApiData.wellnessFactors.includes(",") ? tempApiData.wellnessFactors.split(",") : [tempApiData.wellnessFactors]
+        },
+        otherHumanFactor: {
+          remarkType: "remark",
+          rcaSubType: "othershumanfactors",
+          rcaRemark: tempApiData.othershumanfactors
+        },
+        leadership: {
+          remarkType: "options",
+          rcaSubType: "leadership",
+          rcaRemark: tempApiData.leadership.includes(",") ? tempApiData.leadership.split(",") : [tempApiData.leadership]
+        },
+        processes: {
+          remarkType: "options",
+          rcaSubType: "processes",
+          rcaRemark: tempApiData.processes.includes(",") ? tempApiData.processes.split(",") : [tempApiData.processes]
+        },
+        otherJobFactors: {
+          remarkType: "remark",
+          rcaSubType: "othersjobfactors",
+          rcaRemark: tempApiData.othersjobfactors
+        }
+      })
     }
   };
+
   const handelPersonal = (e, value) => {
     if (e.target.checked == false) {
       let newData = form.personal.rcaRemark.filter((item) => item !== value);
@@ -280,19 +284,15 @@ const BasicCause = () => {
       }
     });
     // api call //
+    let nextPageLink = 0
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
         if (putId.current !== "") {
-          const res = await api.put(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/${callObjects[key].pk}/`,
-            callObjects[key]
-          );
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
           if (res.status == 200) {
-            console.log("request done");
-            console.log(res);
+            console.log("request done")
+            nextPageLink = res.status
           }
         } else {
           const res = await api.post(
@@ -303,10 +303,15 @@ const BasicCause = () => {
           );
           if (res.status == 201) {
             console.log("request done");
-            console.log(res);
+            nextPageLink = res.status
           }
         }
       }
+    }
+    if (nextPageLink == 201) {
+      history.push("/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/")
+    } else {
+      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/`)
     }
     // api call //
   };
