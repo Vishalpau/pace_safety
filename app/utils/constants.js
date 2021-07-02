@@ -35,15 +35,12 @@ export const EVIDENCE_FORM = {
 };
 
 export const INVESTIGATION_FORM = {
-  // "Initial details":`/app/incident-management/registration/investigation/initial-details/`,
   "Investigation Overview":
     "/app/incident-management/registration/investigation/investigation-overview/",
+  "Severity Consequences":
+    "/app/incident-management/registration/investigation/severity-consequences/",
   "Worker Details":
     "/app/incident-management/registration/investigation/worker-details/",
-  "Property Impact Details":
-    "/app/incident-management/registration/investigation/property-impact-details/",
-  "Equipment Impact Details":
-    "/app/incident-management/registration/investigation/Equipment-impact-details/",
   "Event Details":
     "/app/incident-management/registration/investigation/event-details/",
   "Action Taken":
