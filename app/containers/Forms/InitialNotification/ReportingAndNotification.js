@@ -423,7 +423,7 @@ const ReportingAndNotification = () => {
               <TextField
                 id="supervisor-name"
                 variant="outlined"
-                label="Supervisor name"
+                label="Supervisor Name"
                 defaultValue={incidentsListData.supervisorByName}
                 className={classes.formControl}
                 onChange={(e) => {
@@ -525,7 +525,7 @@ const ReportingAndNotification = () => {
                 <TextField
                   id="reason"
                   variant="outlined"
-                  label="Resaon for reporting later than 4 hours"
+                  label="Resaon for Reporting Later than 4 Hours"
                   multiline
                   error={error && error.latereporting}
                   required
@@ -549,7 +549,7 @@ const ReportingAndNotification = () => {
               <TextField
                 id="additionalDetails"
                 variant="outlined"
-                label="Additional details if any"
+                label="Additional Details if Any"
                 multiline
                 rows="4"
                 className={classes.fullWidth}
@@ -584,7 +584,7 @@ const ReportingAndNotification = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Reporting and notification"}
+              selectedItem={"Reporting and Notification"}
             />
           </Grid>
         </Grid>

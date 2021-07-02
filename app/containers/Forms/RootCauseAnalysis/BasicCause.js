@@ -24,6 +24,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import { useHistory, useParams } from "react-router";
+import { PapperBlock } from "dan-components";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -36,6 +37,9 @@ import {
   LEADERSHIP,
   PROCESSES,
 } from "../../../utils/constants";
+import Type from '../../../styles/components/Fonts.scss'
+
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -308,7 +312,7 @@ const BasicCause = () => {
         }
       }
     }
-    if (nextPageLink == 201) {
+    if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push("/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/")
     } else {
       history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/`)
@@ -319,39 +323,31 @@ const BasicCause = () => {
     handelUpdateCheck();
   }, []);
   return (
-    <div>
-      <Container>
-        <Paper>
-          <Box padding={3} bgcolor="background.paper">
-            <Box borderBottom={1} marginBottom={2}>
-              <Typography variant="h6" gutterBottom>
-                Basic Cause
-              </Typography>
-            </Box>
+    <PapperBlock title="Basic Cause" icon="ion-md-list-box">
             <Grid container spacing={3}>
               <Grid container item md={9} spacing={3}>
-                <Grid item md={4}>
-                  <Box>
-                    <Typography variant="body2" gutterBottom>
-                      Incident number: {localStorage.getItem("fkincidentId")}
+                <Grid item md={6}>
+                    <Typography variant="h6" className={Type.labelName} gutterBottom>
+                      Incident number
                     </Typography>
-                  </Box>
+
+                     <Typography className={Type.labelValue} gutterBottom>
+                     {localStorage.getItem("fkincidentId")}
+                    </Typography>
                 </Grid>
-                <Grid item md={4}>
-                  <Box>
-                    <Typography variant="body2" gutterBottom>
-                      RCA Method: PACE Cause Analysis
+                <Grid item md={6}>
+                    <Typography variant="h6" className={Type.labelName} gutterBottom>
+                      RCA Method
                     </Typography>
-                  </Box>
+                    <Typography className={Type.labelValue} gutterBottom>
+                    PACE Cause Analysis
+                    </Typography>
                 </Grid>
                 <Grid item md={12}>
-                  <Box>
                     <Typography variant="h5" gutterBottom>
                       Human Factors
                     </Typography>
-                  </Box>
                 </Grid>
-                {/* perosonal */}
                 <Grid item md={6}>
                   <FormControl component="fieldset">
                     <FormLabel component="legend" error={error.personal}>
@@ -378,7 +374,7 @@ const BasicCause = () => {
                 <Grid item md={6}>
                   <FormControl component="fieldset">
                     <FormLabel component="legend" error={error.wellnessFactors}>
-                      Wellness factors
+                      Wellness Factors
                     </FormLabel>
                     <FormGroup>
                       {PERSONALWELNESSFACTORS.map((value) => (
@@ -421,12 +417,11 @@ const BasicCause = () => {
                     <p>{error.otherHumanFactor}</p>
                   )} */}
                 </Grid>
+
                 <Grid item md={12}>
-                  <Box>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                       Job Factors
                     </Typography>
-                  </Box>
                 </Grid>
                 {/* leadership */}
                 <Grid item md={6}>
@@ -484,7 +479,7 @@ const BasicCause = () => {
                     defaultValue={form.otherJobFactors.rcaRemark}
                     helperText={error ? error.otherJobFactors : ""}
                     rows={3}
-                    label="Other job factors"
+                    label="Other Job Factors"
                     className={classes.formControl}
                     onChange={async (e) => handelOtherJobFactors(e)}
                   />
@@ -516,14 +511,11 @@ const BasicCause = () => {
                 <FormSideBar
                   deleteForm={[1, 2, 3]}
                   listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                  selectedItem={"Basic cause"}
+                  selectedItem={"Basic Cause"}
                 />
               </Grid>
             </Grid>
-          </Box>
-        </Paper>
-      </Container>
-    </div>
+    </PapperBlock>
   );
 };
 export default BasicCause;

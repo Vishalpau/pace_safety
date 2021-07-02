@@ -204,16 +204,15 @@ const EqiptmentAffected = () => {
           );
         }
       }
-      else{
-        if (nextPath.environmentAffect === 'Yes') {
-          history.push(
-            '/app/incident-management/registration/initial-notification/environment-affected/'
-          );
-        } else {
-          history.push(
-            '/app/incident-management/registration/initial-notification/reporting-and-notification/'
-          );
-        }
+      // if (status === 201) {
+      if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          "/app/incident-management/registration/initial-notification/environment-affected/"
+        );
+      } else {
+        history.push(
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+        );
       }
       // if (status === 201) {
      
@@ -241,7 +240,7 @@ const EqiptmentAffected = () => {
         }
       } else if (nextPath.environmentAffect === 'Yes') {
         history.push(
-          '/app/incident-management/registration/initial-notification/environment-affected/'
+          "/app/incident-management/registration/initial-notification/environment-affected/"
         );
       } else {
         history.push(
@@ -545,7 +544,6 @@ const EqiptmentAffected = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
               >
                 Previous
               </Button>
@@ -554,7 +552,7 @@ const EqiptmentAffected = () => {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
+                onClick={() => handleNext()}
               >
                 Next
               </Button>
@@ -563,7 +561,7 @@ const EqiptmentAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Equipment affected"
+              selectedItem="Equipment Affected"
             />
           </Grid>
         </Grid>

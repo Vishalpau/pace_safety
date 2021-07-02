@@ -161,7 +161,7 @@ const EquiptmentImpactDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Equipment impact details"
+            selectedItem="Equipment Impact Details"
           />
         </Grid>
       </Grid>

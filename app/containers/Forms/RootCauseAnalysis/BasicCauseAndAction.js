@@ -35,6 +35,7 @@ import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -105,43 +106,39 @@ const BasicCauseAndAction = () => {
     <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-          <Grid item md={4}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: {localStorage.getItem("fkincidentId")}
-              </Typography>
-            </Box>
-          </Grid>
+        <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Number
+            </Typography>
+            <Typography className={Type.labelValue}>
+                {localStorage.getItem("fkincidentId")}
+            </Typography>
+        </Grid>
 
-          <Grid item md={8}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Method: 5 Why Analysis
-              </Typography>
-            </Box>
-          </Grid>
+        <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Method
+            </Typography>
+            <Typography className={Type.labelValue}>
+              5 Why Analysis
+            </Typography>
+        </Grid>
 
           <Grid item md={12}>
-            <Box>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h6" gutterBottom>
                 Actions
               </Typography>
-            </Box>
           </Grid>
 
           <Grid item md={12}>
-            <Box marginBottom={2}>
-              <Typography variant="body">
+              <Typography>
                 Option selected from basic cause
               </Typography>
-            </Box>
-
-            <Box>
               <List className={classes.list} dense disablePadding>
                 {/* console.log(`${key}: ${value}`) */}
 
                 {Object.entries(data).map(([key, value]) => (
-                  < div>
+                  <div>
                     <ListItem>
                       <ListItemText primary={key} />
                     </ListItem>
@@ -155,12 +152,9 @@ const BasicCauseAndAction = () => {
                     </button>
                   </div>
                 ))}
-
               </List>
-
-
-            </Box>
           </Grid>
+
 
 
           <Grid item md={12}>
@@ -176,7 +170,6 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href="/app/incident-management/registration/root-cause-analysis/management-control/"
               onClick={(e) => handelNext()}
             >
               Next
@@ -187,7 +180,7 @@ const BasicCauseAndAction = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Basic cause and action"}
+            selectedItem={"Basic Cause and Action"}
           />
         </Grid>
       </Grid>

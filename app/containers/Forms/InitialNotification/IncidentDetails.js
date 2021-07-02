@@ -249,7 +249,7 @@ const IncidentDetails = () => {
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
@@ -257,7 +257,7 @@ const IncidentDetails = () => {
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
@@ -337,7 +337,7 @@ const IncidentDetails = () => {
             );
           } else if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
@@ -939,7 +939,7 @@ const IncidentDetails = () => {
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident details"
+              selectedItem="Incident Details"
             />
           </Grid>
         </Grid>

@@ -217,22 +217,20 @@ const PropertyAffected = () => {
         );
         // If api success
         if (status === 201) {
-          // if id is avialable
-          if(id){
-            if (nextPath.equipmentAffect === "Yes") {
-              history.push(
-                `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-              );
-            } else if (nextPath.environmentAffect === "Yes") {
-              history.push(
-                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-              );
-            } else {
-              history.push(
-                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-              );
-            }
+          if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/environment-affected/"
+            );
+          } else {
+            history.push(
+              "/app/incident-management/registration/summary/summary/"
+            );
           }
+        }
           else{
             if (nextPath.equipmentAffect === "Yes") {
               history.push(
@@ -247,7 +245,7 @@ const PropertyAffected = () => {
                 "/app/incident-management/registration/initial-notification/reporting-and-notification/"
               );
             }
-          }
+          
 
           
         }
@@ -618,7 +616,6 @@ const PropertyAffected = () => {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/equipment-affected/"
               >
                 Next
               </Button>
@@ -627,7 +624,7 @@ const PropertyAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Property affected"}
+              selectedItem={"Property Affected"}
             />
           </Grid>
         </Grid>

@@ -263,7 +263,7 @@ const ActivityDetails = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Activity detail"
+              selectedItem="Activity Detail"
             />
           </Grid>
         </Grid>

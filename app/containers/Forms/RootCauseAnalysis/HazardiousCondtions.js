@@ -14,6 +14,7 @@ import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { useHistory, useParams } from 'react-router';
+import { PapperBlock } from "dan-components";
 
 import api from '../../../utils/axios';
 import FormHeader from '../FormHeader';
@@ -279,7 +280,7 @@ const HazardiousCondition = () => {
           }
         }
       }
-      if (nextPageLink == 201) {
+      if (nextPageLink == 201 && Object.keys(error).length === 0) {
         history.push("/app/incident-management/registration/root-cause-analysis/cause-and-action/")
       } else {
         history.push(`/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`)
@@ -298,24 +299,14 @@ const HazardiousCondition = () => {
   }, []);
 
   return (
-    <Container>
-      <Paper>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              Immediate Causes - Hazardous conditions
-            </Typography>
-          </Box>
+    <PapperBlock title="Immediate Causes - Hazardous Conditions" icon="ion-md-list-box">
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
               <Grid item md={4}>
-                <Box>
                   <Typography variant="body2" gutterBottom>
                     Incident number:
-                    {' '}
                     {localStorage.getItem('fkincidentId')}
                   </Typography>
-                </Box>
               </Grid>
 
               <Grid item md={8}>
@@ -473,13 +464,11 @@ const HazardiousCondition = () => {
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem="Hazardious conditions"
+                selectedItem="Hazardious Conditions"
               />
             </Grid>
           </Grid>
-        </Box>
-      </Paper>
-    </Container>
+    </PapperBlock>
   );
 };
 

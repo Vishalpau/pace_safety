@@ -369,7 +369,7 @@ const LessionLearned = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lession learned"}
+              selectedItem={"Lession Learned"}
             />
           </Grid>
         </Grid>

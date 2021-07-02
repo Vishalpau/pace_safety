@@ -168,15 +168,15 @@ const PeoplesAffected = () => {
 
       if (nextPath.propertyAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/property-Affected/${id}`
+          `/app/incident-management/registration/initial-notification/property-affected/${id}`
         );
       } else if (nextPath.equipmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/eqiptment-Affected/${id}`
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
         );
       } else if (nextPath.environmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/environment-Affected/${id}`
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
         );
       } else {
         history.push(
@@ -219,15 +219,15 @@ const PeoplesAffected = () => {
         // Redirect user to next page.
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/environment-Affected/"
+            "/app/incident-management/registration/initial-notification/environment-affected/"
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+            "/app/incident-management/registration/initial-notification/equipment-affected/"
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/environment-Affected/"
+            "/app/incident-management/registration/initial-notification/environment-affected/"
           );
         } else {
           history.push(
@@ -257,15 +257,15 @@ const PeoplesAffected = () => {
       if (id) {
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/property-Affected/${id}`
+            `/app/incident-management/registration/initial-notification/property-affected/${id}`
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/eqiptment-Affected/${id}`
+            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/environment-Affected/${id}`
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
           );
         } else {
           history.push(
@@ -276,15 +276,15 @@ const PeoplesAffected = () => {
       } else {
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/property-Affected/`
+            `/app/incident-management/registration/initial-notification/property-affected/`
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+            "/app/incident-management/registration/initial-notification/equipment-affected/"
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/environment-Affected/"
+            "/app/incident-management/registration/initial-notification/environment-affected/"
           );
         } else {
           history.push(
@@ -919,7 +919,7 @@ const PeoplesAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Peoples Affected"
+              selectedItem="People Affected"
             />
           </Grid>
         </Grid>
