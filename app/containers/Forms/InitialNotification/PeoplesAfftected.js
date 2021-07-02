@@ -868,7 +868,7 @@ const PeoplesAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Peoples Affected"
+              selectedItem="People Affected"
             />
           </Grid>
         </Grid>

@@ -941,7 +941,7 @@ const IncidentDetails = () => {
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident details"
+              selectedItem="Incident Details"
             />
           </Grid>
         </Grid>
