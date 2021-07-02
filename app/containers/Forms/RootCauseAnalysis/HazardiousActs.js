@@ -349,7 +349,7 @@ const HazardiousActs = () => {
       }
       console.log(nextPageLink)
     }
-    if (nextPageLink == 201) {
+    if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push("/app/incident-management/registration/root-cause-analysis/hazardious-condtions/")
     } else {
       history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current}`)
@@ -543,7 +543,8 @@ const HazardiousActs = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    href="/app/incident-management/registration/root-cause-analysis/details/"
+                    // href="/app/incident-management/registration/root-cause-analysis/details/"
+                    onClick={() => history.goBack()}
                   >
                     Previous
                   </Button>

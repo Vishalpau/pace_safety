@@ -279,7 +279,7 @@ const HazardiousCondition = () => {
           }
         }
       }
-      if (nextPageLink == 201) {
+      if (nextPageLink == 201 && Object.keys(error).length === 0) {
         history.push("/app/incident-management/registration/root-cause-analysis/cause-and-action/")
       } else {
         history.push(`/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`)

@@ -144,12 +144,12 @@ const Details = () => {
         }
       }
     }
-    if (nextPageLink == 201) {
+    if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push("/app/incident-management/registration/root-cause-analysis/hazardious-acts/")
     } else {
       history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`)
     }
-
+    e.preventDefault();
   }
 
   useEffect(() => {

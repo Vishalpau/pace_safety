@@ -127,7 +127,7 @@ const RootCauseAnalysis = () => {
       } else {
         form["pk"] = pkValue.current
         const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/rootcauses/${pkValue.current}/`, form);
-        if (res.status == 200) {
+        if (res.status == 200 && Object.keys(error).length === 0) {
           console.log("request done")
           nextPageLink = res.status
         }

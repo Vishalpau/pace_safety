@@ -224,7 +224,7 @@ const CorrectiveAction = () => {
           }
         }
       }
-      if (nextPageLink == 201) {
+      if (nextPageLink == 201 && Object.keys(error).length === 0) {
         history.push("/app/incident-management/registration/root-cause-analysis/root-cause-analysis/")
       } else {
         history.push(`/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current}`)
