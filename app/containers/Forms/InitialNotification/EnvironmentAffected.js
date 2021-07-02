@@ -561,7 +561,6 @@ const EnvironmentAffected = () => {
               className={classes.button}
               color="primary"
               onClick={() => history.goBack()}
-              // href="/app/incident-management/registration/initial-notification/eqiptment-Affected/"
             >
               Previous
             </Button>

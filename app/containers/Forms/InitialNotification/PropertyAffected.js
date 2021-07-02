@@ -154,11 +154,11 @@ const PropertyAffected = () => {
     if (propertyListData.length > 0) {
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/eqiptment-Affected/${id}`
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
         );
       } else if (nextPath.environmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/environment-Affected/${id}`
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
         );
       } else {
         history.push(
@@ -198,11 +198,11 @@ const PropertyAffected = () => {
         if (status === 201) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/environment-Affected/"
+              "/app/incident-management/registration/initial-notification/environment-affected/"
             );
           } else {
             history.push(
@@ -229,11 +229,11 @@ const PropertyAffected = () => {
         if (id) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/eqiptment-Affected/${id}`
+              `/app/incident-management/registration/initial-notification/eqiupment-affected/${id}`
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/environment-Affected/${id}`
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
             );
           } else {
             history.push(
@@ -244,12 +244,12 @@ const PropertyAffected = () => {
         } else {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
             );
           } else if (nextPath.environmentAffect === "Yes") {
             if (nextPath.environmentAffect === "Yes") {
               history.push(
-                "/app/incident-management/registration/initial-notification/environment-Affected/"
+                "/app/incident-management/registration/initial-notification/environment-affected/"
               );
             } else {
               history.push(
@@ -555,7 +555,6 @@ const PropertyAffected = () => {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-Affected/"
               >
                 Next
               </Button>

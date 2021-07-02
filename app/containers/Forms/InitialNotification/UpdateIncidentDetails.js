@@ -186,17 +186,17 @@ const UpdateIncidentDetails = () => {
       } else {
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/property-Affected/"
+            "/app/incident-management/registration/initial-notification/property-affected/"
           );
         } else {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
             );
           } else {
             if (nextPath.environmentAffect === "Yes") {
               history.push(
-                "/app/incident-management/registration/initial-notification/environment-Affected/"
+                "/app/incident-management/registration/initial-notification/environment-affected/"
               );
             } else {
               history.push(
@@ -640,7 +640,6 @@ const UpdateIncidentDetails = () => {
                     </FormControl>
                   </Grid>
 
-                  {/* person Affected */}
                   <Grid item md={12}>
                     <div className={classes.spacer}>
                       <p>Were any person Affected during incident?</p>

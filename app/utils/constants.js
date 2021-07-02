@@ -15,17 +15,17 @@ export const INITIAL_NOTIFICATION_FORM = {
   "People Affected":
     "/app/incident-management/registration/initial-notification/peoples-afftected/",
   "Property Affected":
-    "/app/incident-management/registration/initial-notification/property-Affected/",
+    "/app/incident-management/registration/initial-notification/property-affected/",
   "Equipment Affected":
-    "/app/incident-management/registration/initial-notification/eqiptment-Affected/",
+    "/app/incident-management/registration/initial-notification/equipment-affected/",
   "Environment Affected":
-    "/app/incident-management/registration/initial-notification/environment-Affected/",
+    "/app/incident-management/registration/initial-notification/environment-affected/",
   "Reporting and Notification":
     "/app/incident-management/registration/initial-notification/reporting-and-notification/",
 };
 
 export const EVIDENCE_FORM = {
-  Evidence: "/app/incident-management/registration/evidence/evidence/",
+  " Evidence": "/app/incident-management/registration/evidence/evidence/",
   "Activity Detail":
     "/app/incident-management/registration/evidence/activity-detail/",
   "Personal and PPE Details":
@@ -48,7 +48,7 @@ export const INVESTIGATION_FORM = {
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
-  Details: "/app/incident-management/registration/root-cause-analysis/details/",
+  "Details": "/app/incident-management/registration/root-cause-analysis/details/",
   "Hazardious Acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
   "Hazardious Conditions":
@@ -59,7 +59,7 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/basic-cause/",
   "Basic Cause and Action":
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",
-  "Corrective Action":
+  "Corrective Actions":
     "/app/incident-management/registration/root-cause-analysis/management-control/",
   "Root Cause Analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",

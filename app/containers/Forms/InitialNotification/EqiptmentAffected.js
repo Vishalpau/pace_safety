@@ -146,7 +146,7 @@ const EqiptmentAffected = () => {
     if (equipmentListdata.length > 0) {
       if (nextPath.environmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/environment-Affected/${id}`
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
         );
       } else {
         history.push(
@@ -184,7 +184,7 @@ const EqiptmentAffected = () => {
       if (id !== undefined) {
         if (nextPath.environmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/environment-Affected/${id}`
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
           );
         } else {
           history.push(
@@ -195,7 +195,7 @@ const EqiptmentAffected = () => {
       // if (status === 201) {
       if (nextPath.environmentAffect === "Yes") {
         history.push(
-          "/app/incident-management/registration/initial-notification/environment-Affected/"
+          "/app/incident-management/registration/initial-notification/environment-affected/"
         );
       } else {
         history.push(
@@ -220,7 +220,7 @@ const EqiptmentAffected = () => {
       if (id !== undefined) {
         if (nextPath.environmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/environment-Affected/${id}`
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
           );
         } else {
           history.push(
@@ -229,7 +229,7 @@ const EqiptmentAffected = () => {
         }
       } else if (nextPath.environmentAffect === "Yes") {
         history.push(
-          "/app/incident-management/registration/initial-notification/environment-Affected/"
+          "/app/incident-management/registration/initial-notification/environment-affected/"
         );
       } else {
         history.push(
@@ -532,7 +532,6 @@ const EqiptmentAffected = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/property-Affected/"
               >
                 Previous
               </Button>
@@ -541,7 +540,6 @@ const EqiptmentAffected = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-Affected/"
               >
                 Next
               </Button>
