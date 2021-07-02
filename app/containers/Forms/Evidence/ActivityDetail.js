@@ -44,6 +44,7 @@ const ActivityDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [incidentDetail, setIncidentDetail] = useState({});
   const [activtyList, setActvityList] = useState([
     {
       questionCode: "AD-01",
@@ -125,28 +126,25 @@ const ActivityDetails = () => {
   ]);
   
   const fetchActivityList = async () => {
-    
-      console.log("sagar")
-      
-      const res = await api.get(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-      );
-      const result = res.data.data.results;
-      console.log(result)
-      console.log(result.length)
-      if(result.length){
-        await setActvityList(result);
-      }
-      await setIsLoading(true)
-      
-      
-      console.log(activtyList.length)
+    console.log("sagar");
+
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
+    );
+    const result = res.data.data.results;
+    console.log(result);
+    console.log(result.length);
+    if (result.length) {
+      await setActvityList(result);
+    }
+    await setIsLoading(true);
+
+    console.log(activtyList.length);
   };
-  
+
   const handleNext = async () => {
-    
     if (id && activtyList.length > 0) {
-      console.log("in put")
+      console.log("in put");
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
@@ -157,9 +155,9 @@ const ActivityDetails = () => {
         );
       }
     } else {
-      console.log("in Post")
+      console.log("in Post");
       const { error, isValid } = ActivityDetailValidate(activtyList);
-      console.log(error)
+      console.log(error);
       // setActvityList(activityState);
       if (!isValid) {
         return;
@@ -182,19 +180,27 @@ const ActivityDetails = () => {
       }
       TempActivity.push(activityObj);
     }
-    console.log(TempActivity)
+    console.log(TempActivity);
     setActvityList(TempActivity);
   };
-  
+
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem(
+        "fkincidentId"
+      )}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
+
   useEffect(() => {
+    fetchIncidentDetails();
     if (id) {
       fetchActivityList();
     } else {
       setIsLoading(true);
     }
-    
-    
-    
   }, [id]);
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
@@ -204,44 +210,45 @@ const ActivityDetails = () => {
             <Grid item md={4}>
               <Box>
                 <Typography variant="body2" gutterBottom>
-                  Incident number: {localStorage.getItem("fkincidentId")}
+                  Incident number: {incidentDetail.incidentNumber}
                 </Typography>
               </Box>
             </Grid>
             {console.log(activtyList)}
-            {activtyList.length  ? (
+            {activtyList.length ? (
               <>
-                {Object.entries(activtyList).slice(0,7).map(([key, value]) => (
-                  <Grid item md={12}>
-                    <FormControl
-                      component="fieldset"
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">{value.question}</FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue = {value.answer}
-                        
-                        onChange={(e) => {
-                          handleRadioData(e, value.questionCode);
-                          console.log(value.answer)
-                        }}
-                        // defaultValue={value.answer}
+                {Object.entries(activtyList)
+                  .slice(0, 7)
+                  .map(([key, value]) => (
+                    <Grid item md={12}>
+                      <FormControl
+                        component="fieldset"
+                        className={classes.formControl}
                       >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                      
-                    </FormControl>
-                    {value.error ? <p>{value.error}</p> : null}
-                    
-                  </Grid>
-                ))}
+                        <FormLabel component="legend">
+                          {value.question}
+                        </FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          defaultValue={value.answer}
+                          onChange={(e) => {
+                            handleRadioData(e, value.questionCode);
+                            console.log(value.answer);
+                          }}
+                          // defaultValue={value.answer}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      {value.error ? <p>{value.error}</p> : null}
+                    </Grid>
+                  ))}
               </>
             ) : null}
             <Grid item md={12}>
@@ -250,7 +257,7 @@ const ActivityDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => history.goBack()}
-              // href="/app/incident-management/registration/evidence/evidence/"
+                // href="/app/incident-management/registration/evidence/evidence/"
               >
                 Previous
               </Button>
@@ -259,7 +266,7 @@ const ActivityDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-              // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
+                // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
               >
                 Next
               </Button>
