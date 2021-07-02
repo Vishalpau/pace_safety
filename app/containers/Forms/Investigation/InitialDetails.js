@@ -22,7 +22,6 @@ import api from '../../../utils/axios';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: '.5rem 0',
     width: '100%',
   },
   selectEmpty: {
@@ -30,10 +29,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: '100%',
-    margin: '.5rem 0',
-  },
-  spacer: {
-    padding: '.75rem 0',
   },
 }));
 
@@ -115,15 +110,9 @@ const InitialDetails = () => {
 
   return (
     <PapperBlock title="Initial Details" icon="ion-md-list-box">
-      {/* <Box marginTop={3} marginBottom={4}>
-            <Typography variant="subtitle1" gutterBottom borderBottom={1}>
-              Incident number: nnnnnnn
-            </Typography>
-          </Box> */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
-            {/* <p>Unit Construction Manager Name</p> */}
             <TextField
               id="title"
               variant="outlined"
@@ -532,7 +521,8 @@ const InitialDetails = () => {
             />
             {error && error.pel && <p>{error.pel}</p>}
           </Grid>
-          <Box marginTop={3}>
+         <Grid item xs={12}>
+         <Box marginTop={3}>
             <Button
               variant="contained"
               color="primary"
@@ -542,12 +532,13 @@ const InitialDetails = () => {
               Next
             </Button>
           </Box>
+         </Grid>
         </Grid>
         <Grid item md={3}>
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Initial details"
+            selectedItem="Initial Details"
           />
         </Grid>
       </Grid>

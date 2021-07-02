@@ -23,6 +23,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormLabel from '@material-ui/core/FormLabel';
 import { useHistory, useParams } from 'react-router';
+import { PapperBlock } from "dan-components";
 
 import FormHeader from '../FormHeader';
 import FormSideBar from '../FormSideBar';
@@ -30,6 +31,7 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants';
 import api from '../../../utils/axios';
 import RootCauseValidation from '../../Validator/RCAValidation/RootCauseAnalysisValidation';
 import { RCAOPTION } from "../../../utils/constants";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -146,31 +148,23 @@ const RootCauseAnalysis = () => {
   }, []);
 
   return (
-    <Container>
-      <Paper>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              Root couse Analysis
-            </Typography>
-          </Box>
-
+    <PapperBlock title="Root Cause Analysis" icon="ion-md-list-box">
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
-
-              <Grid item md={12}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number:
-                    {' '}
-                    {localStorage.getItem('fkincidentId')}
-                  </Typography>
-                </Box>
+            <Grid item md={12}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                    Incident Number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                    {localStorage.getItem("fkincidentId")}
+                </Typography>
               </Grid>
 
               <Grid item md={12}>
-                <Typography variant="h6" gutterBottom>
-                  Incident Description:
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                    Incident Description
+                </Typography>
+                <Typography className={Type.labelValue}>
                   {incidents.incidentDetails}
                 </Typography>
               </Grid>
@@ -209,7 +203,7 @@ const RootCauseAnalysis = () => {
               <Grid item md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="project-name-label">
-                    RCA recommended
+                    RCA Recommended
                   </InputLabel>
                   <Select
                     id="project-name"
@@ -241,7 +235,6 @@ const RootCauseAnalysis = () => {
               </Grid>
 
               <Grid item lg={6} md={12} sm={12}>
-                {/* <h6> Incident Date and Time</h6> */}
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <DateTimePicker
                     autoOk
@@ -266,20 +259,18 @@ const RootCauseAnalysis = () => {
                     id="date-picker-dialog"
                     format="dd/mm/yyyy"
                     value={selectedDate}
-                    // onChange={handleDateChange}
                     disabled
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
               <Grid item md={12}>
-                {/* <p>What caused the incident? </p> */}
                 <TextField
                   className={classes.formControl}
                   id="filled-basic"
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="What caused the incident?"
+                  label="What Caused the Incident ?"
                   error={error.causeOfIncident}
                   defaultValue={form.causeOfIncident}
                   helperText={error ? error.causeOfIncident : ''}
@@ -289,14 +280,13 @@ const RootCauseAnalysis = () => {
               </Grid>
 
               <Grid item md={12}>
-                {/* <p>Corrective actions</p> */}
                 <TextField
                   id="filled-basic"
                   className={classes.formControl}
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Corrective actions"
+                  label="Corrective Actions"
                   error={error.correctiveAction}
                   defaultValue={form.correctiveAction}
                   helperText={error ? error.correctiveAction : ''}
@@ -305,16 +295,16 @@ const RootCauseAnalysis = () => {
                 />
               </Grid>
 
-              <Grid item md={6}>
-                <RadioGroup className={classes.inlineRadioGroup}>
+              <Grid item md={12}>
+                <FormControl component="fieldset">
                   <FormLabel
                     component="legend"
                     error={error.wouldItPreventIncident}
                   >
-                    Would Corrective actions prevent simailar incidents in
-                    future?
+                    Would Corrective Actions Prevent Simailar Incidents In
+                    Future?
                   </FormLabel>
-
+                  <RadioGroup className={classes.inlineRadioGroup}>
                   {radioDecide.map((value) => (
                     <FormControlLabel
                       value={value}
@@ -335,6 +325,7 @@ const RootCauseAnalysis = () => {
                     {error.wouldItPreventIncident}
                   </small>
                 )}
+                </FormControl>
               </Grid>
 
               <Grid item md={12}>
@@ -343,7 +334,7 @@ const RootCauseAnalysis = () => {
                   id="filled-basic"
                   variant="outlined"
                   multiline
-                  label="If no, please recommended correct solution ?"
+                  label="If No, Please Recommended Correct Solution ?"
                   rows="3"
                   defaultValue={form.recommendSolution}
                   onChange={(e) => setForm({ ...form, recommendSolution: e.target.value })
@@ -380,13 +371,11 @@ const RootCauseAnalysis = () => {
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem="Root cause analysis"
+                selectedItem="Root Cause Analysis"
               />
             </Grid>
           </Grid>
-        </Box>
-      </Paper>
-    </Container>
+    </PapperBlock>
   );
 };
 export default RootCauseAnalysis;

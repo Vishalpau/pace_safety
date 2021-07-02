@@ -232,7 +232,7 @@ const AdditionalDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={EVIDENCE_FORM}
-            selectedItem="Additional detail"
+            selectedItem="Additional Details"
           />
         </Grid>
       </Grid>

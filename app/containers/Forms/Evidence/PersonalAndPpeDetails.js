@@ -671,7 +671,7 @@ const PersonalAndPpeDetails = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={EVIDENCE_FORM}
-            selectedItem="Personal and Ppedetails"
+            selectedItem="Personal and PPE Details"
             deleteForm={[1, 2, 3]}
           />
         </Grid>

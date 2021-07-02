@@ -17,11 +17,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: ".5rem",
   },
   activeList: {
-    color: theme.palette.primary.main,
-    borderLeft: `5px solid ${theme.palette.primary.main}`,
+    // color: theme.palette.secondary.main,
+    borderLeft: `5px solid ${theme.palette.secondary.main}`,
   },
   notActiveList: {
-    borderLeft: `5px solid ${theme.palette.primary.light}`,
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
   },
 }));
 
@@ -40,7 +40,6 @@ export const FormSideBar = (props) => {
   const data = props.deleteForm || localStorage.getItem('deleteForm')
   return (
     <Paper elevation={1}>
-      <Box padding={2} bgcolor="background.paper">
         <List dense>
             {/* {props.deleteForm.map((value) => (
                 delete props.listOfItems[value]
@@ -74,7 +73,6 @@ export const FormSideBar = (props) => {
             )
           ):null)}
         </List>
-      </Box>
     </Paper>
   );
 };

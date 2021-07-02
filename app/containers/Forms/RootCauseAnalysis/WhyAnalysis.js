@@ -15,6 +15,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Fab from "@material-ui/core/Fab";
 import { useHistory, useParams } from 'react-router';
+import { PapperBlock } from "dan-components";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation"
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss"
 
 
 const WhyAnalysis = () => {
@@ -157,52 +159,51 @@ const WhyAnalysis = () => {
 
   const classes = useStyles();
   return (
-    <Container>
-      <Paper>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              5 Why Analysis
-            </Typography>
-          </Box>
+    <PapperBlock title="Why Analysis" icon="ion-md-list-box">
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
-
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: {localStorage.getItem("fkincidentId")}
+              <Grid item md={6}>
+                  <Typography variant="h6" className={Type.labelName} gutterBottom>
+                    Incident number
                   </Typography>
-                </Box>
+                  <Typography className={Type.labelValue}>
+                    {localStorage.getItem("fkincidentId")}
+                  </Typography>
               </Grid>
 
-              <Grid item md={8}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Method: 5 Why Analysis
+              <Grid item md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                    Method
                   </Typography>
-                </Box>
+                  <Typography className={Type.labelValue}>
+                    5 Why Analysis
+                  </Typography>
               </Grid>
 
               <Grid item md={12}>
-                <Typography variant="h6" gutterBottom>
-                  Incident Description:<small>{incidents.incidentDetails}</small>
+                <Typography variant="h6" className={Type.labelName}  gutterBottom>
+                  Incident Description
                 </Typography>
-
-                <Box marginTop={3}>
-                  <Typography variant="h6" gutterBottom>
-                    Level of Investigation
-                  </Typography>
-                  <Typography variant="body2">Level 5</Typography>
-                </Box>
+                <Typography className={Type.labelValue}>
+                {incidents.incidentDetails}
+                </Typography>
               </Grid>
 
               <Grid item md={12}>
-                {/* <p>Evidence collection</p> */}
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Level of Investigation
+                </Typography>
+                <Typography className={Type.labelValue}>
+               Level 5
+                </Typography>
+              </Grid>
+
+              <Grid item md={12}>
+
                 <TextField
                   variant="outlined"
                   id="filled-basic"
-                  label="Evidence collection"
+                  label="Evidence Collection"
                   multiline
                   rows={3}
                   className={classes.formControl}
@@ -212,11 +213,10 @@ const WhyAnalysis = () => {
               {form.map((item, index) => (
                 <Grid item md={12} >
                   <Grid container spacing={2}>
-
-                    <Grid item sm={11}>
+                    <Grid item xs={12}>
                       <TextField
                         id="filled-basic"
-                        label={`why ${index}`}
+                        label={`Why ${index}`}
                         variant="outlined"
                         error={error[`why${[index]}`]}
                         defaultValue={form[index].why}
@@ -228,16 +228,13 @@ const WhyAnalysis = () => {
                     {form.length > 1 ?
 
                       putId.current == "" ? <Grid item sm={1} justify="center">
-                        <Fab size="small" color="secondary" aria-label="remove">
+                        <Fab size="small" color="primary" aria-label="remove">
                           <RemoveCircleOutlineIcon onClick={(e) => handelRemove(e, index)} />
                         </Fab>
                       </Grid> : null
 
                       : null}
                   </Grid>
-                  {/* {error && error[`why${[index]}`] && (
-                    <p>{error[`why${[index]}`]}</p>
-                  )} */}
                 </Grid>
               ))}
 
@@ -276,9 +273,7 @@ const WhyAnalysis = () => {
               Sidebar
             </Grid>
           </Grid>
-        </Box>
-      </Paper>
-    </Container >
+    </PapperBlock>
   );
 };
 

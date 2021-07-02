@@ -292,7 +292,7 @@ const WorkerDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Worker details"
+            selectedItem="Worker Details"
           />
         </Grid>
       </Grid>
