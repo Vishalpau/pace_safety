@@ -517,8 +517,8 @@ const IncidentDetailsSummary = () => {
           </AccordionSummary>
           <AccordionDetails>
             {enviornmentData.length !== 0
-              ? enviornmentData.map((envData) => (
-                  <>
+              ? enviornmentData.map((envData, key) => (
+                  <Grid container item xs={12} spacing={3} key={key}>
                     <Grid item md={6}>
                       <Typography
                         variant="h6"
@@ -570,7 +570,7 @@ const IncidentDetailsSummary = () => {
                         {envData.envAnswerDetails}
                       </Typography>
                     </Grid>
-                  </>
+                 </Grid>
                 ))
               : null}
           </AccordionDetails>
@@ -586,8 +586,8 @@ const IncidentDetailsSummary = () => {
           </AccordionSummary>
           <AccordionDetails>
             {reportsData.length !== 0
-              ? reportsData.map((report) => (
-                  <>
+              ? reportsData.map((report, key) => (
+                  <Grid container item xs={12} spacing={3} key={key}>
                     <Grid item md={6}>
                       <Typography
                         variant="h6"
@@ -623,7 +623,7 @@ const IncidentDetailsSummary = () => {
                         {report.reportingNote}
                       </Typography>
                     </Grid>
-                  </>
+                  </Grid>
                 ))
               : null}
           </AccordionDetails>

@@ -15,6 +15,7 @@ import { PapperBlock } from "dan-components";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from '../../../styles/components/Fonts.scss';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -58,11 +59,12 @@ const PropertyImpacetDetails = () => {
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: nnnnnnnnnn
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
               </Typography>
-            </Box>
+              <Typography className={Type.labelValue} >
+                487657646
+              </Typography>
           </Grid>
           <Grid item md={6}>
             <TextField
@@ -282,7 +284,7 @@ const PropertyImpacetDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Property impact details"
+            selectedItem="Property Impact Details"
           />
         </Grid>
       </Grid>

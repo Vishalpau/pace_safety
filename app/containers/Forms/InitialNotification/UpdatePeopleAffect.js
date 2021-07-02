@@ -147,10 +147,7 @@ const UpdatePeoplesAffected = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     console.log(nextPath);
 
-    //
-    // window.location.href = '/app/incident-management/registration/initial-notification/eqiptment-Affected/'
     if (personAffect === "Yes") {
-      // alert('ram')
       for (var i = 0; i < form.length; i++) {
         const res = await api.post(
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
@@ -160,17 +157,17 @@ const UpdatePeoplesAffected = () => {
 
       if (nextPath.propertyAffect === "Yes") {
         history.push(
-          "/app/incident-management/registration/initial-notification/property-Affected/"
+          "/app/incident-management/registration/initial-notification/property-affected/"
         );
       } else {
         if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+            "/app/incident-management/registration/initial-notification/equipment-affected/"
           );
         } else {
           if (nextPath.environmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/environment-Affected/"
+              "/app/incident-management/registration/initial-notification/environment-affected/"
             );
           } else {
             history.push(
@@ -182,17 +179,17 @@ const UpdatePeoplesAffected = () => {
     } else {
       if (nextPath.propertyAffect === "Yes") {
         history.push(
-          "/app/incident-management/registration/initial-notification/property-Affected/"
+          "/app/incident-management/registration/initial-notification/property-affected/"
         );
       } else {
         if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            "/app/incident-management/registration/initial-notification/eqiptment-Affected/"
+            "/app/incident-management/registration/initial-notification/eqiupment-affected/"
           );
         } else {
           if (nextPath.environmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/environment-Affected/"
+              "/app/incident-management/registration/initial-notification/environment-affected/"
             );
           } else {
             history.push(

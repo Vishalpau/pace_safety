@@ -484,7 +484,7 @@ function BlankPage() {
                         <Grid item xs={6} md={3} lg={2}>
                           <Button
                             size="small"
-                            color="secondary"
+                            color="primary"
                             startIcon={<Print />}
                             className={Incidents.actionButton}
                           >
@@ -495,7 +495,7 @@ function BlankPage() {
                         <Grid item xs={6} md={3} lg={2}>
                           <Button
                             size="small"
-                            color="secondary"
+                            color="primary"
                             startIcon={<Share />}
                             className={Incidents.actionButton}
                           >
@@ -706,7 +706,7 @@ function BlankPage() {
                         <Grid item xs={6} md={3} lg={2}>
                           <Button
                             size="small"
-                            color="secondary"
+                            color="primary"
                             startIcon={<Print />}
                             className={Incidents.actionButton}
                           >
@@ -717,7 +717,7 @@ function BlankPage() {
                         <Grid item xs={6} md={3} lg={2}>
                           <Button
                             size="small"
-                            color="secondary"
+                            color="primary"
                             startIcon={<Share />}
                             className={Incidents.actionButton}
                           >

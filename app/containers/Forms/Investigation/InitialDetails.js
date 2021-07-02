@@ -538,7 +538,7 @@ const InitialDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Initial details"
+            selectedItem="Initial Details"
           />
         </Grid>
       </Grid>

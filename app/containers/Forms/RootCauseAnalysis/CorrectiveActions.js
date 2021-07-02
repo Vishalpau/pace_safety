@@ -32,9 +32,9 @@ import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-// import Typography from "../../UiElements/Typography";
 import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation";
 import { MANAGEMENTCONTROL } from "../../../utils/constants";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -240,39 +240,32 @@ const CorrectiveAction = () => {
   }, []);
 
   return (
-    <PapperBlock title=" Corrective Actions" icon="ion-md-list-box">
+    <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-          <Grid item md={4}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: {localStorage.getItem("fkincidentId")}
+          <Grid item md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
               </Typography>
-            </Box>
+              <Typography className={Type.labelValue}>
+                {localStorage.getItem("fkincidentId")}
+              </Typography>
           </Grid>
 
-          <Grid item md={4}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: {localStorage.getItem("fkincidentId")}
+          <Grid item md={6}>
+          <Typography variant="h6" className={Type.labelName} gutterBottom>
+                RCA Method
               </Typography>
-            </Box>
+              <Typography className={Type.labelValue}>
+                PACE Cause Analysis
+              </Typography>
           </Grid>
 
-          <Grid item md={8}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                RCA Method: PACE Cause Analysis
-              </Typography>
-            </Box>
-          </Grid>
           <Grid item md={12}>
+            <FormControl component="fieldset">
             <FormLabel component="legend" error={error.managementControl}>
               Management Control
             </FormLabel>
-          </Grid>
-          <Grid item md={12}>
-            <FormControl component="fieldset">
               {MANAGEMENTCONTROL.map((value) => (
                 <FormControlLabel
                   control={<Checkbox name={value} />}
@@ -282,13 +275,13 @@ const CorrectiveAction = () => {
                 />
               ))}
             </FormControl>
-            {error && error.managementControl && (
+            {/* {error && error.managementControl && (
               <p>
                 <small style={{ color: "red" }}>
                   {error.managementControl}
                 </small>
               </p>
-            )}
+            )} */}
           </Grid>
 
           <Grid item md={12}>
@@ -300,13 +293,10 @@ const CorrectiveAction = () => {
               defaultValue={form.regionSupport.rcaRemark}
               helperText={error ? error.regionSupport : ""}
               rows={3}
-              label="Details the region to support above"
+              label="Details of the Reasons to Support Above"
               className={classes.formControl}
               onChange={async (e) => handelRegionSupport(e)}
             />
-            {/* {error && error.regionSupport && (
-                    <p>{error.regionSupport}</p>
-                  )} */}
           </Grid>
           <Grid item md={12}>
             <Button
@@ -321,7 +311,6 @@ const CorrectiveAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"}
               onClick={(e) => handelNext(e)}
             >
               Next
@@ -332,7 +321,7 @@ const CorrectiveAction = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Corrective action"}
+            selectedItem={"Corrective Actions"}
           />
         </Grid>
       </Grid>
