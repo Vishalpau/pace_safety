@@ -593,7 +593,7 @@ const PropertyAffected = () => {
               {/* <p>Comments</p> */}
               {detailsOfPropertyAffect === "Yes" ? null : (
                 <TextField
-                  id="comments"
+                  id="describe-any-actions-taken"
                   multiline
                   rows="3"
                   variant="outlined"

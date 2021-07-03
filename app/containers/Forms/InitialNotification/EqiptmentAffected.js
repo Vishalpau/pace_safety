@@ -534,7 +534,7 @@ const EqiptmentAffected = () => {
               <Grid item lg={12} md={6} sm={6}>
                 {/* <p>Comment </p> */}
                 <TextField
-                  id="comments"
+                  id="describe-equipment-affect"
                   multiline
                   rows="3"
                   variant="outlined"

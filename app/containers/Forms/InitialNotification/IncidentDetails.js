@@ -133,7 +133,7 @@ const IncidentDetails = () => {
         form.incidenttype || incidentsListData.incidentTypeValue;
       tempForm.incidentdate =
         form.incidentdate || incidentsListData.incidentOccuredOn;
-     
+
       tempForm.title = form.title || incidentsListData.incidentTitle;
       tempForm.description =
         form.description || incidentsListData.incidentDetails;
@@ -350,7 +350,6 @@ const IncidentDetails = () => {
     }
   };
 
-
   const fetchIncidentTypeValue = async () => {
     const res = await api.get("api/v1/lists/1/value");
     const result = res.data.data.results;
@@ -387,12 +386,12 @@ const IncidentDetails = () => {
     const result = res.data.data.results;
     await setEnvironmentAffectValue(result);
   };
-  const fetchListData = async () => {
-    const res = await api.get("api/v1/lists/");
+  // const fetchListData = async () => {
+  //   const res = await api.get("api/v1/lists/");
 
-    const result = res.data.data.results;
-    await setListData(result);
-  };
+  //   const result = res.data.data.results;
+  //   await setListData(result);
+  // };
 
   const fetchIncidentsData = async () => {
     if (id === undefined) {
@@ -420,7 +419,7 @@ const IncidentDetails = () => {
   };
 
   useEffect(() => {
-    fetchListData();
+    // fetchListData();
     fetchContractorValue();
     fetchIncidentTypeValue();
     fetchSubContractorValue();
@@ -432,7 +431,6 @@ const IncidentDetails = () => {
     // if(!id){
     //   setIsLoading(true)
     // }
-    
   }, []);
 
   return (
@@ -462,7 +460,9 @@ const IncidentDetails = () => {
                   }}
                 >
                   {companyName.map((selectValues, key) => (
-                    <MenuItem key={key} value={key+1}>{selectValues}</MenuItem>
+                    <MenuItem key={key} value={key + 1}>
+                      {selectValues}
+                    </MenuItem>
                   ))}
                 </Select>
                 {error && error.projectname && (
@@ -511,15 +511,15 @@ const IncidentDetails = () => {
                   label="Incident Type"
                   defaultValue={incidentsListData.incidentType}
                   onChange={(e) => {
-                    setForm({...form, incidenttype:e.target.value})
+                    setForm({ ...form, incidenttype: e.target.value });
                   }}
                 >
                   {incidentTypeValue.length !== 0
                     ? incidentTypeValue.map((selectValues, index) => (
-                      <MenuItem key={index} value={selectValues.inputValue}>
-                        {selectValues.inputLabel}
-                      </MenuItem>
-                    ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                     : null}
                 </Select>
                 {error && error.incidenttype && (
@@ -551,7 +551,6 @@ const IncidentDetails = () => {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            
             <Grid item xs={12} md={12}>
               <TextField
                 required
@@ -656,10 +655,10 @@ const IncidentDetails = () => {
                 >
                   {contractorValue.length !== 0
                     ? contractorValue.map((selectValues, index) => (
-                      <MenuItem key={index} value={selectValues.inputValue}>
-                        {selectValues.inputLabel}
-                      </MenuItem>
-                    ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                     : null}
                 </Select>
                 {error && error.contractor && (
@@ -692,10 +691,10 @@ const IncidentDetails = () => {
                 >
                   {subContractorValue.length !== 0
                     ? subContractorValue.map((selectValues, index) => (
-                      <MenuItem key={index} value={selectValues.inputValue}>
-                        {selectValues.inputLabel}
-                      </MenuItem>
-                    ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                     : null}
                 </Select>
                 {error && error.subcontractor && (
@@ -738,13 +737,13 @@ const IncidentDetails = () => {
                   >
                     {personAffectedValue.length !== 0
                       ? personAffectedValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                 </FormControl>
@@ -756,44 +755,43 @@ const IncidentDetails = () => {
 
             <Grid item xs={12} md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
-               
-                  <FormLabel component="legend">
-                    Was any propery damaged during incident?
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="propertyaffected"
-                    name="propertyaffected"
-                    defaultValue={incidentsListData.isPropertyDamaged}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        propertyaffected: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "Property Affected",
-                        "propertyAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        propertyAffect: e.target.value,
-                      });
-                    }}
-                  >
-                    {propertiesAffectValue.length !== 0
-                      ? propertiesAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                      : null}
-                  </RadioGroup>
-                </FormControl>
-              
+                <FormLabel component="legend">
+                  Was any propery damaged during incident?
+                </FormLabel>
+                <RadioGroup
+                  className={classes.inlineRadioGroup}
+                  aria-label="propertyaffected"
+                  name="propertyaffected"
+                  defaultValue={incidentsListData.isPropertyDamaged}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      propertyaffected: e.target.value,
+                    });
+                    handleHideAffect(
+                      e.target.value,
+                      "Property Affected",
+                      "propertyAffect"
+                    );
+                    setNextPath({
+                      ...nextPath,
+                      propertyAffect: e.target.value,
+                    });
+                  }}
+                >
+                  {propertiesAffectValue.length !== 0
+                    ? propertiesAffectValue.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
+                    : null}
+                </RadioGroup>
+              </FormControl>
+
               {/* {error && error.propertyaffected && (
                     <p>{error.propertyaffected}</p>
                   )} */}
@@ -833,18 +831,18 @@ const IncidentDetails = () => {
                   >
                     {eqiptmentAffectValue.length !== 0
                       ? eqiptmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              equiptmenteffected: e.target.value,
-                            });
-                          }}
-                        />
-                      ))
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                            onChange={(e) => {
+                              setForm({
+                                ...form,
+                                equiptmenteffected: e.target.value,
+                              });
+                            }}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                 </FormControl>
@@ -882,19 +880,19 @@ const IncidentDetails = () => {
                 >
                   {environmentAffectValue.length !== 0
                     ? environmentAffectValue.map((value, index) => (
-                      <FormControlLabel
-                        key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                        onChange={(e) => {
-                          setForm({
-                            ...form,
-                            environmentaffected: e.target.value,
-                          });
-                        }}
-                      />
-                    ))
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              environmentaffected: e.target.value,
+                            });
+                          }}
+                        />
+                      ))
                     : null}
                 </RadioGroup>
                 {/* {error && error.environmentaffected && (
