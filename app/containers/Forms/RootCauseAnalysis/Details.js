@@ -208,20 +208,31 @@ const Details = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker
-                autoOk
-                inputVariant="outlined"
-                className={classes.formControl}
-                ampm={false}
-                value={selectedDate}
-                onChange={handleDateChange}
-                label="Investigation End Date"
-                disabled
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
+              <Grid item md={6}>
+                {/* <h6> RCA recommended</h6> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">
+                    RCA recommended
+                  </InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="RCA recommended"
+                    defaultValue={form.rcaRecommended}
+                  >
+                    {RCAOPTION.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => setForm({ ...form, rcaRecommended: selectValues })}
+                      >{selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {error && error.rcaRecommended && (
+                  <p><small style={{ color: "red" }}>{error.rcaRecommended}</small></p>
+                )}
+              </Grid>
 
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>

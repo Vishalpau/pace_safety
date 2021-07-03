@@ -3,14 +3,30 @@ import validator from "validator";
 function ActivityDetailValidate(data) {
   console.log("data", data);
 
-  const error = {};
+  const error = [];
+  let isValid = true;
+  for (let key in data) {
+    console.log("key", key)
+    const dataObj = data[key];
+    if (dataObj) {
+      if (validator.isEmpty(dataObj.answer.toString())) {
+        dataObj.error = "This filed is empty";
+        error.push(dataObj);
+        isValid = false;
+        continue;
+      }
+    }
 
-  if (validator.isEmpty(data.answer.toString())) {
-    error.answer = "This Field is Empty";
+    error.push(dataObj);
   }
 
-  console.log(error);
-  return { error };
+  // if(data[1]){
+  //     {if (validator.isEmpty(data[1].answer.toString()))
+  //         error.answer = "this filed is empty"
+  //     }
+  // }
+  console.log("------", error, isValid);
+  return { error, isValid };
 }
 
 export default ActivityDetailValidate;
