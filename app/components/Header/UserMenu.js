@@ -208,18 +208,31 @@ function UserMenu(props) {
         id="apps-menu"
         anchorEl={menuAnchorEl}
         keepMounted
+        PaperProps={{
+          style: {
+            width: 250,
+          },
+        }}
         open={appsOpen}
         onClose={handleAppsClose}
         className="headerAppsGrid"
         anchorOrigin={{
-          vertical: "bottom",
+          vertical: "top",
           horizontal: "left",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "center",
+          horizontal: "left",
         }}
       >
+        <MenuItem onClick={handleAppsClose}>
+          <AccountCircleIcon fontSize="large" />
+          <Typography variant="subtitle2">Project Information Hub</Typography>
+        </MenuItem>
+        <MenuItem onClick={handleAppsClose}>
+          <AccountCircleIcon fontSize="large" />
+          <Typography variant="subtitle2">Menu Item</Typography>
+        </MenuItem>
         <MenuItem onClick={handleAppsClose}>
           <AccountCircleIcon fontSize="large" />
           <Typography variant="subtitle2">Menu Item</Typography>
