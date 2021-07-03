@@ -294,7 +294,6 @@ const EqiptmentAffected = () => {
     if(id){
     fetchEquipmentListData();
     }
-    
   }, []);
   return (
     <PapperBlock
@@ -382,6 +381,7 @@ const EqiptmentAffected = () => {
                           label="If others, describe"
                           className={classes.formControl}
                           defaultValue={equipment.equipmentOtherType}
+                          disabled = {equipment.equipmentType === 'Other'?false:true}
                           onChange={(e) => handleUpdateEquipment(
                             e,
                             key,
@@ -405,6 +405,7 @@ const EqiptmentAffected = () => {
                           label="Describe the damage"
                           className={classes.fullWidth}
                           defaultValue={equipment.equipmentDeatils}
+                          
                           onChange={(e) => handleUpdateEquipment(
                             e,
                             key,
@@ -477,7 +478,7 @@ const EqiptmentAffected = () => {
                           label="If others, describe"
                           className={classes.formControl}
                           value = {value.equipmentOtherType || ""}
-                          disabled = {value.equipmentType === 'other'?false:true}
+                          disabled = {value.equipmentType === 'Other'?false:true}
                           onChange={(e) => handleForm(e, key, 'equipmentOtherType')
                           }
                         />

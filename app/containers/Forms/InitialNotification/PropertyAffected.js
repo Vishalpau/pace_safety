@@ -218,20 +218,21 @@ const PropertyAffected = () => {
         );
         // If api success
         if (status === 201) {
-          if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/equipment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/summary/summary/"
-            );
+          if(id){
+            if (nextPath.equipmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+              );
+            } else if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              );
+            } else {
+              history.push(
+                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+              );
+            }
           }
-        }
           else{
             if (nextPath.equipmentAffect === "Yes") {
               history.push(
@@ -246,11 +247,9 @@ const PropertyAffected = () => {
                 "/app/incident-management/registration/initial-notification/reporting-and-notification/"
               );
             }
-          
-
+          }
           
         }
-
         // If no is selected on form.
       } else {
         const temp = incidentsListData;
@@ -537,7 +536,7 @@ const PropertyAffected = () => {
                               )
                             }
                           />
-                          {console.log(value.propertyType)}
+                         
                           {error && error[`propertyOtherType${[index]}`] && (
                             <p>{error[`propertyOtherType${[index]}`]}</p>
                           )}

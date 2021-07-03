@@ -322,21 +322,11 @@ const PeoplesAffected = () => {
   // hablde Remove
 
   const handleRemove = async(key) => {
-    if(peopleData.length > 0){
-      const temp = peopleData;
-      console.log(temp)
-      const newData = temp.filter(item=> item.id !== key);
-      console.log(newData)
-      await setPeopleData(newData)
-      const res = await api.delete(`api/v1/incidents/${id}/people/${key}/`)
-      
-    }
-    else{
       // this condition using when create new
       const temp = form;
       const newData = temp.filter((item, index) => index !== key);
       await setForm(newData);
-    }
+    
      
   };
 
@@ -378,11 +368,11 @@ const PeoplesAffected = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
-
     const isavailable = result.isPersonDetailsAvailable;
-    await setPersonAffect(isavailable);
-    await setIncidentsListdata(result);
-    if(!id){
+     setPersonAffect(isavailable);
+     setIncidentsListdata(result);
+    if(id === undefined){
+      alert('hlo')
       await setIsLoading(true);
     }
   };
@@ -392,7 +382,6 @@ const PeoplesAffected = () => {
     const res = await api.get(`api/v1/incidents/${id}/people/`);
     const result = res.data.data.results;
     await setPeopleData(result);
-
     await setIsLoading(true);
   };
 
@@ -678,7 +667,7 @@ const PeoplesAffected = () => {
                             }
                           />
                         </Grid>
-                        {peopleData.length > 1 ? (
+                        {/* {peopleData.length > 1 ? (
                           <Grid item md={3}>
                             <Button
                               onClick={() => handleRemove(people.id)}
@@ -689,7 +678,7 @@ const PeoplesAffected = () => {
                               Remove
                             </Button>
                           </Grid>
-                        ) : null}
+                        ) : null} */}
                       </Grid>
                     ))
                   : form.map((value, key) => (

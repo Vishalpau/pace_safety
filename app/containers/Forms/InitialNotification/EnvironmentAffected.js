@@ -90,7 +90,7 @@ const EnvironmentAffected = () => {
   const [isrelase, setIsRelase] = useState(false);
   const [isWildlife, setIsWildlife] = useState(false);
   const [iswaterbody, setIswaterBody] = useState(false);
-  const [environmentListData, setEnvironmentListData] = useState({});
+  const [environmentListData, setEnvironmentListData] = useState([]);
   const [envComments, setEnvComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -186,9 +186,8 @@ const EnvironmentAffected = () => {
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );
     } else {
-      // const { error, isValid } = EnvironmentValidate(form[i]);
-      // setError(error);
-      // console.log(error)
+      const { error, isValid } = EnvironmentValidate(form[i]);
+      setError(error);
 
       for (let i = 0; i < form.length; i++) {
         const res = await api.post(
@@ -198,7 +197,6 @@ const EnvironmentAffected = () => {
           form[i]
         );
       }
-
       const temp = incidentsListData;
       temp["updatedAt"] = moment(new Date()).toISOString();
       temp["enviromentalImpactComments"] =
@@ -208,9 +206,16 @@ const EnvironmentAffected = () => {
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-      history.push(
-        "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-      );
+      if(id){
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        ); 
+      }else{
+        history.push(
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+        );
+      }
+     
     }
   };
 
@@ -317,7 +322,7 @@ const EnvironmentAffected = () => {
                         multiline
                         rows="3"
                         variant="outlined"
-                        label={questionMap[env.envQuestion.strip()]}
+                        label={` Details of ${env.envQuestion.slice(14,-2)}`}
                         error={error && error.envAnswerDetails}
                         helperText={
                           error && error.envAnswerDetails

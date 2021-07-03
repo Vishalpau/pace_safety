@@ -420,8 +420,6 @@ const IncidentDetails = () => {
   };
 
   useEffect(() => {
-    localStorage.removeItem("deleteForm");
-    localStorage.removeItem("nextPath");
     fetchListData();
     fetchContractorValue();
     fetchIncidentTypeValue();
