@@ -50,6 +50,7 @@ const EventDetails = () => {
     <PapperBlock title="Events Details" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
+
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Activity</InputLabel>
@@ -64,6 +65,7 @@ const EventDetails = () => {
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Job Task</InputLabel>
@@ -78,6 +80,7 @@ const EventDetails = () => {
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item md={6}>
             {/* <p>Eqipment Invoked</p> */}
             <TextField
@@ -87,7 +90,8 @@ const EventDetails = () => {
               className={classes.formControl}
             />
           </Grid>
-          <Grid item md={6}>
+
+          <Grid item md={12}>
             {/* <p> Weather</p> */}
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Weather</InputLabel>
@@ -102,21 +106,9 @@ const EventDetails = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item md={6}>
-            {/* <p> Weather2</p> */}
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Weather2</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Weather2"
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+
+
+
           <Grid item md={6}>
             {/* <p> Temprature(c</p> */}
             <TextField
@@ -141,15 +133,67 @@ const EventDetails = () => {
               </Select>
             </FormControl>
           </Grid>
+          <Grid item md={12}><h1>Wind</h1></Grid>
           <Grid item md={6}>
             {/* <p> Wind Speed</p> */}
             <TextField
               id="title"
               variant="outlined"
-              label="Wind Speed"
+              label="Speed"
               className={classes.formControl}
             />
           </Grid>
+
+          <Grid item md={6}>
+            {/* <p> Wind Speed</p> */}
+            <TextField
+              id="title"
+              variant="outlined"
+              label="Direction"
+              className={classes.formControl}
+            />
+          </Grid>
+
+          <Grid item md={12}><h1>Spills</h1></Grid>
+
+          <Grid item md={6}>
+            <p>Fluid type</p>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="project-name-label">Lighting</InputLabel>
+              <Select
+                id="project-name"
+                labelId="project-name-label"
+                label="Fluid type"
+              >
+                {selectValues.map((selectValues) => (
+                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item md={6}>
+            <p>Fluid amount</p>
+            <TextField
+              id="title"
+              variant="outlined"
+              label="Fluid amount"
+              className={classes.formControl}
+            />
+          </Grid>
+
+          <Grid item md={6}>
+            <p>AEL</p>
+            <TextField
+              id="title"
+              variant="outlined"
+              label="AEL"
+              className={classes.formControl}
+            />
+          </Grid>
+
+
+
           <Grid item md={12}>
             <Typography variant="h6">Lighting</Typography>
           </Grid>

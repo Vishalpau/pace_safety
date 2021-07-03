@@ -159,6 +159,7 @@ const Details = () => {
 
   return (
     <Container>
+      {console.log(form.rcaRecommended)}
       <Paper>
         <Box padding={3} bgcolor="background.paper">
 
@@ -233,7 +234,7 @@ const Details = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="RCA recommended"
-                  // defaultValue={"Pace cause"}
+                    defaultValue={form.rcaRecommended}
                   >
                     {RCAOPTION.map((selectValues) => (
                       <MenuItem
