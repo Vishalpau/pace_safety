@@ -103,13 +103,11 @@ const AdditionalDetails = () => {
   };
 
   const handleNext = async () => {
-    // await setIsLoading(true)
     const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
     await setError(error);
     console.log(error);
-    // setAdditionalDetailList(activityState);
     if (!isValid) {
-      return "Data is not Valid";
+      return;
     }
 
     if (id && additionalDetailList.length > 0) {
@@ -216,6 +214,8 @@ const AdditionalDetails = () => {
                                 id="filled-basic"
                                 variant="outlined"
                                 label={value.question}
+                                error={value.error}
+                                helperText={value.error ? value.error : ""}
                                 multiline
                                 rows="4"
                                 defaultValue={value.answer}
@@ -226,7 +226,6 @@ const AdditionalDetails = () => {
                                 }}
                               />
                             </FormControl>
-                            {value.error ? <p>{value.error}</p> : null}
                           </Grid>
                         ))}
                     </>
@@ -235,11 +234,16 @@ const AdditionalDetails = () => {
                       {Object.entries(additionalDetailList).map(
                         ([key, value]) => (
                           <Grid item md={12}>
-                            <FormControl className={classes.formControl}>
+                            <FormControl
+                              className={classes.formControl}
+                              error={value.error}
+                            >
                               <TextField
                                 id="filled-basic"
                                 variant="outlined"
                                 label={value.question}
+                                error={value.error}
+                                helperText={value.error ? value.error : ""}
                                 multiline
                                 rows="4"
                                 onChange={(e) => {

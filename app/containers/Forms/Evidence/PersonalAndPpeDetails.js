@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 import { PapperBlock } from "dan-components";
+import { FormHelperText } from "@material-ui/core";
 
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
@@ -205,14 +206,8 @@ const PersonalAndPpeDetails = () => {
   ]);
 
   const handleNext = async () => {
-    const valdation = ppeData;
-    console.log(valdation);
-    const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
-    await setError(error);
-    if (!isValid) {
-      return "Data is not valid";
-    }
     if (ppeList.length > 19) {
+      console.log("sagar");
       const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
       if (res.status === 200) {
         history.push(
@@ -220,19 +215,24 @@ const PersonalAndPpeDetails = () => {
         );
       }
     } else {
-      // if (Object.keys(error).length == 0) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/activities/`,
-          ppeData
-        );
-        console.log(res);
-
-        history.push(
-          "/app/incident-management/registration/evidence/additional-details/"
-        );
+      const valdation = ppeData;
+      console.log(valdation);
+      const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
+      await setError(error);
+      if (!isValid) {
+        return "Data is not valid";
       }
+      // if (Object.keys(error).length == 0) {
+      const res = await api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        ppeData
+      );
+      console.log(res);
+
+      history.push(
+        "/app/incident-management/registration/evidence/additional-details/"
+      );
+    }
     // }
   };
 
@@ -296,6 +296,7 @@ const PersonalAndPpeDetails = () => {
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
+                        error={value.error}
                       >
                         <FormLabel component="legend">
                           {value.question}
@@ -314,8 +315,13 @@ const PersonalAndPpeDetails = () => {
                             />
                           ))}
                         </RadioGroup>
+
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
                       </FormControl>
-                      {value.error ? <p>{value.error}</p> : null}
                     </Grid>
                   </>
                 ))}
@@ -331,6 +337,7 @@ const PersonalAndPpeDetails = () => {
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
+                        error={value.error}
                       >
                         <FormLabel component="legend">
                           {value.question}
@@ -349,8 +356,12 @@ const PersonalAndPpeDetails = () => {
                             />
                           ))}
                         </RadioGroup>
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
                       </FormControl>
-                      {value.error ? <p>{value.error}</p> : null}
                     </Grid>
                   </>
                 ))}
@@ -365,6 +376,7 @@ const PersonalAndPpeDetails = () => {
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
+                        error={value.error}
                       >
                         <FormLabel component="legend">
                           {value.question}
@@ -383,8 +395,13 @@ const PersonalAndPpeDetails = () => {
                             />
                           ))}
                         </RadioGroup>
+
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
                       </FormControl>
-                      {value.error ? <p>{value.error}</p> : null}
                     </Grid>
                   </>
                 ))}
@@ -401,6 +418,7 @@ const PersonalAndPpeDetails = () => {
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
+                        error={value.error}
                       >
                         <FormLabel component="legend">
                           {value.question}
@@ -419,8 +437,13 @@ const PersonalAndPpeDetails = () => {
                             />
                           ))}
                         </RadioGroup>
+
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
                       </FormControl>
-                      {value.error ? <p>{value.error}</p> : null}
                     </Grid>
                   </>
                 ))}

@@ -31,6 +31,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+import { result } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -81,11 +82,15 @@ const Evidence = () => {
       `/api/v1/incidents/${id}/evidences/${localStorage.getItem("id")}/`
     );
     const result = res.data.data.results;
-    console.log(result.id);
-    await setForm({ ...form, available: result.evidenceCheck });
-    await setForm({ ...form, comment: result.evidenceRemark });
-    await setForm({ ...form, evidenceType: result.evidenceCategory });
-    await setForm({ ...form, document: result.evidenceDocument });
+    console.log(result.evidenceCheck);
+    await setForm({
+      ...form,
+      available: result.evidenceCheck,
+      comment: result.evidenceRemark,
+      evidenceType: result.evidenceCategory,
+      document: result.evidenceDocument,
+    });
+    
     await setEvideceData(result);
     await setIsLoading(true);
   };
@@ -152,6 +157,8 @@ const Evidence = () => {
           )}/evidences/`,
           data
         );
+        result = res.data.data.results;
+        setForm({ ...form });
         console.log(res.data.data.result);
         if (res.status === 201) {
           const queId = res.data.data.results.id;
