@@ -14,7 +14,7 @@ import MomentUtils from "@date-io/moment";
 import {
   // TimePicker,
   MuiPickersUtilsProvider,
-  KeyboardDatePicker,
+  KeyboardDateTimePicker,
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
@@ -22,6 +22,9 @@ import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import InputAdornment from "@material-ui/core/InputAdornment";
+// import IconButton from "@material-ui/core/IconButton";
+// import Icon from "@material-ui/core/Icon";
 import FormLabel from "@material-ui/core/FormLabel";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
@@ -55,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
 const IncidentDetails = () => {
   // Props definations.
   const classes = useStyles();
-  const [selectedTime, setSelectedTime] = React.useState(new Date());
   const [error, setError] = useState({});
   const selectValues = [1, 2, 3, 4];
   const companyName = ["ABC Ltd", "XYZ steel", "ABA power", "XDA works"];
@@ -84,11 +86,10 @@ const IncidentDetails = () => {
 
   // Initial forms.
   const [form, setForm] = useState({
-    projectname: "",
-    unitname: "",
+    projectname: 0,
+    unitname: 0,
     incidenttype: "",
     incidentdate: null,
-    incidenttime: null,
     title: "",
     description: "",
     immediateactiontaken: "",
@@ -101,6 +102,10 @@ const IncidentDetails = () => {
     environmentaffected: "",
   });
 
+  // handle date
+  const handledate = async (e) => {
+    await setForm({ ...form, incidentdate: moment(e).toISOString() });
+  };
   // Function called on next button click.
   const handelNext = async (e) => {
     // Create case if id is not null and means it is an update case.
@@ -128,8 +133,7 @@ const IncidentDetails = () => {
         form.incidenttype || incidentsListData.incidentTypeValue;
       tempForm.incidentdate =
         form.incidentdate || incidentsListData.incidentOccuredOn;
-      tempForm.incidenttime =
-        form.incidenttime || incidentsListData.incidentReportedOn;
+     
       tempForm.title = form.title || incidentsListData.incidentTitle;
       tempForm.description =
         form.description || incidentsListData.incidentDetails;
@@ -162,15 +166,17 @@ const IncidentDetails = () => {
 
       const formData = {
         id: parseInt(id),
-        fkCompanyId: 0,
-        fkProjectId: 0,
-        fkPhaseId: 0,
-        fkUnitId: 0,
-        incidentNumber: form.incidenttype,
+        fkCompanyId: incidentsListData.fkCompanyId || 1,
+        fkProjectId: incidentsListData.fkProjectId || 1,
+        fkPhaseId: incidentsListData.fkPhaseId || 1,
+        fkUnitId: incidentsListData.fkUnitId || 1,
+        incidentNumber: incidentsListData.incidentNumber,
+        incidentType: form.incidenttype,
         incidentTitle: form.title,
         incidentDetails: form.description,
-        immediateActionsTaken: "jdf",
-        incidentOccuredOn: null,
+        immediateActionsTaken:
+          form.immediateactiontaken || incidentsListData.immediateActionsTaken,
+        incidentOccuredOn: form.incidentdate,
         isPersonAffected: form.personaffected,
         isPersonDetailsAvailable: incidentsListData.isPersonDetailsAvailable,
         personAffectedComments: incidentsListData.personAffectedComments,
@@ -214,7 +220,6 @@ const IncidentDetails = () => {
 
       // Hit put request to backend as it is the update case.
       const res = await api.put(`/api/v1/incidents/${id}/`, formData);
-      console.log("===> Incident update response > ", res);
 
       // If we received the success from the API then.
       if (res.status === 200) {
@@ -237,7 +242,7 @@ const IncidentDetails = () => {
           );
         } else if (nextPath.propertyAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/property-Affected/${id}`
+            `/app/incident-management/registration/initial-notification/property-affected/${id}`
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
@@ -269,32 +274,33 @@ const IncidentDetails = () => {
       if (isValid === true) {
         const formData = {
           fkCompanyId: 1,
-          fkProjectId: 1,
+          fkProjectId: parseInt(form.projectname),
           fkPhaseId: 1,
-          fkUnitId: 1,
-          incidentNumber: form.incidenttype,
+          fkUnitId: parseInt(form.unitname),
+          incidentNumber: "",
+          incidentType: form.incidenttype,
           incidentTitle: form.title,
           incidentDetails: form.description,
           immediateActionsTaken: form.immediateactiontaken,
-          incidentOccuredOn: null,
+          incidentOccuredOn: form.incidentdate,
           isPersonAffected: form.personaffected,
           isPersonDetailsAvailable: "No",
-          personAffectedComments: "string",
+          personAffectedComments: "",
           isPropertyDamaged: form.propertyaffected,
           isPropertyDamagedAvailable: "No",
-          propertyDamagedComments: "string",
+          propertyDamagedComments: "",
           isEquipmentDamaged: form.equiptmenteffected,
           isEquipmentDamagedAvailable: "No",
-          equipmentDamagedComments: "string",
+          equipmentDamagedComments: "",
           isEnviromentalImpacted: form.environmentaffected,
-          enviromentalImpactComments: "string",
-          supervisorByName: "string",
+          enviromentalImpactComments: "",
+          supervisorByName: "..",
           supervisorById: 0,
-          incidentReportedOn: moment(form.incidentdate).toISOString(),
-          incidentReportedByName: "string",
+          incidentReportedOn: new Date().toISOString(),
+          incidentReportedByName: "..",
           incidentReportedById: 0,
-          reasonLateReporting: "string",
-          notificationComments: "string",
+          reasonLateReporting: "",
+          notificationComments: "",
           reviewedBy: 0,
           reviewDate: "2021-06-17T01:02:49.099Z",
           closedBy: 0,
@@ -312,7 +318,6 @@ const IncidentDetails = () => {
         };
         // sent post api
         const res = await api.post("/api/v1/incidents/", formData);
-        console.log(res);
         if (res.status === 201) {
           const fkincidentId = res.data.data.results.id;
           localStorage.setItem("fkincidentId", fkincidentId);
@@ -345,15 +350,7 @@ const IncidentDetails = () => {
     }
   };
 
-  const handelTimeChange = (date) => {
-    console.log(date);
-    const onlyTime = moment(date).format("HH:mm");
-    setForm({
-      ...form,
-      incidenttime: onlyTime,
-    });
-    setSelectedTime(date);
-  };
+
   const fetchIncidentTypeValue = async () => {
     const res = await api.get("api/v1/lists/1/value");
     const result = res.data.data.results;
@@ -405,13 +402,14 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setIncidentsListdata(result);
       const resTime = new Date(result.incidentOccuredOn);
-      await setForm({ ...form, incidentdate: resTime });
+      form.incidentDate = result.incidentOccuredOn;
+      form.incidenttype = result.incidentType;
+
       await setIsLoading(true);
     }
   };
 
   const handleHideAffect = (e, name, key) => {
-    console.log("set hide affecct", hideAffect);
     if (e !== "Yes") {
       setHideAffect([...hideAffect, name]);
     } else {
@@ -424,7 +422,6 @@ const IncidentDetails = () => {
   useEffect(() => {
     localStorage.removeItem("deleteForm");
     localStorage.removeItem("nextPath");
-    console.log(nextPath);
     fetchListData();
     fetchContractorValue();
     fetchIncidentTypeValue();
@@ -437,7 +434,7 @@ const IncidentDetails = () => {
     // if(!id){
     //   setIsLoading(true)
     // }
-    console.log(hideAffect);
+    
   }, []);
 
   return (
@@ -462,12 +459,12 @@ const IncidentDetails = () => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      projectname: e.target.value,
+                      projectname: e.target.value.toString(),
                     });
                   }}
                 >
-                  {companyName.map((selectValues) => (
-                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  {companyName.map((selectValues, key) => (
+                    <MenuItem key={key} value={key+1}>{selectValues}</MenuItem>
                   ))}
                 </Select>
                 {error && error.projectname && (
@@ -487,12 +484,14 @@ const IncidentDetails = () => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      unitname: toString(e.target.value),
+                      unitname: e.target.value.toString(),
                     });
                   }}
                 >
-                  {selectValues.map((selectValues) => (
-                    <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  {selectValues.map((selectValues, key) => (
+                    <MenuItem key={key} value={selectValues}>
+                      {selectValues}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -512,12 +511,9 @@ const IncidentDetails = () => {
                   labelId="incident-type-label"
                   id="incident-type"
                   label="Incident Type"
-                  defaultValue={incidentsListData.incidentNumber}
+                  defaultValue={incidentsListData.incidentType}
                   onChange={(e) => {
-                    setForm({
-                      ...form,
-                      incidenttype: toString(e.target.value),
-                    });
+                    setForm({...form, incidenttype:e.target.value})
                   }}
                 >
                   {incidentTypeValue.length !== 0
@@ -536,7 +532,7 @@ const IncidentDetails = () => {
 
             <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-                <KeyboardDatePicker
+                <KeyboardDateTimePicker
                   error={error.incidentdate}
                   required
                   className={classes.formControl}
@@ -546,51 +542,18 @@ const IncidentDetails = () => {
                     form.incidentdate || incidentsListData.incidentOccuredOn
                   }
                   onChange={(e) => {
-                    console.log(e);
                     setForm({
                       ...form,
-                      incidentdate: moment(e).toDate(),
+                      incidentdate: moment(e).toISOString(),
                     });
                   }}
-                  format="yyyy/MM/dd"
+                  format="yyyy/MM/dd HH:mm"
                   inputVariant="outlined"
                 />
               </MuiPickersUtilsProvider>
-              {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
             </Grid>
 
-            <Grid item xs={12} md={6}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardTimePicker
-                  required
-                  error={error.incidenttime}
-                  inputVariant="outlined"
-                  helperText={error.incidentdate ? error.incidenttime : null}
-                  className={classes.formControl}
-                  id="time-picker"
-                  label="Incident Time"
-                  value={
-                    form.incidenttime === null
-                      ? new Date(clearedDate)
-                      : new Date(selectedTime)
-                  }
-                  onChange={(e) => {
-                    console.log(e);
-                    setForm({
-                      ...form,
-                      incidenttime: moment(e).format("HH:mm"),
-                    });
-                    setSelectedTime(e);
-                  }}
-                  KeyboardButtonProps={{
-                    "aria-label": "change time",
-                  }}
-                  format="HH:mm"
-                />
-              </MuiPickersUtilsProvider>
-              {/* {error && error.incidentdate && <p>{error.incidentdate}</p>} */}
-            </Grid>
-
+            
             <Grid item xs={12} md={12}>
               <TextField
                 required
@@ -608,6 +571,7 @@ const IncidentDetails = () => {
                   });
                 }}
               />
+              {/* {error && error.title && <FormHelperText>{error.title}</FormHelperText>} */}
             </Grid>
 
             <Grid item xs={12} md={12}>
@@ -629,6 +593,7 @@ const IncidentDetails = () => {
                   });
                 }}
               />
+              {/* {error && error.description && <p>{error.description}</p>} */}
             </Grid>
 
             <Grid item xs={12} md={12}>
@@ -666,6 +631,7 @@ const IncidentDetails = () => {
                   });
                 }}
               />
+              {/* {error && error.location && <p>{error.location}</p>} */}
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -747,8 +713,9 @@ const IncidentDetails = () => {
                   className={classes.formControl}
                 >
                   <FormLabel component="legend">
-                    Were Any Person Affected During the Incident ?
+                    Were any person affected during incident?
                   </FormLabel>
+                  {/* <p>Were any person affected during incident?</p> */}
 
                   <RadioGroup
                     className={classes.inlineRadioGroup}
@@ -762,7 +729,7 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Peoples Affected",
+                        "People Affected",
                         "personAffect"
                       );
                       setNextPath({
@@ -784,56 +751,66 @@ const IncidentDetails = () => {
                   </RadioGroup>
                 </FormControl>
               </div>
+              {/* {error && error.personaffected && (
+                    <p>{error.personaffected}</p>
+                  )} */}
             </Grid>
 
             <Grid item xs={12} md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">
-                  Was Any Property Damaged During the Incident ?
-                </FormLabel>
-                <RadioGroup
-                  className={classes.inlineRadioGroup}
-                  aria-label="propertyaffected"
-                  name="propertyaffected"
-                  defaultValue={incidentsListData.isPropertyDamaged}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      propertyaffected: e.target.value,
-                    });
-                    handleHideAffect(
-                      e.target.value,
-                      "Property Affected",
-                      "propertyAffect"
-                    );
-                    setNextPath({
-                      ...nextPath,
-                      propertyAffect: e.target.value,
-                    });
-                  }}
-                >
-                  {propertiesAffectValue.length !== 0
-                    ? propertiesAffectValue.map((value, index) => (
-                      <FormControlLabel
-                        key={index}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                      />
-                    ))
-                    : null}
-                </RadioGroup>
-              </FormControl>
+               
+                  <FormLabel component="legend">
+                    Was any propery damaged during incident?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.inlineRadioGroup}
+                    aria-label="propertyaffected"
+                    name="propertyaffected"
+                    defaultValue={incidentsListData.isPropertyDamaged}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        propertyaffected: e.target.value,
+                      });
+                      handleHideAffect(
+                        e.target.value,
+                        "Property Affected",
+                        "propertyAffect"
+                      );
+                      setNextPath({
+                        ...nextPath,
+                        propertyAffect: e.target.value,
+                      });
+                    }}
+                  >
+                    {propertiesAffectValue.length !== 0
+                      ? propertiesAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                      : null}
+                  </RadioGroup>
+                </FormControl>
+              
+              {/* {error && error.propertyaffected && (
+                    <p>{error.propertyaffected}</p>
+                  )} */}
             </Grid>
 
             <Grid item xs={12} md={12}>
               <div>
+                {/* <p>Was there any equiptment damaged?</p> */}
+
                 <FormControl
                   component="fieldset"
                   className={classes.formControl}
                 >
                   <FormLabel component="legend">
-                    Was There Any Equipment Damaged ?
+                    Was there any equiptment damaged?
                   </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
@@ -874,12 +851,15 @@ const IncidentDetails = () => {
                   </RadioGroup>
                 </FormControl>
               </div>
+              {/* {error && error.equiptmenteffected && (
+                    <p>{error.equiptmenteffected}</p>
+                  )} */}
             </Grid>
 
             <Grid item xs={12} md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
                 <FormLabel component="legend">
-                  Was There Any Environment Impact ?
+                  Was there any environment impact?
                 </FormLabel>
                 <RadioGroup
                   aria-label="environmentaffected"
@@ -919,12 +899,20 @@ const IncidentDetails = () => {
                     ))
                     : null}
                 </RadioGroup>
+                {/* {error && error.environmentaffected && (
+                    <p>{error.environmentaffected}</p>
+                  )} */}
               </FormControl>
             </Grid>
 
             <Grid item xs={12} md={12}>
               <Box marginTop={4}>
                 <Button
+                  // href={
+                  //   Object.keys(error).length === 0
+                  //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                  //     : "#"
+                  // }
                   type="button"
                   size="medium"
                   variant="contained"
@@ -946,7 +934,7 @@ const IncidentDetails = () => {
           </Grid>
         </Grid>
       ) : (
-        <div>Loading...</div>
+        <div> Loading...</div>
       )}
     </PapperBlock>
   );

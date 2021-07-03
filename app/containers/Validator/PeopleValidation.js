@@ -21,25 +21,25 @@ function PeopleValidate(data) {
       isValid = false;
     }
 
-    if (validator.isEmpty(data[i].personIdentification.toString())) {
-      error[`personIdentification${[i]}`] = "This Field is Empty";
-      isValid = false;
-    }
+    // if (validator.isEmpty(data[i].personIdentification.toString())) {
+    //   error[`personIdentification${[i]}`] = "This Field is Empty";
+    //   isValid = false;
+    // }
 
     if (validator.isEmpty(data[i].personMedicalCare.toString())) {
       error[`personMedicalCare${[i]}`] = "This Field is Empty";
       isValid = false;
     }
 
-    if (validator.isEmpty(data[i].workerOffsiteAssessment.toString())) {
-      error[`workerOffsiteAssessment${[i]}`] = "This Field is Empty";
-      isValid = false;
-    }
+    // if (validator.isEmpty(data[i].workerOffsiteAssessment.toString())) {
+    //   error[`workerOffsiteAssessment${[i]}`] = "This Field is Empty";
+    //   isValid = false;
+    // }
 
-    if (validator.isEmpty(data[i].locationAssessmentCenter.toString())) {
-      error[`locationAssessmentCenter${[i]}`] = "This Field is Empty";
-      isValid = false;
-    }
+    // if (validator.isEmpty(data[i].locationAssessmentCenter.toString())) {
+    //   error[`locationAssessmentCenter${[i]}`] = "This Field is Empty";
+    //   isValid = false;
+    // }
   }
 
   console.log(error);

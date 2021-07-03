@@ -3,9 +3,11 @@ import { MaterialDropZone } from 'dan-components';
 
 function UploadInputAll() {
   const [files] = useState([]);
+  
 
   return (
     <Fragment>
+      {console.log(files)}
       <div>
         <MaterialDropZone
           files={files}

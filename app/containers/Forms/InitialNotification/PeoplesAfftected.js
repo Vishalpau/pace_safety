@@ -135,22 +135,14 @@ const PeoplesAffected = () => {
     setForm(temp);
   };
 
-  // Function just like handleform but on the change we are hitting the API.
-  // TODO: This is wrong we should update on Next button click.
+
+  // set the state in update time
   const handleUpdatePeople = async (e, key, fieldname, peopleId) => {
     const temp = peopleData;
-    console.log(temp[key]);
     const { value } = e.target;
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
-    console.log(temp, peopleId);
-
-    const res = await api.put(
-      `api/v1/incidents/${id}/people/${peopleId}/`,
-      temp[key]
-    );
-    console.log(res);
-    // console.log(res)
+    await setPeopleData(temp);
   };
 
   // Next button click event handling.
@@ -167,6 +159,13 @@ const PeoplesAffected = () => {
       This is wrong implementation.
     */
     if (peopleData.length !== 0) {
+      for (var i = 0; i < peopleData.length; i++) {
+        const res = await api.put(
+          `api/v1/incidents/${id}/people/${peopleData[i].id}/`,
+          peopleData[i]
+        );
+      }
+
       if (nextPath.propertyAffect === "Yes") {
         history.push(
           `/app/incident-management/registration/initial-notification/property-affected/${id}`
@@ -211,30 +210,49 @@ const PeoplesAffected = () => {
         temp.isPersonDetailsAvailable =
           personAffect || incidentsListData.isPersonDetailsAvailable;
         temp.updatedAt = moment(new Date()).toISOString();
-        console.log(temp);
 
         const res = await api.put(
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-
-        // Redirect user to next page.
-        if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
+        // check condition id 
+        if (id) {
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+          // Here it is the new entry create case. We will redirect to next pages without ids.
         } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/environment-affected/"
+            );
+          } else {
+            history.push(
+              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+            );
+          }
         }
 
         // Case when form has No option selected.
@@ -251,50 +269,75 @@ const PeoplesAffected = () => {
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-      }
 
       // Case when id is available. Update case. Redirect user to specific page.
       // Here if we see, we are redirecting user to urls with /id/ in the end.
       // Therefore, next page will get the input from the id and pre-fill the details.
-      if (id) {
-        if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/property-affected/${id}`
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
+         if (id) {
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+          // Here it is the new entry create case. We will redirect to next pages without ids.
         } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              "/app/incident-management/registration/initial-notification/environment-affected/"
+            );
+          } else {
+            history.push(
+              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+            );
+          }
         }
-        // Here it is the new entry create case. We will redirect to next pages without ids.
-      } else {
-        if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/property-affected/`
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
-        } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
-        }
+
       }
+
+     
+      
     }
+  };
+
+  // hablde Remove
+
+  const handleRemove = async(key) => {
+    if(peopleData.length > 0){
+      const temp = peopleData;
+      console.log(temp)
+      const newData = temp.filter(item=> item.id !== key);
+      console.log(newData)
+      await setPeopleData(newData)
+      const res = await api.delete(`api/v1/incidents/${id}/people/${key}/`)
+      
+    }
+    else{
+      // this condition using when create new
+      const temp = form;
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
+    }
+     
   };
 
   // State for the error defination.
@@ -335,10 +378,13 @@ const PeoplesAffected = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
-    await setIncidentsListdata(result);
+
     const isavailable = result.isPersonDetailsAvailable;
     await setPersonAffect(isavailable);
-    await setIsLoading(true);
+    await setIncidentsListdata(result);
+    if(!id){
+      await setIsLoading(true);
+    }
   };
 
   // Fetch the individual page data in case of the update.
@@ -347,18 +393,19 @@ const PeoplesAffected = () => {
     const result = res.data.data.results;
     await setPeopleData(result);
 
-    console.log(result);
+    await setIsLoading(true);
   };
 
   useEffect(() => {
+    fetchIncidentsData();
     fetchIndividualAffectValue();
     fetchPersonTypeValue();
     fetchDepartmentValue();
     fetchPersonTakenMedicalCare();
-    fetchIncidentsData();
     if (id) {
       fetchPersonListData();
     }
+    
   }, []);
   return (
     <PapperBlock title="Details of People Affected" icon="ion-md-list-box">
@@ -375,7 +422,7 @@ const PeoplesAffected = () => {
                   aria-label="personAffect"
                   name="personAffect"
                   defaultValue={
-                    personAffect || incidentsListData.isPersonDetailsAvailable
+                    personAffect 
                   }
                   onChange={(e) => {
                     setPersonAffect(e.target.value);
@@ -631,6 +678,18 @@ const PeoplesAffected = () => {
                             }
                           />
                         </Grid>
+                        {peopleData.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(people.id)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </Grid>
                     ))
                   : form.map((value, key) => (
@@ -655,6 +714,7 @@ const PeoplesAffected = () => {
                               labelId="person-type-label"
                               id="person-type"
                               label=" Person Type"
+                              value={value.personType || ''}
                               onChange={(e) => handleForm(e, key, "personType")}
                             >
                               {personTypeValue.length !== 0
@@ -686,6 +746,7 @@ const PeoplesAffected = () => {
                               labelId="dep-label"
                               id="dep"
                               label="Department"
+                              value={value.personDepartment || ''}
                               onChange={(e) =>
                                 handleForm(e, key, "personDepartment")
                               }
@@ -721,6 +782,7 @@ const PeoplesAffected = () => {
                             }
                             label="Name of Person Affected"
                             className={classes.formControl}
+                            value = {value.personName || ''}
                             onChange={(e) => handleForm(e, key, "personName")}
                           />
                           {/* {error && error[`personName${[key]}`] && (
@@ -742,6 +804,7 @@ const PeoplesAffected = () => {
                             }
                             label="Identify Number of Person"
                             className={classes.formControl}
+                            value = {value.personIdentification}
                             onChange={(e) =>
                               handleForm(e, key, "personIdentification")
                             }
@@ -792,6 +855,7 @@ const PeoplesAffected = () => {
                             variant="outlined"
                             label="Worker Taken Offsite for Further Assesment ?"
                             className={classes.formControl}
+                            value = {value.workerOffsiteAssessment}
                             onChange={(e) =>
                               handleForm(e, key, "workerOffsiteAssessment")
                             }
@@ -811,11 +875,24 @@ const PeoplesAffected = () => {
                             }
                             label="Location Details of Assesment Center ?"
                             className={classes.formControl}
+                            value = {value.locationAssessmentCenter}
                             onChange={(e) =>
                               handleForm(e, key, "locationAssessmentCenter")
                             }
                           />
                         </Grid>
+                        {form.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(key)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </Grid>
                     ))}
 
@@ -838,10 +915,10 @@ const PeoplesAffected = () => {
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe Any Actions Taken"
+                  label="Details of People Affected"
                   className={classes.fullWidth}
                   onChange={(e) => setPersonAffectedComments(e.target.value)}
-                  value={incidentsListData.personAffectedComments}
+                  defaultValue={incidentsListData.personAffectedComments}
                 />
               )}
             </Grid>

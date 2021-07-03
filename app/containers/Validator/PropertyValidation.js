@@ -18,10 +18,10 @@ function PropertyValidate(data) {
       isValid = false;
     }
 
-    if (validator.isEmpty(data[i].propertyOtherType.toString())) {
-      error[`propertyOtherType${[i]}`] = "This Field is Empty";
-      isValid = false;
-    }
+    // if (validator.isEmpty(data[i].propertyOtherType.toString())) {
+    //   error[`propertyOtherType${[i]}`] = "This Field is Empty";
+    //   isValid = false;
+    // }
 
     if (validator.isEmpty(data[i].damageDetails.toString())) {
       error[`damageDetails${[i]}`] = "This Field is Empty";
