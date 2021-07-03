@@ -43,6 +43,9 @@ import Fonts from 'dan-styles/Fonts.scss';
 import moment from 'moment';
 import api from '../../../utils/axios';
 
+// Router
+import { useHistory, useParams } from 'react-router';
+
 import IncidentDetails from '../InitialNotification/IncidentDetails';
 import IncidentDetailsSummary from '../../SummaryDetails/InitialNotification';
 import InvestigationSummary from '../../SummaryDetails/Investigation';
@@ -82,10 +85,14 @@ const Summary = () => {
   const [evidence, setEvidence] = useState(false);
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearn, setLessionlearn] = useState(false);
-  console.log(initialNotification);
+  const [isLoading, setIsLoading] = useState(false)
+
+  const {id} = useParams();
+
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(`api/v1/incidents/${fkid}/`);
+    const allIncidents = await api.get(`api/v1/incidents/${id}/`);
     await setIncidents(allIncidents.data.data.results);
+    await setIsLoading(true)
   };
 
   const [selectedDate, setSelectedDate] = React.useState(
@@ -105,10 +112,13 @@ const Summary = () => {
   }, []);
 
   return (
+    <>     
+     {isLoading ?
     <PapperBlock
       title={`Incident Number: ${incidents.incidentNumber}`}
       icon="ion-md-list-box"
     >
+
       <Box paddingBottom={1}>
         <div className={Styles.incidents}>
           <div className={Styles.item}>
@@ -335,7 +345,11 @@ const Summary = () => {
           </Grid>
         </Grid>
       </Box>
+     
+    
     </PapperBlock>
+    :<h1> Loading...</h1>}
+     </>
   );
 };
 
