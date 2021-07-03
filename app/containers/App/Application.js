@@ -105,12 +105,10 @@ import {
   Evidence,
   PersonalAndPpeDetails,
   ActionTaken,
-  EquiptmentImpactDetails,
   EventDetails,
   InvestigationOverview,
-  PropertyImpactDetails,
   WorkerDetails,
-  InitialDetails,
+  SeverityConsequences,
   BasicCause,
   BasicCauseAndAction,
   CauseAndAction,
@@ -274,14 +272,16 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/"
           component={PersonalAndPpeDetails}
         />
+
+
         {/* form investigation */}
         <Route
           path="/app/incident-management/registration/investigation/action-taken/"
           component={ActionTaken}
         />
         <Route
-          path="/app/incident-management/registration/investigation/equipment-impact-details/"
-          component={EquiptmentImpactDetails}
+          path="/app/incident-management/registration/investigation/severity-consequences/"
+          component={SeverityConsequences}
         />
         <Route
           path="/app/incident-management/registration/investigation/event-details/"
@@ -292,17 +292,11 @@ function Application(props) {
           component={InvestigationOverview}
         />
         <Route
-          path="/app/incident-management/registration/investigation/property-impact-details/"
-          component={PropertyImpactDetails}
-        />
-        <Route
           path="/app/incident-management/registration/investigation/worker-details/"
           component={WorkerDetails}
         />
-        <Route
-          path="/app/incident-management/registration/investigation/initial-details/"
-          component={InitialDetails}
-        />
+
+
         {/* form root cause analysis */}
         <Route
           path="/app/incident-management/registration/root-cause-analysis/basic-cause/"

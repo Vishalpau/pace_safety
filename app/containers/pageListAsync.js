@@ -331,7 +331,7 @@ export const BlankPage = loadable(() =>
 });
 export const Incident = loadable(() =>
   import('./Pages/Incident'), {
-    fallback: <Loading />,
+  fallback: <Loading />,
 })
 export const Pricing = loadable(() =>
   import('./Pages/Pricing'), {
@@ -505,11 +505,6 @@ export const ActionTaken = loadable(() =>
   fallback: <Loading />,
 });
 
-export const EquiptmentImpactDetails = loadable(() =>
-  import('./Forms/Investigation/EquiptmentImpactDetails'), {
-  fallback: <Loading />,
-});
-
 export const EventDetails = loadable(() =>
   import('./Forms/Investigation/EventDetails'), {
   fallback: <Loading />,
@@ -520,20 +515,16 @@ export const InvestigationOverview = loadable(() =>
   fallback: <Loading />,
 });
 
-export const PropertyImpactDetails = loadable(() =>
-  import('./Forms/Investigation/PropertyImpactDetails'), {
-  fallback: <Loading />,
-});
-
 export const WorkerDetails = loadable(() =>
   import('./Forms/Investigation/WorkerDetails'), {
   fallback: <Loading />,
 });
 
-export const InitialDetails = loadable(() =>
-  import('./Forms/Investigation/InitialDetails.js'), {
+export const SeverityConsequences = loadable(() =>
+  import('./Forms/Investigation/Severityconsequences'), {
   fallback: <Loading />,
 });
+
 
 // form root cause analysis
 

@@ -272,8 +272,6 @@ const Evidence = () => {
                           setForm({ ...form, document: e.target.files[0] })
                         }
                       />
-
-                      {/* <DeleteForeverIcon /> */}
                     </Grid>
                   </Grid>
                 </CardContent>

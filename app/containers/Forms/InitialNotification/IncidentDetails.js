@@ -518,10 +518,10 @@ const IncidentDetails = () => {
                 >
                   {incidentTypeValue.length !== 0
                     ? incidentTypeValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                      <MenuItem key={index} value={selectValues.inputValue}>
+                        {selectValues.inputLabel}
+                      </MenuItem>
+                    ))
                     : null}
                 </Select>
                 {error && error.incidenttype && (
@@ -658,10 +658,10 @@ const IncidentDetails = () => {
                 >
                   {contractorValue.length !== 0
                     ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                      <MenuItem key={index} value={selectValues.inputValue}>
+                        {selectValues.inputLabel}
+                      </MenuItem>
+                    ))
                     : null}
                 </Select>
                 {error && error.contractor && (
@@ -694,10 +694,10 @@ const IncidentDetails = () => {
                 >
                   {subContractorValue.length !== 0
                     ? subContractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                      <MenuItem key={index} value={selectValues.inputValue}>
+                        {selectValues.inputLabel}
+                      </MenuItem>
+                    ))
                     : null}
                 </Select>
                 {error && error.subcontractor && (
@@ -740,13 +740,13 @@ const IncidentDetails = () => {
                   >
                     {personAffectedValue.length !== 0
                       ? personAffectedValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
                       : null}
                   </RadioGroup>
                 </FormControl>
@@ -835,18 +835,18 @@ const IncidentDetails = () => {
                   >
                     {eqiptmentAffectValue.length !== 0
                       ? eqiptmentAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                            onChange={(e) => {
-                              setForm({
-                                ...form,
-                                equiptmenteffected: e.target.value,
-                              });
-                            }}
-                          />
-                        ))
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              equiptmenteffected: e.target.value,
+                            });
+                          }}
+                        />
+                      ))
                       : null}
                   </RadioGroup>
                 </FormControl>
@@ -884,19 +884,19 @@ const IncidentDetails = () => {
                 >
                   {environmentAffectValue.length !== 0
                     ? environmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                          onChange={(e) => {
-                            setForm({
-                              ...form,
-                              environmentaffected: e.target.value,
-                            });
-                          }}
-                        />
-                      ))
+                      <FormControlLabel
+                        key={index}
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            environmentaffected: e.target.value,
+                          });
+                        }}
+                      />
+                    ))
                     : null}
                 </RadioGroup>
                 {/* {error && error.environmentaffected && (
