@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 import { PapperBlock } from "dan-components";
+import { FormHelperText } from "@material-ui/core";
 
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
@@ -55,7 +56,7 @@ const PersonalAndPpeDetails = () => {
       activityGroup: "Evidence",
       status: "Active",
       updatedBy: 0,
-      createdBy: 0,
+      createdBy: 2,
       fkIncidentId: localStorage.getItem("fkincidentId"),
       error: "",
     },
@@ -138,7 +139,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-16",
-      question:"Did supervisor conducted I-care observation",
+      question: "Did supervisor conducted I-care observation",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -204,58 +205,50 @@ const PersonalAndPpeDetails = () => {
     },
   ]);
   
-  // const [ad08, setAd08] = useState({error:""});
-  // const [ad09, setAd09] = useState({error:""});
-  // const [ad10, setAd10] = useState({error:""});
-  // const [ad11, setAd11] = useState({error:""});
-  // const [ad12, setAd12] = useState({error:""});
-  // const [ad13, setAd13] = useState({error:""});
-  // const [ad14, setAd14] = useState({error:""});
-  // const [ad15, setAd15] = useState({error:""});
-  // const [ad16, setAd16] = useState({error:""});
-  // const [ad17, setAd17] = useState({error:""});
-  // const [ad18, setAd18] = useState({error:""});
-  // const [ad19, setAd19] = useState({error:""});
-  // const [ad20, setAd20] = useState({error:""});
-  // const [ad21, setAd21] = useState({error:""});
 
   const handleNext = async () => {
-    if (ppeList.length > 19) {
+    if (id && ppeList.length > 19  ) {
+      console.log("sagar");
       const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
       if (res.status === 200) {
         history.push(
           `/app/incident-management/registration/evidence/additional-details/${id}`
         );
       }
-    } else {
-      
-
-      
-
+    } else if(localStorage.getItem("fkincidentId") && ppeList.length > 19) {
+      const res = await api.put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`, ppeList);
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/evidence/additional-details/`
+        );
+      }
+    }else
+    {
       const valdation = ppeData;
       console.log(valdation);
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
-      setError(error);
-      // const res = await api.post(
-      //   `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-      //   ppeData
-      // );
-      // console.log(res);
+      await setError(error);
+      if (!isValid) {
+        return "Data is not valid";
+      }
+      
+      const res = await api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        ppeData
+      );
+      console.log(res);
 
-      // history.push(
-      //   "/app/incident-management/registration/evidence/additional-details/"
-      // );
+      history.push(
+        "/app/incident-management/registration/evidence/additional-details/"
+      );
     }
+    // }
   };
 
-  const handlePpeData = (e, index) => {
-    console.log(e.target.value)
-    const TempPpeData = [...ppeData];
-    const TempIndexData = ppedata[index];
-    TempIndexData.answer = e.target.value;
-    TempPpeData[index] = TempIndexData;
-    setPpeData(TempPpeData);
-    
+  const handlePpeData = async (e, index) => {
+    let TempPpeData = [...ppeData];
+    TempPpeData[index].answer = e.target.value;
+    await setPpeData(TempPpeData);
   };
 
   const handleUpdatePpeList = (e, index) => {
@@ -275,6 +268,15 @@ const PersonalAndPpeDetails = () => {
     await setIsLoading(true);
   };
 
+  const fetchppeDetails = async () => {
+    const res = await api.get(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`);
+    const result = res.data.data.results;
+    if (result.length) {
+      await setPpeList(result);
+    }
+    await setIsLoading(true);
+  };
+
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -283,13 +285,13 @@ const PersonalAndPpeDetails = () => {
     await setIncidentDetail(result);
   };
   useEffect(() => {
+    fetchppeDetails();
     fetchIncidentDetails();
     if (id) {
       fetchPpeList();
     } else {
       setIsLoading(true);
     }
-    
   }, []);
 
   return (
@@ -306,151 +308,167 @@ const PersonalAndPpeDetails = () => {
             </Grid>
             {ppeList.length === undefined ? (
               <>
-                {ppeData.slice(0,4).map((key, value) =>(
-                <>
-                {console.log(key)}
-                <Grid item md={6}>
-                  {/* <p>PPE worn properly</p> */}
-                  <FormControl
-                    component="fieldset"
-                    className={classes.formControl}
-                  >
-                    <FormLabel component="legend">{key.question}</FormLabel>
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      onChange={(e) => {handlePpeData(e, key)
-                      }
-                    }
-                    >
-                      {radioDecide.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  {key.error ? <p>{key.error}</p> : null}
-                </Grid>
+                {ppeData.slice(0, 4).map((value, index) => (
+                  <>
+                    <Grid item md={6}>
+                      {/* <p>PPE worn properly</p> */}
+                      <FormControl
+                        component="fieldset"
+                        className={classes.formControl}
+                        error={value.error}
+                      >
+                        <FormLabel component="legend">
+                          {value.question}
+                        </FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          onChange={(e) => {
+                            handlePpeData(e, index);
+                          }}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
 
-                
-                </>
-              ))}
-              <Grid item md={12}>
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </>
+                ))}
+                <Grid item md={12}>
                   <Typography variant="h6">Supervision</Typography>
-              </Grid>
-              {ppeData.slice(4,9).map((key, value) =>(
-                <>
-                
-
-                <Grid item md={6}>
-                  {/* <p>Employee self supervised</p> */}
-
-                  <FormControl
-                    component="fieldset"
-                    className={classes.formControl}
-                  >
-                    <FormLabel component="legend">
-                      {key.question}
-                    </FormLabel>
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      onChange={(e) => {handlePpeData(e, key)}}
-                    >
-                      {radioDecide.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  {key.error ? <p>{key.error}</p> : null}
                 </Grid>
+                {ppeData.slice(4, 9).map((value, index) => (
+                  <>
+                    {console.log(index)}
+                    <Grid item md={6}>
+                      {/* <p>Employee self supervised</p> */}
 
-                
-                </>
-              ))}
-              <Grid item md={12}>
+                      <FormControl
+                        component="fieldset"
+                        className={classes.formControl}
+                        error={value.error}
+                      >
+                        <FormLabel component="legend">
+                          {value.question}
+                        </FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          onChange={(e) => {
+                            handlePpeData(e, index + 4);
+                          }}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </>
+                ))}
+                <Grid item md={12}>
                   <Typography variant="h6">Flag Person</Typography>
                 </Grid>
-              {ppeData.slice(9,12).map((key, value) =>(
-                <>
-                <Grid item md={6}>
-                  {/* <p>Was flag person required for this job</p> */}
+                {ppeData.slice(9, 12).map((value, index) => (
+                  <>
+                    <Grid item md={6}>
+                      {/* <p>Was flag person required for this job</p> */}
 
-                  <FormControl
-                    component="fieldset"
-                    className={classes.formControl}
-                  >
-                    <FormLabel component="legend">
-                      {key.question}
-                    </FormLabel>
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      onChange={(e) => {handlePpeData(e, key)}}
-                    >
-                      {radioDecide.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  {key.error ? <p>{key.error}</p> : null}
-                </Grid>
+                      <FormControl
+                        component="fieldset"
+                        className={classes.formControl}
+                        error={value.error}
+                      >
+                        <FormLabel component="legend">
+                          {value.question}
+                        </FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          onChange={(e) => {
+                            handlePpeData(e, index + 9);
+                          }}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
 
-               
-                </>
-              ))}
-              
-                
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </>
+                ))}
 
-                
                 <Grid item md={12}>
                   <Box marginBottom={3} marginTop={4}>
                     <Typography variant="h6">Other</Typography>
                   </Box>
                 </Grid>
-                {ppeData.slice(12,14).map((key, value)=>(<>
-                  <Grid item md={6}>
-                  {/* <p>Metal on Metal incident</p> */}
-                  <FormControl
-                    component="fieldset"
-                    className={classes.formControl}
-                  >
-                    <FormLabel component="legend">
-                      {key.question}
-                    </FormLabel>
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      onChange={(e) => {handlePpeData(e, key)}}
-                    >
-                      {radioDecide.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                  {key.error ? <p>{key.error}</p> : null}
-                </Grid>
+                {ppeData.slice(12, 14).map((value, index) => (
+                  <>
+                    <Grid item md={6}>
+                      {/* <p>Metal on Metal incident</p> */}
+                      <FormControl
+                        component="fieldset"
+                        className={classes.formControl}
+                        error={value.error}
+                      >
+                        <FormLabel component="legend">
+                          {value.question}
+                        </FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          onChange={(e) => {
+                            handlePpeData(e, index + 12);
+                          }}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
 
-               
-
-                </>))}
-
-               
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </>
+                ))}
               </>
             ) : (
               <>
-                {/* {Object.entries(acti).slice(6,20).map(([key, value] ) => ())} */}
                 <Grid item md={6}>
                   {/* <p>PPE worn properly</p> */}
                   <FormControl

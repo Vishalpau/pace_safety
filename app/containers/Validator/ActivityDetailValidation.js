@@ -6,15 +6,17 @@ function ActivityDetailValidate(data) {
   const error = [];
   let isValid = true;
   for (let key in data) {
-    console.log("key", key)
+    console.log("key", key);
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        dataObj.error = "This filed is empty";
-        error.push(dataObj);
+        dataObj.error = "This field is empty";
         isValid = false;
-        continue;
+      } else {
+        dataObj.error = "";
       }
+      error.push(dataObj);
+      continue;
     }
 
     error.push(dataObj);

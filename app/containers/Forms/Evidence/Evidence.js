@@ -31,6 +31,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+import { result } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -81,11 +82,35 @@ const Evidence = () => {
       `/api/v1/incidents/${id}/evidences/${localStorage.getItem("id")}/`
     );
     const result = res.data.data.results;
-    console.log(result.id);
-    await setForm({ ...form, available: result.evidenceCheck });
-    await setForm({ ...form, comment: result.evidenceRemark });
-    await setForm({ ...form, evidenceType: result.evidenceCategory });
-    await setForm({ ...form, document: result.evidenceDocument });
+    console.log(result.evidenceCheck);
+    await setForm({
+      ...form,
+      available: result.evidenceCheck,
+      comment: result.evidenceRemark,
+      evidenceType: result.evidenceCategory,
+      document: result.evidenceDocument,
+    });
+
+    await setEvideceData(result);
+    await setIsLoading(true);
+  };
+
+  const fetchEvidenceData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem(
+        "fkincidentId"
+      )}/evidences/${localStorage.getItem("id")}/`
+    );
+    const result = res.data.data.results;
+    console.log(result.evidenceCheck);
+    await setForm({
+      ...form,
+      available: result.evidenceCheck,
+      comment: result.evidenceRemark,
+      evidenceType: result.evidenceCategory,
+      document: result.evidenceDocument,
+    });
+
     await setEvideceData(result);
     await setIsLoading(true);
   };
@@ -99,6 +124,7 @@ const Evidence = () => {
   };
 
   useEffect(() => {
+    fetchEvidenceData();
     fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
@@ -138,6 +164,21 @@ const Evidence = () => {
         );
       }
       // If non update case is there.
+    } else if (
+      localStorage.getItem("fkincidentId") &&
+      localStorage.getItem("id")
+    ) {
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem(
+          "fkincidentId"
+        )}/evidences/${localStorage.getItem("id")}/`,
+        data
+      );
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/evidence/activity-detail/`
+        );
+      }
     } else {
       data.append("createdAt", "");
       data.append("createdBy", "1");
@@ -152,6 +193,7 @@ const Evidence = () => {
           )}/evidences/`,
           data
         );
+
         console.log(res.data.data.result);
         if (res.status === 201) {
           const queId = res.data.data.results.id;
@@ -228,7 +270,6 @@ const Evidence = () => {
                         <FormLabel component="legend">Available</FormLabel>
                         <RadioGroup
                           className={classes.inlineRadioGroup}
-                          // error={error.available}
                           defaultValue={
                             form.available || evideceData.evidenceCheck
                           }
@@ -250,9 +291,6 @@ const Evidence = () => {
                       </FormControl>
                     </Grid>
                     <Grid item md={6}>
-                      {/* <Box marginBottom={2}>
-                <Typography variant="body">Comments</Typography>
-              </Box> */}
                       <TextField
                         id="filled-basic"
                         required
