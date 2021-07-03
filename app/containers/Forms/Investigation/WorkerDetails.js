@@ -109,12 +109,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -130,13 +130,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Type"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -161,13 +161,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Department"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -187,12 +187,12 @@ const WorkerDetails = () => {
               helperText={error.constructionManagerName}
               label="Number of Scheduled Work Hours"
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -209,13 +209,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Start of Shift Time"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -239,13 +239,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Type of Shift"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -270,13 +270,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Occupation"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -301,13 +301,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Shift Cycle"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -333,13 +333,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Number of Days into Shift"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -360,19 +360,51 @@ const WorkerDetails = () => {
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
-                Number of Days into Shift
+                Time in company
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Number of Days into Shift"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
+              >
+                {severity_level.map((selectValues) => (
+                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                ))}
+              </Select>
+              {error && error.actualSeverityLevel && (
+                <FormHelperText>{error.actualSeverityLevel}</FormHelperText>
+              )}
+            </FormControl>
+          </Grid>
+
+          <Grid item md={6}>
+            <FormControl
+              variant="outlined"
+              error={error && error.actualSeverityLevel}
+              required
+              className={classes.formControl}
+            >
+              <InputLabel id="unit-name-label">
+                Time on project
+              </InputLabel>
+              <Select
+                labelId="unit-name-label"
+                id="unit-name"
+                label="Number of Days into Shift"
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -397,13 +429,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Time in Industry"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -434,12 +466,12 @@ const WorkerDetails = () => {
                   ? error.constructionManagerName
                   : null
               }
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -456,12 +488,12 @@ const WorkerDetails = () => {
                   ? error.constructionManagerName
                   : null
               }
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -480,13 +512,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Primary Body Part Side Included"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -513,13 +545,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Secondary Body Part Included"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -546,13 +578,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Injury Illness"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -577,12 +609,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -599,12 +631,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -645,13 +677,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Highest Medical Responder"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -676,12 +708,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -698,13 +730,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="First Aid Treatment"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -729,13 +761,13 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Mechanism of Injury"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -813,12 +845,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -905,12 +937,12 @@ const WorkerDetails = () => {
                     ? error.constructionManagerName
                     : null
                 }
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     constructionManagerName: e.target.value,
-                //   });
-                // }}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     constructionManagerName: e.target.value,
+              //   });
+              // }}
               />
             </Grid>
           )}
@@ -932,12 +964,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
             {error && error.constructionManagerName && (
               <p>{error.constructionManagerName}</p>
@@ -957,12 +989,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -979,12 +1011,12 @@ const WorkerDetails = () => {
                   ? error.constructionManagerName
                   : null
               }
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -1001,12 +1033,12 @@ const WorkerDetails = () => {
                   ? error.constructionManagerName
                   : null
               }
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+            // onChange={(e) => {
+            //   setForm({
+            //     ...form,
+            //     constructionManagerName: e.target.value,
+            //   });
+            // }}
             />
           </Grid>
 
@@ -1022,7 +1054,7 @@ const WorkerDetails = () => {
               filesLimit={5}
               text="Drag and Drop File(s) Here or Click the Button Below"
               showButton
-              // onDrop={handleDrop}
+            // onDrop={handleDrop}
             />
             {error && error.fileupload ? <p>{error.fileupload}</p> : null}
           </Grid>
