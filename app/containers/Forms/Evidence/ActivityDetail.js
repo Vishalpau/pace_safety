@@ -125,9 +125,20 @@ const ActivityDetails = () => {
       error: "",
     },
   ]);
-  console.log(activtyList)
+  console.log(activtyList);
   const fetchActivityList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/activities/`);
+    const result = res.data.data.results;
+    console.log(result);
+    console.log(result.length);
+    if (result.length) {
+      await setActvityList(result);
+    }
+    await setIsLoading(true);
+  };
+
+  const fetchActivityData = async () => {
+    const res = await api.get(`/api/v1/incidents/442/activities/`);
     const result = res.data.data.results;
     console.log(result);
     console.log(result.length);
@@ -140,10 +151,10 @@ const ActivityDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = ActivityDetailValidate(activtyList);
     await setError(error);
-    console.log(error);
     if (!isValid) {
       return;
     }
+
     if (id && activtyList.length > 0) {
       console.log("in put");
       const res = await api.put(
@@ -155,7 +166,19 @@ const ActivityDetails = () => {
           `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
         );
       }
-    } else {
+    } else if(localStorage.getItem("fkincidentId") && activtyList.length > 0) {
+      const res = await api.put(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        activtyList
+      );
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/evidence/personal-and-ppedetails/`
+        );
+      }
+    }
+    else
+    {
       console.log("in Post");
 
       const res = await api.post(
@@ -189,6 +212,7 @@ const ActivityDetails = () => {
   };
 
   useEffect(() => {
+    fetchActivityData();
     fetchIncidentDetails();
     if (id) {
       fetchActivityList();
@@ -219,6 +243,7 @@ const ActivityDetails = () => {
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
+                        error={value.error}
                       >
                         <FormLabel component="legend">
                           {value.question}
@@ -240,10 +265,13 @@ const ActivityDetails = () => {
                             />
                           ))}
                         </RadioGroup>
+
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
                       </FormControl>
-                      {value.error ? (
-                        <FormHelperText>{value.error}</FormHelperText>
-                      ) : ""}
                     </Grid>
                   ))}
               </>
