@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Grid, Container, Input, Select } from "@material-ui/core";
 
 import Paper from "@material-ui/core/Paper";
@@ -11,10 +11,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
+import AddIcon from '@material-ui/icons/Add';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import { useSelector } from "react-redux";
+import { ContactlessOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -34,6 +38,10 @@ const EventDetails = () => {
     "Mital Aid",
     "Other",
   ];
+
+  const [weather, setWeather] = useState(
+    [{ weather: "", index: 1 }]
+  )
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
@@ -45,9 +53,33 @@ const EventDetails = () => {
   };
 
   const radioDecide = ["Yes", "No"];
+
+  const handelWeather = (e, key) => {
+    console.log(e.target.value)
+    let value = e.target.value
+    const temp = [...weather];
+    temp[key]["weather"] = value;
+    setWeather(temp);
+  }
+
+  const handelAdd = (e) => {
+    if (weather.length < 3) {
+      setWeather([...weather, { weather: "" }])
+    }
+  }
+
+  const handelRemove = async (e, index) => {
+    if (weather.length > 1) {
+      let newData = weather.filter((item, key) => key !== index)
+      await setWeather(newData)
+    }
+  }
+
+
   const classes = useStyles();
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
+      {console.log(weather[0])}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
 
@@ -91,23 +123,43 @@ const EventDetails = () => {
             />
           </Grid>
 
-          <Grid item md={12}>
-            {/* <p> Weather</p> */}
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Weather</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Weather"
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          {weather.map((value, index) => (
+            <>
+              <Grid item md={10}>
+                {/* <p> weather</p> */}
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">weather</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Weather"
+                    // value={weather[index] || ""}
+                    onChange={(e) => handelWeather(e, index, weather[index]["index"])}
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem
+                        value={weather["index"] || ""}
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {
+                weather.length > 1 ?
+                  <Grid item md={1}>
+                    <RemoveCircleOutlineIcon onClick={(e) => handelRemove(e, index)} fontSize="large" />
+                  </Grid> :
+                  null
+              }
+            </>
+          ))}
+
+          <Grid item md={1}>
+            <AddIcon onClick={(e) => handelAdd(e)} fontSize="large" />
           </Grid>
-
-
 
           <Grid item md={6}>
             {/* <p> Temprature(c</p> */}
@@ -266,7 +318,7 @@ const EventDetails = () => {
           />
         </Grid>
       </Grid>
-    </PapperBlock>
+    </PapperBlock >
   );
 };
 
