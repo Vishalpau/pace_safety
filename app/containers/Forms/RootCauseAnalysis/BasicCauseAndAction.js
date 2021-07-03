@@ -93,7 +93,11 @@ const BasicCauseAndAction = () => {
     let page_url = window.location.href
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
     putId.current = lastItem
-    history.push(`/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem("fkincidentId")}`)
+    if (!isNaN(putId.current)) {
+      history.push(`/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem("fkincidentId")}`)
+    } else {
+      history.push(`/app/incident-management/registration/root-cause-analysis/management-control/`)
+    }
   }
 
   let form_link = window.location.href;
@@ -106,53 +110,53 @@ const BasicCauseAndAction = () => {
     <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-        <Grid item md={6}>
+          <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Number
+              Incident Number
             </Typography>
             <Typography className={Type.labelValue}>
-                {localStorage.getItem("fkincidentId")}
+              {localStorage.getItem("fkincidentId")}
             </Typography>
-        </Grid>
+          </Grid>
 
-        <Grid item md={6}>
+          <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
             <Typography className={Type.labelValue}>
               5 Why Analysis
             </Typography>
-        </Grid>
-
-          <Grid item md={12}>
-              <Typography variant="h6" gutterBottom>
-                Actions
-              </Typography>
           </Grid>
 
           <Grid item md={12}>
-              <Typography>
-                Option selected from basic cause
-              </Typography>
-              <List className={classes.list} dense disablePadding>
-                {/* console.log(`${key}: ${value}`) */}
+            <Typography variant="h6" gutterBottom>
+              Actions
+            </Typography>
+          </Grid>
 
-                {Object.entries(data).map(([key, value]) => (
-                  <div>
-                    <ListItem>
-                      <ListItemText primary={key} />
-                    </ListItem>
-                    {value.map((value) => (
-                      <ListItemLink href="#">
-                        <ListItemText primary={<small>{value}</small>} />
-                      </ListItemLink>
-                    ))}
-                    <button className={classes.textButton}>
-                      <AddCircleOutlineIcon /> Add a new action
-                    </button>
-                  </div>
-                ))}
-              </List>
+          <Grid item md={12}>
+            <Typography>
+              Option selected from basic cause
+            </Typography>
+            <List className={classes.list} dense disablePadding>
+              {/* console.log(`${key}: ${value}`) */}
+
+              {Object.entries(data).map(([key, value]) => (
+                <div>
+                  <ListItem>
+                    <ListItemText primary={key} />
+                  </ListItem>
+                  {value.map((value) => (
+                    <ListItemLink href="#">
+                      <ListItemText primary={<small>{value}</small>} />
+                    </ListItemLink>
+                  ))}
+                  <button className={classes.textButton}>
+                    <AddCircleOutlineIcon /> Add a new action
+                  </button>
+                </div>
+              ))}
+            </List>
           </Grid>
 
 

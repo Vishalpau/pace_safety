@@ -146,7 +146,7 @@ const Details = () => {
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push("/app/incident-management/registration/root-cause-analysis/hazardious-acts/")
-    } else {
+    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`)
     }
     e.preventDefault();

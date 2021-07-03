@@ -207,7 +207,7 @@ const CorrectiveAction = () => {
             )}/pacecauses/${callObjects[key].pk}/`,
             callObjects[key]
           );
-          if (res.status == 201) {
+          if (res.status == 200) {
             console.log("request done");
             nextPageLink = res.status
           }
@@ -226,7 +226,8 @@ const CorrectiveAction = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length === 0) {
         history.push("/app/incident-management/registration/root-cause-analysis/root-cause-analysis/")
-      } else {
+      } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
+        console.log("here")
         history.push(`/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current}`)
       }
     }
@@ -244,28 +245,28 @@ const CorrectiveAction = () => {
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {localStorage.getItem("fkincidentId")}
-              </Typography>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident number
+            </Typography>
+            <Typography className={Type.labelValue}>
+              {localStorage.getItem("fkincidentId")}
+            </Typography>
           </Grid>
 
           <Grid item md={6}>
-          <Typography variant="h6" className={Type.labelName} gutterBottom>
-                RCA Method
-              </Typography>
-              <Typography className={Type.labelValue}>
-                PACE Cause Analysis
-              </Typography>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              RCA Method
+            </Typography>
+            <Typography className={Type.labelValue}>
+              PACE Cause Analysis
+            </Typography>
           </Grid>
 
           <Grid item md={12}>
             <FormControl component="fieldset">
-            <FormLabel component="legend" error={error.managementControl}>
-              Management Control
-            </FormLabel>
+              <FormLabel component="legend" error={error.managementControl}>
+                Management Control
+              </FormLabel>
               {MANAGEMENTCONTROL.map((value) => (
                 <FormControlLabel
                   control={<Checkbox name={value} />}
