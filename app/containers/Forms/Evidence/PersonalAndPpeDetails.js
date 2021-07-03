@@ -47,7 +47,7 @@ const PersonalAndPpeDetails = () => {
   const [ppeList, setPpeList] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
-  const [ppeData, ppeSetData] = useState([
+  const [ppeData, setPpeData] = useState([
     {
       questionCode: "PPE-08",
       question: "PPE worn properly?",
@@ -236,25 +236,26 @@ const PersonalAndPpeDetails = () => {
       console.log(valdation);
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
       setError(error);
-      const res = await api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        ppeData
-      );
-      console.log(res);
+      // const res = await api.post(
+      //   `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+      //   ppeData
+      // );
+      // console.log(res);
 
-      history.push(
-        "/app/incident-management/registration/evidence/additional-details/"
-      );
+      // history.push(
+      //   "/app/incident-management/registration/evidence/additional-details/"
+      // );
     }
   };
 
   const handlePpeData = (e, index) => {
     console.log(e.target.value)
-    const TempPpe = ppeData;
+    const TempPpeData = [...ppeData];
     const TempIndexData = ppedata[index];
     TempIndexData.answer = e.target.value;
-    TempPpe[index] = TempIndexData;
-    setPpeData(TempPpe);
+    TempPpeData[index] = TempIndexData;
+    setPpeData(TempPpeData);
+    
   };
 
   const handleUpdatePpeList = (e, index) => {
@@ -330,6 +331,7 @@ const PersonalAndPpeDetails = () => {
                       ))}
                     </RadioGroup>
                   </FormControl>
+                  {key.error ? <p>{key.error}</p> : null}
                 </Grid>
 
                 
@@ -365,6 +367,7 @@ const PersonalAndPpeDetails = () => {
                       ))}
                     </RadioGroup>
                   </FormControl>
+                  {key.error ? <p>{key.error}</p> : null}
                 </Grid>
 
                 
@@ -398,6 +401,7 @@ const PersonalAndPpeDetails = () => {
                       ))}
                     </RadioGroup>
                   </FormControl>
+                  {key.error ? <p>{key.error}</p> : null}
                 </Grid>
 
                
@@ -435,6 +439,7 @@ const PersonalAndPpeDetails = () => {
                       ))}
                     </RadioGroup>
                   </FormControl>
+                  {key.error ? <p>{key.error}</p> : null}
                 </Grid>
 
                
