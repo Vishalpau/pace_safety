@@ -228,7 +228,6 @@ const Evidence = () => {
                         <FormLabel component="legend">Available</FormLabel>
                         <RadioGroup
                           className={classes.inlineRadioGroup}
-                          // error={error.available}
                           defaultValue={
                             form.available || evideceData.evidenceCheck
                           }
@@ -250,9 +249,6 @@ const Evidence = () => {
                       </FormControl>
                     </Grid>
                     <Grid item md={6}>
-                      {/* <Box marginBottom={2}>
-                <Typography variant="body">Comments</Typography>
-              </Box> */}
                       <TextField
                         id="filled-basic"
                         required

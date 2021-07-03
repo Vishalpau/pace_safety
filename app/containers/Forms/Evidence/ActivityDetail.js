@@ -141,9 +141,7 @@ const ActivityDetails = () => {
     const { error, isValid } = ActivityDetailValidate(activtyList);
     await setError(error);
     console.log(error);
-    if (!isValid) {
-      return;
-    }
+  
     if (id && activtyList.length > 0) {
       console.log("in put");
       const res = await api.put(

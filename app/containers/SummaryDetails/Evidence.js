@@ -109,16 +109,6 @@ const EvidenceSummary = () => {
                       gutterBottom
                       className={Fonts.labelName}
                     >
-                        Id :
-                      {evidence.id}
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={6} md={6}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
                         Evidence No
                     </Typography>
                     <Typography
@@ -210,16 +200,6 @@ const EvidenceSummary = () => {
             {activity.length !== 0
               ? activity.map((ad, key) => (
                 <Grid item xs={12} spacing={3} key={key}>
-                  <Grid item lg={12}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
-                        Id :
-                      {ad.id}
-                    </Typography>
-                  </Grid>
                   <Grid item lg={12}>
                     <Typography
                       variant="h6"
