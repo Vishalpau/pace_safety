@@ -90,7 +90,27 @@ const Evidence = () => {
       evidenceType: result.evidenceCategory,
       document: result.evidenceDocument,
     });
-    
+
+    await setEvideceData(result);
+    await setIsLoading(true);
+  };
+
+  const fetchEvidenceData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem(
+        "fkincidentId"
+      )}/evidences/${localStorage.getItem("id")}/`
+    );
+    const result = res.data.data.results;
+    console.log(result.evidenceCheck);
+    await setForm({
+      ...form,
+      available: result.evidenceCheck,
+      comment: result.evidenceRemark,
+      evidenceType: result.evidenceCategory,
+      document: result.evidenceDocument,
+    });
+
     await setEvideceData(result);
     await setIsLoading(true);
   };
@@ -104,6 +124,7 @@ const Evidence = () => {
   };
 
   useEffect(() => {
+    fetchEvidenceData();
     fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
@@ -143,6 +164,21 @@ const Evidence = () => {
         );
       }
       // If non update case is there.
+    } else if (
+      localStorage.getItem("fkincidentId") &&
+      localStorage.getItem("id")
+    ) {
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem(
+          "fkincidentId"
+        )}/evidences/${localStorage.getItem("id")}/`,
+        data
+      );
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/evidence/activity-detail/`
+        );
+      }
     } else {
       data.append("createdAt", "");
       data.append("createdBy", "1");
@@ -157,8 +193,7 @@ const Evidence = () => {
           )}/evidences/`,
           data
         );
-        result = res.data.data.results;
-        setForm({ ...form });
+
         console.log(res.data.data.result);
         if (res.status === 201) {
           const queId = res.data.data.results.id;

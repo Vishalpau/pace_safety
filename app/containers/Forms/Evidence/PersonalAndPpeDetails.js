@@ -204,9 +204,10 @@ const PersonalAndPpeDetails = () => {
       error: "",
     },
   ]);
+  
 
   const handleNext = async () => {
-    if (ppeList.length > 19) {
+    if (id && ppeList.length > 19  ) {
       console.log("sagar");
       const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
       if (res.status === 200) {
@@ -214,7 +215,15 @@ const PersonalAndPpeDetails = () => {
           `/app/incident-management/registration/evidence/additional-details/${id}`
         );
       }
-    } else {
+    } else if(localStorage.getItem("fkincidentId") && ppeList.length > 19) {
+      const res = await api.put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`, ppeList);
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/evidence/additional-details/`
+        );
+      }
+    }else
+    {
       const valdation = ppeData;
       console.log(valdation);
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
@@ -222,7 +231,7 @@ const PersonalAndPpeDetails = () => {
       if (!isValid) {
         return "Data is not valid";
       }
-      // if (Object.keys(error).length == 0) {
+      
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         ppeData
@@ -259,6 +268,15 @@ const PersonalAndPpeDetails = () => {
     await setIsLoading(true);
   };
 
+  const fetchppeDetails = async () => {
+    const res = await api.get(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`);
+    const result = res.data.data.results;
+    if (result.length) {
+      await setPpeList(result);
+    }
+    await setIsLoading(true);
+  };
+
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -267,6 +285,7 @@ const PersonalAndPpeDetails = () => {
     await setIncidentDetail(result);
   };
   useEffect(() => {
+    fetchppeDetails();
     fetchIncidentDetails();
     if (id) {
       fetchPpeList();
