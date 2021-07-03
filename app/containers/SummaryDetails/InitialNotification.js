@@ -525,24 +525,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Where there any release?
-                      </Typography>
-
-                      <Typography
-                        variant="body"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {envData.envQuestion}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={6}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Where there any impact on wildlife?
+                      {envData.envQuestion}
                       </Typography>
 
                       <Typography
@@ -552,22 +535,12 @@ const IncidentDetailsSummary = () => {
                       >
                         {envData.envQuestionOption}
                       </Typography>
-                    </Grid>
-                    <Grid item md={6}>
                       <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Where there any waterbody Affected?
-                      </Typography>
-
-                      <Typography
-                        variant="body"
+                        variant="p"
                         color="textSecondary"
                         className={Fonts.labelValue}
                       >
-                        {envData.envAnswerDetails}
+                        {envData.envAnserDetails}
                       </Typography>
                     </Grid>
                  </Grid>

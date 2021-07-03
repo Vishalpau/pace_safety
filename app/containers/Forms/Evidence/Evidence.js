@@ -67,6 +67,7 @@ const Evidence = () => {
     evidenceCategory: "",
   });
   const classes = useStyles();
+  const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = React.useState({
     evidenceType: "",
     available: "",
@@ -77,19 +78,28 @@ const Evidence = () => {
 
   const fetchEvidenceList = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem(
-        "fkincidentId"
-      )}/evidences/${id}/`
+      `/api/v1/incidents/${id}/evidences/${localStorage.getItem("id")}/`
     );
     const result = res.data.data.results;
+    console.log(result.id);
     await setForm({ ...form, available: result.evidenceCheck });
     await setForm({ ...form, comment: result.evidenceRemark });
     await setForm({ ...form, evidenceType: result.evidenceCategory });
+    await setForm({ ...form, document: result.evidenceDocument });
     await setEvideceData(result);
     await setIsLoading(true);
   };
 
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
+
   useEffect(() => {
+    fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
     } else {
@@ -97,6 +107,7 @@ const Evidence = () => {
     }
   }, []);
   // On the next button click function call.
+  console.log(form);
   const handleNext = async () => {
     const { error, isValid } = EvidenceValidate(form);
     setError(error);
@@ -118,7 +129,7 @@ const Evidence = () => {
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem(
           "fkincidentId"
-        )}/evidences/${id}/`,
+        )}/evidences/${localStorage.getItem("id")}/`,
         data
       );
       if (res.status === 200) {
@@ -141,8 +152,10 @@ const Evidence = () => {
           )}/evidences/`,
           data
         );
-
+        console.log(res.data.data.result);
         if (res.status === 201) {
+          const queId = res.data.data.results.id;
+          localStorage.setItem("id", queId);
           history.push(
             "/app/incident-management/registration/evidence/activity-detail/"
           );
@@ -158,14 +171,12 @@ const Evidence = () => {
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
-            <Grid item md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Number
-              </Typography>
-
-              <Typography varint="body1" className={Type.labelValue}>
-                98865686
-              </Typography>
+            <Grid item md={12}>
+              <Box>
+                <Typography variant="body2" gutterBottom>
+                  Incident number: {incidentDetail.incidentNumber}
+                </Typography>
+              </Box>
             </Grid>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>

@@ -268,8 +268,11 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/evidence/:id"
           component={Evidence}
         />
-        <Route
+        <Route exact
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/"
+          component={PersonalAndPpeDetails}
+        /><Route exact
+          path="/app/incident-management/registration/evidence/personal-and-ppedetails/:id"
           component={PersonalAndPpeDetails}
         />
 
@@ -377,7 +380,6 @@ function Application(props) {
           path="/app/incident-management/registration/summary/summary/:id"
           component={Summary}
         />
-        history.push("/app/incident-management/registration/evidence/personal-and-ppedetails/")
         {/* from leassionlearned */}
         <Route
           exact
