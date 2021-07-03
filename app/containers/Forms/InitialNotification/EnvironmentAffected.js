@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 const EnvironmentAffected = () => {
   const reportedTo = [
     "Internal Leadership",
