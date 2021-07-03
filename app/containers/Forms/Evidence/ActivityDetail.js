@@ -21,10 +21,11 @@ import { FormHelperText } from "@material-ui/core";
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
-    margin: "1rem 0",
+    flexWrap: "wrap",
   },
   button: {
     margin: theme.spacing(1),
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   inlineRadioGroup: {
     flexDirection: "row",
     gap: "1.5rem",
+    flexBasis: "100%",
   },
 }));
 const ActivityDetails = () => {
@@ -49,7 +51,7 @@ const ActivityDetails = () => {
   const [activtyList, setActvityList] = useState([
     {
       questionCode: "AD-01",
-      question: "Did the job require work permit?",
+      question: "Did the Job Require Work Permit ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -60,7 +62,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-02",
-      question: "If yes ,was a permit complted prior of the job?",
+      question: "If Yes, Was a Permit Completed Prior of the Job ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -71,7 +73,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-03",
-      question: "Was per-job safety discussed head?",
+      question: "Was Per-Job Safety Discussed Head ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -82,7 +84,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-04",
-      question: "Was JHA executed for the task?",
+      question: "Was JHA executed for the Task ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -93,7 +95,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-05",
-      question: "Was FLA executed for the task?",
+      question: "Was FLA Executed for the Task ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -104,7 +106,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-06",
-      question: " Did pre-planning identified the hazard?",
+      question: "Did Pre-Planning Identified the Hazard ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -115,7 +117,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-07",
-      question: "was per-jon planning enhanced the post-event?",
+      question: "Was Per-Zone Planning Enhanced the Post-Event ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -202,20 +204,20 @@ const ActivityDetails = () => {
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
-            <Grid item md={4}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Incident number: {incidentDetail.incidentNumber}
-                </Typography>
-              </Box>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
             </Grid>
-            {console.log(activtyList)}
             {activtyList.length ? (
               <>
                 {Object.entries(activtyList)
                   .slice(0, 7)
                   .map(([key, value]) => (
-                    <Grid item md={12}>
+                    <Grid item md={6}>
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
@@ -244,9 +246,7 @@ const ActivityDetails = () => {
 
                         {value.error ? (
                           <FormHelperText>{value.error}</FormHelperText>
-                        ) : (
-                          ""
-                        )}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   ))}
@@ -277,7 +277,7 @@ const ActivityDetails = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Activity detail"
+              selectedItem="Activity Detail"
             />
           </Grid>
         </Grid>

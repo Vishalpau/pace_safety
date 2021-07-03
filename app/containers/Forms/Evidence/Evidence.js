@@ -11,19 +11,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { PapperBlock } from "dan-components";
 import InputLabel from "@material-ui/core/InputLabel";
-import Type from "../../../styles/components/Fonts.scss";
+
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { FormHelperText } from "@material-ui/core";
-import api from "../../../utils/axios";
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import EvidenceValidate from "../../Validator/EvidenceValidation";
-import { useHistory, useParams } from "react-router";
-import FormHeader from "../FormHeader";
-// import FormData from "form-data";
 import fs from "fs";
 // import Upload from "material-ui-upload/Upload";
 import { DropzoneArea } from "material-ui-dropzone";
@@ -31,6 +24,16 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+
+import api from "../../../utils/axios";
+import FormSideBar from "../FormSideBar";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import EvidenceValidate from "../../Validator/EvidenceValidation";
+import { useHistory, useParams } from "react-router";
+import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss";
+// import FormData from "form-data";
+
 import { result } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
@@ -90,7 +93,7 @@ const Evidence = () => {
       evidenceType: result.evidenceCategory,
       document: result.evidenceDocument,
     });
-    
+
     await setEvideceData(result);
     await setIsLoading(true);
   };
@@ -174,16 +177,17 @@ const Evidence = () => {
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No", "N/A"];
   return (
-    <PapperBlock title=" Evidences" icon="ion-md-list-box">
+    <PapperBlock title="Evidences" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Incident number: {incidentDetail.incidentNumber}
-                </Typography>
-              </Box>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
             </Grid>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>

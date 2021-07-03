@@ -24,17 +24,19 @@ import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailVa
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
-    margin: "1rem 0",
+    flexWrap: "wrap",
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
     flexDirection: "row",
+    flexBasis: "100%",
     gap: "1.5rem",
   },
 }));
@@ -51,7 +53,7 @@ const PersonalAndPpeDetails = () => {
   const [ppeData, setPpeData] = useState([
     {
       questionCode: "PPE-08",
-      question: "PPE worn properly?",
+      question: "PPE Worn Properly ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -62,7 +64,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-09",
-      question: "PPE in good shape?",
+      question: "PPE in Good Shape ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -73,7 +75,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-10",
-      question: "PPE Proper fit?",
+      question: "PPE Proper Fit ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -84,7 +86,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-11",
-      question: " PPE appropriate for task?",
+      question: " PPE Appropriate for Task ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -95,7 +97,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-12",
-      question: "Employee self supervised",
+      question: "Employee Self Supervised",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -106,7 +108,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-13",
-      question: "Supervisor present at site",
+      question: "Supervisor Present at Site",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -117,7 +119,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-14",
-      question: "Supervisor provided clear detail of work",
+      question: "Supervisor Provided Clear Detail of Work",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -128,7 +130,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-15",
-      question: "Supervisor provided detail work package",
+      question: "Supervisor Provided Detail Work Package",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -139,7 +141,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-16",
-      question: "Did supervisor conducted I-care observation",
+      question: "Did Supervisor Conducted I-Care Observation",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -150,7 +152,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-17",
-      question: "Was flag person required for this job",
+      question: "Was Flag Person Required for this Job ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -161,7 +163,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-18",
-      question: "Flag person trained/competent",
+      question: "Flag Person Trained/Competent",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -172,7 +174,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-19",
-      question: "Was flag person present",
+      question: "Was Flag Person Present",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -183,7 +185,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-20",
-      question: " Metal on Metal incident",
+      question: " Metal on Metal Incident",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -194,7 +196,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-21",
-      question: " Was person in the line of fire ",
+      question: "Was Person in the Line of Fire ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -207,7 +209,6 @@ const PersonalAndPpeDetails = () => {
 
   const handleNext = async () => {
     if (ppeList.length > 19) {
-      console.log("sagar");
       const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
       if (res.status === 200) {
         history.push(
@@ -281,18 +282,18 @@ const PersonalAndPpeDetails = () => {
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
-              <Box>
-                <Typography variant="body2" gutterBottom>
-                  Incident number: {incidentDetail.incidentNumber}
-                </Typography>
-              </Box>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Number
+              </Typography>
+              <Typography className={Type.labelValue} gutterBottom>
+                {incidentDetail.incidentNumber}
+              </Typography>
             </Grid>
             {ppeList.length === undefined ? (
               <>
                 {ppeData.slice(0, 4).map((value, index) => (
                   <>
                     <Grid item md={6}>
-                      {/* <p>PPE worn properly</p> */}
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
@@ -483,7 +484,7 @@ const PersonalAndPpeDetails = () => {
                     component="fieldset"
                     className={classes.formControl}
                   >
-                    <FormLabel component="legend">PPE in good shape?</FormLabel>
+                    <FormLabel component="legend">PPE in Good Shape?</FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
                       defaultValue={ppeList[8].answer}
@@ -508,7 +509,7 @@ const PersonalAndPpeDetails = () => {
                     component="fieldset"
                     className={classes.formControl}
                   >
-                    <FormLabel component="legend">PPE Proper fit?</FormLabel>
+                    <FormLabel component="legend">PPE Proper Fit?</FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
                       defaultValue={ppeList[9].answer}
@@ -594,7 +595,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Supervisor present at site
+                      Supervisor Present at Site ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -622,7 +623,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Supervisor provided clear detail of work
+                      Supervisor Provided Clear Detail of Work ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -649,7 +650,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Supervisor provided detail work package
+                      Supervisor Provided Detail Work Package ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -676,7 +677,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Did supervisor conducted I-care observation
+                      Did Supervisor Conducted I-Care Observation ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -707,7 +708,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Was flag person required for this job
+                      Was Flag Person Required for this Job ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -734,7 +735,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Flag person trained/competent
+                      Flag Person Trained/Competent
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -764,7 +765,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Was flag person present
+                      Was Flag Person Present ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -786,9 +787,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
-                  <Box marginBottom={3} marginTop={4}>
-                    <Typography variant="h6">Other</Typography>
-                  </Box>
+                  <Typography variant="h6">Other</Typography>
                 </Grid>
 
                 <Grid item md={6}>
@@ -798,7 +797,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Metal on Metal incident
+                      Metal on Metal Incident
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -826,7 +825,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Was person in the line of fire
+                      Was Person in the Line of Fire ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -869,7 +868,7 @@ const PersonalAndPpeDetails = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Personal and Ppedetails"
+              selectedItem="Personal and PPE Details"
               deleteForm={[1, 2, 3]}
             />
           </Grid>
