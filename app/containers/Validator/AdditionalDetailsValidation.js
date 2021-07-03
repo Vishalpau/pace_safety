@@ -12,18 +12,14 @@ function AdditionalDetailValidate(data) {
         dataObj.error = "This filed is empty";
         error.push(dataObj);
         isValid = false;
-        continue;
+      } else {
+        dataObj.error = "";
       }
+      error.push(dataObj);
+      continue;
     }
-
     error.push(dataObj);
   }
-
-  // if(data[1]){
-  //     {if (validator.isEmpty(data[1].answer.toString()))
-  //         error.answer = "this filed is empty"
-  //     }
-  // }
   console.log("------", error, isValid);
   return { error, isValid };
 }
