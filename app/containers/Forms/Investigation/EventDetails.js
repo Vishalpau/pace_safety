@@ -39,9 +39,8 @@ const EventDetails = () => {
     "Other",
   ];
 
-  const [weather, setWeather] = useState(
-    [{ weather: "", index: 1 }]
-  )
+  const [weather, setWeather] = useState([{ weather: "" }])
+  const [overAllCost, setOverAllCost] = useState([{ type: "", amount: "", cost: "" }])
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
@@ -54,17 +53,16 @@ const EventDetails = () => {
 
   const radioDecide = ["Yes", "No"];
 
-  const handelWeather = (e, key) => {
+  const handelWeather = async (e, key, value) => {
     console.log(e.target.value)
-    let value = e.target.value
     const temp = [...weather];
     temp[key]["weather"] = value;
-    setWeather(temp);
+    await setWeather(temp);
   }
 
-  const handelAdd = (e) => {
+  const handelAdd = async (e) => {
     if (weather.length < 3) {
-      setWeather([...weather, { weather: "" }])
+      await setWeather([...weather, { weather: "" }])
     }
   }
 
@@ -75,11 +73,24 @@ const EventDetails = () => {
     }
   }
 
+  const handelOveallCostAdd = async (e) => {
+    if (overAllCost.length < 4) {
+      await setOverAllCost([...overAllCost, { type: "", amount: "", cost: "" }])
+    }
+  }
+
+  const handelOverallCostRemove = async (e, index) => {
+    if (overAllCost.length > 1) {
+      let newData = overAllCost.filter((item, key) => key !== index)
+      await setOverAllCost(newData)
+    }
+  }
+
 
   const classes = useStyles();
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
-      {console.log(weather[0])}
+      {console.log(overAllCost)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
 
@@ -133,12 +144,12 @@ const EventDetails = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="Weather"
-                    // value={weather[index] || ""}
-                    onChange={(e) => handelWeather(e, index, weather[index]["index"])}
+                    value={weather[index].weather || ""}
                   >
                     {selectValues.map((selectValues) => (
                       <MenuItem
-                        value={weather["index"] || ""}
+                        value={selectValues}
+                        onClick={(e) => handelWeather(e, index, selectValues)}
                       >
                         {selectValues}
                       </MenuItem>
@@ -157,9 +168,11 @@ const EventDetails = () => {
             </>
           ))}
 
-          <Grid item md={1}>
-            <AddIcon onClick={(e) => handelAdd(e)} fontSize="large" />
-          </Grid>
+          {weather.length < 3 ?
+            <Grid item md={1}>
+              <AddIcon onClick={(e) => handelAdd(e)} fontSize="large" />
+            </Grid>
+            : null}
 
           <Grid item md={6}>
             {/* <p> Temprature(c</p> */}
@@ -244,46 +257,8 @@ const EventDetails = () => {
             />
           </Grid>
 
-
-
-          <Grid item md={12}>
-            <Typography variant="h6">Lighting</Typography>
-          </Grid>
           <Grid item md={6}>
-            {/* <p>Fluid Amount</p> */}
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Fluid Amount"
-              className={classes.formControl}
-            />
-          </Grid>
-          <Grid item md={6}>
-            {/* <p>Fluid Type</p> */}
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Fluid Type</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Fluid Type"
-              >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item md={6}>
-            {/* <p>AEL </p> */}
-            <TextField
-              id="title"
-              variant="outlined"
-              label="AEL"
-              className={classes.formControl}
-            />
-          </Grid>
-          <Grid item md={6}>
-            {/* <p>PEL </p> */}
+            <p>PEL</p>
             <TextField
               id="title"
               variant="outlined"
@@ -291,6 +266,120 @@ const EventDetails = () => {
               className={classes.formControl}
             />
           </Grid>
+
+
+
+          <Grid item md={12}>
+            <Typography variant="h6">Property details</Typography>
+          </Grid>
+          <Grid item md={6}>
+            {/* <p>Fluid Amount</p> */}
+            <TextField
+              id="title"
+              variant="outlined"
+              label="Impact Information"
+              className={classes.formControl}
+            />
+          </Grid>
+
+          <Grid item md={12}>
+            <Typography variant="h6">Overall cost</Typography>
+          </Grid>
+
+          {overAllCost.map((value, index) => (
+            <>
+              <Grid item md={4}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Type</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Fluid type"
+                    value={overAllCost[index].type}
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={async (e) => {
+                          const temp = [...overAllCost];
+                          temp[index]["type"] = selectValues;
+                          await setOverAllCost(temp)
+                        }
+                        }
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item md={4}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Amount</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Fluid type"
+                    value={overAllCost[index].amount}
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={async (e) => {
+                          const temp = [...overAllCost];
+                          temp[index]["amount"] = selectValues;
+                          await setOverAllCost(temp)
+                        }
+                        }
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item md={2}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Cost Factor</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Fluid type"
+                    value={overAllCost[index].cost}
+                  >
+                    {selectValues.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={async (e) => {
+                          const temp = [...overAllCost];
+                          temp[index]["cost"] = selectValues;
+                          await setOverAllCost(temp)
+                        }
+                        }
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              {
+                overAllCost.length > 1 ?
+                  <Grid item md={1}>
+                    <RemoveCircleOutlineIcon onClick={(e) => handelOverallCostRemove(e, index)} fontSize="large" />
+                  </Grid> :
+                  null
+              }
+            </>
+          ))}
+
+
+          <Grid item md={1}>
+            <AddIcon onClick={(e) => handelOveallCostAdd(e)} fontSize="large" />
+          </Grid>
+
           <Grid item md={12}>
             <Button
               variant="contained"
