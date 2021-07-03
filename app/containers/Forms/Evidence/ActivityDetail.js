@@ -17,6 +17,7 @@ import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router-dom";
 import api from "../../../utils/axios";
 import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
+import { FormHelperText } from "@material-ui/core";
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
@@ -37,7 +38,7 @@ const ActivityDetails = () => {
   const [selectedDate, setSelectedDate] = useState(
     new Date("2014-08-18T21:11:54")
   );
-  const [error, setError] = useState({});
+  const [error, setError] = useState();
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
@@ -124,13 +125,9 @@ const ActivityDetails = () => {
       error: "",
     },
   ]);
-  
+  console.log(activtyList)
   const fetchActivityList = async () => {
-    console.log("sagar");
-
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-    );
+    const res = await api.get(`/api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
     console.log(result);
     console.log(result.length);
@@ -138,30 +135,29 @@ const ActivityDetails = () => {
       await setActvityList(result);
     }
     await setIsLoading(true);
-
-    console.log(activtyList.length);
   };
 
   const handleNext = async () => {
+    const { error, isValid } = ActivityDetailValidate(activtyList);
+    await setError(error);
+    console.log(error);
+    if (!isValid) {
+      return;
+    }
     if (id && activtyList.length > 0) {
       console.log("in put");
       const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        `api/v1/incidents/${id}/activities/`,
         activtyList
       );
       if (res.status === 200) {
         history.push(
-          "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+          `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
         );
       }
     } else {
       console.log("in Post");
-      const { error, isValid } = ActivityDetailValidate(activtyList);
-      console.log(error);
-      // setActvityList(activityState);
-      if (!isValid) {
-        return;
-      }
+
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
@@ -171,6 +167,7 @@ const ActivityDetails = () => {
       );
     }
   };
+
   const handleRadioData = (e, questionCode) => {
     let TempActivity = [];
     for (let key in activtyList) {
@@ -180,15 +177,12 @@ const ActivityDetails = () => {
       }
       TempActivity.push(activityObj);
     }
-    console.log(TempActivity);
     setActvityList(TempActivity);
   };
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem(
-        "fkincidentId"
-      )}/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
     await setIncidentDetail(result);
@@ -202,6 +196,7 @@ const ActivityDetails = () => {
       setIsLoading(true);
     }
   }, [id]);
+
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
       {isLoading ? (
@@ -246,7 +241,9 @@ const ActivityDetails = () => {
                           ))}
                         </RadioGroup>
                       </FormControl>
-                      {value.error ? <p>{value.error}</p> : null}
+                      {value.error ? (
+                        <FormHelperText>{value.error}</FormHelperText>
+                      ) : ""}
                     </Grid>
                   ))}
               </>

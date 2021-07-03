@@ -269,8 +269,11 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/evidence/:id"
           component={Evidence}
         />
-        <Route
+        <Route exact
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/"
+          component={PersonalAndPpeDetails}
+        /><Route exact
+          path="/app/incident-management/registration/evidence/personal-and-ppedetails/:id"
           component={PersonalAndPpeDetails}
         />
         {/* form investigation */}

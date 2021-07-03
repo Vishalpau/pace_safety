@@ -44,60 +44,201 @@ const PersonalAndPpeDetails = () => {
   const [error, setError] = useState({});
   const { id } = useParams();
   const history = useHistory();
-  const [activtyList, setActvityList] = useState({});
-  const [ad08, setAd08] = useState({});
-  const [ad09, setAd09] = useState({});
-  const [ad10, setAd10] = useState({});
-  const [ad11, setAd11] = useState({});
-  const [ad12, setAd12] = useState({});
-  const [ad13, setAd13] = useState({});
-  const [ad14, setAd14] = useState({});
-  const [ad15, setAd15] = useState({});
-  const [ad16, setAd16] = useState({});
-  const [ad17, setAd17] = useState({});
-  const [ad18, setAd18] = useState({});
-  const [ad19, setAd19] = useState({});
-  const [ad20, setAd20] = useState({});
-  const [ad21, setAd21] = useState({});
+  const [ppeList, setPpeList] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [incidentDetail, setIncidentDetail] = useState({});
+  const [ppeData, ppeSetData] = useState([
+    {
+      questionCode: "PPE-08",
+      question: "PPE worn properly?",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-09",
+      question: "PPE in good shape?",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-10",
+      question: "PPE Proper fit?",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-11",
+      question: " PPE appropriate for task?",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-12",
+      question: "Employee self supervised",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-13",
+      question: "Supervisor present at site",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-14",
+      question: "Supervisor provided clear detail of work",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-15",
+      question: "Supervisor provided detail work package",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-16",
+      question:"Did supervisor conducted I-care observation",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-17",
+      question: "Was flag person required for this job",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-18",
+      question: "Flag person trained/competent",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-19",
+      question: "Was flag person present",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-20",
+      question: " Metal on Metal incident",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "PPE-21",
+      question: " Was person in the line of fire ",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+  ]);
+  
+  // const [ad08, setAd08] = useState({error:""});
+  // const [ad09, setAd09] = useState({error:""});
+  // const [ad10, setAd10] = useState({error:""});
+  // const [ad11, setAd11] = useState({error:""});
+  // const [ad12, setAd12] = useState({error:""});
+  // const [ad13, setAd13] = useState({error:""});
+  // const [ad14, setAd14] = useState({error:""});
+  // const [ad15, setAd15] = useState({error:""});
+  // const [ad16, setAd16] = useState({error:""});
+  // const [ad17, setAd17] = useState({error:""});
+  // const [ad18, setAd18] = useState({error:""});
+  // const [ad19, setAd19] = useState({error:""});
+  // const [ad20, setAd20] = useState({error:""});
+  // const [ad21, setAd21] = useState({error:""});
 
   const handleNext = async () => {
-    if (activtyList.length > 19) {
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        activtyList
-      );
+    if (ppeList.length > 19) {
+      const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
       if (res.status === 200) {
         history.push(
-          "/app/incident-management/registration/evidence/additional-details/"
+          `/app/incident-management/registration/evidence/additional-details/${id}`
         );
       }
     } else {
-      const selectedQuestion = [
-        ad08,
-        ad09,
-        ad10,
-        ad11,
-        ad12,
-        ad13,
-        ad14,
-        ad15,
-        ad16,
-        ad17,
-        ad18,
-        ad19,
-        ad20,
-        ad21,
-      ];
+      
 
-      console.log(selectedQuestion);
-     
-      const valdation = selectedQuestion;
+      
+
+      const valdation = ppeData;
       console.log(valdation);
-      const { isValid, error } = ActivityDetailValidate(valdation);
-      // setError(error);
+      const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
+      setError(error);
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        selectedQuestion
+        ppeData
       );
       console.log(res);
 
@@ -107,1002 +248,631 @@ const PersonalAndPpeDetails = () => {
     }
   };
 
-  const handleUpdateActivityList = (e, index) => {
-    const TempActivity = activtyList;
-    const TempIndexData = activtyList[index];
+  const handlePpeData = (e, index) => {
+    console.log(e.target.value)
+    const TempPpe = ppeData;
+    const TempIndexData = ppedata[index];
     TempIndexData.answer = e.target.value;
-    TempActivity[index] = TempIndexData;
-    console.log("ac", TempActivity);
-    setActvityList(TempActivity);
+    TempPpe[index] = TempIndexData;
+    setPpeData(TempPpe);
   };
 
-  const fetchActivityList = async () => {
+  const handleUpdatePpeList = (e, index) => {
+    const TempPpe = ppeList;
+    const TempIndexData = ppeList[index];
+    TempIndexData.answer = e.target.value;
+    TempPpe[index] = TempIndexData;
+    setPpeList(TempPpe);
+  };
+
+  const fetchPpeList = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/activities/`);
+    const result = res.data.data.results;
+    if (result.length) {
+      await setPpeList(result);
+    }
+    await setIsLoading(true);
+  };
+
+  const fetchIncidentDetails = async () => {
     const res = await api.get(
-      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
-    await setActvityList(result);
-    console.log(result);
+    await setIncidentDetail(result);
   };
   useEffect(() => {
-    fetchActivityList();
+    fetchIncidentDetails();
+    if (id) {
+      fetchPpeList();
+    } else {
+      setIsLoading(true);
+    }
+    
   }, []);
 
   return (
     <PapperBlock title=" Personal and PPE" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Incident number: {localStorage.getItem("fkincidentId")}
-              </Typography>
-            </Box>
+      {isLoading ? (
+        <Grid container spacing={3}>
+          <Grid container item md={9} spacing={3}>
+            <Grid item md={12}>
+              <Box>
+                <Typography variant="body2" gutterBottom>
+                  Incident number: {incidentDetail.incidentNumber}
+                </Typography>
+              </Box>
+            </Grid>
+            {ppeList.length === undefined ? (
+              <>
+                {ppeData.slice(0,4).map((key, value) =>(
+                <>
+                {console.log(key)}
+                <Grid item md={6}>
+                  {/* <p>PPE worn properly</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">{key.question}</FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      onChange={(e) => {handlePpeData(e, key)
+                      }
+                    }
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                
+                </>
+              ))}
+              <Grid item md={12}>
+                  <Typography variant="h6">Supervision</Typography>
+              </Grid>
+              {ppeData.slice(4,9).map((key, value) =>(
+                <>
+                
+
+                <Grid item md={6}>
+                  {/* <p>Employee self supervised</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      {key.question}
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      onChange={(e) => {handlePpeData(e, key)}}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                
+                </>
+              ))}
+              <Grid item md={12}>
+                  <Typography variant="h6">Flag Person</Typography>
+                </Grid>
+              {ppeData.slice(9,12).map((key, value) =>(
+                <>
+                <Grid item md={6}>
+                  {/* <p>Was flag person required for this job</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      {key.question}
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      onChange={(e) => {handlePpeData(e, key)}}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+               
+                </>
+              ))}
+              
+                
+
+                
+                <Grid item md={12}>
+                  <Box marginBottom={3} marginTop={4}>
+                    <Typography variant="h6">Other</Typography>
+                  </Box>
+                </Grid>
+                {ppeData.slice(12,14).map((key, value)=>(<>
+                  <Grid item md={6}>
+                  {/* <p>Metal on Metal incident</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      {key.question}
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      onChange={(e) => {handlePpeData(e, key)}}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+               
+
+                </>))}
+
+               
+              </>
+            ) : (
+              <>
+                {/* {Object.entries(acti).slice(6,20).map(([key, value] ) => ())} */}
+                <Grid item md={6}>
+                  {/* <p>PPE worn properly</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">PPE worn properly?</FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[7].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 7);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>PPE in good shape</p> */}
+
+                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">PPE in good shape?</FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[8].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 8);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>PPE Proper fit</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">PPE Proper fit?</FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[9].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 9);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>PPE appropriate for task</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      PPE appropriate for task?
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[10].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 10);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item md={12}>
+                  <Typography variant="h6">Supervision</Typography>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Employee self supervised</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Employee self supervised
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[11].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 11);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Supervisor present at site</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Supervisor present at site
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[12].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 12);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Supervisor provided clear detail of work</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Supervisor provided clear detail of work
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[13].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 13);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Supervisor provided detail work package</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Supervisor provided detail work package
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[14].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 14);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Did supervisor conducted I-care observation</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Did supervisor conducted I-care observation
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[15].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 15);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item md={12}>
+                  <Typography variant="h6">Flag Person</Typography>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Was flag person required for this job</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was flag person required for this job
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[16].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 16);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Flag person trained/competent</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Flag person trained/competent
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[17].answer}
+                      onChange={(e) => {
+                        {
+                          handleUpdatePpeList(e, 17);
+                        }
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Was flag person present</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was flag person present
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[18].answer}
+                      onChange={(e) => {
+                        {
+                          handleUpdatePpeList(e, 18);
+                        }
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item md={12}>
+                  <Box marginBottom={3} marginTop={4}>
+                    <Typography variant="h6">Other</Typography>
+                  </Box>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Metal on Metal incident</p> */}
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Metal on Metal incident
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[19].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 19);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+
+                <Grid item md={6}>
+                  {/* <p>Was person in the line of fire</p> */}
+
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was person in the line of fire
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      defaultValue={ppeList[20].answer}
+                      onChange={(e) => {
+                        handleUpdatePpeList(e, 20);
+                      }}
+                    >
+                      {radioDecide.map((value) => (
+                        <FormControlLabel
+                          value={value}
+                          control={<Radio />}
+                          label={value}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+              </>
+            )}
+            <Grid item md={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => history.goBack()}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => handleNext()}
+              >
+                Next
+              </Button>
+            </Grid>
           </Grid>
-          {activtyList.length < 8 ? (
-            <>
-              <Grid item md={6}>
-                {/* <p>PPE worn properly</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans1}
-                >
-                  <FormLabel component="legend">PPE worn properly?</FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd08({
-                        ...ad08,
-                        questionCode: "PPE-08",
-                        question: "PPE worn properly?",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>PPE in good shape</p> */}
-
-                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans2}
-                >
-                  <FormLabel component="legend">PPE in good shape?</FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd09({
-                        ...ad09,
-                        questionCode: "PPE-09",
-                        question: "PPE in good shape?",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>PPE Proper fit</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans3}
-                >
-                  <FormLabel component="legend">PPE Proper fit?</FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd10({
-                        ...ad10,
-                        questionCode: "PPE-10",
-                        question: "PPE Proper fit?",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>PPE appropriate for task</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans4}
-                >
-                  <FormLabel component="legend">
-                    PPE appropriate for task?
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd11({
-                        ...ad11,
-                        questionCode: "PPE-11",
-                        question: " PPE appropriate for task?",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Typography variant="h6">Supervision</Typography>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Employee self supervised</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans1}
-                >
-                  <FormLabel component="legend">
-                    Employee self supervised
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd12({
-                        ...ad12,
-                        questionCode: "PPE-12",
-                        question: "Employee self supervised",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Supervisor present at site</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans2}
-                >
-                  <FormLabel component="legend">
-                    Supervisor present at site
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd13({
-                        ...ad13,
-                        questionCode: "PPE-13",
-                        question: "Supervisor present at site",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Supervisor provided clear detail of work</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans3}
-                >
-                  <FormLabel component="legend">
-                    Supervisor provided clear detail of work
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd14({
-                        ...ad14,
-                        questionCode: "PPE-14",
-                        question: "Supervisor provided clear detail of work",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Supervisor provided detail work package</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans4}
-                >
-                  <FormLabel component="legend">
-                    Supervisor provided detail work package
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd15({
-                        ...ad15,
-                        questionCode: "PPE-15",
-                        question: "Supervisor provided detail work package",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Did supervisor conducted I-care observation</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans5}
-                >
-                  <FormLabel component="legend">
-                    Did supervisor conducted I-care observation
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd16({
-                        ...setAd16,
-                        questionCode: "PPE-16",
-                        question: "Did supervisor conducted I-care observation",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Typography variant="h6">Flag Person</Typography>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Was flag person required for this job</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.flagans1}
-                >
-                  <FormLabel component="legend">
-                    Was flag person required for this job
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd17({
-                        ...setAd17,
-                        questionCode: "PPE-17",
-                        question: "Was flag person required for this job",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Flag person trained/competent</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.flagans2}
-                >
-                  <FormLabel component="legend">
-                    Flag person trained/competent
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd18({
-                        ...setAd18,
-                        questionCode: "PPE-18",
-                        question: "Flag person trained/competent",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Was flag person present</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.flagans3}
-                >
-                  <FormLabel component="legend">
-                    Was flag person present
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd19({
-                        ...setAd19,
-                        questionCode: "PPE-19",
-                        question: "Was flag person present",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Box marginBottom={3} marginTop={4}>
-                  <Typography variant="h6">Other</Typography>
-                </Box>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Metal on Metal incident</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.otherans1}
-                >
-                  <FormLabel component="legend">
-                    Metal on Metal incident
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd20({
-                        ...setAd20,
-                        questionCode: "PPE-20",
-                        question: " Metal on Metal incident",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Was person in the line of fire</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.otherans2}
-                >
-                  <FormLabel component="legend">
-                    Was person in the line of fire
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      setAd21({
-                        ...setAd21,
-                        questionCode: "PPE-21",
-                        question: " Was person in the line of fire ",
-                        answer: e.target.value,
-                        activityGroup: "Evidence",
-                        status: "Active",
-                        updatedBy: 0,
-                        createdBy: 0,
-                        fkIncidentId: localStorage.getItem("fkincidentId"),
-                      });
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-            </>
-          ) : (
-            <>
-            
-              <Grid item md={6}>
-                {/* <p>PPE worn properly</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans1}
-                >
-                  <FormLabel component="legend">PPE worn properly?</FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 7);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>PPE in good shape</p> */}
-
-                {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans2}
-                >
-                  <FormLabel component="legend">PPE in good shape?</FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 8);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>PPE Proper fit</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans3}
-                >
-                  <FormLabel component="legend">PPE Proper fit?</FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 9);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>PPE appropriate for task</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.ppeans4}
-                >
-                  <FormLabel component="legend">
-                    PPE appropriate for task?
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 10);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Typography variant="h6">Supervision</Typography>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Employee self supervised</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans1}
-                >
-                  <FormLabel component="legend">
-                    Employee self supervised
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 11);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Supervisor present at site</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans2}
-                >
-                  <FormLabel component="legend">
-                    Supervisor present at site
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 12);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Supervisor provided clear detail of work</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans3}
-                >
-                  <FormLabel component="legend">
-                    Supervisor provided clear detail of work
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 13);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Supervisor provided detail work package</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans4}
-                >
-                  <FormLabel component="legend">
-                    Supervisor provided detail work package
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 14);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Did supervisor conducted I-care observation</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.supervisionans5}
-                >
-                  <FormLabel component="legend">
-                    Did supervisor conducted I-care observation
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 15);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Typography variant="h6">Flag Person</Typography>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Was flag person required for this job</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.flagans1}
-                >
-                  <FormLabel component="legend">
-                    Was flag person required for this job
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 16);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Flag person trained/competent</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.flagans2}
-                >
-                  <FormLabel component="legend">
-                    Flag person trained/competent
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      {
-                        handleUpdateActivityList(e, 17);
-                      }
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Was flag person present</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.flagans3}
-                >
-                  <FormLabel component="legend">
-                    Was flag person present
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      {
-                        handleUpdateActivityList(e, 18);
-                      }
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Box marginBottom={3} marginTop={4}>
-                  <Typography variant="h6">Other</Typography>
-                </Box>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Metal on Metal incident</p> */}
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.otherans1}
-                >
-                  <FormLabel component="legend">
-                    Metal on Metal incident
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 19);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                {/* <p>Was person in the line of fire</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  error={error.otherans2}
-                >
-                  <FormLabel component="legend">
-                    Was person in the line of fire
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    onChange={(e) => {
-                      handleUpdateActivityList(e, 20);
-                    }}
-                  >
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-            </>
-          )}
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => history.goBack()}
-              // href="/app/incident-management/registration/evidence/activity-detail/"
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => handleNext()}
-              // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/additional-details/" : "#"}
-            >
-              Next
-            </Button>
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={EVIDENCE_FORM}
+              selectedItem="Personal and Ppedetails"
+              deleteForm={[1, 2, 3]}
+            />
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={EVIDENCE_FORM}
-            selectedItem="Personal and Ppedetails"
-            deleteForm={[1, 2, 3]}
-          />
-        </Grid>
-      </Grid>
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </PapperBlock>
   );
 };

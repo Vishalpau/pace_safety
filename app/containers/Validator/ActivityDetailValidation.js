@@ -6,6 +6,7 @@ function ActivityDetailValidate(data) {
   const error = [];
   let isValid = true;
   for (let key in data) {
+    console.log("key", key)
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
