@@ -13,15 +13,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
+import api from "../../../utils/axios";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
+    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),
@@ -36,207 +37,262 @@ const AdditionalDetails = () => {
 
   const { id } = useParams();
   const history = useHistory();
-  const [activtyList, setActvityList] = useState([]);
+  // const [activtyList, setAdditionalDetailList] = useState({});
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [incidentDetail, setIncidentDetail] = useState({});
+  const [additionalDetailList, setAdditionalDetailList] = useState([
+    {
+      questionCode: "ADD-22",
+      question: "Any Part/Equiptment sent for anlysis",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "ADD-23",
+      question: "Evidence analysis notes",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "ADD-24",
+      question: "Evidence summary",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+    {
+      questionCode: "ADD-25",
+      question: "Additional notes if any",
+      answer: "",
+      activityGroup: "Evidence",
+      status: "Active",
+      updatedBy: 0,
+      createdBy: 0,
+      fkIncidentId: localStorage.getItem("fkincidentId"),
+      error: "",
+    },
+  ]);
 
-  const [ad22, setAd22] = useState({});
-  const [ad23, setAd23] = useState({});
-  const [ad24, setAd24] = useState({});
-  const [ad25, setAd25] = useState({});
-  const [ad26, setAd26] = useState({});
+  const fetchActivityList = async () => {
+    console.log("sagar");
+
+    const res = await api.get(`/api/v1/incidents/${id}/activities/`);
+    const result = res.data.data.results;
+    console.log(result);
+    console.log(result.length);
+    if (result.length) {
+      await setAdditionalDetailList(result);
+    }
+    await setIsLoading(true);
+
+    console.log(additionalDetailList.length);
+  };
 
   const handleNext = async () => {
-    if (id !== undefined && activtyList.length > 0) {
-      history.push(
-        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+    // await setIsLoading(true)
+    const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
+    await setError(error);
+    console.log(error);
+    // setAdditionalDetailList(activityState);
+    if (!isValid) {
+      return "Data is not Valid";
+    }
+
+    if (id && additionalDetailList.length > 0) {
+      console.log("in put");
+      const res = await api.put(
+        `api/v1/incidents/${id}/activities/`,
+        additionalDetailList
       );
-    } else {
-      const selectedQuestion = [ad01, ad02, ad03, ad04, ad05, ad06, ad07];
-      console.log(selectedQuestion);
-      for (let i = 0; i < selectedQuestion.length; i++) {
-        const valdation = selectedQuestion[i];
-        console.log(valdation);
-        const { isValid, error } = ActivityDetailValidate(valdation);
-        setError(error);
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/activities/`,
-          selectedQuestion[i]
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/summary/summary/${id}`
         );
-        console.log(res);
       }
+    } else {
+      console.log("in Post");
+
+      const res = await api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        additionalDetailList
+      );
       history.push(
-        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+          "fkincidentId"
+        )}`
       );
     }
   };
 
-  const handleUpdateActivityList = async (e, key, fieldname, activityId) => {
-    const temp = activtyList;
-    console.log(temp);
-    const { value } = e.target;
-    temp[key][fieldname] = value;
-    temp[key].updatedBy = 0;
-    temp[key].updatedAt = moment(new Date()).toISOString();
-    console.log(temp[key]);
-
-    const res = await api.put(
-      `api/v1/incidents/${id}/activities/${activityId}/`,
-      temp[key]
-    );
-    console.log(res);
+  const handleRadioData = (e, questionCode) => {
+    let TempActivity = [];
+    for (let key in additionalDetailList) {
+      let activityObj = additionalDetailList[key];
+      if (questionCode == activityObj.questionCode) {
+        activityObj.answer = e.target.value;
+      }
+      TempActivity.push(activityObj);
+    }
+    console.log(TempActivity);
+    setAdditionalDetailList(TempActivity);
   };
 
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-  const fetchActivityList = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/activities/`);
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
     const result = res.data.data.results;
-    await setActvityList(result);
-    console.log(result);
+    await setIncidentDetail(result);
   };
+  console.log(additionalDetailList);
   useEffect(() => {
-    fetchActivityList();
-  }, []);
+    fetchIncidentDetails();
+    if (id) {
+      fetchActivityList();
+    } else {
+      setIsLoading(true);
+    }
+  }, [id]);
   return (
-    <PapperBlock title="Additional Details" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
-            <Typography variant="h6" gutterBottom className={Type.labelName}>
-              Incident number
-            </Typography>
-            <Typography className={Type.labelValue}>4878694</Typography>
-          </Grid>
-          <Grid item md={12}>
-            <Typography variant="h6" gutterBottom className={Type.labelName}>
-              Incident Description
-            </Typography>
-            <Typography className={Type.labelValue}>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
-              debitis saepe corporis quo inventore similique fugiat voluptatem
-              alias et quae temporibus necessitatibus ut, magni ea quisquam vel,
-              officiis cupiditate aperiam.
-            </Typography>
-          </Grid>
-          <Grid item md={12}>
-            <FormControl className={classes.formControl}>
-              <TextField
-                id="filled-basic"
-                variant="outlined"
-                label="Any Part/Equipment Sent For Anlysis"
-                error={error.ans1}
-                helperText={error.ans1 ? error.ans1 : ""}
-                multiline
-                rows="4"
-                onChange={(e) => {
-                  setAd01({
-                    ...ad01,
-                    questionCode: "AD-01",
-                    question: "Did the Job Require Work Permit ?",
-                    answer: e.target.value,
-                    activityGroup: "Evidence",
-                    status: "Active",
-                    updatedBy: 0,
-                    createdBy: 0,
-                    fkIncidentId: localStorage.getItem("fkincidentId"),
-                  });
-                }}
-              />
-            </FormControl>
-          </Grid>
+    <div>
+      <Container>
+        <Paper>
+          {isLoading ? (
+            <Box padding={3} bgcolor="background.paper">
+              {/* <Box marginBottom={5}>
+              <FormHeader selectedHeader={"Evidence collection"} />
+            </Box> */}
 
-          <Grid item md={12}>
-            {/* <p>Evidence analysis notes</p> */}
+              <Box borderBottom={1} marginBottom={2}>
+                <Typography variant="h6" gutterBottom>
+                  Additional Details
+                </Typography>
+              </Box>
+              <Grid container spacing={3}>
+                <Grid container item md={9} spacing={3}>
+                  <Grid item md={12}>
+                    <Box>
+                      <Typography variant="body2" gutterBottom>
+                        Incident number: {incidentDetail.incidentNumber}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item md={12}>
+                    <Typography variant="h6" gutterBottom>
+                      Incident Description
+                    </Typography>
+                    <Typography variant="body">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Nobis debitis saepe corporis quo inventore similique
+                      fugiat voluptatem alias et quae temporibus necessitatibus
+                      ut, magni ea quisquam vel, officiis cupiditate aperiam.
+                    </Typography>
+                  </Grid>
+                  {additionalDetailList.length > 24 ? (
+                    <>
+                      {Object.entries(additionalDetailList)
+                        .slice(21, 25)
+                        .map(([key, value]) => (
+                          <Grid item md={12}>
+                            <FormControl className={classes.formControl}>
+                              <TextField
+                                id="filled-basic"
+                                variant="outlined"
+                                label={value.question}
+                                multiline
+                                rows="4"
+                                defaultValue={value.answer}
+                                onChange={(e) => {
+                                  handleRadioData(e, value.questionCode);
 
-            <FormControl className={classes.formControl}>
-              <TextField
-                id="filled-basic"
-                variant="outlined"
-                label="Evidence Analysis Notes"
-                error={error.ans2}
-                helperText={error.ans2 ? error.ans2 : ""}
-                onChange={(e) => {
-                  setForm({ ...form, ans2: e.target.value });
-                }}
-                multiline
-                rows="4"
-              />
-            </FormControl>
-          </Grid>
+                                  console.log(value.answer);
+                                }}
+                              />
+                            </FormControl>
+                            {value.error ? <p>{value.error}</p> : null}
+                          </Grid>
+                        ))}
+                    </>
+                  ) : (
+                    <>
+                      {Object.entries(additionalDetailList).map(
+                        ([key, value]) => (
+                          <Grid item md={12}>
+                            <FormControl className={classes.formControl}>
+                              <TextField
+                                id="filled-basic"
+                                variant="outlined"
+                                label={value.question}
+                                multiline
+                                rows="4"
+                                onChange={(e) => {
+                                  handleRadioData(e, value.questionCode);
 
-          <Grid item md={12}>
-            {/* <p>Evidence summary</p> */}
+                                  console.log(value.answer);
+                                }}
+                              />
+                            </FormControl>
+                            {value.error ? <p>{value.error}</p> : null}
+                          </Grid>
+                        )
+                      )}
+                    </>
+                  )}
 
-            <FormControl className={classes.formControl}>
-              <TextField
-                id="filled-basic"
-                variant="outlined"
-                label="Evidence Summary"
-                error={error.ans3}
-                helperText={error.ans3 ? error.ans3 : ""}
-                onChange={(e) => {
-                  setForm({ ...form, ans3: e.target.value });
-                }}
-                multiline
-                rows="4"
-              />
-            </FormControl>
-          </Grid>
+                  <Grid item md={12}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={() => history.goBack()}
+                      // href="/app/incident-management/registration/evidence/personal-and-ppedetails/"
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={() => handleNext()}
+                      // href={Object.keys(error).length == 0 ? 'http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/' : '#'}
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
+                </Grid>
 
-          <Grid item md={12}>
-            {/* <p>Additional notes if any</p> */}
-
-            <FormControl className={classes.formControl}>
-              <TextField
-                id="filled-basic"
-                variant="outlined"
-                label="Additional Notes If Any"
-                error={error.ans4}
-                helperText={error.ans4 ? error.ans4 : ""}
-                onChange={(e) => {
-                  setForm({ ...form, ans4: e.target.value });
-                }}
-                multiline
-                rows="4"
-              />
-            </FormControl>
-          </Grid>
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              href="/app/incident-management/registration/evidence/personal-and-ppedetails/"
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => handleNext()}
-              href={
-                Object.keys(error).length == 0
-                  ? "http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/"
-                  : "#"
-              }
-            >
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-
-        <Grid item md={3}>
-          <FormSideBar
-            deleteForm={[1, 2, 3]}
-            listOfItems={EVIDENCE_FORM}
-            selectedItem="Additional Details"
-          />
-        </Grid>
-      </Grid>
-    </PapperBlock>
+                <Grid item md={3}>
+                  <FormSideBar
+                    deleteForm={[1, 2, 3]}
+                    listOfItems={EVIDENCE_FORM}
+                    selectedItem="Additional detail"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          ) : (
+            <h1>Loading...</h1>
+          )}
+        </Paper>
+      </Container>
+    </div>
   );
 };
 
