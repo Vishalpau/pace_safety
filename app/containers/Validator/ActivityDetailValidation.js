@@ -11,11 +11,11 @@ function ActivityDetailValidate(data) {
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
         dataObj.error = "This field is empty";
+        isValid = false;
       } else {
         dataObj.error = "";
       }
       error.push(dataObj);
-      isValid = false;
       continue;
     }
 
