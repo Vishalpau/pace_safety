@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Grid, Container } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
@@ -13,12 +13,15 @@ import Box from '@material-ui/core/Box';
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { useHistory, useParams } from 'react-router';
+import { PapperBlock } from "dan-components";
 
 import api from '../../../utils/axios';
 import FormHeader from '../FormHeader';
 import FormSideBar from '../FormSideBar';
-import { ROOT_CAUSE_ANALYSIS_FORM } from '../../../utils/constants';
+import { ROOT_CAUSE_ANALYSIS_FORM, SAFETYITEMS } from '../../../utils/constants';
 import HazardiousConditionsValidation from '../../Validator/RCAValidation/HazardiousConditonsValidation';
+import { WARNINGSYSTEM, ENERGIES, TOOLS, CONDITIONSAFETYITEMS } from '../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -50,6 +53,71 @@ const HazardiousCondition = () => {
     safetyitems: { remarkType: "", rcaSubType: "", rcaRemark: [] },
     others: { remarkType: "", rcaSubType: "", rcaRemark: "" },
   });
+
+
+  const putId = useRef("")
+  const [fetchApiData, setFetchApiData] = useState({})
+  const { id } = useParams();
+  const history = useHistory();
+  const updateIds = useRef()
+
+
+  // get data and set to states
+  const handelUpdateCheck = async () => {
+    let allrcaSubType = ["warningSystem", "energyTypes", "tools", "safetyitems", "othersconditions"]
+    let tempApiData = {}
+    let tempApiDataId = []
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
+    if (!isNaN(lastItem)) {
+
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`)
+      putId.current = lastItem
+      console.log(putId)
+      let allApiData = previousData.data.data.results
+
+      allApiData.map(value => {
+        if (allrcaSubType.includes(value.rcaSubType)) {
+          let valueQuestion = value.rcaSubType
+          let valueAnser = value.rcaRemark
+          tempApiData[valueQuestion] = valueAnser
+          tempApiDataId.push(value.id)
+        }
+      })
+      updateIds.current = tempApiDataId.reverse()
+
+      setForm({
+        ...form,
+        warningSystem: {
+          remarkType: 'options',
+          rcaSubType: 'warningSystem',
+          rcaRemark: tempApiData.warningSystem.includes(',') ? tempApiData.warningSystem.split(",") : [tempApiData.warningSystem],
+        },
+        energyTypes: {
+          remarkType: 'options',
+          rcaSubType: 'energyTypes',
+          rcaRemark: tempApiData.energyTypes.includes(',') ? tempApiData.energyTypes.split(",") : [tempApiData.energyTypes],
+        },
+        tools: {
+          remarkType: 'options',
+          rcaSubType: 'tools',
+          rcaRemark: tempApiData.tools.includes(',') ? tempApiData.tools.split(",") : [tempApiData.tools],
+        },
+        safetyitems: {
+          remarkType: 'options',
+          rcaSubType: 'safetyitems',
+          rcaRemark: tempApiData.safetyitems.includes(',') ? tempApiData.safetyitems.split(",") : [tempApiData.safetyitems],
+        },
+        others: {
+          remarkType: 'remark',
+          rcaSubType: 'othersconditions',
+          rcaRemark: tempApiData.othersconditions,
+        }
+      });
+
+    }
+  }
 
   const handelWarningSystems = (e, value) => {
     if (e.target.checked == false) {
@@ -150,78 +218,95 @@ const HazardiousCondition = () => {
       ...form,
       others: {
         remarkType: 'remark',
-        rcaSubType: 'others',
+        rcaSubType: 'othersconditions',
         rcaRemark: e.target.value,
       },
     });
   };
 
-  const handelNext = (e) => {
+  const handelNext = async (e) => {
+
     const { error, isValid } = HazardiousConditionsValidation(form);
-    setError(error);
+    await setError(error);
+    let tempData = []
 
-    const tempData = [];
-    Object.entries(form).map((item) => {
+    Object.entries(form).map(async (item, index) => {
       let api_data = item[1]
-
-      console.log(item)
-      let temp = {
-        createdBy: "0",
-        fkIncidentId: localStorage.getItem("fkincidentId"),
-        rcaRemark: api_data["rcaRemark"].toString(),
-        rcaSubType: api_data["rcaSubType"],
-        rcaType: "Basic",
-        remarkType: api_data["remarkType"],
-        status: "Active"
+      // post request object
+      if (putId.current == "") {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active"
+        }
+        tempData.push(temp)
+        // put request object
+      } else {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: localStorage.getItem("fkincidentId"),
+          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active",
+          pk: updateIds.current[index]
+        }
+        tempData.push(temp)
       }
-      tempData.push(temp)
-
     })
-    setData(tempData)
-  };
 
-  const handelApiCall = async (e) => {
-    const callObjects = data;
-
-    for (const key in callObjects) {
-      console.log(callObjects[key]);
+    // api call //
+    let nextPageLink = 0
+    let callObjects = tempData
+    for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-        const res = await api.post(
-          `/api/v1/incidents/${localStorage.getItem(
-            'fkincidentId'
-          )}/pacecauses/`,
-          callObjects[key]
-        );
-        if (res.status == 201) {
-          console.log('request done');
-          console.log(res);
+
+        if (putId.current !== "") {
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
+          if (res.status == 200) {
+            console.log("request done")
+            nextPageLink = res.status
+          }
+        } else {
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          if (res.status == 201) {
+            console.log("request done")
+            nextPageLink = res.status
+          }
         }
       }
+      if (nextPageLink == 201 && Object.keys(error).length === 0) {
+        history.push("/app/incident-management/registration/root-cause-analysis/cause-and-action/")
+      } else {
+        history.push(`/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`)
+      }
     }
-  };
+    // api call //  
+  }
 
   const selectValues = ['Option1', 'Option2', '....'];
 
   const classes = useStyles();
+
+  useEffect(() => {
+    handelUpdateCheck()
+    // location.reload()
+  }, []);
+
   return (
-    <Container>
-      <Paper>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              Immediate Causes - Hazardous conditions
-            </Typography>
-          </Box>
+    <PapperBlock title="Immediate Causes - Hazardous Conditions" icon="ion-md-list-box">
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
               <Grid item md={4}>
-                <Box>
                   <Typography variant="body2" gutterBottom>
                     Incident number:
-                    {' '}
                     {localStorage.getItem('fkincidentId')}
                   </Typography>
-                </Box>
               </Grid>
 
               <Grid item md={8}>
@@ -232,16 +317,18 @@ const HazardiousCondition = () => {
                 </Box>
               </Grid>
 
+              {/* warning system */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.warningSystem}>
                     Warning System
                   </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {WARNINGSYSTEM.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
+                        checked={form.warningSystem.rcaRemark.includes(value)}
                         onChange={async (e) => handelWarningSystems(e, value)}
                       />
                     ))}
@@ -256,6 +343,7 @@ const HazardiousCondition = () => {
                 )}
               </Grid>
 
+              {/* energy types */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.energyTypes}>
@@ -263,10 +351,11 @@ const HazardiousCondition = () => {
                     Energy Types
                   </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {ENERGIES.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
+                        checked={form.energyTypes.rcaRemark.includes(value)}
                         onChange={async (e) => handelEnergyTypes(e, value)}
                       />
                     ))}
@@ -279,6 +368,7 @@ const HazardiousCondition = () => {
                 )}
               </Grid>
 
+              {/* tools */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.tools}>
@@ -286,10 +376,11 @@ const HazardiousCondition = () => {
                     Tools
                   </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {TOOLS.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
+                        checked={form.tools.rcaRemark.includes(value)}
                         onChange={async (e) => handelTools(e, value)}
                       />
                     ))}
@@ -302,6 +393,7 @@ const HazardiousCondition = () => {
                 )}
               </Grid>
 
+              {/* safety items */}
               <Grid item md={6}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" error={error.safetyitems}>
@@ -309,10 +401,11 @@ const HazardiousCondition = () => {
                     Saftey Items
                   </FormLabel>
                   <FormGroup>
-                    {selectValues.map((value) => (
+                    {CONDITIONSAFETYITEMS.map((value) => (
                       <FormControlLabel
                         control={<Checkbox name={value} />}
-                        label={value}
+                        label={<small>{value}</small>}
+                        checked={form.safetyitems.rcaRemark.includes(value)}
                         onChange={async (e) => handelSafetyItems(e, value)}
                       />
                     ))}
@@ -325,6 +418,7 @@ const HazardiousCondition = () => {
                 )}
               </Grid>
 
+              {/* others     */}
               <Grid item md={12}>
                 {/* <p>others</p> */}
                 <TextField
@@ -333,6 +427,7 @@ const HazardiousCondition = () => {
                   label="Others"
                   multiline
                   error={error.others}
+                  defaultValue={form.others.rcaRemark}
                   helperText={error ? error.others : ''}
                   rows={3}
                   className={classes.formControl}
@@ -358,10 +453,7 @@ const HazardiousCondition = () => {
                     color="primary"
                     className={classes.button}
                     // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/cause-and-action/"}
-                    onClick={(e) => {
-                      handelNext(e);
-                      handelApiCall(e);
-                    }}
+                    onClick={(e) => handelNext(e)}
                   >
                     Next
                   </Button>
@@ -372,13 +464,11 @@ const HazardiousCondition = () => {
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem="Hazardious conditions"
+                selectedItem="Hazardious Conditions"
               />
             </Grid>
           </Grid>
-        </Box>
-      </Paper>
-    </Container>
+    </PapperBlock>
   );
 };
 

@@ -83,7 +83,7 @@ const EqiptmentAffected = () => {
   const [error, setError] = useState({});
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
-  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState('');
+  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState('No');
   const [equipmentListdata, setEquipmentListData] = useState([]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
@@ -97,23 +97,35 @@ const EqiptmentAffected = () => {
       fkIncidentId: localStorage.getItem('fkincidentId'),
     },
   ]);
+
+  // set state for update
   const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
     const temp = equipmentListdata;
-    console.log(temp);
     const { value } = e.target;
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
-    console.log(temp[key]);
+    setEquipmentListData(temp)
 
-    const res = await api.put(
-      `api/v1/incidents/${id}/equipments/${equipmentId}/`,
-      temp[key]
-    );
-    console.log(res);
-    equipmentListdata = temp 
-    console.log(equipmentListdata)
+  
 
   };
+
+  // hablde Remove
+
+  const handleRemove = async(key) => {
+    if(equipmentListdata.length>1){
+      const temp = equipmentListdata
+      const newData = temp.filter(item=> item.id !== key);
+      await setPeopleData(newData)
+    }
+    else{
+      const temp = form;
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
+    }
+    
+  };
+
 
   const addNewEquipmentDetails = () => {
     setForm([
@@ -131,12 +143,18 @@ const EqiptmentAffected = () => {
     const temp = [...form];
     const { value } = e.target;
     temp[key][fieldname] = value;
-    console.log(temp);
     setForm(temp);
   };
 
   const handleNext = async () => {
-    console.log(form);
+    if(id){
+      for(var i=0; i<equipmentListdata.length;i++){
+        const res = await api.put(
+          `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`,
+          equipmentListdata[i]
+        );
+      }
+    }
 
     const nextPath = JSON.parse(localStorage.getItem('nextPath'));
 
@@ -153,7 +171,6 @@ const EqiptmentAffected = () => {
     } else if (detailsOfEquipmentAffect === 'Yes') {
       const { error, isValid } = EquipmentValidate(form);
       setError(error);
-      console.log(form);
       const status = 0;
 
       for (let i = 0; i < form.length; i++) {
@@ -165,19 +182,17 @@ const EqiptmentAffected = () => {
         );
       }
       const temp = incidentsListData;
-      console.log(temp);
       temp.equipmentDamagedComments = equipmentDamagedComments
           || incidentsListData.equipmentDamagedComments;
       temp.isEquipmentDamagedAvailable = detailsOfEquipmentAffect
           || incidentsListData.isEquipmentDamagedAvailable;
       temp.updatedAt = moment(new Date()).toISOString();
-      console.log(temp);
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
         temp
       );
 
-      if (id !== undefined) {
+      if (id) {
         if (nextPath.environmentAffect === 'Yes') {
           history.push(
             `/app/incident-management/registration/initial-notification/environment-affected/${id}`
@@ -189,25 +204,25 @@ const EqiptmentAffected = () => {
         }
       }
       // if (status === 201) {
-      if (nextPath.environmentAffect === 'Yes') {
+      if (nextPath.environmentAffect === "Yes") {
         history.push(
-          '/app/incident-management/registration/initial-notification/environment-affected/'
+          "/app/incident-management/registration/initial-notification/environment-affected/"
         );
       } else {
         history.push(
-          '/app/incident-management/registration/initial-notification/reporting-and-notification/'
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
         );
       }
+      // if (status === 201) {
+     
       // }
     } else {
       const temp = incidentsListData;
-      console.log(temp);
       temp.equipmentDamagedComments = equipmentDamagedComments
           || incidentsListData.equipmentDamagedComments;
       temp.isEquipmentDamagedAvailable = detailsOfEquipmentAffect
           || incidentsListData.isEquipmentDamagedAvailable;
       temp.updatedAt = moment(new Date()).toISOString();
-      console.log(temp);
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
         temp
@@ -224,7 +239,7 @@ const EqiptmentAffected = () => {
         }
       } else if (nextPath.environmentAffect === 'Yes') {
         history.push(
-          '/app/incident-management/registration/initial-notification/environment-affected/'
+          "/app/incident-management/registration/initial-notification/environment-affected/"
         );
       } else {
         history.push(
@@ -233,43 +248,57 @@ const EqiptmentAffected = () => {
       }
     }
   };
-  const fetchEquipmentListData = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/equipments/`);
-    const result = res.data.data.results;
-    setEquipmentListData(result);
-  };
-
-  const fetchEquipmentAffectedValue = async () => {
-    const res = await api.get('api/v1/lists/14/value');
-    const result = res.data.data.results;
-    setequipmentAffected(result);
-  };
-
-  const fetchEquipmentTypeValue = async () => {
-    const res = await api.get('api/v1/lists/15/value');
-    const result = res.data.data.results;
-    setEquipmentTypeValue(result);
-  };
-
+  // fetch incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-    const isavailable = result.isPersonDetailsAvailable;
+    const isavailable = result.isEquipmentDamagedAvailable;
     await setDetailsOfEquipmentAffect(isavailable);
+    if(!id){
+      await setIsLoading(true);
+    }
+  };
+
+  // fetch equipment List data
+  const fetchEquipmentListData = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/equipments/`);
+    const result = res.data.data.results;
+    setEquipmentListData(result);
     await setIsLoading(true);
   };
+
+  // fetch equipment type value for dropdown 
+  const fetchEquipmentTypeValue = async () => {
+    const res = await api.get('api/v1/lists/15/value');
+    const result = res.data.data.results;
+    setEquipmentTypeValue(result);
+  };
+
+  // fetch equipment afftected radio button value
+  const fetchEquipmentAffectedValue = async () => {
+    const res = await api.get('api/v1/lists/14/value');
+    const result = res.data.data.results;
+    await setequipmentAffected(result);
+    
+  };
+
+  
   useEffect(() => {
+    
     fetchEquipmentAffectedValue();
     fetchEquipmentTypeValue();
-    fetchEquipmentListData();
     fetchIncidentsData();
+    if(id){
+    fetchEquipmentListData();
+    }
+    
   }, []);
   return (
     <PapperBlock
-      title=" Details of Equiptments Affected"
+      title=" Details of Equipment Affected"
       icon="ion-md-list-box"
     >
       {isLoading ? (
@@ -277,16 +306,15 @@ const EqiptmentAffected = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="body" component="p" gutterBottom>
-                Do you have details to share about the equiptment accected?
+                Do you have details to share about the equipment accected?
               </Typography>
               <RadioGroup
                 className={classes.inlineRadioGroup}
                 aria-label="detailsOfPropertyAffect"
                 name="detailsOfPropertyAffect"
-                value={detailsOfEquipmentAffect}
+                value={detailsOfEquipmentAffect || incidentsListData.isEquipmentDamagedAvailable}
                 onChange={(e) => {
                   setDetailsOfEquipmentAffect(e.target.value);
-                  handleEquipmentDamageAvailable();
                 }}
               >
                 {equipmentAffected.length !== 0
@@ -312,12 +340,12 @@ const EqiptmentAffected = () => {
                           className={classes.formControl}
                         >
                           <InputLabel id="eq-type-label">
-                              Equiptment type
+                              Equipment type
                           </InputLabel>
                           <Select
                             labelId="eq-type-label"
                             id="eq-type"
-                            label="Equiptment type"
+                            label="Equipment type"
                             defaultValue={equipment.equipmentType}
                             onChange={(e) => handleUpdateEquipment(
                               e,
@@ -389,6 +417,18 @@ const EqiptmentAffected = () => {
                             <p>{error[`equipmentDeatils${[key]}`]}</p>
                           )} */}
                       </Grid>
+                      {/* {equipmentListdata.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(equipment.id)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null} */}
                     </>
                   ))
                   : form.map((value, key) => (
@@ -400,12 +440,13 @@ const EqiptmentAffected = () => {
                           className={classes.formControl}
                         >
                           <InputLabel id="eq-type-label">
-                              Equiptment type
+                              Equipment type
                           </InputLabel>
                           <Select
                             labelId="eq-type-label"
                             id="eq-type"
-                            label="Equiptment type"
+                            label="Equipment type"
+                            value = {value.equipmentType || ""}
                             onChange={(e) => handleForm(e, key, 'equipmentType')
                             }
                           >
@@ -435,6 +476,8 @@ const EqiptmentAffected = () => {
                           id="filled-basic"
                           label="If others, describe"
                           className={classes.formControl}
+                          value = {value.equipmentOtherType || ""}
+                          disabled = {value.equipmentType === 'other'?false:true}
                           onChange={(e) => handleForm(e, key, 'equipmentOtherType')
                           }
                         />
@@ -442,7 +485,7 @@ const EqiptmentAffected = () => {
                           <p>{error[`equipmentOtherType${[key]}`]}</p>
                         )}
                       </Grid>
-
+                    {/* {form[key].equipmentType === ''} */}
                       <Grid item md={12}>
                         {/* <p>Describe the damage</p> */}
                         <TextField
@@ -452,6 +495,7 @@ const EqiptmentAffected = () => {
                           rows="3"
                           label="Describe the damage"
                           className={classes.fullWidth}
+                          value = {value.equipmentDeatils || ""}
                           onChange={(e) => handleForm(e, key, 'equipmentDeatils')
                           }
                         />
@@ -459,6 +503,18 @@ const EqiptmentAffected = () => {
                           <p>{error[`equipmentDeatils${[key]}`]}</p>
                         )}
                       </Grid>
+                      {form.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(key)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                     </>
                   ))}
                 {equipmentListdata.length > 0 ? null : (
@@ -467,7 +523,7 @@ const EqiptmentAffected = () => {
                       className={classes.textButton}
                       onClick={() => addNewEquipmentDetails()}
                     >
-                      Add details of additional equiptment affected?
+                      Add details of additional equipment affected?
                     </button>
                   </Grid>
                 )}
@@ -481,39 +537,38 @@ const EqiptmentAffected = () => {
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe any actions taken"
+                  label="Describe Any Equipment Affect"
                   className={classes.fullWidth}
-                  value={incidentsListData.equipmentDamagedComments}
+                  defaultValue={incidentsListData.equipmentDamagedComments}
                   onChange={(event) => setEequipmentDamagedComments(event.target.value)
                   }
                 />
               </Grid>
             )}
-            <Box marginTop={4}>
+           <Grid item md={6}>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/property-affected/"
               >
                 Previous
               </Button>
               <Button
                 variant="contained"
                 color="primary"
+                onClick={handleNext}
                 className={classes.button}
                 onClick={() => handleNext()}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/environment-affected/"
               >
                 Next
               </Button>
-            </Box>
+            </Grid>
           </Grid>
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Equipment affected"
+              selectedItem="Equipment Affected"
             />
           </Grid>
         </Grid>

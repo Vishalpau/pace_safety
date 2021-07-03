@@ -65,142 +65,234 @@ const LessionLearned = () => {
   const [form, setForm] = useState({ team: "", teamLearning: "" });
   const [learningList, setLearningList] = useState([]);
   const [whyCount, setWhyCount] = useState(["ram", "ram"]);
+  const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
+  // set state onChange update
+  const handleUpdateLessonLearned = async (e, key, fieldname, lessonId) => {
+    const temp = learningList;
+    const value = e.target.value.toString();
+    temp[key][fieldname] = value;
+    temp[key]["updatedBy"] = 0;
+    await setLearningList(temp);
+  };
+
+  const handleNext = async () => {
+    // sent put request
+    if (id) {
+      console.log(learningList);
+      for (var i = 0; i < learningList.length; i++) {
+        const res = await api.put(
+          `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
+          learningList[i]
+        );
+      }
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+            "fkincidentId"
+          )}`
+        );
+      }
+    } else {
+      // sent post request
+      const { isValid, error } = LessionLearnedValidator(form);
+      setError(error);
+      console.log(error, isValid);
+
+      if (isValid === true) {
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/learnings/`,
+          {
+            teamOrDepartment: form.team,
+            learnings: form.teamLearning,
+            status: "Active",
+            createdBy: 0,
+            updatedBy: 0,
+            fkIncidentId: localStorage.getItem("fkincidentId"),
+          }
+        );
+        if (res.status === 201) {
+          history.push(
+            `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+              "fkincidentId"
+            )}`
+          );
+        }
+      }
+    }
+  };
+
+  //  Fetch Lession learn data
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
     const result = res.data.data.results;
     await setLearningList(result);
   };
 
-  const handleUpdateLessonLearned = (e, key, fieldname, lessonId) => {
-    const temp = learningList;
-    const value = e.target.value.toString();
-    temp[key][fieldname] = value;
-    temp[key]["updatedBy"] = 0;
-    // temp[key]["updatedAt"] = moment(new Date()).toISOString();
-    const res = api.put(
-      `api/v1/incidents/${id}/learnings/${lessonId}/`,
-      temp[key]
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
-    // if (res.status === 200) {
-    //   history.push(
-    //     "/app/incident-management/registration/summary/summary/:id"
-    //   );
-    // }
+    const result = res.data.data.results;
+    await setIncidentsListdata(result);
+    await setIsLoading(true);
   };
+
   useEffect(() => {
-    fetchLessonLerned();
-  }, []);
-  const handleNext = () => {
-    const { isValid, error } = LessionLearnedValidator(form);
-
-    setError(error);
-    console.log(error, isValid);
-
-    if (isValid === true) {
-      const res = api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/learnings/`,
-        {
-          teamOrDepartment: form.team,
-          learnings: form.teamLearning,
-          status: "Active",
-          createdBy: 0,
-          updatedBy: 0,
-          fkIncidentId: localStorage.getItem("fkincidentId"),
-        }
-      );
-      if (res.status === 201) {
-        history.push(
-          "/app/incident-management/registration/summary/summary/:id"
-        );
-      }
+    if (id) {
+      fetchLessonLerned();
     }
-  };
-
+    fetchIncidentsData();
+  }, []);
   return (
     <PapperBlock title="Lessions Learned" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} justify="flex-start" spacing={3}>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
-            </Typography>
+      {isLoading ? (
+        <Grid container spacing={3}>
+          <Grid container item md={9} justify="flex-start" spacing={3}>
+            <Grid item md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Number
+              </Typography>
 
-            <Typography varint="body1" className={Type.labelValue}>
-              98865686
-            </Typography>
-          </Grid>
+              <Typography varint="body1" className={Type.labelValue}>
+                {incidentsListData.incidentNumber}
+              </Typography>
+            </Grid>
 
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident on
-            </Typography>
-            <Typography className={Type.labelValue}>
-              27th June 1985, 11:59 PM
-            </Typography>
-          </Grid>
+            <Grid item md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident on
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentsListData.incidentOccuredOn}
+              </Typography>
+            </Grid>
 
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Reported on
-            </Typography>
-            <Typography className={Type.labelValue}>
-              27th June 1985, 11:59 PM
-            </Typography>
-          </Grid>
+            <Grid item md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Reported on
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentsListData.incidentReportedOn}
+              </Typography>
+            </Grid>
 
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Reported By
-            </Typography>
-            <Typography className={Type.labelValue}>11:59 PM</Typography>
-          </Grid>
+            <Grid item md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Reported By
+              </Typography>
+              <Typography className={Type.labelValue}>11:59 PM</Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Type
-            </Typography>
-            <Typography className={Type.labelValue}>Near Miss</Typography>
-          </Grid>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Type
+              </Typography>
+              <Typography className={Type.labelValue}> {incidentsListData.incidentType} </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Title
-            </Typography>
-            <Typography className={Type.labelValue}>
-              This is the Long Incident Title as a Sample
-            </Typography>
-          </Grid>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Title
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentsListData.incidentTitle}
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Description
-            </Typography>
-            <Typography className={Type.labelValue}>
-              Contrary to popular belief, Lorem Ipsum is not simply random text.
-              It has roots in a piece of classical Latin literature from 45 BC,
-              making it over 2000 years old. Richard McClintock, a Latin
-              professor at Hampden-Sydney College in Virginia, looked up one of
-              the more obscure Latin words, consectetur, from a Lorem Ipsum
-              passage, and going through the cites of the word in classical
-              literature, discovered the undoubtable source.
-            </Typography>
-          </Grid>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Description
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentsListData.incidentDetails}
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Location
-            </Typography>
-            <Typography className={Type.labelValue}>New Delhi</Typography>
-          </Grid>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Location
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentsListData.incidentLocation}
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Key Learnings
-            </Typography>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Key Learnings
+              </Typography>
 
-            {learningList.length !== 0 ? (
-              learningList.map((item, index) => (
+              {learningList.length !== 0 ? (
+                learningList.map((item, index) => (
+                  <>
+                    <Grid item md={12}>
+                      <FormControl
+                        variant="outlined"
+                        className={classes.formControl}
+                        error={error.team}
+                      >
+                        <InputLabel id="demo-simple-select-label">
+                          Team/Department
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Team/Department"
+                          defaultValue={item.learnings}
+                          onChange={(e) =>
+                            handleUpdateLessonLearned(
+                              e,
+                              index,
+                              "teamOrDepartment",
+                              item.id
+                            )
+                          }
+                        >
+                          {selectValues.map((selectValues) => (
+                            <MenuItem value={selectValues}>
+                              {selectValues}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {error && error.team && (
+                          <FormHelperText>{error.team}</FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item md={12}>
+                      <FormControl
+                        variant="outlined"
+                        className={classes.formControl}
+                      >
+                        <TextField
+                          id="outlined-search"
+                          label="Team/Department Learnings"
+                          variant="outlined"
+                          rows="3"
+                          multiline
+                          defaultValue={item.learnings}
+                          error={error.teamLearning}
+                          helperText={error ? error.teamLearning : ""}
+                          onChange={(e) =>
+                            handleUpdateLessonLearned(
+                              e,
+                              index,
+                              "learnings",
+                              item.id
+                            )
+                          }
+                        />
+                        {/* {error && error.teamLearning && (
+                            <p>{error.teamLearning}</p>
+                          )} */}
+                      </FormControl>
+                    </Grid>
+                  </>
+                ))
+              ) : (
                 <>
                   <Grid item md={12}>
                     <FormControl
@@ -215,14 +307,11 @@ const LessionLearned = () => {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         label="Team/Department"
-                        defaultValue={item.learnings}
                         onChange={(e) =>
-                          handleUpdateLessonLearned(
-                            e,
-                            index,
-                            "teamOrDepartment",
-                            item.id
-                          )
+                          setForm({
+                            ...form,
+                            team: e.target.value.toString(),
+                          })
                         }
                       >
                         {selectValues.map((selectValues) => (
@@ -237,114 +326,56 @@ const LessionLearned = () => {
                     </FormControl>
                   </Grid>
                   <Grid item md={12}>
+                    {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
                     <FormControl
                       variant="outlined"
                       className={classes.formControl}
                     >
                       <TextField
                         id="outlined-search"
+                        error={error.teamLearning}
                         label="Team/Department Learnings"
                         variant="outlined"
                         rows="3"
                         multiline
-                        defaultValue={item.learnings}
-                        error={error.teamLearning}
                         helperText={error ? error.teamLearning : ""}
                         onChange={(e) =>
-                          handleUpdateLessonLearned(
-                            e,
-                            index,
-                            "learnings",
-                            item.id
-                          )
+                          setForm({ ...form, teamLearning: e.target.value })
                         }
                       />
                       {/* {error && error.teamLearning && (
-                            <p>{error.teamLearning}</p>
-                          )} */}
+                          <p>{error.teamLearning}</p>
+                        )} */}
                     </FormControl>
                   </Grid>
                 </>
-              ))
-            ) : (
-              <>
-                <Grid item md={12}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                    error={error.team}
-                  >
-                    <InputLabel id="demo-simple-select-label">
-                      Team/Department
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Team/Department"
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          team: e.target.value.toString(),
-                        })
-                      }
-                    >
-                      {selectValues.map((selectValues) => (
-                        <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                      ))}
-                    </Select>
-                    {error && error.team && (
-                      <FormHelperText>{error.team}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-                <Grid item md={12}>
-                  {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <TextField
-                      id="outlined-search"
-                      error={error.teamLearning}
-                      label="Team/Department Learnings"
-                      variant="outlined"
-                      rows="3"
-                      multiline
-                      helperText={error ? error.teamLearning : ""}
-                      onChange={(e) =>
-                        setForm({ ...form, teamLearning: e.target.value })
-                      }
-                    />
-                    {/* {error && error.teamLearning && (
-                          <p>{error.teamLearning}</p>
-                        )} */}
-                  </FormControl>
-                </Grid>
-              </>
-            )}
-          </Grid>
+              )}
+            </Grid>
 
-          <Grid item md={12}>
-            <Box marginTop={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                // href="#contained-buttons"
-                onClick={() => handleNext()}
-              >
-                Next
-              </Button>
-            </Box>
+            <Grid item md={12}>
+              <Box marginTop={4}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  // href="#contained-buttons"
+                  onClick={() => handleNext()}
+                >
+                  Next
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={[1, 2, 3]}
+              listOfItems={LESSION_LEARNED_FORM}
+              selectedItem={"Lession Learned"}
+            />
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            deleteForm={[1, 2, 3]}
-            listOfItems={LESSION_LEARNED_FORM}
-            selectedItem={"Lession learned"}
-          />
-        </Grid>
-      </Grid>
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </PapperBlock>
   );
 };

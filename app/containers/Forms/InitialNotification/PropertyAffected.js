@@ -80,6 +80,7 @@ const PropertyAffected = () => {
   const [propertyListData, setPropertyListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
+  const [isOther, setIsOther] = useState(true)
 
   // Default form.
   const [form, setForm] = useState([
@@ -106,25 +107,38 @@ const PropertyAffected = () => {
     ]);
   };
 
+  // hablde Remove
+
+  const handleRemove = async(key) => {
+    // if this condition when update the data
+    if(propertyListData.length>1){
+      const temp = propertyListData
+      const newData = temp.filter(item=> item.id !== key);
+      await setPropertyListData(newData)
+    }else{
+      // this condition use when create the data
+      const temp = form
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
+    }
+    
+    
+  };
+
+// set state when update 
   const handleUpdateProperty = async (e, key, fieldname, propertyId) => {
     const temp = propertyListData;
-    console.log(temp);
     const value = e.target.value;
     temp[key][fieldname] = value;
     temp[key]["updatedBy"] = 0;
-
-    const res = await api.put(
-      `api/v1/incidents/${id}/properties/${propertyId}/`,
-      temp[key]
-    );
-    console.log(res);
+    await setPropertyListData(temp)
   };
 
   const handlePropertyType = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp);
+  
     setForm(temp);
   };
 
@@ -132,7 +146,7 @@ const PropertyAffected = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp);
+  
     setForm(temp);
   };
 
@@ -140,7 +154,7 @@ const PropertyAffected = () => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
-    console.log(temp);
+  
     setForm(temp);
   };
 
@@ -148,11 +162,21 @@ const PropertyAffected = () => {
   const handleNext = async () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
+    
     // If property data there then don't do anything as we are doing put request on each change.
+
+    // if check property have or not . if property data have then put else create new
     if (propertyListData.length > 0) {
+      for (var i =0; i<propertyListData.length;i++){
+        const res = await api.put(
+          `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
+          propertyListData[i]
+        );
+      }
+     
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
         );
       } else if (nextPath.environmentAffect === "Yes") {
         history.push(
@@ -196,7 +220,7 @@ const PropertyAffected = () => {
         if (status === 201) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
@@ -207,6 +231,24 @@ const PropertyAffected = () => {
               "/app/incident-management/registration/summary/summary/"
             );
           }
+        }
+          else{
+            if (nextPath.equipmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/equipment-affected/"
+              );
+            } else if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/environment-affected/"
+              );
+            } else {
+              history.push(
+                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+              );
+            }
+          
+
+          
         }
 
         // If no is selected on form.
@@ -227,7 +269,7 @@ const PropertyAffected = () => {
         if (id) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/eqiptment-affected/${id}`
+              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
@@ -242,7 +284,7 @@ const PropertyAffected = () => {
         } else {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              "/app/incident-management/registration/initial-notification/eqiptment-affected/"
+              "/app/incident-management/registration/initial-notification/equipment-affected/"
             );
           } else if (nextPath.environmentAffect === "Yes") {
             if (nextPath.environmentAffect === "Yes") {
@@ -269,6 +311,7 @@ const PropertyAffected = () => {
   const fetchPropertyTypeValue = async () => {
     const res = await api.get("api/v1/lists/13/value");
     const result = res.data.data.results;
+    result.push({inputValue:'other',inputLabel:'other'})
     setPropertyTypeValue(result);
   };
 
@@ -278,7 +321,7 @@ const PropertyAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-    await setIsLoading(true);
+   
     const isAvailable = result.isPropertyDamagedAvailable;
     await setDetailsOfPropertyAffect(isAvailable);
   };
@@ -286,15 +329,21 @@ const PropertyAffected = () => {
   const fetchPropertyListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/properties/`);
     const result = res.data.data.results;
+   
     await setPropertyListData(result);
-    console.log(result);
+    await setIsLoading(true);
+   
   };
 
   useEffect(() => {
     fetchPropertyAffectedValue();
     fetchPropertyTypeValue();
     fetchIncidentsData();
+    if(id){
     fetchPropertyListData();
+    }else{
+       setIsLoading(true);
+    }
   }, []);
 
   return (
@@ -353,7 +402,7 @@ const PropertyAffected = () => {
                               labelId="person-type-label"
                               id="person-type"
                               label="Person type"
-                              defaultValue={property.propertyType}
+                              value={property.propertyType || ""}
                               onChange={(e) =>
                                 handleUpdateProperty(
                                   e,
@@ -386,7 +435,7 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="if others, describe"
                             className={classes.formControl}
-                            defaultValue={property.propertyOtherType}
+                            value={property.propertyOtherType || ""}
                             onChange={(e) =>
                               handleUpdateProperty(
                                 e,
@@ -405,7 +454,7 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
-                            defaultValue={property.damageDetails}
+                            value={property.damageDetails || ""}
                             onChange={(e) =>
                               handleUpdateProperty(
                                 e,
@@ -416,6 +465,18 @@ const PropertyAffected = () => {
                             }
                           />
                         </Grid>
+                        {/* {propertyListData.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(property.id)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null} */}
                       </>
                     ))
                   : form.map((value, index) => (
@@ -433,8 +494,11 @@ const PropertyAffected = () => {
                               labelId="person-type-label"
                               id="person-type"
                               label="Person type"
-                              onChange={(e) =>
-                                handlePropertyType(e, index, "propertyType")
+                              value = {value.propertyType || ''}
+                              onChange={(e) =>{
+                                handlePropertyType(e, index, "propertyType");
+                                setIsOther(e.target.value !== 'other')
+                              }
                               }
                             >
                               {propertyTypeValue.length !== 0
@@ -462,7 +526,9 @@ const PropertyAffected = () => {
                             id="name-affected"
                             variant="outlined"
                             label="if others, describe"
+                            value = {value.propertyOtherType || ''}
                             className={classes.formControl}
+                            disabled={value.propertyType === 'other'?false:true}
                             onChange={(e) =>
                               handlePropertyOtherType(
                                 e,
@@ -471,6 +537,7 @@ const PropertyAffected = () => {
                               )
                             }
                           />
+                          {console.log(value.propertyType)}
                           {error && error[`propertyOtherType${[index]}`] && (
                             <p>{error[`propertyOtherType${[index]}`]}</p>
                           )}
@@ -483,6 +550,7 @@ const PropertyAffected = () => {
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
+                            value = {value.damageDetails || ''}
                             onChange={(e) =>
                               handleDamageDetails(e, index, "damageDetails")
                             }
@@ -491,6 +559,18 @@ const PropertyAffected = () => {
                             <p>{error[`damageDetails${[index]}`]}</p>
                           )}
                         </Grid>
+                        {form.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(index)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </>
                     ))}
                 {propertyListData.length > 0 ? null : (
@@ -543,7 +623,6 @@ const PropertyAffected = () => {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
               >
                 Next
               </Button>
@@ -552,7 +631,7 @@ const PropertyAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Property affected"}
+              selectedItem={"Property Affected"}
             />
           </Grid>
         </Grid>

@@ -220,7 +220,7 @@ const IncidentDetailsSummary = () => {
           {incidents["subContractor"]}
         </Typography>
       </Grid>
-{/* People Affected */}
+      {/* People Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -357,7 +357,7 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-{/* Property Affected */}
+      {/* Property Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -432,7 +432,7 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-{/* Equipment Affected */}
+      {/* Equipment Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -517,32 +517,15 @@ const IncidentDetailsSummary = () => {
           </AccordionSummary>
           <AccordionDetails>
             {enviornmentData.length !== 0
-              ? enviornmentData.map((envData) => (
-                  <>
+              ? enviornmentData.map((envData, key) => (
+                  <Grid container item xs={12} spacing={3} key={key}>
                     <Grid item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Where there any release?
-                      </Typography>
-
-                      <Typography
-                        variant="body"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {envData.envQuestion}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={6}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Where there any impact on wildlife?
+                      {envData.envQuestion}
                       </Typography>
 
                       <Typography
@@ -552,31 +535,21 @@ const IncidentDetailsSummary = () => {
                       >
                         {envData.envQuestionOption}
                       </Typography>
-                    </Grid>
-                    <Grid item md={6}>
                       <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Where there any waterbody affected?
-                      </Typography>
-
-                      <Typography
-                        variant="body"
+                        variant="p"
                         color="textSecondary"
                         className={Fonts.labelValue}
                       >
-                        {envData.envAnswerDetails}
+                        {envData.envAnserDetails}
                       </Typography>
                     </Grid>
-                  </>
+                 </Grid>
                 ))
               : null}
           </AccordionDetails>
         </Accordion>
       </Grid>
-{/* Reports & Noticefication */}
+      {/* Reports & Noticefication */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -586,8 +559,8 @@ const IncidentDetailsSummary = () => {
           </AccordionSummary>
           <AccordionDetails>
             {reportsData.length !== 0
-              ? reportsData.map((report) => (
-                  <>
+              ? reportsData.map((report, key) => (
+                  <Grid container item xs={12} spacing={3} key={key}>
                     <Grid item md={6}>
                       <Typography
                         variant="h6"
@@ -623,7 +596,7 @@ const IncidentDetailsSummary = () => {
                         {report.reportingNote}
                       </Typography>
                     </Grid>
-                  </>
+                  </Grid>
                 ))
               : null}
           </AccordionDetails>

@@ -31,10 +31,7 @@ function validate(data){
         isValid = false
     }
 
-    if (data.incidenttime === null){
-        error.incidenttime = "this filed is empty"
-        isValid = false
-    }
+   
 
     if (validator.isEmpty(data.title)){
         error.title = "this filed is empty"

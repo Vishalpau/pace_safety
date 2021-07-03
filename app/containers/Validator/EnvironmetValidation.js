@@ -1,58 +1,25 @@
-import validator from 'validator';
+import validator from "validator";
 
-function EnvironmentValidate(data){
-    console.log(data)
-    let isValid = true
-    const error = {}
+function EnvironmentValidate(data) {
+  console.log(data);
+  let isValid = true;
+  const error = {};
 
-    if (validator.isEmpty(data.envQuestion.toString())){
-        error.envQuestion = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
+
+  for (let i = 0; i < data.length; i++) {
+    if (validator.isEmpty(data[i].envQuestion.toString())) {
+      error[`envQuestion${[i]}`] = "This Field is Empty";
+      isValid = false;
     }
 
-    if (validator.isEmpty(data.envAnswerDetails.toString())){
-        error.envAnswerDetails = "this filed is empty"
-        isValid = false
+    if (validator.isEmpty(data[i].envAnswerDetails.toString())) {
+      error[`envAnswerDetails${[i]}`] = "This Field is Empty";
+      isValid = false;
     }
+  }
 
-    if (validator.isEmpty(data.envQuestionOption.toString())){
-        error.envQuestionOption = "this filed is empty"
-        isValid = false
-    }
+  console.log(error);
+  return { error, isValid };
+}
 
-    // if (validator.isEmpty(data.releasedetails.toString())){
-    //     error.releasedetails = "this filed is empty"
-    //     isValid = false
-    // }
-
-    // if (validator.isEmpty(data.iswildlifeimpact.toString())){
-    //     error.iswildlifeimpact = "this filed is empty"
-    //     isValid = false
-    // }
-
-    // if (validator.isEmpty(data.wildlifeimpacedetails.toString())){
-    //     error.wildlifeimpacedetails = "this filed is empty"
-    //     isValid = false
-    // }
-
-    // if (validator.isEmpty(data.iswaterbodyaffected.toString())){
-    //     error.iswaterbodyaffected = "this filed is empty"
-    //     isValid = false
-    // }
-
-    // if (validator.isEmpty(data.waterbodyaffecteddetails.toString())){
-    //     error.waterbodyaffecteddetails = "this filed is empty"
-    //     isValid = false
-    // }
-
-    // if (validator.isEmpty(data.comment.toString())){
-    //     error.comment = "this filed is empty"
-    //     isValid = false
-    // }
-    console.log(error)
-    return { error, isValid }
-} 
-
-export default EnvironmentValidate
+export default EnvironmentValidate;

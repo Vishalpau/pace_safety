@@ -1,8 +1,8 @@
-import validator from 'validator';
+import validator from "validator";
 
-function EvidenceValidate(data){
-    let isValid = true
-    const error = {}
+function EvidenceValidate(data) {
+  let isValid = true;
+  const error = {};
 
     if (validator.isEmpty(data.evidenceType.toString())){
         error.evidenceType = "this filed is empty"
@@ -17,7 +17,7 @@ function EvidenceValidate(data){
         isValid = false   
     }
 
-    return { error , isValid }
-} 
+  return { error, isValid };
+}
 
-export default EvidenceValidate
+export default EvidenceValidate;

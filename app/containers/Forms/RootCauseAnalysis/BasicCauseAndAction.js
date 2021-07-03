@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -27,10 +27,15 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from 'react-router';
 
+import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -57,204 +62,129 @@ function ListItemLink(props) {
 }
 
 const BasicCauseAndAction = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  const [data, setData] = useState([])
+  const history = useHistory();
+  const putId = useRef("")
+  const handelShowData = async () => {
+    let tempApiData = {}
+    let subTypes = BASIC_CAUSE_SUB_TYPES
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+
+    let previousData = await api.get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`)
+
+    let allApiData = previousData.data.data.results
+    allApiData.map((value, index) => {
+      if (subTypes.includes(value.rcaSubType)) {
+        let valueQuestion = value.rcaSubType
+        let valueAnser = value.rcaRemark
+        tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser]
+      }
+    })
+
+    await setData(tempApiData)
+  }
 
   function ListItemLink(props) {
     return (
       <ListItem className={classes.titleLink} button component="a" {...props} />
     );
   }
-
-  const radioDecide = ["Yes", "No"];
+  const handelNext = () => {
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+    putId.current = lastItem
+    history.push(`/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem("fkincidentId")}`)
+  }
 
   let form_link = window.location.href;
+
+  useEffect(() => {
+    handelShowData()
+  }, []);
   const classes = useStyles();
   return (
-    <Container>
-      <Paper>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              Actions against Basic Causes
+    <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+        <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Number
             </Typography>
-          </Box>
-          <Grid container spacing={3}>
-            <Grid container item md={9} spacing={3}>
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: nnnnnnnnnn
-                  </Typography>
-                </Box>
-              </Grid>
+            <Typography className={Type.labelValue}>
+                {localStorage.getItem("fkincidentId")}
+            </Typography>
+        </Grid>
 
-              <Grid item md={8}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Method: 5 Why Analysis
-                  </Typography>
-                </Box>
-              </Grid>
+        <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Method
+            </Typography>
+            <Typography className={Type.labelValue}>
+              5 Why Analysis
+            </Typography>
+        </Grid>
 
-              <Grid item md={12}>
-                <Box>
-                  <Typography variant="h5" gutterBottom>
-                    Actions
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">
-                    Option selected from Hazardous Acts and conditions
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <List className={classes.list} dense disablePadding>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                  </List>
-
-                  <button className={classes.textButton}>
-                    <AddCircleOutlineIcon /> Add a new action
-                  </button>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">
-                    Option selected from Hazardous Acts and conditions
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <List className={classes.list} dense disablePadding>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                  </List>
-
-                  <button className={classes.textButton}>
-                    <AddCircleOutlineIcon /> Add a new action
-                  </button>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginBottom={2}>
-                  <Typography variant="body">
-                    Option selected from Hazardous Acts and conditions
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <List className={classes.list} dense disablePadding>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                    <ListItem>
-                      <ListItemText primary="Action Title" />
-                    </ListItem>
-                    <ListItemLink href="#">
-                      <ListItemText primary="AL-nnnnnn" />
-                    </ListItemLink>
-                  </List>
-
-                  <button className={classes.textButton}>
-                    <AddCircleOutlineIcon /> Add a new action
-                  </button>
-                </Box>
-              </Grid>
-
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  href="/app/incident-management/registration/root-cause-analysis/management-control/"
-                >
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item md={3}>
-              <FormSideBar
-                deleteForm={[1, 2, 3]}
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Basic cause and action"}
-              />
-            </Grid>
+          <Grid item md={12}>
+              <Typography variant="h6" gutterBottom>
+                Actions
+              </Typography>
           </Grid>
-        </Box>
-      </Paper>
-    </Container>
+
+          <Grid item md={12}>
+              <Typography>
+                Option selected from basic cause
+              </Typography>
+              <List className={classes.list} dense disablePadding>
+                {/* console.log(`${key}: ${value}`) */}
+
+                {Object.entries(data).map(([key, value]) => (
+                  <div>
+                    <ListItem>
+                      <ListItemText primary={key} />
+                    </ListItem>
+                    {value.map((value) => (
+                      <ListItemLink href="#">
+                        <ListItemText primary={<small>{value}</small>} />
+                      </ListItemLink>
+                    ))}
+                    <button className={classes.textButton}>
+                      <AddCircleOutlineIcon /> Add a new action
+                    </button>
+                  </div>
+                ))}
+              </List>
+          </Grid>
+
+
+
+          <Grid item md={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={(e) => handelNext()}
+            >
+              Next
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem={"Basic Cause and Action"}
+          />
+        </Grid>
+      </Grid>
+    </PapperBlock>
   );
 };
 

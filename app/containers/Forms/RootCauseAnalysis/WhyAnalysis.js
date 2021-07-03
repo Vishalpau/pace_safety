@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid, Container } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
@@ -14,6 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Fab from "@material-ui/core/Fab";
+import { useHistory, useParams } from 'react-router';
+import { PapperBlock } from "dan-components";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation"
@@ -39,26 +41,50 @@ const useStyles = makeStyles((theme) => ({
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss"
 
 
 const WhyAnalysis = () => {
 
   const [incidents, setIncidents] = useState([]);
-
+  const putId = useRef("")
   const [whyData, setWhyData] = useState({
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: localStorage.getItem("fkincidentId")
+    fkIncidentId: putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current
   })
 
   const [error, setError] = useState({})
 
   const [data, setData] = useState([])
-
+  const history = useHistory();
   const [form, setForm] = useState([
     { why: "", whyCount: "" }
   ])
+
+  const updateIds = useRef()
+
+
+  // get data and set to states
+  const handelUpdateCheck = async () => {
+    let tempApiData = {}
+    let tempApiDataId = []
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+
+    if (!isNaN(lastItem)) {
+      form.length = 0
+      let previousData = await api.get(`/api/v1/incidents/${lastItem}/fivewhy/`)
+      putId.current = lastItem
+      let allApiData = previousData.data.data.results
+      allApiData.map((value) => {
+        form.push({ why: value.why, whyCount: value.whyCount, whyId: value.id })
+      })
+    }
+    updateIds.current = tempApiDataId
+  }
+
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
@@ -90,42 +116,42 @@ const WhyAnalysis = () => {
     }
   }
 
-  const handelNext = (e) => {
-
-    const { error, isValid } = WhyAnalysisValidate(form);
-    setError(error);
-
-    let tempData = []
-    Object.entries(form).map((item) => {
-      let api_data = item[1]
-      let temp = {
-        why: api_data["why"],
-        whyCount: api_data["whyCount"],
-        status: "Active",
-        createdBy: 0,
-        fkIncidentId: localStorage.getItem("fkincidentId")
-      }
-      tempData.push(temp)
-    })
-    setData(tempData)
-  }
-
   const handelApiCall = async (e) => {
-    let callObjects = data
-
+    let nextPageLink = 0
+    let callObjects = form
     for (let key in callObjects) {
-      console.log(callObjects[key])
       if (Object.keys(error).length == 0) {
-        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, callObjects[key]);
-        if (res.status == 201) {
-          console.log("request done")
-          console.log(res)
+
+        if (putId.current == "") {
+          let postObject = { ...whyData, ...callObjects[key] }
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, postObject);
+          if (res.status == 201) {
+            console.log("request done")
+            nextPageLink = res.status
+          }
+        } else {
+          let dataID = callObjects[key].whyId
+          // delete callObjects[key].whyId
+          let postObject = { ...whyData, ...callObjects[key] }
+          if (typeof postObject != "undefined") {
+            const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
+            if (res.status == 200) {
+              console.log("request done")
+              nextPageLink = res.status
+            }
+          }
         }
+      }
+      if (nextPageLink == 201) {
+        history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
+      } else {
+        history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
       }
     }
   }
 
   useEffect(() => {
+    handelUpdateCheck();
     fetchIncidentData();
   }, []);
 
@@ -133,52 +159,51 @@ const WhyAnalysis = () => {
 
   const classes = useStyles();
   return (
-    <Container>
-      <Paper>
-        <Box padding={3} bgcolor="background.paper">
-          <Box borderBottom={1} marginBottom={2}>
-            <Typography variant="h6" gutterBottom>
-              5 Why Analysis
-            </Typography>
-          </Box>
+    <PapperBlock title="Why Analysis" icon="ion-md-list-box">
           <Grid container spacing={3}>
             <Grid container item md={9} spacing={3}>
-
-              <Grid item md={4}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number: {localStorage.getItem("fkincidentId")}
+              <Grid item md={6}>
+                  <Typography variant="h6" className={Type.labelName} gutterBottom>
+                    Incident number
                   </Typography>
-                </Box>
+                  <Typography className={Type.labelValue}>
+                    {localStorage.getItem("fkincidentId")}
+                  </Typography>
               </Grid>
 
-              <Grid item md={8}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    Method: 5 Why Analysis
+              <Grid item md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                    Method
                   </Typography>
-                </Box>
+                  <Typography className={Type.labelValue}>
+                    5 Why Analysis
+                  </Typography>
               </Grid>
 
               <Grid item md={12}>
-                <Typography variant="h6" gutterBottom>
-                  Incident Description:<small>{incidents.incidentDetails}</small>
+                <Typography variant="h6" className={Type.labelName}  gutterBottom>
+                  Incident Description
                 </Typography>
-
-                <Box marginTop={3}>
-                  <Typography variant="h6" gutterBottom>
-                    Level of Investigation
-                  </Typography>
-                  <Typography variant="body2">Level 5</Typography>
-                </Box>
+                <Typography className={Type.labelValue}>
+                {incidents.incidentDetails}
+                </Typography>
               </Grid>
 
               <Grid item md={12}>
-                {/* <p>Evidence collection</p> */}
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Level of Investigation
+                </Typography>
+                <Typography className={Type.labelValue}>
+               Level 5
+                </Typography>
+              </Grid>
+
+              <Grid item md={12}>
+
                 <TextField
                   variant="outlined"
                   id="filled-basic"
-                  label="Evidence collection"
+                  label="Evidence Collection"
                   multiline
                   rows={3}
                   className={classes.formControl}
@@ -188,38 +213,40 @@ const WhyAnalysis = () => {
               {form.map((item, index) => (
                 <Grid item md={12} >
                   <Grid container spacing={2}>
-
-                    <Grid item sm={11}>
+                    <Grid item xs={12}>
                       <TextField
                         id="filled-basic"
-                        label={`why ${index}`}
+                        label={`Why ${index}`}
                         variant="outlined"
                         error={error[`why${[index]}`]}
+                        defaultValue={form[index].why}
                         helperText={error ? error[`why${[index]}`] : ""}
                         className={classes.formControl}
                         onChange={(e) => handleForm(e, index)}
                       />
                     </Grid>
                     {form.length > 1 ?
-                      <Grid item sm={1} justify="center">
-                        <Fab size="small" color="secondary" aria-label="remove">
+
+                      putId.current == "" ? <Grid item sm={1} justify="center">
+                        <Fab size="small" color="primary" aria-label="remove">
                           <RemoveCircleOutlineIcon onClick={(e) => handelRemove(e, index)} />
                         </Fab>
-                      </Grid>
+                      </Grid> : null
+
                       : null}
                   </Grid>
-                  {/* {error && error[`why${[index]}`] && (
-                    <p>{error[`why${[index]}`]}</p>
-                  )} */}
                 </Grid>
               ))}
 
 
               <Grid item md={12}>
                 {/* This button will add another entry of why input  */}
-                <button onClick={(e) => handelAdd(e)} className={classes.textButton}>
-                  <AddIcon /> Add
-                </button>
+                {putId.current == "" ?
+                  <button onClick={(e) => handelAdd(e)} className={classes.textButton}>
+                    <AddIcon /> Add
+                  </button>
+                  : null}
+
               </Grid>
               <Grid item md={12}>
                 <Button
@@ -231,11 +258,12 @@ const WhyAnalysis = () => {
                   Previous
                 </Button>
                 <Button
+                  id="myBtn"
                   variant="contained"
                   color="primary"
                   className={classes.button}
                   // href={Object.keys(error).length > 0 ? '#' : `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`}
-                  onClick={(e) => { handelNext(e); handelApiCall(e) }}
+                  onClick={(e) => handelApiCall(e)}
                 >
                   Submit
                 </Button>
@@ -245,9 +273,7 @@ const WhyAnalysis = () => {
               Sidebar
             </Grid>
           </Grid>
-        </Box>
-      </Paper>
-    </Container >
+    </PapperBlock>
   );
 };
 

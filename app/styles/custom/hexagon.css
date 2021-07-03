@@ -1,0 +1,211 @@
+.hexagon a {
+  text-decoration: none;
+  word-wrap: break-word;
+}
+
+.hexagon :last-child {
+  margin-bottom: 0;
+}
+
+.hexagon {
+  margin: 0 0 5px;
+}
+
+.hexagon {
+  position: relative;
+  display: inline-block;
+  /* left/right margin approx. 25% of .hexagon width + spacing */
+  margin: 0px 28px;
+  background: url() no-repeat;
+  background-color: #fff;
+  background-position: center;
+  text-align: center;
+}
+.hexagon.hexagon_fullcontnt {
+  background-color: #06425c;
+}
+.hexagon.hexagon_fullcontnt.hexagon_fullcontnt_lightteel {
+  background-color: #7692a4;
+}
+.hexagon_row1 .hexagon:nth-child(odd) {
+  top: 0px;
+}
+.hexagon_row1 .hexagon:nth-child(even) {
+  top: 88px;
+}
+.hexagon_row2 .hexagon:nth-child(odd) {
+  top: 0px;
+}
+.hexagon_row2 .hexagon:nth-child(even) {
+  top: 88px;
+}
+.hexagon_row3 .hexagon:nth-child(odd) {
+  top: 0px;
+}
+.hexagon_row3 .hexagon:nth-child(even) {
+  top: 88px;
+}
+.hexagon.hexagon_fullcontnt:hover {
+  background-color: #f68929;
+  cursor: pointer;
+  z-index: 105;
+  transition: all 0.4s ease-in 0s;
+}
+.hexagon,
+.hexagon::before,
+.hexagon::after {
+  /* easy way: height is width * 1.732
+  actual formula is 2*(width/(2*Math.tan(Math.PI/6)))
+  remove border-radius for sharp corners on hexagons
+  width: 82px;
+  height: 142px;
+  */
+  width: 100px;
+  height: 175px;
+  border-radius: 20%/0%;
+}
+.hexagon.hexagon_fullcontnt.inactive_hexagon {
+  background-color: #54758b;
+  cursor: text;
+  pointer-events: none;
+}
+.hexagon-2 {
+  background-position: center;
+  text-align: center;
+}
+.hexagon-2,
+.hexagon::before,
+.hexagon::after {
+  background-color: #efefef;
+}
+.hexagon::before {
+  background-color: inherit;
+  content: "";
+  position: absolute;
+  left: 0;
+  transform: rotate(-60deg);
+}
+.hexagon::after {
+  background-color: inherit;
+  content: "";
+  position: absolute;
+  left: 0;
+  transform: rotate(60deg);
+}
+.hexagontent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140%;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  z-index: 100;
+}
+.ibws-fix {
+  /* inline-block whitespace fix */
+  font-size: 0;
+}
+.honeycomb {
+  margin: 0 auto;
+  text-align: center;
+}
+.titlehexagon_section .titlehexagon {
+  font-size: 20px;
+  color: #06425c;
+  line-height: 23px;
+  margin: 0px;
+  padding: 0px 0px 32px 0px;
+}
+.hexagon_row2,
+.hexagon_row3 {
+  margin-top: 4px;
+}
+.bghide_in_view {
+  background-color: transparent;
+}
+.hexagontent.hexagon_content_box a p {
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 20px;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+  padding-top: 70px !important;
+}
+.hexagontent.hexagon_content_box a:hover {
+  text-decoration: none !important;
+}
+
+.hexagon_fullcontnt .hse_health_safety_environment_mgmt_new {
+  background: url(../../../public/images/icons/2.png) no-repeat 50% 119%;
+  display: block;
+  padding-top: 15px;
+}
+.hexagon_fullcontnt:hover .hse_health_safety_environment_mgmt_new {
+  background-position-y: -9%;
+}
+
+.hexagon_fullcontnt .hse_compliance_protocols {
+  background: url(../../../public/images/icons/4.png) no-repeat 50% 153%;
+  display: block;
+  background-size: 85px;
+  padding-top: 15px;
+}
+.hexagon_fullcontnt:hover .hse_compliance_protocols {
+  background-position-y: -23%;
+}
+
+.hexagon_fullcontnt .hse_incident_reporting_management {
+  background: url(../../../public/images/icons/7.png) no-repeat 50% 137%;
+  display: block;
+  padding-top: 15px;
+}
+.hexagon_fullcontnt:hover .hse_incident_reporting_management {
+  background-position-y: -12.5%;
+}
+
+.hexagon_fullcontnt .project_information_hub {
+  background: url(../../../public/images/icons/1.png) no-repeat 50% 155%;
+  display: block;
+  background-size: 85px;
+  padding-top: 15px;
+}
+.hexagon_fullcontnt:hover .project_information_hub {
+  background-position-y: -4%;
+}
+
+.hexagon_fullcontnt .hse_smart_permit_management {
+  background: url(../../../public/images/icons/3.png) no-repeat 50% 166%;
+  display: block;
+  padding: 30px 0px;
+}
+.hexagon_fullcontnt:hover .hse_smart_permit_management {
+  background-position-y: -32%;
+}
+
+.hexagon_fullcontnt .hse_intelligent_permit_management_new {
+  background: url(../../../public/images/icons/6.png) no-repeat 50% 210%;
+  display: block;
+  padding: 30px 0px;
+}
+.hexagon_fullcontnt:hover .hse_intelligent_permit_management_new {
+  background-position-y: -36%;
+}
+
+.hexagon_fullcontnt .hse_rapid_knowledge_collaboration {
+  background: url(../../../public/images/icons/8.png) no-repeat 50% 202%;
+  display: block;
+  padding: 30px 0px;
+}
+.hexagon_fullcontnt:hover .hse_rapid_knowledge_collaboration {
+  background-position-y: -33%;
+}
+
+.hexagon_fullcontnt .hse_environment_development {
+  background: url(../../../public/images/icons/5.png) no-repeat 50% 131%;
+  display: block;
+}
+.hexagon_fullcontnt:hover .hse_environment_development {
+  background-position-y: 2%;
+}
