@@ -399,7 +399,7 @@ const PropertyAffected = () => {
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
-                              id="person-type"
+                              id={`property-type${index}`}
                               label="Person type"
                               value={property.propertyType || ""}
                               onChange={(e) =>
@@ -430,7 +430,7 @@ const PropertyAffected = () => {
                         <Grid item md={6}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                            id="name-affected"
+                            id={`other-property${index}`}
                             variant="outlined"
                             label="if others, describe"
                             className={classes.formControl}
@@ -449,7 +449,7 @@ const PropertyAffected = () => {
                         <Grid item md={12}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                            id="name-affected"
+                            id={`damage-property${index}`}
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
@@ -491,7 +491,7 @@ const PropertyAffected = () => {
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
-                              id="person-type"
+                              id={`person-type${index+1}`}
                               label="Person type"
                               value = {value.propertyType || ''}
                               onChange={(e) =>{
@@ -522,7 +522,7 @@ const PropertyAffected = () => {
                         <Grid item md={6}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                            id="name-affected"
+                            id={`other-property${index+1}`}
                             variant="outlined"
                             label="if others, describe"
                             value = {value.propertyOtherType || ''}
@@ -545,7 +545,7 @@ const PropertyAffected = () => {
                         <Grid item md={12}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                            id="name-affected"
+                           id={`describe-damage${index+1}`}
                             variant="outlined"
                             label="Describe the damage"
                             className={classes.formControl}
@@ -597,7 +597,7 @@ const PropertyAffected = () => {
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe any actions taken"
+                  label="Describe Property Affected"
                   className={classes.fullWidth}
                   defaultValue={incidentsListData.propertyDamagedComments}
                   onChange={(e) => {

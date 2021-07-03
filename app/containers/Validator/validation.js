@@ -1,103 +1,100 @@
 import validator from 'validator';
 
 function validate(data){
-    console.log(data)
     let isValid = true
     const error = {}
+    console.log(data.projectname)
 
-    if (validator.isEmpty(data.projectname)){
-        error.projectname = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
 
-    if (validator.isEmpty(data.unitname)){
-        error.unitname = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
+        if(data.projectname == 0){
+            error.projectname = "Please choose project name."
+            isValid = false
+        }
+        
+    
+
+    // if (validator.isEmpty(data.unitname)){
+    //     error.unitname = "this filed is empty"
+    //     isValid = false
+    // }else{
+    //     isValid = true
+    // }
 
     if (validator.isEmpty(data.incidenttype)){
-        error.incidenttype = "this filed is empty"
+        error.incidenttype = "Please choose incident type."
         isValid = false
     }else{
         isValid = true
     }
 
-    if (data.incidentdate === null){
-        error.incidentdate = "this filed is empty"
-        isValid = false
-    }
 
    
 
     if (validator.isEmpty(data.title)){
-        error.title = "this filed is empty"
+        error.title = "Please enter incident title."
         isValid = false
     }else{
         isValid = true
     }
 
-    if (validator.isEmpty(data.description)){
-        error.description = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
+    // if (validator.isEmpty(data.description)){
+    //     error.description = "this filed is empty"
+    //     isValid = false
+    // }else{
+    //     isValid = true
+    // }
 
-    if (validator.isEmpty(data.immediateactiontaken)){
-        error.immediateactiontaken = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
+    // if (validator.isEmpty(data.immediateactiontaken)){
+    //     error.immediateactiontaken = "this filed is empty"
+    //     isValid = false
+    // }else{
+    //     isValid = true
+    // }
 
-    if (validator.isEmpty(data.location)){
-        error.location = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
+    // if (validator.isEmpty(data.location)){
+    //     error.location = "this filed is empty"
+    //     isValid = false
+    // }else{
+    //     isValid = true
+    // }
 
     if (validator.isEmpty(data.contractor)){
-        error.contractor = "this filed is empty"
+        error.contractor = "Please choose contractor name."
         isValid = false
     }else{
         isValid = true
     }
 
-    if (validator.isEmpty(data.subcontractor)){
-        error.subcontractor = "this filed is empty"
-        isValid = false
-    }else{
-        isValid = true
-    }
+    // if (validator.isEmpty(data.subcontractor)){
+    //     error.subcontractor = "this filed is empty"
+    //     isValid = false
+    // }else{
+    //     isValid = true
+    // }
 
     if (validator.isEmpty(data.personaffected)){
-        error.personaffected = "this filed is empty"
+        error.personaffected = "Please choose person affected."
         isValid = false
     }else{
         isValid = true
     }
 
     if (validator.isEmpty(data.propertyaffected)){
-        error.propertyaffected = "this filed is empty"
+        error.propertyaffected = "Please choose property affected."
         isValid = false
     }else{
         isValid = true
     }
 
     if (validator.isEmpty(data.equiptmenteffected)){
-        error.equiptmenteffected = "this filed is empty"
+        error.equiptmenteffected = "Please choose equipment affected."
         isValid = false
     }else{
         isValid = true
     }
 
     if (validator.isEmpty(data.environmentaffected)){
-        error.environmentaffected = "this filed is empty"
+        error.environmentaffected = "Please choose enviornment affected."
         isValid = false
     }else{
         isValid = true

@@ -186,16 +186,20 @@ const EnvironmentAffected = () => {
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );
     } else {
-      const { error, isValid } = EnvironmentValidate(form[i]);
-      setError(error);
+      
 
       for (let i = 0; i < form.length; i++) {
+        const { error, isValid } = EnvironmentValidate(form[i]);
+      setError(error);
+      if(isValid){
         const res = await api.post(
           `api/v1/incidents/${localStorage.getItem(
             "fkincidentId"
           )}/environment/`,
           form[i]
         );
+      }
+        
       }
       const temp = incidentsListData;
       temp["updatedAt"] = moment(new Date()).toISOString();
@@ -318,7 +322,7 @@ const EnvironmentAffected = () => {
                   <Grid item md={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
-                        id="waterbody-details"
+                        id={`waterbody-details-update-${key+1}`}
                         multiline
                         rows="3"
                         variant="outlined"
@@ -472,7 +476,7 @@ const EnvironmentAffected = () => {
 
                   {isWildlife == "Yes" ? (
                     <TextField
-                      id="waterbody-details"
+                      id="details-of-Wildlife-Affected"
                       multiline
                       rows="3"
                       variant="outlined"
@@ -549,7 +553,7 @@ const EnvironmentAffected = () => {
               <div>
                 {/* <p>Comment if any</p> */}
                 <TextField
-                  id="comments"
+                  id="comment-if-any-environment"
                   multiline
                   variant="outlined"
                   rows="3"
