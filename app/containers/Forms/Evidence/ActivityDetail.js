@@ -14,18 +14,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 import { PapperBlock } from "dan-components";
-
 import { useHistory, useParams } from "react-router-dom";
 import api from "../../../utils/axios";
 import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
+import { FormHelperText } from "@material-ui/core";
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import Type from "../../../styles/components/Fonts.scss";
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
+    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),
@@ -35,18 +34,18 @@ const useStyles = makeStyles((theme) => ({
     gap: "1.5rem",
   },
 }));
-
 const ActivityDetails = () => {
   const [selectedDate, setSelectedDate] = useState(
     new Date("2014-08-18T21:11:54")
   );
-  const [error, setError] = useState({});
+  const [error, setError] = useState();
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [incidentDetail, setIncidentDetail] = useState({});
   const [activtyList, setActvityList] = useState([
     {
       questionCode: "AD-01",
@@ -126,49 +125,66 @@ const ActivityDetails = () => {
       error: "",
     },
   ]);
-  const activityPutID = useRef();
-
+  console.log(activtyList);
   const fetchActivityList = async () => {
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    if (lastItem != "") {
-      activityPutID.current == lastItem;
-      const res = await api.get(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-      );
-      const result = res.data.data.results;
-      if (result.length) {
-        await setActvityList(result);
-      }
-      await setIsLoading(true);
+    const res = await api.get(`/api/v1/incidents/${id}/activities/`);
+    const result = res.data.data.results;
+    console.log(result);
+    console.log(result.length);
+    if (result.length) {
+      await setActvityList(result);
     }
+    await setIsLoading(true);
+  };
+
+  const fetchActivityData = async () => {
+    const res = await api.get(`/api/v1/incidents/442/activities/`);
+    const result = res.data.data.results;
+    console.log(result);
+    console.log(result.length);
+    if (result.length) {
+      await setActvityList(result);
+    }
+    await setIsLoading(true);
   };
 
   const handleNext = async () => {
-    if (activityPutID.current != "") {
-      console.log("in post");
-      // const res = await api.put(
-      //   `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-      //   activtyList
-      // );
+    const { error, isValid } = ActivityDetailValidate(activtyList);
+    await setError(error);
+    if (!isValid) {
+      return;
+    }
+
+    if (id && activtyList.length > 0) {
+      console.log("in put");
+      const res = await api.put(
+        `api/v1/incidents/${id}/activities/`,
+        activtyList
+      );
       if (res.status === 200) {
         history.push(
-          "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+          `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
         );
       }
-    } else {
-      console.log("in Post");
-      const { activityState, isValid } = ActivityDetailValidate(activtyList);
-      setActvityList(activityState);
-      if (!isValid) {
-        return;
+    } else if(localStorage.getItem("fkincidentId") && activtyList.length > 0) {
+      const res = await api.put(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        activtyList
+      );
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/evidence/personal-and-ppedetails/`
+        );
       }
-      // const res = await api.post(
-      //   `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-      //   activtyList
-      // );
+    }
+    else
+    {
+      console.log("in Post");
 
+      const res = await api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+        activtyList
+      );
       history.push(
         "/app/incident-management/registration/evidence/personal-and-ppedetails/"
       );
@@ -177,10 +193,8 @@ const ActivityDetails = () => {
 
   const handleRadioData = (e, questionCode) => {
     let TempActivity = [];
-
     for (let key in activtyList) {
       let activityObj = activtyList[key];
-
       if (questionCode == activityObj.questionCode) {
         activityObj.answer = e.target.value;
       }
@@ -188,11 +202,24 @@ const ActivityDetails = () => {
     }
     setActvityList(TempActivity);
   };
-  console.log(activtyList[0].answer);
+
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
 
   useEffect(() => {
-    fetchActivityList();
-  }, []);
+    fetchActivityData();
+    fetchIncidentDetails();
+    if (id) {
+      fetchActivityList();
+    } else {
+      setIsLoading(true);
+    }
+  }, [id]);
 
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
@@ -202,40 +229,51 @@ const ActivityDetails = () => {
             <Grid item md={4}>
               <Box>
                 <Typography variant="body2" gutterBottom>
-                  Incident number: {localStorage.getItem("fkincidentId")}
+                  Incident number: {incidentDetail.incidentNumber}
                 </Typography>
               </Box>
             </Grid>
-            {activtyList.length > 0 ? (
+            {console.log(activtyList)}
+            {activtyList.length ? (
               <>
-                {Object.entries(activtyList).map(([key, value]) => (
-                  <Grid item md={12}>
-                    <FormControl
-                      component="fieldset"
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">{value.question}</FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        // defaultValue = {activtyList[0].answer === Yes ? "Yes" : "No"}
-                        onChange={(e) => {
-                          handleRadioData(e, value.questionCode);
-                          console.log(value.answer);
-                        }}
-                        defaultValue={value.answer}
+                {Object.entries(activtyList)
+                  .slice(0, 7)
+                  .map(([key, value]) => (
+                    <Grid item md={12}>
+                      <FormControl
+                        component="fieldset"
+                        className={classes.formControl}
+                        error={value.error}
                       >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                    {value.error ? <p>{value.error}</p> : null}
-                  </Grid>
-                ))}
+                        <FormLabel component="legend">
+                          {value.question}
+                        </FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          defaultValue={value.answer}
+                          onChange={(e) => {
+                            handleRadioData(e, value.questionCode);
+                            console.log(value.answer);
+                          }}
+                          // defaultValue={value.answer}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
+
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : (
+                          ""
+                        )}
+                      </FormControl>
+                    </Grid>
+                  ))}
               </>
             ) : null}
             <Grid item md={12}>
@@ -263,7 +301,7 @@ const ActivityDetails = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Activity Detail"
+              selectedItem="Activity detail"
             />
           </Grid>
         </Grid>
@@ -273,5 +311,4 @@ const ActivityDetails = () => {
     </PapperBlock>
   );
 };
-
 export default ActivityDetails;

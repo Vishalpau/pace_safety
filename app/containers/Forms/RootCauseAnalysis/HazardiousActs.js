@@ -295,6 +295,7 @@ const HazardiousActs = () => {
   const handelNext = async (e) => {
     const { error, isValid } = HazardiousActsValidation(form);
     await setError(error);
+    console.log(error)
     let tempData = []
 
     Object.entries(form).map(async (item, index) => {
@@ -351,7 +352,7 @@ const HazardiousActs = () => {
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push("/app/incident-management/registration/root-cause-analysis/hazardious-condtions/")
-    } else {
+    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current}`)
     }
   }
@@ -362,6 +363,7 @@ const HazardiousActs = () => {
 
   return (
     <Container>
+      {console.log(form)}
       <Paper>
         {/* {console.log(fetchApiData.Supervision !== "undefined" ? fetchApiData : "")} */}
         <Box padding={3} bgcolor="background.paper">

@@ -134,9 +134,9 @@ const RootCauseAnalysis = () => {
           nextPageLink = res.status
         }
       }
-      if (nextPageLink == 201) {
+      if (nextPageLink == 201 && Object.keys(error).length == 0) {
         history.push("/app/incident-management/registration/root-cause-analysis/why-analysis/")
-      } else {
+      } else if ((nextPageLink == 200 && Object.keys(error).length == 0)) {
         history.push(`/app/incident-management/registration/root-cause-analysis/why-analysis/${putId.current}`)
       }
     }
@@ -149,232 +149,232 @@ const RootCauseAnalysis = () => {
 
   return (
     <PapperBlock title="Root Cause Analysis" icon="ion-md-list-box">
-          <Grid container spacing={3}>
-            <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Incident Number
-                </Typography>
-                <Typography className={Type.labelValue}>
-                    {localStorage.getItem("fkincidentId")}
-                </Typography>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Incident Description
-                </Typography>
-                <Typography className={Type.labelValue}>
-                  {incidents.incidentDetails}
-                </Typography>
-              </Grid>
-
-              <Grid item lg={6} md={12} sm={12}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    label="Investigation Start Date"
-                    className={classes.formControl}
-                    inputVariant="outlined"
-                    id="date-picker-dialog"
-                    format="dd/mm/yyyy"
-                    value={selectedDate}
-                    // onChange={handleDateChange}
-                    disabled
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-
-              <Grid item md={6}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    label="Investigation End Date"
-                    className={classes.formControl}
-                    inputVariant="outlined"
-                    required
-                    id="date-picker-dialog"
-                    format="dd/mm/yyyy"
-                    value={selectedDate}
-                    // onChange={handleDateChange}
-                    disabled
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-
-              <Grid item md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">
-                    RCA Recommended
-                  </InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Project Name"
-                  >
-                    {RCAOPTION.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">
-                    Level Of Investigation
-                  </InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Project Name"
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item lg={6} md={12} sm={12}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <DateTimePicker
-                    autoOk
-                    inputVariant="outlined"
-                    className={classes.formControl}
-                    ampm={false}
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    // label="Incident Date and Time"
-                    disabled
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-
-              <Grid item md={6}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    label="Analysis Conduted By"
-                    className={classes.formControl}
-                    inputVariant="outlined"
-                    required
-                    id="date-picker-dialog"
-                    format="dd/mm/yyyy"
-                    value={selectedDate}
-                    disabled
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-              <Grid item md={12}>
-                <TextField
-                  className={classes.formControl}
-                  id="filled-basic"
-                  multiline
-                  rows="3"
-                  variant="outlined"
-                  label="What Caused the Incident ?"
-                  error={error.causeOfIncident}
-                  defaultValue={form.causeOfIncident}
-                  helperText={error ? error.causeOfIncident : ''}
-                  onChange={(e) => setForm({ ...form, causeOfIncident: e.target.value })
-                  }
-                />
-              </Grid>
-
-              <Grid item md={12}>
-                <TextField
-                  id="filled-basic"
-                  className={classes.formControl}
-                  multiline
-                  rows="3"
-                  variant="outlined"
-                  label="Corrective Actions"
-                  error={error.correctiveAction}
-                  defaultValue={form.correctiveAction}
-                  helperText={error ? error.correctiveAction : ''}
-                  onChange={(e) => setForm({ ...form, correctiveAction: e.target.value })
-                  }
-                />
-              </Grid>
-
-              <Grid item md={12}>
-                <FormControl component="fieldset">
-                  <FormLabel
-                    component="legend"
-                    error={error.wouldItPreventIncident}
-                  >
-                    Would Corrective Actions Prevent Simailar Incidents In
-                    Future?
-                  </FormLabel>
-                  <RadioGroup className={classes.inlineRadioGroup}>
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                      checked={form.wouldItPreventIncident == value}
-                      onChange={(e) => setForm({
-                        ...form,
-                        wouldItPreventIncident:
-                          e.target.value === 'Yes' ? 'Yes' : 'No',
-                      })
-                      }
-                    />
-                  ))}
-                </RadioGroup>
-                {error && error.wouldItPreventIncident && (
-                  <small style={{ color: 'red' }}>
-                    {error.wouldItPreventIncident}
-                  </small>
-                )}
-                </FormControl>
-              </Grid>
-
-              <Grid item md={12}>
-                <TextField
-                  className={classes.formControl}
-                  id="filled-basic"
-                  variant="outlined"
-                  multiline
-                  label="If No, Please Recommended Correct Solution ?"
-                  rows="3"
-                  defaultValue={form.recommendSolution}
-                  onChange={(e) => setForm({ ...form, recommendSolution: e.target.value })
-                  }
-                />
-                {error && error.recommendSolution && (
-                  <small style={{ color: 'red' }}>
-                    {error.recommendSolution}
-                  </small>
-                )}
-              </Grid>
-
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/why-analysis/"}
-                  onClick={(e) => handelNext(e)}
-                >
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item={3}>
-              <FormSideBar
-                deleteForm={[1, 2, 3]}
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem="Root Cause Analysis"
-              />
-            </Grid>
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Number
+            </Typography>
+            <Typography className={Type.labelValue}>
+              {localStorage.getItem("fkincidentId")}
+            </Typography>
           </Grid>
+
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Description
+            </Typography>
+            <Typography className={Type.labelValue}>
+              {incidents.incidentDetails}
+            </Typography>
+          </Grid>
+
+          <Grid item lg={6} md={12} sm={12}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                label="Investigation Start Date"
+                className={classes.formControl}
+                inputVariant="outlined"
+                id="date-picker-dialog"
+                format="dd/mm/yyyy"
+                value={selectedDate}
+                // onChange={handleDateChange}
+                disabled
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+
+          <Grid item md={6}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                label="Investigation End Date"
+                className={classes.formControl}
+                inputVariant="outlined"
+                required
+                id="date-picker-dialog"
+                format="dd/mm/yyyy"
+                value={selectedDate}
+                // onChange={handleDateChange}
+                disabled
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+
+          <Grid item md={6}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="project-name-label">
+                RCA Recommended
+              </InputLabel>
+              <Select
+                id="project-name"
+                labelId="project-name-label"
+                label="Project Name"
+              >
+                {RCAOPTION.map((selectValues) => (
+                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item md={6}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="project-name-label">
+                Level Of Investigation
+              </InputLabel>
+              <Select
+                id="project-name"
+                labelId="project-name-label"
+                label="Project Name"
+              >
+                {selectValues.map((selectValues) => (
+                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item lg={6} md={12} sm={12}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DateTimePicker
+                autoOk
+                inputVariant="outlined"
+                className={classes.formControl}
+                ampm={false}
+                value={selectedDate}
+                onChange={handleDateChange}
+                // label="Incident Date and Time"
+                disabled
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+
+          <Grid item md={6}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                label="Analysis Conduted By"
+                className={classes.formControl}
+                inputVariant="outlined"
+                required
+                id="date-picker-dialog"
+                format="dd/mm/yyyy"
+                value={selectedDate}
+                disabled
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+          <Grid item md={12}>
+            <TextField
+              className={classes.formControl}
+              id="filled-basic"
+              multiline
+              rows="3"
+              variant="outlined"
+              label="What Caused the Incident ?"
+              error={error.causeOfIncident}
+              defaultValue={form.causeOfIncident}
+              helperText={error ? error.causeOfIncident : ''}
+              onChange={(e) => setForm({ ...form, causeOfIncident: e.target.value })
+              }
+            />
+          </Grid>
+
+          <Grid item md={12}>
+            <TextField
+              id="filled-basic"
+              className={classes.formControl}
+              multiline
+              rows="3"
+              variant="outlined"
+              label="Corrective Actions"
+              error={error.correctiveAction}
+              defaultValue={form.correctiveAction}
+              helperText={error ? error.correctiveAction : ''}
+              onChange={(e) => setForm({ ...form, correctiveAction: e.target.value })
+              }
+            />
+          </Grid>
+
+          <Grid item md={12}>
+            <FormControl component="fieldset">
+              <FormLabel
+                component="legend"
+                error={error.wouldItPreventIncident}
+              >
+                Would Corrective Actions Prevent Simailar Incidents In
+                Future?
+              </FormLabel>
+              <RadioGroup className={classes.inlineRadioGroup}>
+                {radioDecide.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                    checked={form.wouldItPreventIncident == value}
+                    onChange={(e) => setForm({
+                      ...form,
+                      wouldItPreventIncident:
+                        e.target.value === 'Yes' ? 'Yes' : 'No',
+                    })
+                    }
+                  />
+                ))}
+              </RadioGroup>
+              {error && error.wouldItPreventIncident && (
+                <small style={{ color: 'red' }}>
+                  {error.wouldItPreventIncident}
+                </small>
+              )}
+            </FormControl>
+          </Grid>
+
+          <Grid item md={12}>
+            <TextField
+              className={classes.formControl}
+              id="filled-basic"
+              variant="outlined"
+              multiline
+              label="If No, Please Recommended Correct Solution ?"
+              rows="3"
+              defaultValue={form.recommendSolution}
+              onChange={(e) => setForm({ ...form, recommendSolution: e.target.value })
+              }
+            />
+            {error && error.recommendSolution && (
+              <small style={{ color: 'red' }}>
+                {error.recommendSolution}
+              </small>
+            )}
+          </Grid>
+
+          <Grid item md={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/why-analysis/"}
+              onClick={(e) => handelNext(e)}
+            >
+              Next
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem="Root Cause Analysis"
+          />
+        </Grid>
+      </Grid>
     </PapperBlock>
   );
 };

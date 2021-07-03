@@ -4,27 +4,27 @@ function HazardiousConditionsValidation(data) {
   let isValid = true;
   const error = {};
 
-  if (validator.isEmpty(data.warningSystem.rcaSubType)) {
+  if (validator.isEmpty(data.warningSystem.rcaRemark.toString())) {
     error.warningSystem = "This Field is Empty";
     isValid = false;
   }
 
-  if (validator.isEmpty(data.energyTypes.rcaSubType)) {
+  if (validator.isEmpty(data.energyTypes.rcaRemark.toString())) {
     error.energyTypes = "This Field is Empty";
     isValid = false;
   }
 
-  if (validator.isEmpty(data.tools.rcaSubType)) {
+  if (validator.isEmpty(data.tools.rcaRemark.toString())) {
     error.tools = "This Field is Empty";
     isValid = false;
   }
 
-  if (validator.isEmpty(data.safetyitems.rcaSubType)) {
+  if (validator.isEmpty(data.safetyitems.rcaRemark.toString())) {
     error.safetyitems = "This Field is Empty";
     isValid = false;
   }
 
-  if (validator.isEmpty(data.others.rcaSubType)) {
+  if (validator.isEmpty(data.others.rcaRemark.toString())) {
     error.others = "This Field is Empty";
     isValid = false;
   }

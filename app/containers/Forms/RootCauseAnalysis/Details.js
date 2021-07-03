@@ -146,7 +146,7 @@ const Details = () => {
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push("/app/incident-management/registration/root-cause-analysis/hazardious-acts/")
-    } else {
+    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`)
     }
     e.preventDefault();
@@ -159,6 +159,7 @@ const Details = () => {
 
   return (
     <Container>
+      {console.log(form.rcaRecommended)}
       <Paper>
         <Box padding={3} bgcolor="background.paper">
 
@@ -233,7 +234,7 @@ const Details = () => {
                     id="project-name"
                     labelId="project-name-label"
                     label="RCA recommended"
-                  // defaultValue={"Pace cause"}
+                    defaultValue={form.rcaRecommended}
                   >
                     {RCAOPTION.map((selectValues) => (
                       <MenuItem

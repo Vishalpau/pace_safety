@@ -314,8 +314,8 @@ const BasicCause = () => {
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push("/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/")
-    } else {
-      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/`)
+    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
+      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current}`)
     }
     // api call //
   };
@@ -324,197 +324,197 @@ const BasicCause = () => {
   }, []);
   return (
     <PapperBlock title="Basic Cause" icon="ion-md-list-box">
-            <Grid container spacing={3}>
-              <Grid container item md={9} spacing={3}>
-                <Grid item md={6}>
-                    <Typography variant="h6" className={Type.labelName} gutterBottom>
-                      Incident number
-                    </Typography>
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident number
+            </Typography>
 
-                     <Typography className={Type.labelValue} gutterBottom>
-                     {localStorage.getItem("fkincidentId")}
-                    </Typography>
-                </Grid>
-                <Grid item md={6}>
-                    <Typography variant="h6" className={Type.labelName} gutterBottom>
-                      RCA Method
-                    </Typography>
-                    <Typography className={Type.labelValue} gutterBottom>
-                    PACE Cause Analysis
-                    </Typography>
-                </Grid>
-                <Grid item md={12}>
-                    <Typography variant="h5" gutterBottom>
-                      Human Factors
-                    </Typography>
-                </Grid>
-                <Grid item md={6}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.personal}>
-                      Personal
-                    </FormLabel>
-                    <FormGroup>
-                      {PERSONAL.map((value) => (
-                        <FormControlLabel
-                          control={<Checkbox name={value} />}
-                          label={<small>{value}</small>}
-                          checked={form.personal.rcaRemark.includes(value)}
-                          onChange={async (e) => handelPersonal(e, value)}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  {error && error.personal && (
-                    <p>
-                      <small style={{ color: "red" }}>{error.personal}</small>
-                    </p>
-                  )}
-                </Grid>
-                {/* wellness factors */}
-                <Grid item md={6}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.wellnessFactors}>
-                      Wellness Factors
-                    </FormLabel>
-                    <FormGroup>
-                      {PERSONALWELNESSFACTORS.map((value) => (
-                        <FormControlLabel
-                          control={<Checkbox name={value} />}
-                          label={<small>{value}</small>}
-                          checked={form.wellnessFactors.rcaRemark.includes(
-                            value
-                          )}
-                          onChange={async (e) =>
-                            handelWellnessFactors(e, value)
-                          }
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  {error && error.wellnessFactors && (
-                    <p>
-                      <small style={{ color: "red" }}>
-                        {error.wellnessFactors}
-                      </small>
-                    </p>
-                  )}
-                </Grid>
-                {/* other human factors */}
-                <Grid item md={12}>
-                  <TextField
-                    id="filled-basic"
-                    variant="outlined"
-                    multiline
-                    rows={4}
-                    label="Other Human Factors"
-                    error={error.otherHumanFactor}
-                    defaultValue={form.otherHumanFactor.rcaRemark}
-                    helperText={error ? error.otherHumanFactor : ""}
-                    className={classes.formControl}
-                    onChange={async (e) => handelOtherHumanFactors(e)}
+            <Typography className={Type.labelValue} gutterBottom>
+              {localStorage.getItem("fkincidentId")}
+            </Typography>
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              RCA Method
+            </Typography>
+            <Typography className={Type.labelValue} gutterBottom>
+              PACE Cause Analysis
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h5" gutterBottom>
+              Human Factors
+            </Typography>
+          </Grid>
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.personal}>
+                Personal
+              </FormLabel>
+              <FormGroup>
+                {PERSONAL.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.personal.rcaRemark.includes(value)}
+                    onChange={async (e) => handelPersonal(e, value)}
                   />
-                  {/* {error && error.otherHumanFactor && (
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.personal && (
+              <p>
+                <small style={{ color: "red" }}>{error.personal}</small>
+              </p>
+            )}
+          </Grid>
+          {/* wellness factors */}
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.wellnessFactors}>
+                Wellness Factors
+              </FormLabel>
+              <FormGroup>
+                {PERSONALWELNESSFACTORS.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.wellnessFactors.rcaRemark.includes(
+                      value
+                    )}
+                    onChange={async (e) =>
+                      handelWellnessFactors(e, value)
+                    }
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.wellnessFactors && (
+              <p>
+                <small style={{ color: "red" }}>
+                  {error.wellnessFactors}
+                </small>
+              </p>
+            )}
+          </Grid>
+          {/* other human factors */}
+          <Grid item md={12}>
+            <TextField
+              id="filled-basic"
+              variant="outlined"
+              multiline
+              rows={4}
+              label="Other Human Factors"
+              error={error.otherHumanFactor}
+              defaultValue={form.otherHumanFactor.rcaRemark}
+              helperText={error ? error.otherHumanFactor : ""}
+              className={classes.formControl}
+              onChange={async (e) => handelOtherHumanFactors(e)}
+            />
+            {/* {error && error.otherHumanFactor && (
                     <p>{error.otherHumanFactor}</p>
                   )} */}
-                </Grid>
+          </Grid>
 
-                <Grid item md={12}>
-                    <Typography variant="h6" gutterBottom>
-                      Job Factors
-                    </Typography>
-                </Grid>
-                {/* leadership */}
-                <Grid item md={6}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.leadership}>
-                      Leadership
-                    </FormLabel>
-                    <FormGroup>
-                      {LEADERSHIP.map((value) => (
-                        <FormControlLabel
-                          control={<Checkbox name={value} />}
-                          label={<small>{value}</small>}
-                          checked={form.leadership.rcaRemark.includes(value)}
-                          onChange={async (e) => handelLeadership(e, value)}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  {error && error.leadership && (
-                    <p>
-                      <small style={{ color: "red" }}>{error.leadership}</small>
-                    </p>
-                  )}
-                </Grid>
-                {/* processes */}
-                <Grid item md={6}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" error={error.processes}>
-                      Processes
-                    </FormLabel>
-                    <FormGroup>
-                      {PROCESSES.map((value) => (
-                        <FormControlLabel
-                          control={<Checkbox name={value} />}
-                          label={<small>{value}</small>}
-                          checked={form.processes.rcaRemark.includes(value)}
-                          onChange={async (e) => handelProcesses(e, value)}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  {error && error.processes && (
-                    <p>
-                      <small style={{ color: "red" }}>{error.processes}</small>
-                    </p>
-                  )}
-                </Grid>
-                {/* other job factors */}
-                <Grid item md={12}>
-                  <TextField
-                    id="filled-basic"
-                    variant="outlined"
-                    multiline
-                    error={error.otherJobFactors}
-                    defaultValue={form.otherJobFactors.rcaRemark}
-                    helperText={error ? error.otherJobFactors : ""}
-                    rows={3}
-                    label="Other Job Factors"
-                    className={classes.formControl}
-                    onChange={async (e) => handelOtherJobFactors(e)}
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom>
+              Job Factors
+            </Typography>
+          </Grid>
+          {/* leadership */}
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.leadership}>
+                Leadership
+              </FormLabel>
+              <FormGroup>
+                {LEADERSHIP.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.leadership.rcaRemark.includes(value)}
+                    onChange={async (e) => handelLeadership(e, value)}
                   />
-                  {/* {error && error.otherJobFactors && (
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.leadership && (
+              <p>
+                <small style={{ color: "red" }}>{error.leadership}</small>
+              </p>
+            )}
+          </Grid>
+          {/* processes */}
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.processes}>
+                Processes
+              </FormLabel>
+              <FormGroup>
+                {PROCESSES.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.processes.rcaRemark.includes(value)}
+                    onChange={async (e) => handelProcesses(e, value)}
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.processes && (
+              <p>
+                <small style={{ color: "red" }}>{error.processes}</small>
+              </p>
+            )}
+          </Grid>
+          {/* other job factors */}
+          <Grid item md={12}>
+            <TextField
+              id="filled-basic"
+              variant="outlined"
+              multiline
+              error={error.otherJobFactors}
+              defaultValue={form.otherJobFactors.rcaRemark}
+              helperText={error ? error.otherJobFactors : ""}
+              rows={3}
+              label="Other Job Factors"
+              className={classes.formControl}
+              onChange={async (e) => handelOtherJobFactors(e)}
+            />
+            {/* {error && error.otherJobFactors && (
                     <p>{error.otherJobFactors}</p>
                   )} */}
-                </Grid>
-                <Grid item md={6}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"}
-                    onClick={(e) => handelNext(e)}
-                  >
-                    Next
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item md={3}>
-                <FormSideBar
-                  deleteForm={[1, 2, 3]}
-                  listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                  selectedItem={"Basic Cause"}
-                />
-              </Grid>
-            </Grid>
+          </Grid>
+          <Grid item md={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"}
+              onClick={(e) => handelNext(e)}
+            >
+              Next
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem={"Basic Cause"}
+          />
+        </Grid>
+      </Grid>
     </PapperBlock>
   );
 };
