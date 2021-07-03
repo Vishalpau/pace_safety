@@ -254,6 +254,9 @@ const EqiptmentAffected = () => {
       `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
     );
     const result = res.data.data.results;
+    console.log(result.equipmentDamagedComments)
+    let envComments =result.equipmentDamagedComments
+    setEequipmentDamagedComments(envComments)
     await setIncidentsListdata(result);
     const isavailable = result.isEquipmentDamagedAvailable;
     await setDetailsOfEquipmentAffect(isavailable);
@@ -339,13 +342,13 @@ const EqiptmentAffected = () => {
                           className={classes.formControl}
                         >
                           <InputLabel id="eq-type-label">
-                              Equipment type
+                              Equipment type{equipment.equipmentType}
                           </InputLabel>
                           <Select
                             labelId="eq-type-label"
-                            id="eq-type"
+                            id={`equipment-type${key+1}`}
                             label="Equipment type"
-                            defaultValue={equipment.equipmentType}
+                            defaultValue={equipment.equipmentType || ''}
                             onChange={(e) => handleUpdateEquipment(
                               e,
                               key,
@@ -377,7 +380,7 @@ const EqiptmentAffected = () => {
                         {/* <p>if other describe</p> */}
                         <TextField
                           variant="outlined"
-                          id="filled-basic"
+                          id={`If-others-describe-property${key}`}
                           label="If others, describe"
                           className={classes.formControl}
                           defaultValue={equipment.equipmentOtherType}
@@ -398,7 +401,7 @@ const EqiptmentAffected = () => {
                       <Grid item md={12}>
                         {/* <p>Describe the damage</p> */}
                         <TextField
-                          id="describe-damage"
+                          id={`describe-damage-equipment${key}`}
                           multiline
                           variant="outlined"
                           rows="3"
@@ -445,7 +448,7 @@ const EqiptmentAffected = () => {
                           </InputLabel>
                           <Select
                             labelId="eq-type-label"
-                            id="eq-type"
+                            id={`equipment-type${key}`}
                             label="Equipment type"
                             value = {value.equipmentType || ""}
                             onChange={(e) => handleForm(e, key, 'equipmentType')
@@ -474,7 +477,7 @@ const EqiptmentAffected = () => {
                         {/* <p>if other describe</p> */}
                         <TextField
                           variant="outlined"
-                          id="filled-basic"
+                          id={`other-equipment${key+1}`}
                           label="If others, describe"
                           className={classes.formControl}
                           value = {value.equipmentOtherType || ""}
@@ -490,7 +493,7 @@ const EqiptmentAffected = () => {
                       <Grid item md={12}>
                         {/* <p>Describe the damage</p> */}
                         <TextField
-                          id="describe-damage"
+                           id={`damage-describe${key+1}`}
                           multiline
                           variant="outlined"
                           rows="3"
@@ -534,14 +537,14 @@ const EqiptmentAffected = () => {
               <Grid item lg={12} md={6} sm={6}>
                 {/* <p>Comment </p> */}
                 <TextField
-                  id="comments"
+                  id="describe-any-equipment-affect"
                   multiline
                   rows="3"
                   variant="outlined"
                   label="Describe Any Equipment Affect"
                   className={classes.fullWidth}
-                  defaultValue={incidentsListData.equipmentDamagedComments}
-                  onChange={(event) => setEequipmentDamagedComments(event.target.value)
+                 defaultValue={equipmentDamagedComments}
+                  onChange={(e) => setEequipmentDamagedComments(e.target.value)
                   }
                 />
               </Grid>

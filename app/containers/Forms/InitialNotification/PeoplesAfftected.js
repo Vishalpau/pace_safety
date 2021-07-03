@@ -372,7 +372,6 @@ const PeoplesAffected = () => {
      setPersonAffect(isavailable);
      setIncidentsListdata(result);
     if(id === undefined){
-      alert('hlo')
       await setIsLoading(true);
     }
   };
@@ -458,7 +457,7 @@ const PeoplesAffected = () => {
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
-                              id="person-type"
+                              id={`person-type${key}`}
                               label=" Person Type"
                               defaultValue={people.personType}
                               onChange={(e) =>
@@ -498,7 +497,7 @@ const PeoplesAffected = () => {
                             <InputLabel id="dep-label">Department</InputLabel>
                             <Select
                               labelId="dep-label"
-                              id="dep"
+                              id={`person-department${key}`}
                               label="Department"
                               defaultValue={people.personDepartment}
                               onChange={(e) =>
@@ -531,7 +530,7 @@ const PeoplesAffected = () => {
                         <Grid item md={6}>
                           {/* <p>Name of people Affected</p> */}
                           <TextField
-                            id="name-Affected"
+                            id={`person-name${key}`}
                             variant="outlined"
                             error={error && error[`personName${[key]}`]}
                             helperText={
@@ -554,7 +553,7 @@ const PeoplesAffected = () => {
                         </Grid>
                         <Grid item md={6}>
                           <TextField
-                            id="id-num"
+                            id={`person-identification${key}`}
                             error={
                               error && error[`personIdentification${[key]}`]
                             }
@@ -619,7 +618,7 @@ const PeoplesAffected = () => {
                         </Grid>
                         <Grid item md={6}>
                           <TextField
-                            id="worker-taken"
+                            id={`worker${key}`}
                             error={
                               error && error[`workerOffsiteAssessment${[key]}`]
                             }
@@ -645,7 +644,7 @@ const PeoplesAffected = () => {
                         <Grid item md={6}>
                           <TextField
                             variant="outlined"
-                            id="location-details"
+                            id={`location-details${key}`}
                             error={
                               error && error[`locationAssessmentCenter${[key]}`]
                             }
@@ -701,7 +700,7 @@ const PeoplesAffected = () => {
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
-                              id="person-type"
+                              id= {`person-type${key}`}
                               label=" Person Type"
                               value={value.personType || ''}
                               onChange={(e) => handleForm(e, key, "personType")}
@@ -733,7 +732,7 @@ const PeoplesAffected = () => {
                             <InputLabel id="dep-label">Department</InputLabel>
                             <Select
                               labelId="dep-label"
-                              id="dep"
+                              id={`person-department${id}`}
                               label="Department"
                               value={value.personDepartment || ''}
                               onChange={(e) =>
@@ -761,7 +760,7 @@ const PeoplesAffected = () => {
                         <Grid item md={6}>
                           {/* <p>Name of people Affected</p> */}
                           <TextField
-                            id="name-Affected"
+                            id={`name-Affected${key}`}
                             variant="outlined"
                             error={error && error[`personName${[key]}`]}
                             helperText={
@@ -781,7 +780,7 @@ const PeoplesAffected = () => {
                         <Grid item md={6}>
                           {/* <p>Identification number of person</p> */}
                           <TextField
-                            id="id-num"
+                            id={`id-num${key}`}
                             variant="outlined"
                             error={
                               error && error[`personIdentification${[key]}`]
@@ -832,7 +831,7 @@ const PeoplesAffected = () => {
                         </Grid>
                         <Grid item md={6}>
                           <TextField
-                            id="worker-taken"
+                            id={`worker-taken${key}`}
                             error={
                               error && error[`workerOffsiteAssessment${[key]}`]
                             }
@@ -853,7 +852,7 @@ const PeoplesAffected = () => {
                         <Grid item md={6}>
                           <TextField
                             variant="outlined"
-                            id="location-details"
+                            id={`location-details${key}`}
                             error={
                               error && error[`locationAssessmentCenter${[key]}`]
                             }
@@ -900,7 +899,7 @@ const PeoplesAffected = () => {
             <Grid item md={12}>
               {personAffect === "Yes" ? null : (
                 <TextField
-                  id="comments"
+                  id="details-of-people-affected"
                   multiline
                   rows="3"
                   variant="outlined"

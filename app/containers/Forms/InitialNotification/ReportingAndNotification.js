@@ -107,7 +107,7 @@ const ReportingAndNotification = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [reportsListData, setReportListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [lateReport, SetLateReport] = useState(false);
+  const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
   const [reportedTo, setReportableTo] = useState([]);
   const [reportId, setReportId] = useState([])
@@ -141,12 +141,14 @@ const ReportingAndNotification = () => {
   const [reportData, setReportData] = useState([]);
 
   const handelTimeCompare = async (e) => {
+    let rpTime = form.reportingtime;
+    let rpDate = form.reportingdate;
+    let startDate = `${rpDate} ${rpTime}`;
     // let startDate = form.reportingdate.concat(form.reportingtime)
     var start_date = moment(form.reportingdate || incidentsListData.incidentReportedOn, "YYYY-MM-DD HH:mm:ss");
     var end_date = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
     var duration = moment.duration(end_date.diff(start_date));
     var Hours = duration.asHours();
-    console.log(Hours>4)
     if (Hours > 4) {
       await SetLateReport(true);
     } else {
@@ -368,7 +370,11 @@ const ReportingAndNotification = () => {
                       label="Other"
                       // defaultValue={"Orher name"}
                       className={classes.formControl}
-                      onChange={(e) => setOtherData(e.target.value)}
+                      onChange={(e) => setForm({
+                        ...form,
+                        reportedto: [...form.reportedto, e.target.value],
+                      })
+                    }
                     />
                   ) : null}
                 </FormGroup>
@@ -496,7 +502,6 @@ const ReportingAndNotification = () => {
                       ...form,
                       reportedby: e.target.value.toString(),
                     });
-                    hand
                   }}
                 >
                   {selectValues.map((selectValues,index) => (
