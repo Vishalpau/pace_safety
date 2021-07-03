@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -98,9 +98,15 @@ const EnvironmentAffected = () => {
   // SetState in update time
   const [isChecked, setIsChecked] = useState([]);
 
+  const questionMap = useRef({
+    "Were There Any Spills ?": "Details of Spills Affected",
+    "Were There Any Release ?": "Details of Release Affected",
+    "Were There Any Impact on Wildlife ?": "Details of Wildlife Affected",
+    "Were There Any Waterbody Affected ?": "Details of Waterbody Affected"
+  })
   const [form, setForm] = useState([
     {
-      envQuestion: " Were There Any Spills ?",
+      envQuestion: "Were There Any Spills ?",
       envQuestionOption: "",
       envAnswerDetails: "No",
       createdBy: 1,
@@ -116,7 +122,7 @@ const EnvironmentAffected = () => {
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
     {
-      envQuestion: " Were There Any Impact on Wildlife ?",
+      envQuestion: "Were There Any Impact on Wildlife ?",
       envQuestionOption: "",
       envAnswerDetails: "No",
       createdBy: 1,
@@ -311,7 +317,7 @@ const EnvironmentAffected = () => {
                         multiline
                         rows="3"
                         variant="outlined"
-                        label="Details of Waterbody Affected"
+                        label={questionMap[env.envQuestion.strip()]}
                         error={error && error.envAnswerDetails}
                         helperText={
                           error && error.envAnswerDetails
