@@ -345,6 +345,7 @@ const HazardiousActs = () => {
   const handelNext = async (e) => {
     const { error, isValid } = HazardiousActsValidation(form);
     await setError(error);
+    console.log(error);
     let tempData = [];
 
     Object.entries(form).map(async (item, index) => {
@@ -412,7 +413,7 @@ const HazardiousActs = () => {
       history.push(
         "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
       );
-    } else {
+    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
         `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
           putId.current

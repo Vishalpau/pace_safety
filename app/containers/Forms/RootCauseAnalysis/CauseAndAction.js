@@ -120,17 +120,15 @@ const BasicCauseAndAction = () => {
   const classes = useStyles();
 
   const handelNext = () => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    putId.current = lastItem;
-    history.push(
-      `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-        putId.current
-      }`
-    );
-  };
+    let page_url = window.location.href
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
+    putId.current = lastItem
+    if (!isNaN(putId.current)) {
+      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current}`)
+    } else if (isNaN(putId.current)) {
+      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause/`)
+    }
+  }
 
   useEffect(() => {
     handelShowData();

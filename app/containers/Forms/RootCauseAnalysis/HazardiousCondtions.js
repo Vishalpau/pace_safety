@@ -282,7 +282,7 @@ const HazardiousCondition = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length === 0) {
         history.push("/app/incident-management/registration/root-cause-analysis/cause-and-action/")
-      } else {
+      } else if ((nextPageLink == 200 && Object.keys(error).length === 0)) {
         history.push(`/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`)
       }
     }
@@ -300,174 +300,174 @@ const HazardiousCondition = () => {
 
   return (
     <PapperBlock title="Immediate Causes - Hazardous Conditions" icon="ion-md-list-box">
-          <Grid container spacing={3}>
-            <Grid container item md={9} spacing={3}>
-              <Grid item md={4}>
-                  <Typography variant="body2" gutterBottom>
-                    Incident number:
-                    {localStorage.getItem('fkincidentId')}
-                  </Typography>
-              </Grid>
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={4}>
+            <Typography variant="body2" gutterBottom>
+              Incident number:
+              {localStorage.getItem('fkincidentId')}
+            </Typography>
+          </Grid>
 
-              <Grid item md={8}>
-                <Box>
-                  <Typography variant="body2" gutterBottom>
-                    RCA Method: PACE Cuase Analysis
-                  </Typography>
-                </Box>
-              </Grid>
+          <Grid item md={8}>
+            <Box>
+              <Typography variant="body2" gutterBottom>
+                RCA Method: PACE Cuase Analysis
+              </Typography>
+            </Box>
+          </Grid>
 
-              {/* warning system */}
-              <Grid item md={6}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend" error={error.warningSystem}>
-                    Warning System
-                  </FormLabel>
-                  <FormGroup>
-                    {WARNINGSYSTEM.map((value) => (
-                      <FormControlLabel
-                        control={<Checkbox name={value} />}
-                        label={<small>{value}</small>}
-                        checked={form.warningSystem.rcaRemark.includes(value)}
-                        onChange={async (e) => handelWarningSystems(e, value)}
-                      />
-                    ))}
-                  </FormGroup>
-                </FormControl>
-                {error && error.warningSystem && (
-                  <p>
-                    <small style={{ color: 'red' }}>
-                      {error.warningSystem}
-                    </small>
-                  </p>
-                )}
-              </Grid>
+          {/* warning system */}
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.warningSystem}>
+                Warning System
+              </FormLabel>
+              <FormGroup>
+                {WARNINGSYSTEM.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.warningSystem.rcaRemark.includes(value)}
+                    onChange={async (e) => handelWarningSystems(e, value)}
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.warningSystem && (
+              <p>
+                <small style={{ color: 'red' }}>
+                  {error.warningSystem}
+                </small>
+              </p>
+            )}
+          </Grid>
 
-              {/* energy types */}
-              <Grid item md={6}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend" error={error.energyTypes}>
-                    {' '}
-                    Energy Types
-                  </FormLabel>
-                  <FormGroup>
-                    {ENERGIES.map((value) => (
-                      <FormControlLabel
-                        control={<Checkbox name={value} />}
-                        label={<small>{value}</small>}
-                        checked={form.energyTypes.rcaRemark.includes(value)}
-                        onChange={async (e) => handelEnergyTypes(e, value)}
-                      />
-                    ))}
-                  </FormGroup>
-                </FormControl>
-                {error && error.energyTypes && (
-                  <p>
-                    <small style={{ color: 'red' }}>{error.energyTypes}</small>
-                  </p>
-                )}
-              </Grid>
+          {/* energy types */}
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.energyTypes}>
+                {' '}
+                Energy Types
+              </FormLabel>
+              <FormGroup>
+                {ENERGIES.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.energyTypes.rcaRemark.includes(value)}
+                    onChange={async (e) => handelEnergyTypes(e, value)}
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.energyTypes && (
+              <p>
+                <small style={{ color: 'red' }}>{error.energyTypes}</small>
+              </p>
+            )}
+          </Grid>
 
-              {/* tools */}
-              <Grid item md={6}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend" error={error.tools}>
-                    {' '}
-                    Tools
-                  </FormLabel>
-                  <FormGroup>
-                    {TOOLS.map((value) => (
-                      <FormControlLabel
-                        control={<Checkbox name={value} />}
-                        label={<small>{value}</small>}
-                        checked={form.tools.rcaRemark.includes(value)}
-                        onChange={async (e) => handelTools(e, value)}
-                      />
-                    ))}
-                  </FormGroup>
-                </FormControl>
-                {error && error.tools && (
-                  <p>
-                    <small style={{ color: 'red' }}>{error.tools}</small>
-                  </p>
-                )}
-              </Grid>
+          {/* tools */}
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.tools}>
+                {' '}
+                Tools
+              </FormLabel>
+              <FormGroup>
+                {TOOLS.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.tools.rcaRemark.includes(value)}
+                    onChange={async (e) => handelTools(e, value)}
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.tools && (
+              <p>
+                <small style={{ color: 'red' }}>{error.tools}</small>
+              </p>
+            )}
+          </Grid>
 
-              {/* safety items */}
-              <Grid item md={6}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend" error={error.safetyitems}>
-                    {' '}
-                    Saftey Items
-                  </FormLabel>
-                  <FormGroup>
-                    {CONDITIONSAFETYITEMS.map((value) => (
-                      <FormControlLabel
-                        control={<Checkbox name={value} />}
-                        label={<small>{value}</small>}
-                        checked={form.safetyitems.rcaRemark.includes(value)}
-                        onChange={async (e) => handelSafetyItems(e, value)}
-                      />
-                    ))}
-                  </FormGroup>
-                </FormControl>
-                {error && error.safetyitems && (
-                  <p>
-                    <small style={{ color: 'red' }}>{error.safetyitems}</small>
-                  </p>
-                )}
-              </Grid>
+          {/* safety items */}
+          <Grid item md={6}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend" error={error.safetyitems}>
+                {' '}
+                Saftey Items
+              </FormLabel>
+              <FormGroup>
+                {CONDITIONSAFETYITEMS.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={<small>{value}</small>}
+                    checked={form.safetyitems.rcaRemark.includes(value)}
+                    onChange={async (e) => handelSafetyItems(e, value)}
+                  />
+                ))}
+              </FormGroup>
+            </FormControl>
+            {error && error.safetyitems && (
+              <p>
+                <small style={{ color: 'red' }}>{error.safetyitems}</small>
+              </p>
+            )}
+          </Grid>
 
-              {/* others     */}
-              <Grid item md={12}>
-                {/* <p>others</p> */}
-                <TextField
-                  variant="outlined"
-                  id="filled-basic"
-                  label="Others"
-                  multiline
-                  error={error.others}
-                  defaultValue={form.others.rcaRemark}
-                  helperText={error ? error.others : ''}
-                  rows={3}
-                  className={classes.formControl}
-                  onChange={async (e) => handelOthers(e)}
-                />
-                {/* {error && error.others && (
+          {/* others     */}
+          <Grid item md={12}>
+            {/* <p>others</p> */}
+            <TextField
+              variant="outlined"
+              id="filled-basic"
+              label="Others"
+              multiline
+              error={error.others}
+              defaultValue={form.others.rcaRemark}
+              helperText={error ? error.others : ''}
+              rows={3}
+              className={classes.formControl}
+              onChange={async (e) => handelOthers(e)}
+            />
+            {/* {error && error.others && (
                   <p>{error.others}</p>
                 )} */}
-              </Grid>
-
-              <Grid item md={12}>
-                <Box marginTop={3}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/cause-and-action/"}
-                    onClick={(e) => handelNext(e)}
-                  >
-                    Next
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-            <Grid item md={3}>
-              <FormSideBar
-                deleteForm={[1, 2, 3]}
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem="Hazardious Conditions"
-              />
-            </Grid>
           </Grid>
+
+          <Grid item md={12}>
+            <Box marginTop={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/cause-and-action/"}
+                onClick={(e) => handelNext(e)}
+              >
+                Next
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          <FormSideBar
+            deleteForm={[1, 2, 3]}
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem="Hazardious Conditions"
+          />
+        </Grid>
+      </Grid>
     </PapperBlock>
   );
 };

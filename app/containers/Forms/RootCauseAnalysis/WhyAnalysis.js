@@ -142,9 +142,9 @@ const WhyAnalysis = () => {
           }
         }
       }
-      if (nextPageLink == 201) {
+      if (nextPageLink == 201 && Object.keys(error).length == 0) {
         history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
-      } else {
+      } else if ((nextPageLink == 200 && Object.keys(error).length == 0)) {
         history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
       }
     }
