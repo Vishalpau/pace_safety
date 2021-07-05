@@ -99,12 +99,14 @@ const Evidence = () => {
   };
 
   const fetchEvidenceData = async () => {
+    console.log("sagar");
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem(
         "fkincidentId"
       )}/evidences/${localStorage.getItem("id")}/`
     );
     const result = res.data.data.results;
+    console.log(result);
     console.log(result.evidenceCheck);
     await setForm({
       ...form,
@@ -115,9 +117,9 @@ const Evidence = () => {
     });
 
     await setEvideceData(result);
-    await setIsLoading(true);
+    // await setIsLoading(true);
   };
-
+  console.log(form);
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -126,15 +128,6 @@ const Evidence = () => {
     await setIncidentDetail(result);
   };
 
-  useEffect(() => {
-    fetchEvidenceData();
-    fetchIncidentDetails();
-    if (id) {
-      fetchEvidenceList();
-    } else {
-      setIsLoading(true);
-    }
-  }, []);
   // On the next button click function call.
   console.log(form);
   const handleNext = async () => {
@@ -211,6 +204,17 @@ const Evidence = () => {
 
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No", "N/A"];
+
+  useEffect(() => {
+    fetchEvidenceData();
+    fetchIncidentDetails();
+    if (id) {
+      fetchEvidenceList();
+    } else {
+      setIsLoading(true);
+    }
+  }, []);
+
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
       {isLoading ? (
