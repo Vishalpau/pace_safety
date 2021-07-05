@@ -135,7 +135,6 @@ const PeoplesAffected = () => {
     setForm(temp);
   };
 
-
   // set the state in update time
   const handleUpdatePeople = async (e, key, fieldname, peopleId) => {
     const temp = peopleData;
@@ -215,7 +214,7 @@ const PeoplesAffected = () => {
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-        // check condition id 
+        // check condition id
         if (id) {
           if (nextPath.propertyAffect === "Yes") {
             history.push(
@@ -270,10 +269,10 @@ const PeoplesAffected = () => {
           temp
         );
 
-      // Case when id is available. Update case. Redirect user to specific page.
-      // Here if we see, we are redirecting user to urls with /id/ in the end.
-      // Therefore, next page will get the input from the id and pre-fill the details.
-         if (id) {
+        // Case when id is available. Update case. Redirect user to specific page.
+        // Here if we see, we are redirecting user to urls with /id/ in the end.
+        // Therefore, next page will get the input from the id and pre-fill the details.
+        if (id) {
           if (nextPath.propertyAffect === "Yes") {
             history.push(
               `/app/incident-management/registration/initial-notification/property-affected/${id}`
@@ -311,23 +310,17 @@ const PeoplesAffected = () => {
             );
           }
         }
-
       }
-
-     
-      
     }
   };
 
   // hablde Remove
 
-  const handleRemove = async(key) => {
-      // this condition using when create new
-      const temp = form;
-      const newData = temp.filter((item, index) => index !== key);
-      await setForm(newData);
-    
-     
+  const handleRemove = async (key) => {
+    // this condition using when create new
+    const temp = form;
+    const newData = temp.filter((item, index) => index !== key);
+    await setForm(newData);
   };
 
   // State for the error defination.
@@ -369,9 +362,9 @@ const PeoplesAffected = () => {
     );
     const result = res.data.data.results;
     const isavailable = result.isPersonDetailsAvailable;
-     setPersonAffect(isavailable);
-     setIncidentsListdata(result);
-    if(id === undefined){
+    setPersonAffect(isavailable);
+    setIncidentsListdata(result);
+    if (!id) {
       await setIsLoading(true);
     }
   };
@@ -393,7 +386,6 @@ const PeoplesAffected = () => {
     if (id) {
       fetchPersonListData();
     }
-    
   }, []);
   return (
     <PapperBlock title="Details of People Affected" icon="ion-md-list-box">
@@ -409,9 +401,7 @@ const PeoplesAffected = () => {
                   className={classes.inlineRadioGroup}
                   aria-label="personAffect"
                   name="personAffect"
-                  defaultValue={
-                    personAffect 
-                  }
+                  defaultValue={personAffect}
                   onChange={(e) => {
                     setPersonAffect(e.target.value);
                   }}
@@ -702,7 +692,7 @@ const PeoplesAffected = () => {
                               labelId="person-type-label"
                               id= {`person-type${key}`}
                               label=" Person Type"
-                              value={value.personType || ''}
+                              value={value.personType || ""}
                               onChange={(e) => handleForm(e, key, "personType")}
                             >
                               {personTypeValue.length !== 0
@@ -734,7 +724,7 @@ const PeoplesAffected = () => {
                               labelId="dep-label"
                               id={`person-department${id}`}
                               label="Department"
-                              value={value.personDepartment || ''}
+                              value={value.personDepartment || ""}
                               onChange={(e) =>
                                 handleForm(e, key, "personDepartment")
                               }
@@ -770,7 +760,7 @@ const PeoplesAffected = () => {
                             }
                             label="Name of Person Affected"
                             className={classes.formControl}
-                            value = {value.personName || ''}
+                            value={value.personName || ""}
                             onChange={(e) => handleForm(e, key, "personName")}
                           />
                           {/* {error && error[`personName${[key]}`] && (
@@ -792,7 +782,7 @@ const PeoplesAffected = () => {
                             }
                             label="Identify Number of Person"
                             className={classes.formControl}
-                            value = {value.personIdentification}
+                            value={value.personIdentification}
                             onChange={(e) =>
                               handleForm(e, key, "personIdentification")
                             }
@@ -843,7 +833,7 @@ const PeoplesAffected = () => {
                             variant="outlined"
                             label="Worker Taken Offsite for Further Assesment ?"
                             className={classes.formControl}
-                            value = {value.workerOffsiteAssessment}
+                            value={value.workerOffsiteAssessment}
                             onChange={(e) =>
                               handleForm(e, key, "workerOffsiteAssessment")
                             }
@@ -863,7 +853,7 @@ const PeoplesAffected = () => {
                             }
                             label="Location Details of Assesment Center ?"
                             className={classes.formControl}
-                            value = {value.locationAssessmentCenter}
+                            value={value.locationAssessmentCenter}
                             onChange={(e) =>
                               handleForm(e, key, "locationAssessmentCenter")
                             }
