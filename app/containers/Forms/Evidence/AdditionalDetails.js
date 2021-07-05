@@ -18,6 +18,7 @@ import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -169,130 +170,114 @@ const AdditionalDetails = () => {
     }
   }, [id]);
   return (
-    <div>
-      <Container>
-        <Paper>
-          {isLoading ? (
-            <Box padding={3} bgcolor="background.paper">
-              {/* <Box marginBottom={5}>
-              <FormHeader selectedHeader={"Evidence collection"} />
-            </Box> */}
+    <PapperBlock title="Additional Details" icon="ion-md-list-box">
+      {isLoading ? (
+        <Grid container spacing={3}>
+          <Grid container item md={9} spacing={3}>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
+            </Grid>
+            <Grid item md={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Description
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentDetails}
+              </Typography>
+            </Grid>
+            {additionalDetailList.length > 24 ? (
+              <>
+                {Object.entries(additionalDetailList)
+                  .slice(21, 25)
+                  .map(([key, value]) => (
+                    <Grid item md={12}>
+                      <FormControl className={classes.formControl}>
+                        <TextField
+                          id="filled-basic"
+                          variant="outlined"
+                          label={value.question}
+                          required
+                          error={value.error}
+                          helperText={value.error ? value.error : null}
+                          multiline
+                          rows="4"
+                          defaultValue={value.answer}
+                          onChange={(e) => {
+                            handleRadioData(e, value.questionCode);
 
-              <Box borderBottom={1} marginBottom={2}>
-                <Typography variant="h6" gutterBottom>
-                  Additional Details
-                </Typography>
-              </Box>
-              <Grid container spacing={3}>
-                <Grid container item md={9} spacing={3}>
+                            console.log(value.answer);
+                          }}
+                        />
+                      </FormControl>
+                    </Grid>
+                  ))}
+              </>
+            ) : (
+              <>
+                {Object.entries(additionalDetailList).map(([key, value]) => (
                   <Grid item md={12}>
-                    <Box>
-                      <Typography variant="body2" gutterBottom>
-                        Incident number: {incidentDetail.incidentNumber}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item md={12}>
-                    <Typography variant="h6" gutterBottom>
-                      Incident Description
-                    </Typography>
-                    <Typography variant="body">
-                      {incidentDetail.incidentDetails}
-                    </Typography>
-                  </Grid>
-                  {additionalDetailList.length > 24 ? (
-                    <>
-                      {Object.entries(additionalDetailList)
-                        .slice(21, 25)
-                        .map(([key, value]) => (
-                          <Grid item md={12}>
-                            <FormControl className={classes.formControl}>
-                              <TextField
-                                id="filled-basic"
-                                variant="outlined"
-                                label={value.question}
-                                error={value.error}
-                                helperText={value.error ? value.error : ""}
-                                multiline
-                                rows="4"
-                                defaultValue={value.answer}
-                                onChange={(e) => {
-                                  handleRadioData(e, value.questionCode);
-
-                                  console.log(value.answer);
-                                }}
-                              />
-                            </FormControl>
-                          </Grid>
-                        ))}
-                    </>
-                  ) : (
-                    <>
-                      {Object.entries(additionalDetailList).map(
-                        ([key, value]) => (
-                          <Grid item md={12}>
-                            <FormControl
-                              className={classes.formControl}
-                              error={value.error}
-                            >
-                              <TextField
-                                id="filled-basic"
-                                variant="outlined"
-                                label={value.question}
-                                error={value.error}
-                                helperText={value.error ? value.error : ""}
-                                multiline
-                                rows="4"
-                                onChange={(e) => {
-                                  handleRadioData(e, value.questionCode);
-
-                                  console.log(value.answer);
-                                }}
-                              />
-                            </FormControl>
-                          </Grid>
-                        )
-                      )}
-                    </>
-                  )}
-
-                  <Grid item md={12}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={() => history.goBack()}
-                      // href="/app/incident-management/registration/evidence/personal-and-ppedetails/"
+                    <FormControl
+                      className={classes.formControl}
+                      error={value.error}
                     >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={() => handleNext()}
-                      // href={Object.keys(error).length == 0 ? 'http://localhost:3000/app/incident-management/registration/root-cause-analysis/details/' : '#'}
-                    >
-                      Submit
-                    </Button>
-                  </Grid>
-                </Grid>
+                      <TextField
+                        id="filled-basic"
+                        variant="outlined"
+                        label={value.question}
+                        error={value.error}
+                        required
+                        helperText={value.error ? value.error : null}
+                        multiline
+                        rows="4"
+                        onChange={(e) => {
+                          handleRadioData(e, value.questionCode);
 
-                <Grid item md={3}>
-                  <FormSideBar
-                    deleteForm={[1, 2, 3]}
-                    listOfItems={EVIDENCE_FORM}
-                    selectedItem="Additional detail"
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-          ) : (
-            <h1>Loading...</h1>
-          )}
-        </Paper>
-      </Container>
-    </div>
+                          console.log(value.answer);
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
+                ))}
+              </>
+            )}
+
+            <Grid item md={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => history.goBack()}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => handleNext()}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={[1, 2, 3]}
+              listOfItems={EVIDENCE_FORM}
+              selectedItem="Additional Details"
+            />
+          </Grid>
+        </Grid>
+      ) : (
+        <h1>Loading...</h1>
+      )}
+    </PapperBlock>
   );
 };
 
