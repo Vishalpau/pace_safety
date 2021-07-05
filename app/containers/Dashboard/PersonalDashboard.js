@@ -42,7 +42,7 @@ function PersonalDashboard(props) {
             <div class="hexagontent hexagon_content_box">
               <a
                 class="hse_health_safety_environment_mgmt_new"
-                href="https://ntpc-stage.teknobuilt.com/index.php?do=/hse/projectid_1/phaseid_1/uid_0/moduleType_1/"
+                href="#"
                 target="_blank"
               >
                 <p>HSE Management</p>
@@ -56,11 +56,7 @@ function PersonalDashboard(props) {
 
           <div class="hexagon hexagon_fullcontnt">
             <div class="hexagontent hexagon_content_box">
-              <a
-                class="hse_compliance_protocols"
-                href="https://ntpc-stage.teknobuilt.com/index.php?do=/hse/projectid_1/phaseid_1/uid_0/moduleType_4/"
-                target="_blank"
-              >
+              <a class="hse_compliance_protocols" href="#" target="_blank">
                 <p>Compliance Protocols</p>
               </a>
             </div>
@@ -74,7 +70,7 @@ function PersonalDashboard(props) {
             <div class="hexagontent hexagon_content_box">
               <a
                 class="hse_incident_reporting_management"
-                href="https://ntpc-stage.teknobuilt.com/index.php?do=/hseincident/projectid_1/phaseid_1/uid_0/"
+                href="#"
                 target="_blank"
               >
                 <p>Incident Reporting &amp; Management</p>
@@ -90,11 +86,7 @@ function PersonalDashboard(props) {
         <div class="ibws-fix hexagon_row2">
           <div class="hexagon hexagon_fullcontnt">
             <div class="hexagontent hexagon_content_box">
-              <a
-                class="project_information_hub"
-                href="https://ntpc-stage.teknobuilt.com/index.php?do=/hse/projectid_1/phaseid_1/uid_0/moduleType_2/"
-                target="_blank"
-              >
+              <a class="project_information_hub" href="#" target="_blank">
                 <p>Project Information Hub</p>
               </a>
             </div>
@@ -106,11 +98,7 @@ function PersonalDashboard(props) {
 
           <div class="hexagon hexagon_fullcontnt">
             <div class="hexagontent hexagon_content_box">
-              <a
-                class="hse_smart_permit_management"
-                href="https://ntpc-stage.teknobuilt.com/index.php?do=/hse/projectid_1/phaseid_1/uid_0/moduleType_3/"
-                target="_blank"
-              >
+              <a class="hse_smart_permit_management" href="#" target="_blank">
                 <p>Assessments</p>
               </a>
             </div>
@@ -118,11 +106,7 @@ function PersonalDashboard(props) {
 
           <div class="hexagon hexagon_fullcontnt">
             <div class="hexagontent hexagon_content_box">
-              <a
-                class="hse_environment_development"
-                href="https://ntpc-stage.teknobuilt.com/index.php?do=/hse/projectid_1/phaseid_1/uid_0/moduleType_5/"
-                target="_blank"
-              >
+              <a class="hse_environment_development" href="#" target="_blank">
                 <p>Environment Management</p>
               </a>
             </div>

@@ -1,5 +1,3 @@
-import FormHelperText from "@material-ui/core/FormHelperText";
-
 export const RESTART_ON_REMOUNT = "@@saga-injector/restart-on-remount";
 export const DAEMON = "@@saga-injector/daemon";
 export const ONCE_TILL_UNMOUNT = "@@saga-injector/once-till-unmount";
@@ -25,7 +23,7 @@ export const INITIAL_NOTIFICATION_FORM = {
 };
 
 export const EVIDENCE_FORM = {
-  "Evidence": "/app/incident-management/registration/evidence/evidence/",
+  Evidence: "/app/incident-management/registration/evidence/evidence/",
   "Activity Detail":
     "/app/incident-management/registration/evidence/activity-detail/",
   "Personal and PPE Details":
@@ -48,7 +46,7 @@ export const INVESTIGATION_FORM = {
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
-  "Details": "/app/incident-management/registration/root-cause-analysis/details/",
+  Details: "/app/incident-management/registration/root-cause-analysis/details/",
   "Hazardious Acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
   "Hazardious Conditions":
@@ -90,27 +88,30 @@ export const FORM_HEADER = {
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 
-export const HAZARDIOUS_ACTS_SUB_TYPES = ["Supervision",
-  "Workpackage",
-  "equipmentMachinery",
-  "behaviourIssue",
-  "safetyIssues",
-  "ergonimics",
-  "procedures",
-  "otheracts"]
+export const HAZARDIOUS_ACTS_SUB_TYPES = [
+  "Supervision",
+  "Work Package",
+  "Equipment Machinery",
+  "Behaviour Issue",
+  "Safety Issues",
+  "Ergonimics",
+  "Procedures",
+  "Other Acts",
+];
 export const HAZARDIOUS_CONDITION_SUB_TYPES = [
-  "warningSystem",
-  "energyTypes",
-  "tools",
-  "safetyitems",
-  "othersconditions"]
+  "Warning System",
+  "Energy Types",
+  "Tools",
+  "Safety Items",
+  "Others Conditions",
+];
 export const BASIC_CAUSE_SUB_TYPES = [
-  "personal",
-  "wellnessFactors",
-  "othershumanfactors",
-  "leadership",
-  "processes",
-  "othersjobfactors",
+  "Personal",
+  "Wellness Factors",
+  "Others Human Factors",
+  "Leadership",
+  "Processes",
+  "Others Job Factors",
 ];
 
 // option in root cause and anlysis
@@ -122,82 +123,81 @@ export const HAZARDIOUS_ACTS = [
   "Behaviousissues",
   "Safetyitems",
   "Ergonomics",
-  "Procedure"
-]
+  "Procedure",
+];
 
 export const SUPERVISON = [
-  "No supervision at work site",
-  "Lack of communication between supervisor & Workers",
-  "Lack of Management of Change Processes - (failure to manage change)"
-]
+  "No Supervision at Work Site",
+  "Lack of Communication Between Supervisor & Workers",
+  "Lack of Management of Change Processes - (Failure to Manage Change)",
+];
 
 export const EQUIMENTMACHINARY = [
-  "Operating machinery - mobile equipment without  permission",
-  "Operating at excessive speed / over speed / above set limits - without authority",
-  "Using a nonfunctioning / defective / out of order machinery / equip",
-  "Using equipment beyond limits company policy or manufacturer recommendations",
-  "Working on equipment / machinery while in operation",
-]
-
+  "Operating Machinery - Mobile Equipment Without  Permission",
+  "Operating at Excessive Speed / Over speed / Above Set Limits - Without Authority",
+  "Using a Nonfunctioning / Defective / Out of Order Machinery / Equip",
+  "Using Equipment Beyond Limits Company Policy or Manufacturer Recommendations",
+  "Working on Equipment / Machinery While in Operation",
+];
 
 export const SAFETYITEMS = [
   "Misuse of PPE",
-  "Failure to conduct risk assessment - JHA / FLHA / workplace observation",
-  "Failure to inspect – pre job inspection / FLHA",
-  "Failure to activate safety critical devices",
-]
+  "Failure to Conduct Risk Assessment - JHA / FLHA / Workplace Observation",
+  "Failure to Inspect – Pre Job Inspection / FLHA",
+  "Failure to Activate Safety Critical Devices",
+];
 
 export const PROCEDURES = [
-  "Failure to follow standards- procedures or guidelines",
-  "No or improper securing devices used",
-  "Wrong loading - lifting or improper placement techniques used",
-]
+  "Failure to Follow Standards- Procedures or Guidelines",
+  "No or Improper Securing Devices Used",
+  "Wrong Loading - Lifting or Improper Placement Techniques Used",
+];
 
 export const WORKPACKAGE = [
-  "Work package incomplete",
-  "Work package not available",
-]
+  "Work Package Incomplete",
+  "Work Package Not Available",
+];
 
 export const BEHAVIOURISSUES = [
-  "Fighting or being bullied at work place",
-  "Under the influence of drug or alcohol",
-  "Physical or mental stress",
-  "Complacent Behavior(worker / supervisor)",
-  "Intentional harmfully act",
-]
+  "Fighting or Being Bullied at Work Place",
+  "Under the Influence of Drug or Alcohol",
+  "Physical or Mental Stress",
+  "Complacent Behavior(Worker/Supervisor)",
+  "Intentional Harmfully Act",
+];
 
 export const ERGONOMICS = [
-  "Poor posture",
-  "Poor lifting techniques",
-  "Repetitious movements",
-  "Over reaching",
-]
+  "Poor Posture",
+  "Poor Lifting Techniques",
+  "Repetitious Movements",
+  "Over Reaching",
+];
 
 export const WARNINGSYSTEM = [
-  "No visual warning signs at point of operation",
-  "Warning labels faded not legible",
-  "Warning devices not functioning",
-  "No caution signs - barriers - guards - traffic signs a & signals",
-  "Lack of visual or auditable signs",
-]
+  "No Visual Warning Signs at Point of Operation",
+  "Warning Labels Faded not Legible",
+  "Warning Devices not Functioning",
+  "No Caution Signs - Barriers - Guards - Traffic Signs & Signals",
+  "Lack of Visual or Auditable Signs",
+];
 
 export const TOOLS = [
-  "Wrong tool for the job",
-  "Using home made tools",
-  "Worn out tools - material  or improperly cared for equipment",
-  "Wrong equipment for the job",
-]
+  "Wrong Tool for the Job",
+  "Using Home Made Tools",
+  "Worn Out Tools - Material  or Improperly Cared for Equipment",
+  "Wrong Equipment for the jJob",
+];
 
 export const CONDITIONSAFETYITEMS = [
-  "Inadequate PPE for specific hazards",
+  "Inadequate PPE for Specific Hazards",
   "Defective PPE",
-  "Bypassing safety critical devices",
-  "Poor housekeeping - untidy or congested areas",
-  "Improper storage – (flammable material close to ignition sources etc.)",
-  "Combustible dusts - chemical fumes, mists, smoke",
-  "Inadequate ventilation",
-  "Poor lighting - wrong type of lighting - glare",
-]
+  "Bypassing Safety Critical Devices",
+  "Poor Housekeeping - Untidy or Congested Areas",
+  "Improper Storage – (Flammable Material Close to Ignition Sources etc.)",
+  "Combustible Dusts - Chemical Fumes, Mists, Smoke",
+  "Inadequate Ventilation",
+  "Poor Lighting - Wrong Type of Lighting - Glare",
+];
 
 export const ENERGIES = [
   "Kinetic Energy",
@@ -213,57 +213,56 @@ export const ENERGIES = [
   "Pneumatic Energy",
   "Temperature",
   "Sound",
-]
+];
 
 export const PERSONAL = [
-  "Physical limitation",
-  "Not engaged psychological",
+  "Physical Limitation",
+  "Not Engaged Psychological",
   "Personal Stress",
-  "Under the influence of illicit substances",
+  "Under the Influence of Illicit Substances",
   "Multitasking",
-  "Lack of training or knowledge",
-  "Lack of competency or skill",
-  "Complacent Behavior – no accountability",
-  "Adequate skill / knowledge – but  took short cut",
-  "Done it wrong previously without consequences",
-  "Operational discipline not followed",
+  "Lack of Training or Knowledge",
+  "Lack of Competency or Skill",
+  "Complacent Behavior – No Accountability",
+  "Adequate Skill/Knowledge – But  took Short Cut",
+  "Done it Wrong Previously Without Consequences",
+  "Operational Discipline Not Followed",
   "Company Risk Tolerance",
-  "Personal risk Tolerance",
-]
+  "Personal Risk Tolerance",
+];
 
 export const PERSONALWELNESSFACTORS = [
-  "Lack of rest- working long hors(overtime)",
-  "Relationship issues",
-  "Financial difficulties",
-  "Peer pressure",
+  "Lack of Rest- Working Long Hours (Overtime)",
+  "Relationship Issues",
+  "Financial Difficulties",
+  "Peer Pressure",
   "Time Constraints",
-  "Personal or family medical issues",
-]
-
+  "Personal or Family Medical Issues",
+];
 
 export const LEADERSHIP = [
-  "Work package incomplete",
-  "Work package not available",
-  "Fighting or being bullied at work place",
-  "Under the influence of drug or alcohol",
-  "Physical or mental stress",
-  "Complacent Behavior(worker / supervisor)",
-  "Intentional harmfully act",
-]
+  "Work Package Incomplete",
+  "Work Package Not Available",
+  "Fighting or Being Bullied at Work Place",
+  "Under the Influence of Drug or Alcohol",
+  "Physical or Mental Stress",
+  "Complacent Behavior(Worker / Supervisor)",
+  "Intentional Harmfully Act",
+];
 
 export const PROCESSES = [
-  "Poor posture",
-  "Poor lifting techniques",
-  "Repetitious movements",
-  "Over reaching",
-  "No or improper securing devices used",
-  "Wrong loading- lifting or improper placement techniques used",
-]
+  "Poor Posture",
+  "Poor Lifting Techniques",
+  "Repetitious Movements",
+  "Over Reaching",
+  "No or Improper Securing Devices Used",
+  "Wrong Loading- Lifting or Improper Placement Techniques Used",
+];
 
 export const MANAGEMENTCONTROL = [
   "Inadequate System",
-  "Inadequate standards",
-  "Inadequate compilance and standards",
+  "Inadequate Standards",
+  "Inadequate Compilance and Standards",
 ];
 
-export const RCAOPTION = ["Cause analysis", "Pace cause", "Root cause"]
+export const RCAOPTION = ["Cause Analysis", "Pace Cause", "Root Cause"];
