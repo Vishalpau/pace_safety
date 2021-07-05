@@ -174,7 +174,7 @@ const RootCauseAnalysis = () => {
               Incident Number
             </Typography>
             <Typography className={Type.labelValue}>
-              {localStorage.getItem("fkincidentId")}
+              {incidents.incidentNumber}
             </Typography>
           </Grid>
 

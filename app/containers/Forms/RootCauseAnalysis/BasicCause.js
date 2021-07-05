@@ -72,6 +72,7 @@ const BasicCause = () => {
   const { id } = useParams();
   const history = useHistory();
   const updateIds = useRef();
+  const [incidentDetail, setIncidentDetail] = useState({});
   // get data and set to states
 
   const handelUpdateCheck = async () => {
@@ -330,7 +331,17 @@ const BasicCause = () => {
     }
     // api call //
   };
+
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
+
   useEffect(() => {
+    fetchIncidentDetails();
     handelUpdateCheck();
   }, []);
   return (
@@ -343,7 +354,7 @@ const BasicCause = () => {
             </Typography>
 
             <Typography className={Type.labelValue} gutterBottom>
-              {localStorage.getItem("fkincidentId")}
+              {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
           <Grid item md={6}>
