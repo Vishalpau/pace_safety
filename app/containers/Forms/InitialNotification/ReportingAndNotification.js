@@ -29,7 +29,7 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
-import {MaterialDropZone} from 'dan-components';
+import { MaterialDropZone } from "dan-components";
 import { DropzoneArea } from "material-ui-dropzone";
 import { DropzoneDialogBase } from "material-ui-dropzone";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -40,7 +40,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
 
-import { DateTimePicker, KeyboardDateTimePicker, } from '@material-ui/pickers';
+import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -82,14 +82,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UploadInputImg=()=> {
+const UploadInputImg = () => {
   const [files] = useState([]);
 
   return (
     <Fragment>
       <div>
         <MaterialDropZone
-          acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+          acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
           files={files}
           showPreviews
           maxSize={5000000}
@@ -99,7 +99,7 @@ const UploadInputImg=()=> {
       </div>
     </Fragment>
   );
-}
+};
 
 const ReportingAndNotification = () => {
   const [files, setFiles] = useState([]);
@@ -110,7 +110,7 @@ const ReportingAndNotification = () => {
   const [lateReport, SetLateReport] = useState(true);
   const [clearedDate, handleClearedDateChange] = useState(null);
   const [reportedTo, setReportableTo] = useState([]);
-  const [reportId, setReportId] = useState([])
+  const [reportId, setReportId] = useState([]);
 
   const { id } = useParams();
 
@@ -145,7 +145,10 @@ const ReportingAndNotification = () => {
     let rpDate = form.reportingdate;
     let startDate = `${rpDate} ${rpTime}`;
     // let startDate = form.reportingdate.concat(form.reportingtime)
-    var start_date = moment(form.reportingdate || incidentsListData.incidentReportedOn, "YYYY-MM-DD HH:mm:ss");
+    var start_date = moment(
+      form.reportingdate || incidentsListData.incidentReportedOn,
+      "YYYY-MM-DD HH:mm:ss"
+    );
     var end_date = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
     var duration = moment.duration(end_date.diff(start_date));
     var Hours = duration.asHours();
@@ -173,10 +176,9 @@ const ReportingAndNotification = () => {
   };
 
   const handleDrop = (acceptedFiles) => {
-  
     const formData = new FormData();
     for (let i = 0; i < acceptedFiles.length; i++) {
-      setFiles(acceptedFiles[i])
+      setFiles(acceptedFiles[i]);
       formData.append("evidenceDocument", acceptedFiles[i]);
       formData.append("evidenceCategory", "Initial Evidence ");
       formData.append("createdBy", "1");
@@ -186,7 +188,7 @@ const ReportingAndNotification = () => {
         formData
       );
     }
-   
+
     setForm({
       ...form,
       fileupload: acceptedFiles,
@@ -203,7 +205,9 @@ const ReportingAndNotification = () => {
     temp.supervisorByName =
       form.supervisorname || incidentsListData.supervisorByName;
     temp.supervisorById = 1;
-    temp.incidentReportedOn = moment(form.reportingdate).toISOString() || incidentsListData.incidentReportedOn;
+    temp.incidentReportedOn =
+      moment(form.reportingdate).toISOString() ||
+      incidentsListData.incidentReportedOn;
     temp.incidentReportedByName =
       form.reportedby || incidentsListData.incidentReportedByName;
     temp.incidentReportedById = 1;
@@ -221,24 +225,26 @@ const ReportingAndNotification = () => {
     );
 
     // Update case.
-    if (reportData.length>0) {
-
+    if (reportData.length > 0) {
       // reported to api call
-      const res = await api.put(`/api/v1/incidents/${id}/reports/${reportId}/`, {
-        reportTo: form.reportedto.includes("Others")
-          ? form.reportedto.concat([otherdata]).toString()
-          : form.reportedto.toString(),
-        reportingNote: otherdata,
-        createdBy: 0,
-        fkIncidentId: id,
-      });
-      if(res.status === 200){
-      history.push(
-        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-          "fkincidentId"
-        )}`
-      );
+      const res = await api.put(
+        `/api/v1/incidents/${id}/reports/${reportId}/`,
+        {
+          reportTo: form.reportedto.includes("Others")
+            ? form.reportedto.concat([otherdata]).toString()
+            : form.reportedto.toString(),
+          reportingNote: otherdata,
+          createdBy: 0,
+          fkIncidentId: id,
         }
+      );
+      if (res.status === 200) {
+        history.push(
+          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+            "fkincidentId"
+          )}`
+        );
+      }
     } else {
       // const { error, isValid } = ReportingValidation(form);
       // setError(error);
@@ -265,13 +271,10 @@ const ReportingAndNotification = () => {
   };
 
   const handelReportedTo = async (e, value, type) => {
-   
     if ((type = "option")) {
       if (e.target.checked == false) {
-        
-       
         const newData = form.reportedto.filter((item) => item !== value);
-       
+
         await setForm({
           ...form,
           reportedto: newData,
@@ -279,7 +282,6 @@ const ReportingAndNotification = () => {
 
         // let newReportedTo = [];
       } else {
-      
         await setForm({
           ...form,
           reportedto: [...form.reportedto, value],
@@ -288,19 +290,17 @@ const ReportingAndNotification = () => {
     }
   };
 
-  
-
   // fetch reportList
   const fetchReportsDataList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
     const result = res.data.data.results;
-    if(result.length>0){
+    if (result.length > 0) {
       const report = result[0].reportTo;
       // form.reportedto = report.split(",")
       await setForm({ ...form, reportedto: report.split(",") });
-      await setReportId(result[0].id)
+      await setReportId(result[0].id);
     }
-    
+
     await setIsLoading(true);
   };
 
@@ -317,23 +317,20 @@ const ReportingAndNotification = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
-    const date = new Date(result.incidentReportedOn)
-    await setForm({...form,reportingdate:date})
+    const date = new Date(result.incidentReportedOn);
+    await setForm({ ...form, reportingdate: date });
     await setIncidentsListdata(result);
-    if(!id){
-      setIsLoading(true)
+    if (!id) {
+      setIsLoading(true);
     }
-   
   };
 
   useEffect(() => {
     fetchReportableTo();
     fetchIncidentsData();
-    if(id){
+    if (id) {
       fetchReportsDataList();
-    }  
-   
-    
+    }
   }, []);
 
   const classes = useStyles();
@@ -344,25 +341,24 @@ const ReportingAndNotification = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">Reportable to</FormLabel>
-                
+                <FormLabel component="legend">Reportable to ?</FormLabel>
+
                 <FormGroup>
-                  {reportedTo.map((value,key) => (
+                  {reportedTo.map((value, key) => (
                     <FormControlLabel
-                    id={key}
-                    key={key}
+                      id={key}
+                      key={key}
                       value={value.inputValue}
                       control={<Checkbox />}
                       label={value.inputValue}
                       checked={
-                        form.reportedto.includes(value.inputValue) ? true : false
+                        form.reportedto.includes(value.inputValue)
+                          ? true
+                          : false
                       }
-                      onChange={(e) =>
-                        {
-                          handelReportedTo(e, value.inputValue, "option");
-                        }
-
-                      }
+                      onChange={(e) => {
+                        handelReportedTo(e, value.inputValue, "option");
+                      }}
                     />
                   ))}
                   {form.reportedto.includes("Others") ? (
@@ -387,7 +383,7 @@ const ReportingAndNotification = () => {
                 error={error && error.isnotificationsent}
               >
                 <FormLabel component="legend">
-                  Notification to be sent
+                  Notification to be Sent ?
                 </FormLabel>
                 {notificationSent.map((value) => (
                   <FormControlLabel
@@ -417,11 +413,7 @@ const ReportingAndNotification = () => {
                 </Typography>
               </Box>
               {/* <UploadInputAll/> */}
-              <DropzoneArea
-        onChange={(e)=>handleDrop(e)}
-        showPreviews
-       
-        />
+              <DropzoneArea onChange={(e) => handleDrop(e)} showPreviews />
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
             </Grid>
 
@@ -459,7 +451,6 @@ const ReportingAndNotification = () => {
 
             <Grid item md={6}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-             
                 <KeyboardDateTimePicker
                   className={classes.formControl}
                   id="date-picker-dialog"
@@ -471,17 +462,20 @@ const ReportingAndNotification = () => {
                   required
                   inputVariant="outlined"
                   label="Reporting Date"
-                  value={form.reportingdate || incidentsListData.incidentReportedOn}
-                  onChange={(date) => {handleDateChange(date);handelTimeCompare()}}
+                  value={
+                    form.reportingdate || incidentsListData.incidentReportedOn
+                  }
+                  onChange={(date) => {
+                    handleDateChange(date);
+                    handelTimeCompare();
+                  }}
                   KeyboardButtonProps={{
                     "aria-label": "change date",
                   }}
                 />
               </MuiPickersUtilsProvider>
-
             </Grid>
 
-           
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -501,8 +495,10 @@ const ReportingAndNotification = () => {
                     });
                   }}
                 >
-                  {selectValues.map((selectValues,index) => (
-                    <MenuItem key={index} value={selectValues}>{selectValues}</MenuItem>
+                  {selectValues.map((selectValues, index) => (
+                    <MenuItem key={index} value={selectValues}>
+                      {selectValues}
+                    </MenuItem>
                   ))}
                 </Select>
                 {error && error.reportedby ? (
@@ -594,9 +590,9 @@ const ReportingAndNotification = () => {
             />
           </Grid>
         </Grid>
-      ) : ( 
-         <h1>Loading...</h1> 
-      )} 
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </PapperBlock>
   );
 };
