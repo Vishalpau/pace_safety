@@ -225,10 +225,7 @@ const Evidence = () => {
                 Incident Description
               </Typography>
               <Typography className={Type.labelValue}>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nobis
-                debitis saepe corporis quo inventore similique fugiat voluptatem
-                alias et quae temporibus necessitatibus ut, magni ea quisquam
-                vel, officiis cupiditate aperiam.
+                {incidentDetail.incidentDetails}
               </Typography>
             </Grid>
 
