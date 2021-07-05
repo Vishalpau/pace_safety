@@ -168,7 +168,11 @@ const ActivityDetails = () => {
           `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
         );
       }
-    } else if (localStorage.getItem("fkincidentId") && activtyList.length > 7) {
+    } else if (
+      localStorage.getItem("fkincidentId") &&
+      activtyList.length > 6 &&
+      activtyList[0].id
+    ) {
       console.log("dd put");
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
