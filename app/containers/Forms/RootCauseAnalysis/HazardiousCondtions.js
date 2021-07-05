@@ -68,6 +68,7 @@ const HazardiousCondition = () => {
   const [fetchApiData, setFetchApiData] = useState({});
   const { id } = useParams();
   const history = useHistory();
+  const [incidentDetail, setIncidentDetail] = useState({});
   const updateIds = useRef();
 
   // get data and set to states
@@ -335,7 +336,16 @@ const HazardiousCondition = () => {
 
   const classes = useStyles();
 
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
+
   useEffect(() => {
+    fetchIncidentDetails();
     handelUpdateCheck();
     // location.reload()
   }, []);
@@ -352,7 +362,7 @@ const HazardiousCondition = () => {
               Incident Number
             </Typography>
             <Typography className={Type.labelValue}>
-              {localStorage.getItem("fkincidentId")}
+              {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
 

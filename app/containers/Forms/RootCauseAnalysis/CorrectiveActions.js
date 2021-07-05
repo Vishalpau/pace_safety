@@ -66,6 +66,7 @@ const CorrectiveAction = () => {
   const [error, setError] = useState({});
 
   const [data, setData] = useState([]);
+  const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = useState({
     managementControl: { remarkType: "", rcaSubType: "", rcaRemark: [] },
     regionSupport: { remarkType: "", rcaSubType: "", rcaRemark: "" },
@@ -242,7 +243,16 @@ const CorrectiveAction = () => {
 
   const classes = useStyles();
 
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
+
   useEffect(() => {
+    fetchIncidentDetails();
     handelUpdateCheck();
   }, []);
 
@@ -255,7 +265,7 @@ const CorrectiveAction = () => {
               Incident number
             </Typography>
             <Typography className={Type.labelValue}>
-              {localStorage.getItem("fkincidentId")}
+              {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
 

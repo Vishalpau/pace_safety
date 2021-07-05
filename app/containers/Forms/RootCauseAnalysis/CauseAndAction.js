@@ -72,6 +72,7 @@ const BasicCauseAndAction = () => {
   ];
   const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
+  const [incidentDetail, setIncidentDetail] = useState({});
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -134,8 +135,16 @@ const BasicCauseAndAction = () => {
       );
     }
   };
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
 
   useEffect(() => {
+    fetchIncidentDetails();
     handelShowData();
   }, []);
 
@@ -152,7 +161,7 @@ const BasicCauseAndAction = () => {
             </Typography>
 
             <Typography lassName={Type.labelValue}>
-              {localStorage.getItem("fkincidentId")}
+              {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
 

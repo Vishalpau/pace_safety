@@ -65,6 +65,7 @@ const BasicCauseAndAction = () => {
   const [data, setData] = useState([]);
   const history = useHistory();
   const putId = useRef("");
+  const [incidentDetail, setIncidentDetail] = useState({});
   let sub_values = [
     "Personal",
     "Wellness factors",
@@ -121,7 +122,16 @@ const BasicCauseAndAction = () => {
 
   let form_link = window.location.href;
 
+  const fetchIncidentDetails = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    await setIncidentDetail(result);
+  };
+
   useEffect(() => {
+    fetchIncidentDetails();
     handelShowData();
   }, []);
   const classes = useStyles();
@@ -134,7 +144,7 @@ const BasicCauseAndAction = () => {
               Incident Number
             </Typography>
             <Typography className={Type.labelValue}>
-              {localStorage.getItem("fkincidentId")}
+              {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
 
