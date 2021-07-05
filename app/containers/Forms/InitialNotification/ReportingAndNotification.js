@@ -126,6 +126,7 @@ const ReportingAndNotification = () => {
     others: "",
     latereporting: "",
     additionaldetails: "",
+    
   });
 
   const history = useHistory();
@@ -332,6 +333,8 @@ const ReportingAndNotification = () => {
     if(id){
       fetchReportsDataList();
     }  
+   
+    
   }, []);
 
   const classes = useStyles();
@@ -370,11 +373,7 @@ const ReportingAndNotification = () => {
                       label="Other"
                       // defaultValue={"Orher name"}
                       className={classes.formControl}
-                      onChange={(e) => setForm({
-                        ...form,
-                        reportedto: [...form.reportedto, e.target.value],
-                      })
-                    }
+                      onChange={(e) => setOtherData(e.target.value)}
                     />
                   ) : null}
                 </FormGroup>

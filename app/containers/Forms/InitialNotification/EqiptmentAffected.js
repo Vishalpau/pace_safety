@@ -248,6 +248,7 @@ const EqiptmentAffected = () => {
       }
     }
   };
+  
   // fetch incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(

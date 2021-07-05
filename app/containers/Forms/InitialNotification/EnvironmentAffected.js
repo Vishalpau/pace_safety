@@ -13,7 +13,7 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import { PapperBlock } from "dan-components";
-import FormLabel from "@material-ui/core/FormLabel";
+import { FormHelperText, FormLabel } from "@material-ui/core";
 
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
@@ -357,6 +357,7 @@ const EnvironmentAffected = () => {
                       Were There Any Spills ?
                     </FormLabel>
                     <RadioGroup
+                    
                       className={classes.inlineRadioGroup}
                       aria-label="isspills"
                       name="isspills"
@@ -377,6 +378,7 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
+                    
                   </FormControl>
                 </Grid>
 
