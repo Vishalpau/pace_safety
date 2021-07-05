@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
+import { Button, Grid, Container, FormHelperText } from "@material-ui/core";
 
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
@@ -444,10 +444,12 @@ const HazardiousActs = () => {
 
           {/* supervision */}
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.supervision}>
-                Supervision
-              </FormLabel>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.supervision}
+            >
+              <FormLabel component="legend">Supervision</FormLabel>
               <FormGroup>
                 {SUPERVISON.map((value) => (
                   <FormControlLabel
@@ -458,21 +460,20 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
+              {error && error.supervision && (
+                <FormHelperText>{error.supervision}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.supervision && (
-              <p>
-                <small style={{ color: "red" }}>{error.supervision}</small>
-              </p>
-            )}
           </Grid>
 
           {/* workpackage */}
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.workpackage}>
-                {" "}
-                Work package{" "}
-              </FormLabel>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.workpackage}
+            >
+              <FormLabel component="legend">Work package</FormLabel>
               <FormGroup>
                 {WORKPACKAGE.map((value) => (
                   <FormControlLabel
@@ -483,21 +484,20 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
+              {error && error.workpackage && (
+                <FormHelperText>{error.workpackage}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.workpackage && (
-              <p>
-                <small style={{ color: "red" }}>{error.workpackage}</small>
-              </p>
-            )}
           </Grid>
 
           {/* equiment machinary     */}
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.equipmentMachinery}>
-                {" "}
-                Equiptment & Machinery
-              </FormLabel>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.equipmentMachinery}
+            >
+              <FormLabel component="legend">Equiptment & Machinery</FormLabel>
               <FormGroup>
                 {EQUIMENTMACHINARY.map((value) => (
                   <FormControlLabel
@@ -510,20 +510,18 @@ const HazardiousActs = () => {
               </FormGroup>
             </FormControl>
             {error && error.equipmentMachinery && (
-              <p>
-                <small style={{ color: "red" }}>
-                  {error.equipmentMachinery}
-                </small>
-              </p>
+              <FormHelperText>{error.equipmentMachinery}</FormHelperText>
             )}
           </Grid>
 
           {/* behaviour issues      */}
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.behaviourIssue}>
-                Behaviour Issue
-              </FormLabel>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.behaviourIssue}
+            >
+              <FormLabel component="legend">Behaviour Issue</FormLabel>
               <FormGroup>
                 {BEHAVIOURISSUES.map((value) => (
                   <FormControlLabel
@@ -534,19 +532,19 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
+              {error && error.behaviourIssue && (
+                <FormHelperText>{error.behaviourIssue}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.behaviourIssue && (
-              <p>
-                <small style={{ color: "red" }}>{error.behaviourIssue}</small>
-              </p>
-            )}
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.safetyIssues}>
-                Saftey Items
-              </FormLabel>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.safetyIssues}
+            >
+              <FormLabel component="legend">Saftey Items</FormLabel>
               <FormGroup>
                 {SAFETYITEMS.map((value) => (
                   <FormControlLabel
@@ -557,20 +555,16 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
+              {error && error.safetyIssues && (
+                <FormHelperText>{error.safetyIssues}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.safetyIssues && (
-              <p>
-                <small style={{ color: "red" }}>{error.safetyIssues}</small>
-              </p>
-            )}
           </Grid>
 
           {/* ergonomics */}
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.procedures}>
-                Ergonomics
-              </FormLabel>
+            <FormControl component="fieldset" required error={error.procedures}>
+              <FormLabel component="legend">Ergonomics</FormLabel>
               <FormGroup>
                 {ERGONOMICS.map((value) => (
                   <FormControlLabel
@@ -581,19 +575,15 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
+              {error && error.ergonimics && (
+                <FormHelperText>{error.ergonimics}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.ergonimics && (
-              <p>
-                <small style={{ color: "red" }}>{error.ergonimics}</small>
-              </p>
-            )}
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.procedures}>
-                Procedure
-              </FormLabel>
+            <FormControl component="fieldset" required error={error.procedures}>
+              <FormLabel component="legend">Procedure</FormLabel>
               <FormGroup>
                 {PROCEDURES.map((value) => (
                   <FormControlLabel
@@ -604,18 +594,17 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
+              {error && error.procedures && (
+                <FormHelperText>{error.procedures}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.procedures && (
-              <p>
-                <small style={{ color: "red" }}>{error.procedures}</small>
-              </p>
-            )}
           </Grid>
 
           <Grid item md={12}>
             <TextField
               className={classes.formControl}
               id="filled-basic"
+              required
               label="Others"
               variant="outlined"
               multiline

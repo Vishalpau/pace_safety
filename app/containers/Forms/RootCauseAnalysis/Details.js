@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Container, Grid, Button } from "@material-ui/core";
+import { Container, Grid, Button, FormHelperText } from "@material-ui/core";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -152,9 +152,15 @@ const Details = () => {
       }
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
-      history.push("/app/incident-management/registration/root-cause-analysis/hazardious-acts/")
+      history.push(
+        "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+      );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-      history.push(`/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`)
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+          putId.current
+        }`
+      );
     }
     e.preventDefault();
   };
@@ -202,31 +208,37 @@ const Details = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-              <Grid item md={6}>
-                {/* <h6> RCA recommended</h6> */}
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">
-                    RCA recommended
-                  </InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="RCA recommended"
-                    defaultValue={form.rcaRecommended}
+          <Grid item md={6}>
+            {/* <h6> RCA recommended</h6> */}
+            <FormControl
+              variant="outlined"
+              required
+              className={classes.formControl}
+              error={error && error.rcaRecommended}
+            >
+              <InputLabel id="project-name-label">RCA recommended</InputLabel>
+              <Select
+                id="project-name"
+                labelId="project-name-label"
+                label="RCA recommended"
+                defaultValue={form.rcaRecommended}
+              >
+                {RCAOPTION.map((selectValues) => (
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) =>
+                      setForm({ ...form, rcaRecommended: selectValues })
+                    }
                   >
-                    {RCAOPTION.map((selectValues) => (
-                      <MenuItem
-                        value={selectValues}
-                        onClick={(e) => setForm({ ...form, rcaRecommended: selectValues })}
-                      >{selectValues}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {error && error.rcaRecommended && (
-                  <p><small style={{ color: "red" }}>{error.rcaRecommended}</small></p>
-                )}
-              </Grid>
+                    {selectValues}
+                  </MenuItem>
+                ))}
+              </Select>
+              {error && error.rcaRecommended && (
+                <FormHelperText>{error.rcaRecommended}</FormHelperText>
+              )}
+            </FormControl>
+          </Grid>
 
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
@@ -239,7 +251,12 @@ const Details = () => {
           </Grid>
 
           <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
+            <FormControl
+              variant="outlined"
+              required
+              error={error && error.rcaRecommended}
+              className={classes.formControl}
+            >
               <InputLabel id="project-name-label">RCA Recommended</InputLabel>
               <Select
                 id="project-name"
@@ -257,16 +274,18 @@ const Details = () => {
                   </MenuItem>
                 ))}
               </Select>
+              {error && error.rcaRecommended && (
+                <FormHelperText>{error.rcaRecommended}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.rcaRecommended && (
-              <p>
-                <small style={{ color: "red" }}>{error.rcaRecommended}</small>
-              </p>
-            )}
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.evidenceSupport}>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.evidenceSupport}
+            >
               <FormLabel component="legend">
                 Evidence Collected Supports the Incident Event Took Place
               </FormLabel>
@@ -283,17 +302,19 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
+              {error && error.evidenceSupport && (
+                <FormHelperText>{error.evidenceSupport}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.evidenceSupport && (
-              <p>
-                <small style={{ color: "red" }}>{error.evidenceSupport}</small>
-              </p>
-            )}
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.evidenceContradiction}>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.evidenceContradiction}
+            >
+              <FormLabel component="legend">
                 Contradictions Between Evidence and the Description of Incident
               </FormLabel>
               <RadioGroup
@@ -315,19 +336,16 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
+              {error && error.evidenceContradiction && (
+                <FormHelperText>{error.evidenceContradiction}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.evidenceContradiction && (
-              <p>
-                <small style={{ color: "red" }}>
-                  {error.evidenceContradiction}
-                </small>
-              </p>
-            )}
           </Grid>
 
           <Grid item md={12}>
             <FormControl
               component="fieldset"
+              required
               error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
@@ -352,10 +370,10 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
+              {error && error.evidenceNotSupport && (
+                <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.evidenceNotSupport && (
-              <p>{error.evidenceNotSupport}</p>
-            )}
           </Grid>
 
           <Grid item md={12}>

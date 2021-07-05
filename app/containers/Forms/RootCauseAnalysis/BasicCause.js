@@ -37,8 +37,7 @@ import {
   LEADERSHIP,
   PROCESSES,
 } from "../../../utils/constants";
-import Type from '../../../styles/components/Fonts.scss'
-
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -111,34 +110,42 @@ const BasicCause = () => {
         personal: {
           remarkType: "options",
           rcaSubType: "personal",
-          rcaRemark: tempApiData.personal.includes(",") ? tempApiData.personal.split(",") : [tempApiData.personal]
+          rcaRemark: tempApiData.personal.includes(",")
+            ? tempApiData.personal.split(",")
+            : [tempApiData.personal],
         },
         wellnessFactors: {
           remarkType: "options",
           rcaSubType: "wellnessFactors",
-          rcaRemark: tempApiData.wellnessFactors.includes(",") ? tempApiData.wellnessFactors.split(",") : [tempApiData.wellnessFactors]
+          rcaRemark: tempApiData.wellnessFactors.includes(",")
+            ? tempApiData.wellnessFactors.split(",")
+            : [tempApiData.wellnessFactors],
         },
         otherHumanFactor: {
           remarkType: "remark",
           rcaSubType: "othershumanfactors",
-          rcaRemark: tempApiData.othershumanfactors
+          rcaRemark: tempApiData.othershumanfactors,
         },
         leadership: {
           remarkType: "options",
           rcaSubType: "leadership",
-          rcaRemark: tempApiData.leadership.includes(",") ? tempApiData.leadership.split(",") : [tempApiData.leadership]
+          rcaRemark: tempApiData.leadership.includes(",")
+            ? tempApiData.leadership.split(",")
+            : [tempApiData.leadership],
         },
         processes: {
           remarkType: "options",
           rcaSubType: "processes",
-          rcaRemark: tempApiData.processes.includes(",") ? tempApiData.processes.split(",") : [tempApiData.processes]
+          rcaRemark: tempApiData.processes.includes(",")
+            ? tempApiData.processes.split(",")
+            : [tempApiData.processes],
         },
         otherJobFactors: {
           remarkType: "remark",
           rcaSubType: "othersjobfactors",
-          rcaRemark: tempApiData.othersjobfactors
-        }
-      })
+          rcaRemark: tempApiData.othersjobfactors,
+        },
+      });
     }
   };
 
@@ -288,15 +295,20 @@ const BasicCause = () => {
       }
     });
     // api call //
-    let nextPageLink = 0
+    let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
         if (putId.current !== "") {
-          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/pacecauses/${callObjects[key].pk}/`,
+            callObjects[key]
+          );
           if (res.status == 200) {
-            console.log("request done")
-            nextPageLink = res.status
+            console.log("request done");
+            nextPageLink = res.status;
           }
         } else {
           const res = await api.post(
@@ -307,15 +319,21 @@ const BasicCause = () => {
           );
           if (res.status == 201) {
             console.log("request done");
-            nextPageLink = res.status
+            nextPageLink = res.status;
           }
         }
       }
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
-      history.push("/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/")
+      history.push(
+        "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+      );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current}`)
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${
+          putId.current
+        }`
+      );
     }
     // api call //
   };
@@ -344,60 +362,50 @@ const BasicCause = () => {
             </Typography>
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h6" gutterBottom>
               Human Factors
             </Typography>
           </Grid>
-          <Grid item md={6}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.personal}>
-                Personal
-              </FormLabel>
+          <Grid item md={12}>
+            <FormControl component="fieldset" required error={error.personal}>
+              <FormLabel component="legend">Personal</FormLabel>
               <FormGroup>
                 {PERSONAL.map((value) => (
                   <FormControlLabel
                     control={<Checkbox name={value} />}
-                    label={<small>{value}</small>}
+                    label={value}
                     checked={form.personal.rcaRemark.includes(value)}
                     onChange={async (e) => handelPersonal(e, value)}
                   />
                 ))}
               </FormGroup>
+              {error && error.personal && (
+                <FormHelperText>{error.personal}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.personal && (
-              <p>
-                <small style={{ color: "red" }}>{error.personal}</small>
-              </p>
-            )}
           </Grid>
           {/* wellness factors */}
           <Grid item md={6}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.wellnessFactors}>
-                Wellness Factors
-              </FormLabel>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.wellnessFactors}
+            >
+              <FormLabel component="legend">Wellness Factors</FormLabel>
               <FormGroup>
                 {PERSONALWELNESSFACTORS.map((value) => (
                   <FormControlLabel
                     control={<Checkbox name={value} />}
-                    label={<small>{value}</small>}
-                    checked={form.wellnessFactors.rcaRemark.includes(
-                      value
-                    )}
-                    onChange={async (e) =>
-                      handelWellnessFactors(e, value)
-                    }
+                    label={value}
+                    checked={form.wellnessFactors.rcaRemark.includes(value)}
+                    onChange={async (e) => handelWellnessFactors(e, value)}
                   />
                 ))}
               </FormGroup>
+              {error && error.wellnessFactors && (
+                <FormHelperText>{error.wellnessFactors}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.wellnessFactors && (
-              <p>
-                <small style={{ color: "red" }}>
-                  {error.wellnessFactors}
-                </small>
-              </p>
-            )}
           </Grid>
           {/* other human factors */}
           <Grid item md={12}>
@@ -406,6 +414,7 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               rows={4}
+              required
               label="Other Human Factors"
               error={error.otherHumanFactor}
               defaultValue={form.otherHumanFactor.rcaRemark}
@@ -413,9 +422,6 @@ const BasicCause = () => {
               className={classes.formControl}
               onChange={async (e) => handelOtherHumanFactors(e)}
             />
-            {/* {error && error.otherHumanFactor && (
-                    <p>{error.otherHumanFactor}</p>
-                  )} */}
           </Grid>
 
           <Grid item md={12}>
@@ -425,49 +431,41 @@ const BasicCause = () => {
           </Grid>
           {/* leadership */}
           <Grid item md={6}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.leadership}>
-                Leadership
-              </FormLabel>
+            <FormControl component="fieldset" required error={error.leadership}>
+              <FormLabel component="legend">Leadership</FormLabel>
               <FormGroup>
                 {LEADERSHIP.map((value) => (
                   <FormControlLabel
                     control={<Checkbox name={value} />}
-                    label={<small>{value}</small>}
+                    label={value}
                     checked={form.leadership.rcaRemark.includes(value)}
                     onChange={async (e) => handelLeadership(e, value)}
                   />
                 ))}
               </FormGroup>
+              {error && error.leadership && (
+                <FormHelperText>{error.leadership}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.leadership && (
-              <p>
-                <small style={{ color: "red" }}>{error.leadership}</small>
-              </p>
-            )}
           </Grid>
           {/* processes */}
-          <Grid item md={6}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.processes}>
-                Processes
-              </FormLabel>
+          <Grid item md={12}>
+            <FormControl component="fieldset" required error={error.processes}>
+              <FormLabel component="legend">Processes</FormLabel>
               <FormGroup>
                 {PROCESSES.map((value) => (
                   <FormControlLabel
                     control={<Checkbox name={value} />}
-                    label={<small>{value}</small>}
+                    label={value}
                     checked={form.processes.rcaRemark.includes(value)}
                     onChange={async (e) => handelProcesses(e, value)}
                   />
                 ))}
               </FormGroup>
+              {error && error.processes && (
+                <FormHelperText>{error.processes}</FormHelperText>
+              )}
             </FormControl>
-            {error && error.processes && (
-              <p>
-                <small style={{ color: "red" }}>{error.processes}</small>
-              </p>
-            )}
           </Grid>
           {/* other job factors */}
           <Grid item md={12}>
@@ -475,6 +473,7 @@ const BasicCause = () => {
               id="filled-basic"
               variant="outlined"
               multiline
+              required
               error={error.otherJobFactors}
               defaultValue={form.otherJobFactors.rcaRemark}
               helperText={error ? error.otherJobFactors : ""}
@@ -483,9 +482,6 @@ const BasicCause = () => {
               className={classes.formControl}
               onChange={async (e) => handelOtherJobFactors(e)}
             />
-            {/* {error && error.otherJobFactors && (
-                    <p>{error.otherJobFactors}</p>
-                  )} */}
           </Grid>
           <Grid item md={6}>
             <Button

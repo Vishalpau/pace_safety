@@ -1,33 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { AccessAlarm, ThreeDRotation } from "@material-ui/icons";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
 import { makeStyles } from "@material-ui/core/styles";
-import Link from "@material-ui/core/Link";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
+
 import { useHistory, useParams } from "react-router";
 
 import api from "../../../utils/axios";
@@ -53,16 +36,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "transparent",
   },
   list: {
-    maxWidth: "300px",
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
   },
   button: {
     margin: theme.spacing(1),
   },
 }));
 
-function ListItemLink(props) {
-  return <ListItem component="a" {...props} />;
-}
 
 const BasicCauseAndAction = () => {
   const reportedTo = [
@@ -120,15 +101,23 @@ const BasicCauseAndAction = () => {
   const classes = useStyles();
 
   const handelNext = () => {
-    let page_url = window.location.href
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf('/') + 1))
-    putId.current = lastItem
+    let page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    putId.current = lastItem;
     if (!isNaN(putId.current)) {
-      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current}`)
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
+          putId.current
+        }`
+      );
     } else if (isNaN(putId.current)) {
-      history.push(`/app/incident-management/registration/root-cause-analysis/basic-cause/`)
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/`
+      );
     }
-  }
+  };
 
   useEffect(() => {
     handelShowData();
@@ -158,41 +147,39 @@ const BasicCauseAndAction = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Box>
-              <Typography variant="h5" gutterBottom>
-                Actions
-              </Typography>
-            </Box>
+            <Typography variant="h6" gutterBottom>
+              Actions
+            </Typography>
           </Grid>
 
           <Grid item md={12}>
-            <Box marginBottom={2}>
-              <Typography variant="body">
-                Option selected from hazardious acts and condition
-              </Typography>
-            </Box>
+            <Typography variant="h6" gutterBottom>
+              Options Selected from Hazardious Acts and Condition
+            </Typography>
 
-            <Box>
-              <List className={classes.list} dense disablePadding>
-                {/* console.log(`${key}: ${value}`) */}
-
-                {Object.entries(data).map(([key, value]) => (
-                  <div>
-                    <ListItem>
-                      <ListItemText primary={key} />
-                    </ListItem>
-                    {value.map((value) => (
-                      <ListItemLink href="#">
-                        <ListItemText primary={<small>{value}</small>} />
-                      </ListItemLink>
-                    ))}
-                    <button className={classes.textButton}>
-                      <AddCircleOutlineIcon /> Add a new action
-                    </button>
-                  </div>
+            {Object.entries(data).map(([key, value]) => (
+              <List
+                className={classes.list}
+                component="ul"
+                subheader={
+                  <ListSubheader
+                    disableGutters
+                    disableSticky
+                    component="div"
+                    id="selected-options"
+                  >
+                    {key}
+                  </ListSubheader>
+                }
+              >
+                {value.map((value, key) => (
+                  <ListItemText key={key} primary={value} />
                 ))}
               </List>
-            </Box>
+            ))}
+            <button className={classes.textButton}>
+              <AddCircleOutlineIcon /> Add a New Action
+            </button>
           </Grid>
 
           <Grid item md={12}>

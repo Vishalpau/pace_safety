@@ -1,18 +1,17 @@
 import validator from "validator";
 
 function WhyAnalysisValidate(data) {
-  let isValid = true
-  const error = {}
-
+  let isValid = true;
+  const error = {};
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].why)) {
-      error[`why${[i]}`] = "this filed is empty"
-      isValid = false
+      error[`why${[i]}`] = "This Field is Empty";
+      isValid = false;
     }
 
     // if (validator.isEmpty(data[i].locationAssessmentCenter.toString())) {
-    //     error[`locationAssessmentCenter${[i]}`] = "this filed is empty"
+    //     error[`locationAssessmentCenter${[i]}`] = "This Field is Empty"
     //     isValid = false
     // }
 
@@ -21,7 +20,7 @@ function WhyAnalysisValidate(data) {
         error[`why${[i]}`] = "This Field is Empty";
         isValid = false;
       }
-      return { error, isValid }
+      return { error, isValid };
     }
   }
 }

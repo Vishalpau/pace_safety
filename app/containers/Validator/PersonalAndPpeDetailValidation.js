@@ -8,7 +8,7 @@ function PersonalAndPpeDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        dataObj.error = "This filed is empty";
+        dataObj.error = "This Field is Empty";
         error.push(dataObj);
         isValid = false;
       } else {
