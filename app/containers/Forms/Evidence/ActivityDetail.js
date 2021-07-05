@@ -140,7 +140,7 @@ const ActivityDetails = () => {
   };
 
   const fetchActivityData = async () => {
-    const res = await api.get(`/api/v1/incidents/442/activities/`);
+    const res = await api.get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`);
     const result = res.data.data.results;
     console.log(result);
     console.log(result.length);
@@ -168,7 +168,8 @@ const ActivityDetails = () => {
           `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
         );
       }
-    } else if(localStorage.getItem("fkincidentId") && activtyList.length > 0) {
+    } else if(localStorage.getItem("fkincidentId") && activtyList.length > 6) {
+      console.log("dd put")
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList

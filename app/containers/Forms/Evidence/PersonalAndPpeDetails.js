@@ -47,7 +47,7 @@ const PersonalAndPpeDetails = () => {
   const [error, setError] = useState({});
   const { id } = useParams();
   const history = useHistory();
-  const [ppeList, setPpeList] = useState({});
+  const [ppeList, setPpeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [ppeData, setPpeData] = useState([
@@ -270,15 +270,18 @@ const PersonalAndPpeDetails = () => {
     }
     await setIsLoading(true);
   };
-
+  console.log(ppeList)
   const fetchppeDetails = async () => {
     const res = await api.get(
       `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
     );
     const result = res.data.data.results;
-    if (result.length) {
-      await setPpeList(result);
-    }
+    console.log(result)
+    
+    await setPpeList(result);
+    
+      
+    
     await setIsLoading(true);
   };
 
@@ -312,7 +315,7 @@ const PersonalAndPpeDetails = () => {
                 {incidentDetail.incidentNumber}
               </Typography>
             </Grid>
-            {ppeList.length === undefined ? (
+            {ppeList.length < 8 ? (
               <>
                 {ppeData.slice(0, 4).map((value, index) => (
                   <>
@@ -323,7 +326,7 @@ const PersonalAndPpeDetails = () => {
                         error={value.error}
                       >
                         <FormLabel component="legend">
-                          {value.question}
+                          {value.question} 
                         </FormLabel>
                         <RadioGroup
                           className={classes.inlineRadioGroup}
@@ -476,6 +479,7 @@ const PersonalAndPpeDetails = () => {
               <>
                 <Grid item md={6}>
                   {/* <p>PPE worn properly</p> */}
+                  {console.log(ppeList)}
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
