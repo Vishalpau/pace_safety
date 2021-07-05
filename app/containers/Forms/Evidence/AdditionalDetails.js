@@ -253,7 +253,6 @@ const AdditionalDetails = () => {
                                 }}
                               />
                             </FormControl>
-                            {value.error ? <p>{value.error}</p> : null}
                           </Grid>
                         )
                       )}
