@@ -142,9 +142,9 @@ const WhyAnalysis = () => {
           }
         }
       }
-      if (nextPageLink == 201) {
+      if (nextPageLink == 201 && Object.keys(error).length == 0) {
         history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
-      } else {
+      } else if ((nextPageLink == 200 && Object.keys(error).length == 0)) {
         history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
       }
     }
@@ -160,119 +160,119 @@ const WhyAnalysis = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Why Analysis" icon="ion-md-list-box">
-          <Grid container spacing={3}>
-            <Grid container item md={9} spacing={3}>
-              <Grid item md={6}>
-                  <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Incident number
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {localStorage.getItem("fkincidentId")}
-                  </Typography>
-              </Grid>
-
-              <Grid item md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Method
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    5 Why Analysis
-                  </Typography>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography variant="h6" className={Type.labelName}  gutterBottom>
-                  Incident Description
-                </Typography>
-                <Typography className={Type.labelValue}>
-                {incidents.incidentDetails}
-                </Typography>
-              </Grid>
-
-              <Grid item md={12}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
-                  Level of Investigation
-                </Typography>
-                <Typography className={Type.labelValue}>
-               Level 5
-                </Typography>
-              </Grid>
-
-              <Grid item md={12}>
-
-                <TextField
-                  variant="outlined"
-                  id="filled-basic"
-                  label="Evidence Collection"
-                  multiline
-                  rows={3}
-                  className={classes.formControl}
-                />
-              </Grid>
-
-              {form.map((item, index) => (
-                <Grid item md={12} >
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        id="filled-basic"
-                        label={`Why ${index}`}
-                        variant="outlined"
-                        error={error[`why${[index]}`]}
-                        defaultValue={form[index].why}
-                        helperText={error ? error[`why${[index]}`] : ""}
-                        className={classes.formControl}
-                        onChange={(e) => handleForm(e, index)}
-                      />
-                    </Grid>
-                    {form.length > 1 ?
-
-                      putId.current == "" ? <Grid item sm={1} justify="center">
-                        <Fab size="small" color="primary" aria-label="remove">
-                          <RemoveCircleOutlineIcon onClick={(e) => handelRemove(e, index)} />
-                        </Fab>
-                      </Grid> : null
-
-                      : null}
-                  </Grid>
-                </Grid>
-              ))}
-
-
-              <Grid item md={12}>
-                {/* This button will add another entry of why input  */}
-                {putId.current == "" ?
-                  <button onClick={(e) => handelAdd(e)} className={classes.textButton}>
-                    <AddIcon /> Add
-                  </button>
-                  : null}
-
-              </Grid>
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
-                >
-                  Previous
-                </Button>
-                <Button
-                  id="myBtn"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  // href={Object.keys(error).length > 0 ? '#' : `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`}
-                  onClick={(e) => handelApiCall(e)}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item md={3}>
-              Sidebar
-            </Grid>
+      <Grid container spacing={3}>
+        <Grid container item md={9} spacing={3}>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident number
+            </Typography>
+            <Typography className={Type.labelValue}>
+              {localStorage.getItem("fkincidentId")}
+            </Typography>
           </Grid>
+
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Method
+            </Typography>
+            <Typography className={Type.labelValue}>
+              5 Why Analysis
+            </Typography>
+          </Grid>
+
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Incident Description
+            </Typography>
+            <Typography className={Type.labelValue}>
+              {incidents.incidentDetails}
+            </Typography>
+          </Grid>
+
+          <Grid item md={12}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Level of Investigation
+            </Typography>
+            <Typography className={Type.labelValue}>
+              Level 5
+            </Typography>
+          </Grid>
+
+          <Grid item md={12}>
+
+            <TextField
+              variant="outlined"
+              id="filled-basic"
+              label="Evidence Collection"
+              multiline
+              rows={3}
+              className={classes.formControl}
+            />
+          </Grid>
+
+          {form.map((item, index) => (
+            <Grid item md={12} >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="filled-basic"
+                    label={`Why ${index}`}
+                    variant="outlined"
+                    error={error[`why${[index]}`]}
+                    value={form[index].why || ""}
+                    helperText={error ? error[`why${[index]}`] : ""}
+                    className={classes.formControl}
+                    onChange={(e) => handleForm(e, index)}
+                  />
+                </Grid>
+                {form.length > 1 ?
+
+                  putId.current == "" ? <Grid item sm={1} justify="center">
+                    <Fab size="small" color="primary" aria-label="remove">
+                      <RemoveCircleOutlineIcon onClick={(e) => handelRemove(e, index)} />
+                    </Fab>
+                  </Grid> : null
+
+                  : null}
+              </Grid>
+            </Grid>
+          ))}
+
+
+          <Grid item md={12}>
+            {/* This button will add another entry of why input  */}
+            {putId.current == "" ?
+              <button onClick={(e) => handelAdd(e)} className={classes.textButton}>
+                <AddIcon /> Add
+              </button>
+              : null}
+
+          </Grid>
+          <Grid item md={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+            >
+              Previous
+            </Button>
+            <Button
+              id="myBtn"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              // href={Object.keys(error).length > 0 ? '#' : `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`}
+              onClick={(e) => handelApiCall(e)}
+            >
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item md={3}>
+          Sidebar
+        </Grid>
+      </Grid>
     </PapperBlock>
   );
 };

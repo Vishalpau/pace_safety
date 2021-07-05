@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -59,6 +59,8 @@ const ActionTaken = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+  const [error, setError] = useState({});
+
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
@@ -76,29 +78,25 @@ const ActionTaken = () => {
           </Grid>
 
           <Grid item md={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <TimePicker
-                label="Reporting Time"
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
                 className={classes.formControl}
-                mask={[/\d/, /\d/, ":", /\d/, /\d/, " ", /a|p/i, "M"]}
-                placeholder="08:00 AM"
-                clearable
-                // value={selectedDate}
-                inputVariant="outlined"
-                // onChange={handleDateChange}
+                id="date-picker-dialog"
+                error={error && error.reportingdate}
+                helperText={
+                  error && error.reportingdate ? error.reportingdate : null
+                }
+                format="yyyy/MM/dd"
                 required
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton>
-                        <Icon>access_time</Icon>
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+                inputVariant="outlined"
+                label="Correction Action Date Completed"
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
                 }}
               />
             </MuiPickersUtilsProvider>
           </Grid>
+
           <Grid item md={12}>
             <Button
               variant="contained"
