@@ -111,16 +111,16 @@ const CorrectiveAction = () => {
         managementControl: {
           remarkType: "options",
           rcaSubType: "managementcontrol",
-          rcaRemark: tempApiData.managementcontrol.includes(",") ? tempApiData.managementcontrol.split(",") : [tempApiData.managementcontrol],
+          rcaRemark: tempApiData.managementcontrol.includes(",")
+            ? tempApiData.managementcontrol.split(",")
+            : [tempApiData.managementcontrol],
         },
         regionSupport: {
           remarkType: "remark",
           rcaSubType: "regionsupportabove",
           rcaRemark: tempApiData.regionsupportabove,
         },
-
       });
-
     }
   };
 
@@ -196,7 +196,7 @@ const CorrectiveAction = () => {
     });
 
     // api call //
-    let nextPageLink = 0
+    let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
@@ -209,7 +209,7 @@ const CorrectiveAction = () => {
           );
           if (res.status == 200) {
             console.log("request done");
-            nextPageLink = res.status
+            nextPageLink = res.status;
           }
         } else {
           const res = await api.post(
@@ -220,15 +220,21 @@ const CorrectiveAction = () => {
           );
           if (res.status == 201) {
             console.log("request done");
-            nextPageLink = res.status
+            nextPageLink = res.status;
           }
         }
       }
       if (nextPageLink == 201 && Object.keys(error).length === 0) {
-        history.push("/app/incident-management/registration/root-cause-analysis/root-cause-analysis/")
+        history.push(
+          "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+        );
       } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-        console.log("here")
-        history.push(`/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current}`)
+        console.log("here");
+        history.push(
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
+            putId.current
+          }`
+        );
       }
     }
     // api call //
@@ -263,10 +269,12 @@ const CorrectiveAction = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend" error={error.managementControl}>
-                Management Control
-              </FormLabel>
+            <FormControl
+              component="fieldset"
+              required
+              error={error.managementControl}
+            >
+              <FormLabel component="legend">Management Control</FormLabel>
               {MANAGEMENTCONTROL.map((value) => (
                 <FormControlLabel
                   control={<Checkbox name={value} />}
@@ -276,13 +284,6 @@ const CorrectiveAction = () => {
                 />
               ))}
             </FormControl>
-            {/* {error && error.managementControl && (
-              <p>
-                <small style={{ color: "red" }}>
-                  {error.managementControl}
-                </small>
-              </p>
-            )} */}
           </Grid>
 
           <Grid item md={12}>
@@ -290,6 +291,7 @@ const CorrectiveAction = () => {
               id="filled-basic"
               variant="outlined"
               multiline
+              required
               error={error.regionSupport}
               defaultValue={form.regionSupport.rcaRemark}
               helperText={error ? error.regionSupport : ""}
