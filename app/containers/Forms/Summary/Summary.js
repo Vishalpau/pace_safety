@@ -168,10 +168,10 @@ const Summary = () => {
           <div className={Styles.item}>
             <Button
               color="primary"
-              variant="outlined"
+              variant={localStorage.getItem("Evidence") == "Done" ? "contained" : "outlined"}
               size="small"
               className={classes.statusButton}
-              endIcon={<AccessTime />}
+              endIcon={localStorage.getItem("Evidence") == "Done" ? <CheckCircle /> : <AccessTime />}
               onClick={(e) => {
                 setInitialNotification(false);
                 setInvestigation(false);
@@ -183,7 +183,7 @@ const Summary = () => {
               Evidence
             </Button>
             <Typography variant="caption" display="block">
-              Pending
+            {localStorage.getItem("Evidence") == "Done" ? "Done" : "Pending"}
             </Typography>
           </div>
           <div className={Styles.item}>
