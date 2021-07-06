@@ -350,7 +350,8 @@ const IncidentDetails = () => {
       }
     }
   };
-
+ 
+  
   const fetchIncidentTypeValue = async () => {
     const res = await api.get("api/v1/lists/1/value");
     const result = res.data.data.results;

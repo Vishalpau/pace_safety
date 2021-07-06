@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const EnvironmentAffected = () => {
   const reportedTo = [
     "Internal Leadership",
@@ -102,8 +101,8 @@ const EnvironmentAffected = () => {
     "Were There Any Spills ?": "Details of Spills Affected",
     "Were There Any Release ?": "Details of Release Affected",
     "Were There Any Impact on Wildlife ?": "Details of Wildlife Affected",
-    "Were There Any Waterbody Affected ?": "Details of Waterbody Affected"
-  })
+    "Were There Any Waterbody Affected ?": "Details of Waterbody Affected",
+  });
   const [form, setForm] = useState([
     {
       envQuestion: "Were There Any Spills ?",
@@ -186,19 +185,16 @@ const EnvironmentAffected = () => {
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );
     } else {
-      
-
-      for (let i = 0; i < form.length; i++) {
-        const { error, isValid } = EnvironmentValidate(form[i]);
+      const { error, isValid } = EnvironmentValidate(form);
       setError(error);
-      if(isValid){
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/environment/`,
-          form[i]
-        );
-      }
+      if(isValid === true){
+        for (let i = 0; i < form.length; i++) {
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/environment/`,
+            form[i]
+          );
         
       }
       const temp = incidentsListData;
@@ -210,16 +206,16 @@ const EnvironmentAffected = () => {
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-      if(id){
+      if (id) {
         history.push(
           `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-        ); 
-      }else{
+        );
+      } else {
         history.push(
           "/app/incident-management/registration/initial-notification/reporting-and-notification/"
         );
       }
-     
+      }
     }
   };
 
@@ -322,11 +318,11 @@ const EnvironmentAffected = () => {
                   <Grid item md={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
-                        id={`waterbody-details-update-${key+1}`}
+                        id={`waterbody-details-update-${key + 1}`}
                         multiline
                         rows="3"
                         variant="outlined"
-                        label={` Details of ${env.envQuestion.slice(14,-2)}`}
+                        label={` Details of ${env.envQuestion.slice(14, -2)}`}
                         error={error && error.envAnswerDetails}
                         helperText={
                           error && error.envAnswerDetails
@@ -352,12 +348,14 @@ const EnvironmentAffected = () => {
               <>
                 {/* spills question and option */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset"
+                  error={error && error[`envQuestionOption${[0]}`]}
+                  >
+
                     <FormLabel component="legend">
-                      Were There Any Spills ?
+                      Were There Any Spills ?*
                     </FormLabel>
                     <RadioGroup
-                    
                       className={classes.inlineRadioGroup}
                       aria-label="isspills"
                       name="isspills"
@@ -378,7 +376,6 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    
                   </FormControl>
                 </Grid>
 
@@ -400,9 +397,11 @@ const EnvironmentAffected = () => {
 
                 {/* relase question and answer */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset"
+                   error={error && error[`envQuestionOption${[1]}`]}
+                  >
                     <FormLabel component="legend">
-                      Were There Any Release ?
+                      Were There Any Release ?*
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -448,9 +447,11 @@ const EnvironmentAffected = () => {
 
                 {/* wildlife imapact question and answer */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset"
+                   error={error && error[`envQuestionOption${[2]}`]}
+                  >
                     <FormLabel component="legend">
-                      Were There Any Impact on Wildlife ?
+                      Were There Any Impact on Wildlife ?*
                     </FormLabel>
 
                     <RadioGroup
@@ -500,9 +501,11 @@ const EnvironmentAffected = () => {
                 {/* waterbody question and answer */}
 
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset"
+                   error={error && error[`envQuestionOption${[3]}`]}
+                  >
                     <FormLabel component="legend">
-                      Were There Any Waterbody Affected ?
+                      Were There Any Waterbody Affected ?*
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}

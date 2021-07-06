@@ -104,10 +104,7 @@ const EqiptmentAffected = () => {
     const { value } = e.target;
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
-    setEquipmentListData(temp)
-
-  
-
+    await setEquipmentListData(temp)
   };
 
   // hablde Remove
@@ -248,7 +245,7 @@ const EqiptmentAffected = () => {
       }
     }
   };
-  
+
   // fetch incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
