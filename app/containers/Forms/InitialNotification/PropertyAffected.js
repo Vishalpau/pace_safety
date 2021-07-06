@@ -214,35 +214,38 @@ const PropertyAffected = () => {
         );
         // If api success
         if (status === 201) {
-          if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/equipment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/summary/summary/"
-            );
+          if(id){
+            if (nextPath.equipmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+              );
+            } else if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              );
+            } else {
+              history.push(
+                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+              );
+            }
           }
-        } else {
-          if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/equipment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-            );
+          else{
+            if (nextPath.equipmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/equipment-affected/"
+              );
+            } else if (nextPath.environmentAffect === "Yes") {
+              history.push(
+                "/app/incident-management/registration/initial-notification/environment-affected/"
+              );
+            } else {
+              history.push(
+                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+              );
+            }
           }
+          
         }
-
         // If no is selected on form.
       } else {
         const temp = incidentsListData;
@@ -396,8 +399,8 @@ const PropertyAffected = () => {
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
-                              id="person-type"
-                              label="Property Type"
+                              id={`property-type${index}`}
+                              label="Person type"
                               value={property.propertyType || ""}
                               onChange={(e) =>
                                 handleUpdateProperty(
@@ -427,7 +430,7 @@ const PropertyAffected = () => {
                         <Grid item md={6}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                            id="name-affected"
+                            id={`other-property${index}`}
                             variant="outlined"
                             label="If Others, Describe"
                             className={classes.formControl}
@@ -446,7 +449,7 @@ const PropertyAffected = () => {
                         <Grid item md={12}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                            id="name-affected"
+                            id={`damage-property${index}`}
                             variant="outlined"
                             label="Describe the Damage"
                             className={classes.formControl}
@@ -482,10 +485,10 @@ const PropertyAffected = () => {
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
-                              id="person-type"
-                              label="Property Type"
-                              value={value.propertyType || ""}
-                              onChange={(e) => {
+                              id={`person-type${index+1}`}
+                              label="Person type"
+                              value = {value.propertyType || ''}
+                              onChange={(e) =>{
                                 handlePropertyType(e, index, "propertyType");
                                 setIsOther(e.target.value !== "Other");
                               }}
@@ -513,7 +516,7 @@ const PropertyAffected = () => {
 
                         <Grid item md={6}>
                           <TextField
-                            id="name-affected"
+                            id={`other-property${index+1}`}
                             variant="outlined"
                             label="If Others, Describe"
                             value={value.propertyOtherType || ""}
@@ -537,12 +540,16 @@ const PropertyAffected = () => {
                               )
                             }
                           />
+                         
+                          {error && error[`propertyOtherType${[index]}`] && (
+                            <p>{error[`propertyOtherType${[index]}`]}</p>
+                          )}
                         </Grid>
 
                         <Grid item md={12}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                            id="name-affected"
+                           id={`describe-damage${index+1}`}
                             variant="outlined"
                             error={error && error[`damageDetails${[index]}`]}
                             helperText={
@@ -587,11 +594,11 @@ const PropertyAffected = () => {
             <Grid item md={12}>
               {detailsOfPropertyAffect === "Yes" ? null : (
                 <TextField
-                  id="comments"
+                  id="describe-any-actions-taken"
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe Any Actions Taken"
+                  label="Describe Property Affected"
                   className={classes.fullWidth}
                   defaultValue={incidentsListData.propertyDamagedComments}
                   onChange={(e) => {

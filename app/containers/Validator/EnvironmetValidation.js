@@ -8,17 +8,22 @@ function EnvironmentValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].envQuestion.toString())) {
-      error[`envQuestion${[i]}`] = "This Field is Empty";
+      error[`envQuestion${[i]}`] = "Please choose enviornment question.";
+      isValid = false;
+    }
+  
+    if (validator.isEmpty(data[i].envAnswerDetails.toString())) {
+      error[`envAnswerDetails${[i]}`] = "Please enter enviornment answer details.";
+      isValid = false;
+    }
+    if (validator.isEmpty(data[i].envQuestionOption.toString())) {
+      error[`envQuestionOption${[i]}`] = "Please enter enviornment answer details.";
       isValid = false;
     }
 
-    if (validator.isEmpty(data[i].envAnswerDetails.toString())) {
-      error[`envAnswerDetails${[i]}`] = "This Field is Empty";
-      isValid = false;
-    }
   }
 
-  console.log(error);
+  console.log(error,isValid);
   return { error, isValid };
 }
 

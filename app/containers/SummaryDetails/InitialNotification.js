@@ -525,7 +525,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                      {envData.envQuestion}
+                    {key+1}{" "}  {envData.envQuestion}
                       </Typography>
 
                       <Typography
@@ -535,12 +535,15 @@ const IncidentDetailsSummary = () => {
                       >
                         {envData.envQuestionOption}
                       </Typography>
-                      <Typography
-                        variant="p"
+                     
+                    </Grid>
+                    <Grid item md={12}>
+                    <Typography
+                        variant="body"
                         color="textSecondary"
                         className={Fonts.labelValue}
                       >
-                        {envData.envAnserDetails}
+                        {"Answer Details :-"}{" "}{envData.envAnswerDetails}
                       </Typography>
                     </Grid>
                  </Grid>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -6,30 +6,55 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import DateFnsUtils from "@date-io/date-fns";
+import MomentUtils from "@date-io/moment";
+import {
+  TimePicker,
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+  KeyboardTimePicker,
+} from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Icon from "@material-ui/core/Icon";
+import Input from "@material-ui/core/Input";
+import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import FormSideBar from "../FormSideBar";
+import { PapperBlock } from "dan-components";
+import { MaterialDropZone } from "dan-components";
+import { DropzoneArea } from "material-ui-dropzone";
+import { DropzoneDialogBase } from "material-ui-dropzone";
+import FormLabel from "@material-ui/core/FormLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import CloseIcon from "@material-ui/icons/Close";
+import moment from "moment";
+import { useHistory, useParams } from "react-router";
 
+import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
+
+import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
-import PeopleValidate from "../../Validator/PeopleValidation";
-import { useHistory } from "react-router";
+import ReportingValidation from "../../Validator/ReportingValidation";
 import api from "../../../utils/axios";
+import UploadInputAll from "../demos/UploadInputAll";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: "100%",
+    minWidth: "100%",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -55,451 +80,671 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
-  inlineRadioGroup: {
-    flexDirection: "row",
-    gap: "1.5rem",
-  },
 }));
-const UpdatePeoplesAffected = () => {
-  // const [form, setForm] = useState({
-  //   detailindividualeffected: "",
-  //   affectedpersons: {
-  //     persontype: "",
-  //     department: "",
-  //     name: "",
-  //     idnumber: "",
-  //     ismedicalcare: "",
-  //     offsiteassesment: "",
-  //     locationdetails: "",
-  //   },
-  //   describeactiontaken: "",
-  // });
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+
+const UploadInputImg = () => {
+  const [files] = useState([]);
+
+  return (
+    <Fragment>
+      <div>
+        <MaterialDropZone
+          acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
+          files={files}
+          showPreviews
+          maxSize={5000000}
+          filesLimit={5}
+          text="Drag and drop image(s) here or click"
+        />
+      </div>
+    </Fragment>
   );
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const radioDecide = ["Yes", "No"];
-  const radioDecideNew = ["Yes", "No", "N/A"];
-  const classes = useStyles();
-  const history = useHistory();
+};
 
-  const [personAffect, setPersonAffect] = useState("No");
-  const [individualAffectValue, setIndividualAffecctValue] = useState([]);
-  const [personTypeValue, setPersonTypeValue] = useState([]);
-  const [departmentValue, setDepartmentValue] = useState([]);
-  const [medicalCareValue, setMedicalCareValue] = useState([]);
-
-  const [form, setForm] = useState([
+const ReportingAndNotification = () => {
+  const [files, setFiles] = useState([]);
+  const [error, setError] = useState({});
+  const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [reportsListData, setReportListData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [lateReport, SetLateReport] = useState(true);
+  const [clearedDate, handleClearedDateChange] = useState(null);
+  const [reportedTo, setReportableTo] = useState([]);
+  const [reportId, setReportId] = useState([]);
+  const [reportOtherData, setReportOtherData] = useState("");
+  let [reportedToObj, setReportedToObj] = useState([]);
+  const [evidanceForm, setEvidanceForm] = useState([
     {
-      personType: "",
-      personDepartment: "",
-      personName: "",
-      personIdentification: "",
-      personMedicalCare: "",
-      workerOffsiteAssessment: "",
-      locationAssessmentCenter: "",
+      evidenceCheck: "Yes",
+      evidenceNumber: "string",
+      evidenceCategory: "Initial Evidence",
+      evidenceRemark: "",
+      evidenceDocument: "",
+      status: "Active",
       createdBy: 1,
-      fkIncidentId: 3,
+      updatedBy: 1,
+      fkIncidentId: localStorage.getItem(""),
     },
   ]);
-  const addNewPeopleDetails = () => {
-    // alert('ram')
-    setForm([
-      ...form,
-      {
-        personType: "",
-        personDepartment: "",
-        personName: "",
-        personIdentification: "",
-        personMedicalCare: "",
-        workerOffsiteAssessment: "",
-        locationAssessmentCenter: "",
-        createdBy: 1,
-        fkIncidentId: localStorage.getItem("fkincidentId"),
-      },
-    ]);
-  };
-  const handleForm = (e, key, fieldname) => {
-    const temp = [...form];
-    const value = e.target.value;
-    temp[key][fieldname] = value;
-    console.log(temp);
-    setForm(temp);
-  };
 
-  const handleNext = async () => {
-    console.log(form);
-    const { error, isValid } = PeopleValidate(form);
-    setError(error);
-    console.log(error, isValid);
-    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
-    console.log(nextPath);
+  const { id } = useParams();
 
-    if (personAffect === "Yes") {
-      for (var i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
-          form[i]
-        );
-      }
+  const [form, setForm] = useState({
+    reportedto: [],
+    isnotificationsent: "",
+    fileupload: "",
+    supervisorname: "",
+    othername: "",
+    reportingdate: null,
+    reportingtime: null,
+    reportedby: "",
+    others: "",
+    latereporting: "",
+    additionaldetails: "",
+  });
 
-      if (nextPath.propertyAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/property-affected/"
-        );
-      } else {
-        if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else {
-          if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-            );
-          }
-        }
-      }
+  const history = useHistory();
+
+  const notificationSent = ["Manage", "SuperVisor"];
+  const selectValues = [1, 2, 3, 4, "Other"];
+  const [selectedTime, setSelectedTime] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
+  const [otherdata, setOtherData] = useState("");
+  const [fileNames, setFileNames] = useState("");
+  const [reportData, setReportData] = useState([]);
+
+  const handelTimeCompare = async (e) => {
+    let rpTime = form.reportingtime;
+    let rpDate = form.reportingdate;
+    let startDate = `${rpDate} ${rpTime}`;
+    // let startDate = form.reportingdate.concat(form.reportingtime)
+    var start_date = moment(
+      form.reportingdate || incidentsListData.incidentReportedOn,
+      "YYYY-MM-DD HH:mm:ss"
+    );
+    var end_date = moment(new Date(), "YYYY-MM-DD HH:mm:ss");
+    var duration = moment.duration(end_date.diff(start_date));
+    var Hours = duration.asHours();
+    if (Hours > 4) {
+      await SetLateReport(true);
     } else {
-      if (nextPath.propertyAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/property-affected/"
-        );
-      } else {
-        if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/eqiupment-affected/"
+      await SetLateReport(false);
+    }
+  };
+
+  const handleDateChange = (date) => {
+    setForm({
+      ...form,
+      reportingdate: date,
+    });
+  };
+
+  const handelTimeChange = async (date) => {
+    const onlyTime = moment(date).format("HH:mm:ss");
+    await setForm({
+      ...form,
+      reportingtime: onlyTime,
+    });
+    setSelectedTime(date);
+  };
+
+  const handleUpdateIncidentDetails = async () => {
+    // const { error, isValid } = ReportingValidation(form);
+    // setError(error);
+    // getting fileds for update
+    const fkid = localStorage.getItem("fkincidentId");
+    const temp = incidentsListData;
+    temp.supervisorByName =
+      form.supervisorname || incidentsListData.supervisorByName;
+    temp.supervisorById = 1;
+    temp.incidentReportedOn =
+      moment(form.reportingdate).toISOString() ||
+      incidentsListData.incidentReportedOn;
+    temp.incidentReportedByName =
+      form.reportedby || incidentsListData.incidentReportedByName;
+    temp.incidentReportedById = 1;
+    temp.reasonLateReporting =
+      form.latereporting || incidentsListData.reasonLateReporting;
+    temp.notificationComments =
+      form.additionaldetails || incidentsListData.notificationComments;
+    temp.updatedAt = moment(new Date()).toISOString();
+    temp.updatedBy = "0";
+
+    console.log(form);
+
+    // put call for update incident Details
+    const res = await api.put(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+      temp
+    );
+  };
+
+  const handleRemoveExitingReport = async () => {
+    // Delete existing report to and create new ones.
+    if (reportedToObj.length > 0) {
+      for (let key in reportedToObj) {
+        let reportId = reportedToObj[key].id;
+
+        try {
+          const res = await api.delete(
+            `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-        } else {
-          if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-            );
-          }
-        }
+          console.log(res);
+        } catch (err) {}
       }
     }
   };
-  const [error, setError] = useState({});
 
-  const fetchIndividualAffectValue = async () => {
-    const res = await api.get("api/v1/lists/8/value");
-    const result = res.data.data.results;
-    setIndividualAffecctValue(result);
+  // handleInitailEvidance
+  const handleInitialEvidance = async () => {
+    // Create new Evidance
+    const formData = new FormData();
+    for (let i = 0; i < evidanceForm.length; i++) {
+      formData.append("evidenceDocument", evidanceForm[i].evidenceDocument);
+      formData.append("evidenceDocument", evidanceForm[i].evidenceRemark);
+      formData.append("evidenceCheck", "Yes");
+      formData.append("evidenceCategory", "Initial Evidence ");
+      formData.append("createdBy", "1");
+      formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
+      const evidanceResponse = await api.post(
+        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/`,
+        formData
+      );
+    }
   };
 
-  const fetchPersonTypeValue = async () => {
-    const res = await api.get("api/v1/lists/9/value");
-    const result = res.data.data.results;
-    setPersonTypeValue(result);
+  const handelNext = async (e) => {
+    // set in reportTo otherData
+    if (reportOtherData !== "") {
+      await setForm(form.reportedto.push(reportOtherData));
+    }
+
+    // update incident details
+    await handleUpdateIncidentDetails();
+
+    // handle Initail evidance
+    await handleInitialEvidance();
+
+    // handle remove existing report
+    await handleRemoveExitingReport();
+
+    let status = 0;
+    // Create new entries.
+    for (let key in form.reportedto) {
+      let name = form.reportedto[key];
+
+      try {
+        const res = await api.post(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/reports/`,
+          {
+            reportTo: name,
+            createdBy: 1,
+            fkIncidentId: localStorage.getItem("fkincidentId") || id,
+          }
+        );
+        status = res.status;
+      } catch (err) {}
+    }
+
+    if (status === 201) {
+      history.push(
+        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+          "fkincidentId"
+        )}`
+      );
+    }
   };
 
-  const fetchDepartmentValue = async () => {
-    const res = await api.get("api/v1/lists/10/value");
-    const result = res.data.data.results;
-    setDepartmentValue(result);
+  const handelReportedTo = async (e, value, type) => {
+    if ((type = "option")) {
+      if (e.target.checked == false) {
+        const newData = form.reportedto.filter((item) => item !== value);
+
+        await setForm({
+          ...form,
+          reportedto: newData,
+        });
+
+        // let newReportedTo = [];
+      } else {
+        await setForm({
+          ...form,
+          reportedto: [...form.reportedto, value],
+        });
+      }
+    }
   };
 
-  const fetchPersonTakenMedicalCare = async () => {
-    const res = await api.get("api/v1/lists/11/value");
+  // handle New Evidance
+
+  const handleNewEvidance = () => {
+    setEvidanceForm([
+      ...evidanceForm,
+      {
+        evidenceCheck: "Yes",
+        evidenceNumber: "string",
+        evidenceCategory: "Initial Evidence",
+        evidenceRemark: "",
+        evidenceDocument: "",
+        status: "Active",
+        createdBy: 1,
+        updatedBy: 1,
+        fkIncidentId: localStorage.getItem(""),
+      },
+    ]);
+  };
+
+  // handle form
+  const handleEvidanceForm = async (e, key, fieldname) => {
+    const temp = [...evidanceForm];
+    const { value } = e.target;
+    if (fieldname === "evidenceDocument") {
+      temp[key][fieldname] = e.target.files[0];
+    } else {
+      temp[key][fieldname] = value;
+    }
+
+    await setEvidanceForm(temp);
+  };
+  // handle remove evidance
+  const handleRemoveEvidance = async (key) => {
+    const temp = [...evidanceForm];
+    const newData = temp.filter((item, index) => index !== key);
+    await setEvidanceForm(newData);
+  };
+  //  Fetch checkbox value
+  const fetchReportableTo = async () => {
+    const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
-    console.log(result);
-    setMedicalCareValue(result);
+    await setReportableTo(result);
+  };
+
+  // fetch reportList
+  const fetchReportsDataList = async () => {
+    await fetchReportableTo();
+    const res = await api.get(`/api/v1/incidents/${id}/reports/`);
+    const result = res.data.data.results;
+    if (result.length > 0) {
+      let reportToData = [];
+      for (let key in result) {
+        reportToData.push(result[key]["reportTo"]);
+      }
+      for (let i in reportToData) {
+        if (
+          reportToData[i] !== "Internal Leadership" ||
+          reportToData[i] !== "OHS" ||
+          reportToData[i] !== "Environment Officer" ||
+          reportToData[i] !== "Police" ||
+          reportToData[i] !== "Others"
+        ) {
+          await setReportOtherData(reportToData[i]);
+        }
+      }
+      await setReportedToObj(result);
+      await setForm({ ...form, reportedto: reportToData });
+      await setReportId(result[0].id);
+    }
+
+    await setIsLoading(true);
+  };
+
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    );
+    const result = res.data.data.results;
+    const date = new Date(result.incidentReportedOn);
+    await setForm({ ...form, reportingdate: date });
+    await setIncidentsListdata(result);
+    if (!id) {
+      await setIsLoading(true);
+    }
   };
 
   useEffect(() => {
-    fetchIndividualAffectValue();
-    fetchPersonTypeValue();
-    fetchDepartmentValue();
-    fetchPersonTakenMedicalCare();
+    fetchIncidentsData();
+    if (id) {
+      fetchReportsDataList();
+    } else {
+      fetchReportableTo();
+    }
   }, []);
 
+  const classes = useStyles();
   return (
-    <div>
-      <Container>
-        <Paper>
-          <Box padding={3} bgcolor="background.paper">
-            <Box marginBottom={5}>
-              <FormHeader selectedHeader={"Initial notification"} />
-            </Box>
-            <Box borderBottom={1} marginBottom={2}>
-              <Typography variant="h6" gutterBottom>
-                Details of Persons Affected
-              </Typography>
-            </Box>
-            <Grid container spacing={3}>
-              <Grid container item md={9} spacing={3}>
-                <Grid item lg={12} md={6} sm={6}>
-                  <Typography variant="body2">
-                    Do you have details of individual effected?
-                  </Typography>
-                  {/* <p>Do you have details of individual effected?</p>   */}
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="personAffect"
-                    name="personAffect"
-                    value={personAffect}
-                    onChange={(e) => setPersonAffect(e.target.value)}
-                  >
-                    {individualAffectValue.map((value, key) => (
-                      <FormControlLabel
-                        key={key}
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                      />
-                    ))}
-                    {/* {error && error.detailindividualeffected && (
-                    <p>{error.detailindividualeffected}</p>
-                  )} */}
-                  </RadioGroup>
-                </Grid>
-                {personAffect === "Yes" ? (
-                  <>
-                    <Grid item md={12}>
-                      <Box marginTop={2} marginBottom={2}>
-                        {/* <h4>Details of people Affected</h4> */}
-                        <Typography variant="h6">
-                          Details of people Affected
-                        </Typography>
-                      </Box>
-                    </Grid>
-                    {form.map((value, key) => (
-                      <>
-                        <Grid item md={6}>
-                          {/* <p>person type</p> */}
-                          <FormControl
-                            variant="outlined"
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="person-type-label">
-                              Person type
-                            </InputLabel>
-                            <Select
-                              labelId="person-type-label"
-                              id="person-type"
-                              label="Person type"
-                              onChange={(e) => handleForm(e, key, "personType")}
-                            >
-                              {personTypeValue.length !== 0
-                                ? personTypeValue.map((selectValues, key) => (
-                                    <MenuItem
-                                      key={key}
-                                      value={selectValues.inputValue}
-                                    >
-                                      {selectValues.inputLabel}
-                                    </MenuItem>
-                                  ))
-                                : null}
-                            </Select>
-                          </FormControl>
-                          {error && error[`personType${[key]}`] && (
-                            <p>{error[`personType${[key]}`]}</p>
-                          )}
-                        </Grid>
-                        <Grid item md={6}>
-                          <FormControl
-                            variant="outlined"
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="dep-label">Department</InputLabel>
-                            <Select
-                              labelId="dep-label"
-                              id="dep"
-                              label="Department"
-                              onChange={(e) =>
-                                handleForm(e, key, "personDepartment")
-                              }
-                            >
-                              {departmentValue.length !== 0
-                                ? departmentValue.map((selectValues, index) => (
-                                    <MenuItem
-                                      key={index}
-                                      value={selectValues.inputValue}
-                                    >
-                                      {selectValues.inputLabel}
-                                    </MenuItem>
-                                  ))
-                                : null}
-                            </Select>
-                          </FormControl>
-                          {error && error[`personDepartment${[key]}`] && (
-                            <p>{error[`personDepartment${[key]}`]}</p>
-                          )}
-                        </Grid>
-                        <Grid item md={6}>
-                          {/* <p>Name of people Affected</p> */}
-                          <TextField
-                            id="name-Affected"
-                            variant="outlined"
-                            label="Name of people Affected"
-                            className={classes.formControl}
-                            onChange={(e) => handleForm(e, key, "personName")}
-                          />
-                          {error && error[`personName${[key]}`] && (
-                            <p>{error[`personName${[key]}`]}</p>
-                          )}
-                        </Grid>
-                        <Grid item md={6}>
-                          {/* <p>Identification number of person</p> */}
-                          <TextField
-                            id="id-num"
-                            variant="outlined"
-                            label="Identification number of person"
-                            className={classes.formControl}
-                            onChange={(e) =>
-                              handleForm(e, key, "personIdentification")
-                            }
-                          />
-                          {error && error[`personIdentification${[key]}`] && (
-                            <p>{error[`personIdentification${[key]}`]}</p>
-                          )}
-                        </Grid>
-                        <Grid item md={12}>
-                          <div className={classes.spacer}>
-                            {/* <p>Was that person taken to medical care?</p> */}
-                            <Typography variant="body2">
-                              Was that person taken to medical care?
-                            </Typography>
-                            <RadioGroup
-                              className={classes.inlineRadioGroup}
-                              aria-label="personAffect"
-                              name="personAffect"
-                              value={value.personMedicalCare}
-                              onChange={(e) =>
-                                handleForm(e, key, "personMedicalCare")
-                              }
-                            >
-                              {medicalCareValue.length !== 0
-                                ? medicalCareValue.map((value, index) => (
-                                    <FormControlLabel
-                                      key={index}
-                                      value={value.inputValue}
-                                      control={<Radio />}
-                                      label={value.inputLabel}
-                                    />
-                                  ))
-                                : null}
-                            </RadioGroup>
-                          </div>
-                          {error && error[`personMedicalCare${[key]}`] && (
-                            <p>{error[`personMedicalCare${[key]}`]}</p>
-                          )}
-                        </Grid>
-                        <Grid item md={6}>
-                          {/* <p>Worker taken offisite for further assesment?</p> */}
-                          <TextField
-                            id="worker-taken"
-                            variant="outlined"
-                            label="Worker taken offisite for further assesment?"
-                            className={classes.formControl}
-                            onChange={(e) =>
-                              handleForm(e, key, "workerOffsiteAssessment")
-                            }
-                          />
-                          {error &&
-                            error[`workerOffsiteAssessment${[key]}`] && (
-                              <p>{error[`workerOffsiteAssessment${[key]}`]}</p>
-                            )}
-                        </Grid>
-                        <Grid item md={6}>
-                          {/* <p>Location details of assesment center</p> */}
-                          <TextField
-                            variant="outlined"
-                            id="location-details"
-                            label="Location details of assesment center?"
-                            className={classes.formControl}
-                            onChange={(e) =>
-                              handleForm(e, key, "locationAssessmentCenter")
-                            }
-                          />
-                          {error &&
-                            error[`locationAssessmentCenter${[key]}`] && (
-                              <p>{error[`locationAssessmentCenter${[key]}`]}</p>
-                            )}
-                        </Grid>
-                      </>
-                    ))}
-                    <Grid item md={12}>
-                      <button
-                        className={classes.textButton}
-                        onClick={() => addNewPeopleDetails()}
-                      >
-                        <PersonAddIcon /> Add details of another person Affected
-                      </button>
-                    </Grid>
-                  </>
-                ) : null}
-                <Grid item md={12}>
-                  {/* <p>Comments</p> */}
-                  <TextField
-                    id="comments"
-                    multiline
-                    rows="3"
-                    variant="outlined"
-                    label="Describe any actions taken"
-                    className={classes.fullWidth}
+    <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
+      {isLoading ? (
+        <Grid container spacing={3}>
+          <Grid container item md={9} spacing={3}>
+            <Grid item md={12}>
+              <FormControl component="fieldset" className={classes.formControl}>
+                <FormLabel component="legend">Reportable to</FormLabel>
+
+                <FormGroup>
+                  {reportedTo.map((value, key) => (
+                    <FormControlLabel
+                      id={key}
+                      key={key}
+                      value={value.inputValue}
+                      control={<Checkbox />}
+                      label={value.inputValue}
+                      checked={
+                        form.reportedto.includes(value.inputValue)
+                          ? true
+                          : false
+                      }
+                      onChange={(e) => {
+                        handelReportedTo(e, value.inputValue, "option");
+                      }}
+                    />
+                  ))}
+                  {form.reportedto.includes("Others") ? (
+                    <TextField
+                      id="Other"
+                      variant="outlined"
+                      label="Other"
+                      defaultValue={reportOtherData}
+                      className={classes.formControl}
+                      onChange={(e) => {
+                        setReportOtherData(e.target.value);
+                      }}
+                    />
+                  ) : null}
+                </FormGroup>
+              </FormControl>
+            </Grid>
+
+            <Grid item lg={12} md={6} sm={6}>
+              {/* <p>Notification to be sent</p> */}
+              <FormControl
+                component="fieldset"
+                required
+                error={error && error.isnotificationsent}
+              >
+                <FormLabel component="legend">
+                  Notification to be sent
+                </FormLabel>
+                {notificationSent.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    control={<Checkbox />}
+                    label={value}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        isnotificationsent: e.target.value,
+                      });
+                    }}
                   />
-                  {/* {error && error.describeactiontaken && (
-                    <p>{error.describeactiontaken}</p>
-                  )} */}
-                </Grid>
-                <Grid item md={6}>
+                ))}
+                {error && error.isnotificationsent && (
+                  <FormHelperText>{error.isnotificationsent}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item lg={12} justify="flex-start">
+              {/* <p>Initial Evidences</p> */}
+
+              <Box marginTop={3} marginBottom={4}>
+                <Typography variant="h6" gutterBottom>
+                  Initial Evidences
+                </Typography>
+              </Box>
+              {/* <UploadInputAll/> */}
+
+              {evidanceForm.map((item, index) => (
+                <>
+                  <input
+                    type="file"
+                    onChange={(e) =>
+                      handleEvidanceForm(e, index, "evidenceDocument")
+                    }
+                    showPreviews
+                  />
+                  <TextField
+                    id="evidanceRemark"
+                    variant="outlined"
+                    label="evidanceRemark"
+                    className={classes.formControl}
+                    onChange={(e) =>
+                      handleEvidanceForm(e, index, "evidenceRemark")
+                    }
+                  />
                   <Button
-                    href="/app/incident-management/registration/initial-notification/incident-details/"
                     variant="contained"
                     color="primary"
                     className={classes.button}
+                    onClick={() => handleRemoveEvidance(index)}
                   >
-                    Previous
+                    Remove
                   </Button>
-                  <Button
-                    // href={
-                    //   Object.keys(error).length === 0
-                    //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/property-Affected/"
-                    //     : "#"
-                    // }
-                    onClick={() => handleNext()}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    // onClick={(e) => handelNext(e)}
-                  >
-                    Next
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item md={3}>
-                <FormSideBar
-                  listOfItems={INITIAL_NOTIFICATION_FORM}
-                  selectedItem={"Peoples Affected"}
+                </>
+              ))}
+              {error && error.fileupload ? <p>{error.fileupload}</p> : null}
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handleNewEvidance(e)}
+              >
+                Add
+              </Button>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl
+                variant="outlined"
+                required
+                className={classes.formControl}
+                error={error && error.reportedby}
+              >
+                <InputLabel id="supervisorname-label">
+                  Supervisor Name
+                </InputLabel>
+                <Select
+                  labelId="supervisorname-label"
+                  id="supervisorname"
+                  label="Supervisor Name"
+                  defaultValue={
+                    incidentsListData.supervisorByName
+                      ? incidentsListData.supervisorByName
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      supervisorname: e.target.value.toString(),
+                    });
+                  }}
+                >
+                  {selectValues.map((value, index) => (
+                    <MenuItem key={index} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {error && error.reportedby ? (
+                  <FormHelperText>{error.reportedby}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              {form.supervisorname === "Other" ? (
+                <TextField
+                  id="others"
+                  variant="outlined"
+                  label="Others"
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      reportedby: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+              {error && error.othername ? <p>{error.othername}</p> : null}
+            </Grid>
+
+            <Grid item md={6}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDateTimePicker
+                  className={classes.formControl}
+                  id="date-picker-dialog"
+                  error={error && error.reportingdate}
+                  helperText={
+                    error && error.reportingdate ? error.reportingdate : null
+                  }
+                  format="yyyy/MM/dd HH:mm"
+                  required
+                  inputVariant="outlined"
+                  label="Reporting Date"
+                  value={
+                    form.reportingdate || incidentsListData.incidentReportedOn
+                  }
+                  onChange={(date) => {
+                    handleDateChange(date);
+                    handelTimeCompare();
+                  }}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date",
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl
+                variant="outlined"
+                required
+                className={classes.formControl}
+                error={error && error.reportedby}
+              >
+                <InputLabel id="reportedBy-label">Reported By</InputLabel>
+                <Select
+                  labelId="reportedBy-label"
+                  id="reportedBy"
+                  label="Reported By"
+                  defaultValue={
+                    incidentsListData.incidentReportedByName
+                      ? incidentsListData.incidentReportedByName
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      reportedby: e.target.value.toString(),
+                    });
+                  }}
+                >
+                  {selectValues.map((value, index) => (
+                    <MenuItem key={index} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {error && error.reportedby ? (
+                  <FormHelperText>{error.reportedby}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              {form.reportedby === "Other" ? (
+                <TextField
+                  id="others"
+                  variant="outlined"
+                  label="Others"
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      reportedby: e.target.value,
+                    });
+                  }}
+                />
+              ) : null}
+            </Grid>
+            {lateReport ? (
+              <Grid item md={12}>
+                <TextField
+                  id="reason"
+                  variant="outlined"
+                  label="Resaon for Reporting Later than 4 Hours"
+                  multiline
+                  error={error && error.latereporting}
+                  required
+                  helperText={
+                    error && error.latereporting ? error.latereporting : null
+                  }
+                  rows="4"
+                  defaultValue={incidentsListData.reasonLateReporting}
+                  className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      latereporting: e.target.value.toString(),
+                    });
+                  }}
                 />
               </Grid>
+            ) : null}
+
+            <Grid item md={12}>
+              <TextField
+                id="additionalDetails"
+                variant="outlined"
+                label="Additional Details if Any"
+                multiline
+                rows="4"
+                defaultValue={incidentsListData.notificationComments}
+                className={classes.fullWidth}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    additionaldetails: e.target.value.toString(),
+                  });
+                }}
+              />
             </Grid>
-          </Box>
-        </Paper>
-      </Container>
-    </div>
+
+            <Grid item md={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => history.goBack()}
+              >
+                Previous
+              </Button>
+              <Button
+                type="button"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelNext(e)}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={INITIAL_NOTIFICATION_FORM}
+              selectedItem={"Reporting and Notification"}
+            />
+          </Grid>
+        </Grid>
+      ) : (
+        <h1>Loading...</h1>
+      )}
+    </PapperBlock>
   );
 };
-export default UpdatePeoplesAffected;
+
+export default ReportingAndNotification;
