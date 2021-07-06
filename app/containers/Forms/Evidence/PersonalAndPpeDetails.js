@@ -53,7 +53,7 @@ const PersonalAndPpeDetails = () => {
   const [ppeData, setPpeData] = useState([
     {
       questionCode: "PPE-08",
-      question: "PPE Worn Properly ?",
+      question: "PPE worn properly?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -64,7 +64,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-09",
-      question: "PPE in Good Shape ?",
+      question: "PPE in good shape?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -75,7 +75,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-10",
-      question: "PPE Proper Fit ?",
+      question: "PPE proper fit?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -86,7 +86,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-11",
-      question: " PPE Appropriate for Task ?",
+      question: " PPE appropriate for task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -97,7 +97,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-12",
-      question: "Employee Self Supervised",
+      question: "Employee self supervised?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -108,7 +108,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-13",
-      question: "Supervisor Present at Site",
+      question: "Supervisor present at site?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -119,7 +119,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-14",
-      question: "Supervisor Provided Clear Detail of Work",
+      question: "Supervisor provided clear detail of work?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -130,7 +130,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-15",
-      question: "Supervisor Provided Detail Work Package",
+      question: "Supervisor provided detail work package?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -141,7 +141,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-16",
-      question: "Did Supervisor Conducted I-Care Observation",
+      question: "Did supervisor conducted I-Care observation?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -152,7 +152,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-17",
-      question: "Was Flag Person Required for this Job ?",
+      question: "Was flag person required for this job?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -163,7 +163,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-18",
-      question: "Flag Person Trained/Competent",
+      question: "Flag person trained/competent?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -174,7 +174,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-19",
-      question: "Was Flag Person Present",
+      question: "Was flag person present?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -185,7 +185,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-20",
-      question: " Metal on Metal Incident",
+      question: "Metal on metal incident?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -196,7 +196,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-21",
-      question: "Was Person in the Line of Fire ?",
+      question: "Was person in the line of fire?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -270,18 +270,16 @@ const PersonalAndPpeDetails = () => {
     }
     await setIsLoading(true);
   };
-  console.log(ppeList)
+  console.log(ppeList);
   const fetchppeDetails = async () => {
     const res = await api.get(
       `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
     );
     const result = res.data.data.results;
-    console.log(result)
-    
+    console.log(result);
+
     await setPpeList(result);
-    
-      
-    
+
     await setIsLoading(true);
   };
 
@@ -303,7 +301,7 @@ const PersonalAndPpeDetails = () => {
   }, []);
 
   return (
-    <PapperBlock title=" Personal and PPE" icon="ion-md-list-box">
+    <PapperBlock title="Personal and PPE Details" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -326,7 +324,7 @@ const PersonalAndPpeDetails = () => {
                         error={value.error}
                       >
                         <FormLabel component="legend">
-                          {value.question} 
+                          {value.question}
                         </FormLabel>
                         <RadioGroup
                           className={classes.inlineRadioGroup}
@@ -353,7 +351,9 @@ const PersonalAndPpeDetails = () => {
                   </>
                 ))}
                 <Grid item md={12}>
-                  <Typography variant="h6">Supervision</Typography>
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                    <Typography variant="h6">Supervisor</Typography>
+                  </Box>
                 </Grid>
                 {ppeData.slice(4, 9).map((value, index) => (
                   <>
@@ -393,7 +393,9 @@ const PersonalAndPpeDetails = () => {
                   </>
                 ))}
                 <Grid item md={12}>
-                  <Typography variant="h6">Flag Person</Typography>
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                    <Typography variant="h6">Flag Person</Typography>
+                  </Box>
                 </Grid>
                 {ppeData.slice(9, 12).map((value, index) => (
                   <>
@@ -434,7 +436,7 @@ const PersonalAndPpeDetails = () => {
                 ))}
 
                 <Grid item md={12}>
-                  <Box marginBottom={3} marginTop={4}>
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">Other</Typography>
                   </Box>
                 </Grid>
@@ -895,7 +897,7 @@ const PersonalAndPpeDetails = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Personal and PPE Details"
+              selectedItem="Personal and PPE details"
               deleteForm={[1, 2, 3]}
             />
           </Grid>

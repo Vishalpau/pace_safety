@@ -6,42 +6,42 @@ function HazardiousActsValidation(data) {
   console.log(data.supervision.rcaSubType);
 
   if (validator.isEmpty(data.supervision.rcaRemark.toString())) {
-    error.supervision = "This Field is Empty";
+    error.supervision = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.workpackage.rcaRemark.toString())) {
-    error.workpackage = "This Field is Empty";
+    error.workpackage = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.equipmentMachinery.rcaRemark.toString())) {
-    error.equipmentMachinery = "This Field is Empty";
+    error.equipmentMachinery = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.behaviourIssue.rcaRemark.toString())) {
-    error.behaviourIssue = "This Field is Empty";
+    error.behaviourIssue = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.safetyIssues.rcaRemark.toString())) {
-    error.safetyIssues = "This Field is Empty";
+    error.safetyIssues = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.ergonimics.rcaRemark.toString())) {
-    error.ergonimics = "This Field is Empty";
+    error.ergonimics = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.procedures.rcaRemark.toString())) {
-    error.procedures = "This Field is Empty";
+    error.procedures = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.others.rcaRemark.toString())) {
-    error.others = "This Field is Empty";
+    error.others = "This field is empty";
     isValid = false;
   }
 

@@ -23,7 +23,7 @@ const styles = (theme) => ({
   },
   title: {
     position: "relative",
-    textTransform: "capitalize",
+    // textTransform: "capitalize",
     fontSize: 24,
     fontWeight: 400,
     // color: '#06425c',

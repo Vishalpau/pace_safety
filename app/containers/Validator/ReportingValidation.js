@@ -6,57 +6,57 @@ function ReportingValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.reportedto.toString())) {
-    error.reportedto = "This Field is Empty";
+    error.reportedto = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.isnotificationsent)) {
-    error.isnotificationsent = "This Field is Empty";
+    error.isnotificationsent = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.supervisorname)) {
-    error.supervisorname = "This Field is Empty";
+    error.supervisorname = "This field is empty";
     isValid = false;
   }
 
   // if (validator.isEmpty(data.othername)){
-  //     error.othername = "This Field is Empty"
+  //     error.othername = "This field is empty"
   //     isValid = false
   // }
 
   if (data.fileupload.length == 0) {
-    error.fileupload = "This Field is Empty";
+    error.fileupload = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.reportingdate || "")) {
-    error.reportingdate = "This Field is Empty";
+    error.reportingdate = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.reportingtime || "")) {
-    error.reportingtime = "This Field is Empty";
+    error.reportingtime = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.reportedby)) {
-    error.reportedby = "This Field is Empty";
+    error.reportedby = "This field is empty";
     isValid = false;
   }
 
   if (data.reportedby == "Others" && validator.isEmpty(data.others)) {
-    error.others = "This Field is Empty";
+    error.others = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.latereporting)) {
-    error.latereporting = "This Field is Empty";
+    error.latereporting = "This field is empty";
     isValid = false;
   }
 
   // if (validator.isEmpty(data.additionaldetails)){
-  //     error.additionaldetails = "This Field is Empty"
+  //     error.additionaldetails = "This field is empty"
   //     isValid = false
   // }
 

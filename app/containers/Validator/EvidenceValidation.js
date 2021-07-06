@@ -5,15 +5,15 @@ function EvidenceValidate(data) {
   const error = {};
 
   if (validator.isEmpty(data.evidenceType.toString())) {
-    error.evidenceType = "This Field is Empty";
+    error.evidenceType = "This field is empty";
     isValid = false;
   }
   if (validator.isEmpty(data.available.toString())) {
-    error.available = "This Field is Empty";
+    error.available = "This field is empty";
     isValid = false;
   }
   if (validator.isEmpty(data.comment.toString())) {
-    error.comment = "This Field is Empty";
+    error.comment = "This field is empty";
     isValid = false;
   }
 

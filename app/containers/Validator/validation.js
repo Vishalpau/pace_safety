@@ -6,96 +6,96 @@ function validate(data) {
   const error = {};
 
   if (validator.isEmpty(data.projectname)) {
-    error.projectname = "This Field is Empty";
+    error.projectname = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.unitname)) {
-    error.unitname = "This Field is Empty";
+    error.unitname = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.incidenttype)) {
-    error.incidenttype = "This Field is Empty";
+    error.incidenttype = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (data.incidentdate === null) {
-    error.incidentdate = "This Field is Empty";
+    error.incidentdate = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.title)) {
-    error.title = "This Field is Empty";
+    error.title = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.description)) {
-    error.description = "This Field is Empty";
+    error.description = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.immediateactiontaken)) {
-    error.immediateactiontaken = "This Field is Empty";
+    error.immediateactiontaken = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.location)) {
-    error.location = "This Field is Empty";
+    error.location = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.contractor)) {
-    error.contractor = "This Field is Empty";
+    error.contractor = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.subcontractor)) {
-    error.subcontractor = "This Field is Empty";
+    error.subcontractor = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.personaffected)) {
-    error.personaffected = "This Field is Empty";
+    error.personaffected = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.propertyaffected)) {
-    error.propertyaffected = "This Field is Empty";
+    error.propertyaffected = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.equiptmenteffected)) {
-    error.equiptmenteffected = "This Field is Empty";
+    error.equiptmenteffected = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.environmentaffected)) {
-    error.environmentaffected = "This Field is Empty";
+    error.environmentaffected = "This field is empty";
     isValid = false;
   } else {
     isValid = true;
