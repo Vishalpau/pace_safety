@@ -44,7 +44,7 @@ const AdditionalDetails = () => {
   const [additionalDetailList, setAdditionalDetailList] = useState([
     {
       questionCode: "ADD-22",
-      question: "Any Part/Equiptment sent for anlysis",
+      question: "Any part/equipment sent for anlysis",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -89,8 +89,6 @@ const AdditionalDetails = () => {
   ]);
 
   const fetchActivityList = async () => {
-    console.log("sagar");
-
     const res = await api.get(`/api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
     console.log(result);
@@ -135,7 +133,7 @@ const AdditionalDetails = () => {
         )}`
       );
     }
-    localStorage.setItem("Evidence" , "Done");
+    localStorage.setItem("Evidence", "Done");
   };
 
   const handleRadioData = (e, questionCode) => {
@@ -177,7 +175,7 @@ const AdditionalDetails = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Number
+                Incident number
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentDetail.incidentNumber}
@@ -185,7 +183,7 @@ const AdditionalDetails = () => {
             </Grid>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Description
+                Incident description
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentDetail.incidentDetails}
@@ -271,7 +269,7 @@ const AdditionalDetails = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Additional Details"
+              selectedItem="Additional details"
             />
           </Grid>
         </Grid>

@@ -6,7 +6,6 @@ function ReportingValidation(data) {
   const error = {};
   const report = data.reportedto
   
-
   if(report.length === 0){
     
     error.reportedto = "Please select reportable to."
@@ -25,9 +24,10 @@ function ReportingValidation(data) {
   // }
 
   // if (validator.isEmpty(data.othername)){
-  //     error.othername = "This Field is Empty"
+  //     error.othername = "This field is empty"
   //     isValid = false
   // }
+
 
   // if (data.fileupload.length == 0) {
   //   error.fileupload = "This Field is Empty";
@@ -60,7 +60,7 @@ function ReportingValidation(data) {
   // }
 
   // if (validator.isEmpty(data.additionaldetails)){
-  //     error.additionaldetails = "This Field is Empty"
+  //     error.additionaldetails = "This field is empty"
   //     isValid = false
   // }
 

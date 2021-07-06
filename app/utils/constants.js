@@ -24,11 +24,11 @@ export const INITIAL_NOTIFICATION_FORM = {
 
 export const EVIDENCE_FORM = {
   Evidence: "/app/incident-management/registration/evidence/evidence/",
-  "Activity Detail":
+  "Activity detail":
     "/app/incident-management/registration/evidence/activity-detail/",
-  "Personal and PPE Details":
+  "Personal and PPE details":
     "/app/incident-management/registration/evidence/personal-and-ppedetails/",
-  "Additional Details":
+  "Additional details":
     "/app/incident-management/registration/evidence/additional-details/",
 };
 
@@ -95,40 +95,45 @@ export const BASIC_CAUSE_SUB_TYPE = [
   "Leadership",
   "Processes",
   "Others job factors",
-]
+];
 
-export const HAZARDIOUS_ACTS_SUB_TYPES = ["Supervision",
+export const HAZARDIOUS_ACTS_SUB_TYPES = [
+  "Supervision",
   "Workpackage",
   "equipmentMachinery",
   "behaviourIssue",
   "safetyIssues",
   "ergonimics",
   "procedures",
-  "otheracts"]
+  "otheracts",
+];
 
-export const ACTS_SUB_TYPES = ["Supervision",
+export const ACTS_SUB_TYPES = [
+  "Supervision",
   "Work package",
   "Equipment machinery",
   "Behaviour issue",
   "Safety issues",
   "Ergonimics",
   "Procedures",
-  "Other acts"]
+  "Other acts",
+];
 
 export const HAZARDIOUS_CONDITION_SUB_TYPES = [
   "warningSystem",
   "energyTypes",
   "tools",
   "safetyitems",
-  "othersconditions"]
+  "othersconditions",
+];
 
 export const CONDITION_SUB_TYPES = [
   "Warning system",
   "Energy types",
   "Tools",
   "Safety items",
-  "Others conditions"
-]
+  "Others conditions",
+];
 
 export const BASIC_CAUSE_SUB_TYPES = [
   "personal",

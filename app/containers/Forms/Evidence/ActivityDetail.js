@@ -51,7 +51,7 @@ const ActivityDetails = () => {
   const [activtyList, setActvityList] = useState([
     {
       questionCode: "AD-01",
-      question: "Did the Job Require Work Permit ?",
+      question: "Did the job require work permit ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -62,7 +62,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-02",
-      question: "If Yes, Was a Permit Completed Prior of the Job ?",
+      question: "If yes, was a permit completed prior of the job ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -73,7 +73,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-03",
-      question: "Was Per-Job Safety Discussed Head ?",
+      question: "Was per-job safety discussed head ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -84,7 +84,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-04",
-      question: "Was JHA executed for the Task ?",
+      question: "Was JHA executed for the task ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -95,7 +95,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-05",
-      question: "Was FLA Executed for the Task ?",
+      question: "Was FLA executed for the task ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -106,7 +106,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-06",
-      question: "Did Pre-Planning Identified the Hazard ?",
+      question: "Did pre-planning identified the hazard ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -117,7 +117,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-07",
-      question: "Was Per-Zone Planning Enhanced the Post-Event ?",
+      question: "Was per-zone planning enhanced the post-event ?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -235,7 +235,7 @@ const ActivityDetails = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Number
+                Incident number
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentDetail.incidentNumber}
@@ -306,7 +306,7 @@ const ActivityDetails = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Activity Detail"
+              selectedItem="Activity detail"
             />
           </Grid>
         </Grid>

@@ -5,7 +5,6 @@ function EnvironmentValidate(data) {
   let isValid = true;
   const error = {};
 
-
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].envQuestion.toString())) {
       error[`envQuestion${[i]}`] = "Please choose enviornment question.";
@@ -13,6 +12,7 @@ function EnvironmentValidate(data) {
     }
   
     if (validator.isEmpty(data[i].envAnswerDetails.toString())) {
+      error[`envAnswerDetails${[i]}`] = "This field is empty";
       error[`envAnswerDetails${[i]}`] = "Please enter enviornment answer details.";
       isValid = false;
     }
