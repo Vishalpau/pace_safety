@@ -94,6 +94,9 @@ const applicationTheme = (color, mode, direction) => ({
     MuiRadio: {
       color: "primary",
     },
+    MuiCheckbox: {
+      color: "primary",
+    },
   },
   overrides: {
     MuiAccordionDetails: {

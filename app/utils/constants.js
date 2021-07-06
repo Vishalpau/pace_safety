@@ -290,4 +290,4 @@ export const MANAGEMENTCONTROL = [
   "Inadequate Compilance and Standards",
 ];
 
-export const RCAOPTION = ["Cause analysis", "Pace cause", "Root Cause"];
+export const RCAOPTION = ["Five Why analysis", "Pace cause analysis", "Root Cause analysis"];
