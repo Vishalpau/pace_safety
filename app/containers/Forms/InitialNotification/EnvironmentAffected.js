@@ -349,11 +349,12 @@ const EnvironmentAffected = () => {
                 {/* spills question and option */}
                 <Grid item md={12}>
                   <FormControl component="fieldset"
+                  required
                   error={error && error[`envQuestionOption${[0]}`]}
                   >
 
                     <FormLabel component="legend">
-                      Were There Any Spills ?*
+                      Were There Any Spills ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -398,10 +399,11 @@ const EnvironmentAffected = () => {
                 {/* relase question and answer */}
                 <Grid item md={12}>
                   <FormControl component="fieldset"
+                  required
                    error={error && error[`envQuestionOption${[1]}`]}
                   >
                     <FormLabel component="legend">
-                      Were There Any Release ?*
+                      Were There Any Release ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -448,10 +450,11 @@ const EnvironmentAffected = () => {
                 {/* wildlife imapact question and answer */}
                 <Grid item md={12}>
                   <FormControl component="fieldset"
+                  required
                    error={error && error[`envQuestionOption${[2]}`]}
                   >
                     <FormLabel component="legend">
-                      Were There Any Impact on Wildlife ?*
+                      Were There Any Impact on Wildlife ?
                     </FormLabel>
 
                     <RadioGroup
@@ -501,11 +504,11 @@ const EnvironmentAffected = () => {
                 {/* waterbody question and answer */}
 
                 <Grid item md={12}>
-                  <FormControl component="fieldset"
+                  <FormControl component="fieldset" required
                    error={error && error[`envQuestionOption${[3]}`]}
                   >
                     <FormLabel component="legend">
-                      Were There Any Waterbody Affected ?*
+                      Were There Any Waterbody Affected ?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}

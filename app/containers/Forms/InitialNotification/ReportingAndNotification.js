@@ -488,7 +488,7 @@ const ReportingAndNotification = () => {
                 error={error && error.isnotificationsent}
               >
                 <FormLabel component="legend">
-                  Notification to be sent
+                  Notification to be Sent ?
                 </FormLabel>
                 {notificationSent.map((value) => (
                   <FormControlLabel

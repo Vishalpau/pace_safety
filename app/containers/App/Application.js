@@ -173,6 +173,8 @@ function Application(props) {
         {/* Login And Register */}
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+
+        
         {/* form initialNotification */}
         <Route
           exact

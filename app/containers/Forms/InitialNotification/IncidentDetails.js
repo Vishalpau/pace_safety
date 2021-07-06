@@ -705,13 +705,13 @@ const IncidentDetails = () => {
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <div>
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
+              <FormControl component="fieldset" 
+              required
+              error={error && error[`personaffected$`]} 
+              className={classes.formControl}>
+               
                   <FormLabel component="legend">
-                    Were any person affected during incident?*
+                    Were any person affected during incident?
                   </FormLabel>
                   {/* <p>Were any person affected during incident?</p> */}
 
@@ -749,17 +749,20 @@ const IncidentDetails = () => {
                       : null}
                   </RadioGroup>
                 </FormControl>
-              </div>
+              
               {error && error.personaffected && (
                     <p>{error.personaffected}</p>
                   )}
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" className={classes.formControl}>
+              <FormControl component="fieldset" className={classes.formControl}
+              required
+              error={error && error[`propertyaffected$`]} 
+              >
                
                   <FormLabel component="legend">
-                    Was any propery damaged during incident?*
+                    Was any propery damaged during incident?
                   </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
@@ -802,15 +805,13 @@ const IncidentDetails = () => {
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <div>
-                {/* <p>Was there any equiptment damaged?</p> */}
-
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                >
+              <FormControl component="fieldset" 
+                  required
+                  error={error && error[`equiptmenteffected$`]} 
+                   className={classes.formControl}>
+            
                   <FormLabel component="legend">
-                    Was there any equiptment damaged?*
+                    Was there any equiptment damaged?
                   </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
@@ -851,16 +852,19 @@ const IncidentDetails = () => {
                       : null}
                   </RadioGroup>
                 </FormControl>
-              </div>
+              
               {error && error.equiptmenteffected && (
                     <p>{error.equiptmenteffected}</p>
                   )}
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">
-                  Was there any environment impact?*
+              <FormControl component="fieldset" 
+                  required
+                  error={error && error[`environmentaffected$`]} className={classes.formControl}>
+                <FormLabel component="legend" 
+                >
+                  Was there any environment impact?
                 </FormLabel>
                 <RadioGroup
                   aria-label="environmentaffected"
@@ -908,22 +912,20 @@ const IncidentDetails = () => {
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <Box marginTop={4}>
-                <Button
-                  // href={
-                  //   Object.keys(error).length === 0
-                  //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
-                  //     : "#"
-                  // }
-                  type="button"
-                  size="medium"
-                  variant="contained"
-                  color="primary"
-                  onClick={(e) => handelNext(e)}
-                >
-                  Next
-                </Button>
-              </Box>
+              <Button
+                // href={
+                //   Object.keys(error).length === 0
+                //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
+                //     : "#"
+                // }
+                type="button"
+                size="medium"
+                variant="contained"
+                color="primary"
+                onClick={(e) => handelNext(e)}
+              >
+                Next
+              </Button>
             </Grid>
           </Grid>
 

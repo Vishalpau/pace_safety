@@ -90,12 +90,20 @@ const applicationTheme = (color, mode, direction) => ({
           "0px 11px 14px -7px rgba(80,80,80, 0.2),0px 23px 36px 3px rgba(80,80,80, 0.14),0px 9px 44px 8px rgba(80,80,80, 0.12)",
           "0px 11px 15px -7px rgba(80,80,80, 0.2),0px 24px 38px 3px rgba(80,80,80, 0.14),0px 9px 46px 8px rgba(80,80,80, 0.12)",
         ],
+  props: {
+    MuiRadio: {
+      color: "primary",
+    },
+    MuiCheckbox: {
+      color: "primary",
+    },
+  },
   overrides: {
     MuiAccordionDetails: {
-    root: {
-      flexDirection: 'column',
-      gap: '1.5rem'
-    }
+      root: {
+        flexDirection: "column",
+        gap: "1.5rem",
+      },
     },
     MuiPaper: {
       root: {

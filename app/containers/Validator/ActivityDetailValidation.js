@@ -10,7 +10,7 @@ function ActivityDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        dataObj.error = "This field is empty";
+        dataObj.error = "This Field is Empty";
         isValid = false;
       } else {
         dataObj.error = "";
@@ -24,7 +24,7 @@ function ActivityDetailValidate(data) {
 
   // if(data[1]){
   //     {if (validator.isEmpty(data[1].answer.toString()))
-  //         error.answer = "this filed is empty"
+  //         error.answer = "This Field is Empty"
   //     }
   // }
   console.log("------", error, isValid);
