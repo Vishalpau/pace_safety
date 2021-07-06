@@ -30,6 +30,7 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import ListSubheader from "@material-ui/core/ListSubheader";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -40,6 +41,7 @@ import {
   HAZARDIOUS_CONDITION_SUB_TYPES,
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
+import "../../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -125,7 +127,8 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -185,7 +188,8 @@ const BasicCauseAndAction = () => {
             {Object.entries(data).map(([key, value]) => (
               <List
                 className={classes.list}
-                component="ul"
+                component="nav"
+                dense
                 subheader={
                   <ListSubheader
                     disableGutters
@@ -198,7 +202,12 @@ const BasicCauseAndAction = () => {
                 }
               >
                 {value.map((value) => (
-                  <ListItemText primary={value} />
+                  <ListItem>
+                    <ListItemIcon>
+                      <FiberManualRecordIcon className="smallIcon" />
+                    </ListItemIcon>
+                    <ListItemText primary={value} />
+                  </ListItem>
                 ))}
               </List>
             ))}
@@ -230,7 +239,7 @@ const BasicCauseAndAction = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Cause and Action"}
+            selectedItem={"Cause and action"}
           />
         </Grid>
       </Grid>

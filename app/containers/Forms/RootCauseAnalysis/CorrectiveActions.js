@@ -233,7 +233,9 @@ const CorrectiveAction = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${putId.current}`
+          `/app/incident-management/registration/summary/summary/${
+            putId.current
+          }`
         );
       }
     }
@@ -270,10 +272,10 @@ const CorrectiveAction = () => {
 
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              RCA Method
+              RCA method
             </Typography>
             <Typography className={Type.labelValue}>
-              PACE Cause Analysis
+              PACE cause analysis
             </Typography>
           </Grid>
 
@@ -283,7 +285,7 @@ const CorrectiveAction = () => {
               required
               error={error.managementControl}
             >
-              <FormLabel component="legend">Management Control</FormLabel>
+              <FormLabel component="legend">Management control</FormLabel>
               {MANAGEMENTCONTROL.map((value) => (
                 <FormControlLabel
                   control={<Checkbox name={value} />}
@@ -305,7 +307,7 @@ const CorrectiveAction = () => {
               defaultValue={form.regionSupport.rcaRemark}
               helperText={error ? error.regionSupport : ""}
               rows={3}
-              label="Details of the Reasons to Support Above"
+              label="Details of the reasons to support above"
               className={classes.formControl}
               onChange={async (e) => handelRegionSupport(e)}
             />
@@ -332,7 +334,7 @@ const CorrectiveAction = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Corrective Actions"}
+            selectedItem={"Corrective actions"}
           />
         </Grid>
       </Grid>

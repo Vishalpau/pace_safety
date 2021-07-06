@@ -16,12 +16,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import Divider from "@material-ui/core/Divider";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation";
 import { call } from "file-loader";
+
 import {
   SUPERVISON,
   WORKPACKAGE,
@@ -415,7 +417,8 @@ const HazardiousActs = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
+          putId.current
         }`
       );
     }
@@ -443,7 +446,7 @@ const HazardiousActs = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
             <Typography className={Type.labelValue}>
               {incidentDetail.incidentNumber}
@@ -470,6 +473,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.supervision}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* workpackage */}
@@ -494,6 +498,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.workpackage}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* equiment machinary     */}
@@ -518,6 +523,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.equipmentMachinery}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
@@ -541,6 +547,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.behaviourIssue}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* safety issues    */}
@@ -565,6 +572,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.safetyIssues}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
@@ -584,6 +592,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.ergonimics}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
@@ -603,6 +612,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.procedures}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* others */}
@@ -646,7 +656,7 @@ const HazardiousActs = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Hazardious Acts"}
+            selectedItem={"Hazardious acts"}
           />
         </Grid>
       </Grid>

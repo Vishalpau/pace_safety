@@ -47,21 +47,21 @@ export const INVESTIGATION_FORM = {
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
   Details: "/app/incident-management/registration/root-cause-analysis/details/",
-  "Hazardious Acts":
+  "Hazardious acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
-  "Hazardious Conditions":
+  "Hazardious conditions":
     "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/",
-  "Cause and Action":
+  "Cause and action":
     "/app/incident-management/registration/root-cause-analysis/cause-and-action/",
-  "Basic Cause":
+  "Basic cause":
     "/app/incident-management/registration/root-cause-analysis/basic-cause/",
-  "Basic Cause and Action":
+  "Basic cause and action":
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",
-  "Corrective Actions":
+  "Corrective actions":
     "/app/incident-management/registration/root-cause-analysis/management-control/",
-  "Root Cause Analysis":
+  "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
-  "Why Analysis":
+  "Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
@@ -295,4 +295,8 @@ export const MANAGEMENTCONTROL = [
   "Inadequate Compilance and Standards",
 ];
 
-export const RCAOPTION = ["Five Why analysis", "Pace cause analysis", "Root Cause analysis"];
+export const RCAOPTION = [
+  "Five Why analysis",
+  "Pace cause analysis",
+  "Root Cause analysis",
+];

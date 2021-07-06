@@ -3,3 +3,8 @@
   border-top: 3px solid #cdd9de;
   margin-top: 1.5rem;
 }
+
+.smallIcon {
+  height: 0.5em;
+  width: 0.5em;
+}
