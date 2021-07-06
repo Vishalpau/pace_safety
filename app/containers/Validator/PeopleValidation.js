@@ -7,7 +7,7 @@ function PeopleValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].personType.toString())) {
-      error[`personType${[i]}`] = "Please choose person type.";
+      error[`personType${[i]}`] = "Please choose person type";
       isValid = false;
     }
 
@@ -22,7 +22,7 @@ function PeopleValidate(data) {
     }
 
     // if (validator.isEmpty(data[i].personIdentification.toString())) {
-    //   error[`personIdentification${[i]}`] = "This Field is Empty";
+    //   error[`personIdentification${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
 
@@ -32,12 +32,12 @@ function PeopleValidate(data) {
     }
 
     // if (validator.isEmpty(data[i].workerOffsiteAssessment.toString())) {
-    //   error[`workerOffsiteAssessment${[i]}`] = "This Field is Empty";
+    //   error[`workerOffsiteAssessment${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
 
     // if (validator.isEmpty(data[i].locationAssessmentCenter.toString())) {
-    //   error[`locationAssessmentCenter${[i]}`] = "This Field is Empty";
+    //   error[`locationAssessmentCenter${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
   }

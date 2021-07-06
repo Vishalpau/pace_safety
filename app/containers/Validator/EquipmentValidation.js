@@ -6,7 +6,7 @@ function EquipmentValidate(data) {
   const error = {};
 
   // if (validator.isEmpty(data.detailpropertyaffected)){
-  //     error.detailpropertyaffected = "This Field is Empty"
+  //     error.detailpropertyaffected = "This field is empty"
   //     isValid = false
   // }else{
   //     isValid = true
@@ -19,18 +19,20 @@ function EquipmentValidate(data) {
     }
 
     // if (validator.isEmpty(data[i].equipmentOtherType.toString())) {
-    //   error[`equipmentOtherType${[i]}`] = "This Field is Empty";
+    //   error[`equipmentOtherType${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
 
     if (validator.isEmpty(data[i].equipmentDeatils.toString())) {
+
       error[`equipmentDeatils${[i]}`] = "Please enter equipment details.";
+
       isValid = false;
     }
   }
 
   // if (validator.isEmpty(data.describeactiontaken)){
-  //     error.describeactiontaken = "This Field is Empty"
+  //     error.describeactiontaken = "This field is empty"
   //     isValid = false
   // }
 
