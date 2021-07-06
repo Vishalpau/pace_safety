@@ -14,7 +14,7 @@ function EquipmentValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].equipmentType.toString())) {
-      error[`equipmentType${[i]}`] = "Please choose equipment type.";
+      error[`equipmentType${[i]}`] = "Please select equipment type.";
       isValid = false;
     }
 

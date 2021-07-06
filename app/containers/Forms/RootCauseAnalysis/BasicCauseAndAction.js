@@ -30,6 +30,7 @@ import Link from "@material-ui/core/Link";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -37,6 +38,7 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
+import "../../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -109,7 +111,9 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem("fkincidentId")}`
+        `/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem(
+          "fkincidentId"
+        )}`
       );
     } else {
       history.push(
@@ -139,7 +143,7 @@ const BasicCauseAndAction = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
             <Typography className={Type.labelValue}>
               {incidentDetail.incidentNumber}
@@ -150,13 +154,15 @@ const BasicCauseAndAction = () => {
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
-            <Typography className={Type.labelValue}>5 Why Analysis</Typography>
+            <Typography className={Type.labelValue}>5 why analysis</Typography>
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
-              Actions
-            </Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6" gutterBottom>
+                Actions
+              </Typography>
+            </Box>
           </Grid>
 
           <Grid item md={12}>
@@ -167,7 +173,8 @@ const BasicCauseAndAction = () => {
             {Object.entries(data).map(([key, value], index) => (
               <List
                 className={classes.list}
-                component="ul"
+                component="nav"
+                dense
                 subheader={
                   <ListSubheader
                     disableGutters
@@ -180,7 +187,12 @@ const BasicCauseAndAction = () => {
                 }
               >
                 {value.map((value) => (
-                  <ListItemText primary={value} />
+                  <ListItem>
+                    <ListItemIcon>
+                      <FiberManualRecordIcon className="smallIcon" />
+                    </ListItemIcon>
+                    <ListItemText primary={value} />
+                  </ListItem>
                 ))}
               </List>
             ))}
@@ -211,7 +223,7 @@ const BasicCauseAndAction = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Basic Cause and Action"}
+            selectedItem={"Basic cause and action"}
           />
         </Grid>
       </Grid>

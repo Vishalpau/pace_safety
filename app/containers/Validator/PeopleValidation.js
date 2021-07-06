@@ -7,12 +7,12 @@ function PeopleValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].personType.toString())) {
-      error[`personType${[i]}`] = "Please choose person type";
+      error[`personType${[i]}`] = "Please select person type";
       isValid = false;
     }
 
     if (validator.isEmpty(data[i].personDepartment.toString())) {
-      error[`personDepartment${[i]}`] = "Please choose department.";
+      error[`personDepartment${[i]}`] = "Please select department.";
       isValid = false;
     }
 

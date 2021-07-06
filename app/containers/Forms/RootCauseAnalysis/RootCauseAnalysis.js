@@ -154,7 +154,9 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${putId.current}`
+          `/app/incident-management/registration/summary/summary/${
+            putId.current
+          }`
         );
       }
     }
@@ -391,7 +393,7 @@ const RootCauseAnalysis = () => {
         <Grid item={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem="Root Cause Analysis"
+            selectedItem="Root cause analysis"
           />
         </Grid>
       </Grid>

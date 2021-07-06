@@ -8,17 +8,17 @@ export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvw
 export const API_URL = "https://dev-safety-api.paceos.io/";
 
 export const INITIAL_NOTIFICATION_FORM = {
-  "Incident Details":
+  "Incident details":
     "/app/incident-management/registration/initial-notification/incident-details/",
-  "People Affected":
+  "People affected":
     "/app/incident-management/registration/initial-notification/peoples-afftected/",
-  "Property Affected":
+  "Property affected":
     "/app/incident-management/registration/initial-notification/property-affected/",
-  "Equipment Affected":
+  "Equipment affected":
     "/app/incident-management/registration/initial-notification/equipment-affected/",
-  "Environment Affected":
+  "Environment affected":
     "/app/incident-management/registration/initial-notification/environment-affected/",
-  "Reporting and Notification":
+  "Reporting and notification":
     "/app/incident-management/registration/initial-notification/reporting-and-notification/",
 };
 
@@ -47,21 +47,21 @@ export const INVESTIGATION_FORM = {
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
   Details: "/app/incident-management/registration/root-cause-analysis/details/",
-  "Hazardious Acts":
+  "Hazardious acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
-  "Hazardious Conditions":
+  "Hazardious conditions":
     "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/",
-  "Cause and Action":
+  "Cause and action":
     "/app/incident-management/registration/root-cause-analysis/cause-and-action/",
-  "Basic Cause":
+  "Basic cause":
     "/app/incident-management/registration/root-cause-analysis/basic-cause/",
-  "Basic Cause and Action":
+  "Basic cause and action":
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",
-  "Corrective Actions":
+  "Corrective actions":
     "/app/incident-management/registration/root-cause-analysis/management-control/",
-  "Root Cause Analysis":
+  "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
-  "Why Analysis":
+  "Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
@@ -295,4 +295,8 @@ export const MANAGEMENTCONTROL = [
   "Inadequate Compilance and Standards",
 ];
 
-export const RCAOPTION = ["Five Why analysis", "Pace cause analysis", "Root Cause analysis"];
+export const RCAOPTION = [
+  "Five Why analysis",
+  "Pace cause analysis",
+  "Root Cause analysis",
+];
