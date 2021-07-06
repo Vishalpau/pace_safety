@@ -22,7 +22,6 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
 import Input from "@material-ui/core/Input";
-import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
@@ -39,6 +38,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import CloseIcon from "@material-ui/icons/Close";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
+import IconButton from "@material-ui/core/IconButton";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
 
@@ -50,7 +51,7 @@ import {
 import FormHeader from "../FormHeader";
 
 import ReportingValidation from "../../Validator/ReportingValidation";
-import InitialEvidenceValidate from "../../Validator/InitialEvidance"
+import InitialEvidenceValidate from "../../Validator/InitialEvidance";
 
 import api from "../../../utils/axios";
 import UploadInputAll from "../demos/UploadInputAll";
@@ -64,10 +65,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-    margin: ".5rem 0",
-  },
-  spacer: {
-    marginTop: "1rem",
   },
   customLabel: {
     marginBottom: 0,
@@ -173,14 +170,14 @@ const ReportingAndNotification = () => {
     }
   };
 
-  const handleDateChange = async(date) => {
-    var time = date || incidentsListData.incidentReportedOn
-    var start_time = new Date(time)
-    var end_time = new Date()
-    var diff = end_time - start_time
+  const handleDateChange = async (date) => {
+    var time = date || incidentsListData.incidentReportedOn;
+    var start_time = new Date(time);
+    var end_time = new Date();
+    var diff = end_time - start_time;
     var hours = Math.floor(diff / 1000 / 60 / 60);
 
-  console.log(hours)
+    console.log(hours);
     if (hours > 4) {
       await SetLateReport(true);
     } else {
@@ -239,11 +236,14 @@ const ReportingAndNotification = () => {
   // handleInitailEvidance
   const handleInitialEvidance = async () => {
     // Create new Evidance
-    
+
     const formData = new FormData();
-    
+
     for (let i = 0; i < evidanceForm.length; i++) {
-      if(evidanceForm[i].evidenceDocument !=='' && evidanceForm[i].evidenceRemark !==''){
+      if (
+        evidanceForm[i].evidenceDocument !== "" &&
+        evidanceForm[i].evidenceRemark !== ""
+      ) {
         formData.append("evidenceDocument", evidanceForm[i].evidenceDocument);
         formData.append("evidenceDocument", evidanceForm[i].evidenceRemark);
         formData.append("evidenceCheck", "Yes");
@@ -258,26 +258,24 @@ const ReportingAndNotification = () => {
     }
   };
 
-  // send request other data in report to 
-  const setOtherDataReportTo = async()=>{
-
+  // send request other data in report to
+  const setOtherDataReportTo = async () => {
     if (reportOtherData !== "") {
-     try {
-       const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
-         reportTo: reportOtherData,
-         createdBy: 1,
-         fkIncidentId: localStorage.getItem("fkincidentId") || id,
-       });
-     } catch (err) {}
-   }
-   else{
-     return
-   }
- }
+      try {
+        const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
+          reportTo: reportOtherData,
+          createdBy: 1,
+          fkIncidentId: localStorage.getItem("fkincidentId") || id,
+        });
+      } catch (err) {}
+    } else {
+      return;
+    }
+  };
 
- const handelNext = async (e) => {
-   // set in reportTo otherData
-   await setOtherDataReportTo();
+  const handelNext = async (e) => {
+    // set in reportTo otherData
+    await setOtherDataReportTo();
 
     // update incident details
     await handleUpdateIncidentDetails();
@@ -292,15 +290,17 @@ const ReportingAndNotification = () => {
     // Create new entries.
     const { error, isValid } = ReportingValidation(form);
     setError(error);
-    console.log(error)
+    console.log(error);
 
-    if(isValid === true){
+    if (isValid === true) {
       for (let key in form.reportedto) {
         let name = form.reportedto[key];
-  
+
         try {
           const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/reports/`,
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/reports/`,
             {
               reportTo: name,
               createdBy: 1,
@@ -310,7 +310,7 @@ const ReportingAndNotification = () => {
           status = res.status;
         } catch (err) {}
       }
-  
+
       if (status === 201) {
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
@@ -319,7 +319,6 @@ const ReportingAndNotification = () => {
         );
       }
     }
-  
   };
 
   const handelReportedTo = async (e, value, type) => {
@@ -478,9 +477,7 @@ const ReportingAndNotification = () => {
                     />
                   ) : null}
                 </FormGroup>
-                {error && error.reportedto && (
-                    <p>{error.reportedto}</p>
-                  )}
+                {error && error.reportedto && <p>{error.reportedto}</p>}
               </FormControl>
             </Grid>
 
@@ -524,42 +521,48 @@ const ReportingAndNotification = () => {
               {/* <UploadInputAll/> */}
 
               {evidanceForm.map((item, index) => (
-                <>
-                  <input
-                    type="file"
-                    onChange={(e) =>
-                      handleEvidanceForm(e, index, "evidenceDocument")
-                    }
-                    showPreviews
-                  />
-                  <TextField
-                    id="evidanceRemark"
-                    variant="outlined"
-                    label="evidanceRemark"
-                    className={classes.formControl}
-                    onChange={(e) =>
-                      handleEvidanceForm(e, index, "evidenceRemark")
-                    }
-                  />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={() => handleRemoveEvidance(index)}
-                  >
-                    Remove
-                  </Button>
-                </>
+                <Grid container item md={12} spacing={3} alignItems="center">
+                  <Grid item md={5}>
+                    <input
+                      type="file"
+                      onChange={(e) =>
+                        handleEvidanceForm(e, index, "evidenceDocument")
+                      }
+                      showPreviews
+                    />
+                  </Grid>
+                  <Grid item md={5}>
+                    <TextField
+                      id="evidanceRemark"
+                      variant="outlined"
+                      label="evidanceRemark"
+                      className={classes.formControl}
+                      onChange={(e) =>
+                        handleEvidanceForm(e, index, "evidenceRemark")
+                      }
+                    />
+                  </Grid>
+                  <Grid item md={2}>
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleRemoveEvidance(index)}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
               ))}
+              <Grid item md={12}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  startIcon={<AddCircleIcon />}
+                  onClick={(e) => handleNewEvidance(e)}
+                >
+                  Add New
+                </Button>
+              </Grid>
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handleNewEvidance(e)}
-              >
-                Add
-              </Button>
             </Grid>
 
             <Grid item md={6}>
@@ -570,12 +573,12 @@ const ReportingAndNotification = () => {
                 error={error && error.reportedby}
               >
                 <InputLabel id="supervisorname-label">
-                  Supervisor Name
+                  Supervisor name
                 </InputLabel>
                 <Select
                   labelId="supervisorname-label"
                   id="supervisorname"
-                  label="Supervisor Name"
+                  label="Supervisor name"
                   defaultValue={
                     incidentsListData.supervisorByName
                       ? incidentsListData.supervisorByName
@@ -630,7 +633,7 @@ const ReportingAndNotification = () => {
                   format="yyyy/MM/dd HH:mm"
                   required
                   inputVariant="outlined"
-                  label="Reporting Date"
+                  label="Reporting date"
                   value={
                     form.reportingdate || incidentsListData.incidentReportedOn
                   }
@@ -652,15 +655,15 @@ const ReportingAndNotification = () => {
                 className={classes.formControl}
                 error={error && error.reportedby}
               >
-                <InputLabel id="reportedBy-label">Reported By</InputLabel>
+                <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
                   labelId="reportedBy-label"
                   id="reportedBy"
-                  label="Reported By"
+                  label="Reported by"
                   defaultValue={
                     incidentsListData.incidentReportedByName
                       ? incidentsListData.incidentReportedByName
-                      : ""
+                      : null
                   }
                   onChange={(e) => {
                     setForm({
@@ -681,8 +684,8 @@ const ReportingAndNotification = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
-              {form.reportedby === "Other" ? (
+            {form.reportedby === "Other" ? (
+              <Grid item md={6}>
                 <TextField
                   id="others"
                   variant="outlined"
@@ -695,14 +698,15 @@ const ReportingAndNotification = () => {
                     });
                   }}
                 />
-              ) : null}
-            </Grid>
+              </Grid>
+            ) : null}
+
             {lateReport ? (
               <Grid item md={12}>
                 <TextField
                   id="reason"
                   variant="outlined"
-                  label="Resaon for Reporting Later than 4 Hours"
+                  label="Resaon for reporting later than 4 hours"
                   multiline
                   error={error && error.latereporting}
                   required
@@ -726,7 +730,7 @@ const ReportingAndNotification = () => {
               <TextField
                 id="additionalDetails"
                 variant="outlined"
-                label="Additional Details if Any"
+                label="Additional details if any"
                 multiline
                 rows="4"
                 defaultValue={incidentsListData.notificationComments}
@@ -763,7 +767,7 @@ const ReportingAndNotification = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Reporting and Notification"}
+              selectedItem={"Reporting and notification"}
             />
           </Grid>
         </Grid>

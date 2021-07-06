@@ -14,7 +14,7 @@ function PropertyValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].propertyType.toString())) {
-      error[`propertyType${[i]}`] = "Please choose property type";
+      error[`propertyType${[i]}`] = "Please select property type";
       isValid = false;
     }
 
