@@ -864,7 +864,7 @@ module.exports = [
   },
   {
     key: "inspections",
-    name: "Inspections",
+    name: "Compliances",
     icon: "ion-ios-checkbox",
     multilevel: false,
     linkParent: "/app/charts/area-filled-charts",
