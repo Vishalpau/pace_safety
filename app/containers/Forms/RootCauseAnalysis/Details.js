@@ -52,9 +52,9 @@ const Details = () => {
   const [incidents, setIncidents] = useState([]);
 
   const [form, setForm] = useState({
-    evidenceSupport: "",
-    evidenceContradiction: "",
-    evidenceNotSupport: "",
+    evidenceSupport: "No",
+    evidenceContradiction: "No",
+    evidenceNotSupport: "No",
     rcaRecommended: "",
     status: "Active",
     createdBy: 0,
