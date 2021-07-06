@@ -48,7 +48,10 @@ import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+
 import ReportingValidation from "../../Validator/ReportingValidation";
+import InitialEvidenceValidate from "../../Validator/InitialEvidance"
+
 import api from "../../../utils/axios";
 import UploadInputAll from "../demos/UploadInputAll";
 
@@ -102,15 +105,11 @@ const UploadInputImg = () => {
 };
 
 const ReportingAndNotification = () => {
-  const [files, setFiles] = useState([]);
   const [error, setError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
-  const [reportsListData, setReportListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [lateReport, SetLateReport] = useState(true);
-  const [clearedDate, handleClearedDateChange] = useState(null);
+  const [lateReport, SetLateReport] = useState(false);
   const [reportedTo, setReportableTo] = useState([]);
-  const [reportId, setReportId] = useState([]);
   const [reportOtherData, setReportOtherData] = useState("");
   let [reportedToObj, setReportedToObj] = useState([]);
   const [evidanceForm, setEvidanceForm] = useState([
@@ -174,20 +173,23 @@ const ReportingAndNotification = () => {
     }
   };
 
-  const handleDateChange = (date) => {
-    setForm({
+  const handleDateChange = async(date) => {
+    var time = date || incidentsListData.incidentReportedOn
+    var start_time = new Date(time)
+    var end_time = new Date()
+    var diff = end_time - start_time
+    var hours = Math.floor(diff / 1000 / 60 / 60);
+
+  console.log(hours)
+    if (hours > 4) {
+      await SetLateReport(true);
+    } else {
+      await SetLateReport(false);
+    }
+    await setForm({
       ...form,
       reportingdate: date,
     });
-  };
-
-  const handelTimeChange = async (date) => {
-    const onlyTime = moment(date).format("HH:mm:ss");
-    await setForm({
-      ...form,
-      reportingtime: onlyTime,
-    });
-    setSelectedTime(date);
   };
 
   const handleUpdateIncidentDetails = async () => {
@@ -212,8 +214,6 @@ const ReportingAndNotification = () => {
     temp.updatedAt = moment(new Date()).toISOString();
     temp.updatedBy = "0";
 
-    console.log(form);
-
     // put call for update incident Details
     const res = await api.put(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
@@ -231,7 +231,6 @@ const ReportingAndNotification = () => {
           const res = await api.delete(
             `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-          console.log(res);
         } catch (err) {}
       }
     }
@@ -240,6 +239,7 @@ const ReportingAndNotification = () => {
   // handleInitailEvidance
   const handleInitialEvidance = async () => {
     // Create new Evidance
+    
     const formData = new FormData();
     
     for (let i = 0; i < evidanceForm.length; i++) {
@@ -292,6 +292,8 @@ const ReportingAndNotification = () => {
     // Create new entries.
     const { error, isValid } = ReportingValidation(form);
     setError(error);
+    console.log(error)
+
     if(isValid === true){
       for (let key in form.reportedto) {
         let name = form.reportedto[key];
@@ -407,7 +409,6 @@ const ReportingAndNotification = () => {
       }
       await setReportedToObj(result);
       await setForm({ ...form, reportedto: reportToData });
-      await setReportId(result[0].id);
     }
 
     await setIsLoading(true);
@@ -477,6 +478,9 @@ const ReportingAndNotification = () => {
                     />
                   ) : null}
                 </FormGroup>
+                {error && error.reportedto && (
+                    <p>{error.reportedto}</p>
+                  )}
               </FormControl>
             </Grid>
 
@@ -632,7 +636,7 @@ const ReportingAndNotification = () => {
                   }
                   onChange={(date) => {
                     handleDateChange(date);
-                    handelTimeCompare();
+                    // handelTimeCompare();
                   }}
                   KeyboardButtonProps={{
                     "aria-label": "change date",

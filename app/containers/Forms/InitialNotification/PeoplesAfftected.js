@@ -131,7 +131,12 @@ const PeoplesAffected = () => {
   const handleForm = (e, key, fieldname) => {
     const temp = [...form];
     const { value } = e.target;
-    temp[key][fieldname] = value;
+    if(e.target.value === "Don't Know"){
+      temp[key][fieldname] = "N/A";
+    }
+    else{
+      temp[key][fieldname] = value;
+    }
     setForm(temp);
   };
 
@@ -139,7 +144,12 @@ const PeoplesAffected = () => {
   const handleUpdatePeople = async (e, key, fieldname, peopleId) => {
     const temp = peopleData;
     const { value } = e.target;
-    temp[key][fieldname] = value;
+    if(e.target.value === "Don't Know"){
+      temp[key][fieldname] = "N/A";
+    }
+    else{
+      temp[key][fieldname] = value;
+    }
     temp[key].updatedBy = 0;
     await setPeopleData(temp);
   };
