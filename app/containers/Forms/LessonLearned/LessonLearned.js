@@ -121,6 +121,7 @@ const LessionLearned = () => {
         }
       }
     }
+    localStorage.setItem("LessionLearnt" , "Done");
   };
 
   //  Fetch Lession learn data
