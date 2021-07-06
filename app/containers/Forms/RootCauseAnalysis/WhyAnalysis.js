@@ -148,6 +148,7 @@ const WhyAnalysis = () => {
         history.push(`/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`)
       }
     }
+    localStorage.setItem("RootCause", "Done")
   }
 
   useEffect(() => {

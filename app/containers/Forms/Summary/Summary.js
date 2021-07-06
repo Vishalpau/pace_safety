@@ -87,7 +87,7 @@ const Summary = () => {
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
@@ -112,244 +112,247 @@ const Summary = () => {
   }, []);
 
   return (
-    <>     
-     {isLoading ?
-    <PapperBlock
-      title={`Incident Number: ${incidents.incidentNumber}`}
-      icon="ion-md-list-box"
-    >
+    <>
+      {isLoading ?
+        <PapperBlock
+          title={`Incident Number: ${incidents.incidentNumber}`}
+          icon="ion-md-list-box"
+        >
 
-      <Box paddingBottom={1}>
-        <div className={Styles.incidents}>
-          <div className={Styles.item}>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              endIcon={<CheckCircle />}
-              className={classes.statusButton}
-              onClick={(e) => {
-                setInitialNotification(true);
-                setInvestigation(false);
-                setEvidence(false);
-                setRootCauseAnalysis(false);
-                setLessionlearn(false);
-              }}
-            >
-              Initial Notification
-            </Button>
-            <Typography variant="caption" display="block">
-              Done
-            </Typography>
-          </div>
-
-          <div className={Styles.item}>
-            <Button
-              color="primary"
-              variant="outlined"
-              size="small"
-              endIcon={<AccessTime />}
-              className={classes.statusButton}
-              onClick={(e) => {
-                setInitialNotification(false);
-                setInvestigation(true);
-                setEvidence(false);
-                setRootCauseAnalysis(false);
-                setLessionlearn(false);
-              }}
-            >
-              Investigation
-            </Button>
-            <Typography variant="caption" display="block">
-              Pending
-            </Typography>
-          </div>
-
-          <div className={Styles.item}>
-            <Button
-              color="primary"
-              variant="outlined"
-              size="small"
-              className={classes.statusButton}
-              endIcon={<AccessTime />}
-              onClick={(e) => {
-                setInitialNotification(false);
-                setInvestigation(false);
-                setEvidence(true);
-                setRootCauseAnalysis(false);
-                setLessionlearn(false);
-              }}
-            >
-              Evidence
-            </Button>
-            <Typography variant="caption" display="block">
-              Pending
-            </Typography>
-          </div>
-          <div className={Styles.item}>
-            <Button
-              color="primary"
-              variant="outlined"
-              size="small"
-              className={classes.statusButton}
-              onClick={(e) => {
-                setInitialNotification(false);
-                setInvestigation(false);
-                setEvidence(false);
-                setRootCauseAnalysis(true);
-                setLessionlearn(false);
-              }}
-            >
-              Root Cause & Analysis
-            </Button>
-            <Typography variant="caption" display="block">
-              Pending
-            </Typography>
-          </div>
-          <div className={Styles.item}>
-            <Button
-              color="primary"
-              variant="outlined"
-              size="small"
-              endIcon={<AccessTime />}
-              className={classes.statusButton}
-              onClick={(e) => {
-                setInitialNotification(false);
-                setInvestigation(false);
-                setEvidence(false);
-                setRootCauseAnalysis(false);
-                setLessionlearn(true);
-              }}
-            >
-              Lessions Learnt
-            </Button>
-            <Typography variant="caption" display="block">
-              Pending
-            </Typography>
-          </div>
-        </div>
-      </Box>
-      <Divider />
-
-      <Box marginTop={4}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={9}>
-            {/* summary and part */}
-            <>
-              {(() => {
-                if (
-                  initialNotification == true ||
-                  (investigation === false &&
-                    evidence === false &&
-                    rootcauseanalysis === false &&
-                    lessionlearn === false)
-                ) {
-                  return <IncidentDetailsSummary />;
-                } if (investigation == true) {
-                  return <InvestigationSummary />;
-                } if (evidence == true) {
-                  return <EvidenceSummary />;
-                } if (rootcauseanalysis == true) {
-                  return <RootCauseAnalysisSummary />;
-                } if (lessionlearn == true) {
-                  return <LessionLearnSummary />;
-                }
-              })()}
-            </>
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <Paper>
-              <List
-                dense
-                subheader={
-                  <ListSubheader component="div">Actions</ListSubheader>
-                }
-              >
-                <ListItemLink
-                  href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-                    'fkincidentId'
-                  )}`}
+          <Box paddingBottom={1}>
+            <div className={Styles.incidents}>
+              <div className={Styles.item}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                  endIcon={<CheckCircle />}
+                  className={classes.statusButton}
+                  onClick={(e) => {
+                    setInitialNotification(true);
+                    setInvestigation(false);
+                    setEvidence(false);
+                    setRootCauseAnalysis(false);
+                    setLessionlearn(false);
+                  }}
                 >
-                  <ListItemIcon>
-                    <Edit />
-                  </ListItemIcon>
-                  <ListItemText primary="Modify Notification" />
-                </ListItemLink>
+                  Initial Notification
+                </Button>
+                <Typography variant="caption" display="block">
+                  Done
+                </Typography>
+              </div>
 
-                <ListItemLink href="/app/incident-management/registration/investigation/initial-details/">
-                  <ListItemIcon>
-                    <Edit />
-                  </ListItemIcon>
-                  <ListItemText primary="Modify Investigation" />
-                </ListItemLink>
+              <div className={Styles.item}>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                  endIcon={<AccessTime />}
+                  className={classes.statusButton}
+                  onClick={(e) => {
+                    setInitialNotification(false);
+                    setInvestigation(true);
+                    setEvidence(false);
+                    setRootCauseAnalysis(false);
+                    setLessionlearn(false);
+                  }}
+                >
+                  Investigation
+                </Button>
+                <Typography variant="caption" display="block">
+                  Pending
+                </Typography>
+              </div>
 
-                <ListItemLink href="/app/incident-management/registration/evidence/evidence/">
-                  <ListItemIcon>
-                    <Add />
-                  </ListItemIcon>
+              <div className={Styles.item}>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                  className={classes.statusButton}
+                  endIcon={<AccessTime />}
+                  onClick={(e) => {
+                    setInitialNotification(false);
+                    setInvestigation(false);
+                    setEvidence(true);
+                    setRootCauseAnalysis(false);
+                    setLessionlearn(false);
+                  }}
+                >
+                  Evidence
+                </Button>
+                <Typography variant="caption" display="block">
+                  Pending
+                </Typography>
+              </div>
 
-                  <ListItemText primary="Add Evidence" />
-                </ListItemLink>
+              <div className={Styles.item}>
+                <Button
+                  color="primary"
+                  variant={localStorage.getItem("RootCause") == "Done" ? "contained" : "outlined"}
+                  size="small"
+                  className={classes.statusButton}
+                  endIcon={localStorage.getItem("RootCause") == "Done" ? <CheckCircle /> : <AccessTime />}
+                  onClick={(e) => {
+                    setInitialNotification(false);
+                    setInvestigation(false);
+                    setEvidence(false);
+                    setRootCauseAnalysis(true);
+                    setLessionlearn(false);
+                  }}
+                >
+                  Root Cause & Analysis
+                </Button>
+                <Typography variant="caption" display="block">
+                  {localStorage.getItem("RootCause") == "Done" ? "Done" : "Pending"}
+                </Typography>
+              </div>
 
-                <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
-                  <ListItemIcon>
-                    <Add />
-                  </ListItemIcon>
-                  <ListItemText primary="Perform RCA" />
-                </ListItemLink>
+              <div className={Styles.item}>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                  endIcon={<AccessTime />}
+                  className={classes.statusButton}
+                  onClick={(e) => {
+                    setInitialNotification(false);
+                    setInvestigation(false);
+                    setEvidence(false);
+                    setRootCauseAnalysis(false);
+                    setLessionlearn(true);
+                  }}
+                >
+                  Lessions Learnt
+                </Button>
+                <Typography variant="caption" display="block">
+                  Pending
+                </Typography>
+              </div>
+            </div>
+          </Box>
+          <Divider />
 
-                <ListItemLink href="/app/incident-management/registration/lession-learned/lession-learned/">
-                  <ListItemIcon>
-                    <Add />
-                  </ListItemIcon>
-                  <ListItemText primary="Lessions Learnt" />
-                </ListItemLink>
+          <Box marginTop={4}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={9}>
+                {/* summary and part */}
+                <>
+                  {(() => {
+                    if (
+                      initialNotification == true ||
+                      (investigation === false &&
+                        evidence === false &&
+                        rootcauseanalysis === false &&
+                        lessionlearn === false)
+                    ) {
+                      return <IncidentDetailsSummary />;
+                    } if (investigation == true) {
+                      return <InvestigationSummary />;
+                    } if (evidence == true) {
+                      return <EvidenceSummary />;
+                    } if (rootcauseanalysis == true) {
+                      return <RootCauseAnalysisSummary />;
+                    } if (lessionlearn == true) {
+                      return <LessionLearnSummary />;
+                    }
+                  })()}
+                </>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Paper>
+                  <List
+                    dense
+                    subheader={
+                      <ListSubheader component="div">Actions</ListSubheader>
+                    }
+                  >
+                    <ListItemLink
+                      href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                        'fkincidentId'
+                      )}`}
+                    >
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                      <ListItemText primary="Modify Notification" />
+                    </ListItemLink>
 
-                <ListItem button divider>
-                  <ListItemIcon>
-                    <Close />
-                  </ListItemIcon>
-                  <ListItemText primary="Close Out" />
-                </ListItem>
+                    <ListItemLink href="/app/incident-management/registration/investigation/initial-details/">
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                      <ListItemText primary="Modify Investigation" />
+                    </ListItemLink>
 
-                <ListItem button>
-                  <ListItemIcon>
-                    <Comment />
-                  </ListItemIcon>
-                  <ListItemText primary="Comments" />
-                </ListItem>
+                    <ListItemLink href="/app/incident-management/registration/evidence/evidence/">
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
 
-                <ListItem button>
-                  <ListItemIcon>
-                    <History />
-                  </ListItemIcon>
-                  <ListItemText primary="Activity History" />
-                </ListItem>
-              </List>
-              <Divider />
-              <List dense>
-                <ListItem button>
-                  <ListItemIcon>
-                    <Print />
-                  </ListItemIcon>
-                  <ListItemText primary="Print" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <Share />
-                  </ListItemIcon>
-                  <ListItemText primary="Share" />
-                </ListItem>
-              </List>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
-     
-    
-    </PapperBlock>
-    :<h1> Loading...</h1>}
-     </>
+                      <ListItemText primary="Add Evidence" />
+                    </ListItemLink>
+
+                    <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
+                      <ListItemText primary="Perform RCA" />
+                    </ListItemLink>
+
+                    <ListItemLink href="/app/incident-management/registration/lession-learned/lession-learned/">
+                      <ListItemIcon>
+                        <Add />
+                      </ListItemIcon>
+                      <ListItemText primary="Lessions Learnt" />
+                    </ListItemLink>
+
+                    <ListItem button divider>
+                      <ListItemIcon>
+                        <Close />
+                      </ListItemIcon>
+                      <ListItemText primary="Close Out" />
+                    </ListItem>
+
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Comment />
+                      </ListItemIcon>
+                      <ListItemText primary="Comments" />
+                    </ListItem>
+
+                    <ListItem button>
+                      <ListItemIcon>
+                        <History />
+                      </ListItemIcon>
+                      <ListItemText primary="Activity History" />
+                    </ListItem>
+                  </List>
+                  <Divider />
+                  <List dense>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Print />
+                      </ListItemIcon>
+                      <ListItemText primary="Print" />
+                    </ListItem>
+                    <ListItem button>
+                      <ListItemIcon>
+                        <Share />
+                      </ListItemIcon>
+                      <ListItemText primary="Share" />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Grid>
+            </Grid>
+          </Box>
+
+
+        </PapperBlock>
+        : <h1> Loading...</h1>}
+    </>
   );
 };
 
