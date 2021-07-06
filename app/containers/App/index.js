@@ -20,6 +20,7 @@ function App() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
+    console.log(code)
 
     if (code) {
       let axios = require("axios");

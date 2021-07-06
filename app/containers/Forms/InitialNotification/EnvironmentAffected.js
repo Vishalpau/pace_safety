@@ -370,6 +370,9 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
+                    {error && error[`envQuestionOption${[3]}`]
+                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
+                  : null}
                   </FormControl>
                 </Grid>
 
@@ -419,6 +422,9 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
+                    {error && error[`envQuestionOption${[3]}`]
+                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
+                  : null}
                   </FormControl>
 
                   {isrelase == "Yes" ? (
@@ -472,6 +478,9 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
+                    {error && error[`envQuestionOption${[3]}`]
+                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
+                  : null}
                   </FormControl>
 
                   {isWildlife == "Yes" ? (
@@ -527,6 +536,12 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
+                    
+                   
+                  {error && error[`envQuestionOption${[3]}`]
+                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
+                  : null}
+               
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
