@@ -295,7 +295,7 @@ const IncidentDetails = () => {
           equipmentDamagedComments: "",
           isEnviromentalImpacted: form.environmentaffected,
           enviromentalImpactComments: "",
-          supervisorByName: "..",
+          supervisorByName: "",
           supervisorById: 0,
           incidentReportedOn: new Date().toISOString(),
           incidentReportedByName: "..",

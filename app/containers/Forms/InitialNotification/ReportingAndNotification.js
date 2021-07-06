@@ -164,6 +164,7 @@ const ReportingAndNotification = () => {
   };
 
   const handleDateChange = async(date) => {
+    // compare time
     var time = date || incidentsListData.incidentReportedOn
     var start_time = new Date(time)
     var end_time = new Date()
@@ -171,7 +172,7 @@ const ReportingAndNotification = () => {
     var hours = Math.floor(diff / 1000 / 60 / 60);
 
   console.log(hours)
-    if (hours > 4) {
+    if (hours >= 4) {
       await SetLateReport(true);
     } else {
       await SetLateReport(false);
