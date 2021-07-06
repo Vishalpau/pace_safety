@@ -7,7 +7,6 @@ function UploadInputAll() {
 
   return (
     <Fragment>
-      {console.log(files)}
       <div>
         <MaterialDropZone
           files={files}

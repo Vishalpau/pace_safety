@@ -45,10 +45,8 @@ const InvestigationOverview = () => {
   const severity_level = ["Level1", "Level2", "Level3", "Level4"];
 
   const handleNext = () => {
-    console.log(form);
     const { error, isValid } = initialdetailvalidate(form);
     setError(error);
-    // console.log(error, isValid);
     const res = api.post("api/v1/incidents/92/investigations/", form);
     if (res.status === 200) {
       console.log("request done");

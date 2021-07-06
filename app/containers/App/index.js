@@ -44,7 +44,6 @@ function App() {
 
       axios(config)
         .then(function(response) {
-          console.log(response.data.access_token);
           localStorage.setItem("access_token", response.data.access_token);
         })
         .catch(function(error) {

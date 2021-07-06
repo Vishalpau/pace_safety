@@ -373,7 +373,7 @@ const RootCauseAnalysis = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>

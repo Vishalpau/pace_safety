@@ -488,7 +488,7 @@ const HazardiousCondition = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+                onClick={() => history.goBack()}
               >
                 Previous
               </Button>

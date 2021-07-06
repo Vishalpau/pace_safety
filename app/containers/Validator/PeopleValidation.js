@@ -7,17 +7,17 @@ function PeopleValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].personType.toString())) {
-      error[`personType${[i]}`] = "This Field is Empty";
+      error[`personType${[i]}`] = "Please choose person type.";
       isValid = false;
     }
 
     if (validator.isEmpty(data[i].personDepartment.toString())) {
-      error[`personDepartment${[i]}`] = "This Field is Empty";
+      error[`personDepartment${[i]}`] = "Please choose department.";
       isValid = false;
     }
 
     if (validator.isEmpty(data[i].personName.toString())) {
-      error[`personName${[i]}`] = "This Field is Empty";
+      error[`personName${[i]}`] = "Please enter person name.";
       isValid = false;
     }
 
@@ -27,7 +27,7 @@ function PeopleValidate(data) {
     // }
 
     if (validator.isEmpty(data[i].personMedicalCare.toString())) {
-      error[`personMedicalCare${[i]}`] = "This Field is Empty";
+      error[`personMedicalCare${[i]}`] = "Please choose medical care.";
       isValid = false;
     }
 

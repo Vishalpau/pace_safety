@@ -57,7 +57,7 @@ function PersonalDashboard(props) {
           <div class="hexagon hexagon_fullcontnt">
             <div class="hexagontent hexagon_content_box">
               <a class="hse_compliance_protocols" href="#" target="_blank">
-                <p>Compliance Protocols</p>
+                <p>Compliances</p>
               </a>
             </div>
           </div>
@@ -73,7 +73,7 @@ function PersonalDashboard(props) {
                 href="#"
                 target="_blank"
               >
-                <p>Incident Reporting &amp; Management</p>
+                <p>Incidents</p>
               </a>
             </div>
           </div>
@@ -107,7 +107,7 @@ function PersonalDashboard(props) {
           <div class="hexagon hexagon_fullcontnt">
             <div class="hexagontent hexagon_content_box">
               <a class="hse_environment_development" href="#" target="_blank">
-                <p>Environment Management</p>
+                <p>Observations</p>
               </a>
             </div>
           </div>
@@ -119,13 +119,17 @@ function PersonalDashboard(props) {
                 href="https://ntpc-stage.teknobuilt.com/index.php?do=/permitmanagement/projectid_1/phaseid_1/uid_0/type_2/wctype_iwp/"
                 target="_blank"
               >
-                <p>Intelligent Permit Management</p>
+                <p>Intelligent Permits</p>
               </a>
             </div>
           </div>
 
-          <div class="hexagon hide_responsiv">
-            <div class="hexagontent hexagon_content_box" />
+          <div class="hexagon hexagon_fullcontnt">
+            <div class="hexagontent hexagon_content_box">
+              <a class="hse_environment_development" href="#" target="_blank">
+                <p>Observations</p>
+              </a>
+            </div>
           </div>
 
           <div class="hexagon hexagon_fullcontnt">

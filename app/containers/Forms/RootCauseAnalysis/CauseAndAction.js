@@ -212,7 +212,7 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>

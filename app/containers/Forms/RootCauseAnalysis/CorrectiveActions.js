@@ -315,7 +315,7 @@ const CorrectiveAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>

@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { PapperBlock } from "dan-components";
-import InputLabel from "@material-ui/core/InputLabel";
-
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { FormHelperText } from "@material-ui/core";
-import fs from "fs";
-// import Upload from "material-ui-upload/Upload";
-import { DropzoneArea } from "material-ui-dropzone";
+import { FormHelperText, withStyles } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -46,15 +43,13 @@ const useStyles = makeStyles((theme) => ({
   },
   inlineRadioGroup: {
     flexDirection: "row",
-    gap: "1.5rem",
+    fontSize: 10,
   },
   evidenceCard: {
     padding: "1rem",
   },
-  fullWidth: {
-    width: "100%",
-  },
 }));
+
 const Evidence = () => {
   // States definations.
   const [selectedDate, setSelectedDate] = React.useState(
@@ -238,13 +233,10 @@ const Evidence = () => {
             </Grid>
 
             <Grid item md={12}>
-              <Card variant="outlined" className={classes.evidenceCard}>
+              {/* <Card variant="outlined" className={classes.evidenceCard}>
                 <CardContent>
                   <Grid container spacing={4} alignItems="center">
                     <Grid item md={6}>
-                      {/* <Box marginBottom={2}>
-                <Typography variant="subtitle1">Evidence Type</Typography>
-              </Box> */}
                       <TextField
                         id="filled-basic"
                         variant="outlined"
@@ -314,10 +306,6 @@ const Evidence = () => {
                       />
                     </Grid>
                     <Grid item md={6}>
-                      {/* <Box marginBottom={2}>
-                <Typography variant="body">Attatchments</Typography>
-              </Box> */}
-
                       <input
                         type="file"
                         className={classes.fullWidth}
@@ -329,7 +317,63 @@ const Evidence = () => {
                     </Grid>
                   </Grid>
                 </CardContent>
-              </Card>
+              </Card> */}
+              <TableContainer>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ width: 200 }}>
+                        Evidence Type
+                      </TableCell>
+                      <TableCell style={{ width: 260 }}>Yes/ No/ N/A</TableCell>
+                      <TableCell>Comments</TableCell>
+                      <TableCell>Attatchments</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        <Typography variant="body2">
+                          Worker Statement
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <FormControl size="small" component="fieldset">
+                          <RadioGroup
+                            aria-label="availability"
+                            name="availability1"
+                            className={classes.inlineRadioGroup}
+                            value="yes" // Default
+                            // onChange={handleChange}
+                          >
+                            <FormControlLabel
+                              value="yes"
+                              control={<Radio />}
+                              label="Yes"
+                            />
+                            <FormControlLabel
+                              value="no"
+                              control={<Radio />}
+                              label="Male"
+                            />
+                            <FormControlLabel
+                              value="not available"
+                              control={<Radio />}
+                              label="N/A"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </TableCell>
+                      <TableCell>
+                        <TextField size="small" variant="outlined" />
+                      </TableCell>
+                      <TableCell>
+                        <input type="file" />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
 
             <Grid item md={12}>

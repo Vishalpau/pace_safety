@@ -211,7 +211,6 @@ const Details = () => {
           `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current}`
         )
       }
-
     }
 
     e.preventDefault();
@@ -221,6 +220,7 @@ const Details = () => {
   useEffect(() => {
     handelUpdateCheck();
     fetchIncidentData();
+    setHideArray(localStorage.getItem("deleteForm"))
   }, []);
 
   return (
