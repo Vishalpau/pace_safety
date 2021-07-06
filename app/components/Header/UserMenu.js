@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
@@ -19,9 +19,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import Typography from "@material-ui/core/Typography";
-
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import dummy from "dan-api/dummy/dummyContents";
 import messageStyles from "dan-styles/Messages.scss";
 import avatarApi from "dan-api/images/avatars";
@@ -31,6 +32,15 @@ import styles from "./header-jss";
 
 import "../../styles/custom/customheader.css";
 import { LOGIN_URL } from "../../utils/constants";
+
+const useStyles = makeStyles({
+  list: {
+    width: 300,
+  },
+  fullList: {
+    width: "auto",
+  },
+});
 
 function UserMenu(props) {
   const [menuState, setMenuState] = useState({
@@ -70,6 +80,12 @@ function UserMenu(props) {
     localStorage.clear();
     window.location.href = LOGIN_URL;
   };
+
+  function ListItemLink(props) {
+    return <ListItem button component="a" {...props} />;
+  }
+
+  const classnames = useStyles();
 
   return (
     <div>
@@ -204,7 +220,43 @@ function UserMenu(props) {
         </IconButton>
       </Tooltip>
 
-      <Menu
+      <Drawer
+        anchor="right"
+        anchorEl={menuAnchorEl}
+        open={appsOpen}
+        onClose={handleAppsClose}
+      >
+        <div className={classnames.list}>
+          <List dense className={classnames.menulist}>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="Project Information Hub" />
+            </ListItemLink>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="HSE Management" />
+            </ListItemLink>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="Assesments" />
+            </ListItemLink>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="Complaince Protocols" />
+            </ListItemLink>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="Environment Management" />
+            </ListItemLink>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="Intelligent Permit Management" />
+            </ListItemLink>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="Incident Reporting & Management" />
+            </ListItemLink>
+            <ListItemLink href="#simple-list">
+              <ListItemText primary="Rapid Knowledge & Collaboration" />
+            </ListItemLink>
+          </List>
+        </div>
+      </Drawer>
+
+      {/* <Menu
         id="apps-menu"
         anchorEl={menuAnchorEl}
         keepMounted
@@ -257,7 +309,7 @@ function UserMenu(props) {
           <AccountCircleIcon fontSize="large" />
           <Typography variant="subtitle2">Menu Item</Typography>
         </MenuItem>
-      </Menu>
+      </Menu> */}
 
       <Button
         className={classes.userControls}
