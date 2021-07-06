@@ -14,7 +14,7 @@ function EquipmentValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].equipmentType.toString())) {
-      error[`equipmentType${[i]}`] = "This field is empty";
+      error[`equipmentType${[i]}`] = "Please choose equipment type.";
       isValid = false;
     }
 
@@ -24,7 +24,9 @@ function EquipmentValidate(data) {
     // }
 
     if (validator.isEmpty(data[i].equipmentDeatils.toString())) {
-      error[`equipmentDeatils${[i]}`] = "This field is empty";
+
+      error[`equipmentDeatils${[i]}`] = "Please enter equipment details.";
+
       isValid = false;
     }
   }

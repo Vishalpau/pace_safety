@@ -18,7 +18,7 @@ function Settings(props) {
   const showResult = useCallback((values) => {
     setTimeout(() => {
       setValueForm(values);
-      alert(`You submitted:\n\n${valueForm}`);
+      // alert(`You submitted:\n\n${valueForm}`);
     }, 500); // simulate server latency
   }, [valueForm]);
 

@@ -14,7 +14,7 @@ function PropertyValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].propertyType.toString())) {
-      error[`propertyType${[i]}`] = "This field is empty";
+      error[`propertyType${[i]}`] = "Please choose property type";
       isValid = false;
     }
 
@@ -24,7 +24,7 @@ function PropertyValidate(data) {
     // }
 
     if (validator.isEmpty(data[i].damageDetails.toString())) {
-      error[`damageDetails${[i]}`] = "This field is empty";
+      error[`damageDetails${[i]}`] = "Please enter damage details";
       isValid = false;
     }
   }

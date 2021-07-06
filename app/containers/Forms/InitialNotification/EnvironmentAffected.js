@@ -13,7 +13,7 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import { PapperBlock } from "dan-components";
-import FormLabel from "@material-ui/core/FormLabel";
+import { FormHelperText, FormLabel } from "@material-ui/core";
 
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const EnvironmentAffected = () => {
   const reportedTo = [
     "Internal Leadership",
@@ -90,7 +89,7 @@ const EnvironmentAffected = () => {
   const [isrelase, setIsRelase] = useState(false);
   const [isWildlife, setIsWildlife] = useState(false);
   const [iswaterbody, setIswaterBody] = useState(false);
-  const [environmentListData, setEnvironmentListData] = useState({});
+  const [environmentListData, setEnvironmentListData] = useState([]);
   const [envComments, setEnvComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -102,8 +101,8 @@ const EnvironmentAffected = () => {
     "Were There Any Spills ?": "Details of Spills Affected",
     "Were There Any Release ?": "Details of Release Affected",
     "Were There Any Impact on Wildlife ?": "Details of Wildlife Affected",
-    "Were There Any Waterbody Affected ?": "Details of Waterbody Affected"
-  })
+    "Were There Any Waterbody Affected ?": "Details of Waterbody Affected",
+  });
   const [form, setForm] = useState([
     {
       envQuestion: "Were There Any Spills ?",
@@ -186,19 +185,18 @@ const EnvironmentAffected = () => {
         `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
       );
     } else {
-      // const { error, isValid } = EnvironmentValidate(form[i]);
-      // setError(error);
-      // console.log(error)
-
-      for (let i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/environment/`,
-          form[i]
-        );
+      const { error, isValid } = EnvironmentValidate(form);
+      setError(error);
+      if(isValid === true){
+        for (let i = 0; i < form.length; i++) {
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/environment/`,
+            form[i]
+          );
+        
       }
-
       const temp = incidentsListData;
       temp["updatedAt"] = moment(new Date()).toISOString();
       temp["enviromentalImpactComments"] =
@@ -208,9 +206,16 @@ const EnvironmentAffected = () => {
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-      history.push(
-        "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-      );
+      if (id) {
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
+      } else {
+        history.push(
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+        );
+      }
+      }
     }
   };
 
@@ -313,11 +318,11 @@ const EnvironmentAffected = () => {
                   <Grid item md={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
-                        id="waterbody-details"
+                        id={`waterbody-details-update-${key + 1}`}
                         multiline
                         rows="3"
                         variant="outlined"
-                        label={questionMap[env.envQuestion.strip()]}
+                        label={` Details of ${env.envQuestion.slice(14, -2)}`}
                         error={error && error.envAnswerDetails}
                         helperText={
                           error && error.envAnswerDetails
@@ -343,7 +348,11 @@ const EnvironmentAffected = () => {
               <>
                 {/* spills question and option */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset"
+                  required
+                  error={error && error[`envQuestionOption${[0]}`]}
+                  >
+
                     <FormLabel component="legend">
                       Were There Any Spills ?
                     </FormLabel>
@@ -389,7 +398,10 @@ const EnvironmentAffected = () => {
 
                 {/* relase question and answer */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset"
+                  required
+                   error={error && error[`envQuestionOption${[1]}`]}
+                  >
                     <FormLabel component="legend">
                       Were There Any Release ?
                     </FormLabel>
@@ -437,7 +449,10 @@ const EnvironmentAffected = () => {
 
                 {/* wildlife imapact question and answer */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset"
+                  required
+                   error={error && error[`envQuestionOption${[2]}`]}
+                  >
                     <FormLabel component="legend">
                       Were There Any Impact on Wildlife ?
                     </FormLabel>
@@ -467,7 +482,7 @@ const EnvironmentAffected = () => {
 
                   {isWildlife == "Yes" ? (
                     <TextField
-                      id="waterbody-details"
+                      id="details-of-Wildlife-Affected"
                       multiline
                       rows="3"
                       variant="outlined"
@@ -489,7 +504,9 @@ const EnvironmentAffected = () => {
                 {/* waterbody question and answer */}
 
                 <Grid item md={12}>
-                  <FormControl component="fieldset">
+                  <FormControl component="fieldset" required
+                   error={error && error[`envQuestionOption${[3]}`]}
+                  >
                     <FormLabel component="legend">
                       Were There Any Waterbody Affected ?
                     </FormLabel>
@@ -544,7 +561,7 @@ const EnvironmentAffected = () => {
               <div>
                 {/* <p>Comment if any</p> */}
                 <TextField
-                  id="comments"
+                  id="comment-if-any-environment"
                   multiline
                   variant="outlined"
                   rows="3"
