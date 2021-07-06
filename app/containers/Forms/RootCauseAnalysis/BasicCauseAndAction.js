@@ -109,9 +109,7 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem(
-          "fkincidentId"
-        )}`
+        `/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem("fkincidentId")}`
       );
     } else {
       history.push(
@@ -196,7 +194,7 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>
@@ -212,7 +210,6 @@ const BasicCauseAndAction = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem={"Basic Cause and Action"}
           />

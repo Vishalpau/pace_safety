@@ -148,13 +148,13 @@ const RootCauseAnalysis = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
         history.push(
-          "/app/incident-management/registration/root-cause-analysis/why-analysis/"
+          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+            "fkincidentId"
+          )}`
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/why-analysis/${
-            putId.current
-          }`
+          `/app/incident-management/registration/summary/summary/${putId.current}`
         );
       }
     }
@@ -373,7 +373,7 @@ const RootCauseAnalysis = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/management-control/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>
@@ -390,7 +390,6 @@ const RootCauseAnalysis = () => {
         </Grid>
         <Grid item={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem="Root Cause Analysis"
           />

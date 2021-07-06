@@ -415,8 +415,7 @@ const HazardiousActs = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
         }`
       );
     }
@@ -646,7 +645,6 @@ const HazardiousActs = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem={"Hazardious Acts"}
           />

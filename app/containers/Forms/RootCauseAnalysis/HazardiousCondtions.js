@@ -323,8 +323,7 @@ const HazardiousCondition = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
           }`
         );
       }
@@ -489,7 +488,7 @@ const HazardiousCondition = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+                onClick={() => history.goBack()}
               >
                 Previous
               </Button>
@@ -507,7 +506,6 @@ const HazardiousCondition = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem="Hazardious Conditions"
           />

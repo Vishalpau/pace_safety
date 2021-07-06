@@ -81,6 +81,7 @@ const Details = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
+  let [hideArray, setHideArray] = useState([])
 
   // get data for put
   const handelUpdateCheck = async () => {
@@ -122,6 +123,33 @@ const Details = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
+  const handelRcaRecommended = (e, value) => {
+    if (value == "Five Why analysis") {
+      console.log("here")
+      setHideArray(["Hazardious Acts",
+        "Hazardious Conditions",
+        "Cause and Action",
+        "Basic Cause",
+        "Basic Cause and Action",
+        "Corrective Actions",
+        "Root Cause Analysis"])
+
+    } else if (value == "Pace cause analysis") {
+      setHideArray(["Root Cause Analysis",
+        "Why Analysis"])
+
+    } else if (value == "Root Cause analysis") {
+      setHideArray(["Hazardious Acts",
+        "Hazardious Conditions",
+        "Cause and Action",
+        "Basic Cause",
+        "Basic Cause and Action",
+        "Corrective Actions",
+        "Why Analysis"])
+    }
+    setForm({ ...form, rcaRecommended: value })
+  }
+
   const handelNext = async (e) => {
     console.log(form);
     const { error, isValid } = DetailValidation(form);
@@ -155,26 +183,49 @@ const Details = () => {
       }
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
-      history.push(
-        "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
-      );
+      if (form.rcaRecommended == "Five Why analysis") {
+        history.push(
+          "/app/incident-management/registration/root-cause-analysis/why-analysis/"
+        )
+      } else if (form.rcaRecommended == "Pace cause analysis") {
+        history.push(
+          "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+        )
+      } else if (form.rcaRecommended == "Root Cause analysis") {
+        history.push(
+          "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+        )
+      }
+
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-          putId.current
-        }`
-      );
+      if (form.rcaRecommended == "Five Why analysis") {
+        history.push(
+          `/app/incident-management/registration/root-cause-analysis/why-analysis/${putId.current}`
+        )
+      } else if (form.rcaRecommended == "Pace cause analysis") {
+        history.push(
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`
+        )
+      } else if (form.rcaRecommended == "Root Cause analysis") {
+        history.push(
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current}`
+        )
+      }
     }
+
     e.preventDefault();
+    localStorage.setItem("deleteForm", hideArray)
   };
 
   useEffect(() => {
     handelUpdateCheck();
     fetchIncidentData();
+    setHideArray(localStorage.getItem("deleteForm"))
   }, []);
 
   return (
     <PapperBlock title="RCA Details">
+      {console.log(hideArray)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
@@ -251,9 +302,7 @@ const Details = () => {
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
-                    onClick={(e) =>
-                      setForm({ ...form, rcaRecommended: selectValues })
-                    }
+                    onClick={(e) => handelRcaRecommended(e, selectValues)}
                   >
                     {selectValues}
                   </MenuItem>
@@ -372,7 +421,7 @@ const Details = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
+            deleteForm={hideArray}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem={"Details"}
           />

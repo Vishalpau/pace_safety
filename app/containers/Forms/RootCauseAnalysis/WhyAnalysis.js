@@ -166,7 +166,8 @@ const WhyAnalysis = () => {
         );
       }
     }
-  };
+    localStorage.setItem("RootCause", "Done")
+  }
 
   useEffect(() => {
     handelUpdateCheck();
@@ -265,7 +266,7 @@ const WhyAnalysis = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>
@@ -283,7 +284,6 @@ const WhyAnalysis = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem={"Why Analysis"}
           />
