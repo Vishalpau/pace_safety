@@ -10,27 +10,27 @@ export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/"
 export const access_token = "ZWrwcFuWcsfaKgHv7jXC5KswUw4hma" || localStorage.getItem('access_token')
 
 export const INITIAL_NOTIFICATION_FORM = {
-  "Incident Details":
+  "Incident details":
     "/app/incident-management/registration/initial-notification/incident-details/",
-  "People Affected":
+  "People affected":
     "/app/incident-management/registration/initial-notification/peoples-afftected/",
-  "Property Affected":
+  "Property affected":
     "/app/incident-management/registration/initial-notification/property-affected/",
-  "Equipment Affected":
+  "Equipment affected":
     "/app/incident-management/registration/initial-notification/equipment-affected/",
-  "Environment Affected":
+  "Environment affected":
     "/app/incident-management/registration/initial-notification/environment-affected/",
-  "Reporting and Notification":
+  "Reporting and notification":
     "/app/incident-management/registration/initial-notification/reporting-and-notification/",
 };
 
 export const EVIDENCE_FORM = {
   Evidence: "/app/incident-management/registration/evidence/evidence/",
-  "Activity Detail":
+  "Activity detail":
     "/app/incident-management/registration/evidence/activity-detail/",
-  "Personal and PPE Details":
+  "Personal and PPE details":
     "/app/incident-management/registration/evidence/personal-and-ppedetails/",
-  "Additional Details":
+  "Additional details":
     "/app/incident-management/registration/evidence/additional-details/",
 };
 
@@ -97,40 +97,45 @@ export const BASIC_CAUSE_SUB_TYPE = [
   "Leadership",
   "Processes",
   "Others job factors",
-]
+];
 
-export const HAZARDIOUS_ACTS_SUB_TYPES = ["Supervision",
+export const HAZARDIOUS_ACTS_SUB_TYPES = [
+  "Supervision",
   "Workpackage",
   "equipmentMachinery",
   "behaviourIssue",
   "safetyIssues",
   "ergonimics",
   "procedures",
-  "otheracts"]
+  "otheracts",
+];
 
-export const ACTS_SUB_TYPES = ["Supervision",
+export const ACTS_SUB_TYPES = [
+  "Supervision",
   "Work package",
   "Equipment machinery",
   "Behaviour issue",
   "Safety issues",
   "Ergonimics",
   "Procedures",
-  "Other acts"]
+  "Other acts",
+];
 
 export const HAZARDIOUS_CONDITION_SUB_TYPES = [
   "warningSystem",
   "energyTypes",
   "tools",
   "safetyitems",
-  "othersconditions"]
+  "othersconditions",
+];
 
 export const CONDITION_SUB_TYPES = [
   "Warning system",
   "Energy types",
   "Tools",
   "Safety items",
-  "Others conditions"
-]
+  "Others conditions",
+];
 
 export const BASIC_CAUSE_SUB_TYPES = [
   "personal",
@@ -292,4 +297,4 @@ export const MANAGEMENTCONTROL = [
   "Inadequate Compilance and Standards",
 ];
 
-export const RCAOPTION = ["Cause analysis", "Pace cause", "Root Cause"];
+export const RCAOPTION = ["Five Why analysis", "Pace cause analysis", "Root Cause analysis"];

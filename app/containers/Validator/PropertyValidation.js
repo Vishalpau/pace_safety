@@ -6,7 +6,7 @@ function PropertyValidate(data) {
   const error = {};
 
   // if (validator.isEmpty(data.detailpropertyaffected)){
-  //     error.detailpropertyaffected = "This Field is Empty"
+  //     error.detailpropertyaffected = "This field is empty"
   //     isValid = false
   // }else{
   //     isValid = true
@@ -14,12 +14,12 @@ function PropertyValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].propertyType.toString())) {
-      error[`propertyType${[i]}`] = "Please choose property type";
+      error[`propertyType${[i]}`] = "Please select property type";
       isValid = false;
     }
 
     // if (validator.isEmpty(data[i].propertyOtherType.toString())) {
-    //   error[`propertyOtherType${[i]}`] = "This Field is Empty";
+    //   error[`propertyOtherType${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
 
@@ -30,7 +30,7 @@ function PropertyValidate(data) {
   }
 
   // if (validator.isEmpty(data.describeactiontaken)){
-  //     error.describeactiontaken = "This Field is Empty"
+  //     error.describeactiontaken = "This field is empty"
   //     isValid = false
   // }
 

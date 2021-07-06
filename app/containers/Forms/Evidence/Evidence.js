@@ -217,7 +217,7 @@ const Evidence = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Number
+                Incident number
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentDetail.incidentNumber}
@@ -225,7 +225,7 @@ const Evidence = () => {
             </Grid>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Description
+                Incident description
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentDetail.incidentDetails}

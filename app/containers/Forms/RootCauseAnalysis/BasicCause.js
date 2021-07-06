@@ -324,8 +324,7 @@ const BasicCause = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current
         }`
       );
     }
@@ -490,7 +489,7 @@ const BasicCause = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>
@@ -498,7 +497,6 @@ const BasicCause = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"}
               onClick={(e) => handelNext(e)}
             >
               Next
@@ -507,7 +505,6 @@ const BasicCause = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem={"Basic Cause"}
           />

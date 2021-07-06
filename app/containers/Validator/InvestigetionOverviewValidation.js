@@ -6,27 +6,27 @@ function investigationoverviewvalidate(data) {
   const error = {};
 
   if (validator.isEmpty(data.constructionManagerName.toString())) {
-    error.constructionManagerName = "This Field is Empty";
+    error.constructionManagerName = "This field is empty";
   }
 
   if (validator.isEmpty(data.unitconstructionmanagercontact.toString())) {
-    error.unitconstructionmanagercontact = "This Field is Empty";
+    error.unitconstructionmanagercontact = "This field is empty";
   }
 
   if (validator.isEmpty(data.unithsespecialistname.toString())) {
-    error.unithsespecialistname = "This Field is Empty";
+    error.unithsespecialistname = "This field is empty";
   }
 
   if (validator.isEmpty(data.unithsespecialistcontactno.toString())) {
-    error.unithsespecialistcontactno = "This Field is Empty";
+    error.unithsespecialistcontactno = "This field is empty";
   }
 
   if (validator.isEmpty(data.actualseveritylevel.toString())) {
-    error.actualseveritylevel = "This Field is Empty";
+    error.actualseveritylevel = "This field is empty";
   }
 
   if (validator.isEmpty(data.potentialseveritylevel.toString())) {
-    error.potentialseveritylevel = "This Field is Empty";
+    error.potentialseveritylevel = "This field is empty";
   }
   return { error };
 }

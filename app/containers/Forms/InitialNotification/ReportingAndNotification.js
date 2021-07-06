@@ -527,7 +527,7 @@ const ReportingAndNotification = () => {
                   ) : null}
                 </FormGroup>
                 {error && error.reportedto && (
-                    <p>{error.reportedto}</p>
+                    <FormHelperText>{error.reportedto}</FormHelperText>
                   )}
               </FormControl>
             </Grid>
@@ -707,9 +707,7 @@ const ReportingAndNotification = () => {
                   id="reportedBy"
                   label="Reported By"
                   defaultValue={
-                    incidentsListData.incidentReportedByName
-                      ? incidentsListData.incidentReportedByName
-                      : ""
+                    incidentsListData.incidentReportedByName === "."?"":incidentsListData.incidentReportedByName
                   }
                   onChange={(e) => {
                     setForm({

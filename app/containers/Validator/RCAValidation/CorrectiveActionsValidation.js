@@ -5,12 +5,12 @@ function CorrectiveActionValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.managementControl.rcaRemark.toString())) {
-    error.managementControl = "This Field is Empty";
+    error.managementControl = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.regionSupport.rcaRemark.toString())) {
-    error.regionSupport = "This Field is Empty";
+    error.regionSupport = "This field is empty";
     isValid = false;
   }
 

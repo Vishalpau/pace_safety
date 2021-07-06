@@ -200,9 +200,10 @@ const Summary = () => {
               <div className={Styles.item}>
                 <Button
                   color="primary"
-                  variant="outlined"
+                  variant={localStorage.getItem("RootCause") == "Done" ? "contained" : "outlined"}
                   size="small"
                   className={classes.statusButton}
+                  endIcon={localStorage.getItem("RootCause") == "Done" ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
                     setInitialNotification(false);
                     setInvestigation(false);
@@ -214,7 +215,7 @@ const Summary = () => {
                   Root Cause & Analysis
                 </Button>
                 <Typography variant="caption" display="block">
-                  Pending
+                  {localStorage.getItem("RootCause") == "Done" ? "Done" : "Pending"}
                 </Typography>
               </div>
               <div className={Styles.item}>
