@@ -269,8 +269,8 @@ const IncidentDetails = () => {
     } else {
       // Create case if id is not null and means it is an add new registration case.
       const { error, isValid } = validate(form);
-     await setError(error);
-      console.log(error,isValid)
+      await setError(error);
+      console.log(error, isValid);
 
       if (isValid === true) {
         const formData = {
@@ -350,8 +350,7 @@ const IncidentDetails = () => {
       }
     }
   };
- 
-  
+
   const fetchIncidentTypeValue = async () => {
     const res = await api.get("api/v1/lists/1/value");
     const result = res.data.data.results;
@@ -448,11 +447,11 @@ const IncidentDetails = () => {
                 className={classes.formControl}
               >
                 {/* <Typography varint="p">Project Name</Typography> */}
-                <InputLabel id="project-name-label">Project Name</InputLabel>
+                <InputLabel id="project-name-label">Project name</InputLabel>
                 <Select
                   id="project-name"
                   labelId="project-name-label"
-                  label="Project Name"
+                  label="Project name"
                   defaultValue={incidentsListData.fkProjectId}
                   onChange={(e) => {
                     setForm({
@@ -476,11 +475,11 @@ const IncidentDetails = () => {
 
             <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Unit Name</InputLabel>
+                <InputLabel id="unit-name-label">Unit name</InputLabel>
                 <Select
                   labelId="unit-name-label"
                   id="unit-name"
-                  label="Unit Name"
+                  label="Unit name"
                   defaultValue={incidentsListData.fkUnitId}
                   onChange={(e) => {
                     setForm({
@@ -506,12 +505,12 @@ const IncidentDetails = () => {
                 className={classes.formControl}
               >
                 <InputLabel id="demo-simple-select-label">
-                  Incident Type
+                  Incident type
                 </InputLabel>
                 <Select
                   labelId="incident-type-label"
                   id="incident-type"
-                  label="Incident Type"
+                  label="Incident type"
                   defaultValue={incidentsListData.incidentType}
                   onChange={(e) => {
                     setForm({ ...form, incidenttype: e.target.value });
@@ -535,9 +534,8 @@ const IncidentDetails = () => {
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   error={error.incidentdate}
-                  
                   className={classes.formControl}
-                  label="Incident Date"
+                  label="Incident date & time"
                   helperText={error.incidentdate ? error.incidentdate : null}
                   value={
                     form.incidentdate || incidentsListData.incidentOccuredOn
@@ -578,7 +576,6 @@ const IncidentDetails = () => {
               <TextField
                 error={error.description}
                 multiline
-                
                 variant="outlined"
                 rows="4"
                 id="description"
@@ -602,7 +599,7 @@ const IncidentDetails = () => {
                 id="immediate-actions"
                 multiline
                 rows="4"
-                label="Any Immediate Actions Taken"
+                label="Any immediate actions taken"
                 defaultValue={incidentsListData.immediateActionsTaken}
                 className={classes.fullWidth}
                 onChange={(e) => {
@@ -672,11 +669,10 @@ const IncidentDetails = () => {
               <FormControl
                 variant="outlined"
                 error={error.subcontractor}
-               
                 className={classes.formControl}
               >
                 <InputLabel id="demo-simple-select-label">
-                  Sub-Contractor
+                  Sub-contractor
                 </InputLabel>
                 <Select
                   labelId="sub-contractor-type-label"
@@ -705,165 +701,168 @@ const IncidentDetails = () => {
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" 
-              required
-              error={error && error[`personaffected$`]} 
-              className={classes.formControl}>
-               
-                  <FormLabel component="legend">
-                    Were any person affected during incident?
-                  </FormLabel>
-                  {/* <p>Were any person affected during incident?</p> */}
-
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="personaffected"
-                    name="personaffected"
-                    aria-required
-                    defaultValue={incidentsListData.isPersonAffected}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        personaffected: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "People Affected",
-                        "personAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        personAffect: e.target.value,
-                      });
-                    }}
-                  >
-                    {personAffectedValue.length !== 0
-                      ? personAffectedValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                      : null}
-                  </RadioGroup>
-                </FormControl>
-              
-              {error && error.personaffected && (
-                    <p>{error.personaffected}</p>
-                  )}
-            </Grid>
-
-            <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" className={classes.formControl}
-              required
-              error={error && error[`propertyaffected$`]} 
+              <FormControl
+                component="fieldset"
+                required
+                error={error && error[`personaffected`]}
+                className={classes.formControl}
               >
-               
-                  <FormLabel component="legend">
-                    Was any propery damaged during incident?
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="propertyaffected"
-                    name="propertyaffected"
-                    aria-required
-                    defaultValue={incidentsListData.isPropertyDamaged}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        propertyaffected: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "Property Affected",
-                        "propertyAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        propertyAffect: e.target.value,
-                      });
-                    }}
-                  >
-                    {propertiesAffectValue.length !== 0
-                      ? propertiesAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                      : null}
-                  </RadioGroup>
-                </FormControl>
-              
-              {error && error.propertyaffected && (
-                    <p>{error.propertyaffected}</p>
-                  )}
-            </Grid>
+                <FormLabel component="legend">
+                  Were any person affected during incident?
+                </FormLabel>
+                {/* <p>Were any person affected during incident?</p> */}
 
-            <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" 
-                  required
-                  error={error && error[`equiptmenteffected$`]} 
-                   className={classes.formControl}>
-            
-                  <FormLabel component="legend">
-                    Was there any equiptment damaged?
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="equiptmenteffected"
-                    name="equiptmenteffected"
-                    aria-required
-                    defaultValue={incidentsListData.isEquipmentDamaged}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        equiptmenteffected: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "Equipment Affected",
-                        "equipmentAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        equipmentAffect: e.target.value,
-                      });
-                    }}
-                  >
-                    {eqiptmentAffectValue.length !== 0
-                      ? eqiptmentAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                            onChange={(e) => {
-                              setForm({
-                                ...form,
-                                equiptmenteffected: e.target.value,
-                              });
-                            }}
-                          />
-                        ))
-                      : null}
-                  </RadioGroup>
-                </FormControl>
-              
-              {error && error.equiptmenteffected && (
-                    <p>{error.equiptmenteffected}</p>
-                  )}
-            </Grid>
-
-            <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" 
-                  required
-                  error={error && error[`environmentaffected$`]} className={classes.formControl}>
-                <FormLabel component="legend" 
+                <RadioGroup
+                  className={classes.inlineRadioGroup}
+                  aria-label="personaffected"
+                  name="personaffected"
+                  aria-required
+                  defaultValue={incidentsListData.isPersonAffected}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      personaffected: e.target.value,
+                    });
+                    handleHideAffect(
+                      e.target.value,
+                      "People Affected",
+                      "personAffect"
+                    );
+                    setNextPath({
+                      ...nextPath,
+                      personAffect: e.target.value,
+                    });
+                  }}
                 >
+                  {personAffectedValue.length !== 0
+                    ? personAffectedValue.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
+                    : null}
+                </RadioGroup>
+
+                {error && error.personaffected && (
+                  <FormHelperText>{error.personaffected}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={12}>
+              <FormControl
+                component="fieldset"
+                className={classes.formControl}
+                required
+                error={error && error[`propertyaffected`]}
+              >
+                <FormLabel component="legend">
+                  Was any propery damaged during incident?
+                </FormLabel>
+                <RadioGroup
+                  className={classes.inlineRadioGroup}
+                  aria-label="propertyaffected"
+                  name="propertyaffected"
+                  aria-required
+                  defaultValue={incidentsListData.isPropertyDamaged}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      propertyaffected: e.target.value,
+                    });
+                    handleHideAffect(
+                      e.target.value,
+                      "Property Affected",
+                      "propertyAffect"
+                    );
+                    setNextPath({
+                      ...nextPath,
+                      propertyAffect: e.target.value,
+                    });
+                  }}
+                >
+                  {propertiesAffectValue.length !== 0
+                    ? propertiesAffectValue.map((value, index) => (
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
+                    : null}
+                </RadioGroup>
+                {error && error.propertyaffected && (
+                  <FormHelperText>{error.propertyaffected}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={12}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error && error[`equiptmenteffected`]}
+                className={classes.formControl}
+              >
+                <FormLabel component="legend">
+                  Was there any equiptment damaged?
+                </FormLabel>
+                <RadioGroup
+                  className={classes.inlineRadioGroup}
+                  aria-label="equiptmenteffected"
+                  name="equiptmenteffected"
+                  aria-required
+                  defaultValue={incidentsListData.isEquipmentDamaged}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      equiptmenteffected: e.target.value,
+                    });
+                    handleHideAffect(
+                      e.target.value,
+                      "Equipment Affected",
+                      "equipmentAffect"
+                    );
+                    setNextPath({
+                      ...nextPath,
+                      equipmentAffect: e.target.value,
+                    });
+                  }}
+                >
+                  {eqiptmentAffectValue.length !== 0
+                    ? eqiptmentAffectValue.map((value, index) => (
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                          onChange={(e) => {
+                            setForm({
+                              ...form,
+                              equiptmenteffected: e.target.value,
+                            });
+                          }}
+                        />
+                      ))
+                    : null}
+                </RadioGroup>
+                {error && error.equiptmenteffected && (
+                  <FormHelperText>{error.equiptmenteffected}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={12}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error && error[`environmentaffected`]}
+                className={classes.formControl}
+              >
+                <FormLabel component="legend">
                   Was there any environment impact?
                 </FormLabel>
                 <RadioGroup
@@ -906,8 +905,8 @@ const IncidentDetails = () => {
                     : null}
                 </RadioGroup>
                 {error && error.environmentaffected && (
-                    <p>{error.environmentaffected}</p>
-                  )}
+                  <FormHelperText>{error.environmentaffected}</FormHelperText>
+                )}
               </FormControl>
             </Grid>
 
@@ -933,7 +932,7 @@ const IncidentDetails = () => {
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident Details"
+              selectedItem="Incident details"
             />
           </Grid>
         </Grid>

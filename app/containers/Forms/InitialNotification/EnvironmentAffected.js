@@ -37,10 +37,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-    margin: ".5rem 0",
-  },
-  spacer: {
-    marginTop: "1rem",
   },
   customLabel: {
     marginBottom: 0,
@@ -98,14 +94,14 @@ const EnvironmentAffected = () => {
   const [isChecked, setIsChecked] = useState([]);
 
   const questionMap = useRef({
-    "Were There Any Spills ?": "Details of Spills Affected",
-    "Were There Any Release ?": "Details of Release Affected",
-    "Were There Any Impact on Wildlife ?": "Details of Wildlife Affected",
-    "Were There Any Waterbody Affected ?": "Details of Waterbody Affected",
+    "Were there any spills?": "Details of spills affected",
+    "Were there any release?": "Details of release affected",
+    "Were there any impact on wildlife?": "Details of wildlife affected",
+    "Were there any waterbody affected?": "Details of waterbody affected",
   });
   const [form, setForm] = useState([
     {
-      envQuestion: "Were There Any Spills ?",
+      envQuestion: "Were there any spills?",
       envQuestionOption: "",
       envAnswerDetails: "No",
       createdBy: 1,
@@ -113,7 +109,7 @@ const EnvironmentAffected = () => {
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
     {
-      envQuestion: "Were There Any Release ?",
+      envQuestion: "Were there any release?",
       envQuestionOption: "",
       envAnswerDetails: "No",
       createdBy: 1,
@@ -121,7 +117,7 @@ const EnvironmentAffected = () => {
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
     {
-      envQuestion: "Were There Any Impact on Wildlife ?",
+      envQuestion: "Were there any impact on wildlife?",
       envQuestionOption: "",
       envAnswerDetails: "No",
       createdBy: 1,
@@ -129,7 +125,7 @@ const EnvironmentAffected = () => {
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
     {
-      envQuestion: "Were There Any Waterbody Affected ?",
+      envQuestion: "Were there any waterbody affected?",
       envQuestionOption: "",
       envAnswerDetails: "No",
       status: "Active",
@@ -187,7 +183,7 @@ const EnvironmentAffected = () => {
     } else {
       const { error, isValid } = EnvironmentValidate(form);
       setError(error);
-      if(isValid === true){
+      if (isValid === true) {
         for (let i = 0; i < form.length; i++) {
           const res = await api.post(
             `api/v1/incidents/${localStorage.getItem(
@@ -195,26 +191,25 @@ const EnvironmentAffected = () => {
             )}/environment/`,
             form[i]
           );
-        
-      }
-      const temp = incidentsListData;
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      temp["enviromentalImpactComments"] =
-        envComments || incidentsListData.enviromentalImpactComments;
+        }
+        const temp = incidentsListData;
+        temp["updatedAt"] = moment(new Date()).toISOString();
+        temp["enviromentalImpactComments"] =
+          envComments || incidentsListData.enviromentalImpactComments;
 
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      if (id) {
-        history.push(
-          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
         );
-      } else {
-        history.push(
-          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-        );
-      }
+        if (id) {
+          history.push(
+            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+          );
+        } else {
+          history.push(
+            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          );
+        }
       }
     }
   };
@@ -300,7 +295,6 @@ const EnvironmentAffected = () => {
                             "envQuestionOption",
                             env.id
                           );
-                          // handleChecked(e,key)
                         }}
                       >
                         {environmentAffectedValue.length !== 0
@@ -346,15 +340,14 @@ const EnvironmentAffected = () => {
               ))
             ) : (
               <>
-                {/* spills question and option */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset"
-                  required
-                  error={error && error[`envQuestionOption${[0]}`]}
+                  <FormControl
+                    component="fieldset"
+                    required
+                    error={error && error[`envQuestionOption${[0]}`]}
                   >
-
                     <FormLabel component="legend">
-                      Were There Any Spills ?
+                      Were there any spills?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -385,7 +378,7 @@ const EnvironmentAffected = () => {
                     <TextField
                       id="spills-details"
                       variant="outlined"
-                      label="Details of Spills"
+                      label="Details of spills"
                       multiline
                       rows="3"
                       className={classes.fullWidth}
@@ -396,14 +389,14 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                {/* relase question and answer */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset"
-                  required
-                   error={error && error[`envQuestionOption${[1]}`]}
+                  <FormControl
+                    component="fieldset"
+                    required
+                    error={error && error[`envQuestionOption${[1]}`]}
                   >
                     <FormLabel component="legend">
-                      Were There Any Release ?
+                      Were there any release?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -438,7 +431,7 @@ const EnvironmentAffected = () => {
                         error && error.envQuestion ? err.envQuestion : null
                       }
                       rows="3"
-                      label="Details of Release"
+                      label="Details of release"
                       className={classes.fullWidth}
                       onChange={(e) => {
                         handleForm(e, 1, "envAnswerDetails");
@@ -449,12 +442,13 @@ const EnvironmentAffected = () => {
 
                 {/* wildlife imapact question and answer */}
                 <Grid item md={12}>
-                  <FormControl component="fieldset"
-                  required
-                   error={error && error[`envQuestionOption${[2]}`]}
+                  <FormControl
+                    component="fieldset"
+                    required
+                    error={error && error[`envQuestionOption${[2]}`]}
                   >
                     <FormLabel component="legend">
-                      Were There Any Impact on Wildlife ?
+                      Were there any impact on wildlife?
                     </FormLabel>
 
                     <RadioGroup
@@ -504,11 +498,13 @@ const EnvironmentAffected = () => {
                 {/* waterbody question and answer */}
 
                 <Grid item md={12}>
-                  <FormControl component="fieldset" required
-                   error={error && error[`envQuestionOption${[3]}`]}
+                  <FormControl
+                    component="fieldset"
+                    required
+                    error={error && error[`envQuestionOption${[3]}`]}
                   >
                     <FormLabel component="legend">
-                      Were There Any Waterbody Affected ?
+                      Were there any waterbody affected?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -546,7 +542,7 @@ const EnvironmentAffected = () => {
                           ? error.envAnswerDetails
                           : null
                       }
-                      label="Details of Waterbody Affected"
+                      label="Details of waterbody affected"
                       className={classes.fullWidth}
                       onChange={(e) => {
                         handleForm(e, 3, "envAnswerDetails");
@@ -559,13 +555,12 @@ const EnvironmentAffected = () => {
 
             <Grid item md={12}>
               <div>
-                {/* <p>Comment if any</p> */}
                 <TextField
                   id="comment-if-any-environment"
                   multiline
                   variant="outlined"
                   rows="3"
-                  label="Comment If Any"
+                  label="Comment if any"
                   className={classes.fullWidth}
                   defaultValue={incidentsListData.enviromentalImpactComments}
                   onChange={(e) => setEnvComments(e.target.value)}
@@ -597,7 +592,7 @@ const EnvironmentAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Environment Affected"
+              selectedItem="Environment affected"
             />
           </Grid>
         </Grid>

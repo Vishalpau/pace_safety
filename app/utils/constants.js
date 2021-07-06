@@ -8,17 +8,17 @@ export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvw
 export const API_URL = "https://dev-safety-api.paceos.io/";
 
 export const INITIAL_NOTIFICATION_FORM = {
-  "Incident Details":
+  "Incident details":
     "/app/incident-management/registration/initial-notification/incident-details/",
-  "People Affected":
+  "People affected":
     "/app/incident-management/registration/initial-notification/peoples-afftected/",
-  "Property Affected":
+  "Property affected":
     "/app/incident-management/registration/initial-notification/property-affected/",
-  "Equipment Affected":
+  "Equipment affected":
     "/app/incident-management/registration/initial-notification/equipment-affected/",
-  "Environment Affected":
+  "Environment affected":
     "/app/incident-management/registration/initial-notification/environment-affected/",
-  "Reporting and Notification":
+  "Reporting and notification":
     "/app/incident-management/registration/initial-notification/reporting-and-notification/",
 };
 

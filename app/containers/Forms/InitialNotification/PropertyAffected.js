@@ -214,7 +214,7 @@ const PropertyAffected = () => {
         );
         // If api success
         if (status === 201) {
-          if(id){
+          if (id) {
             if (nextPath.equipmentAffect === "Yes") {
               history.push(
                 `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
@@ -228,8 +228,7 @@ const PropertyAffected = () => {
                 `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
               );
             }
-          }
-          else{
+          } else {
             if (nextPath.equipmentAffect === "Yes") {
               history.push(
                 "/app/incident-management/registration/initial-notification/equipment-affected/"
@@ -244,7 +243,6 @@ const PropertyAffected = () => {
               );
             }
           }
-          
         }
         // If no is selected on form.
       } else {
@@ -341,13 +339,13 @@ const PropertyAffected = () => {
   }, []);
 
   return (
-    <PapperBlock title=" Details of Proprties Affected?" icon="ion-md-list-box">
+    <PapperBlock title="Details of Proprties Affected?" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="body2">
-                Do You Have Details to Share About the Properties Affected ?
+                Do you have details to share about the properties affected?
               </Typography>
               <RadioGroup
                 className={classes.inlineRadioGroup}
@@ -372,10 +370,9 @@ const PropertyAffected = () => {
             {detailsOfPropertyAffect === "Yes" ? (
               <>
                 <Grid item md={12}>
-                  <Box marginTop={2} marginBottom={2}>
-                    {/* <h4>Details of people affected</h4> */}
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">
-                      Details of Properties Affected
+                      Details of properties affected
                     </Typography>
                   </Box>
                 </Grid>
@@ -395,7 +392,7 @@ const PropertyAffected = () => {
                             className={classes.formControl}
                           >
                             <InputLabel id="person-type-label">
-                              Property Type
+                              Property type
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
@@ -432,7 +429,7 @@ const PropertyAffected = () => {
                           <TextField
                             id={`other-property${index}`}
                             variant="outlined"
-                            label="If Others, Describe"
+                            label="If others, describe"
                             className={classes.formControl}
                             value={property.propertyOtherType || ""}
                             onChange={(e) =>
@@ -451,7 +448,7 @@ const PropertyAffected = () => {
                           <TextField
                             id={`damage-property${index}`}
                             variant="outlined"
-                            label="Describe the Damage"
+                            label="Describe the damage"
                             className={classes.formControl}
                             value={property.damageDetails || ""}
                             onChange={(e) =>
@@ -481,14 +478,14 @@ const PropertyAffected = () => {
                             error={error && error[`propertyType${[index]}`]}
                           >
                             <InputLabel id="person-type-label">
-                              Property Type
+                              Property type
                             </InputLabel>
                             <Select
                               labelId="person-type-label"
-                              id={`person-type${index+1}`}
+                              id={`person-type${index + 1}`}
                               label="Person type"
-                              value = {value.propertyType || ''}
-                              onChange={(e) =>{
+                              value={value.propertyType || ""}
+                              onChange={(e) => {
                                 handlePropertyType(e, index, "propertyType");
                                 setIsOther(e.target.value !== "Other");
                               }}
@@ -516,9 +513,9 @@ const PropertyAffected = () => {
 
                         <Grid item md={6}>
                           <TextField
-                            id={`other-property${index+1}`}
+                            id={`other-property${index + 1}`}
                             variant="outlined"
-                            label="If Others, Describe"
+                            label="If others, describe"
                             value={value.propertyOtherType || ""}
                             error={
                               error && error[`propertyOtherType${[index]}`]
@@ -540,7 +537,7 @@ const PropertyAffected = () => {
                               )
                             }
                           />
-                         
+
                           {error && error[`propertyOtherType${[index]}`] && (
                             <p>{error[`propertyOtherType${[index]}`]}</p>
                           )}
@@ -549,7 +546,7 @@ const PropertyAffected = () => {
                         <Grid item md={12}>
                           {/* <p>Name of people affected</p> */}
                           <TextField
-                           id={`describe-damage${index+1}`}
+                            id={`describe-damage${index + 1}`}
                             variant="outlined"
                             error={error && error[`damageDetails${[index]}`]}
                             helperText={
@@ -557,7 +554,7 @@ const PropertyAffected = () => {
                                 ? error[`damageDetails${[index]}`]
                                 : null
                             }
-                            label="Describe the Damage"
+                            label="Describe the damage"
                             className={classes.formControl}
                             value={value.damageDetails || ""}
                             onChange={(e) =>
@@ -585,7 +582,7 @@ const PropertyAffected = () => {
                       className={classes.textButton}
                       onClick={() => addNewPropertyDetails()}
                     >
-                      <PersonAddIcon /> Add Details of Another Property Affected
+                      <PersonAddIcon /> Add details of another property affected
                     </button>
                   </Grid>
                 )}
@@ -598,7 +595,7 @@ const PropertyAffected = () => {
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe Property Affected"
+                  label="Describe property affected"
                   className={classes.fullWidth}
                   defaultValue={incidentsListData.propertyDamagedComments}
                   onChange={(e) => {
@@ -629,7 +626,7 @@ const PropertyAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Property Affected"}
+              selectedItem={"Property affected"}
             />
           </Grid>
         </Grid>
