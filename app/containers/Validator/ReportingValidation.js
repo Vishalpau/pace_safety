@@ -5,9 +5,12 @@ function ReportingValidation(data) {
   let isValid = true;
   const error = {};
   const report = data.reportedto
+  
 
   if(report.length === 0){
-    error.reportedto === "Please select reportable to."
+    
+    error.reportedto = "Please select reportable to."
+    console.log(report)
     isValid = false
   }
 
