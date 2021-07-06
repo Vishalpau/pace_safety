@@ -6,6 +6,8 @@ const URL = "https://dev-safety.pace-os.com/";
 export const SSO_URL = "https://dev-accounts-api.paceos.io";
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
 export const API_URL = "https://dev-safety-api.paceos.io/";
+export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/"
+export const access_token = "ZWrwcFuWcsfaKgHv7jXC5KswUw4hma" || localStorage.getItem('access_token')
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident Details":

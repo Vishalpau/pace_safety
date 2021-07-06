@@ -44,6 +44,9 @@ import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
 
 import FormSideBar from "../FormSideBar";
 import {
+  access_token,
+  ACCOUNT_API_URL,
+  API_URL,
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
@@ -53,6 +56,8 @@ import ReportingValidation from "../../Validator/ReportingValidation";
 import InitialEvidenceValidate from "../../Validator/InitialEvidance"
 
 import api from "../../../utils/axios";
+import axios from 'axios'
+
 import UploadInputAll from "../demos/UploadInputAll";
 
 const useStyles = makeStyles((theme) => ({
@@ -85,24 +90,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UploadInputImg = () => {
-  const [files] = useState([]);
 
-  return (
-    <Fragment>
-      <div>
-        <MaterialDropZone
-          acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
-          files={files}
-          showPreviews
-          maxSize={5000000}
-          filesLimit={5}
-          text="Drag and drop image(s) here or click"
-        />
-      </div>
-    </Fragment>
-  );
-};
 
 const ReportingAndNotification = () => {
   const [error, setError] = useState({});
@@ -112,6 +100,8 @@ const ReportingAndNotification = () => {
   const [reportedTo, setReportableTo] = useState([]);
   const [reportOtherData, setReportOtherData] = useState("");
   let [reportedToObj, setReportedToObj] = useState([]);
+  const [superVisorName, setSuperVisorName] = useState([])
+  const [reportedByName, setReportedByName] = useState([])
   const [evidanceForm, setEvidanceForm] = useState([
     {
       evidenceCheck: "Yes",
@@ -428,8 +418,65 @@ const ReportingAndNotification = () => {
     }
   };
 
+  // fetch supervisor name
+
+  const fetchSuperVisorName= ()=>{
+    var config = {
+      method: 'get',
+      url: `${ACCOUNT_API_URL}api/v1/companies/1/roles/4/users/`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`, 
+       }
+    };
+    
+    axios(config)
+    .then(function (response) {
+      console.log(response)
+      const result  = response.data.data.results[0].roles[0].users
+      let role=[]
+      role = result
+      role.push({name:'other'})
+      setSuperVisorName(role)
+      console.log(result)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  
+
+  const fetchReportedBy = ()=>{
+    var config = {
+      method: 'get',
+      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`, 
+        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
+      }
+    };
+    
+    axios(config)
+    .then(function (response) {
+      console.log(response)
+      const result  = response.data.data.results[0].users
+      let user=[]
+      user = result;
+      user.push({name:"other"})
+     
+      
+      setReportedByName(result)
+      console.log(result)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    
+  }
+
   useEffect(() => {
     fetchIncidentsData();
+    fetchSuperVisorName();
+    fetchReportedBy();
     if (id) {
       fetchReportsDataList();
     } else {
@@ -577,7 +624,7 @@ const ReportingAndNotification = () => {
                   id="supervisorname"
                   label="Supervisor Name"
                   defaultValue={
-                    incidentsListData.supervisorByName
+                    incidentsListData.supervisorByName 
                       ? incidentsListData.supervisorByName
                       : ""
                   }
@@ -588,9 +635,9 @@ const ReportingAndNotification = () => {
                     });
                   }}
                 >
-                  {selectValues.map((value, index) => (
-                    <MenuItem key={index} value={value}>
-                      {value}
+                  {superVisorName.map((value, index) => (
+                    <MenuItem key={index} value={value.name}>
+                      {value.name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -601,20 +648,21 @@ const ReportingAndNotification = () => {
             </Grid>
 
             <Grid item md={6}>
-              {form.supervisorname === "Other" ? (
+              
                 <TextField
                   id="others"
                   variant="outlined"
                   label="Others"
+                  disabled ={form.supervisorname === "other"?false:true}
                   className={classes.formControl}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      reportedby: e.target.value,
+                      supervisorname: e.target.value.toString(),
                     });
                   }}
                 />
-              ) : null}
+             
               {error && error.othername ? <p>{error.othername}</p> : null}
             </Grid>
 
@@ -669,9 +717,9 @@ const ReportingAndNotification = () => {
                     });
                   }}
                 >
-                  {selectValues.map((value, index) => (
-                    <MenuItem key={index} value={value}>
-                      {value}
+                  {reportedByName.map((value, index) => (
+                    <MenuItem key={index} value={value.name}>
+                      {value.name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -682,12 +730,13 @@ const ReportingAndNotification = () => {
             </Grid>
 
             <Grid item md={6}>
-              {form.reportedby === "Other" ? (
+             
                 <TextField
                   id="others"
                   variant="outlined"
                   label="Others"
                   className={classes.formControl}
+                  disabled ={form.reportedby === "other"?false:true}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -695,7 +744,7 @@ const ReportingAndNotification = () => {
                     });
                   }}
                 />
-              ) : null}
+              
             </Grid>
             {lateReport ? (
               <Grid item md={12}>
