@@ -51,7 +51,7 @@ const ActivityDetails = () => {
   const [activtyList, setActvityList] = useState([
     {
       questionCode: "AD-01",
-      question: "Did the job require work permit ?",
+      question: "Did the job require work permit?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -62,7 +62,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-02",
-      question: "If yes, was a permit completed prior of the job ?",
+      question: "If yes, was a permit completed prior of the job?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -73,7 +73,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-03",
-      question: "Was per-job safety discussed head ?",
+      question: "Was per-job safety discussed head?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -84,7 +84,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-04",
-      question: "Was JHA executed for the task ?",
+      question: "Was JHA executed for the task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -95,7 +95,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-05",
-      question: "Was FLA executed for the task ?",
+      question: "Was FLA executed for the task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -106,7 +106,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-06",
-      question: "Did pre-planning identified the hazard ?",
+      question: "Did pre-planning identified the hazard?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -117,7 +117,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-07",
-      question: "Was per-zone planning enhanced the post-event ?",
+      question: "Was per-zone planning enhanced the post-event?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -249,6 +249,7 @@ const ActivityDetails = () => {
                     <Grid item md={6}>
                       <FormControl
                         component="fieldset"
+                        required
                         className={classes.formControl}
                         error={value.error}
                       >

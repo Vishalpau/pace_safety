@@ -549,6 +549,8 @@ const IncidentDetails = () => {
                   }}
                   format="yyyy/MM/dd HH:mm"
                   inputVariant="outlined"
+                  disableFuture='true'
+                
                 />
               </MuiPickersUtilsProvider>
             </Grid>

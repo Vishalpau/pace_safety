@@ -53,6 +53,8 @@ import EvidenceSummary from "../../SummaryDetails/Evidence";
 import RootCauseAnalysisSummary from "../../SummaryDetails/RootCauseAndAnalysis";
 import LessionLearnSummary from "../../SummaryDetails/LessionLearn";
 
+// import { useHistory } from "react-router";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -88,6 +90,7 @@ const Summary = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
+  const history = useHistory();
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
@@ -294,9 +297,7 @@ const Summary = () => {
                     }
                   >
                     <ListItemLink
-                      href={`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-                        "fkincidentId"
-                      )}`}
+                      href={`/app/incident-management/registration/initial-notification/incident-details/${id}`}
                     >
                       <ListItemIcon>
                         <Edit />
@@ -326,7 +327,7 @@ const Summary = () => {
                       <ListItemText primary="Perform RCA" />
                     </ListItemLink>
 
-                    <ListItemLink href="/app/incident-management/registration/lession-learned/lession-learned/">
+                    <ListItemLink onClick={()=>history.push("/app/incident-management/registration/lession-learned/lession-learned/")}>
                       <ListItemIcon>
                         <Add />
                       </ListItemIcon>

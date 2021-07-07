@@ -182,6 +182,7 @@ const Details = () => {
         }
       }
     }
+    // routing as per fields
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
       if (form.rcaRecommended == "Five why analysis") {
         history.push(
@@ -200,20 +201,17 @@ const Details = () => {
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       if (form.rcaRecommended == "Five why analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/why-analysis/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/why-analysis/${putId.current
           }`
         );
       } else if (form.rcaRecommended == "Pace cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
           }`
         );
       } else if (form.rcaRecommended == "Root cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
           }`
         );
       }
@@ -325,8 +323,8 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              // required
-              // error={error.evidenceSupport}
+            // required
+            // error={error.evidenceSupport}
             >
               <FormLabel component="legend">
                 Evidence collected supports the incident event took place?
@@ -353,8 +351,8 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              // required
-              // error={error.evidenceContradiction}
+            // required
+            // error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
                 Contradictions between evidence and the description of incident?
@@ -387,8 +385,8 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              // required
-              // error={error.evidenceContradiction}
+            // required
+            // error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
                 Evidence does not supports the incident event as described?

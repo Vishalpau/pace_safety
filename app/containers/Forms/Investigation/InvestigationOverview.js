@@ -41,8 +41,8 @@ const InvestigationOverview = () => {
   const selectValues = [1, 2, 3, 4];
 
   const [form, setForm] = useState({
-    levelOfInvestigation: "",
-    srartDate: "2021-07-07T07:13:21.626Z",
+    srartDate: "2021-07-07T13:05:22.157Z",
+    endDate: "2021-07-07T13:05:22.157Z",
     constructionManagerName: "",
     constructionManagerContactNo: "",
     hseSpecialistName: "",
@@ -58,7 +58,8 @@ const InvestigationOverview = () => {
   const handleNext = () => {
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
-    const res = api.post("api/v1/incidents/92/investigations/", form);
+
+    const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
     if (res.status === 200) {
       console.log("request done");
     }
@@ -71,14 +72,22 @@ const InvestigationOverview = () => {
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
+
           <Grid item md={12}>
             <Typography variant="h6">Unit Constructor Manager</Typography>
           </Grid>
+
           <Grid item md={6}>
             <TextField
               id="title"
               variant="outlined"
               label="Name"
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  constructionManagerName: e.target.value,
+                });
+              }}
               error={error && error.constructionManagerName}
               helperText={
                 error && error.constructionManagerName
@@ -86,14 +95,9 @@ const InvestigationOverview = () => {
                   : null
               }
               className={classes.formControl}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  constructionManagerName: e.target.value,
-                });
-              }}
             />
           </Grid>
+
           <Grid item md={6}>
             <TextField
               id="title"
@@ -166,13 +170,13 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Actual Severity & Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     unitname: toString(e.target.value),
-              //   });
-              // }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    actualSeverityLevel: toString(e.target.value),
+                  });
+                }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -197,13 +201,13 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Potential Severity & Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     unitname: toString(e.target.value),
-              //   });
-              // }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    potentialSeverityLevel: toString(e.target.value),
+                  });
+                }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>

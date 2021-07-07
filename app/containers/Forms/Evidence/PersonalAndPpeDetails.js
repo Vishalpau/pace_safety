@@ -307,7 +307,7 @@ const PersonalAndPpeDetails = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Number
+                Incident number
               </Typography>
               <Typography className={Type.labelValue} gutterBottom>
                 {incidentDetail.incidentNumber}
@@ -321,6 +321,7 @@ const PersonalAndPpeDetails = () => {
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
+                        required
                         error={value.error}
                       >
                         <FormLabel component="legend">
@@ -343,9 +344,7 @@ const PersonalAndPpeDetails = () => {
 
                         {value.error ? (
                           <FormHelperText>{value.error}</FormHelperText>
-                        ) : (
-                          ""
-                        )}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   </>
@@ -359,10 +358,9 @@ const PersonalAndPpeDetails = () => {
                   <>
                     {console.log(index)}
                     <Grid item md={6}>
-                      {/* <p>Employee self supervised</p> */}
-
                       <FormControl
                         component="fieldset"
+                        required
                         className={classes.formControl}
                         error={value.error}
                       >
@@ -385,9 +383,7 @@ const PersonalAndPpeDetails = () => {
                         </RadioGroup>
                         {value.error ? (
                           <FormHelperText>{value.error}</FormHelperText>
-                        ) : (
-                          ""
-                        )}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   </>
@@ -400,11 +396,10 @@ const PersonalAndPpeDetails = () => {
                 {ppeData.slice(9, 12).map((value, index) => (
                   <>
                     <Grid item md={6}>
-                      {/* <p>Was flag person required for this job</p> */}
-
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
+                        required
                         error={value.error}
                       >
                         <FormLabel component="legend">
@@ -427,9 +422,7 @@ const PersonalAndPpeDetails = () => {
 
                         {value.error ? (
                           <FormHelperText>{value.error}</FormHelperText>
-                        ) : (
-                          ""
-                        )}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   </>
@@ -443,9 +436,9 @@ const PersonalAndPpeDetails = () => {
                 {ppeData.slice(12, 14).map((value, index) => (
                   <>
                     <Grid item md={6}>
-                      {/* <p>Metal on Metal incident</p> */}
                       <FormControl
                         component="fieldset"
+                        required
                         className={classes.formControl}
                         error={value.error}
                       >
@@ -469,9 +462,7 @@ const PersonalAndPpeDetails = () => {
 
                         {value.error ? (
                           <FormHelperText>{value.error}</FormHelperText>
-                        ) : (
-                          ""
-                        )}
+                        ) : null}
                       </FormControl>
                     </Grid>
                   </>
@@ -480,10 +471,10 @@ const PersonalAndPpeDetails = () => {
             ) : (
               <>
                 <Grid item md={6}>
-                  {/* <p>PPE worn properly</p> */}
                   {console.log(ppeList)}
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">PPE worn properly?</FormLabel>
@@ -511,6 +502,7 @@ const PersonalAndPpeDetails = () => {
                   {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">PPE in Good Shape?</FormLabel>
@@ -536,6 +528,7 @@ const PersonalAndPpeDetails = () => {
                   {/* <p>PPE Proper fit</p> */}
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">PPE Proper Fit?</FormLabel>
@@ -562,7 +555,9 @@ const PersonalAndPpeDetails = () => {
 
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
+                    required
                   >
                     <FormLabel component="legend">
                       PPE appropriate for task?
@@ -589,10 +584,9 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Employee self supervised</p> */}
-
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
@@ -617,14 +611,13 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Supervisor present at site</p> */}
-
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Supervisor Present at Site ?
+                      Supervisor present at site?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -645,14 +638,13 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Supervisor provided clear detail of work</p> */}
-
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Supervisor Provided Clear Detail of Work ?
+                      Supervisor provided clear detail of work?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -673,13 +665,13 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Supervisor provided detail work package</p> */}
                   <FormControl
+                    required
                     component="fieldset"
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Supervisor Provided Detail Work Package ?
+                      Supervisor provided detail work package?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -700,13 +692,13 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Did supervisor conducted I-care observation</p> */}
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Did Supervisor Conducted I-Care Observation ?
+                      Did supervisor conducted I-care observation?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -726,18 +718,19 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
-                  <Typography variant="h6">Flag Person</Typography>
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                    <Typography variant="h6">Flag person</Typography>
+                  </Box>
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Was flag person required for this job</p> */}
-
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Was Flag Person Required for this Job ?
+                      Was flag person required for this job?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -758,13 +751,13 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Flag person trained/competent</p> */}
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Flag Person Trained/Competent
+                      Flag person trained competent
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -787,14 +780,13 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Was flag person present</p> */}
-
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Was Flag Person Present ?
+                      Was flag person present?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -816,17 +808,19 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
                 <Grid item md={12}>
-                  <Typography variant="h6">Other</Typography>
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                    <Typography variant="h6">Other</Typography>
+                  </Box>
                 </Grid>
 
                 <Grid item md={6}>
-                  {/* <p>Metal on Metal incident</p> */}
                   <FormControl
                     component="fieldset"
+                    required
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Metal on Metal Incident
+                      Metal on metal incident
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
@@ -852,9 +846,10 @@ const PersonalAndPpeDetails = () => {
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
+                    required
                   >
                     <FormLabel component="legend">
-                      Was Person in the Line of Fire ?
+                      Was person in the line of fire?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
