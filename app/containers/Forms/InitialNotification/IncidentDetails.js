@@ -534,6 +534,7 @@ const IncidentDetails = () => {
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   error={error.incidentdate}
+                  disableFuture
                   className={classes.formControl}
                   label="Incident date & time"
                   helperText={error.incidentdate ? error.incidentdate : null}
@@ -932,7 +933,7 @@ const IncidentDetails = () => {
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident Details"
+              selectedItem="Incident details"
             />
           </Grid>
         </Grid>

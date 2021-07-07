@@ -154,11 +154,13 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${putId.current
+          `/app/incident-management/registration/summary/summary/${
+            putId.current
           }`
         );
       }
     }
+    localStorage.setItem("RootCause", "Done");
   };
 
   useEffect(() => {
@@ -172,7 +174,7 @@ const RootCauseAnalysis = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
             <Typography className={Type.labelValue}>
               {incidents.incidentNumber}
@@ -181,7 +183,7 @@ const RootCauseAnalysis = () => {
 
           <Grid item md={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Description
+              Incident description
             </Typography>
             <Typography className={Type.labelValue}>
               {incidents.incidentDetails}
@@ -191,7 +193,7 @@ const RootCauseAnalysis = () => {
           <Grid item lg={6} md={12} sm={12}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
-                label="Investigation Start Date"
+                label="Investigation start date"
                 className={classes.formControl}
                 inputVariant="outlined"
                 id="date-picker-dialog"
@@ -206,7 +208,7 @@ const RootCauseAnalysis = () => {
           <Grid item md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
-                label="Investigation End Date"
+                label="Investigation end date"
                 className={classes.formControl}
                 inputVariant="outlined"
                 required
@@ -221,11 +223,11 @@ const RootCauseAnalysis = () => {
 
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">RCA Recommended</InputLabel>
+              <InputLabel id="project-name-label">RCA recommended</InputLabel>
               <Select
                 id="project-name"
                 labelId="project-name-label"
-                label="RCA Recommended"
+                label="RCA recommended"
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -237,12 +239,12 @@ const RootCauseAnalysis = () => {
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">
-                Level Of Investigation
+                Level of investigation
               </InputLabel>
               <Select
                 id="project-name"
                 labelId="project-name-label"
-                label="Level Of Investigation"
+                label="Level of investigation"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -260,7 +262,7 @@ const RootCauseAnalysis = () => {
                 ampm={false}
                 value={selectedDate}
                 onChange={handleDateChange}
-                // label="Incident Date and Time"
+                label="Incident date and time"
                 disabled
               />
             </MuiPickersUtilsProvider>
@@ -269,7 +271,7 @@ const RootCauseAnalysis = () => {
           <Grid item md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
-                label="Analysis Conduted By"
+                label="Analysis conduted by"
                 className={classes.formControl}
                 inputVariant="outlined"
                 required
@@ -288,7 +290,7 @@ const RootCauseAnalysis = () => {
               rows="3"
               variant="outlined"
               required
-              label="What Caused the Incident ?"
+              label="What caused the incident?"
               error={error.causeOfIncident}
               value={form.causeOfIncident}
               helperText={error ? error.causeOfIncident : ""}
@@ -305,7 +307,7 @@ const RootCauseAnalysis = () => {
               multiline
               rows="3"
               variant="outlined"
-              label="Corrective Actions"
+              label="Corrective actions"
               required
               error={error.correctiveAction}
               defaultValue={form.correctiveAction}
@@ -317,13 +319,9 @@ const RootCauseAnalysis = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl
-              component="fieldset"
-              required
-              error={error.wouldItPreventIncident}
-            >
+            <FormControl component="fieldset">
               <FormLabel component="legend">
-                Would Corrective Actions Prevent Simailar Incidents In Future?
+                Would corrective actions prevent simailar incidents in future?
               </FormLabel>
               <RadioGroup className={classes.inlineRadioGroup}>
                 {radioDecide.map((value) => (
@@ -342,9 +340,6 @@ const RootCauseAnalysis = () => {
                   />
                 ))}
               </RadioGroup>
-              {/* {error && error.wouldItPreventIncident && (
-                <FormHelperText>{error.wouldItPreventIncident}</FormHelperText>
-              )} */}
             </FormControl>
           </Grid>
 
@@ -355,13 +350,8 @@ const RootCauseAnalysis = () => {
               variant="outlined"
               multiline
               error={error && error.recommendSolution}
-              // helperText={
-              //   error && error.recommendSolution
-              //     ? error.recommendSolution
-              //     : null
-              // }
               helperText={null}
-              label="If No, Please Recommended Correct Solution ?"
+              label="If no please recommended correct solution?"
               rows="3"
               defaultValue={form.recommendSolution}
               onChange={(e) =>
@@ -383,7 +373,6 @@ const RootCauseAnalysis = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/why-analysis/"}
               onClick={(e) => handelNext(e)}
             >
               Next

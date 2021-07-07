@@ -154,7 +154,9 @@ const BasicCauseAndAction = () => {
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
-            <Typography className={Type.labelValue}>5 why analysis</Typography>
+            <Typography className={Type.labelValue}>
+              {localStorage.getItem("rcaMethod")}
+            </Typography>
           </Grid>
 
           <Grid item md={12}>
