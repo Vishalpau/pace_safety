@@ -541,7 +541,7 @@ const EqiptmentAffected = () => {
                 />
               </Grid>
             )}
-            <Grid item md={6}>
+            <Grid item md={12}>
               <Button
                 variant="contained"
                 color="primary"

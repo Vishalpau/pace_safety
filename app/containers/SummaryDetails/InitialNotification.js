@@ -81,27 +81,20 @@ const IncidentDetailsSummary = () => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incident Overview
+        <Typography variant="h6" gutterBottom>
+          Incident overview
         </Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography variant="h6">
-          {/* {item[1]["incidentTitle"]} */}
-          {incidents.incidentTitle}
-        </Typography>
+        <Typography variant="h5">{incidents.incidentTitle}</Typography>
       </Grid>
 
       <Grid item md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident on
         </Typography>
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {moment(incidents["incidentOccuredOn"]).format(
             "Do MMMM YYYY, h:mm:ss a"
           )}
@@ -113,11 +106,7 @@ const IncidentDetailsSummary = () => {
           Reported on
         </Typography>
 
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography variant="body" className={Fonts.labelValue}>
           {moment(incidents["incidentReportedOn"]).format(
             "Do MMMM YYYY, h:mm:ss a"
           )}
@@ -129,67 +118,47 @@ const IncidentDetailsSummary = () => {
           Reported by
         </Typography>
 
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {incidents["incidentReportedByName"]}
         </Typography>
       </Grid>
 
       <Grid item md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incident Type
+          Incident type
         </Typography>
 
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {incidents["incidentReportedByName"]}
         </Typography>
       </Grid>
 
       <Grid item md={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incidnet Description
+          Incidnet description
         </Typography>
 
         {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {incidents["incidentDetails"]}
         </Typography>
       </Grid>
       <Grid item md={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Immediate Action Taken
+          Immediate action taken
         </Typography>
 
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {incidents["immediateActionsTaken"]}
         </Typography>
       </Grid>
 
       <Grid item md={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incident Location
+          Incident location
         </Typography>
 
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {incidents["incidentLocation"]}
         </Typography>
       </Grid>
@@ -199,11 +168,7 @@ const IncidentDetailsSummary = () => {
           Contractor
         </Typography>
 
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {incidents["contractor"]}
         </Typography>
       </Grid>
@@ -212,15 +177,10 @@ const IncidentDetailsSummary = () => {
           Sub-contractor
         </Typography>
 
-        <Typography
-          variant="body"
-          color="textSecondary"
-          className={Fonts.labelValue}
-        >
+        <Typography className={Fonts.labelValue}>
           {incidents["subContractor"]}
         </Typography>
       </Grid>
-      {/* People Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -245,13 +205,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Person Department
+                        Person department
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {peopledata.personDepartment}
                       </Typography>
                     </Grid>
@@ -261,13 +217,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Person Name
+                        Person name
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {peopledata.personName}
                       </Typography>
                     </Grid>
@@ -277,13 +229,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Person Type
+                        Person type
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {peopledata.personType}
                       </Typography>
                     </Grid>
@@ -293,13 +241,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Person Identification Number
+                        Person identification number
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {peopledata.personIdentification}
                       </Typography>
                     </Grid>
@@ -311,11 +255,7 @@ const IncidentDetailsSummary = () => {
                       >
                         Person Department
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {peopledata.personDepartment}
                       </Typography>
                     </Grid>
@@ -327,11 +267,7 @@ const IncidentDetailsSummary = () => {
                       >
                         Location
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {peopledata.locationAssessmentCenter}
                       </Typography>
                     </Grid>
@@ -341,13 +277,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Worker offsite Assesments
+                        Worker offsite assesments
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {peopledata.workerOffsiteAssessment}
                       </Typography>
                     </Grid>
@@ -362,7 +294,7 @@ const IncidentDetailsSummary = () => {
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
-              Property Affected
+              Property affected
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -386,11 +318,7 @@ const IncidentDetailsSummary = () => {
                       >
                         Property Type
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {propertydata.propertyType}
                       </Typography>
                     </Grid>
@@ -402,11 +330,7 @@ const IncidentDetailsSummary = () => {
                       >
                         Property other type
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {propertydata.propertyOtherType}
                       </Typography>
                     </Grid>
@@ -416,13 +340,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Damage Details
+                        Damage details
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {propertydata.damageDetails}
                       </Typography>
                     </Grid>
@@ -437,7 +357,7 @@ const IncidentDetailsSummary = () => {
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
-              Equipment Affected
+              Equipment affected
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -450,7 +370,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Equipment Type
+                        Equipment type
                       </Typography>
                       <Typography
                         variant="body2"
@@ -466,7 +386,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        {key + 1}: Details of Equipment
+                        {key + 1}:Details of equipment
                       </Typography>
                     </Grid>
                     <Grid item md={6}>
@@ -475,13 +395,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Equipment Details
+                        Equipment details
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {equipmentdata.equipmentDeatils}
                       </Typography>
                     </Grid>
@@ -491,13 +407,9 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Equipment Other type
+                        Equipment other type
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {equipmentdata.equipmentOtherType}
                       </Typography>
                     </Grid>
@@ -512,7 +424,7 @@ const IncidentDetailsSummary = () => {
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
-              Enviroment Affected
+              Enviroment affected
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -525,28 +437,19 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                    {key+1}{" "}  {envData.envQuestion}
+                        {key + 1} {envData.envQuestion}
                       </Typography>
 
-                      <Typography
-                        variant="body"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {envData.envQuestionOption}
                       </Typography>
-                     
                     </Grid>
                     <Grid item md={12}>
-                    <Typography
-                        variant="body"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
-                        {"Answer Details :-"}{" "}{envData.envAnswerDetails}
+                      <Typography className={Fonts.labelValue}>
+                        {"Answer Details:"} {envData.envAnswerDetails}
                       </Typography>
                     </Grid>
-                 </Grid>
+                  </Grid>
                 ))
               : null}
           </AccordionDetails>
@@ -570,14 +473,10 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Reported To
+                        Reported to
                       </Typography>
 
-                      <Typography
-                        variant="body"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {report.reportTo}
                       </Typography>
                     </Grid>
@@ -588,14 +487,10 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Report Description
+                        Report description
                       </Typography>
 
-                      <Typography
-                        variant="body"
-                        color="textSecondary"
-                        className={Fonts.labelValue}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {report.reportingNote}
                       </Typography>
                     </Grid>

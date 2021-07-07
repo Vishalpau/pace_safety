@@ -389,6 +389,7 @@ const PropertyAffected = () => {
                           {/* <p>person type</p> */}
                           <FormControl
                             variant="outlined"
+                            required
                             className={classes.formControl}
                           >
                             <InputLabel id="person-type-label">
@@ -449,6 +450,7 @@ const PropertyAffected = () => {
                             id={`damage-property${index}`}
                             variant="outlined"
                             label="Describe the damage"
+                            required
                             className={classes.formControl}
                             value={property.damageDetails || ""}
                             onChange={(e) =>
@@ -474,6 +476,7 @@ const PropertyAffected = () => {
                         <Grid item md={6}>
                           <FormControl
                             variant="outlined"
+                            required
                             className={classes.formControl}
                             error={error && error[`propertyType${[index]}`]}
                           >
@@ -537,10 +540,6 @@ const PropertyAffected = () => {
                               )
                             }
                           />
-
-                          {error && error[`propertyOtherType${[index]}`] && (
-                            <p>{error[`propertyOtherType${[index]}`]}</p>
-                          )}
                         </Grid>
 
                         <Grid item md={12}>
@@ -548,6 +547,7 @@ const PropertyAffected = () => {
                           <TextField
                             id={`describe-damage${index + 1}`}
                             variant="outlined"
+                            required
                             error={error && error[`damageDetails${[index]}`]}
                             helperText={
                               error && error[`damageDetails${[index]}`]
