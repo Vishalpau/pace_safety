@@ -12,14 +12,14 @@ function EnvironmentValidate(data) {
     }
 
     if (validator.isEmpty(data[i].envAnswerDetails.toString())) {
-      error[`envAnswerDetails${[i]}`] = "This field is empty";
+     
       error[`envAnswerDetails${[i]}`] =
         "Please enter enviornment answer details.";
       isValid = false;
     }
     if (validator.isEmpty(data[i].envQuestionOption.toString())) {
       error[`envQuestionOption${[i]}`] =
-        "Please enter enviornment answer details.";
+        "Please choose given option";
       isValid = false;
     }
   }

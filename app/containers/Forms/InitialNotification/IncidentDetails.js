@@ -295,10 +295,10 @@ const IncidentDetails = () => {
           equipmentDamagedComments: "",
           isEnviromentalImpacted: form.environmentaffected,
           enviromentalImpactComments: "",
-          supervisorByName: "..",
+          supervisorByName: "",
           supervisorById: 0,
           incidentReportedOn: new Date().toISOString(),
-          incidentReportedByName: "..",
+          incidentReportedByName: ".",
           incidentReportedById: 0,
           reasonLateReporting: "",
           notificationComments: "",
@@ -932,7 +932,7 @@ const IncidentDetails = () => {
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident details"
+              selectedItem="Incident Details"
             />
           </Grid>
         </Grid>

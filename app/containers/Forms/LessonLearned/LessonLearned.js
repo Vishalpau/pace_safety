@@ -27,9 +27,11 @@ import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import { LESSION_LEARNED_FORM } from "../../../utils/constants";
+import { access_token, ACCOUNT_API_URL, LESSION_LEARNED_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
+
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -67,6 +69,7 @@ const LessionLearned = () => {
   const [whyCount, setWhyCount] = useState(["ram", "ram"]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [department, setDepartment] = useState([])
 
   // set state onChange update
   const handleUpdateLessonLearned = async (e, key, fieldname, lessonId) => {
@@ -141,7 +144,29 @@ const LessionLearned = () => {
     await setIsLoading(true);
   };
 
+  // fetch team or deparment 
+  const fetchDepartment = ()=>{
+    var config = {
+      method: 'get',
+      url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`, 
+       }
+    };
+    axios(config)
+    .then(function (response) {
+      console.log(response)
+      const result  = response.data.data.results;
+      console.log(result)
+      setDepartment(result);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
   useEffect(() => {
+    fetchDepartment();
     if (id) {
       fetchLessonLerned();
     }
@@ -252,9 +277,9 @@ const LessionLearned = () => {
                             )
                           }
                         >
-                          {selectValues.map((selectValues) => (
-                            <MenuItem value={selectValues}>
-                              {selectValues}
+                          {department.map((selectValues,index) => (
+                            <MenuItem value={selectValues.departmentName} key={index}>
+                              {selectValues.departmentDescription}
                             </MenuItem>
                           ))}
                         </Select>
@@ -315,11 +340,11 @@ const LessionLearned = () => {
                           })
                         }
                       >
-                        {selectValues.map((selectValues) => (
-                          <MenuItem value={selectValues}>
-                            {selectValues}
-                          </MenuItem>
-                        ))}
+                       {department.map((selectValues,index) => (
+                            <MenuItem value={selectValues.departmentName} key={index}>
+                              {selectValues.departmentDescription}
+                            </MenuItem>
+                          ))}
                       </Select>
                       {error && error.team && (
                         <FormHelperText>{error.team}</FormHelperText>
