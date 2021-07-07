@@ -298,7 +298,7 @@ const IncidentDetails = () => {
           supervisorByName: "",
           supervisorById: 0,
           incidentReportedOn: new Date().toISOString(),
-          incidentReportedByName: ".",
+          incidentReportedByName: "Vani",
           incidentReportedById: 0,
           reasonLateReporting: "",
           notificationComments: "",
