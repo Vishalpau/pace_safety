@@ -124,7 +124,7 @@ const Details = () => {
   const classes = useStyles();
 
   const handelRcaRecommended = (e, value) => {
-    if (value == "Five Why analysis") {
+    if (value == "Five why analysis") {
       setHideArray([
         "Hazardious acts",
         "Hazardious conditions",
@@ -135,10 +135,8 @@ const Details = () => {
         "Root cause analysis",
       ]);
     } else if (value == "Pace cause analysis") {
-      setHideArray([
-        "Root cause analysis",
-        "Why analysis"]);
-    } else if (value == "Root Cause analysis") {
+      setHideArray(["Root cause analysis", "Why analysis"]);
+    } else if (value == "Root cause analysis") {
       setHideArray([
         "Hazardious acts",
         "Hazardious conditions",
@@ -185,7 +183,7 @@ const Details = () => {
       }
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
-      if (form.rcaRecommended == "Five Why analysis") {
+      if (form.rcaRecommended == "Five why analysis") {
         history.push(
           "/app/incident-management/registration/root-cause-analysis/why-analysis/"
         );
@@ -193,26 +191,29 @@ const Details = () => {
         history.push(
           "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
         );
-      } else if (form.rcaRecommended == "Root Cause analysis") {
-        console.log("here")
+      } else if (form.rcaRecommended == "Root cause analysis") {
+        console.log("here");
         history.push(
           "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
         );
       }
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-      if (form.rcaRecommended == "Five Why analysis") {
+      if (form.rcaRecommended == "Five why analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/why-analysis/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/why-analysis/${
+            putId.current
           }`
         );
       } else if (form.rcaRecommended == "Pace cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+            putId.current
           }`
         );
       } else if (form.rcaRecommended == "Root cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
+            putId.current
           }`
         );
       }
@@ -220,6 +221,8 @@ const Details = () => {
 
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
+    localStorage.setItem("rcaMethod", form.rcaRecommended);
+
   };
 
   useEffect(() => {
@@ -322,8 +325,8 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.evidenceSupport}
+              // required
+              // error={error.evidenceSupport}
             >
               <FormLabel component="legend">
                 Evidence collected supports the incident event took place?
@@ -350,8 +353,8 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.evidenceContradiction}
+              // required
+              // error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
                 Contradictions between evidence and the description of incident?
@@ -384,8 +387,8 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.evidenceContradiction}
+              // required
+              // error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
                 Evidence does not supports the incident event as described?

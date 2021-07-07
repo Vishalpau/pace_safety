@@ -84,9 +84,21 @@ const BasicCauseAndAction = () => {
     setSelectedDate(date);
   };
   const putId = useRef("");
-  const subValues = ["Others conditions", "Safety items", "Tools", "Energy types", "Warning system",
-    "Other acts", "Procedures", "Ergonimics", "Safety issues", "Behaviour issue", "Equipment machinery",
-    "Workpackage", "Supervision"]
+  const subValues = [
+    "Others conditions",
+    "Safety items",
+    "Tools",
+    "Energy types",
+    "Warning system",
+    "Other acts",
+    "Procedures",
+    "Ergonimics",
+    "Safety issues",
+    "Behaviour issue",
+    "Equipment machinery",
+    "Workpackage",
+    "Supervision",
+  ];
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
@@ -130,7 +142,8 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -161,10 +174,10 @@ const BasicCauseAndAction = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
 
-            <Typography lassName={Type.labelValue}>
+            <Typography className={Type.labelValue}>
               {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
@@ -173,7 +186,9 @@ const BasicCauseAndAction = () => {
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
-            <Typography lassName={Type.labelValue}>5 Why Analysis</Typography>
+            <Typography className={Type.labelValue}>
+              {localStorage.getItem("rcaMethod")}
+            </Typography>
           </Grid>
 
           <Grid item md={12}>

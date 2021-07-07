@@ -417,7 +417,8 @@ const HazardiousActs = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
+          putId.current
         }`
       );
     }
@@ -482,7 +483,7 @@ const HazardiousActs = () => {
               required
               error={error.workpackage}
             >
-              <FormLabel component="legend">Work Package</FormLabel>
+              <FormLabel component="legend">Work package</FormLabel>
               <FormGroup>
                 {WORKPACKAGE.map((value) => (
                   <FormControlLabel
@@ -507,7 +508,7 @@ const HazardiousActs = () => {
               required
               error={error.equipmentMachinery}
             >
-              <FormLabel component="legend">Equiptment & Machinery</FormLabel>
+              <FormLabel component="legend">Equipment & machinery</FormLabel>
               <FormGroup>
                 {EQUIMENTMACHINARY.map((value) => (
                   <FormControlLabel
@@ -531,7 +532,7 @@ const HazardiousActs = () => {
               required
               error={error.behaviourIssue}
             >
-              <FormLabel component="legend">Behaviour Issue</FormLabel>
+              <FormLabel component="legend">Behaviour issue</FormLabel>
               <FormGroup>
                 {BEHAVIOURISSUES.map((value) => (
                   <FormControlLabel
@@ -556,7 +557,7 @@ const HazardiousActs = () => {
               required
               error={error.safetyIssues}
             >
-              <FormLabel component="legend"> Saftey Items</FormLabel>
+              <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
                 {SAFETYITEMS.map((value) => (
                   <FormControlLabel
