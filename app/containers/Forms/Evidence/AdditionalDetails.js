@@ -23,7 +23,6 @@ import Type from "../../../styles/components/Fonts.scss";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
-    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),
@@ -44,7 +43,7 @@ const AdditionalDetails = () => {
   const [additionalDetailList, setAdditionalDetailList] = useState([
     {
       questionCode: "ADD-22",
-      question: "Any part/equipment sent for anlysis",
+      question: "Any part/equipment sent for analysis",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",

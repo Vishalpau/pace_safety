@@ -10,7 +10,7 @@ function ActivityDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        dataObj.error = "This field is empty";
+        dataObj.error = "Please select any one";
         isValid = false;
       } else {
         dataObj.error = "";
