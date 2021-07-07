@@ -84,6 +84,9 @@ const BasicCauseAndAction = () => {
     setSelectedDate(date);
   };
   const putId = useRef("");
+  const subValues = ["Others conditions", "Safety items", "Tools", "Energy types", "Warning system",
+    "Other acts", "Procedures", "Ergonimics", "Safety issues", "Behaviour issue", "Equipment machinery",
+    "Workpackage", "Supervision"]
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
@@ -127,8 +130,7 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -185,7 +187,7 @@ const BasicCauseAndAction = () => {
               Option Selected from Hazardious Acts and Condition
             </Typography>
 
-            {Object.entries(data).map(([key, value]) => (
+            {Object.entries(data).map(([key, value], index) => (
               <List
                 className={classes.list}
                 component="nav"
@@ -197,7 +199,7 @@ const BasicCauseAndAction = () => {
                     component="div"
                     id="selected-options"
                   >
-                    {key}
+                    {subValues[index]}
                   </ListSubheader>
                 }
               >

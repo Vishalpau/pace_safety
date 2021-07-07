@@ -323,8 +323,7 @@ const HazardiousCondition = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
           }`
         );
       }
@@ -478,7 +477,7 @@ const HazardiousCondition = () => {
               multiline
               required
               error={error.others}
-              defaultValue={form.others.rcaRemark}
+              value={form.others.rcaRemark}
               helperText={error ? error.others : ""}
               rows={3}
               className={classes.formControl}

@@ -233,8 +233,7 @@ const CorrectiveAction = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -304,7 +303,7 @@ const CorrectiveAction = () => {
               multiline
               required
               error={error.regionSupport}
-              defaultValue={form.regionSupport.rcaRemark}
+              value={form.regionSupport.rcaRemark}
               helperText={error ? error.regionSupport : ""}
               rows={3}
               label="Details of the reasons to support above"

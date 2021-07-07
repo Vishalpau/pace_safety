@@ -324,8 +324,7 @@ const BasicCause = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current
         }`
       );
     }
@@ -424,7 +423,7 @@ const BasicCause = () => {
               rows={4}
               label="Other human factors"
               error={error.otherHumanFactor}
-              defaultValue={form.otherHumanFactor.rcaRemark}
+              value={form.otherHumanFactor.rcaRemark}
               helperText={error ? error.otherHumanFactor : ""}
               className={classes.formControl}
               onChange={async (e) => handelOtherHumanFactors(e)}
@@ -485,7 +484,7 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               error={error.otherJobFactors}
-              defaultValue={form.otherJobFactors.rcaRemark}
+              value={form.otherJobFactors.rcaRemark}
               helperText={error ? error.otherJobFactors : ""}
               rows={3}
               label="Other job factors"

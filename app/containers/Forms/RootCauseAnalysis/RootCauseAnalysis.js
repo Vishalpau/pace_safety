@@ -290,7 +290,7 @@ const RootCauseAnalysis = () => {
               required
               label="What Caused the Incident ?"
               error={error.causeOfIncident}
-              defaultValue={form.causeOfIncident}
+              value={form.causeOfIncident}
               helperText={error ? error.causeOfIncident : ""}
               onChange={(e) =>
                 setForm({ ...form, causeOfIncident: e.target.value })

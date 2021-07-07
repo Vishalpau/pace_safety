@@ -417,8 +417,7 @@ const HazardiousActs = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
         }`
       );
     }
@@ -625,7 +624,7 @@ const HazardiousActs = () => {
               multiline
               required
               error={error.others}
-              defaultValue={form.others.rcaRemark}
+              value={form.others.rcaRemark}
               helperText={error ? error.others : ""}
               rows={3}
               onChange={async (e) => handelOthers(e)}
