@@ -358,7 +358,7 @@ const HazardiousCondition = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
             <Typography className={Type.labelValue}>
               {incidentDetail.incidentNumber}
@@ -367,21 +367,20 @@ const HazardiousCondition = () => {
 
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              RCA Method
+              RCA method
             </Typography>
             <Typography className={Type.labelValue}>
-              PACE Cause Analysis
+              PACE cause analysis
             </Typography>
           </Grid>
 
-          {/* warning system */}
           <Grid item md={12}>
             <FormControl
               component="fieldset"
               required
               error={error.warningSystem}
             >
-              <FormLabel component="legend">Warning System</FormLabel>
+              <FormLabel component="legend">Warning system</FormLabel>
               <FormGroup>
                 {WARNINGSYSTEM.map((value) => (
                   <FormControlLabel
@@ -396,6 +395,7 @@ const HazardiousCondition = () => {
                 <FormHelperText>{error.warningSystem}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* energy types */}
@@ -405,7 +405,7 @@ const HazardiousCondition = () => {
               required
               error={error.energyTypes}
             >
-              <FormLabel component="legend">Energy Types</FormLabel>
+              <FormLabel component="legend">Energy types</FormLabel>
               <FormGroup>
                 {ENERGIES.map((value) => (
                   <FormControlLabel
@@ -420,6 +420,7 @@ const HazardiousCondition = () => {
                 <FormHelperText>{error.energyTypes}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* tools */}
@@ -440,6 +441,7 @@ const HazardiousCondition = () => {
                 <FormHelperText>{error.tools}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* safety items */}
@@ -449,7 +451,7 @@ const HazardiousCondition = () => {
               required
               error={error.safetyitems}
             >
-              <FormLabel component="legend">Saftey Items</FormLabel>
+              <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
                 {CONDITIONSAFETYITEMS.map((value) => (
                   <FormControlLabel
@@ -464,6 +466,7 @@ const HazardiousCondition = () => {
                 <FormHelperText>{error.safetyitems}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
@@ -474,7 +477,7 @@ const HazardiousCondition = () => {
               multiline
               required
               error={error.others}
-              defaultValue={form.others.rcaRemark}
+              value={form.others.rcaRemark}
               helperText={error ? error.others : ""}
               rows={3}
               className={classes.formControl}
@@ -496,7 +499,6 @@ const HazardiousCondition = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/cause-and-action/"}
                 onClick={(e) => handelNext(e)}
               >
                 Next
@@ -507,7 +509,7 @@ const HazardiousCondition = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem="Hazardious Conditions"
+            selectedItem="Hazardious conditions"
           />
         </Grid>
       </Grid>

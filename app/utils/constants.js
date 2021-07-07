@@ -6,8 +6,9 @@ const URL = "https://dev-safety.pace-os.com/";
 export const SSO_URL = "https://dev-accounts-api.paceos.io";
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
 export const API_URL = "https://dev-safety-api.paceos.io/";
-export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/"
-export const access_token = "2xK5jHp34xdsoWBYyQGxqRmdaw1JdI" || localStorage.getItem('access_token')
+export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
+export const access_token =
+  "ZWrwcFuWcsfaKgHv7jXC5KswUw4hma" || localStorage.getItem("access_token");
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details":
@@ -49,21 +50,21 @@ export const INVESTIGATION_FORM = {
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
   Details: "/app/incident-management/registration/root-cause-analysis/details/",
-  "Hazardious Acts":
+  "Hazardious acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
-  "Hazardious Conditions":
+  "Hazardious conditions":
     "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/",
-  "Cause and Action":
+  "Cause and action":
     "/app/incident-management/registration/root-cause-analysis/cause-and-action/",
-  "Basic Cause":
+  "Basic cause":
     "/app/incident-management/registration/root-cause-analysis/basic-cause/",
-  "Basic Cause and Action":
+  "Basic cause and action":
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",
-  "Corrective Actions":
+  "Corrective actions":
     "/app/incident-management/registration/root-cause-analysis/management-control/",
-  "Root Cause Analysis":
+  "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
-  "Why Analysis":
+  "Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
@@ -83,7 +84,7 @@ export const FORM_HEADER = {
     "/app/incident-management/registration/investigation/initial-details/",
   "Evidence Collection":
     "/app/incident-management/registration/evidence/evidence/",
-  "Root Cause Analysis":
+  "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/details/",
   Summary: "/app/incident-management/registration/summary/summary/",
   "Lession Learned":
@@ -297,4 +298,8 @@ export const MANAGEMENTCONTROL = [
   "Inadequate Compilance and Standards",
 ];
 
-export const RCAOPTION = ["Five Why analysis", "Pace cause analysis", "Root Cause analysis"];
+export const RCAOPTION = [
+  "Five why analysis",
+  "Pace cause analysis",
+  "Root cause analysis",
+];

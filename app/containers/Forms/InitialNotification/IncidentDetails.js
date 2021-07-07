@@ -534,6 +534,7 @@ const IncidentDetails = () => {
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   error={error.incidentdate}
+                  disableFuture
                   className={classes.formControl}
                   label="Incident date & time"
                   helperText={error.incidentdate ? error.incidentdate : null}

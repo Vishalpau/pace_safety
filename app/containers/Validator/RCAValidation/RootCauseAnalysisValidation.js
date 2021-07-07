@@ -15,15 +15,15 @@ function RootCauseValidation(data) {
     isValid = false;
   }
 
-  if (validator.isEmpty(data.wouldItPreventIncident)) {
-    error.wouldItPreventIncident = "This field is empty";
-    isValid = false;
-  }
+  // if (validator.isEmpty(data.wouldItPreventIncident)) {
+  //   error.wouldItPreventIncident = "This field is empty";
+  //   isValid = false;
+  // }
 
-  if (validator.isEmpty(data.recommendSolution)) {
-    error.recommendSolution = "This field is empty";
-    isValid = false;
-  }
+  // if (validator.isEmpty(data.recommendSolution)) {
+  //   error.recommendSolution = "This field is empty";
+  //   isValid = false;
+  // }
 
   console.log(error);
   return { error, isValid };

@@ -358,16 +358,18 @@ const BasicCause = () => {
           </Grid>
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              RCA Method
+              RCA method
             </Typography>
             <Typography className={Type.labelValue} gutterBottom>
-              PACE Cause Analysis
+              PACE cause analysis
             </Typography>
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
-              Human Factors
-            </Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6" gutterBottom>
+                Human factors
+              </Typography>
+            </Box>
           </Grid>
           <Grid item md={12}>
             <FormControl component="fieldset" required error={error.personal}>
@@ -386,6 +388,7 @@ const BasicCause = () => {
                 <FormHelperText>{error.personal}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
           {/* wellness factors */}
           <Grid item md={12}>
@@ -394,7 +397,7 @@ const BasicCause = () => {
               required
               error={error.wellnessFactors}
             >
-              <FormLabel component="legend">Wellness Factors</FormLabel>
+              <FormLabel component="legend">Wellness factors</FormLabel>
               <FormGroup>
                 {PERSONALWELNESSFACTORS.map((value) => (
                   <FormControlLabel
@@ -409,6 +412,7 @@ const BasicCause = () => {
                 <FormHelperText>{error.wellnessFactors}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
           {/* other human factors */}
           <Grid item md={12}>
@@ -417,9 +421,9 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               rows={4}
-              label="Other Human Factors"
+              label="Other human factors"
               error={error.otherHumanFactor}
-              defaultValue={form.otherHumanFactor.rcaRemark}
+              value={form.otherHumanFactor.rcaRemark}
               helperText={error ? error.otherHumanFactor : ""}
               className={classes.formControl}
               onChange={async (e) => handelOtherHumanFactors(e)}
@@ -427,9 +431,11 @@ const BasicCause = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
-              Job Factors
-            </Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6" gutterBottom>
+                Job factors
+              </Typography>
+            </Box>
           </Grid>
 
           <Grid item md={12}>
@@ -449,6 +455,7 @@ const BasicCause = () => {
                 <FormHelperText>{error.leadership}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
           {/* processes */}
           <Grid item md={12}>
@@ -468,6 +475,7 @@ const BasicCause = () => {
                 <FormHelperText>{error.processes}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
           {/* other job factors */}
           <Grid item md={12}>
@@ -476,10 +484,10 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               error={error.otherJobFactors}
-              defaultValue={form.otherJobFactors.rcaRemark}
+              value={form.otherJobFactors.rcaRemark}
               helperText={error ? error.otherJobFactors : ""}
               rows={3}
-              label="Other Job Factors"
+              label="Other job factors"
               className={classes.formControl}
               onChange={async (e) => handelOtherJobFactors(e)}
             />
@@ -506,7 +514,7 @@ const BasicCause = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Basic Cause"}
+            selectedItem={"Basic cause"}
           />
         </Grid>
       </Grid>
