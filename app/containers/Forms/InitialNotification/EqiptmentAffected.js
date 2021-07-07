@@ -18,6 +18,8 @@ import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
+import AddIcon from "@material-ui/icons/Add";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -28,7 +30,6 @@ import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import EquipmentValidate from "../../Validator/EquipmentValidation";
 import "../../../styles/custom.css";
-import { FormHelperText } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -39,10 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-    margin: ".5rem 0",
-  },
-  spacer: {
-    marginTop: "1rem",
   },
   customLabel: {
     marginBottom: 0,
@@ -108,7 +105,7 @@ const EqiptmentAffected = () => {
     const { value } = e.target;
     temp[key][fieldname] = value;
     temp[key].updatedBy = 0;
-    setEquipmentListData(temp);
+    await setEquipmentListData(temp);
   };
 
   // hablde Remove
@@ -248,12 +245,16 @@ const EqiptmentAffected = () => {
       }
     }
   };
+
   // fetch incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
+    console.log(result.equipmentDamagedComments);
+    let envComments = result.equipmentDamagedComments;
+    setEequipmentDamagedComments(envComments);
     await setIncidentsListdata(result);
     const isavailable = result.isEquipmentDamagedAvailable;
     await setDetailsOfEquipmentAffect(isavailable);
@@ -293,13 +294,13 @@ const EqiptmentAffected = () => {
     }
   }, []);
   return (
-    <PapperBlock title=" Details of Equipment Affected" icon="ion-md-list-box">
+    <PapperBlock title="Details of Equipment Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="body" component="p" gutterBottom>
-                Do You Have Details to Share About the Equipment Affected ?
+                Do you have details to share about the equipment affected?
               </Typography>
               <RadioGroup
                 className={classes.inlineRadioGroup}
@@ -336,19 +337,18 @@ const EqiptmentAffected = () => {
                         className="repeatedGrid"
                       >
                         <Grid item md={6}>
-                          {/* <p>Equiptment type</p> */}
                           <FormControl
                             variant="outlined"
                             className={classes.formControl}
                           >
                             <InputLabel id="eq-type-label">
-                              Equipment Type
+                              Equipment type{equipment.equipmentType}
                             </InputLabel>
                             <Select
                               labelId="eq-type-label"
-                              id="eq-type"
-                              label=" Equipment Type"
-                              defaultValue={equipment.equipmentType}
+                              id={`equipment-type${key + 1}`}
+                              label="Equipment type"
+                              defaultValue={equipment.equipmentType || ""}
                               onChange={(e) =>
                                 handleUpdateEquipment(
                                   e,
@@ -375,13 +375,15 @@ const EqiptmentAffected = () => {
                         </Grid>
 
                         <Grid item md={6}>
-                          {/* <p>if other describe</p> */}
                           <TextField
                             variant="outlined"
-                            id="filled-basic"
-                            label="If Others, Describe"
+                            id={`If-others-describe-property${key}`}
+                            label="If others, describe"
                             className={classes.formControl}
                             defaultValue={equipment.equipmentOtherType}
+                            disabled={
+                              equipment.equipmentType === "Other" ? false : true
+                            }
                             onChange={(e) =>
                               handleUpdateEquipment(
                                 e,
@@ -391,19 +393,15 @@ const EqiptmentAffected = () => {
                               )
                             }
                           />
-                          {/* {error && error[`equipmentOtherType${[key]}`] && (
-                            <p>{error[`equipmentOtherType${[key]}`]}</p>
-                          )} */}
                         </Grid>
 
                         <Grid item md={12}>
-                          {/* <p>Describe the damage</p> */}
                           <TextField
-                            id="describe-damage"
+                            id={`describe-damage-equipment${key}`}
                             multiline
                             variant="outlined"
                             rows="3"
-                            label="Describe the Damage"
+                            label="Describe the damage"
                             className={classes.fullWidth}
                             defaultValue={equipment.equipmentDeatils}
                             onChange={(e) =>
@@ -415,22 +413,7 @@ const EqiptmentAffected = () => {
                               )
                             }
                           />
-                          {/* {error && error[`equipmentDeatils${[key]}`] && (
-                            <p>{error[`equipmentDeatils${[key]}`]}</p>
-                          )} */}
                         </Grid>
-                        {/* {equipmentListdata.length > 1 ? (
-                          <Grid item md={3}>
-                            <Button
-                              onClick={() => handleRemove(equipment.id)}
-                              variant="contained"
-                              color="primary"
-                              className={classes.button}
-                            >
-                              Remove
-                            </Button>
-                          </Grid>
-                        ) : null} */}
                       </Grid>
                     ))
                   : form.map((value, key) => (
@@ -442,19 +425,19 @@ const EqiptmentAffected = () => {
                         className="repeatedGrid"
                       >
                         <Grid item md={6}>
-                          {/* <p>Equiptment type</p> */}
                           <FormControl
                             variant="outlined"
-                            error={error && error[`equipmentType${[key]}`]}
                             className={classes.formControl}
+                            required
+                            error={error && error[`equipmentType${[key]}`]}
                           >
                             <InputLabel id="eq-type-label">
-                              Equipment Type
+                              Equipment type
                             </InputLabel>
                             <Select
                               labelId="eq-type-label"
-                              id="eq-type"
-                              label="Equipment Type"
+                              id={`equipment-type${key}`}
+                              label="Equipment type"
                               value={value.equipmentType || ""}
                               onChange={(e) =>
                                 handleForm(e, key, "equipmentType")
@@ -484,37 +467,33 @@ const EqiptmentAffected = () => {
                         <Grid item md={6}>
                           <TextField
                             variant="outlined"
-                            id="filled-basic"
-                            label="If Others, Describe"
-                            error={
-                              error && error[`equipmentOtherType${[key]}`]
-                                ? error[`equipmentOtherType${[key]}`]
-                                : null
-                            }
+                            id={`other-equipment${key + 1}`}
+                            label="If others, describe"
                             className={classes.formControl}
                             value={value.equipmentOtherType || ""}
                             disabled={
-                              value.equipmentType === "other" ? false : true
+                              value.equipmentType === "Other" ? false : true
                             }
                             onChange={(e) =>
                               handleForm(e, key, "equipmentOtherType")
                             }
                           />
                         </Grid>
-                        {/* {form[key].equipmentType === ''} */}
+
                         <Grid item md={12}>
                           <TextField
-                            id="describe-damage"
+                            id={`damage-describe${key + 1}`}
                             multiline
                             variant="outlined"
+                            rows="3"
+                            required
                             error={error && error[`equipmentDeatils${[key]}`]}
                             helperText={
                               error && error[`equipmentDeatils${[key]}`]
                                 ? error[`equipmentDeatils${[key]}`]
                                 : null
                             }
-                            rows="3"
-                            label="Describe the Damage"
+                            label="Describe the damage"
                             className={classes.fullWidth}
                             value={value.equipmentDeatils || ""}
                             onChange={(e) =>
@@ -542,7 +521,7 @@ const EqiptmentAffected = () => {
                       className={classes.textButton}
                       onClick={() => addNewEquipmentDetails()}
                     >
-                      Add Details of Additional Equipment Affected ?
+                      <AddIcon /> Add details of additional equipment affected?
                     </button>
                   </Grid>
                 )}
@@ -551,16 +530,14 @@ const EqiptmentAffected = () => {
             {detailsOfEquipmentAffect === "Yes" ? null : (
               <Grid item lg={12} md={6} sm={6}>
                 <TextField
-                  id="comments"
+                  id="describe-any-equipment-affect"
                   multiline
                   rows="3"
                   variant="outlined"
-                  label="Describe Any Equipment Affect"
+                  label="Describe any equipment affect"
                   className={classes.fullWidth}
-                  defaultValue={incidentsListData.equipmentDamagedComments}
-                  onChange={(event) =>
-                    setEequipmentDamagedComments(event.target.value)
-                  }
+                  defaultValue={equipmentDamagedComments}
+                  onChange={(e) => setEequipmentDamagedComments(e.target.value)}
                 />
               </Grid>
             )}
@@ -587,7 +564,7 @@ const EqiptmentAffected = () => {
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Equipment Affected"
+              selectedItem="Equipment affected"
             />
           </Grid>
         </Grid>

@@ -7,37 +7,37 @@ function PeopleValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].personType.toString())) {
-      error[`personType${[i]}`] = "This Field is Empty";
+      error[`personType${[i]}`] = "Please select person type";
       isValid = false;
     }
 
     if (validator.isEmpty(data[i].personDepartment.toString())) {
-      error[`personDepartment${[i]}`] = "This Field is Empty";
+      error[`personDepartment${[i]}`] = "Please select department.";
       isValid = false;
     }
 
     if (validator.isEmpty(data[i].personName.toString())) {
-      error[`personName${[i]}`] = "This Field is Empty";
+      error[`personName${[i]}`] = "Please enter person name.";
       isValid = false;
     }
 
     // if (validator.isEmpty(data[i].personIdentification.toString())) {
-    //   error[`personIdentification${[i]}`] = "This Field is Empty";
+    //   error[`personIdentification${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
 
     if (validator.isEmpty(data[i].personMedicalCare.toString())) {
-      error[`personMedicalCare${[i]}`] = "This Field is Empty";
+      error[`personMedicalCare${[i]}`] = "Please choose medical care.";
       isValid = false;
     }
 
     // if (validator.isEmpty(data[i].workerOffsiteAssessment.toString())) {
-    //   error[`workerOffsiteAssessment${[i]}`] = "This Field is Empty";
+    //   error[`workerOffsiteAssessment${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
 
     // if (validator.isEmpty(data[i].locationAssessmentCenter.toString())) {
-    //   error[`locationAssessmentCenter${[i]}`] = "This Field is Empty";
+    //   error[`locationAssessmentCenter${[i]}`] = "This field is empty";
     //   isValid = false;
     // }
   }

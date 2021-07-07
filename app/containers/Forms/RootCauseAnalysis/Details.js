@@ -52,9 +52,9 @@ const Details = () => {
   const [incidents, setIncidents] = useState([]);
 
   const [form, setForm] = useState({
-    evidenceSupport: "",
-    evidenceContradiction: "",
-    evidenceNotSupport: "",
+    evidenceSupport: "N/A",
+    evidenceContradiction: "N/A",
+    evidenceNotSupport: "N/A",
     rcaRecommended: "",
     status: "Active",
     createdBy: 0,
@@ -81,6 +81,7 @@ const Details = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
+  let [hideArray, setHideArray] = useState([]);
 
   // get data for put
   const handelUpdateCheck = async () => {
@@ -122,8 +123,35 @@ const Details = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
+  const handelRcaRecommended = (e, value) => {
+    if (value == "Five why analysis") {
+      setHideArray([
+        "Hazardious acts",
+        "Hazardious conditions",
+        "Cause and action",
+        "Basic cause",
+        "Basic cause and action",
+        "Corrective actions",
+        "Root cause analysis",
+      ]);
+    } else if (value == "Pace cause analysis") {
+      setHideArray(["Root cause analysis", "Why analysis"]);
+    } else if (value == "Root cause analysis") {
+      setHideArray([
+        "Hazardious acts",
+        "Hazardious conditions",
+        "Cause and action",
+        "Basic cause",
+        "Basic cause and action",
+        "Corrective actions",
+        "Why analysis",
+      ]);
+    }
+    setForm({ ...form, rcaRecommended: value });
+  };
+
   const handelNext = async (e) => {
-    console.log(form);
+    // console.log(form);
     const { error, isValid } = DetailValidation(form);
     let nextPageLink = 0;
     setError(error);
@@ -155,31 +183,62 @@ const Details = () => {
       }
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
-      history.push(
-        "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
-      );
+      if (form.rcaRecommended == "Five why analysis") {
+        history.push(
+          "/app/incident-management/registration/root-cause-analysis/why-analysis/"
+        );
+      } else if (form.rcaRecommended == "Pace cause analysis") {
+        history.push(
+          "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
+        );
+      } else if (form.rcaRecommended == "Root cause analysis") {
+        console.log("here");
+        history.push(
+          "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
+        );
+      }
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-          putId.current
-        }`
-      );
+      if (form.rcaRecommended == "Five why analysis") {
+        history.push(
+          `/app/incident-management/registration/root-cause-analysis/why-analysis/${
+            putId.current
+          }`
+        );
+      } else if (form.rcaRecommended == "Pace cause analysis") {
+        history.push(
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+            putId.current
+          }`
+        );
+      } else if (form.rcaRecommended == "Root cause analysis") {
+        history.push(
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
+            putId.current
+          }`
+        );
+      }
     }
-    e.preventDefault();
+
+    // e.preventDefault();
+    localStorage.setItem("deleteForm", hideArray);
+    localStorage.setItem("rcaMethod", form.rcaRecommended);
+
   };
 
   useEffect(() => {
     handelUpdateCheck();
     fetchIncidentData();
+    setHideArray(localStorage.getItem("deleteForm"));
   }, []);
 
   return (
-    <PapperBlock title="RCA Details">
+    <PapperBlock title="RCA Details" icon="ion-md-list-box">
+      {/* {console.log(hideArray)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
             <Typography className={Type.labelValue}>
               {incidents.incidentNumber}
@@ -188,7 +247,7 @@ const Details = () => {
 
           <Grid item md={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Description
+              Incident description
             </Typography>
             <Typography className={Type.labelValue}>
               {incidents.incidentDetails}
@@ -204,7 +263,7 @@ const Details = () => {
                 ampm={false}
                 value={selectedDate}
                 onChange={handleDateChange}
-                label="Investigation Start Date"
+                label="Investigation start date"
                 disabled
               />
             </MuiPickersUtilsProvider>
@@ -219,7 +278,7 @@ const Details = () => {
                 ampm={false}
                 value={selectedDate}
                 onChange={handleDateChange}
-                label="Incident End Date"
+                label="Incident end date"
                 disabled
               />
             </MuiPickersUtilsProvider>
@@ -227,7 +286,7 @@ const Details = () => {
 
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Level of Investigation
+              Level of investigation
             </Typography>
             <Typography className={Type.labelValue}>
               Level to be displayed here.
@@ -241,19 +300,17 @@ const Details = () => {
               className={classes.formControl}
               error={error && error.rcaRecommended}
             >
-              <InputLabel id="project-name-label">RCA Recommended</InputLabel>
+              <InputLabel id="project-name-label">RCA recommended</InputLabel>
               <Select
                 id="project-name"
                 labelId="project-name-label"
-                label="RCA Recommended"
+                label="RCA recommended"
                 value={form.rcaRecommended}
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
-                    onClick={(e) =>
-                      setForm({ ...form, rcaRecommended: selectValues })
-                    }
+                    onClick={(e) => handelRcaRecommended(e, selectValues)}
                   >
                     {selectValues}
                   </MenuItem>
@@ -268,11 +325,11 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.evidenceSupport}
+              // required
+              // error={error.evidenceSupport}
             >
               <FormLabel component="legend">
-                Evidence Collected Supports the Incident Event Took Place ?
+                Evidence collected supports the incident event took place?
               </FormLabel>
               <RadioGroup className={classes.inlineRadioGroup}>
                 {radioDecide.map((value) => (
@@ -287,21 +344,20 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {error && error.evidenceSupport && (
+              {/* {error && error.evidenceSupport && (
                 <FormHelperText>{error.evidenceSupport}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
 
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.evidenceContradiction}
+              // required
+              // error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
-                Contradictions Between Evidence and the Description of Incident
-                ?
+                Contradictions between evidence and the description of incident?
               </FormLabel>
               <RadioGroup
                 className={classes.inlineRadioGroup}
@@ -322,20 +378,20 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {error && error.evidenceContradiction && (
+              {/* {error && error.evidenceContradiction && (
                 <FormHelperText>{error.evidenceContradiction}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
 
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.evidenceContradiction}
+              // required
+              // error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
-                Evidence Does Not Supports the Incident Event as Described ?
+                Evidence does not supports the incident event as described?
               </FormLabel>
               <RadioGroup
                 className={classes.inlineRadioGroup}
@@ -353,9 +409,9 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {error && error.evidenceNotSupport && (
+              {/* {error && error.evidenceNotSupport && (
                 <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
 
@@ -363,7 +419,6 @@ const Details = () => {
             <Button
               variant="contained"
               color="primary"
-              // href={Object.keys(error).length > 0 ? '#' : "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"}
               onClick={(e) => handelNext(e)}
             >
               Next
@@ -372,7 +427,7 @@ const Details = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
+            deleteForm={hideArray}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
             selectedItem={"Details"}
           />

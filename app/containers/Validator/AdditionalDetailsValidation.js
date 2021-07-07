@@ -9,7 +9,7 @@ function AdditionalDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        dataObj.error = "This Field is Empty";
+        dataObj.error = "This field is empty";
         error.push(dataObj);
         isValid = false;
       } else {

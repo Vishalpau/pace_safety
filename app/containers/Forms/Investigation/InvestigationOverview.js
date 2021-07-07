@@ -19,7 +19,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
 
-import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
+import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
@@ -40,15 +40,24 @@ const InvestigationOverview = () => {
 
   const selectValues = [1, 2, 3, 4];
 
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({
+    levelOfInvestigation: "",
+    srartDate: "2021-07-07T07:13:21.626Z",
+    constructionManagerName: "",
+    constructionManagerContactNo: "",
+    hseSpecialistName: "",
+    hseSpecialistContactNo: "",
+    actualSeverityLevel: "",
+    potentialSeverityLevel: "",
+    createdBy: 0,
+    fkIncidentId: 0
+  });
 
   const severity_level = ["Level1", "Level2", "Level3", "Level4"];
 
   const handleNext = () => {
-    console.log(form);
-    const { error, isValid } = initialdetailvalidate(form);
+    const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
-    // console.log(error, isValid);
     const res = api.post("api/v1/incidents/92/investigations/", form);
     if (res.status === 200) {
       console.log("request done");
@@ -157,13 +166,13 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Actual Severity & Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -188,13 +197,13 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Potential Severity & Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+              // onChange={(e) => {
+              //   setForm({
+              //     ...form,
+              //     unitname: toString(e.target.value),
+              //   });
+              // }}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -211,7 +220,7 @@ const InvestigationOverview = () => {
               variant="contained"
               color="primary"
               onClick={() => handleNext()}
-              // href="/app/incident-management/registration/investigation/investigation-overview/"
+            // href="/app/incident-management/registration/investigation/investigation-overview/"
             >
               Next
             </Button>

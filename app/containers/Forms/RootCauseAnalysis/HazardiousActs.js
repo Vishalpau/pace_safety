@@ -16,12 +16,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import Divider from "@material-ui/core/Divider";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation";
 import { call } from "file-loader";
+
 import {
   SUPERVISON,
   WORKPACKAGE,
@@ -444,7 +446,7 @@ const HazardiousActs = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
             <Typography className={Type.labelValue}>
               {incidentDetail.incidentNumber}
@@ -471,6 +473,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.supervision}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* workpackage */}
@@ -480,7 +483,7 @@ const HazardiousActs = () => {
               required
               error={error.workpackage}
             >
-              <FormLabel component="legend">Work Package</FormLabel>
+              <FormLabel component="legend">Work package</FormLabel>
               <FormGroup>
                 {WORKPACKAGE.map((value) => (
                   <FormControlLabel
@@ -495,6 +498,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.workpackage}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* equiment machinary     */}
@@ -504,7 +508,7 @@ const HazardiousActs = () => {
               required
               error={error.equipmentMachinery}
             >
-              <FormLabel component="legend">Equiptment & Machinery</FormLabel>
+              <FormLabel component="legend">Equipment & machinery</FormLabel>
               <FormGroup>
                 {EQUIMENTMACHINARY.map((value) => (
                   <FormControlLabel
@@ -519,6 +523,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.equipmentMachinery}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
@@ -527,7 +532,7 @@ const HazardiousActs = () => {
               required
               error={error.behaviourIssue}
             >
-              <FormLabel component="legend">Behaviour Issue</FormLabel>
+              <FormLabel component="legend">Behaviour issue</FormLabel>
               <FormGroup>
                 {BEHAVIOURISSUES.map((value) => (
                   <FormControlLabel
@@ -542,6 +547,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.behaviourIssue}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* safety issues    */}
@@ -551,7 +557,7 @@ const HazardiousActs = () => {
               required
               error={error.safetyIssues}
             >
-              <FormLabel component="legend"> Saftey Items</FormLabel>
+              <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
                 {SAFETYITEMS.map((value) => (
                   <FormControlLabel
@@ -566,6 +572,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.safetyIssues}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
@@ -585,6 +592,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.ergonimics}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
@@ -604,6 +612,7 @@ const HazardiousActs = () => {
                 <FormHelperText>{error.procedures}</FormHelperText>
               )}
             </FormControl>
+            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* others */}
@@ -616,7 +625,7 @@ const HazardiousActs = () => {
               multiline
               required
               error={error.others}
-              defaultValue={form.others.rcaRemark}
+              value={form.others.rcaRemark}
               helperText={error ? error.others : ""}
               rows={3}
               onChange={async (e) => handelOthers(e)}
@@ -646,9 +655,8 @@ const HazardiousActs = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Hazardious Acts"}
+            selectedItem={"Hazardious acts"}
           />
         </Grid>
       </Grid>

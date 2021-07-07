@@ -156,21 +156,17 @@ const RootCauseAnalysisSummary = () => {
       <Grid item md={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Casue Analysis</Typography>
+            <Typography className={classes.heading}>Casue analysis</Typography>
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>
-              <Table
-                className={classes.table}
-                size="small"
-                aria-label="a dense table"
-              >
+              <Table className={classes.table} size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>Evidence Support</TableCell>
-                    <TableCell>Evidence Contradiction</TableCell>
-                    <TableCell>RCA Recommended</TableCell>
+                    <TableCell>Evidence support</TableCell>
+                    <TableCell>Evidence contradiction</TableCell>
+                    <TableCell>RCA recommended</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -197,7 +193,7 @@ const RootCauseAnalysisSummary = () => {
       <Grid item md={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Pace Cause</Typography>
+            <Typography className={classes.heading}>Pace cause</Typography>
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>

@@ -30,6 +30,7 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import ListSubheader from "@material-ui/core/ListSubheader";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -40,6 +41,7 @@ import {
   HAZARDIOUS_CONDITION_SUB_TYPES,
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
+import "../../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -82,6 +84,21 @@ const BasicCauseAndAction = () => {
     setSelectedDate(date);
   };
   const putId = useRef("");
+  const subValues = [
+    "Others conditions",
+    "Safety items",
+    "Tools",
+    "Energy types",
+    "Warning system",
+    "Other acts",
+    "Procedures",
+    "Ergonimics",
+    "Safety issues",
+    "Behaviour issue",
+    "Equipment machinery",
+    "Workpackage",
+    "Supervision",
+  ];
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
@@ -157,10 +174,10 @@ const BasicCauseAndAction = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Number
+              Incident number
             </Typography>
 
-            <Typography lassName={Type.labelValue}>
+            <Typography className={Type.labelValue}>
               {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
@@ -169,7 +186,9 @@ const BasicCauseAndAction = () => {
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
-            <Typography lassName={Type.labelValue}>5 Why Analysis</Typography>
+            <Typography className={Type.labelValue}>
+              {localStorage.getItem("rcaMethod")}
+            </Typography>
           </Grid>
 
           <Grid item md={12}>
@@ -183,10 +202,11 @@ const BasicCauseAndAction = () => {
               Option Selected from Hazardious Acts and Condition
             </Typography>
 
-            {Object.entries(data).map(([key, value]) => (
+            {Object.entries(data).map(([key, value], index) => (
               <List
                 className={classes.list}
-                component="ul"
+                component="nav"
+                dense
                 subheader={
                   <ListSubheader
                     disableGutters
@@ -194,12 +214,17 @@ const BasicCauseAndAction = () => {
                     component="div"
                     id="selected-options"
                   >
-                    {key}
+                    {subValues[index]}
                   </ListSubheader>
                 }
               >
                 {value.map((value) => (
-                  <ListItemText primary={value} />
+                  <ListItem>
+                    <ListItemIcon>
+                      <FiberManualRecordIcon className="smallIcon" />
+                    </ListItemIcon>
+                    <ListItemText primary={value} />
+                  </ListItem>
                 ))}
               </List>
             ))}
@@ -213,7 +238,7 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
+              onClick={() => history.goBack()}
             >
               Previous
             </Button>
@@ -230,9 +255,8 @@ const BasicCauseAndAction = () => {
         </Grid>
         <Grid item md={3}>
           <FormSideBar
-            deleteForm={[1, 2, 3]}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Cause and Action"}
+            selectedItem={"Cause and action"}
           />
         </Grid>
       </Grid>

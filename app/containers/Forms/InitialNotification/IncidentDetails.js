@@ -269,7 +269,8 @@ const IncidentDetails = () => {
     } else {
       // Create case if id is not null and means it is an add new registration case.
       const { error, isValid } = validate(form);
-      setError(error);
+      await setError(error);
+      console.log(error, isValid);
 
       if (isValid === true) {
         const formData = {
@@ -294,10 +295,10 @@ const IncidentDetails = () => {
           equipmentDamagedComments: "",
           isEnviromentalImpacted: form.environmentaffected,
           enviromentalImpactComments: "",
-          supervisorByName: "..",
+          supervisorByName: "",
           supervisorById: 0,
           incidentReportedOn: new Date().toISOString(),
-          incidentReportedByName: "..",
+          incidentReportedByName: ".",
           incidentReportedById: 0,
           reasonLateReporting: "",
           notificationComments: "",
@@ -386,12 +387,12 @@ const IncidentDetails = () => {
     const result = res.data.data.results;
     await setEnvironmentAffectValue(result);
   };
-  const fetchListData = async () => {
-    const res = await api.get("api/v1/lists/");
+  // const fetchListData = async () => {
+  //   const res = await api.get("api/v1/lists/");
 
-    const result = res.data.data.results;
-    await setListData(result);
-  };
+  //   const result = res.data.data.results;
+  //   await setListData(result);
+  // };
 
   const fetchIncidentsData = async () => {
     if (id === undefined) {
@@ -419,9 +420,7 @@ const IncidentDetails = () => {
   };
 
   useEffect(() => {
-    localStorage.removeItem("deleteForm");
-    localStorage.removeItem("nextPath");
-    fetchListData();
+    // fetchListData();
     fetchContractorValue();
     fetchIncidentTypeValue();
     fetchSubContractorValue();
@@ -448,16 +447,16 @@ const IncidentDetails = () => {
                 className={classes.formControl}
               >
                 {/* <Typography varint="p">Project Name</Typography> */}
-                <InputLabel id="project-name-label">Project Name</InputLabel>
+                <InputLabel id="project-name-label">Project name</InputLabel>
                 <Select
                   id="project-name"
                   labelId="project-name-label"
-                  label="Project Name"
+                  label="Project name"
                   defaultValue={incidentsListData.fkProjectId}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      projectname: e.target.value.toString(),
+                      projectname: e.target.value,
                     });
                   }}
                 >
@@ -467,6 +466,7 @@ const IncidentDetails = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                {console.log(error)}
                 {error && error.projectname && (
                   <FormHelperText>{error.projectname}</FormHelperText>
                 )}
@@ -475,11 +475,11 @@ const IncidentDetails = () => {
 
             <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Unit Name</InputLabel>
+                <InputLabel id="unit-name-label">Unit name</InputLabel>
                 <Select
                   labelId="unit-name-label"
                   id="unit-name"
-                  label="Unit Name"
+                  label="Unit name"
                   defaultValue={incidentsListData.fkUnitId}
                   onChange={(e) => {
                     setForm({
@@ -505,12 +505,12 @@ const IncidentDetails = () => {
                 className={classes.formControl}
               >
                 <InputLabel id="demo-simple-select-label">
-                  Incident Type
+                  Incident type
                 </InputLabel>
                 <Select
                   labelId="incident-type-label"
                   id="incident-type"
-                  label="Incident Type"
+                  label="Incident type"
                   defaultValue={incidentsListData.incidentType}
                   onChange={(e) => {
                     setForm({ ...form, incidenttype: e.target.value });
@@ -534,9 +534,9 @@ const IncidentDetails = () => {
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   error={error.incidentdate}
-                  required
+                  disableFuture
                   className={classes.formControl}
-                  label="Incident Date"
+                  label="Incident date & time"
                   helperText={error.incidentdate ? error.incidentdate : null}
                   value={
                     form.incidentdate || incidentsListData.incidentOccuredOn
@@ -577,7 +577,6 @@ const IncidentDetails = () => {
               <TextField
                 error={error.description}
                 multiline
-                required
                 variant="outlined"
                 rows="4"
                 id="description"
@@ -601,8 +600,8 @@ const IncidentDetails = () => {
                 id="immediate-actions"
                 multiline
                 rows="4"
-                label="Any Immediate Actions Taken"
-                defaultValue={incidentsListData.incidentLocation}
+                label="Any immediate actions taken"
+                defaultValue={incidentsListData.immediateActionsTaken}
                 className={classes.fullWidth}
                 onChange={(e) => {
                   setForm({
@@ -615,9 +614,7 @@ const IncidentDetails = () => {
 
             <Grid item xs={12} md={6}>
               <TextField
-                id="title"
-                error={error.title}
-                required
+                id="initial-detail-location"
                 variant="outlined"
                 label="Location"
                 helperText={error.location ? error.location : ""}
@@ -673,11 +670,10 @@ const IncidentDetails = () => {
               <FormControl
                 variant="outlined"
                 error={error.subcontractor}
-                required
                 className={classes.formControl}
               >
                 <InputLabel id="demo-simple-select-label">
-                  Sub-Contractor
+                  Sub-contractor
                 </InputLabel>
                 <Select
                   labelId="sub-contractor-type-label"
@@ -706,14 +702,22 @@ const IncidentDetails = () => {
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" className={classes.formControl}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error && error[`personaffected`]}
+                className={classes.formControl}
+              >
                 <FormLabel component="legend">
-                  Were Any Person Affected During the Incident ?
+                  Were any person affected during incident?
                 </FormLabel>
+                {/* <p>Were any person affected during incident?</p> */}
+
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   aria-label="personaffected"
                   name="personaffected"
+                  aria-required
                   defaultValue={incidentsListData.isPersonAffected}
                   onChange={(e) => {
                     setForm({
@@ -742,21 +746,28 @@ const IncidentDetails = () => {
                       ))
                     : null}
                 </RadioGroup>
+
+                {error && error.personaffected && (
+                  <FormHelperText>{error.personaffected}</FormHelperText>
+                )}
               </FormControl>
-              {/* {error && error.personaffected && (
-                    <p>{error.personaffected}</p>
-                  )} */}
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" className={classes.formControl}>
+              <FormControl
+                component="fieldset"
+                className={classes.formControl}
+                required
+                error={error && error[`propertyaffected`]}
+              >
                 <FormLabel component="legend">
-                  Was Any Property Damaged During the Incident ?
+                  Was any propery damaged during incident?
                 </FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   aria-label="propertyaffected"
                   name="propertyaffected"
+                  aria-required
                   defaultValue={incidentsListData.isPropertyDamaged}
                   onChange={(e) => {
                     setForm({
@@ -785,22 +796,27 @@ const IncidentDetails = () => {
                       ))
                     : null}
                 </RadioGroup>
+                {error && error.propertyaffected && (
+                  <FormHelperText>{error.propertyaffected}</FormHelperText>
+                )}
               </FormControl>
-
-              {/* {error && error.propertyaffected && (
-                    <p>{error.propertyaffected}</p>
-                  )} */}
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" className={classes.formControl}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error && error[`equiptmenteffected`]}
+                className={classes.formControl}
+              >
                 <FormLabel component="legend">
-                  Was There Any Equipment Damaged ?
+                  Was there any equiptment damaged?
                 </FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   aria-label="equiptmenteffected"
                   name="equiptmenteffected"
+                  aria-required
                   defaultValue={incidentsListData.isEquipmentDamaged}
                   onChange={(e) => {
                     setForm({
@@ -834,16 +850,25 @@ const IncidentDetails = () => {
                       ))
                     : null}
                 </RadioGroup>
+                {error && error.equiptmenteffected && (
+                  <FormHelperText>{error.equiptmenteffected}</FormHelperText>
+                )}
               </FormControl>
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <FormControl component="fieldset" className={classes.formControl}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error && error[`environmentaffected`]}
+                className={classes.formControl}
+              >
                 <FormLabel component="legend">
-                  Was There Any Environment Impact ?
+                  Was there any environment impact?
                 </FormLabel>
                 <RadioGroup
                   aria-label="environmentaffected"
+                  aria-required
                   name="environmentaffected"
                   className={classes.inlineRadioGroup}
                   defaultValue={incidentsListData.isEnviromentalImpacted}
@@ -880,9 +905,9 @@ const IncidentDetails = () => {
                       ))
                     : null}
                 </RadioGroup>
-                {/* {error && error.environmentaffected && (
-                    <p>{error.environmentaffected}</p>
-                  )} */}
+                {error && error.environmentaffected && (
+                  <FormHelperText>{error.environmentaffected}</FormHelperText>
+                )}
               </FormControl>
             </Grid>
 
@@ -908,7 +933,7 @@ const IncidentDetails = () => {
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident Details"
+              selectedItem="Incident details"
             />
           </Grid>
         </Grid>

@@ -20,6 +20,7 @@ function App() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
+    console.log(code)
 
     if (code) {
       let axios = require("axios");
@@ -44,7 +45,6 @@ function App() {
 
       axios(config)
         .then(function(response) {
-          console.log(response.data.access_token);
           localStorage.setItem("access_token", response.data.access_token);
         })
         .catch(function(error) {

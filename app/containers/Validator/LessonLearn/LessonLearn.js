@@ -7,12 +7,12 @@ function LessionLearnedValidator(data) {
   const error = {};
 
   if (validator.isEmpty(data.team.toString())) {
-    error.team = "This Field is Empty";
+    error.team = "This field is empty";
     isValid = false;
   }
 
   if (validator.isEmpty(data.teamLearning.toString())) {
-    error.teamLearning = "This Field is Empty";
+    error.teamLearning = "This field is empty";
     isValid = false;
   }
 

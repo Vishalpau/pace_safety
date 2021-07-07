@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: ".5rem",
   },
   activeList: {
-    // color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     borderLeft: `5px solid ${theme.palette.secondary.main}`,
   },
   notActiveList: {
@@ -37,21 +37,25 @@ export const FormSideBar = (props) => {
   let linkBreak = Object.keys(props.listOfItems).indexOf(props.selectedItem);
   const classes = useStyles();
 
-  const data = props.deleteForm || localStorage.getItem('deleteForm')
+  const data = props.deleteForm || localStorage.getItem("deleteForm");
   return (
     <Paper elevation={1}>
-        <List dense>
-            {/* {props.deleteForm.map((value) => (
+      <List dense>
+        {/* {props.deleteForm.map((value) => (
                 delete props.listOfItems[value]
             ))} */}
-          {Object.entries(props.listOfItems).map(([key, value], index) =>
-            !data.includes(key) ?(index >= linkBreak ? (
+        {Object.entries(props.listOfItems).map(([key, value], index) =>
+          !data.includes(key) ? (
+            index >= linkBreak ? (
               index === linkBreak ? (
                 <ListItem className={classes.activeList}>
                   <ListItemIcon className={classes.icon}>
                     <DoubleArrowIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText primary={key} />
+                  <ListItemText
+                    primaryTypographyProps={{ variant: "subtitle2" }}
+                    primary={key}
+                  />
                   {/* {key} */}
                 </ListItem>
               ) : (
@@ -71,8 +75,9 @@ export const FormSideBar = (props) => {
                 {/* <a href={value}>{key}</a> */}
               </ListItem>
             )
-          ):null)}
-        </List>
+          ) : null
+        )}
+      </List>
     </Paper>
   );
 };
