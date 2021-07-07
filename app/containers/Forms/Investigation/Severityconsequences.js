@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Button,
   Grid,
@@ -37,19 +37,32 @@ const useStyles = makeStyles((theme) => ({
 const InvestigationOverview = () => {
   const notificationSent = ["Manage", "SuperVisor"];
   const [error, setError] = useState({});
-
+  const putId = useRef("")
   const selectValues = [1, 2, 3, 4];
 
   const [form, setForm] = useState({});
 
   const severity_level = ["Level1", "Level2", "Level3", "Level4"];
 
-  const handleNext = () => {
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId")
+    putId.current = incidentId
+    console.log(incidentId)
+    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let allApiData = previousData.data.data.results[0];
+    setForm(allApiData)
+  }
+
+  const handleNext = async (e) => {
     console.log(form);
-    const { error, isValid } = initialdetailvalidate(form);
-    setError(error);
+    // const { error, isValid } = initialdetailvalidate(form);
+    // setError(error);
     // console.log(error, isValid);
-    const res = api.post("api/v1/incidents/92/investigations/", form);
+    const res = await api.post(`api/v1/incidents/${putId.current}/investigations/`, form);
     if (res.status === 200) {
       console.log("request done");
     }
@@ -57,6 +70,10 @@ const InvestigationOverview = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+
+  useEffect(() => {
+    handelUpdateCheck();
+  }, []);
 
   return (
     <PapperBlock title="Severity Consequences" icon="ion-md-list-box">
@@ -77,21 +94,23 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Health & Safety - Actual Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        healthSafetyActual: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.actualSeverityLevel && (
-                <FormHelperText>{error.actualSeverityLevel}</FormHelperText>
-              )}
+
             </FormControl>
           </Grid>
 
@@ -99,7 +118,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.potentialSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -109,21 +127,22 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Health & Safety - Potential Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        healthSafetyPotential: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -132,7 +151,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -142,21 +160,23 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Environment - Actual Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        environmentActual: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.actualSeverityLevel && (
-                <FormHelperText>{error.actualSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -164,7 +184,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.potentialSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -174,21 +193,23 @@ const InvestigationOverview = () => {
                 labelId=""
                 id="unit-name"
                 label="   Environment - Potential Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        environmentPotential: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -197,7 +218,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -207,21 +227,22 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Regulatory -  Actual Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        regulatoryActual: selectValues,
+                      });
+                    }}
+                  >{selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.actualSeverityLevel && (
-                <FormHelperText>{error.actualSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -229,7 +250,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.potentialSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -239,21 +259,23 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Regulatory - Potential Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        regulatoryPotential: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -262,7 +284,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -272,21 +293,22 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Reputaion -  Actual Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        reputationActual: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.actualSeverityLevel && (
-                <FormHelperText>{error.actualSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -294,7 +316,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.potentialSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -304,21 +325,22 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Reputaion -  Potential Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        reputationPotential: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -327,7 +349,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -337,28 +358,28 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Financial - Actual Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        financialActual: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.actualSeverityLevel && (
-                <FormHelperText>{error.actualSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
           <Grid item md={6}>
             <FormControl
               variant="outlined"
-              error={error && error.potentialSeverityLevel}
               required
               className={classes.formControl}
             >
@@ -369,21 +390,22 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Financial Potential Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        financialPotential: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -392,7 +414,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.potentialSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
@@ -402,21 +423,22 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Select Potential consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        highestPotentialImpactReceptor: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -425,7 +447,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.potentialSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">Classification</InputLabel>
@@ -433,21 +454,23 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Classification"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        classification: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -455,7 +478,6 @@ const InvestigationOverview = () => {
             <FormControl
               variant="outlined"
               required
-              error={error && error.potentialSeverityLevel}
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">RCA Recommended</InputLabel>
@@ -463,21 +485,23 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="RCA Recommended"
-                // defaultValue={incidentsListData.fkUnitId}
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     unitname: toString(e.target.value),
-                //   });
-                // }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        rcaRecommended: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -486,7 +510,7 @@ const InvestigationOverview = () => {
               variant="contained"
               color="primary"
               onClick={() => handleNext()}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+            // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
             >
               Next
             </Button>

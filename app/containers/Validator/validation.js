@@ -6,7 +6,7 @@ function validate(data) {
   console.log(data.projectname);
 
   if (data.projectname == 0) {
-    error.projectname = "Please select project name.";
+    error.projectname = "Please select project name";
     isValid = false;
   }
 
@@ -18,14 +18,14 @@ function validate(data) {
   // }
 
   if (validator.isEmpty(data.incidenttype)) {
-    error.incidenttype = "Please select incident type.";
+    error.incidenttype = "Please select incident type";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.title)) {
-    error.title = "Please enter incident title.";
+    error.title = "Please enter incident title";
     isValid = false;
   } else {
     isValid = true;
@@ -53,7 +53,7 @@ function validate(data) {
   // }
 
   if (validator.isEmpty(data.contractor)) {
-    error.contractor = "Please select contractor name.";
+    error.contractor = "Please select contractor name";
     isValid = false;
   } else {
     isValid = true;
@@ -67,28 +67,28 @@ function validate(data) {
   // }
 
   if (validator.isEmpty(data.personaffected)) {
-    error.personaffected = "Please choose person affected.";
+    error.personaffected = "Please choose person affected";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.propertyaffected)) {
-    error.propertyaffected = "Please choose property affected.";
+    error.propertyaffected = "Please choose property affected";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.equiptmenteffected)) {
-    error.equiptmenteffected = "Please choose equipment affected.";
+    error.equiptmenteffected = "Please choose equipment affected";
     isValid = false;
   } else {
     isValid = true;
   }
 
   if (validator.isEmpty(data.environmentaffected)) {
-    error.environmentaffected = "Please choose enviornment affected.";
+    error.environmentaffected = "Please choose enviornment affected";
     isValid = false;
   } else {
     isValid = true;

@@ -50,10 +50,10 @@ const InvestigationOverview = () => {
     actualSeverityLevel: "",
     potentialSeverityLevel: "",
     createdBy: 0,
-    fkIncidentId: 0
+    fkIncidentId: localStorage.getItem("fkincidentId")
   });
 
-  const severity_level = ["Level1", "Level2", "Level3", "Level4"];
+  const severity_level = ["High", "Low", "Medium"];
 
   const handleNext = () => {
     const { error, isValid } = InvestigationOverviewValidate(form);
@@ -170,16 +170,22 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Actual Severity & Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    actualSeverityLevel: toString(e.target.value),
-                  });
-                }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      console.log("here")
+                      setForm({
+                        ...form,
+                        actualSeverityLevel: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
               {error && error.actualSeverityLevel && (
@@ -201,16 +207,21 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Potential Severity & Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    potentialSeverityLevel: toString(e.target.value),
-                  });
-                }}
+              // defaultValue={incidentsListData.fkUnitId}
+
               >
                 {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                  <MenuItem
+                    value={selectValues}
+                    onClick={(e) => {
+                      setForm({
+                        ...form,
+                        potentialSeverityLevel: selectValues,
+                      });
+                    }}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
               {error && error.potentialSeverityLevel && (
