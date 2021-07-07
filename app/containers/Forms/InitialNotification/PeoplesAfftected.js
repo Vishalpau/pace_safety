@@ -587,7 +587,11 @@ const PeoplesAffected = () => {
                               className={classes.inlineRadioGroup}
                               aria-label="personAffect"
                               name="personAffect"
-                              defaultValue={people.personMedicalCare}
+                              defaultValue={
+                                people.personMedicalCare === "N/A"
+                                  ? "Don't Know"
+                                  : people.personMedicalCare
+                              }
                               // value={value.personMedicalCare}
                               onChange={(e) =>
                                 handleUpdatePeople(
@@ -800,7 +804,12 @@ const PeoplesAffected = () => {
                               className={classes.inlineRadioGroup}
                               aria-label="personAffect"
                               name="personAffect"
-                              value={value.personMedicalCare}
+                              // value={value.personMedicalCare}
+                              defaultValue={
+                                value.personMedicalCare === "N/A"
+                                  ? "Don't Know"
+                                  : value.personMedicalCare
+                              }
                               onChange={(e) =>
                                 handleForm(e, key, "personMedicalCare")
                               }
