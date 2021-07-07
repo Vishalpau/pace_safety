@@ -461,9 +461,11 @@ const Evidence = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell style={{ width: 200 }}>
-                        Evidence Type
+                        Evidence type
                       </TableCell>
-                      <TableCell style={{ width: 260 }}>Yes/No/N/A</TableCell>
+                      <TableCell style={{ width: 260 }}>
+                        Yes / No / N/A
+                      </TableCell>
                       <TableCell>Remarks</TableCell>
                       <TableCell>Attachments</TableCell>
                     </TableRow>
