@@ -548,6 +548,8 @@ const IncidentDetails = () => {
                   }}
                   format="yyyy/MM/dd HH:mm"
                   inputVariant="outlined"
+                  disableFuture='true'
+                
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -932,7 +934,7 @@ const IncidentDetails = () => {
             <FormSideBar
               deleteForm={hideAffect}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident Details"
+              selectedItem="Incident details"
             />
           </Grid>
         </Grid>

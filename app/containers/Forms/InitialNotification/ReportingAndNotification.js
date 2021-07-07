@@ -583,7 +583,7 @@ const ReportingAndNotification = () => {
                   <TextField
                     id="evidanceRemark"
                     variant="outlined"
-                    label="evidanceRemark"
+                    label="Evidences Remark"
                     className={classes.formControl}
                     onChange={(e) =>
                       handleEvidanceForm(e, index, "evidenceRemark")
@@ -690,6 +690,7 @@ const ReportingAndNotification = () => {
                   KeyboardButtonProps={{
                     "aria-label": "change date",
                   }}
+                  disableFuture={true}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -810,8 +811,9 @@ const ReportingAndNotification = () => {
           </Grid>
           <Grid item md={3}>
             <FormSideBar
+            deleteForm={[1,2]}
               listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Reporting and Notification"}
+              selectedItem={"Reporting and notification"}
             />
           </Grid>
         </Grid>
