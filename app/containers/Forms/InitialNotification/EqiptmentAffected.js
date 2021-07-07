@@ -342,7 +342,7 @@ const EqiptmentAffected = () => {
                             className={classes.formControl}
                           >
                             <InputLabel id="eq-type-label">
-                              Equipment type{equipment.equipmentType}
+                              Equipment type
                             </InputLabel>
                             <Select
                               labelId="eq-type-label"
