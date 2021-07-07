@@ -583,6 +583,7 @@ const PeoplesAffected = () => {
                             <FormLabel>
                               Was that person taken to medical care?
                             </FormLabel>
+                            {people.personMedicalCare}
                             <RadioGroup
                               className={classes.inlineRadioGroup}
                               aria-label="personAffect"
