@@ -53,7 +53,7 @@ const RootCauseAnalysis = () => {
   const [form, setForm] = useState({
     causeOfIncident: "",
     correctiveAction: "",
-    wouldItPreventIncident: "",
+    wouldItPreventIncident: "N/A",
     recommendSolution: "",
     status: "Active",
     createdBy: 0,
@@ -154,8 +154,7 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -343,9 +342,9 @@ const RootCauseAnalysis = () => {
                   />
                 ))}
               </RadioGroup>
-              {error && error.wouldItPreventIncident && (
+              {/* {error && error.wouldItPreventIncident && (
                 <FormHelperText>{error.wouldItPreventIncident}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
 
@@ -356,11 +355,12 @@ const RootCauseAnalysis = () => {
               variant="outlined"
               multiline
               error={error && error.recommendSolution}
-              helperText={
-                error && error.recommendSolution
-                  ? error.recommendSolution
-                  : null
-              }
+              // helperText={
+              //   error && error.recommendSolution
+              //     ? error.recommendSolution
+              //     : null
+              // }
+              helperText={null}
               label="If No, Please Recommended Correct Solution ?"
               rows="3"
               defaultValue={form.recommendSolution}

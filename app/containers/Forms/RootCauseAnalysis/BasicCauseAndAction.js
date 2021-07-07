@@ -69,12 +69,12 @@ const BasicCauseAndAction = () => {
   const putId = useRef("");
   const [incidentDetail, setIncidentDetail] = useState({});
   let sub_values = [
-    "Personal",
-    "Wellness factors",
-    "Other human factors",
-    "Leadership",
-    "Processes",
     "Others job factors",
+    "Processes",
+    "Leadership",
+    "Other human factors",
+    "Wellness factors",
+    "Personal",
   ];
   const handelShowData = async () => {
     let tempApiData = {};

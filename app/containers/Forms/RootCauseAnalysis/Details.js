@@ -52,9 +52,9 @@ const Details = () => {
   const [incidents, setIncidents] = useState([]);
 
   const [form, setForm] = useState({
-    evidenceSupport: "No",
-    evidenceContradiction: "No",
-    evidenceNotSupport: "No",
+    evidenceSupport: "N/A",
+    evidenceContradiction: "N/A",
+    evidenceNotSupport: "N/A",
     rcaRecommended: "",
     status: "Active",
     createdBy: 0,
@@ -124,8 +124,7 @@ const Details = () => {
   const classes = useStyles();
 
   const handelRcaRecommended = (e, value) => {
-    if (value == "Five why analysis") {
-      console.log("here");
+    if (value == "Five Why analysis") {
       setHideArray([
         "Hazardious acts",
         "Hazardious conditions",
@@ -136,8 +135,10 @@ const Details = () => {
         "Root cause analysis",
       ]);
     } else if (value == "Pace cause analysis") {
-      setHideArray(["Root cause analysis", "Why analysis"]);
-    } else if (value == "Root cause analysis") {
+      setHideArray([
+        "Root cause analysis",
+        "Why analysis"]);
+    } else if (value == "Root Cause analysis") {
       setHideArray([
         "Hazardious acts",
         "Hazardious conditions",
@@ -152,7 +153,7 @@ const Details = () => {
   };
 
   const handelNext = async (e) => {
-    console.log(form);
+    // console.log(form);
     const { error, isValid } = DetailValidation(form);
     let nextPageLink = 0;
     setError(error);
@@ -192,7 +193,8 @@ const Details = () => {
         history.push(
           "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
         );
-      } else if (form.rcaRecommended == "Root cause analysis") {
+      } else if (form.rcaRecommended == "Root Cause analysis") {
+        console.log("here")
         history.push(
           "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
         );
@@ -200,26 +202,23 @@ const Details = () => {
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       if (form.rcaRecommended == "Five Why analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/why-analysis/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/why-analysis/${putId.current
           }`
         );
       } else if (form.rcaRecommended == "Pace cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
           }`
         );
       } else if (form.rcaRecommended == "Root cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
           }`
         );
       }
     }
 
-    e.preventDefault();
+    // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
   };
 
@@ -231,7 +230,7 @@ const Details = () => {
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {console.log(hideArray)}
+      {/* {console.log(hideArray)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
@@ -342,9 +341,9 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {error && error.evidenceSupport && (
+              {/* {error && error.evidenceSupport && (
                 <FormHelperText>{error.evidenceSupport}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
 
@@ -376,9 +375,9 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {error && error.evidenceContradiction && (
+              {/* {error && error.evidenceContradiction && (
                 <FormHelperText>{error.evidenceContradiction}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
 
@@ -407,9 +406,9 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {error && error.evidenceNotSupport && (
+              {/* {error && error.evidenceNotSupport && (
                 <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
 
