@@ -342,7 +342,7 @@ const EqiptmentAffected = () => {
                             className={classes.formControl}
                           >
                             <InputLabel id="eq-type-label">
-                              Equipment type{equipment.equipmentType}
+                              Equipment type
                             </InputLabel>
                             <Select
                               labelId="eq-type-label"
@@ -541,7 +541,7 @@ const EqiptmentAffected = () => {
                 />
               </Grid>
             )}
-            <Grid item md={6}>
+            <Grid item md={12}>
               <Button
                 variant="contained"
                 color="primary"
