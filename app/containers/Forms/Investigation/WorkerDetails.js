@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid, Select, Container } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -185,13 +184,10 @@ const WorkerDetails = () => {
   return (
     <PapperBlock title="Details of Person Affected" icon="ion-md-list-box">
       <Grid container spacing={3}>
-        {console.log(testTaken)}
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
-            <Typography variant="h6">Worker Detais</Typography>
+            <Typography variant="h6">Worker details</Typography>
           </Grid>
-
-          {/* name */}
           <Grid item md={6}>
             <TextField
               id="title"
@@ -300,7 +296,7 @@ const WorkerDetails = () => {
               error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">Start of Shift Time</InputLabel>
+              <InputLabel id="unit-name-label">Start of shift time</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -330,7 +326,7 @@ const WorkerDetails = () => {
               error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">Type of Shift</InputLabel>
+              <InputLabel id="unit-name-label">Type of shift</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -392,7 +388,7 @@ const WorkerDetails = () => {
               error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">Shift Cycle</InputLabel>
+              <InputLabel id="unit-name-label">Shift cycle</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -423,7 +419,7 @@ const WorkerDetails = () => {
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
-                Number of Days into Shift
+                Number of days into shift
               </InputLabel>
               <Select
                 labelId="unit-name-label"
@@ -455,9 +451,7 @@ const WorkerDetails = () => {
               required
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">
-                Time in company
-              </InputLabel>
+              <InputLabel id="unit-name-label">Time in company</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -487,9 +481,7 @@ const WorkerDetails = () => {
               required
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">
-                Time on project
-              </InputLabel>
+              <InputLabel id="unit-name-label">Time on project</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -520,7 +512,7 @@ const WorkerDetails = () => {
               required
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">Time in Industry</InputLabel>
+              <InputLabel id="unit-name-label">Time in industry</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -545,16 +537,16 @@ const WorkerDetails = () => {
 
           {/* injury     */}
           <Grid item md={12}>
-            <Typography variant="h6">Injury Details</Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6">Injury details</Typography>
+            </Box>
           </Grid>
 
-          {/* injury event */}
           <Grid item md={6}>
-            {/* <p>Event leading to injury</p> */}
             <TextField
               id="title"
               variant="outlined"
-              label="Event Leading to Injury"
+              label="Event leading to injury"
               className={classes.formControl}
               error={error && error.eventLeadingToInjury}
               helperText={
@@ -576,7 +568,7 @@ const WorkerDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Injury Object"
+              label="Injury object"
               className={classes.formControl}
               error={error && error.injuryObject}
               helperText={
@@ -602,7 +594,7 @@ const WorkerDetails = () => {
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
-                Primary Body Part Side Included
+                Primary body part side included
               </InputLabel>
               <Select
                 labelId="unit-name-label"
@@ -626,7 +618,6 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
 
-          {/* secondary body part included */}
           <Grid item md={6}>
             <FormControl
               variant="outlined"
@@ -635,7 +626,7 @@ const WorkerDetails = () => {
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
-                Secondary Body Part Included
+                Secondary body part included
               </InputLabel>
               <Select
                 labelId="unit-name-label"
@@ -659,7 +650,6 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
 
-          {/* injury illness  */}
           <Grid item md={6}>
             <FormControl
               variant="outlined"
@@ -668,7 +658,7 @@ const WorkerDetails = () => {
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
-                Type of Injury Illness
+                Type of injury illness
               </InputLabel>
               <Select
                 labelId="unit-name-label"
@@ -790,7 +780,7 @@ const WorkerDetails = () => {
               className={classes.formControl}
             >
               <InputLabel id="unit-name-label">
-                Highest Medical Responder
+                Highest medical responder
               </InputLabel>
               <Select
                 labelId="unit-name-label"
@@ -836,7 +826,6 @@ const WorkerDetails = () => {
             />
           </Grid>
 
-          {/* first aid  */}
           <Grid item md={6}>
             <FormControl
               variant="outlined"
@@ -844,7 +833,7 @@ const WorkerDetails = () => {
               error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">First Aid Treatment</InputLabel>
+              <InputLabel id="unit-name-label">First aid treatment</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -867,7 +856,6 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
 
-          {/* injury mechanism  */}
           <Grid item md={6}>
             <FormControl
               variant="outlined"
@@ -875,7 +863,7 @@ const WorkerDetails = () => {
               required
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">Mechanism of Injury</InputLabel>
+              <InputLabel id="unit-name-label">Mechanism of injury</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
@@ -898,12 +886,12 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
 
-          {/* worker Care */}
           <Grid item md={12}>
-            <Typography variant="h6">Worker Care</Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6">Worker care</Typography>
+            </Box>
           </Grid>
 
-          {/* medical issued */}
           <Grid item md={6}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Medical Issued ?</FormLabel>
@@ -926,7 +914,6 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
 
-          {/* precription issued */}
           <Grid item md={6}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Prescription Issues ?</FormLabel>
@@ -949,7 +936,6 @@ const WorkerDetails = () => {
             </FormControl>
           </Grid>
 
-          {/* non prescription */}
           <Grid item md={6}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Non-Prescription ?</FormLabel>
@@ -1019,14 +1005,14 @@ const WorkerDetails = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6">Alcohal and Drug Test</Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6">Alcohal and drug test</Typography>
+            </Box>
           </Grid>
 
-          {/* test taken */}
           <Grid item md={12}>
-            {/* <p>Was the test taken ?</p> */}
             <FormControl component="fieldset">
-              <FormLabel component="legend">Was the Test Taken ?</FormLabel>
+              <FormLabel component="legend">Was the test taken?</FormLabel>
               <RadioGroup
                 className={classes.inlineRadioGroup}
                 defaultValue="No"
@@ -1044,9 +1030,7 @@ const WorkerDetails = () => {
           </Grid>
           {testTaken ? (
             <>
-              {/* date of test */}
               <Grid item md={6}>
-                {/* <p>Date of test</p> */}
                 <MuiPickersUtilsProvider
                   variant="outlined"
                   utils={DateFnsUtils}
@@ -1074,7 +1058,7 @@ const WorkerDetails = () => {
                 {/* <p>Was worker cleared to work following A&D testing?</p> */}
                 <FormControl component="fieldset">
                   <FormLabel component="legend">
-                    Was Worker Cleared to Work Following A&D Testing ?
+                    Was worker cleared to work following a&d testing?
                   </FormLabel>
                   <RadioGroup className={classes.inlineRadioGroup}>
                     {radioYesNo.map((value) => (
@@ -1093,7 +1077,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Why Was the Test Not Conducted ?"
+                label="Why was the test not conducted?"
                 className={classes.formControl}
                 error={error && error.constructionManagerName}
                 helperText={
@@ -1101,18 +1085,22 @@ const WorkerDetails = () => {
                     ? error.constructionManagerName
                     : null
                 }
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     constructionManagerName: e.target.value,
-              //   });
-              // }}
+                // onChange={(e) => {
+                //   setForm({
+                //     ...form,
+                //     constructionManagerName: e.target.value,
+                //   });
+                // }}
               />
             </Grid>
           )}
 
           <Grid item md={12}>
-            <Typography variant="h6">Supervisor Details for Worker</Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6">
+                Supervisor details for worker
+              </Typography>
+            </Box>
           </Grid>
 
           <Grid item md={6}>
@@ -1167,7 +1155,7 @@ const WorkerDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Supervisor Time in Company"
+              label="Supervisor time in company"
               className={classes.formControl}
               error={error && error.supervisorTimeInCompany}
               helperText={
@@ -1185,11 +1173,10 @@ const WorkerDetails = () => {
           </Grid>
 
           <Grid item md={6}>
-            {/* <p>Supervisor time on project</p> */}
             <TextField
               id="title"
               variant="outlined"
-              label="Supervisor Time on Project"
+              label="Supervisor time on project"
               className={classes.formControl}
               error={error && error.supervisorTimeOnProject}
               helperText={
@@ -1207,7 +1194,9 @@ const WorkerDetails = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6">Attachment</Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6">Attachment</Typography>
+            </Box>
           </Grid>
 
           <Grid item xs={12} justify="flex-start">
@@ -1216,9 +1205,9 @@ const WorkerDetails = () => {
               showPreviews
               maxSize={5000000}
               filesLimit={5}
-              text="Drag and Drop File(s) Here or Click the Button Below"
+              text="Drag and drop file(s) here or click the button below"
               showButton
-            // onDrop={handleDrop}
+              // onDrop={handleDrop}
             />
             {error && error.fileupload ? <p>{error.fileupload}</p> : null}
           </Grid>
@@ -1232,7 +1221,7 @@ const WorkerDetails = () => {
                 )
               }
             >
-              Add New Worker
+              Add new worker
             </button>
           </Grid>
 
@@ -1260,7 +1249,7 @@ const WorkerDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Worker Details"
+            selectedItem="Worker details"
           />
         </Grid>
       </Grid>

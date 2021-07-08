@@ -61,7 +61,6 @@ const ActionTaken = () => {
   };
   const [error, setError] = useState({});
 
-
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   return (
@@ -72,7 +71,7 @@ const ActionTaken = () => {
             <TextField
               variant="outlined"
               id="filled-basic"
-              label="Pre Event Mitigation"
+              label="Pre event mitigation"
               className={classes.formControl}
             />
           </Grid>
@@ -89,7 +88,7 @@ const ActionTaken = () => {
                 format="yyyy/MM/dd"
                 required
                 inputVariant="outlined"
-                label="Correction Action Date Completed"
+                label="Correction action date completed"
                 KeyboardButtonProps={{
                   "aria-label": "change date",
                 }}
@@ -120,7 +119,7 @@ const ActionTaken = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Action Taken"
+            selectedItem="Action taken"
           />
         </Grid>
       </Grid>
