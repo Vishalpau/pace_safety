@@ -303,3 +303,12 @@ export const RCAOPTION = [
   "Pace cause analysis",
   "Root cause analysis",
 ];
+
+
+export const HIGHESTPOTENTIALIMPACTOR = [
+  "Health and safety",
+  "Environment",
+  "Regulatory",
+  "Reputaion",
+  "Financial"
+]

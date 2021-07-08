@@ -21,7 +21,7 @@ import { PapperBlock } from "dan-components";
 
 import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
+import { INVESTIGATION_FORM, HIGHESTPOTENTIALIMPACTOR, RCAOPTION } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
@@ -39,12 +39,15 @@ const InvestigationOverview = () => {
   const notificationSent = ["Manage", "SuperVisor"];
   const [error, setError] = useState({});
   const putId = useRef("");
+  const investigationId = useRef("")
+
   const selectValues = [1, 2, 3, 4];
   const healthAndSafetyValues = useRef([])
   const environmentValues = useRef([])
   const regulationValues = useRef([])
   const reputaionValues = useRef([])
   const financialValues = useRef([])
+  const classificationValues = useRef([])
 
   const [form, setForm] = useState({});
 
@@ -52,19 +55,19 @@ const InvestigationOverview = () => {
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-    console.log(incidentId);
+
+
     let previousData = await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
     );
     let allApiData = previousData.data.data.results[0];
-    setForm(allApiData);
+    if (!isNaN(allApiData.id)) {
+      await setForm(allApiData);
+      investigationId.current = allApiData.id
+    }
   };
 
   const handleNext = async (e) => {
@@ -72,10 +75,7 @@ const InvestigationOverview = () => {
     // const { error, isValid } = initialdetailvalidate(form);
     // setError(error);
     // console.log(error, isValid);
-    const res = await api.post(
-      `api/v1/incidents/${putId.current}/investigations/`,
-      form
-    );
+    const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
     if (res.status === 200) {
       console.log("request done");
     }
@@ -86,16 +86,17 @@ const InvestigationOverview = () => {
 
   useEffect(async () => {
     handelUpdateCheck();
+    classificationValues.current = await PickListData(40)
     healthAndSafetyValues.current = await PickListData(42)
     environmentValues.current = await PickListData(43)
     regulationValues.current = await PickListData(44)
     reputaionValues.current = await PickListData(45)
     financialValues.current = await PickListData(46)
-
   }, []);
 
   return (
     <PapperBlock title="Severity Consequences" icon="ion-md-list-box">
+      {console.log(form.healthSafetyActual)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
@@ -104,6 +105,7 @@ const InvestigationOverview = () => {
             </Typography>
           </Grid>
 
+          {/* health and safety  */}
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
@@ -113,7 +115,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Health & safety - actual consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={typeof form.healthSafetyActual !== "undefined" ? form.healthSafetyActual : ""}
               >
                 {healthAndSafetyValues.current.map((selectValues) => (
                   <MenuItem
@@ -141,7 +143,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Health & Safety - Potential Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.healthSafetyPotential || false}
               >
                 {healthAndSafetyValues.current.map((selectValues) => (
                   <MenuItem
@@ -170,9 +172,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Environment - actual consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.environmentActual || false}
               >
-                {severity_level.map((selectValues) => (
+                {environmentValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -198,9 +200,9 @@ const InvestigationOverview = () => {
                 labelId=""
                 id="unit-name"
                 label="Environment - potential consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.environmentPotential || false}
               >
-                {severity_level.map((selectValues) => (
+                {environmentValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -227,9 +229,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Regulatory - actual consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.regulatoryActual || false}
               >
-                {severity_level.map((selectValues) => (
+                {regulationValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -255,9 +257,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Regulatory - potential consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.regulatoryPotential || false}
               >
-                {severity_level.map((selectValues) => (
+                {regulationValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -284,9 +286,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Reputaion -  Actual Consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.reputationActual || false}
               >
-                {severity_level.map((selectValues) => (
+                {reputaionValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -312,9 +314,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Reputaion - potential consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.reputationPotential || false}
               >
-                {severity_level.map((selectValues) => (
+                {reputaionValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -341,9 +343,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Financial - actual consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.financialActual || false}
               >
-                {severity_level.map((selectValues) => (
+                {financialValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -369,9 +371,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Financial potential consequences"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.financialPotential || false}
               >
-                {severity_level.map((selectValues) => (
+                {financialValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -398,9 +400,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Highest potential impact receptor"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.highestPotentialImpactReceptor || false}
               >
-                {severity_level.map((selectValues) => (
+                {HIGHESTPOTENTIALIMPACTOR.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -425,9 +427,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Classification"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.classification || false}
               >
-                {severity_level.map((selectValues) => (
+                {classificationValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -451,9 +453,9 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Rca recommended"
-                // defaultValue={incidentsListData.fkUnitId}
+                value={form.rcaRecommended || false}
               >
-                {severity_level.map((selectValues) => (
+                {RCAOPTION.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -475,7 +477,7 @@ const InvestigationOverview = () => {
               variant="contained"
               color="primary"
               onClick={() => handleNext()}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+            // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
             >
               Next
             </Button>
