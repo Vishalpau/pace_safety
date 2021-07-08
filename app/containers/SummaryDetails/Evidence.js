@@ -142,11 +142,12 @@ const EvidenceSummary = () => {
                 {evidence.length !== 0
                   ? evidence.map((value, index) => (
                       <Grid
+                        key={index}
                         className="repeatedGrid"
                         container
                         item
                         md={12}
-                        spacing={3}
+                        spacing={3} 
                       >
                         <Grid container item xs={12} spacing={3}>
                           <Grid item lg={6} md={6}>
@@ -223,7 +224,7 @@ const EvidenceSummary = () => {
                             >
                               <Tooltip title="File Name">
                                 <IconButton
-                                  onClick={handleOpen}
+                                  onClick={handleOpen(index)}
                                   className={classes.fileIcon}
                                 >
                                   <PhotoSizeSelectActualIcon />
@@ -300,6 +301,7 @@ const EvidenceSummary = () => {
                   variant="contained"
                   color="primary"
                   disableElevation
+                  // href={}
                 >
                   Download Attachment
                 </Button>

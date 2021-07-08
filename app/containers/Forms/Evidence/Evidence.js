@@ -21,6 +21,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -50,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const Evidence = () => {
   // States definations.
   const [selectedDate, setSelectedDate] = React.useState(
@@ -61,6 +67,7 @@ const Evidence = () => {
 
   const [evideceData, setEvideceData] = useState([]);
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = React.useState([
     {
@@ -382,6 +389,16 @@ const Evidence = () => {
     }
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      // setOpenError(false)
+      return;
+    }
+
+    setOpen(false);
+    
+  };
+
   const handleChange = async (e, index) => {
     let TempPpeData = [...form];
     TempPpeData[index].evidenceCheck = e.target.value;
@@ -400,7 +417,7 @@ const Evidence = () => {
       TempPpeData[index].evidenceDocument = e.target.files[0];
       await setForm(TempPpeData);
     } else {
-      alert("Please select file less than 25Mb");
+      await setOpen(true);
     }
   };
 
@@ -548,6 +565,15 @@ const Evidence = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+              >
+                <Alert onClose={handleClose} severity="error">
+                  The file you are attaching is bigger than the 25mb.
+                </Alert>
+              </Snackbar>
             </Grid>
 
             <Grid item md={12}>
