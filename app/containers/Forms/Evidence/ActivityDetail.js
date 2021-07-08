@@ -73,7 +73,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-03",
-      question: "Was per-job safety discussed head?",
+      question: "Was per-job safety discussion held?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -106,7 +106,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-06",
-      question: "Did pre-planning identified the hazard?",
+      question: "Did pre-planning identify the hazard?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -258,7 +258,7 @@ const ActivityDetails = () => {
                         </FormLabel>
                         <RadioGroup
                           className={classes.inlineRadioGroup}
-                          defaultValue={value.answer}
+                          defaultValue={value.answer || false}
                           onChange={(e) => {
                             handleRadioData(e, value.questionCode);
                             console.log(value.answer);
@@ -307,7 +307,7 @@ const ActivityDetails = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Activity detail"
+              selectedItem="Activity details"
             />
           </Grid>
         </Grid>
