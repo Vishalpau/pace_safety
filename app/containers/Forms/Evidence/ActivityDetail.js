@@ -127,7 +127,7 @@ const ActivityDetails = () => {
       error: "",
     },
   ]);
-  console.log(activtyList);
+  
   const fetchActivityList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
@@ -136,8 +136,9 @@ const ActivityDetails = () => {
     if (result.length) {
       await setActvityList(result);
     }
-    await setIsLoading(true);
+      await setIsLoading(true);
   };
+
 
   const fetchActivityData = async () => {
     const res = await api.get(
@@ -147,9 +148,14 @@ const ActivityDetails = () => {
     console.log(result);
     console.log(result.length);
     if (result.length) {
-      await setActvityList(result);
+      let temp = [...activtyList]
+      temp = result
+      await setActvityList(temp);    
     }
-    await setIsLoading(true);
+    if(!id){
+      setIsLoading(true)
+    }
+    
   };
 
   const handleNext = async () => {
@@ -158,7 +164,6 @@ const ActivityDetails = () => {
     if (!isValid) {
       return;
     }
-
     if (id && activtyList.length > 0) {
       console.log("in put");
       const res = await api.put(
@@ -187,7 +192,6 @@ const ActivityDetails = () => {
       }
     } else {
       console.log("in Post");
-
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
@@ -223,15 +227,15 @@ const ActivityDetails = () => {
     fetchIncidentDetails();
     if (id) {
       fetchActivityList();
-    } else {
-      setIsLoading(true);
-    }
+    } 
   }, [id]);
 
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
       {isLoading ? (
+        
         <Grid container spacing={3}>
+        {console.log(activtyList)}
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
@@ -273,7 +277,7 @@ const ActivityDetails = () => {
                             />
                           ))}
                         </RadioGroup>
-
+​
                         {value.error ? (
                           <FormHelperText>{value.error}</FormHelperText>
                         ) : null}

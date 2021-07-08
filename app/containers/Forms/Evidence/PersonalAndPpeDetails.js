@@ -141,7 +141,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-16",
-      question: "Did supervisor conducted I-Care observation?",
+      question: "Did supervisor conduct I-Care observation?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -698,7 +698,7 @@ const PersonalAndPpeDetails = () => {
                     className={classes.formControl}
                   >
                     <FormLabel component="legend">
-                      Did supervisor conducted I-care observation?
+                      Did supervisor conduct I-Care observation?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}

@@ -393,8 +393,15 @@ const Evidence = () => {
 
   const handleFile = async (e, index) => {
     let TempPpeData = [...form];
-    TempPpeData[index].evidenceDocument = e.target.files[0];
-    await setForm(TempPpeData);
+    if (
+      (TempPpeData[index].evidenceDocument =
+        e.target.files[0].size <= 1024 * 1024 * 25)
+    ) {
+      TempPpeData[index].evidenceDocument = e.target.files[0];
+      await setForm(TempPpeData);
+    } else {
+      alert("Please select file less than 25Mb");
+    }
   };
 
   const handleComment = async (e, index) => {
@@ -520,10 +527,11 @@ const Evidence = () => {
                               }}
                             />
                           </TableCell>
-                          <TableCell style={{width:"220px"}}>
+                          <TableCell style={{ width: "220px" }}>
                             <input
                               type="file"
                               className={classes.fullWidth}
+                              accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
                               disabled={
                                 value.evidenceCheck !== "Yes" ? true : false
                               }
