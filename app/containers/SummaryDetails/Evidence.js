@@ -47,6 +47,7 @@ import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
+import "../../styles/custom.css"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,7 +100,7 @@ const EvidenceSummary = () => {
               <AccordionDetails>
                 {evidence.length !== 0
                   ? evidence.map((value, index) => (
-                      <>
+                      <Grid className="repeatedGrid" container item md={12} spacing={3}>
                         <Grid container item xs={12} spacing={3}>
                           <Grid item lg={6} md={6}>
                             <Typography
@@ -182,7 +183,7 @@ const EvidenceSummary = () => {
                             </Typography>
                           </Grid>
                         </Grid>
-                      </>
+                      </Grid>
                     ))
                   : null}
               </AccordionDetails>

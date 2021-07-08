@@ -203,10 +203,20 @@ const Summary = () => {
               <div className={Styles.item}>
                 <Button
                   color="primary"
-                  variant={localStorage.getItem("RootCause") == "Done" ? "contained" : "outlined"}
+                  variant={
+                    localStorage.getItem("RootCause") == "Done"
+                      ? "contained"
+                      : "outlined"
+                  }
                   size="small"
                   className={classes.statusButton}
-                  endIcon={localStorage.getItem("RootCause") == "Done" ? <CheckCircle /> : <AccessTime />}
+                  endIcon={
+                    localStorage.getItem("RootCause") == "Done" ? (
+                      <CheckCircle />
+                    ) : (
+                      <AccessTime />
+                    )
+                  }
                   onClick={(e) => {
                     setInitialNotification(false);
                     setInvestigation(false);
@@ -218,7 +228,9 @@ const Summary = () => {
                   Root Cause & Analysis
                 </Button>
                 <Typography variant="caption" display="block">
-                  {localStorage.getItem("RootCause") == "Done" ? "Done" : "Pending"}
+                  {localStorage.getItem("RootCause") == "Done"
+                    ? "Done"
+                    : "Pending"}
                 </Typography>
               </div>
               <div className={Styles.item}>
@@ -312,13 +324,24 @@ const Summary = () => {
                       <ListItemText primary="Modify Investigation" />
                     </ListItemLink>
 
-                    <ListItemLink href="/app/incident-management/registration/evidence/evidence/">
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
+                    {localStorage.getItem("Evidence") == "Done" ? (
+                      <ListItemLink
+                        href={`/app/incident-management/registration/evidence/evidence/${id}`}
+                      >
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary="Modify Evidence" />
+                      </ListItemLink>
+                    ) : (
+                      <ListItemLink href="/app/incident-management/registration/evidence/evidence/">
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
 
-                      <ListItemText primary="Add Evidence" />
-                    </ListItemLink>
+                        <ListItemText primary="Add Evidence" />
+                      </ListItemLink>
+                    )}
 
                     <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
                       <ListItemIcon>
@@ -327,7 +350,13 @@ const Summary = () => {
                       <ListItemText primary="Perform RCA" />
                     </ListItemLink>
 
-                    <ListItemLink onClick={()=>history.push("/app/incident-management/registration/lession-learned/lession-learned/")}>
+                    <ListItemLink
+                      onClick={() =>
+                        history.push(
+                          "/app/incident-management/registration/lession-learned/lession-learned/"
+                        )
+                      }
+                    >
                       <ListItemIcon>
                         <Add />
                       </ListItemIcon>
