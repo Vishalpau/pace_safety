@@ -26,8 +26,8 @@ export const INITIAL_NOTIFICATION_FORM = {
 };
 
 export const EVIDENCE_FORM = {
-  Evidence: "/app/incident-management/registration/evidence/evidence/",
-  "Activity detail":
+  Evidences: "/app/incident-management/registration/evidence/evidence/",
+  "Activity details":
     "/app/incident-management/registration/evidence/activity-detail/",
   "Personal and PPE details":
     "/app/incident-management/registration/evidence/personal-and-ppedetails/",
