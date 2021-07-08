@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 const InvestigationOverview = () => {
   const notificationSent = ["Manage", "SuperVisor"];
   const [error, setError] = useState({});
-  const putId = useRef("")
+  const putId = useRef("");
   const selectValues = [1, 2, 3, 4];
 
   const [form, setForm] = useState({});
@@ -49,20 +49,27 @@ const InvestigationOverview = () => {
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId")
-    putId.current = incidentId
-    console.log(incidentId)
-    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+    console.log(incidentId);
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
     let allApiData = previousData.data.data.results[0];
-    setForm(allApiData)
-  }
+    setForm(allApiData);
+  };
 
   const handleNext = async (e) => {
     console.log(form);
     // const { error, isValid } = initialdetailvalidate(form);
     // setError(error);
     // console.log(error, isValid);
-    const res = await api.post(`api/v1/incidents/${putId.current}/investigations/`, form);
+    const res = await api.post(
+      `api/v1/incidents/${putId.current}/investigations/`,
+      form
+    );
     if (res.status === 200) {
       console.log("request done");
     }
@@ -81,20 +88,20 @@ const InvestigationOverview = () => {
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
             <Typography variant="h6">
-              Potential Severity Level Scenerio
+              Potential severity level scenerio
             </Typography>
           </Grid>
 
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Health & Safety - Actual Consequences
+                Health & safety - actual consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Health & Safety - Actual Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
+                label="Health & safety - actual consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -110,24 +117,19 @@ const InvestigationOverview = () => {
                   </MenuItem>
                 ))}
               </Select>
-
             </FormControl>
           </Grid>
 
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Health & Safety - Potential Consequences
+                Health & safety - potential consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Health & Safety - Potential Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -148,20 +150,15 @@ const InvestigationOverview = () => {
 
           {/* Environment */}
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Environment - Actual Consequences
+                Environment - actual consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Environment - Actual Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                label=" Environment - actual consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -181,20 +178,15 @@ const InvestigationOverview = () => {
           </Grid>
 
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Environment - Potential Consequences
+                Environment - potential consequences
               </InputLabel>
               <Select
                 labelId=""
                 id="unit-name"
-                label="   Environment - Potential Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                label="Environment - potential consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -215,20 +207,15 @@ const InvestigationOverview = () => {
 
           {/* Regulatory */}
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Regulatory - Actual Consequences
+                Regulatory - actual consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Regulatory -  Actual Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                label="Regulatory - actual consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -239,7 +226,8 @@ const InvestigationOverview = () => {
                         regulatoryActual: selectValues,
                       });
                     }}
-                  >{selectValues}
+                  >
+                    {selectValues}
                   </MenuItem>
                 ))}
               </Select>
@@ -247,20 +235,15 @@ const InvestigationOverview = () => {
           </Grid>
 
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Regulatory - Potential Consequences
+                Regulatory - potential consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label=" Regulatory - Potential Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                label="Regulatory - potential consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -281,19 +264,15 @@ const InvestigationOverview = () => {
 
           {/* reuptation */}
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Reputaion - Actual Consequences
+                Reputaion - actual consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Reputaion -  Actual Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -313,19 +292,15 @@ const InvestigationOverview = () => {
           </Grid>
 
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Reputaion - Potential Consequences
+                Reputaion - potential consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label=" Reputaion -  Potential Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
+                label="Reputaion - potential consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -346,19 +321,15 @@ const InvestigationOverview = () => {
 
           {/* financial */}
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Financial - Actual Consequences
+                Financial - actual consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Financial - Actual Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
+                label="Financial - actual consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -378,19 +349,15 @@ const InvestigationOverview = () => {
           </Grid>
 
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Financial Potential Consequences
+                Financial potential consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Financial Potential Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
+                label="Financial potential consequences"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -411,19 +378,15 @@ const InvestigationOverview = () => {
 
           {/* highest potentsial impact receptor */}
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Highest Potential Impact Receptor
+                Highest potential impact receptor
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Select Potential consequences"
-              // defaultValue={incidentsListData.fkUnitId}
+                label="Highest potential impact receptor"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -444,18 +407,13 @@ const InvestigationOverview = () => {
 
           {/* Classification */}
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">Classification</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Classification"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -475,18 +433,13 @@ const InvestigationOverview = () => {
           </Grid>
 
           <Grid item md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
-              <InputLabel id="unit-name-label">RCA Recommended</InputLabel>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="unit-name-label">Rca recommended</InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="RCA Recommended"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                label="Rca recommended"
+                // defaultValue={incidentsListData.fkUnitId}
               >
                 {severity_level.map((selectValues) => (
                   <MenuItem
@@ -510,7 +463,7 @@ const InvestigationOverview = () => {
               variant="contained"
               color="primary"
               onClick={() => handleNext()}
-            // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+              // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
             >
               Next
             </Button>
@@ -520,7 +473,7 @@ const InvestigationOverview = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Severity Consequences"
+            selectedItem="Severity consequences"
           />
         </Grid>
       </Grid>

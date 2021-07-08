@@ -114,11 +114,11 @@ const EventDetails = () => {
 
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Job Task</InputLabel>
+              <InputLabel id="project-name-label">Job task</InputLabel>
               <Select
                 id="project-name"
                 labelId="project-name-label"
-                label="Job Task"
+                label="Job task"
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -132,7 +132,7 @@ const EventDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Equipment Involved"
+              label="Equipment involved"
               className={classes.formControl}
             />
           </Grid>
@@ -229,7 +229,7 @@ const EventDetails = () => {
 
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Fluid Type</InputLabel>
+              <InputLabel id="project-name-label">Fluid type</InputLabel>
               <Select
                 id="project-name"
                 labelId="project-name-label"
@@ -246,7 +246,7 @@ const EventDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Fluid Amount"
+              label="Fluid amount"
               className={classes.formControl}
             />
           </Grid>
@@ -270,7 +270,7 @@ const EventDetails = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6">Property Details</Typography>
+            <Typography variant="h6">Property details</Typography>
           </Grid>
 
           <Grid item md={6}>
@@ -283,14 +283,14 @@ const EventDetails = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6">Overall Cost</Typography>
+            <Typography variant="h6">Overall cost</Typography>
           </Grid>
 
           {overAllCost.map((value, index) => (
-            <>
+            <Grid container item md={12} spacing={2} alignItems="center">
               <Grid item md={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Fluid Type</InputLabel>
+                  <InputLabel id="project-name-label">Fluid type</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -340,11 +340,11 @@ const EventDetails = () => {
 
               <Grid item md={2}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Cost Factor</InputLabel>
+                  <InputLabel id="project-name-label">Cost factor</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
-                    label="Cost Factor"
+                    label="Cost factor"
                     value={overAllCost[index].cost}
                   >
                     {selectValues.map((selectValues) => (
@@ -371,14 +371,14 @@ const EventDetails = () => {
                   </IconButton>
                 </Grid>
               ) : null}
-            </>
-          ))}
 
-          <Grid item md={1}>
-            <IconButton onClick={(e) => handelOveallCostAdd(e)}>
-              <AddIcon />
-            </IconButton>
-          </Grid>
+              <Grid item md={1}>
+                <IconButton onClick={(e) => handelOveallCostAdd(e)}>
+                  <AddIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          ))}
 
           <Grid item md={12}>
             <Button
@@ -403,7 +403,7 @@ const EventDetails = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Event Details"
+            selectedItem="Event details"
           />
         </Grid>
       </Grid>
