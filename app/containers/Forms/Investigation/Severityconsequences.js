@@ -81,6 +81,10 @@ const InvestigationOverview = () => {
     }
   };
 
+  const handelDeaultValue = (value) => {
+    return typeof value !== "undefined" ? value : ""
+  }
+
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
@@ -115,7 +119,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Health & safety - actual consequences"
-                value={typeof form.healthSafetyActual !== "undefined" ? form.healthSafetyActual : ""}
+                value={handelDeaultValue(form.healthSafetyActual)}
               >
                 {healthAndSafetyValues.current.map((selectValues) => (
                   <MenuItem
@@ -143,7 +147,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Health & Safety - Potential Consequences"
-                value={form.healthSafetyPotential || false}
+                value={handelDeaultValue(form.healthSafetyPotential)}
               >
                 {healthAndSafetyValues.current.map((selectValues) => (
                   <MenuItem
@@ -172,7 +176,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label=" Environment - actual consequences"
-                value={form.environmentActual || false}
+                value={handelDeaultValue(form.environmentActual)}
               >
                 {environmentValues.current.map((selectValues) => (
                   <MenuItem
@@ -200,7 +204,7 @@ const InvestigationOverview = () => {
                 labelId=""
                 id="unit-name"
                 label="Environment - potential consequences"
-                value={form.environmentPotential || false}
+                value={handelDeaultValue(form.environmentPotential)}
               >
                 {environmentValues.current.map((selectValues) => (
                   <MenuItem
@@ -229,7 +233,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Regulatory - actual consequences"
-                value={form.regulatoryActual || false}
+                value={handelDeaultValue(form.regulatoryActual)}
               >
                 {regulationValues.current.map((selectValues) => (
                   <MenuItem
@@ -257,7 +261,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Regulatory - potential consequences"
-                value={form.regulatoryPotential || false}
+                value={handelDeaultValue(form.regulatoryPotential)}
               >
                 {regulationValues.current.map((selectValues) => (
                   <MenuItem
@@ -286,7 +290,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Reputaion -  Actual Consequences"
-                value={form.reputationActual || false}
+                value={handelDeaultValue(form.reputationActual)}
               >
                 {reputaionValues.current.map((selectValues) => (
                   <MenuItem
@@ -314,7 +318,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Reputaion - potential consequences"
-                value={form.reputationPotential || false}
+                value={handelDeaultValue(form.reputationPotential)}
               >
                 {reputaionValues.current.map((selectValues) => (
                   <MenuItem
@@ -343,7 +347,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Financial - actual consequences"
-                value={form.financialActual || false}
+                value={handelDeaultValue(form.financialActual)}
               >
                 {financialValues.current.map((selectValues) => (
                   <MenuItem
@@ -371,7 +375,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Financial potential consequences"
-                value={form.financialPotential || false}
+                value={handelDeaultValue(form.financialPotential)}
               >
                 {financialValues.current.map((selectValues) => (
                   <MenuItem
@@ -400,7 +404,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Highest potential impact receptor"
-                value={form.highestPotentialImpactReceptor || false}
+                value={handelDeaultValue(form.highestPotentialImpactReceptor)}
               >
                 {HIGHESTPOTENTIALIMPACTOR.map((selectValues) => (
                   <MenuItem
@@ -427,7 +431,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Classification"
-                value={form.classification || false}
+                value={handelDeaultValue(form.classification)}
               >
                 {classificationValues.current.map((selectValues) => (
                   <MenuItem
@@ -453,7 +457,7 @@ const InvestigationOverview = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Rca recommended"
-                value={form.rcaRecommended || false}
+                value={handelDeaultValue(form.rcaRecommended)}
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Grid, Container, Input, Select } from "@material-ui/core";
 
 import Paper from "@material-ui/core/Paper";
@@ -20,6 +20,7 @@ import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import { useSelector } from "react-redux";
 import { ContactlessOutlined } from "@material-ui/icons";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,14 +32,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EventDetails = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
+
+  const [form, setFrom] = useState({})
+
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+
+
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
+    let allApiData = previousData.data.data.results[0];
+    if (!isNaN(allApiData.id)) {
+      await setForm(allApiData);
+      investigationId.current = allApiData.id
+    }
+  };
+
+  const activityListValues = useRef([])
+  const jobTaskValues = useRef([])
+  const weatherValues = useRef([])
+  const lightningValues = useRef([])
+  const fluidTypeValues = useRef([])
+  const costTypeValues = useRef([])
+  const casualFactorTypeValues = useRef([])
 
   const [weather, setWeather] = useState([{ weather: "" }]);
   const [overAllCost, setOverAllCost] = useState([
@@ -49,12 +69,6 @@ const EventDetails = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const radioDecide = ["Yes", "No"];
 
   const handelWeather = async (e, key, value) => {
     console.log(e.target.value);
@@ -92,9 +106,21 @@ const EventDetails = () => {
     }
   };
 
+  useEffect(async () => {
+    activityListValues.current = await PickListData(63)
+    jobTaskValues.current = await PickListData(64)
+    weatherValues.current = await PickListData(65)
+    lightningValues.current = await PickListData(66)
+    fluidTypeValues.current = await PickListData(67)
+    costTypeValues.current = await PickListData(68)
+    casualFactorTypeValues.current = await PickListData(69)
+
+  }, []);
+
   const classes = useStyles();
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
+      {console.log(casualFactorTypeValues.current)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -105,13 +131,18 @@ const EventDetails = () => {
                 labelId="project-name-label"
                 label="Activity"
               >
-                {selectValues.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {activityListValues.current.map((selectValues) => (
+                  <MenuItem
+                    value={selectValues}
+                  >
+                    {selectValues}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
 
+          {/* job task */}
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Job task</InputLabel>
@@ -120,13 +151,14 @@ const EventDetails = () => {
                 labelId="project-name-label"
                 label="Job task"
               >
-                {selectValues.map((selectValues) => (
+                {jobTaskValues.current.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
 
+          {/* equiment involved */}
           <Grid item md={6}>
             {/* <p>Eqipment Invoked</p> */}
             <TextField
@@ -137,6 +169,7 @@ const EventDetails = () => {
             />
           </Grid>
 
+          {/* weather */}
           {weather.map((value, index) => (
             <>
               <Grid item md={11}>
@@ -148,7 +181,7 @@ const EventDetails = () => {
                     label="Weather"
                     value={weather[index].weather || ""}
                   >
-                    {selectValues.map((selectValues) => (
+                    {weatherValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues}
                         onClick={(e) => handelWeather(e, index, selectValues)}
@@ -178,6 +211,7 @@ const EventDetails = () => {
             </Grid>
           ) : null}
 
+
           <Grid item md={6}>
             <TextField
               id="title"
@@ -186,6 +220,8 @@ const EventDetails = () => {
               className={classes.formControl}
             />
           </Grid>
+
+          {/* lightning */}
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Lighting</InputLabel>
@@ -194,13 +230,14 @@ const EventDetails = () => {
                 labelId="project-name-label"
                 label="Lighting"
               >
-                {selectValues.map((selectValues) => (
+                {lightningValues.current.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Grid>
 
+          {/* wind         */}
           <Grid item md={12}>
             <Typography variant="h6">Wind</Typography>
           </Grid>
@@ -223,6 +260,7 @@ const EventDetails = () => {
             />
           </Grid>
 
+          {/* spills */}
           <Grid item md={12}>
             <Typography variant="h6">Spills</Typography>
           </Grid>
@@ -235,7 +273,7 @@ const EventDetails = () => {
                 labelId="project-name-label"
                 label="Fluid type"
               >
-                {selectValues.map((selectValues) => (
+                {fluidTypeValues.current.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
               </Select>
@@ -269,6 +307,7 @@ const EventDetails = () => {
             />
           </Grid>
 
+          {/* property details */}
           <Grid item md={12}>
             <Typography variant="h6">Property details</Typography>
           </Grid>
@@ -286,18 +325,19 @@ const EventDetails = () => {
             <Typography variant="h6">Overall cost</Typography>
           </Grid>
 
+          {/* cost incurred         */}
           {overAllCost.map((value, index) => (
             <Grid container item md={12} spacing={2} alignItems="center">
               <Grid item md={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Fluid type</InputLabel>
+                  <InputLabel id="project-name-label">Cost type</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
-                    label="Fluid Type"
+                    label="Cost type"
                     value={overAllCost[index].type}
                   >
-                    {selectValues.map((selectValues) => (
+                    {costTypeValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues}
                         onClick={async (e) => {
@@ -314,40 +354,32 @@ const EventDetails = () => {
               </Grid>
 
               <Grid item md={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Amount</InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Amount"
-                    value={overAllCost[index].amount}
-                  >
-                    {selectValues.map((selectValues) => (
-                      <MenuItem
-                        value={selectValues}
-                        onClick={async (e) => {
-                          const temp = [...overAllCost];
-                          temp[index]["amount"] = selectValues;
-                          await setOverAllCost(temp);
-                        }}
-                      >
-                        {selectValues}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                {/* <p>Eqipment Invoked</p> */}
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Cost amount"
+                  value={overAllCost[index].amount}
+                  className={classes.formControl}
+                  onChange={
+                    async (e) => {
+                      const temp = [...overAllCost];
+                      temp[index]["amount"] = e.target.value;
+                      await setOverAllCost(temp);
+                    }}
+                />
               </Grid>
 
               <Grid item md={2}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Cost factor</InputLabel>
+                  <InputLabel id="project-name-label">Casual factor</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
-                    label="Cost factor"
+                    label="Casual factor"
                     value={overAllCost[index].cost}
                   >
-                    {selectValues.map((selectValues) => (
+                    {casualFactorTypeValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues}
                         onClick={async (e) => {
