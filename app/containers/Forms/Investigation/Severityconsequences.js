@@ -23,6 +23,7 @@ import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +40,11 @@ const InvestigationOverview = () => {
   const [error, setError] = useState({});
   const putId = useRef("")
   const selectValues = [1, 2, 3, 4];
+  const healthAndSafetyValues = useRef([])
+  const environmentValues = useRef([])
+  const regulationValues = useRef([])
+  const reputaionValues = useRef([])
+  const financialValues = useRef([])
 
   const [form, setForm] = useState({});
 
@@ -71,8 +77,14 @@ const InvestigationOverview = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
-  useEffect(() => {
+  useEffect(async () => {
     handelUpdateCheck();
+    healthAndSafetyValues.current = await PickListData(42)
+    environmentValues.current = await PickListData(43)
+    regulationValues.current = await PickListData(44)
+    reputaionValues.current = await PickListData(45)
+    financialValues.current = await PickListData(46)
+
   }, []);
 
   return (
@@ -96,7 +108,7 @@ const InvestigationOverview = () => {
                 label="Health & Safety - Actual Consequences"
               // defaultValue={incidentsListData.fkUnitId}
               >
-                {severity_level.map((selectValues) => (
+                {healthAndSafetyValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -129,7 +141,7 @@ const InvestigationOverview = () => {
                 label=" Health & Safety - Potential Consequences"
               // defaultValue={incidentsListData.fkUnitId}
               >
-                {severity_level.map((selectValues) => (
+                {healthAndSafetyValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {

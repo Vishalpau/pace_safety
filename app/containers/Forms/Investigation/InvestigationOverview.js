@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Grid,
@@ -23,6 +23,7 @@ import InvestigationOverviewValidate from "../../Validator/InvestigationValidati
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +40,8 @@ const InvestigationOverview = () => {
   const [error, setError] = useState({});
 
   const selectValues = [1, 2, 3, 4];
+
+  const severityValues = useRef([])
 
   const [form, setForm] = useState({
     srartDate: "2021-07-07T13:05:22.157Z",
@@ -67,6 +70,10 @@ const InvestigationOverview = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+
+  useEffect(async () => {
+    severityValues.current = await PickListData(41)
+  }, []);
 
   return (
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
@@ -173,7 +180,7 @@ const InvestigationOverview = () => {
               // defaultValue={incidentsListData.fkUnitId}
 
               >
-                {severity_level.map((selectValues) => (
+                {severityValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -210,7 +217,7 @@ const InvestigationOverview = () => {
               // defaultValue={incidentsListData.fkUnitId}
 
               >
-                {severity_level.map((selectValues) => (
+                {severityValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
