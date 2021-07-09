@@ -288,7 +288,6 @@ function BlankPage() {
               <div className="gridView">
                 {showIncident.map((item, key) => (
                   <Card variant="outlined" className={Incidents.card} key={key}>
-                    {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
                     <CardContent>
                       <Grid container spacing={3}>
                         <Grid item xs={12}>
@@ -297,7 +296,7 @@ function BlankPage() {
                               <Typography
                                 variant="h6"
                                 // display="inline"
-                                // color="textSecondary"
+                                //
                                 // className={Fonts.labelValue}
                               >
                                 {/* {item[1]["incidentTitle"]} */}
@@ -311,8 +310,6 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="John Doe"
-                                // onDelete={handleDelete}
-                                // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -340,16 +337,12 @@ function BlankPage() {
 
                             <Chip
                               variant="outlined"
-                              label=" Initial Notification"
+                              label="Initial Notification"
                               color="primary"
                               size="small"
                             />
 
-                            <Typography
-                              variant="body1"
-                              // color="textSecondary"
-                              display="inline"
-                            >
+                            <Typography display="inline">
                               {/* {item[1]["incidentNumber"]} */}
                               <i className="ion-ios-calendar-outline" />
                               <span className={Incidents.dateValue}>
@@ -364,42 +357,31 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography
-                            // variant="h6"
-                            gutterBottom
-                            // className={Fonts.labelName}
-                          >
+                          <Typography className={Fonts.labelName} gutterBottom>
                             Incident Type
                           </Typography>
 
-                          <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            className={Fonts.labelValue}
-                          >
+                          <Typography className={Fonts.labelValue}>
                             {/* {item[1]["incidentReportedByName"]} */}
                             Not found
                           </Typography>
                         </Grid>
                         <Grid item lg={3}>
-                          <Typography gutterBottom>
+                          <Typography className={Fonts.labelName} gutterBottom>
                             Incident location
                           </Typography>
-                          <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            className={Fonts.labelValue}
-                          >
+                          <Typography className={Fonts.labelValue}>
                             {item[1]}
                           </Typography>
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography gutterBottom>Reported on</Typography>
+                          <Typography className={Fonts.labelName} gutterBottom>
+                            Reported on
+                          </Typography>
 
                           <Typography
                             variant="body1"
-                            color="textSecondary"
                             className={Fonts.labelValue}
                           >
                             {item[3]}
@@ -407,13 +389,11 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography gutterBottom>Reported By</Typography>
+                          <Typography className={Fonts.labelName} gutterBottom>
+                            Reported By
+                          </Typography>
 
-                          <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            className={Fonts.labelValue}
-                          >
+                          <Typography className={Fonts.labelValue}>
                             {item[1]}
                           </Typography>
                         </Grid>
@@ -429,9 +409,8 @@ function BlankPage() {
                       >
                         <Grid item xs={6} md={3} lg={2}>
                           <Typography
-                            variant="body2"
                             display="inline"
-                            className={Incidents.actionsLabel}
+                            // className={Incidents.actionsLabel}
                           >
                             <AttachmentIcon /> Comments:
                           </Typography>
@@ -444,7 +423,7 @@ function BlankPage() {
                           <Typography
                             variant="body2"
                             display="inline"
-                            className={Incidents.actionsLabel}
+                            // className={Incidents.actionsLabel}
                           >
                             <AttachmentIcon /> Actions:
                           </Typography>
@@ -456,7 +435,7 @@ function BlankPage() {
                           <Typography
                             variant="body2"
                             display="inline"
-                            className={Incidents.actionsLabel}
+                            // className={Incidents.actionsLabel}
                           >
                             <AttachmentIcon /> Evidences:
                           </Typography>
@@ -475,7 +454,7 @@ function BlankPage() {
                       <Typography
                         variant="body2"
                         display="inline"
-                        color="textSecondary"
+                        
                         className={Type.statusHighlight}
                       >
                         Initial Notification
@@ -525,7 +504,7 @@ function BlankPage() {
                               <Typography
                                 variant="h6"
                                 // display="inline"
-                                // color="textSecondary"
+                                //
                                 // className={Fonts.labelValue}
                               >
                                 {item[1]["incidentTitle"]}
@@ -551,7 +530,7 @@ function BlankPage() {
                               display="inline"
                               className={Fonts.labelName}
                             >
-                              Number{" "}
+                              Number
                               <Link
                                 href={`/app/incident-management/registration/summary/summary/${
                                   item[1].id
@@ -571,16 +550,9 @@ function BlankPage() {
                               size="small"
                             />
 
-                            <Typography
-                              variant="body1"
-                              // color="textSecondary"
-                              display="inline"
-                            >
-                              {/* {item[1]["incidentNumber"]} */}
+                            <Typography variant="body1" display="inline">
                               <i className="ion-ios-calendar-outline" />
                               <span className={Incidents.dateValue}>
-                                {/* {item[1]["incidentOccuredOn"]} */}
-
                                 {moment(item[1]["incidentOccuredOn"]).format(
                                   "Do MMM YYYY, h:mm a"
                                 )}
@@ -590,24 +562,19 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography gutterBottom>Incident Type</Typography>
-
-                          <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            className={Fonts.labelValue}
-                          >
-                            {/* {item[1]["incidentReportedByName"]} */}
+                          <Typography className={Fonts.labelName} gutterBottom>
+                            Incident type
+                          </Typography>
+                          <Typography className={Fonts.labelValue}>
                             Not found
                           </Typography>
                         </Grid>
                         <Grid item lg={3}>
-                          <Typography gutterBottom>
+                          <Typography className={Fonts.labelName} gutterBottom>
                             Incident location
                           </Typography>
                           <Typography
                             variant="body1"
-                            color="textSecondary"
                             className={Fonts.labelValue}
                           >
                             {item[1]["incidentLocation"]}
@@ -615,11 +582,12 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography gutterBottom>Reported on</Typography>
+                          <Typography className={Fonts.labelName} gutterBottom>
+                            Reported on
+                          </Typography>
 
                           <Typography
                             variant="body1"
-                            color="textSecondary"
                             className={Fonts.labelValue}
                           >
                             {moment(item[1]["incidentReportedOn"]).format(
@@ -629,13 +597,11 @@ function BlankPage() {
                         </Grid>
 
                         <Grid item lg={3}>
-                          <Typography gutterBottom>Reported By</Typography>
+                          <Typography className={Fonts.labelName} gutterBottom>
+                            Reported by
+                          </Typography>
 
-                          <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            className={Fonts.labelValue}
-                          >
+                          <Typography className={Fonts.labelValue}>
                             {item[1]["incidentReportedByName"]}
                           </Typography>
                         </Grid>
@@ -653,7 +619,7 @@ function BlankPage() {
                           <Typography
                             variant="body2"
                             display="inline"
-                            className={Incidents.actionsLabel}
+                            // className={Incidents.actionsLabel}
                           >
                             <AttachmentIcon /> Comments:
                           </Typography>
@@ -666,7 +632,7 @@ function BlankPage() {
                           <Typography
                             variant="body2"
                             display="inline"
-                            className={Incidents.actionsLabel}
+                            // className={Incidents.actionsLabel}
                           >
                             <AttachmentIcon /> Actions:
                           </Typography>
@@ -678,7 +644,7 @@ function BlankPage() {
                           <Typography
                             variant="body2"
                             display="inline"
-                            className={Incidents.actionsLabel}
+                            // className={Incidents.actionsLabel}
                           >
                             <AttachmentIcon /> Evidences:
                           </Typography>
@@ -697,7 +663,7 @@ function BlankPage() {
                       <Typography
                         variant="body2"
                         display="inline"
-                        color="textSecondary"
+                        
                         className={Type.statusHighlight}
                       >
                         Initial Notification
@@ -736,7 +702,6 @@ function BlankPage() {
 
           <div className="listView">
             <MUIDataTable
-              // title="Incidents List"
               data={Object.entries(incidents).map((item) => [
                 item[1]["incidentNumber"],
                 item[1]["incidentReportedByName"],

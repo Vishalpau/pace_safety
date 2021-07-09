@@ -309,6 +309,7 @@ const EnvironmentAffected = () => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
+
                   <Grid item md={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
@@ -316,7 +317,7 @@ const EnvironmentAffected = () => {
                         multiline
                         rows="3"
                         variant="outlined"
-                        label={` Details of ${env.envQuestion.slice(14, -2)}`}
+                        label={`Details of ${env.envQuestion.slice(14, -2)}`}
                         error={error && error.envAnswerDetails}
                         helperText={
                           error && error.envAnswerDetails
@@ -370,9 +371,12 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    {error && error[`envQuestionOption${[3]}`]
-                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
-                  : null}
+                    {error && error[`envQuestionOption${[3]}`] ? (
+                      <FormHelperText>
+                        {" "}
+                        {error[`envQuestionOption${[3]}`]}
+                      </FormHelperText>
+                    ) : null}
                   </FormControl>
                 </Grid>
 
@@ -422,31 +426,35 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    {error && error[`envQuestionOption${[3]}`]
-                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
-                  : null}
+                    {error && error[`envQuestionOption${[3]}`] ? (
+                      <FormHelperText>
+                        {" "}
+                        {error[`envQuestionOption${[3]}`]}
+                      </FormHelperText>
+                    ) : null}
                   </FormControl>
 
                   {isrelase == "Yes" ? (
-                    <TextField
-                      id="release-details"
-                      multiline
-                      variant="outlined"
-                      error={error && error.envQuestion}
-                      helperText={
-                        error && error.envQuestion ? err.envQuestion : null
-                      }
-                      rows="3"
-                      label="Details of release"
-                      className={classes.fullWidth}
-                      onChange={(e) => {
-                        handleForm(e, 1, "envAnswerDetails");
-                      }}
-                    />
+                    <Grid item md={12}>
+                      <TextField
+                        id="release-details"
+                        multiline
+                        variant="outlined"
+                        error={error && error.envQuestion}
+                        helperText={
+                          error && error.envQuestion ? err.envQuestion : null
+                        }
+                        rows="3"
+                        label="Details of release"
+                        className={classes.fullWidth}
+                        onChange={(e) => {
+                          handleForm(e, 1, "envAnswerDetails");
+                        }}
+                      />
+                    </Grid>
                   ) : null}
                 </Grid>
 
-                {/* wildlife imapact question and answer */}
                 <Grid item md={12}>
                   <FormControl
                     component="fieldset"
@@ -478,33 +486,36 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    {error && error[`envQuestionOption${[3]}`]
-                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
-                  : null}
+                    {error && error[`envQuestionOption${[3]}`] ? (
+                      <FormHelperText>
+                        {" "}
+                        {error[`envQuestionOption${[3]}`]}
+                      </FormHelperText>
+                    ) : null}
                   </FormControl>
 
                   {isWildlife == "Yes" ? (
-                    <TextField
-                      id="details-of-Wildlife-Affected"
-                      multiline
-                      rows="3"
-                      variant="outlined"
-                      error={error && error.envAnswerDetails}
-                      helperText={
-                        error && error.envAnswerDetails
-                          ? err.envAnswerDetails
-                          : null
-                      }
-                      label="Details of Wildlife Affected"
-                      className={classes.fullWidth}
-                      onChange={(e) => {
-                        handleForm(e, 2, "envAnswerDetails");
-                      }}
-                    />
+                    <Grid item md={12}>
+                      <TextField
+                        id="details-of-Wildlife-Affected"
+                        multiline
+                        rows="3"
+                        variant="outlined"
+                        error={error && error.envAnswerDetails}
+                        helperText={
+                          error && error.envAnswerDetails
+                            ? err.envAnswerDetails
+                            : null
+                        }
+                        label="Details of Wildlife Affected"
+                        className={classes.fullWidth}
+                        onChange={(e) => {
+                          handleForm(e, 2, "envAnswerDetails");
+                        }}
+                      />
+                    </Grid>
                   ) : null}
                 </Grid>
-
-                {/* waterbody question and answer */}
 
                 <Grid item md={12}>
                   <FormControl
@@ -536,16 +547,18 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    
-                   
-                  {error && error[`envQuestionOption${[3]}`]
-                  ?<FormHelperText> {error[`envQuestionOption${[3]}`]}</FormHelperText>
-                  : null}
-               
+
+                    {error && error[`envQuestionOption${[3]}`] ? (
+                      <FormHelperText>
+                        {" "}
+                        {error[`envQuestionOption${[3]}`]}
+                      </FormHelperText>
+                    ) : null}
                   </FormControl>
                 </Grid>
-                <Grid item md={12}>
-                  {iswaterbody == "Yes" ? (
+
+                {iswaterbody == "Yes" ? (
+                  <Grid item md={12}>
                     <TextField
                       id="waterbody-details"
                       multiline
@@ -563,24 +576,22 @@ const EnvironmentAffected = () => {
                         handleForm(e, 3, "envAnswerDetails");
                       }}
                     />
-                  ) : null}
-                </Grid>
+                  </Grid>
+                ) : null}
               </>
             )}
 
             <Grid item md={12}>
-              <div>
-                <TextField
-                  id="comment-if-any-environment"
-                  multiline
-                  variant="outlined"
-                  rows="3"
-                  label="Comment if any"
-                  className={classes.fullWidth}
-                  defaultValue={incidentsListData.enviromentalImpactComments}
-                  onChange={(e) => setEnvComments(e.target.value)}
-                />
-              </div>
+              <TextField
+                id="comment-if-any-environment"
+                multiline
+                variant="outlined"
+                rows="3"
+                label="Comment if any"
+                className={classes.fullWidth}
+                defaultValue={incidentsListData.enviromentalImpactComments}
+                onChange={(e) => setEnvComments(e.target.value)}
+              />
             </Grid>
 
             <Grid item md={6}>
