@@ -169,7 +169,7 @@ const BasicCauseAndAction = () => {
 
           <Grid item md={12}>
             <Typography variant="h6">
-              Option Selected from Basic Cause
+              Option selected from basic cause
             </Typography>
 
             {Object.entries(data).map(([key, value], index) => (

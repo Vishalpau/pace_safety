@@ -819,7 +819,7 @@ const IncidentDetails = () => {
                 className={classes.formControl}
               >
                 <FormLabel component="legend">
-                  Was there any equiptment damaged?
+                  Was there any equipment damaged?
                 </FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
