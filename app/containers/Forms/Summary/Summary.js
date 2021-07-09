@@ -342,13 +342,20 @@ const Summary = () => {
                         <ListItemText primary="Add Evidence" />
                       </ListItemLink>
                     )}
-
-                    <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
+                    {localStorage.getItem("RootCause") == "Done" ? (
+                    <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
+                      <ListItemIcon>
+                        <Edit />
+                      </ListItemIcon>
+                      <ListItemText primary="Modify RCA" />
+                    </ListItemLink>):(
+                      <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
                       <ListItemIcon>
                         <Add />
                       </ListItemIcon>
                       <ListItemText primary="Perform RCA" />
                     </ListItemLink>
+                    )}
 
                     <ListItemLink
                       onClick={() =>
