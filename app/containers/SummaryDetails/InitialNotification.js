@@ -372,11 +372,7 @@ const IncidentDetailsSummary = () => {
                       >
                         Equipment type
                       </Typography>
-                      <Typography
-                        variant="body2"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {equipmentdata.equipmentType}
                       </Typography>
                     </Grid>
@@ -437,7 +433,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        {key + 1} {envData.envQuestion}
+                        {key + 1}: {envData.envQuestion}
                       </Typography>
 
                       <Typography className={Fonts.labelValue}>

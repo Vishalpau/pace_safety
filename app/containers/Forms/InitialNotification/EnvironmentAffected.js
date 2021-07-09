@@ -373,7 +373,6 @@ const EnvironmentAffected = () => {
                     </RadioGroup>
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
@@ -428,32 +427,31 @@ const EnvironmentAffected = () => {
                     </RadioGroup>
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
                   </FormControl>
-
-                  {isrelase == "Yes" ? (
-                    <Grid item md={12}>
-                      <TextField
-                        id="release-details"
-                        multiline
-                        variant="outlined"
-                        error={error && error.envQuestion}
-                        helperText={
-                          error && error.envQuestion ? err.envQuestion : null
-                        }
-                        rows="3"
-                        label="Details of release"
-                        className={classes.fullWidth}
-                        onChange={(e) => {
-                          handleForm(e, 1, "envAnswerDetails");
-                        }}
-                      />
-                    </Grid>
-                  ) : null}
                 </Grid>
+
+                {isrelase == "Yes" ? (
+                  <Grid item md={12}>
+                    <TextField
+                      id="release-details"
+                      multiline
+                      variant="outlined"
+                      error={error && error.envQuestion}
+                      helperText={
+                        error && error.envQuestion ? err.envQuestion : null
+                      }
+                      rows="3"
+                      label="Details of release"
+                      className={classes.fullWidth}
+                      onChange={(e) => {
+                        handleForm(e, 1, "envAnswerDetails");
+                      }}
+                    />
+                  </Grid>
+                ) : null}
 
                 <Grid item md={12}>
                   <FormControl
@@ -488,34 +486,33 @@ const EnvironmentAffected = () => {
                     </RadioGroup>
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
                   </FormControl>
-
-                  {isWildlife == "Yes" ? (
-                    <Grid item md={12}>
-                      <TextField
-                        id="details-of-Wildlife-Affected"
-                        multiline
-                        rows="3"
-                        variant="outlined"
-                        error={error && error.envAnswerDetails}
-                        helperText={
-                          error && error.envAnswerDetails
-                            ? err.envAnswerDetails
-                            : null
-                        }
-                        label="Details of Wildlife Affected"
-                        className={classes.fullWidth}
-                        onChange={(e) => {
-                          handleForm(e, 2, "envAnswerDetails");
-                        }}
-                      />
-                    </Grid>
-                  ) : null}
                 </Grid>
+
+                {isWildlife == "Yes" ? (
+                  <Grid item md={12}>
+                    <TextField
+                      id="details-of-Wildlife-Affected"
+                      multiline
+                      rows="3"
+                      variant="outlined"
+                      error={error && error.envAnswerDetails}
+                      helperText={
+                        error && error.envAnswerDetails
+                          ? err.envAnswerDetails
+                          : null
+                      }
+                      label="Details of Wildlife Affected"
+                      className={classes.fullWidth}
+                      onChange={(e) => {
+                        handleForm(e, 2, "envAnswerDetails");
+                      }}
+                    />
+                  </Grid>
+                ) : null}
 
                 <Grid item md={12}>
                   <FormControl
@@ -550,7 +547,6 @@ const EnvironmentAffected = () => {
 
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
