@@ -311,7 +311,7 @@ const EvidenceSummary = () => {
                   // disableElevation
                   // href={}
                 >
-                  <a href={`${documentUrl}`} download > Download Attachment </a>
+                  <a href={`${documentUrl}`} download  > Download Attachment </a>
                   
                 </button>
               </Grid>
