@@ -100,14 +100,17 @@ const EvidenceSummary = () => {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
+  const handleOpen = (document) => {
+    setDocumentUrl(document)
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-
+  const downloadFile = () => {
+    window.location.href = `${documentUrl}`
+  }
   // const fkid = localStorage.getItem('fkincidentId');
   console.log(evidence);
   const fetchEvidanceData = async () => {
@@ -224,7 +227,7 @@ const EvidenceSummary = () => {
                             >
                               <Tooltip title="File Name">
                                 <IconButton
-                                  onClick={handleOpen}
+                                  onClick={()=>handleOpen(value.evidenceDocument)}
                                   className={classes.fileIcon}
                                 >
                                   <PhotoSizeSelectActualIcon />
@@ -291,6 +294,8 @@ const EvidenceSummary = () => {
                   style={{ width: "100%" }}
                   variant="contained"
                   disableElevation
+                  href={`${documentUrl}`}
+                  target='_blank'
                 >
                   View Attachment
                 </Button>
@@ -301,6 +306,7 @@ const EvidenceSummary = () => {
                   style={{ width: "100%" }}
                   variant="contained"
                   color="primary"
+                  onClick={()=>downloadFile()}
                   disableElevation
                 >
                   Download Attachment
