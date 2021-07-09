@@ -12,46 +12,68 @@ import { PersonalDashboard } from "../../containers/pageListAsync";
 
 import axios from "axios";
 
-import { SSO_URL, LOGIN_URL } from "../../utils/constants";
+import {
+  SSO_URL,
+  LOGIN_URL,
+  SSO_CLIENT_ID,
+  SSO_CLIENT_SECRET,
+} from "../../utils/constants";
+import api from "../../utils/axios";
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 function App() {
-  useEffect(() => {
+  
+  const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
-    console.log(code)
-
     if (code) {
-      let axios = require("axios");
-      let data = JSON.stringify({
+      const response = await api.post(`${SSO_URL}/api/v1/user/auth/token/`, {
         grant_type: "authorization_code",
-        client_id: "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
+        client_id:
+          { SSO_CLIENT_ID } || "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
         client_secret:
+          { SSO_CLIENT_SECRET } ||
           "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
         code: code,
       });
-
-      let config = {
-        method: "post",
-        url: `${SSO_URL}/api/v1/user/auth/token/`,
-        headers: {
-          "Content-Type": "application/json",
-          Cookie:
-            "sessionid=g2zt7cjcpjkf2qabggfwe14yzliwjz2x; csrftoken=NcsO8L9eWK1dLfWRGQ10t2b86GzdD9vSwmzDwc77Cc4luBmQAZiYbvtfgp3X845H",
-        },
-        data: data,
-      };
-
-      axios(config)
-        .then(function(response) {
-          localStorage.setItem("access_token", response.data.access_token);
-        })
-        .catch(function(error) {
-          // window.location.href = LOGIN_URL;
-          console.log(error);
-        });
+      const result = response.data.access_token;
+      localStorage.setItem("access_token", result);
     }
+  };
+
+  useEffect(() => {
+    getToken();
+
+    // if (code) {
+    //   let axios = require("axios");
+    //   let data = JSON.stringify({
+    //     grant_type: "authorization_code",
+    //     client_id: {SSO_CLIENT_ID}||"yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
+    //     client_secret:
+    //       "",
+    //     code: code,
+    //   });
+
+    //   let config = {
+    //     method: "post",
+    //     url: `${SSO_URL}/api/v1/user/auth/token/`,
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Cookie:
+    //         "sessionid=g2zt7cjcpjkf2qabggfwe14yzliwjz2x; csrftoken=NcsO8L9eWK1dLfWRGQ10t2b86GzdD9vSwmzDwc77Cc4luBmQAZiYbvtfgp3X845H",
+    //     },
+    //     data: data,
+    //   };
+
+    //   axios(config)
+    //     .then(function(response) {
+    //       localStorage.setItem("access_token", response.data.access_token);
+    //     })
+    //     .catch(function(error) {
+    //       console.log(error);
+    //     });
+    // }
   });
 
   return (

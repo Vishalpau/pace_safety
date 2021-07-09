@@ -31,7 +31,8 @@ import link from "dan-api/ui/link";
 import styles from "./header-jss";
 
 import "../../styles/custom/customheader.css";
-import { LOGIN_URL } from "../../utils/constants";
+import { access_token, ACCOUNT_API_URL, LOGIN_URL } from "../../utils/constants";
+import axios from "axios";
 
 const useStyles = makeStyles({
   list: {
@@ -77,8 +78,28 @@ function UserMenu(props) {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = LOGIN_URL;
+    console.log(access_token)
+    var config = {
+      method: 'get',
+      url: `${ACCOUNT_API_URL}api/v1/user/logout/`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`, 
+      }
+    };
+    console.log(config)
+    axios(config)
+    .then(function (response) {
+        if(response.status === 201){
+          localStorage.clear();
+          window.location.href = 'https://dev-accounts-api.paceos.io/login'
+        }
+      
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    
+    // window.location.href = LOGIN_URL;
   };
 
   function ListItemLink(props) {

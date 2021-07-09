@@ -911,7 +911,7 @@ const PeoplesAffected = () => {
             </Grid>
             <Grid item md={6}>
               <Button
-                onClick={() => history.goBack()}
+                onClick={() => history.push(`/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem('fkincidentId')}`)}
                 variant="contained"
                 color="primary"
                 className={classes.button}

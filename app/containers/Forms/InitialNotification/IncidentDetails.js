@@ -325,27 +325,36 @@ const IncidentDetails = () => {
           localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
           localStorage.setItem("nextPath", JSON.stringify(nextPath));
 
-          if (nextPath.personAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/peoples-afftected/"
-            );
-          } else if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/property-affected/"
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/equipment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-            );
-          }
+                  // Decide on which path to go next.
+        if (nextPath.personAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
+          );
+        } else if (nextPath.propertyAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
+          );
+        } else if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
+          );
+        } else if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
+          );
+        } else {
+          history.push(
+            `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
+          );
+        }
         }
       }
     }
@@ -404,7 +413,18 @@ const IncidentDetails = () => {
       const resTime = new Date(result.incidentOccuredOn);
       form.incidentDate = result.incidentOccuredOn;
       form.incidenttype = result.incidentType;
-
+      if(result.isEnviromentalImpacted !=="Yes"){
+        hideAffect.push("Environment affected");
+      }
+      if(result.isEquipmentDamaged !=="Yes"){
+        hideAffect.push("Equipment affected");
+      }
+      if(result.isPropertyDamaged !=="Yes"){
+        hideAffect.push("Property affected");
+      }
+      if(result.isPersonAffected !=="Yes"){
+        hideAffect.push("People affected");
+      }
       await setIsLoading(true);
     }
   };
@@ -728,7 +748,7 @@ const IncidentDetails = () => {
                     });
                     handleHideAffect(
                       e.target.value,
-                      "People Affected",
+                      "People affected",
                       "personAffect"
                     );
                     setNextPath({
@@ -778,7 +798,7 @@ const IncidentDetails = () => {
                     });
                     handleHideAffect(
                       e.target.value,
-                      "Property Affected",
+                      "Property affected",
                       "propertyAffect"
                     );
                     setNextPath({
@@ -827,7 +847,7 @@ const IncidentDetails = () => {
                     });
                     handleHideAffect(
                       e.target.value,
-                      "Equipment Affected",
+                      "Equipment affected",
                       "equipmentAffect"
                     );
                     setNextPath({
@@ -881,7 +901,7 @@ const IncidentDetails = () => {
                     });
                     handleHideAffect(
                       e.target.value,
-                      "Environment Affected",
+                      "Environment affected",
                       "environmentAffect"
                     );
                     setNextPath({
@@ -915,11 +935,6 @@ const IncidentDetails = () => {
 
             <Grid item xs={12} md={12}>
               <Button
-                // href={
-                //   Object.keys(error).length === 0
-                //     ? "http://localhost:3000/app/incident-management/registration/initial-notification/peoples-afftected/"
-                //     : "#"
-                // }
                 type="button"
                 size="medium"
                 variant="contained"

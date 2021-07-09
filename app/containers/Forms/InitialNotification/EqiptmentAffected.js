@@ -82,9 +82,7 @@ const EqiptmentAffected = () => {
   const [error, setError] = useState({});
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
-  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState(
-    "No"
-  );
+  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState("No");
   const [equipmentListdata, setEquipmentListData] = useState([]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
@@ -142,18 +140,20 @@ const EqiptmentAffected = () => {
   };
 
   const handleNext = async () => {
-    if (id) {
+   
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+//  cheack condition equipment is already filled or new creation
+    if (equipmentListdata.length > 0) {
+
+      // send request for update
+
       for (var i = 0; i < equipmentListdata.length; i++) {
         const res = await api.put(
           `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`,
           equipmentListdata[i]
         );
       }
-    }
-
-    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
-
-    if (equipmentListdata.length > 0) {
+      // decide for next path
       if (nextPath.environmentAffect === "Yes") {
         history.push(
           `/app/incident-management/registration/initial-notification/environment-affected/${id}`
@@ -187,7 +187,7 @@ const EqiptmentAffected = () => {
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-
+      // decide path for next 
       if (id) {
         if (nextPath.environmentAffect === "Yes") {
           history.push(
@@ -199,19 +199,17 @@ const EqiptmentAffected = () => {
           );
         }
       }
-      // if (status === 201) {
-      if (nextPath.environmentAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/environment-affected/"
-        );
-      } else {
-        history.push(
-          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-        );
+      else{
+        if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/environment-affected/"
+          );
+        } else {
+          history.push(
+            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          );
+        }
       }
-      // if (status === 201) {
-
-      // }
     } else {
       const temp = incidentsListData;
       temp.equipmentDamagedComments =

@@ -23,6 +23,12 @@ import CheckCircle from "@material-ui/icons/CheckCircle";
 import AccessTime from "@material-ui/icons/AccessTime";
 import Divider from "@material-ui/core/Divider";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import Modal from "@material-ui/core/Modal";
+import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
 
 // List
 import List from "@material-ui/core/List";
@@ -39,6 +45,8 @@ import Comment from "@material-ui/icons/Comment";
 import History from "@material-ui/icons/History";
 import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 // Styles
 import Styles from "dan-styles/Summary.scss";
@@ -47,6 +55,7 @@ import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
+import "../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,20 +65,55 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
+  fileIcon: {
+    background: "#e2e2e2",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    position: "absolute",
+    width: 650,
+    backgroundColor: theme.palette.background.paper,
+    // boxShadow: theme.shadows[5],
+    padding: theme.spacing(4),
+  },
 }));
+
+function getModalStyle() {
+  return {
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  };
+}
 
 const EvidenceSummary = () => {
   const [evidence, setEvidence] = useState([]);
   const [activity, setActivity] = useState([]);
   const [isLoading, setIsLoding] = useState(false);
+  const [documentUrl, setDocumentUrl] = useState('')
   const { id } = useParams();
+  
+
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = (document) => {
+    setDocumentUrl(documentUrl)
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // const fkid = localStorage.getItem('fkincidentId');
   console.log(evidence);
   const fetchEvidanceData = async () => {
-    const allEvidence = await api.get(
-      `/api/v1/incidents/${id}/evidences/`
-    );
+    const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     await setEvidence(allEvidence.data.data.results);
     await setIsLoding(true);
   };
@@ -86,6 +130,7 @@ const EvidenceSummary = () => {
     }
     setIsLoding(true);
   }, []);
+
   const classes = useStyles();
   return (
     <PapperBlock title=" Evidences" icon="ion-md-list-box">
@@ -99,7 +144,13 @@ const EvidenceSummary = () => {
               <AccordionDetails>
                 {evidence.length !== 0
                   ? evidence.map((value, index) => (
-                      <>
+                      <Grid
+                        className="repeatedGrid"
+                        container
+                        item
+                        md={12}
+                        spacing={3}
+                      >
                         <Grid container item xs={12} spacing={3}>
                           <Grid item lg={6} md={6}>
                             <Typography
@@ -111,7 +162,6 @@ const EvidenceSummary = () => {
                             </Typography>
                             <Typography
                               variant="body"
-                              color="textSecondary"
                               className={Fonts.labelValue}
                             >
                               {value.evidenceNumber}
@@ -127,7 +177,6 @@ const EvidenceSummary = () => {
                             </Typography>
                             <Typography
                               variant="body"
-                              color="textSecondary"
                               className={Fonts.labelValue}
                             >
                               {value.evidenceCheck}
@@ -143,7 +192,6 @@ const EvidenceSummary = () => {
                             </Typography>
                             <Typography
                               variant="body"
-                              color="textSecondary"
                               className={Fonts.labelValue}
                             >
                               {value.evidenceCategory}
@@ -159,7 +207,6 @@ const EvidenceSummary = () => {
                             </Typography>
                             <Typography
                               variant="body"
-                              color="textSecondary"
                               className={Fonts.labelValue}
                             >
                               {value.evidenceRemark}
@@ -175,14 +222,20 @@ const EvidenceSummary = () => {
                             </Typography>
                             <Typography
                               variant="body"
-                              color="textSecondary"
                               className={Fonts.labelValue}
                             >
-                              {value.evidenceDocument}
+                              <Tooltip title="File Name">
+                                <IconButton
+                                  onClick={()=>handleOpen(value.evidenceDocument)}
+                                  className={classes.fileIcon}
+                                >
+                                  <PhotoSizeSelectActualIcon />
+                                </IconButton>
+                              </Tooltip>
                             </Typography>
                           </Grid>
                         </Grid>
-                      </>
+                      </Grid>
                     ))
                   : null}
               </AccordionDetails>
@@ -198,7 +251,7 @@ const EvidenceSummary = () => {
               <AccordionDetails>
                 {activity.length !== 0
                   ? activity.map((ad, key) => (
-                      <Grid item xs={12} spacing={3} key={key}>
+                      <Grid container item xs={12} spacing={3} key={key}>
                         <Grid item lg={12}>
                           <Typography
                             variant="h6"
@@ -209,7 +262,6 @@ const EvidenceSummary = () => {
                           </Typography>
                           <Typography
                             variant="body"
-                            color="textSecondary"
                             className={Fonts.labelValue}
                           >
                             {ad.answer}
@@ -225,6 +277,44 @@ const EvidenceSummary = () => {
       ) : (
         <h1>Loading...</h1>
       )}
+
+      <Modal className={classes.modal} open={open} onClose={handleClose}>
+        <div className={classes.paper}>
+          <Typography variant="h6" gutterBottom>
+            View Attachment
+          </Typography>
+          <Typography>Please choose what do you want to?</Typography>
+          <Box marginTop={4}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Button
+                  startIcon={<VisibilityIcon />}
+                  style={{ width: "100%" }}
+                  variant="contained"
+                  disableElevation
+                  href={documentUrl}
+                  target='_blank'
+                  value=""
+                >
+                  View Attachment
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  startIcon={<GetAppIcon />}
+                  style={{ width: "100%" }}
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  onclick={`window.location(${documentUrl})`}
+                >
+                  Download Attachment
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </div>
+      </Modal>
     </PapperBlock>
   );
 };
