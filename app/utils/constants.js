@@ -9,7 +9,7 @@ export const SSO_CLIENT_ID = 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo';
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
 export const API_URL = 'https://dev-safety-api.paceos.io/';
 export const ACCOUNT_API_URL = 'https://dev-accounts-api.paceos.io/';
-export const access_token = 'e69LTkhldQkKdciJEV4haJ8GHPXfqV' || localStorage.getItem('access_token');
+export const access_token = localStorage.getItem('access_token');
 
 export const INITIAL_NOTIFICATION_FORM = {
   'Incident details':
@@ -27,26 +27,26 @@ export const INITIAL_NOTIFICATION_FORM = {
 };
 
 export const EVIDENCE_FORM = {
-  Evidence: '/app/incident-management/registration/evidence/evidence/',
-  'Activity detail':
-    '/app/incident-management/registration/evidence/activity-detail/',
-  'Personal and PPE details':
-    '/app/incident-management/registration/evidence/personal-and-ppedetails/',
-  'Additional details':
-    '/app/incident-management/registration/evidence/additional-details/',
+  Evidences: "/app/incident-management/registration/evidence/evidence/",
+  "Activity details":
+    "/app/incident-management/registration/evidence/activity-detail/",
+  "Personal and PPE details":
+    "/app/incident-management/registration/evidence/personal-and-ppedetails/",
+  "Additional details":
+    "/app/incident-management/registration/evidence/additional-details/",
 };
 
 export const INVESTIGATION_FORM = {
-  'Investigation Overview':
-    '/app/incident-management/registration/investigation/investigation-overview/',
-  'Severity Consequences':
-    '/app/incident-management/registration/investigation/severity-consequences/',
-  'Worker Details':
-    '/app/incident-management/registration/investigation/worker-details/',
-  'Event Details':
-    '/app/incident-management/registration/investigation/event-details/',
-  'Action Taken':
-    '/app/incident-management/registration/investigation/action-taken/',
+  "Investigation overview":
+    "/app/incident-management/registration/investigation/investigation-overview/",
+  "Severity consequences":
+    "/app/incident-management/registration/investigation/severity-consequences/",
+  "Worker details":
+    "/app/incident-management/registration/investigation/worker-details/",
+  "Event details":
+    "/app/incident-management/registration/investigation/event-details/",
+  "Action taken":
+    "/app/incident-management/registration/investigation/action-taken/",
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
@@ -304,3 +304,12 @@ export const RCAOPTION = [
   'Pace cause analysis',
   'Root cause analysis',
 ];
+
+
+export const HIGHESTPOTENTIALIMPACTOR = [
+  "Health and safety",
+  "Environment",
+  "Regulatory",
+  "Reputaion",
+  "Financial"
+]

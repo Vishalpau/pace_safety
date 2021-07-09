@@ -130,7 +130,7 @@ const Evidence = () => {
       error: "",
     },
     {
-      evidenceCategory: "Scope of work, JHQ/TLHQ",
+      evidenceCategory: "Scope of work, JHA/ FLHA",
       evidenceCheck: "",
       evidenceRemark: "",
       evidenceDocument: "",
@@ -514,19 +514,13 @@ const Evidence = () => {
                             <TextField
                               size="small"
                               variant="outlined"
-                              error={error && error[`evidenceRemark${[index]}`]}
-                              helperText={
-                                error && error[`evidenceRemark${[index]}`]
-                                  ? error[`evidenceRemark${[index]}`]
-                                  : ""
-                              }
                               defaultValue={form[index].evidenceRemark}
                               onChange={(e) => {
                                 handleComment(e, index);
                               }}
                             />
                           </TableCell>
-                          <TableCell>
+                          <TableCell style={{width:"220px"}}>
                             <input
                               type="file"
                               className={classes.fullWidth}
@@ -562,7 +556,7 @@ const Evidence = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={EVIDENCE_FORM}
-              selectedItem="Evidence"
+              selectedItem="Evidences"
             />
           </Grid>
         </Grid>

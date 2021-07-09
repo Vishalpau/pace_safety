@@ -11,10 +11,6 @@ function EvidenceValidate(data) {
             error[`evidenceCheck${[i]}`] = "Please select any one";
             isValid = false;
         }
-        if (validator.isEmpty(data[i].evidenceRemark.toString())){
-            error[`evidenceRemark${[i]}`] = "This field is required";
-            isValid = false;
-        }
     }
     console.log("------", error);
   return { error, isValid };

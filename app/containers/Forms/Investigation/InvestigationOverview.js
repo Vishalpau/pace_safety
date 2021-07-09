@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Grid,
@@ -23,6 +23,7 @@ import InvestigationOverviewValidate from "../../Validator/InvestigationValidati
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,10 +36,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const InvestigationOverview = () => {
-  const notificationSent = ["Manage", "SuperVisor"];
   const [error, setError] = useState({});
-
-  const selectValues = [1, 2, 3, 4];
+  const putId = useRef("")
+  const investigationId = useRef("")
+  const severityValues = useRef([])
 
   const [form, setForm] = useState({
     srartDate: "2021-07-07T13:05:22.157Z",
@@ -50,31 +51,58 @@ const InvestigationOverview = () => {
     actualSeverityLevel: "",
     potentialSeverityLevel: "",
     createdBy: 0,
-    fkIncidentId: localStorage.getItem("fkincidentId")
+    fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
   });
 
-  const severity_level = ["High", "Low", "Medium"];
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let allApiData = previousData.data.data.results[0];
+    if (!isNaN(allApiData.id)) {
+      await setForm(allApiData);
+      investigationId.current = allApiData.id
+      putId.current = incidentId;
+    }
+    console.log(investigationId.current)
+  };
 
   const handleNext = () => {
+    console.log(putId.current)
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
 
-    const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-    if (res.status === 200) {
-      console.log("request done");
+    if (putId.current == "") {
+      const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
+      if (res.status === 201) {
+        console.log("request done");
+      }
+    } else if (putId.current !== "") {
+      console.log(putId.current)
+      form["updatedBy"] = "0"
+      const res = api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
+      if (res.status === 200) {
+        console.log("request done");
+      }
     }
+
   };
 
-  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+
+  useEffect(async () => {
+    handelUpdateCheck()
+    severityValues.current = await PickListData(41)
+  }, []);
 
   return (
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
+      {/* {console.log(form)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-
           <Grid item md={12}>
-            <Typography variant="h6">Unit Constructor Manager</Typography>
+            <Typography variant="h6">Unit constructor manager</Typography>
           </Grid>
 
           <Grid item md={6}>
@@ -82,6 +110,8 @@ const InvestigationOverview = () => {
               id="title"
               variant="outlined"
               label="Name"
+              required
+              value={form.constructionManagerName}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -103,6 +133,8 @@ const InvestigationOverview = () => {
               id="title"
               variant="outlined"
               label="Contact"
+              required
+              value={form.constructionManagerContactNo}
               error={error && error.constructionManagerContactNo}
               helperText={
                 error && error.constructionManagerContactNo
@@ -119,13 +151,17 @@ const InvestigationOverview = () => {
             />
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h6">Unit HSE specialist</Typography>
+            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+              <Typography variant="h6">Unit HSE specialist</Typography>
+            </Box>
           </Grid>
           <Grid item md={6}>
             <TextField
               id="title"
               variant="outlined"
               label="Name"
+              required
+              value={form.hseSpecialistName}
               error={error && error.hseSpecialistName}
               helperText={
                 error && error.hseSpecialistName
@@ -145,6 +181,7 @@ const InvestigationOverview = () => {
             <TextField
               id="title"
               variant="outlined"
+              value={form.hseSpecialistContactNo}
               error={error && error.hseSpecialistContactNo}
               helperText={
                 error && error.hseSpecialistContactNo
@@ -152,6 +189,7 @@ const InvestigationOverview = () => {
                   : null
               }
               label="Contact"
+              required
               className={classes.formControl}
               onChange={(e) => {
                 setForm({
@@ -164,20 +202,19 @@ const InvestigationOverview = () => {
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Actual Severity & Consequences
+                Actual severity & consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Actual Severity & Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                label=" Actual severity & consequences"
+                value={form.actualSeverityLevel || false}
               >
-                {severity_level.map((selectValues) => (
+                {severityValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
-                      console.log("here")
+                      console.log("here");
                       setForm({
                         ...form,
                         actualSeverityLevel: selectValues,
@@ -188,29 +225,20 @@ const InvestigationOverview = () => {
                   </MenuItem>
                 ))}
               </Select>
-              {error && error.actualSeverityLevel && (
-                <FormHelperText>{error.actualSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
           <Grid item md={6}>
-            {/* <p>Potential Severity Level </p> */}
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-            >
+            <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="unit-name-label">
-                Potential Severity & Consequences
+                Potential severity & consequences
               </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Potential Severity & Consequences"
-              // defaultValue={incidentsListData.fkUnitId}
-
+                label="Potential severity & consequences"
+                value={form.potentialSeverityLevel || false}
               >
-                {severity_level.map((selectValues) => (
+                {severityValues.current.map((selectValues) => (
                   <MenuItem
                     value={selectValues}
                     onClick={(e) => {
@@ -224,9 +252,6 @@ const InvestigationOverview = () => {
                   </MenuItem>
                 ))}
               </Select>
-              {error && error.potentialSeverityLevel && (
-                <FormHelperText>{error.potentialSeverityLevel}</FormHelperText>
-              )}
             </FormControl>
           </Grid>
 
@@ -245,7 +270,7 @@ const InvestigationOverview = () => {
           <FormSideBar
             deleteForm={[1, 2, 3]}
             listOfItems={INVESTIGATION_FORM}
-            selectedItem="Investigation Overview"
+            selectedItem="Investigation overview"
           />
         </Grid>
       </Grid>
