@@ -107,7 +107,7 @@ const WhyAnalysis = () => {
 
   const handelAdd = (e) => {
     if (Object.keys(form).length < 5) {
-      setForm([...form, { why: "" }]);
+      setForm([...form, { why: "", whyCount: "" }]);
     }
   };
 
@@ -122,7 +122,7 @@ const WhyAnalysis = () => {
   const handelApiCall = async (e) => {
     const { error, isValid } = WhyAnalysisValidate(form);
     setError(error);
-    console.log(error)
+
     let nextPageLink = 0;
     let callObjects = form;
     for (let key in callObjects) {

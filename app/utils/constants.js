@@ -213,14 +213,14 @@ export const WARNINGSYSTEM = [
   "Warning Labels Faded not Legible",
   "Warning Devices not Functioning",
   "No Caution Signs - Barriers - Guards - Traffic Signs & Signals",
-  "Lack of Visual or Auditable Signs",
+  "Lack of Visual or  Audible signs",
 ];
 
 export const TOOLS = [
   "Wrong Tool for the Job",
   "Using Home Made Tools",
   "Worn Out Tools - Material  or Improperly Cared for Equipment",
-  "Wrong Equipment for the jJob",
+  "Wrong Equipment for the Job",
 ];
 
 export const CONDITIONSAFETYITEMS = [
@@ -242,7 +242,7 @@ export const ENERGIES = [
   "Chemical Energy",
   "Nuclear Energy",
   "Radiation Energy",
-  "Gravtiational Energy",
+  "Gravitational energy",
   "Pressure",
   "Hydraulic Energy",
   "Pneumatic Energy",
