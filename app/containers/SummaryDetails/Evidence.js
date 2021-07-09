@@ -57,6 +57,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
 import "../../styles/custom.css";
 import axios from "axios";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,17 +115,19 @@ const EvidenceSummary = () => {
   };
 
 
-  const handleDownload = (url, filename) => {
-    axios
-      .get(url, {
-        responseType: "blob",
-        headers: {"Access-Control-Allow-Origin": "*"}
-      }
-      )
-      .then((res) => {
-        fileDownload(res.data, filename);
-      });
-  };
+  // const handleDownload = (url, filename) => {
+  //   axios
+  //     .get(url, {
+  //       responseType: "blob",
+  //       headers: {"Access-Control-Allow-Origin": "*"}
+  //     }
+  //     )
+  //     .then((res) => {
+  //       fileDownload(res.data, filename);
+  //     });
+  // };
+
+
 
   // const fkid = localStorage.getItem('fkincidentId');
   console.log(evidence);
@@ -331,20 +334,23 @@ const EvidenceSummary = () => {
                 
                   Download Attachment
                 </Button> */}
-                <button
+                {/* <button
                 crossorigin="anonymous"
                   onClick={() => {
                     handleDownload(
-                      `https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png`,
-                      "test-download.jpg"
+                      `${documentUrl}`
                     );
                   }}
                 >
                   Download Image
-                </button>
+                </button> */}
 
-                {/* <a href={`${documentUrl}`} 
-                 download> Download Here </a> */}
+                {/* <a href="https://www.w3schools.com/images/myw3schoolsimage.jpg"
+                
+                download> Download Here </a> */}
+                <a href={`${documentUrl}`}
+    download>
+          </a>
               </Grid>
             </Grid>
           </Box>
