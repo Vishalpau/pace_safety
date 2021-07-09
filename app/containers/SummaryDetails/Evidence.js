@@ -146,11 +146,12 @@ const EvidenceSummary = () => {
                 {evidence.length !== 0
                   ? evidence.map((value, index) => (
                       <Grid
+                        key={index}
                         className="repeatedGrid"
                         container
                         item
                         md={12}
-                        spacing={3}
+                        spacing={3} 
                       >
                         <Grid container item xs={12} spacing={3}>
                           <Grid item lg={6} md={6}>
@@ -308,6 +309,7 @@ const EvidenceSummary = () => {
                   color="primary"
                   onClick={()=>downloadFile()}
                   disableElevation
+                  // href={}
                 >
                   Download Attachment
                 </Button>
