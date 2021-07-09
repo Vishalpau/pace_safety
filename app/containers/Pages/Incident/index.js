@@ -296,9 +296,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                                // display="inline"
-                                // color="textSecondary"
-                                // className={Fonts.labelValue}
+                              // display="inline"
+                              // color="textSecondary"
+                              // className={Fonts.labelValue}
                               >
                                 {/* {item[1]["incidentTitle"]} */}
                                 Lorem ipsum dolor sit amet consectetur
@@ -311,8 +311,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="John Doe"
-                                // onDelete={handleDelete}
-                                // className={classes.chip}
+                              // onDelete={handleDelete}
+                              // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -327,9 +327,8 @@ function BlankPage() {
                             >
                               Number
                               <Link
-                                href={`/app/incident-management/registration/summary/summary/${
-                                  item[1].id
-                                }`}
+                                href={`/app/incident-management/registration/summary/summary/${item[1].id
+                                  }`}
                                 variant="subtitle2"
                                 className={Incidents.incidentNumber}
                                 style={{ textDecoration: "underline" }}
@@ -367,7 +366,7 @@ function BlankPage() {
                           <Typography
                             // variant="h6"
                             gutterBottom
-                            // className={Fonts.labelName}
+                          // className={Fonts.labelName}
                           >
                             Incident Type
                           </Typography>
@@ -524,9 +523,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                                // display="inline"
-                                // color="textSecondary"
-                                // className={Fonts.labelValue}
+                              // display="inline"
+                              // color="textSecondary"
+                              // className={Fonts.labelValue}
                               >
                                 {item[1]["incidentTitle"]}
                                 {/* {item[index]["incidentTitle"]} */}
@@ -537,8 +536,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="John Doe"
-                                // onDelete={handleDelete}
-                                // className={classes.chip}
+                              // onDelete={handleDelete}
+                              // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -553,9 +552,8 @@ function BlankPage() {
                             >
                               Number{" "}
                               <Link
-                                href={`/app/incident-management/registration/summary/summary/${
-                                  item[1].id
-                                }`}
+                                href={`/app/incident-management/registration/summary/summary/${item[1].id
+                                  }`}
                                 variant="subtitle2"
                                 className={Incidents.incidentNumber}
                                 style={{ textDecoration: "underline" }}
