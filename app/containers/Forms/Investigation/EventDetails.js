@@ -67,6 +67,8 @@ const EventDetails = () => {
   const casualFactorTypeValues = useRef([])
   const putId = useRef("")
   const eventId = useRef("")
+  const weatherId = useRef([])
+  const overAllCostId = useRef([])
 
   const [weather, setWeather] = useState([
     {
@@ -114,14 +116,21 @@ const EventDetails = () => {
       const weatherData = weather.data.data.results
       if (typeof weatherData !== "undefined") {
         setWeather(weatherData)
+        weatherData.map((value) => {
+          weatherId.current.push(value.id)
+        })
+
+
       }
 
       // event data
       const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
       const costData = cost.data.data.results
       if (typeof costData !== "undefined") {
-        console.log(costData)
         setOverAllCost(costData)
+        costData.map((value) => {
+          overAllCostId.current.push(value.id)
+        })
       }
 
 
@@ -182,28 +191,53 @@ const EventDetails = () => {
     console.log(error, isValid);
     // event api call
     if (Object.keys(error).length == 0) {
-      const res = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/`, form);
-      if (res.status === 201) {
-        let eventID = res.data.data.results.id
+      if (eventId.current === "") {
+        const res = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/`, form);
+        if (res.status === 201) {
+          let eventID = res.data.data.results.id
+          let weatherObject = weather;
+
+          // weather api call
+          for (let key in weatherObject) {
+            weatherObject[key]["fkEventDetailsId"] = eventID
+            const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/weatherconditions/`, weatherObject[key])
+            if (resWeather == 201) {
+              console.log("request done")
+            }
+          }
+          // cost api call
+          let costObject = overAllCost;
+          for (let keys in costObject) {
+            costObject[keys]["fkEventDetailsId"] = eventID
+            const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/cost/`, costObject[keys])
+            if (resWeather == 201) {
+              console.log("request done")
+            }
+
+          }
+        }
+        // put
+      } else if (eventId.current !== "") {
+        const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/`, form);
+
+        // weather api call put 
         let weatherObject = weather;
-        // weather api call
         for (let key in weatherObject) {
-          weatherObject[key]["fkEventDetailsId"] = eventID
-          const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/weatherconditions/`, weatherObject[key])
-          if (resWeather == 201) {
+          const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/${weatherId.current[key]}/`, weatherObject[key])
+          if (resWeather == 200) {
             console.log("request done")
           }
         }
-        // cost api call
+
+        // cost api call put
         let costObject = overAllCost;
         for (let keys in costObject) {
-          costObject[keys]["fkEventDetailsId"] = eventID
-          const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/cost/`, costObject[keys])
-          if (resWeather == 201) {
+          const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/${overAllCostId.current[keys]}/`, costObject[keys])
+          if (resWeather == 200) {
             console.log("request done")
           }
-
         }
+
       }
     }
   };
@@ -226,7 +260,7 @@ const EventDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
-      {/* {console.log(form)} */}
+      {console.log(weatherId.current)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
 
