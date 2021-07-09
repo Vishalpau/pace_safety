@@ -15,13 +15,13 @@ function WhyAnalysisValidate(data) {
     //     isValid = false
     // }
 
-    for (let i = 0; i < data.length; i++) {
-      if (validator.isEmpty(data[i].why)) {
-        error[`why${[i]}`] = "This field is empty";
-        isValid = false;
-      }
-      return { error, isValid };
-    }
+    // for (let i = 0; i < data.length; i++) {
+    //   if (validator.isEmpty(data[i].why)) {
+    //     error[`why${[i]}`] = "This field is empty";
+    //     isValid = false;
+    //   }
+    return { error, isValid };
+    // }
   }
 }
 export default WhyAnalysisValidate;

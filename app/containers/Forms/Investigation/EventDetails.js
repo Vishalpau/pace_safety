@@ -113,7 +113,6 @@ const EventDetails = () => {
       const weather = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/`)
       const weatherData = weather.data.data.results
       if (typeof weatherData !== "undefined") {
-        console.log(weatherData)
         setWeather(weatherData)
       }
 
@@ -181,11 +180,13 @@ const EventDetails = () => {
     const { error, isValid } = EventDetailsValidate(form);
     setError(error);
     console.log(error, isValid);
+    // event api call
     if (Object.keys(error).length == 0) {
       const res = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/`, form);
       if (res.status === 201) {
         let eventID = res.data.data.results.id
         let weatherObject = weather;
+        // weather api call
         for (let key in weatherObject) {
           weatherObject[key]["fkEventDetailsId"] = eventID
           const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/weatherconditions/`, weatherObject[key])
@@ -193,6 +194,7 @@ const EventDetails = () => {
             console.log("request done")
           }
         }
+        // cost api call
         let costObject = overAllCost;
         for (let keys in costObject) {
           costObject[keys]["fkEventDetailsId"] = eventID
@@ -202,7 +204,6 @@ const EventDetails = () => {
           }
 
         }
-
       }
     }
   };
@@ -224,7 +225,6 @@ const EventDetails = () => {
 
   const classes = useStyles();
   return (
-
     <PapperBlock title="Events Details" icon="ion-md-list-box">
       {/* {console.log(form)} */}
       <Grid container spacing={3}>
