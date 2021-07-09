@@ -13,6 +13,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { PapperBlock } from "dan-components";
 import moment from "moment";
 
@@ -567,6 +568,7 @@ const PropertyAffected = () => {
                             <Button
                               onClick={() => handleRemove(index)}
                               variant="contained"
+                              startIcon={<DeleteForeverIcon />}
                               color="primary"
                               className={classes.button}
                             >

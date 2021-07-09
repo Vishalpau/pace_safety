@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import Box from "@material-ui/core/Box";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import { useHistory, useParams } from "react-router";
+import React, { useEffect, useState } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import DateFnsUtils from '@date-io/date-fns';
+import Box from '@material-ui/core/Box';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import { useHistory, useParams } from 'react-router';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -31,11 +31,11 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 
 // List
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 // Icons
 import Print from "@material-ui/icons/Print";
@@ -56,10 +56,12 @@ import moment from "moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
 import "../../styles/custom.css";
+import axios from "axios";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -94,18 +96,38 @@ const EvidenceSummary = () => {
   const [evidence, setEvidence] = useState([]);
   const [activity, setActivity] = useState([]);
   const [isLoading, setIsLoding] = useState(false);
+  const [documentUrl, setDocumentUrl] = useState('');
   const { id } = useParams();
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
+  const handleOpen = (document) => {
+    setDocumentUrl(document)
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+  const downloadFile = () => {
+
+    window.location.href = `${documentUrl}`;
+  };
+
+
+  // const handleDownload = (url, filename) => {
+  //   axios
+  //     .get(url, {
+  //       responseType: "blob",
+  //       headers: {"Access-Control-Allow-Origin": "*"}
+  //     }
+  //     )
+  //     .then((res) => {
+  //       fileDownload(res.data, filename);
+  //     });
+  // };
+
 
   // const fkid = localStorage.getItem('fkincidentId');
   console.log(evidence);
@@ -142,11 +164,12 @@ const EvidenceSummary = () => {
                 {evidence.length !== 0
                   ? evidence.map((value, index) => (
                       <Grid
+                        key={index}
                         className="repeatedGrid"
                         container
                         item
                         md={12}
-                        spacing={3}
+                        spacing={3} 
                       >
                         <Grid container item xs={12} spacing={3}>
                           <Grid item lg={6} md={6}>
@@ -223,7 +246,7 @@ const EvidenceSummary = () => {
                             >
                               <Tooltip title="File Name">
                                 <IconButton
-                                  onClick={handleOpen}
+                                  onClick={()=>handleOpen(value.evidenceDocument)}
                                   className={classes.fileIcon}
                                 >
                                   <PhotoSizeSelectActualIcon />
@@ -265,7 +288,8 @@ const EvidenceSummary = () => {
                           </Typography>
                         </Grid>
                       </Grid>
-                    ))
+                    // </Grid>
+                  ))
                   : null}
               </AccordionDetails>
             </Accordion>
@@ -289,20 +313,44 @@ const EvidenceSummary = () => {
                   style={{ width: "100%" }}
                   variant="contained"
                   disableElevation
+                  href={`${documentUrl}`}
+                  target='_blank'
                 >
                   View Attachment
                 </Button>
               </Grid>
               <Grid item xs={6}>
-                <Button
+                {/* <Button
                   startIcon={<GetAppIcon />}
                   style={{ width: "100%" }}
                   variant="contained"
                   color="primary"
+                  href={`${documentUrl}`} 
+                  onClick={()=>downloadFile()}
                   disableElevation
+                  // target='_blank'
                 >
+                
                   Download Attachment
-                </Button>
+                </Button> */}
+                {/* <button
+                crossorigin="anonymous"
+                  onClick={() => {
+                    handleDownload(
+                      `${documentUrl}`
+                    );
+                  }}
+                >
+                  Download Image
+                </button> */}
+
+                {/* <a href="https://www.w3schools.com/images/myw3schoolsimage.jpg"
+                
+                download> Download Here </a> */}
+                <a href={`${documentUrl}`}
+    download>
+          </a>
+
               </Grid>
             </Grid>
           </Box>

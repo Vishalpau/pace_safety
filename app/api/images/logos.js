@@ -1,3 +1,3 @@
-const logos = ["/images/treva.png"];
+const logos = ["/images/ntpc.png"];
 
 export default logos;

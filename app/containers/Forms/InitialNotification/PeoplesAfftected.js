@@ -16,6 +16,7 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
@@ -40,10 +41,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-    margin: ".5rem 0",
-  },
-  spacer: {
-    marginTop: "1rem",
   },
   customLabel: {
     marginBottom: 0,
@@ -125,7 +122,7 @@ const PeoplesAffected = () => {
 
   /*
     This is the generic function which will be used to update the states.
-    Like above object we have multiple fields and based on the key 
+    Like above object we have multiple fields and based on the key
     and field name we will modify the values.
   */
   const handleForm = (e, key, fieldname) => {
@@ -157,10 +154,10 @@ const PeoplesAffected = () => {
     // Next path handlings.
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-    /* 
-      This condition is there, because it has been assumed that peopleData length 
+    /*
+      This condition is there, because it has been assumed that peopleData length
       will be 0 and on the people change in the yes section we have hit the put
-      API. However it is wrong implementation. Therefore, it is checked that if 
+      API. However it is wrong implementation. Therefore, it is checked that if
       people data is there then just redirect user to next page.
 
       This is wrong implementation.
@@ -242,34 +239,32 @@ const PeoplesAffected = () => {
             );
           }
           // Here it is the new entry create case. We will redirect to next pages without ids.
+        } else if (nextPath.propertyAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/property-affected/"
+          );
+        } else if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/equipment-affected/"
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/environment-affected/"
+          );
         } else {
-          if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/`
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/equipment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-            );
-          }
+          history.push(
+            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          );
         }
 
         // Case when form has No option selected.
       } else {
         // When no is selected we just have to send the comment and yes/no flag to API via put request.
         const temp = incidentsListData;
-        temp["isPersonDetailsAvailable"] =
+        temp.isPersonDetailsAvailable =
           personAffect || incidentsListData.isPersonDetailsAvailable;
-        temp["updatedAt"] = moment(new Date()).toISOString();
-        temp["personAffectedComments"] =
+        temp.updatedAt = moment(new Date()).toISOString();
+        temp.personAffectedComments =
           personAffectedComments || incidentsListData.personAffectedComments;
 
         const res = await api.put(
@@ -299,24 +294,22 @@ const PeoplesAffected = () => {
             );
           }
           // Here it is the new entry create case. We will redirect to next pages without ids.
+        } else if (nextPath.propertyAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/property-affected/"
+          );
+        } else if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/equipment-affected/"
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            "/app/incident-management/registration/initial-notification/environment-affected/"
+          );
         } else {
-          if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/`
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/equipment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/environment-affected/"
-            );
-          } else {
-            history.push(
-              "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-            );
-          }
+          history.push(
+            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          );
         }
       }
     }
@@ -873,6 +866,7 @@ const PeoplesAffected = () => {
                             <Button
                               onClick={() => handleRemove(key)}
                               variant="contained"
+                              startIcon={<DeleteForeverIcon />}
                               color="primary"
                               className={classes.button}
                             >
@@ -911,7 +905,13 @@ const PeoplesAffected = () => {
             </Grid>
             <Grid item md={6}>
               <Button
-                onClick={() => history.goBack()}
+                onClick={() =>
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+                      "fkincidentId"
+                    )}`
+                  )
+                }
                 variant="contained"
                 color="primary"
                 className={classes.button}

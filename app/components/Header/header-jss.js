@@ -572,8 +572,7 @@ const styles = (theme) => ({
     minWidth: 150,
   },
   userLogo: {
-    height: 35,
-    width: 35,
+    width: 50,
     display: "inline-block",
     marginRight: theme.spacing(2),
   },
