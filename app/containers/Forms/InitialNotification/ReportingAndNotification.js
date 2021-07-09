@@ -180,7 +180,7 @@ const ReportingAndNotification = () => {
     const diff = end_time - start_time;
     const hours = Math.floor(diff / 1000 / 60 / 60);
 
-    console.log(hours);
+    
     if (hours >= 4) {
       await SetLateReport(true);
     } else {
@@ -244,6 +244,7 @@ const ReportingAndNotification = () => {
   // handleInitailEvidance
   const handleInitialEvidance = async () => {
     // Create new Evidance
+    let status = 0;
     // check condition initial evidance is or not
     if (
       evidanceForm[0].evidenceDocument === ''
@@ -251,14 +252,15 @@ const ReportingAndNotification = () => {
     ) {
       evidanceCkecked = true;
     } else {
-      let status = 0;
+      
       for (let i = 0; i < evidanceForm.length; i++) {
       // check condition both filled is required
+      const formData = new FormData();
         if (
           evidanceForm[i].evidenceDocument !== ''
           && evidanceForm[i].evidenceRemark !== ''
         ) {
-          const formData = new FormData();
+         
           formData.append('evidenceDocument', evidanceForm[i].evidenceDocument);
           formData.append('evidenceDocument', evidanceForm[i].evidenceRemark);
           formData.append('evidenceCheck', 'Yes');
@@ -271,16 +273,12 @@ const ReportingAndNotification = () => {
             )}/evidences/`,
             formData
           );
-          status = res.status;
-        } else {
-          // await setMessageType('error')
-          // await setMessage("File upload failed! Please filled document/remark!")
-          // await setOpen(true);
-          evidanceCkecked = false;
-        }
+          
+          status = evidanceResponse.status;
+        } 
       }
       if (status === 201) {
-
+        evidanceCkecked = true;
       } else {
         evidanceCkecked = false;
         await setMessage('File uploading failed! invalid document/remark');
@@ -314,17 +312,17 @@ const ReportingAndNotification = () => {
 
     // handle Initail evidance
     await handleInitialEvidance();
-
+    
     // handle remove existing report
     await handleRemoveExitingReport();
-
+    
     // check initial evidance
     if (evidanceCkecked === true) {
       let status = 0;
+      
       // Create new entries.
       const { error, isValid } = ReportingValidation(form);
       setError(error);
-      console.log(error);
 
       if (isValid === true) {
         for (const key in form.reportedto) {
@@ -408,7 +406,6 @@ const ReportingAndNotification = () => {
     const { value } = e.target;
     if (fieldname === 'evidenceDocument') {
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        alert('nko g');
         temp[key][fieldname] = e.target.files[0];
         await setMessage('File uploaded successfully!');
         await setMessageType('success');
@@ -482,7 +479,6 @@ const ReportingAndNotification = () => {
   // fetch supervisor name
 
   const fetchSuperVisorName = () => {
-    console.log(access_token);
     const config = {
       method: 'get',
       url: `${ACCOUNT_API_URL}api/v1/companies/1/roles/4/users/`,
@@ -493,16 +489,14 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
-        console.log(response);
         const result = response.data.data.results[0].roles[0].users;
         // let role = []
         // role = result
         // role.push({ name: 'other' })
         setSuperVisorName([...result, { name: 'other' }]);
-        console.log(result);
+        
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -518,16 +512,15 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
-        console.log(response);
+       
         const result = response.data.data.results[0].users;
         let user = [];
         user = result;
 
         setReportedByName([...result, { name: 'other' }]);
-        console.log(result);
+       
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
@@ -621,7 +614,6 @@ const ReportingAndNotification = () => {
 
             <Grid item lg={12} justify="flex-start">
               <Box marginTop={3} marginBottom={4}>
-                {console.log(incidentsListData.supervisorByName)}
                 <Typography variant="h6" gutterBottom>
                   Initial evidences
                 </Typography>

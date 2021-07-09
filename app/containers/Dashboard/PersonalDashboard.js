@@ -31,7 +31,7 @@ function PersonalDashboard(props) {
   const description = brand.desc;
   const { classes } = props;
   return (
-    <PapperBlock title="Dashboard" icon="ion-md-list-box">
+    <PapperBlock title="Dashboard" icon="ion-md-warning">
       <div class="honeycomb">
         <div class="ibws-fix hexagon_row1">
           <div class="hexagon hide_responsiv">
