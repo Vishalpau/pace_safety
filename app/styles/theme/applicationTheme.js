@@ -97,6 +97,10 @@ const applicationTheme = (color, mode, direction) => ({
     MuiCheckbox: {
       color: "primary",
     },
+    MuiButton: {
+      color: "primary",
+      disableRipple: true,
+    },
   },
   overrides: {
     MuiAccordionDetails: {
@@ -128,6 +132,11 @@ const applicationTheme = (color, mode, direction) => ({
     MuiButton: {
       contained: {
         boxShadow: "none",
+      },
+      containedPrimary: {
+        "&:hover": {
+          backgroundColor: themePalette(color, mode).palette.secondary.main,
+        },
       },
       root: {
         borderRadius: 20,
