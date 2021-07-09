@@ -302,17 +302,18 @@ const EvidenceSummary = () => {
                 </Button>
               </Grid>
               <Grid item xs={6}>
-                <Button
-                  startIcon={<GetAppIcon />}
+                <button
+                  // startIcon={<GetAppIcon />}
                   style={{ width: "100%" }}
-                  variant="contained"
-                  color="primary"
-                  onClick={()=>downloadFile()}
-                  disableElevation
+                  // variant="contained"
+                  // color="primary"
+                  // onClick={()=>downloadFile()}
+                  // disableElevation
                   // href={}
                 >
-                  Download Attachment
-                </Button>
+                  <a href={`${documentUrl}`} download > Download Attachment </a>
+                  
+                </button>
               </Grid>
             </Grid>
           </Box>
