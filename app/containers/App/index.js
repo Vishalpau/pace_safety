@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from React from "react";
 import { Switch, Route } from "react-router-dom";
 import NotFound from "containers/Pages/Standalone/NotFoundDedicated";
 import Auth from "./Auth";
@@ -7,38 +7,37 @@ import LandingCorporate from "./Landing";
 import LandingCreative from "./LandingCreative";
 import ArticleNews from "./ArticleNews";
 import ThemeWrapper from "./ThemeWrapper";
-import { useEffect } from "react";
-import { PersonalDashboard } from "../../containers/pageListAsync";
 
-import axios from "axios";
+import { PersonalDashboard } from '../../containers/pageListAsync';
+
+import axios from 'axios';
 
 import {
   SSO_URL,
   LOGIN_URL,
   SSO_CLIENT_ID,
   SSO_CLIENT_SECRET,
-} from "../../utils/constants";
-import api from "../../utils/axios";
+} from '../../utils/constants';
+import api from '../../utils/axios';
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 function App() {
-  
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
-    const code = searchParams.get("code");
+    const code = searchParams.get('code');
     if (code) {
       const response = await api.post(`${SSO_URL}/api/v1/user/auth/token/`, {
-        grant_type: "authorization_code",
+        grant_type: 'authorization_code',
         client_id:
-          { SSO_CLIENT_ID } || "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
+          { SSO_CLIENT_ID } || 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo',
         client_secret:
-          { SSO_CLIENT_SECRET } ||
-          "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
-        code: code,
+          { SSO_CLIENT_SECRET }
+          || "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
+        code,
       });
       const result = response.data.access_token;
-      localStorage.setItem("access_token", result);
+      localStorage.setItem('access_token', result);
     }
   };
 
