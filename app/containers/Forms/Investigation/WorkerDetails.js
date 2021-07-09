@@ -26,6 +26,7 @@ import { useHistory, useParams } from "react-router";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +69,25 @@ const WorkerDetails = () => {
   const severity_level = ["Level1", "Level2", "Level3", "Level4"];
   const [files, setFile] = React.useState([]);
   const history = useHistory();
-  
+  const departmentName = useRef([]);
+  const workHours = useRef([]);
+  const shiftType = useRef([]);
+  const occupation = useRef([]);
+  const shiftCycle = useRef([]);
+  const noOfDaysIntoShift = useRef([]);
+  const timeInCompany = useRef([]);
+  const timeOnProject = useRef([]);
+  const timeInIndustry = useRef([]);
+  const primaryBodyPartWithSide = useRef([]);
+  const secondaryBodyPartWithSide = useRef([]);
+  const typeOfInjury = useRef([]);
+  const higherMedicalResponder = useRef([]);
+  const treatmentType = useRef([]);
+  const mechanismOfInjury = useRef([]);
+  const supervisorTimeInIndustry = useRef([]);
+  const supervisorTimeInCompany = useRef([]);
+  const supervisorTimeOnProject = useRef([]);
+
   const [form, setForm] = useState(
     // {
     //   name : "",
@@ -120,7 +139,7 @@ const WorkerDetails = () => {
       workerType: "",
       department: "",
       workHours: "",
-      shiftTimeStart : "",
+      shiftTimeStart: "",
       shiftType: "",
       occupation: "",
       shiftCycle: "",
@@ -133,7 +152,7 @@ const WorkerDetails = () => {
       injuryObject: "",
       primaryBodyPartWithSide: "",
       secondaryBodyPartWithSide: "",
-      timeOfInjury: "",
+      typeOfInjury: "",
       NoOfDaysAway: "",
       medicalResponseTaken: "",
       treatmentDate: "",
@@ -153,9 +172,9 @@ const WorkerDetails = () => {
       dateOfAlcoholDrugTest: "",
       isWorkerClearedTest: "",
       reasonForTestNotDone: "",
-      status: "",
+      status: "Active",
       createdBy: 0,
-      fkInvestigationId: 11
+      fkInvestigationId: 11,
     }
   );
 
@@ -169,16 +188,50 @@ const WorkerDetails = () => {
   const handelTestTaken = (e) => {
     if (e.target.value == "Yes") {
       console.log(e.target.value);
+      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       seTesttaken(true);
     } else if (e.target.value == "No") {
       console.log(e.target.value);
+      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       seTesttaken(false);
     }
   };
-  const handleNext = async () => {
-    console.log(form)
-    const res = await api.post('/api/v1/incidents/400/investigations/11/workers/',form)
+
+  const handleFile= async (e) => {
+    
+     
+    await setForm({ ...form,attechments : e.target.files[0] });
   }
+
+  const handleNext = async () => {
+    console.log(form);
+    const res = await api.post(
+      "/api/v1/incidents/400/investigations/11/workers/",
+      form
+    );
+  };
+
+  useEffect(async () => {
+    // handelUpdateCheck()
+    departmentName.current = await PickListData(10);
+    workHours.current = await PickListData(70);
+    shiftType.current = await PickListData(47);
+    occupation.current = await PickListData(48);
+    shiftCycle.current = await PickListData(49);
+    noOfDaysIntoShift.current = await PickListData(50);
+    timeInCompany.current = await PickListData(51);
+    timeOnProject.current = await PickListData(52);
+    timeInIndustry.current = await PickListData(53);
+    primaryBodyPartWithSide.current = await PickListData(57);
+    secondaryBodyPartWithSide.current = await PickListData(58);
+    typeOfInjury.current = await PickListData(59);
+    higherMedicalResponder.current = await PickListData(60);
+    treatmentType.current = await PickListData(61);
+    mechanismOfInjury.current = await PickListData(62);
+    supervisorTimeInIndustry.current = await PickListData(54);
+    supervisorTimeOnProject.current = await PickListData(55);
+    supervisorTimeInCompany.current = await PickListData(56);
+  }, []);
 
   const classes = useStyles();
   return (
@@ -195,18 +248,14 @@ const WorkerDetails = () => {
               label="Name"
               required
               error={error && error.name}
-              helperText={
-                error && error.name
-                  ? error.name
-                  : null
-              }
+              helperText={error && error.name ? error.name : null}
               className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                name: e.target.value,
-              });
-            }}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  name: e.target.value,
+                });
+              }}
             />
           </Grid>
 
@@ -222,11 +271,11 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Type"
-              // defaultValue={incidentsListData.fkUnitId}
+                // defaultValue={incidentsListData.fkUnitId}
                 onChange={(e) => {
                   setForm({
                     ...form,
-                    workerType: e.target.value
+                    workerType: e.target.value,
                   });
                 }}
               >
@@ -253,16 +302,18 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Department"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  department: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  console.log("here");
+                  setForm({
+                    ...form,
+                    department: e.target.value,
+                  });
+                  console.log(e.target.value);
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {departmentName.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.department && (
@@ -272,51 +323,57 @@ const WorkerDetails = () => {
           </Grid>
 
           <Grid item md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              error={error && error.workHours}
-              helperText={error.workHours}
-              label="Number of Scheduled Work Hours"
-              className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                workHours: e.target.value,
-              });
-            }}
-            />
-          </Grid>
-
-          {/* start of shift */}
-          <Grid item md={6}>
             <FormControl
               variant="outlined"
               required
               error={error && error.actualSeverityLevel}
               className={classes.formControl}
             >
-              <InputLabel id="unit-name-label">Start of shift time</InputLabel>
+              <InputLabel id="unit-name-label">
+                Number of Scheduled Work Hours
+              </InputLabel>
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Start of Shift Time"
-              // defaultValue={incidentsListData.fkUnitId}
-              // onChange={(e) => {
-              //   setForm({
-              //     ...form,
-              //     shiftTimeStart: toString(e.target.value),
-              //   });
-              // }}
+                label="Number of Scheduled Work Hours"
+                onChange={(e) => {
+                  console.log("here");
+                  setForm({
+                    ...form,
+                    workHours: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {workHours.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
-              {error && error.shiftTimeStart && (
-                <FormHelperText>{error.shiftTimeStart}</FormHelperText>
+              {error && error.workHours && (
+                <FormHelperText>{error.workHours}</FormHelperText>
               )}
             </FormControl>
+          </Grid>
+
+          {/* start of shift */}
+          <Grid item md={6}>
+            <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
+              <KeyboardTimePicker
+                error={error.incidentdate}
+                required
+                className={classes.formControl}
+                label="Start of shift time"
+                helperText={error.incidentdate ? error.incidentdate : null}
+                onChange={(e) => {
+                  console.log(e);
+                  setForm({
+                    ...form,
+                    shiftTimeStart: moment(e).toISOString(),
+                  });
+                }}
+                format="HH:mm"
+                inputVariant="outlined"
+              />
+            </MuiPickersUtilsProvider>
           </Grid>
 
           {/* type of shift */}
@@ -331,16 +388,17 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Type of Shift"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  shiftType: e.target.value
-                })
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  console.log("here");
+                  setForm({
+                    ...form,
+                    shiftType: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {shiftType.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.shiftType && (
@@ -362,16 +420,17 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Occupation"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  occupation: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  console.log("here");
+                  setForm({
+                    ...form,
+                    occupation: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {occupation.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.occupation && (
@@ -393,16 +452,17 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Shift Cycle"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  shiftCycle: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  console.log("here");
+                  setForm({
+                    ...form,
+                    shiftCycle: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {shiftCycle.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.shiftCycle && (
@@ -425,16 +485,16 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Number of Days into Shift"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  noOfDaysIntoShift: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    noOfDaysIntoShift: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {noOfDaysIntoShift.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.noOfDaysIntoShift && (
@@ -455,17 +515,17 @@ const WorkerDetails = () => {
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Number of Days into Shift"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  timeInCompany: e.target.value
-                });
-              }}
+                label="Time in company"
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    timeInCompany: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {timeInCompany.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.timeInCompany && (
@@ -485,17 +545,17 @@ const WorkerDetails = () => {
               <Select
                 labelId="unit-name-label"
                 id="unit-name"
-                label="Number of Days into Shift"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  timeOnProject: toString(e.target.value),
-                });
-              }}
+                label="Time on project"
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    timeOnProject: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {timeOnProject.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.timeOnProject && (
@@ -517,16 +577,16 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Time in Industry"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  timeInIndustry: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    timeInIndustry: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {timeInIndustry.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.timeInIndustry && (
@@ -554,12 +614,12 @@ const WorkerDetails = () => {
                   ? error.eventLeadingToInjury
                   : null
               }
-            onChange={(e) => {
-              setForm({
-                ...form,
-                eventLeadingToInjury: e.target.value,
-              });
-            }}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  eventLeadingToInjury: e.target.value,
+                });
+              }}
             />
           </Grid>
 
@@ -572,16 +632,14 @@ const WorkerDetails = () => {
               className={classes.formControl}
               error={error && error.injuryObject}
               helperText={
-                error && error.injuryObject
-                  ? error.injuryObject
-                  : null
+                error && error.injuryObject ? error.injuryObject : null
               }
-            onChange={(e) => {
-              setForm({
-                ...form,
-                injuryObject: e.target.value,
-              });
-            }}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  injuryObject: e.target.value,
+                });
+              }}
             />
           </Grid>
 
@@ -600,16 +658,16 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Primary Body Part Side Included"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  primaryBodyPartWithSide: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    primaryBodyPartWithSide: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {primaryBodyPartWithSide.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.primaryBodyPartWithSide && (
@@ -632,20 +690,22 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Secondary Body Part Included"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  secondaryBodyPartWithSide: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    secondaryBodyPartWithSide: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {secondaryBodyPartWithSide.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.secondaryBodyPartWithSide && (
-                <FormHelperText>{error.secondaryBodyPartWithSide}</FormHelperText>
+                <FormHelperText>
+                  {error.secondaryBodyPartWithSide}
+                </FormHelperText>
               )}
             </FormControl>
           </Grid>
@@ -664,20 +724,20 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Injury Illness"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  timeOfInjury: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    typeOfInjury: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {typeOfInjury.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
-              {error && error.timeOfInjury && (
-                <FormHelperText>{error.timeOfInjury}</FormHelperText>
+              {error && error.typeOfInjury && (
+                <FormHelperText>{error.typeOfInjury}</FormHelperText>
               )}
             </FormControl>
           </Grid>
@@ -690,17 +750,15 @@ const WorkerDetails = () => {
               label="Number of Days Away/On Restriction"
               error={error && error.NoOfDaysAway}
               helperText={
-                error && error.NoOfDaysAway
-                  ? error.NoOfDaysAway
-                  : null
+                error && error.NoOfDaysAway ? error.NoOfDaysAway : null
               }
               className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                NoOfDaysAway: e.target.value,
-              });
-            }}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  NoOfDaysAway: e.target.value,
+                });
+              }}
             />
           </Grid>
 
@@ -717,12 +775,12 @@ const WorkerDetails = () => {
                   : null
               }
               className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                medicalResponseTaken: e.target.value,
-              });
-            }}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  medicalResponseTaken: e.target.value,
+                });
+              }}
             />
           </Grid>
 
@@ -747,28 +805,25 @@ const WorkerDetails = () => {
               />
             </MuiPickersUtilsProvider> */}
             <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  
-                  className={classes.formControl}
-                  label="Treatment Date"
-                  // helperText={error.incidentdate ? error.incidentdate : null}
-                  // value={
-                  //   form.incidentdate || incidentsListData.incidentOccuredOn
-                  // }
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      treatmentDate: moment(e).toISOString(),
-                    });
-                    console.log(moment(e).toISOString())
-                  }}
-                  format="yyyy/MM/dd"
-                  inputVariant="outlined"
-                  disableFuture='true'
-                
-                />
-              </MuiPickersUtilsProvider>
-            
+              <KeyboardDatePicker
+                className={classes.formControl}
+                label="Treatment Date"
+                // helperText={error.incidentdate ? error.incidentdate : null}
+                // value={
+                //   form.incidentdate || incidentsListData.incidentOccuredOn
+                // }
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    treatmentDate: moment(e).toISOString(),
+                  });
+                  console.log(moment(e).toISOString());
+                }}
+                format="yyyy/MM/dd"
+                inputVariant="outlined"
+                disableFuture="true"
+              />
+            </MuiPickersUtilsProvider>
           </Grid>
 
           {/* highest medical responder */}
@@ -786,16 +841,16 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Highest Medical Responder"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  higherMedicalResponder: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    higherMedicalResponder: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {higherMedicalResponder.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.higherMedicalResponder && (
@@ -812,17 +867,15 @@ const WorkerDetails = () => {
               label="Status Update"
               error={error && error.injuryStatus}
               helperText={
-                error && error.injuryStatus
-                  ? error.injuryStatus
-                  : null
+                error && error.injuryStatus ? error.injuryStatus : null
               }
               className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                injuryStatus: e.target.value,
-              });
-            }}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  injuryStatus: e.target.value,
+                });
+              }}
             />
           </Grid>
 
@@ -838,16 +891,16 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="First Aid Treatment"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  firstAidTreatment: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    firstAidTreatment: e.target.value,
+                  });
+                }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {treatmentType.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
                 ))}
               </Select>
               {error && error.firstAidTreatment && (
@@ -868,16 +921,21 @@ const WorkerDetails = () => {
                 labelId="unit-name-label"
                 id="unit-name"
                 label="Mechanism of Injury"
-              // defaultValue={incidentsListData.fkUnitId}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  mechanismOfInjury: e.target.value
-                });
-              }}
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                      setForm({
+                        ...form,
+                        mechanismOfInjury: e.target.value,
+                      });console.log(e.target.value)
+                    }}
               >
-                {severity_level.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
+                {mechanismOfInjury.current.map((value) => (
+                  <MenuItem
+                    value={value}
+                    
+                  >
+                    {value}
+                  </MenuItem>
                 ))}
               </Select>
               {error && error.mechanismOfInjury && (
@@ -895,13 +953,14 @@ const WorkerDetails = () => {
           <Grid item md={6}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Medical Issued ?</FormLabel>
-              <RadioGroup className={classes.inlineRadioGroup}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  isMedicationIssued: e.target.value
-                });
-              }}
+              <RadioGroup
+                className={classes.inlineRadioGroup}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    isMedicationIssued: e.target.value,
+                  });
+                }}
               >
                 {radioDecide.map((value) => (
                   <FormControlLabel
@@ -917,13 +976,14 @@ const WorkerDetails = () => {
           <Grid item md={6}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Prescription Issues ?</FormLabel>
-              <RadioGroup className={classes.inlineRadioGroup}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  isPrescriptionIssued: e.target.value
-                });
-              }}
+              <RadioGroup
+                className={classes.inlineRadioGroup}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    isPrescriptionIssued: e.target.value,
+                  });
+                }}
               >
                 {radioDecide.map((value) => (
                   <FormControlLabel
@@ -939,13 +999,14 @@ const WorkerDetails = () => {
           <Grid item md={6}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Non-Prescription ?</FormLabel>
-              <RadioGroup className={classes.inlineRadioGroup}
-               onChange={(e) => {
-                setForm({
-                  ...form,
-                  isNonPrescription: e.target.value
-                });
-              }}
+              <RadioGroup
+                className={classes.inlineRadioGroup}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    isNonPrescription: e.target.value,
+                  });
+                }}
               >
                 {radioDecide.map((value) => (
                   <FormControlLabel
@@ -980,18 +1041,16 @@ const WorkerDetails = () => {
             />
           </Grid> */}
           <Grid item md={6}>
-            
             <FormControl component="fieldset">
               <FormLabel component="legend">Any Limitation ?</FormLabel>
               <RadioGroup
                 className={classes.inlineRadioGroup}
-                
                 onChange={(e) => {
-              setForm({
-                ...form,
-                isAnyLimitation: e.target.value,
-              });
-            }}
+                  setForm({
+                    ...form,
+                    isAnyLimitation: e.target.value,
+                  });
+                }}
               >
                 {radioDecide.map((value) => (
                   <FormControlLabel
@@ -1045,7 +1104,7 @@ const WorkerDetails = () => {
                       console.log(e);
                       setForm({
                         ...form,
-                        incidentdate: moment(e).toDate(),
+                        dateOfAlcoholDrugTest: moment(e).toDate(),
                       });
                     }}
                     format="yyyy/MM/dd"
@@ -1060,7 +1119,15 @@ const WorkerDetails = () => {
                   <FormLabel component="legend">
                     Was worker cleared to work following a&d testing?
                   </FormLabel>
-                  <RadioGroup className={classes.inlineRadioGroup}>
+                  <RadioGroup
+                    className={classes.inlineRadioGroup}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        isWorkerClearedTest: e.target.value,
+                      });
+                    }}
+                  >
                     {radioYesNo.map((value) => (
                       <FormControlLabel
                         value={value}
@@ -1085,12 +1152,12 @@ const WorkerDetails = () => {
                     ? error.constructionManagerName
                     : null
                 }
-                // onChange={(e) => {
-                //   setForm({
-                //     ...form,
-                //     constructionManagerName: e.target.value,
-                //   });
-                // }}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    isWorkerClearedTest: e.target.value,
+                  });
+                }}
               />
             </Grid>
           )}
@@ -1111,86 +1178,115 @@ const WorkerDetails = () => {
               label="Supervisor Name"
               error={error && error.supervisorName}
               helperText={
-                error && error.supervisorName
-                  ? error.supervisorName
-                  : null
+                error && error.supervisorName ? error.supervisorName : null
               }
               className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                supervisorName: e.target.value,
-              });
-            }}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  supervisorName: e.target.value,
+                });
+              }}
             />
-            {error && error.supervisorName && (
-              <p>{error.supervisorName}</p>
-            )}
+            {error && error.supervisorName && <p>{error.supervisorName}</p>}
           </Grid>
 
           <Grid item md={6}>
-            {/* <p>Supervisor time in industry</p> */}
-            <TextField
-              id="title"
+            <FormControl
               variant="outlined"
-              label="Supervisor Time in Industry"
-              error={error && error.supervisorTimeInIndustry}
-              helperText={
-                error && error.supervisorTimeInIndustry
-                  ? error.supervisorTimeInIndustry
-                  : null
-              }
+              error={error && error.actualSeverityLevel}
+              required
               className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                supervisorTimeInIndustry: e.target.value,
-              });
-            }}
-            />
+            >
+              <InputLabel id="unit-name-label">
+                Supervisor Time in Industry
+              </InputLabel>
+              <Select
+                labelId="unit-name-label"
+                id="unit-name"
+                label="Supervisor Time in Industry"
+                // defaultValue={incidentsListData.fkUnitId}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    supervisorTimeInIndustry: e.target.value,
+                  });
+                }}
+              >
+                {supervisorTimeInIndustry.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
+                ))}
+              </Select>
+              {error && error.supervisorTimeInIndustry && (
+                <FormHelperText>
+                  {error.supervisorTimeInIndustry}
+                </FormHelperText>
+              )}
+            </FormControl>
           </Grid>
 
           <Grid item md={6}>
-            {/* <p>Supervisor time in company</p> */}
-            <TextField
-              id="title"
+            <FormControl
               variant="outlined"
-              label="Supervisor time in company"
+              error={error && error.actualSeverityLevel}
+              required
               className={classes.formControl}
-              error={error && error.supervisorTimeInCompany}
-              helperText={
-                error && error.supervisorTimeInCompany
-                  ? error.supervisorTimeInCompany
-                  : null
-              }
-            onChange={(e) => {
-              setForm({
-                ...form,
-                supervisorTimeInCompany: e.target.value,
-              });
-            }}
-            />
+            >
+              <InputLabel id="unit-name-label">
+                Supervisor time in company
+              </InputLabel>
+              <Select
+                labelId="unit-name-label"
+                id="unit-name"
+                label="Supervisor time in company"
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    supervisorTimeInCompany: e.target.value,
+                  });
+                }}
+                // defaultValue={incidentsListData.fkUnitId}
+              >
+                {supervisorTimeInCompany.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
+                ))}
+              </Select>
+              {error && error.supervisorTimeInCompany && (
+                <FormHelperText>{error.supervisorTimeInCompany}</FormHelperText>
+              )}
+            </FormControl>
           </Grid>
 
           <Grid item md={6}>
-            <TextField
-              id="title"
+            <FormControl
               variant="outlined"
-              label="Supervisor time on project"
+              error={error && error.actualSeverityLevel}
+              required
               className={classes.formControl}
-              error={error && error.supervisorTimeOnProject}
-              helperText={
-                error && error.supervisorTimeOnProject
-                  ? error.supervisorTimeOnProject
-                  : null
-              }
-            // onChange={(e) => {
-            //   setForm({
-            //     ...form,
-            //     supervisorTimeOnProject: e.target.value,
-            //   });
-            // }}
-            />
+            >
+              <InputLabel id="unit-name-label">
+                Supervisor time on project
+              </InputLabel>
+              <Select
+                labelId="unit-name-label"
+                id="unit-name"
+                label="Supervisor time on project"
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    supervisorTimeOnProject: e.target.value,
+                  });
+                }}
+                // defaultValue={incidentsListData.fkUnitId}
+              >
+                {supervisorTimeOnProject.current.map((value) => (
+                  <MenuItem value={value}>{value}</MenuItem>
+                ))}
+              </Select>
+              {error && error.supervisorTimeOnProject && (
+                <FormHelperText>{error.supervisorTimeOnProject}</FormHelperText>
+              )}
+            </FormControl>
           </Grid>
 
           <Grid item md={12}>
@@ -1207,8 +1303,9 @@ const WorkerDetails = () => {
               filesLimit={5}
               text="Drag and drop file(s) here or click the button below"
               showButton
-              // onDrop={handleDrop}
-            />
+              onClick={(e) => {
+                                handleFile(e);
+             console.log("sagar") }}/>
             {error && error.fileupload ? <p>{error.fileupload}</p> : null}
           </Grid>
 

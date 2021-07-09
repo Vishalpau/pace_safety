@@ -56,6 +56,8 @@ import moment from "moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
 import "../../styles/custom.css";
+import axios from "axios";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,8 +111,24 @@ const EvidenceSummary = () => {
     setOpen(false);
   };
   const downloadFile = () => {
-    window.location.href = `${documentUrl}`
-  }
+
+    window.location.href = `${documentUrl}`;
+  };
+
+
+  // const handleDownload = (url, filename) => {
+  //   axios
+  //     .get(url, {
+  //       responseType: "blob",
+  //       headers: {"Access-Control-Allow-Origin": "*"}
+  //     }
+  //     )
+  //     .then((res) => {
+  //       fileDownload(res.data, filename);
+  //     });
+  // };
+
+
   // const fkid = localStorage.getItem('fkincidentId');
   console.log(evidence);
   const fetchEvidanceData = async () => {
@@ -302,18 +320,37 @@ const EvidenceSummary = () => {
                 </Button>
               </Grid>
               <Grid item xs={6}>
-                <button
-                  // startIcon={<GetAppIcon />}
+                {/* <Button
+                  startIcon={<GetAppIcon />}
                   style={{ width: "100%" }}
-                  // variant="contained"
-                  // color="primary"
-                  // onClick={()=>downloadFile()}
-                  // disableElevation
-                  // href={}
+                  variant="contained"
+                  color="primary"
+                  href={`${documentUrl}`} 
+                  onClick={()=>downloadFile()}
+                  disableElevation
+                  // target='_blank'
                 >
-                  <a href={`${documentUrl}`} download  > Download Attachment </a>
-                  
-                </button>
+                
+                  Download Attachment
+                </Button> */}
+                {/* <button
+                crossorigin="anonymous"
+                  onClick={() => {
+                    handleDownload(
+                      `${documentUrl}`
+                    );
+                  }}
+                >
+                  Download Image
+                </button> */}
+
+                {/* <a href="https://www.w3schools.com/images/myw3schoolsimage.jpg"
+                
+                download> Download Here </a> */}
+                <a href={`${documentUrl}`}
+    download>
+          </a>
+
               </Grid>
             </Grid>
           </Box>
