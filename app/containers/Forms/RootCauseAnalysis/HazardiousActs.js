@@ -439,7 +439,7 @@ const HazardiousActs = () => {
 
   return (
     <PapperBlock
-      title="Immediate Causes - Hazardious Acts"
+      title="Immediate Causes - Hazardous Acts"
       icon="ion-md-list-box"
     >
       <Grid container spacing={3}>
@@ -656,7 +656,7 @@ const HazardiousActs = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Hazardious acts"}
+            selectedItem={"Hazardous acts"}
           />
         </Grid>
       </Grid>
