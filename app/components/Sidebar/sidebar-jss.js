@@ -29,7 +29,8 @@ const styles = (theme) => ({
   },
   opened: {
     "& $primary, & $icon": {
-      color: theme.palette.primary.main,
+      color: theme.palette.secondary.main,
+      fontWeight: 700,
     },
     "&:before": {
       content: '""',
@@ -38,7 +39,8 @@ const styles = (theme) => ({
       height: theme.spacing(6),
       top: 0,
       left: 0,
-      background: fade(theme.palette.primary.main, 0.5),
+      // background: fade(theme.palette.primary.main, 0.5),
+      background: theme.palette.secondary.main,
     },
   },
   drawerPaperClose: {
