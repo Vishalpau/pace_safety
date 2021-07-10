@@ -25,54 +25,53 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 function App() {
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
-    const code = searchParams.get('code');
+    const code = 'VwWDGmthURHnOcaStEURr3Jmea3BsQ'||searchParams.get('code');
     if (code) {
-      const response = await api.post(`${SSO_URL}/api/v1/user/auth/token/`, {
-        grant_type: 'authorization_code',
-        client_id:
-          { SSO_CLIENT_ID } || 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo',
+      let data = JSON.stringify({
+        grant_type: "authorization_code",
+        client_id: "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
         client_secret:
-          { SSO_CLIENT_SECRET }
-          || "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
-        code,
+          "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
+        code: code,
       });
-      const result = response.data.access_token;
-      localStorage.setItem('access_token', result);
+
+      let config = {
+        method: "post",
+        url: `${SSO_URL}/api/v1/user/auth/token/`,
+        headers: {
+          "Content-Type": "application/json",
+          Cookie:
+            "sessionid=g2zt7cjcpjkf2qabggfwe14yzliwjz2x; csrftoken=NcsO8L9eWK1dLfWRGQ10t2b86GzdD9vSwmzDwc77Cc4luBmQAZiYbvtfgp3X845H",
+        },
+        data: data,
+      };
+      console.log(config)
+     await axios(config)
+        .then(function(response) {
+          console.log(response)
+          localStorage.setItem("access_token", response.data.access_token);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
+    // if (code) {
+    //   const response = await api.post(`${SSO_URL}/api/v1/user/auth/token/`, {
+    //     grant_type: 'authorization_code',
+    //     client_id:
+    //       { SSO_CLIENT_ID } || 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo',
+    //     client_secret:
+    //       { SSO_CLIENT_SECRET }
+    //       || "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
+    //     code,
+    //   });
+    //   const result = response.data.access_token;
+    //   localStorage.setItem('access_token', result);
+    // }
   };
 
   useEffect(() => {
     getToken();
-
-    // if (code) {
-    //   let axios = require("axios");
-    //   let data = JSON.stringify({
-    //     grant_type: "authorization_code",
-    //     client_id: {SSO_CLIENT_ID}||"yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
-    //     client_secret:
-    //       "",
-    //     code: code,
-    //   });
-
-    //   let config = {
-    //     method: "post",
-    //     url: `${SSO_URL}/api/v1/user/auth/token/`,
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Cookie:
-    //         "sessionid=g2zt7cjcpjkf2qabggfwe14yzliwjz2x; csrftoken=NcsO8L9eWK1dLfWRGQ10t2b86GzdD9vSwmzDwc77Cc4luBmQAZiYbvtfgp3X845H",
-    //     },
-    //     data: data,
-    //   };
-
-    //   axios(config)
-    //     .then(function(response) {
-    //       localStorage.setItem("access_token", response.data.access_token);
-    //     })
-    //     .catch(function(error) {
-    //       console.log(error);
-    //     });
-    // }
   });
 
   return (
