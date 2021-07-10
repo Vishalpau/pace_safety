@@ -25,7 +25,7 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 function App() {
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
-    const code = 'VwWDGmthURHnOcaStEURr3Jmea3BsQ'||searchParams.get('code');
+    const code = searchParams.get('code');
     if (code) {
       let data = JSON.stringify({
         grant_type: "authorization_code",
