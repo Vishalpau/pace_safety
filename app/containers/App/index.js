@@ -40,8 +40,6 @@ function App() {
         url: `${SSO_URL}/api/v1/user/auth/token/`,
         headers: {
           "Content-Type": "application/json",
-          Cookie:
-            "sessionid=g2zt7cjcpjkf2qabggfwe14yzliwjz2x; csrftoken=NcsO8L9eWK1dLfWRGQ10t2b86GzdD9vSwmzDwc77Cc4luBmQAZiYbvtfgp3X845H",
         },
         data: data,
       };
