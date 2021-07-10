@@ -323,7 +323,8 @@ const HazardiousCondition = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
+            putId.current
           }`
         );
       }
@@ -351,7 +352,7 @@ const HazardiousCondition = () => {
 
   return (
     <PapperBlock
-      title="Immediate Causes - Hazardous Conditions"
+      title="Immediate causes - hazardous Conditions"
       icon="ion-md-list-box"
     >
       <Grid container spacing={3}>
@@ -509,7 +510,7 @@ const HazardiousCondition = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem="Hazardious conditions"
+            selectedItem="Hazardous conditions"
           />
         </Grid>
       </Grid>
