@@ -91,6 +91,9 @@ const Summary = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  if(id){
+    localStorage.setItem('fkincidentId', id);
+  }
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
@@ -317,7 +320,9 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink href="/app/incident-management/registration/investigation/initial-details/">
+                    <ListItemLink
+                      href="/app/incident-management/registration/investigation/investigation-overview/"
+                    >
                       <ListItemIcon>
                         <Edit />
                       </ListItemIcon>
@@ -343,33 +348,42 @@ const Summary = () => {
                       </ListItemLink>
                     )}
                     {localStorage.getItem("RootCause") == "Done" ? (
-                    <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                      <ListItemText primary="Modify RCA" />
-                    </ListItemLink>):(
+                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary="Modify RCA" />
+                      </ListItemLink>) : (
                       <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <ListItemText primary="Perform RCA" />
-                    </ListItemLink>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <ListItemText primary="Perform RCA" />
+                      </ListItemLink>
+                    )}
+                    {localStorage.getItem("LessionLearnt") == "Done" ? (
+                      <ListItemLink href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary="Lessions Learnt" />
+                      </ListItemLink>) : (
+                       <ListItemLink
+                       onClick={() =>
+                         history.push(
+                           "/app/incident-management/registration/lession-learned/lession-learned/"
+                         )
+                       }
+                     >
+                       <ListItemIcon>
+                         <Add />
+                       </ListItemIcon>
+                       <ListItemText primary="Lessions Learnt" />
+                     </ListItemLink>
+ 
                     )}
 
-                    <ListItemLink
-                      onClick={() =>
-                        history.push(
-                          "/app/incident-management/registration/lession-learned/lession-learned/"
-                        )
-                      }
-                    >
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <ListItemText primary="Lessions Learnt" />
-                    </ListItemLink>
-
+                   
                     <ListItem button divider>
                       <ListItemIcon>
                         <Close />
