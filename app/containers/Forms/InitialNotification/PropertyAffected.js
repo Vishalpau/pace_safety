@@ -81,6 +81,7 @@ const PropertyAffected = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
   const [isOther, setIsOther] = useState(true);
+  const nextPath = localStorage.getItem('nextPath')
 
   // Default form.
   const [form, setForm] = useState([
@@ -327,6 +328,17 @@ const PropertyAffected = () => {
     await setPropertyListData(result);
     await setIsLoading(true);
   };
+
+  // handle go back
+  const handleBack = ()=>{
+  if (nextPath.personAffect === 'Yes') {
+      history.push(
+        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+      );
+      }else{
+      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    }
+  }
 
   useEffect(() => {
     fetchPropertyAffectedValue();
@@ -611,7 +623,7 @@ const PropertyAffected = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+                onClick={() => handleBack()}
               >
                 Previous
               </Button>

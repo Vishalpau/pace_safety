@@ -91,6 +91,9 @@ const Summary = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  if(id){
+    localStorage.setItem('fkincidentId', id);
+  }
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
@@ -358,20 +361,29 @@ const Summary = () => {
                         <ListItemText primary="Perform RCA" />
                       </ListItemLink>
                     )}
+                    {localStorage.getItem("LessionLearnt") == "Done" ? (
+                      <ListItemLink href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary="Lessions Learnt" />
+                      </ListItemLink>) : (
+                       <ListItemLink
+                       onClick={() =>
+                         history.push(
+                           "/app/incident-management/registration/lession-learned/lession-learned/"
+                         )
+                       }
+                     >
+                       <ListItemIcon>
+                         <Add />
+                       </ListItemIcon>
+                       <ListItemText primary="Lessions Learnt" />
+                     </ListItemLink>
+ 
+                    )}
 
-                    <ListItemLink
-                      onClick={() =>
-                        history.push(
-                          "/app/incident-management/registration/lession-learned/lession-learned/"
-                        )
-                      }
-                    >
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <ListItemText primary="Lessions Learnt" />
-                    </ListItemLink>
-
+                   
                     <ListItem button divider>
                       <ListItemIcon>
                         <Close />

@@ -390,13 +390,12 @@ const Evidence = () => {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       // setOpenError(false)
       return;
     }
 
     setOpen(false);
-    
   };
 
   const handleChange = async (e, index) => {
@@ -495,73 +494,163 @@ const Evidence = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {Object.entries(form).map(([index, value]) => (
+                    {form.length == 14 ? (
                       <>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            <Typography variant="body2">
-                              {value.evidenceCategory || value.evidenceCategory}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <FormControl
-                              component="fieldset"
-                              required
-                              size="small"
-                              className={classes.fullWidth}
-                              error={error && error[`evidenceCheck${[index]}`]}
-                            >
-                              <RadioGroup
-                                className={classes.inlineRadioGroup}
-                                defaultValue={form[index].evidenceCheck}
-                                onChange={(e) => {
-                                  handleChange(e, index);
-                                  // setForm([{ ...form, evidenceCheck: e.target.value }]);
-                                }}
-                              >
-                                {radioDecide.map((value) => (
-                                  <FormControlLabel
-                                    value={value}
-                                    control={<Radio />}
-                                    label={value}
+                        {Object.entries(form)
+                          .slice(1, 14)
+                          .map(([index, value]) => (
+                            <>
+                              <TableRow>
+                                <TableCell component="th" scope="row">
+                                  <Typography variant="body2">
+                                    {value.evidenceCategory ||
+                                      value.evidenceCategory}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <FormControl
+                                    component="fieldset"
+                                    required
+                                    size="small"
+                                    className={classes.fullWidth}
+                                    error={
+                                      error && error[`evidenceCheck${[index]}`]
+                                    }
+                                  >
+                                    <RadioGroup
+                                      className={classes.inlineRadioGroup}
+                                      defaultValue={form[index].evidenceCheck}
+                                      onChange={(e) => {
+                                        handleChange(e, index);
+                                        // setForm([{ ...form, evidenceCheck: e.target.value }]);
+                                      }}
+                                    >
+                                      {radioDecide.map((value) => (
+                                        <FormControlLabel
+                                          value={value}
+                                          control={<Radio />}
+                                          label={value}
+                                        />
+                                      ))}
+                                    </RadioGroup>
+                                    {error &&
+                                      error[`evidenceCheck${[index]}`] && (
+                                        <FormHelperText>
+                                          {error[`evidenceCheck${[index]}`]}
+                                        </FormHelperText>
+                                      )}
+                                  </FormControl>
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    size="small"
+                                    variant="outlined"
+                                    defaultValue={form[index].evidenceRemark}
+                                    onChange={(e) => {
+                                      handleComment(e, index);
+                                    }}
                                   />
-                                ))}
-                              </RadioGroup>
-                              {error && error[`evidenceCheck${[index]}`] && (
-                                <FormHelperText>
-                                  {error[`evidenceCheck${[index]}`]}
-                                </FormHelperText>
-                              )}
-                            </FormControl>
-                          </TableCell>
-                          <TableCell>
-                            <TextField
-                              size="small"
-                              variant="outlined"
-                              defaultValue={form[index].evidenceRemark}
-                              onChange={(e) => {
-                                handleComment(e, index);
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell style={{ width: "220px" }}>
-                            <input
-                              type="file"
-                              className={classes.fullWidth}
-                              accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
-                              disabled={
-                                value.evidenceCheck !== "Yes" ? true : false
-                              }
-                              name="file"
-                              onChange={(e) => {
-                                handleFile(e, index);
-                                // setForm([{ ...form, evidenceCheck: e.target.value }]);
-                              }}
-                            />
-                          </TableCell>
-                        </TableRow>
+                                </TableCell>
+                                <TableCell style={{ width: "220px" }}>
+                                  <input
+                                    type="file"
+                                    className={classes.fullWidth}
+                                    accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
+                                    disabled={
+                                      value.evidenceCheck !== "Yes"
+                                        ? true
+                                        : false
+                                    }
+                                    name="file"
+                                    onChange={(e) => {
+                                      handleFile(e, index);
+                                      // setForm([{ ...form, evidenceCheck: e.target.value }]);
+                                    }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            </>
+                          ))}
                       </>
-                    ))}
+                    ) : (
+                      <>
+                        {Object.entries(form)
+                          .slice(1, 14)
+                          .map(([index, value]) => (
+                            <>
+                              <TableRow>
+                                <TableCell component="th" scope="row">
+                                  <Typography variant="body2">
+                                    {value.evidenceCategory ||
+                                      value.evidenceCategory}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <FormControl
+                                    component="fieldset"
+                                    required
+                                    size="small"
+                                    className={classes.fullWidth}
+                                    error={
+                                      error && error[`evidenceCheck${[index]}`]
+                                    }
+                                  >
+                                    <RadioGroup
+                                      className={classes.inlineRadioGroup}
+                                      defaultValue={form[index].evidenceCheck}
+                                      onChange={(e) => {
+                                        handleChange(e, index);
+                                        // setForm([{ ...form, evidenceCheck: e.target.value }]);
+                                      }}
+                                    >
+                                      {radioDecide.map((value) => (
+                                        <FormControlLabel
+                                          value={value}
+                                          control={<Radio />}
+                                          label={value}
+                                        />
+                                      ))}
+                                    </RadioGroup>
+                                    {error &&
+                                      error[`evidenceCheck${[index]}`] && (
+                                        <FormHelperText>
+                                          {error[`evidenceCheck${[index]}`]}
+                                        </FormHelperText>
+                                      )}
+                                  </FormControl>
+                                </TableCell>
+                                <TableCell>
+                                  <TextField
+                                    size="small"
+                                    variant="outlined"
+                                    defaultValue={form[index].evidenceRemark}
+                                    onChange={(e) => {
+                                      handleComment(e, index);
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell style={{ width: "220px" }}>
+                                  <input
+                                    type="file"
+                                    className={classes.fullWidth}
+                                    accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
+                                    disabled={
+                                      value.evidenceCheck !== "Yes"
+                                        ? true
+                                        : false
+                                    }
+                                    name="file"
+                                    onChange={(e) => {
+                                      handleFile(e, index);
+                                      // setForm([{ ...form, evidenceCheck: e.target.value }]);
+                                    }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            </>
+                          ))}
+                      </>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
