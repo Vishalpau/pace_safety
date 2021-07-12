@@ -83,15 +83,21 @@ const LessionLearned = () => {
 
   const handleNext = async () => {
     // sent put request
-    if (id) {
-      console.log(learningList);
+    let status =0
+    if (learningList.length>0) {
       for (var i = 0; i < learningList.length; i++) {
         const res = await api.put(
           `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
-          learningList[i]
+          {
+            teamOrDepartment: learningList[i].teamOrDepartment,
+            learnings: learningList[i].learnings,
+            status: "Active",
+            updatedBy: 0
+          }
         );
+        status = res.status
       }
-      if (res.status === 200) {
+      if (status === 200) {
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -122,10 +128,11 @@ const LessionLearned = () => {
               "fkincidentId"
             )}`
           );
+          localStorage.setItem("LessionLearnt", "Done");
         }
       }
     }
-    localStorage.setItem("LessionLearnt", "Done");
+    
   };
 
   //  Fetch Lession learn data
@@ -277,7 +284,7 @@ const LessionLearned = () => {
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
                           label="Team/department"
-                          defaultValue={item.learnings}
+                          defaultValue={item.teamOrDepartment}
                           onChange={(e) =>
                             handleUpdateLessonLearned(
                               e,
