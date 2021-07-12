@@ -23,19 +23,23 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
+import moment from "moment";
 
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import { access_token, ACCOUNT_API_URL, LESSION_LEARNED_FORM } from "../../../utils/constants";
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  LESSION_LEARNED_FORM,
+} from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
 
-import axios from 'axios'
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: ".5rem 0",
     width: "100%",
   },
   selectEmpty: {
@@ -43,11 +47,8 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-    margin: ".5rem 0",
   },
-  spacer: {
-    padding: ".75rem 0",
-  },
+  spacer: {},
 }));
 
 const LessionLearned = () => {
@@ -69,7 +70,7 @@ const LessionLearned = () => {
   const [whyCount, setWhyCount] = useState(["ram", "ram"]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [department, setDepartment] = useState([])
+  const [department, setDepartment] = useState([]);
 
   // set state onChange update
   const handleUpdateLessonLearned = async (e, key, fieldname, lessonId) => {
@@ -82,15 +83,21 @@ const LessionLearned = () => {
 
   const handleNext = async () => {
     // sent put request
-    if (id) {
-      console.log(learningList);
+    let status =0
+    if (learningList.length>0) {
       for (var i = 0; i < learningList.length; i++) {
         const res = await api.put(
           `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
-          learningList[i]
+          {
+            teamOrDepartment: learningList[i].teamOrDepartment,
+            learnings: learningList[i].learnings,
+            status: "Active",
+            updatedBy: 0
+          }
         );
+        status = res.status
       }
-      if (res.status === 200) {
+      if (status === 200) {
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -121,10 +128,11 @@ const LessionLearned = () => {
               "fkincidentId"
             )}`
           );
+          localStorage.setItem("LessionLearnt", "Done");
         }
       }
     }
-    localStorage.setItem("LessionLearnt" , "Done");
+    
   };
 
   //  Fetch Lession learn data
@@ -144,26 +152,26 @@ const LessionLearned = () => {
     await setIsLoading(true);
   };
 
-  // fetch team or deparment 
-  const fetchDepartment = ()=>{
+  // fetch team or deparment
+  const fetchDepartment = () => {
     var config = {
-      method: 'get',
+      method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
-      headers: { 
-        'Authorization': `Bearer ${access_token}`, 
-       }
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     };
     axios(config)
-    .then(function (response) {
-      console.log(response)
-      const result  = response.data.data.results;
-      console.log(result)
-      setDepartment(result);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
+      .then(function(response) {
+        console.log(response);
+        const result = response.data.data.results;
+        console.log(result);
+        setDepartment(result);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     fetchDepartment();
@@ -179,7 +187,7 @@ const LessionLearned = () => {
           <Grid container item md={9} justify="flex-start" spacing={3}>
             <Grid item md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Number
+                Incident number
               </Typography>
 
               <Typography varint="body1" className={Type.labelValue}>
@@ -189,39 +197,48 @@ const LessionLearned = () => {
 
             <Grid item md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident on
+                Incident occured on
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentOccuredOn}
+                {moment(incidentsListData.incidentOccuredOn).format(
+                  "YYYY/DD/MM HH:mm"
+                )}
               </Typography>
             </Grid>
 
             <Grid item md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Reported on
+                Incident reported on
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentReportedOn}
+                {moment(incidentsListData.incidentReportedOn).format(
+                  "YYYY/DD/MM HH:mm"
+                )}
               </Typography>
             </Grid>
 
             <Grid item md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Reported By
+                Reported by
               </Typography>
-              <Typography className={Type.labelValue}>11:59 PM</Typography>
+              <Typography className={Type.labelValue}>
+                {incidentsListData.incidentReportedByName}
+              </Typography>
             </Grid>
 
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Type
+                Incident type
               </Typography>
-              <Typography className={Type.labelValue}> {incidentsListData.incidentType} </Typography>
+              <Typography className={Type.labelValue}>
+                {" "}
+                {incidentsListData.incidentType}{" "}
+              </Typography>
             </Grid>
 
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Title
+                Incident title
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentTitle}
@@ -230,7 +247,7 @@ const LessionLearned = () => {
 
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Description
+                Incident description
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentDetails}
@@ -239,7 +256,7 @@ const LessionLearned = () => {
 
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Location
+                Incident location
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentLocation}
@@ -247,13 +264,13 @@ const LessionLearned = () => {
             </Grid>
 
             <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Key Learnings
+              <Typography variant="h6" gutterBottom>
+                Key learnings
               </Typography>
 
               {learningList.length !== 0 ? (
                 learningList.map((item, index) => (
-                  <>
+                  <Grid container item spacing={3} md={12}>
                     <Grid item md={12}>
                       <FormControl
                         variant="outlined"
@@ -261,13 +278,13 @@ const LessionLearned = () => {
                         error={error.team}
                       >
                         <InputLabel id="demo-simple-select-label">
-                          Team/Department
+                          Team/department
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          label="Team/Department"
-                          defaultValue={item.learnings}
+                          label="Team/department"
+                          defaultValue={item.teamOrDepartment}
                           onChange={(e) =>
                             handleUpdateLessonLearned(
                               e,
@@ -277,8 +294,11 @@ const LessionLearned = () => {
                             )
                           }
                         >
-                          {department.map((selectValues,index) => (
-                            <MenuItem value={selectValues.departmentName} key={index}>
+                          {department.map((selectValues, index) => (
+                            <MenuItem
+                              value={selectValues.departmentName}
+                              key={index}
+                            >
                               {selectValues.departmentDescription}
                             </MenuItem>
                           ))}
@@ -295,7 +315,7 @@ const LessionLearned = () => {
                       >
                         <TextField
                           id="outlined-search"
-                          label="Team/Department Learnings"
+                          label="Team/department learnings"
                           variant="outlined"
                           rows="3"
                           multiline
@@ -316,10 +336,10 @@ const LessionLearned = () => {
                           )} */}
                       </FormControl>
                     </Grid>
-                  </>
+                  </Grid>
                 ))
               ) : (
-                <>
+                <Grid container spacing={3} item md={12}>
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
@@ -327,12 +347,12 @@ const LessionLearned = () => {
                       error={error.team}
                     >
                       <InputLabel id="demo-simple-select-label">
-                        Team/Department
+                        Team/department
                       </InputLabel>
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        label="Team/Department"
+                        label="Team/department"
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -340,11 +360,14 @@ const LessionLearned = () => {
                           })
                         }
                       >
-                       {department.map((selectValues,index) => (
-                            <MenuItem value={selectValues.departmentName} key={index}>
-                              {selectValues.departmentDescription}
-                            </MenuItem>
-                          ))}
+                        {department.map((selectValues, index) => (
+                          <MenuItem
+                            value={selectValues.departmentName}
+                            key={index}
+                          >
+                            {selectValues.departmentDescription}
+                          </MenuItem>
+                        ))}
                       </Select>
                       {error && error.team && (
                         <FormHelperText>{error.team}</FormHelperText>
@@ -360,7 +383,7 @@ const LessionLearned = () => {
                       <TextField
                         id="outlined-search"
                         error={error.teamLearning}
-                        label="Team/Department Learnings"
+                        label="Team/department learnings"
                         variant="outlined"
                         rows="3"
                         multiline
@@ -374,7 +397,7 @@ const LessionLearned = () => {
                         )} */}
                     </FormControl>
                   </Grid>
-                </>
+                </Grid>
               )}
             </Grid>
 
@@ -395,7 +418,7 @@ const LessionLearned = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lession Learned"}
+              selectedItem={"Lession learned"}
             />
           </Grid>
         </Grid>

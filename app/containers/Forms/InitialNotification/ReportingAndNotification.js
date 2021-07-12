@@ -1,43 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Container from '@material-ui/core/Container';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import DateFnsUtils from '@date-io/date-fns';
-import MomentUtils from '@date-io/moment';
 import {
-  TimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-  DateTimePicker, KeyboardDateTimePicker
+  MuiPickersUtilsProvider, KeyboardDateTimePicker
 } from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Icon from '@material-ui/core/Icon';
-import Input from '@material-ui/core/Input';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Box from '@material-ui/core/Box';
-import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { PapperBlock, MaterialDropZone } from 'dan-components';
+import { PapperBlock} from 'dan-components';
 
-import { DropzoneArea, DropzoneDialogBase } from 'material-ui-dropzone';
+// import { DropzoneArea, DropzoneDialogBase } from 'material-ui-dropzone';
 
 import FormLabel from '@material-ui/core/FormLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
@@ -51,18 +37,16 @@ import FormSideBar from '../FormSideBar';
 import {
   access_token,
   ACCOUNT_API_URL,
-  API_URL,
-  INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from '../../../utils/constants';
-import FormHeader from '../FormHeader';
+// import FormHeader from '../FormHeader';
 
 import ReportingValidation from '../../Validator/ReportingValidation';
-import InitialEvidenceValidate from '../../Validator/InitialEvidance';
+// import InitialEvidenceValidate from '../../Validator/InitialEvidance';
 
 import api from '../../../utils/axios';
 
-import UploadInputAll from '../demos/UploadInputAll';
+// import UploadInputAll from '../demos/UploadInputAll';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -105,7 +89,6 @@ const ReportingAndNotification = () => {
   const [superVisorName, setSuperVisorName] = useState([]);
   const [reportedByName, setReportedByName] = useState([]);
   const [open, setOpen] = useState(false);
-  const [openError, setOpenError] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [evidanceForm, setEvidanceForm] = useState([
@@ -123,6 +106,8 @@ const ReportingAndNotification = () => {
   ]);
 
   const { id } = useParams();
+  const history = useHistory();
+  const nextPath = localStorage.getItem('nextPath')
 
   const [form, setForm] = useState({
     reportedto: [],
@@ -140,37 +125,27 @@ const ReportingAndNotification = () => {
     reportedByOtherName: '',
   });
 
-  const history = useHistory();
-
   const notificationSent = ['Manage', 'SuperVisor'];
-  const selectValues = [1, 2, 3, 4, 'Other'];
-  const [selectedTime, setSelectedTime] = React.useState(
-    new Date('2014-08-18T21:11:54')
-  );
-
-  const [otherdata, setOtherData] = useState('');
-  const [fileNames, setFileNames] = useState('');
-  const [reportData, setReportData] = useState([]);
   let evidanceCkecked = true;
 
-  const handelTimeCompare = async (e) => {
-    const rpTime = form.reportingtime;
-    const rpDate = form.reportingdate;
-    const startDate = `${rpDate} ${rpTime}`;
-    // let startDate = form.reportingdate.concat(form.reportingtime)
-    const start_date = moment(
-      form.reportingdate || incidentsListData.incidentReportedOn,
-      'YYYY-MM-DD HH:mm:ss'
-    );
-    const end_date = moment(new Date(), 'YYYY-MM-DD HH:mm:ss');
-    const duration = moment.duration(end_date.diff(start_date));
-    const Hours = duration.asHours();
-    if (Hours > 4) {
-      await SetLateReport(true);
-    } else {
-      await SetLateReport(false);
-    }
-  };
+  // const handelTimeCompare = async (e) => {
+  //   const rpTime = form.reportingtime;
+  //   const rpDate = form.reportingdate;
+  //   const startDate = `${rpDate} ${rpTime}`;
+  //   // let startDate = form.reportingdate.concat(form.reportingtime)
+  //   const start_date = moment(
+  //     form.reportingdate || incidentsListData.incidentReportedOn,
+  //     'YYYY-MM-DD HH:mm:ss'
+  //   );
+  //   const end_date = moment(new Date(), 'YYYY-MM-DD HH:mm:ss');
+  //   const duration = moment.duration(end_date.diff(start_date));
+  //   const Hours = duration.asHours();
+  //   if (Hours > 4) {
+  //     await SetLateReport(true);
+  //   } else {
+  //     await SetLateReport(false);
+  //   }
+  // };
 
   const handleDateChange = async (date) => {
     // compare time
@@ -524,6 +499,30 @@ const ReportingAndNotification = () => {
       });
   };
 
+  // handle go back
+  const handleGoBack = ()=>{
+    if (nextPath.environmentAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+      );
+    } else if (nextPath.equipmentAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+      );
+    }
+    else if (nextPath.propertyAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/property-affected/${id}`
+      );
+    }else if (nextPath.personAffect === 'Yes') {
+      history.push(
+        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+      );
+      }else{
+      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    }
+  }
+
   useEffect(() => {
     fetchIncidentsData();
     fetchSuperVisorName();
@@ -859,7 +858,7 @@ const ReportingAndNotification = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={(e) => history.goBack()}
+                onClick={(e) => handleGoBack(e)}
               >
                 Previous
               </Button>

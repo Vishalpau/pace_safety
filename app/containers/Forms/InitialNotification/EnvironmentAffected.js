@@ -93,6 +93,8 @@ const EnvironmentAffected = () => {
   // SetState in update time
   const [isChecked, setIsChecked] = useState([]);
 
+  const nextPath = localStorage.getItem('nextPath')
+  
   const questionMap = useRef({
     "Were there any spills?": "Details of spills affected",
     "Were there any release?": "Details of release affected",
@@ -259,6 +261,28 @@ const EnvironmentAffected = () => {
     // await setPersonAffect(isavailable)
     // await setIsLoading(true);
   };
+
+   // handle go back
+  const handleBack = ()=>{
+    if (nextPath.equipmentAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+      );
+    }
+    else if (nextPath.propertyAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/property-affected/${id}`
+      );
+    }else if (nextPath.personAffect === 'Yes') {
+      history.push(
+        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+      );
+      }else{
+      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    }
+  }
+
+
   useEffect(() => {
     fetchEnviornmentAffectedValue();
     fetchAnyReleaseValue();
@@ -373,7 +397,6 @@ const EnvironmentAffected = () => {
                     </RadioGroup>
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
@@ -428,32 +451,31 @@ const EnvironmentAffected = () => {
                     </RadioGroup>
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
                   </FormControl>
-
-                  {isrelase == "Yes" ? (
-                    <Grid item md={12}>
-                      <TextField
-                        id="release-details"
-                        multiline
-                        variant="outlined"
-                        error={error && error.envQuestion}
-                        helperText={
-                          error && error.envQuestion ? err.envQuestion : null
-                        }
-                        rows="3"
-                        label="Details of release"
-                        className={classes.fullWidth}
-                        onChange={(e) => {
-                          handleForm(e, 1, "envAnswerDetails");
-                        }}
-                      />
-                    </Grid>
-                  ) : null}
                 </Grid>
+
+                {isrelase == "Yes" ? (
+                  <Grid item md={12}>
+                    <TextField
+                      id="release-details"
+                      multiline
+                      variant="outlined"
+                      error={error && error.envQuestion}
+                      helperText={
+                        error && error.envQuestion ? err.envQuestion : null
+                      }
+                      rows="3"
+                      label="Details of release"
+                      className={classes.fullWidth}
+                      onChange={(e) => {
+                        handleForm(e, 1, "envAnswerDetails");
+                      }}
+                    />
+                  </Grid>
+                ) : null}
 
                 <Grid item md={12}>
                   <FormControl
@@ -488,34 +510,33 @@ const EnvironmentAffected = () => {
                     </RadioGroup>
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
                   </FormControl>
-
-                  {isWildlife == "Yes" ? (
-                    <Grid item md={12}>
-                      <TextField
-                        id="details-of-Wildlife-Affected"
-                        multiline
-                        rows="3"
-                        variant="outlined"
-                        error={error && error.envAnswerDetails}
-                        helperText={
-                          error && error.envAnswerDetails
-                            ? err.envAnswerDetails
-                            : null
-                        }
-                        label="Details of Wildlife Affected"
-                        className={classes.fullWidth}
-                        onChange={(e) => {
-                          handleForm(e, 2, "envAnswerDetails");
-                        }}
-                      />
-                    </Grid>
-                  ) : null}
                 </Grid>
+
+                {isWildlife == "Yes" ? (
+                  <Grid item md={12}>
+                    <TextField
+                      id="details-of-Wildlife-Affected"
+                      multiline
+                      rows="3"
+                      variant="outlined"
+                      error={error && error.envAnswerDetails}
+                      helperText={
+                        error && error.envAnswerDetails
+                          ? err.envAnswerDetails
+                          : null
+                      }
+                      label="Details of Wildlife Affected"
+                      className={classes.fullWidth}
+                      onChange={(e) => {
+                        handleForm(e, 2, "envAnswerDetails");
+                      }}
+                    />
+                  </Grid>
+                ) : null}
 
                 <Grid item md={12}>
                   <FormControl
@@ -550,7 +571,6 @@ const EnvironmentAffected = () => {
 
                     {error && error[`envQuestionOption${[3]}`] ? (
                       <FormHelperText>
-                        {" "}
                         {error[`envQuestionOption${[3]}`]}
                       </FormHelperText>
                     ) : null}
@@ -607,7 +627,7 @@ const EnvironmentAffected = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleNext}
+                onClick={() => handleBack()}
                 className={classes.button}
                 // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
               >

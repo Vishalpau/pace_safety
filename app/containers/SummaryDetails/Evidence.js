@@ -229,6 +229,7 @@ const EvidenceSummary = () => {
                               {value.evidenceRemark}
                             </Typography>
                           </Grid>
+<<<<<<< HEAD
                           {value.evidenceDocument ? (
                             <Grid item lg={6} md={6}>
                               <Typography
@@ -255,6 +256,32 @@ const EvidenceSummary = () => {
                               </Typography>
                             </Grid>
                           ) : null}
+=======
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Document
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              <Tooltip title="File Name">
+                                <IconButton
+                                  onClick={() =>
+                                    handleOpen(value.evidenceDocument)
+                                  }
+                                  className={classes.fileIcon}
+                                >
+                                  <PhotoSizeSelectActualIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Typography>
+                          </Grid>
+>>>>>>> 814d007b2ca4c4e5849d4219084c56b0a60f8fcc
                         </Grid>
                       </Grid>
                     ))
@@ -273,7 +300,7 @@ const EvidenceSummary = () => {
                 {activity.length !== 0
                   ? activity.map((ad, key) => (
                       <Grid container item xs={12} spacing={3} key={key}>
-                        <Grid item lg={12}>
+                        <Grid item md={6}>
                           <Typography
                             variant="h6"
                             gutterBottom

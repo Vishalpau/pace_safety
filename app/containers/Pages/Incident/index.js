@@ -137,20 +137,12 @@ function BlankPage() {
     fetchData();
   }, []);
 
-  // useEffect( () => {
-  //   const callback=async()=>{
-  //     const allIncidents = await api.get("api/v1/incidents/");
-  //     await setIncidents(allIncidents.data.data.results);
-  //   }
-  //   callback();
-  // }, []);
-
   const handelSearchIncident = async (e) => {
     console.log(e.target.value);
     let allSeacrh = [];
     // console.log(e.target.value.length);
     if (e.target.value.length === 0) {
-      setShowIncident([]);
+      await setShowIncident([]);
     } else {
       console.log(searchIncident);
       await setSeacrhIncident(e.target.value.toLowerCase());
@@ -180,7 +172,8 @@ function BlankPage() {
       name: "Incident Number",
       options: {
         filter: true,
-      },
+
+      }
     },
     {
       name: "Incident reported by",
@@ -209,11 +202,22 @@ function BlankPage() {
   ];
 
   const options = {
+    data: incidents,
+    // onRowsDelete:(rows)=>{console.log(rows)},
+    onRowsDelete: (rowsDeleted) => {
+      const idsToDelete = rowsDeleted.data.map(d => incidents[d.dataIndex].id);
+      console.log(idsToDelete)
+      for (var i = 0; i < idsToDelete.length; i++) {
+        const res = api.delete(`api/v1/incidents/${idsToDelete[i]}/`)
+      }
+
+    },
     filterType: "dropdown",
     responsive: "vertical",
     print: true,
     rowsPerPage: 10,
     page: 0,
+    // rowsSelected:[1,2,3]
   };
 
   const classes = useStyles();
@@ -298,9 +302,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                                // display="inline"
-                                //
-                                // className={Fonts.listingLabelValue}
+                              // display="inline"
+                              //
+                              // className={Fonts.listingLabelValue}
                               >
                                 {/* {item[1]["incidentTitle"]} */}
                                 Lorem ipsum dolor sit amet consectetur
@@ -332,9 +336,8 @@ function BlankPage() {
                               >
                                 Number:
                                 <Link
-                                  href={`/app/incident-management/registration/summary/summary/${
-                                    item[1].id
-                                  }`}
+                                  href={`/app/incident-management/registration/summary/summary/${item[1].id
+                                    }`}
                                   variant="subtitle2"
                                   className={Fonts.listingLabelValue}
                                   style={{
@@ -529,9 +532,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                                // display="inline"
-                                //
-                                // className={Fonts.listingLabelValue}
+                              // display="inline"
+                              //
+                              // className={Fonts.listingLabelValue}
                               >
                                 {item[1]["incidentTitle"]}
                                 {/* {item[index]["incidentTitle"]} */}
@@ -547,8 +550,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="Admin"
-                                // onDelete={handleDelete}
-                                // className={classes.chip}
+                              // onDelete={handleDelete}
+                              // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -563,9 +566,8 @@ function BlankPage() {
                               >
                                 Number:
                                 <Link
-                                  href={`/app/incident-management/registration/summary/summary/${
-                                    item[1].id
-                                  }`}
+                                  href={`/app/incident-management/registration/summary/summary/${item[1].id
+                                    }`}
                                   variant="subtitle2"
                                   className={Fonts.listingLabelValue}
                                   style={{
@@ -762,6 +764,7 @@ function BlankPage() {
                   "Do MMMM YYYY, h:mm:ss a"
                 ),
                 item[1]["incidentReportedByName"],
+                item[1]['id']
               ])}
               columns={columns}
               options={options}

@@ -29,6 +29,7 @@ import avatarApi from "dan-api/images/avatars";
 import companyLogo from "dan-api/images/logos";
 import link from "dan-api/ui/link";
 import styles from "./header-jss";
+import { useHistory } from "react-router";
 
 import "../../styles/custom/customheader.css";
 import {
@@ -48,6 +49,7 @@ const useStyles = makeStyles({
 });
 
 function UserMenu(props) {
+  const history = useHistory()
   const [menuState, setMenuState] = useState({
     anchorEl: null,
     openMenu: null,
@@ -95,11 +97,17 @@ function UserMenu(props) {
       .then((response) => {
         if (response.status === 201) {
           localStorage.clear();
-          window.location.href = "https://dev-accounts-api.paceos.io/login";
+          window.location.href = LOGIN_URL
+          // window.location.href = "https://dev-accounts-api.paceos.io/login";
         }
+        alert(res.status)
+        if(res.status === 401){
+          window.location.href = LOGIN_URL
+        }
+       
       })
       .catch((error) => {
-        console.log(error);
+        window.location.href = LOGIN_URL
       });
 
     // window.location.href = LOGIN_URL;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -29,6 +29,7 @@ import { PapperBlock } from "dan-components";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -50,6 +51,26 @@ const ActionTaken = () => {
   ];
 
   const notificationSent = ["Manage", "SuperVisor"];
+  const [form, setForm] = useState({});
+  const putId = useRef("")
+  const investigationId = useRef("")
+
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+
+
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
+    let allApiData = previousData.data.data.results[0];
+    if (!isNaN(allApiData.id)) {
+      await setForm(allApiData);
+      investigationId.current = allApiData.id
+    }
+  };
 
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
@@ -60,6 +81,19 @@ const ActionTaken = () => {
     setSelectedDate(date);
   };
   const [error, setError] = useState({});
+
+  const handleNext = async (e) => {
+    console.log(form);
+
+    const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
+    if (res.status === 200) {
+      console.log("request done");
+    }
+  };
+
+  useEffect(() => {
+    handelUpdateCheck()
+  }, []);
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
@@ -72,6 +106,13 @@ const ActionTaken = () => {
               variant="outlined"
               id="filled-basic"
               label="Pre event mitigation"
+              value={form.preEventMitigations}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  preEventMitigations: e.target.value,
+                });
+              }}
               className={classes.formControl}
             />
           </Grid>
@@ -109,7 +150,8 @@ const ActionTaken = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/evidence/evidence/"
+              // href="http://localhost:3000/app/incident-management/registration/evidence/evidence/"
+              onClick={(e) => handleNext(e)}
             >
               Submit
             </Button>
