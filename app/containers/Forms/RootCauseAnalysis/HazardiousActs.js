@@ -64,6 +64,7 @@ const HazardiousActs = () => {
   const history = useHistory();
   const [incidentDetail, setIncidentDetail] = useState({});
   const updateIds = useRef();
+  const checkPost = useRef()
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -84,12 +85,11 @@ const HazardiousActs = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    if (!isNaN(lastItem)) {
-      let previousData = await api.get(
-        `/api/v1/incidents/${lastItem}/pacecauses/`
-      );
-      putId.current = lastItem;
-      let allApiData = previousData.data.data.results;
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let allApiData = previousData.data.data.results;
+    if (allApiData.length !== 0) {
+      putId.current = incidentId;
       allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
@@ -100,7 +100,7 @@ const HazardiousActs = () => {
       });
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
-      console.log(tempApiData);
+      checkPost.current = false
 
       setForm({
         ...form,
@@ -353,7 +353,7 @@ const HazardiousActs = () => {
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       // post request object
-      if (putId.current == "") {
+      if (checkPost.current !== false) {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
@@ -368,7 +368,7 @@ const HazardiousActs = () => {
       } else {
         let temp = {
           createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
+          fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString(),
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
@@ -385,11 +385,9 @@ const HazardiousActs = () => {
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-        if (putId.current !== "") {
+        if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/${callObjects[key].pk}/`,
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
             callObjects[key]
           );
           if (res.status == 200) {
@@ -417,8 +415,7 @@ const HazardiousActs = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
         }`
       );
     }

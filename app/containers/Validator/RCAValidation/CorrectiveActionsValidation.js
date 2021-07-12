@@ -5,12 +5,12 @@ function CorrectiveActionValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.managementControl.rcaRemark.toString())) {
-    error.managementControl = "This field is empty";
+    error.managementControl = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.regionSupport.rcaRemark.toString())) {
-    error.regionSupport = "This field is empty";
+    error.regionSupport = "Fill the information";
     isValid = false;
   }
 

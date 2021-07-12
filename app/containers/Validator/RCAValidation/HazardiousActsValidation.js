@@ -6,42 +6,42 @@ function HazardiousActsValidation(data) {
   console.log(data.supervision.rcaSubType);
 
   if (validator.isEmpty(data.supervision.rcaRemark.toString())) {
-    error.supervision = "This field is empty";
+    error.supervision = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.workpackage.rcaRemark.toString())) {
-    error.workpackage = "This field is empty";
+    error.workpackage = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.equipmentMachinery.rcaRemark.toString())) {
-    error.equipmentMachinery = "This field is empty";
+    error.equipmentMachinery = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.behaviourIssue.rcaRemark.toString())) {
-    error.behaviourIssue = "This field is empty";
+    error.behaviourIssue = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.safetyIssues.rcaRemark.toString())) {
-    error.safetyIssues = "This field is empty";
+    error.safetyIssues = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.ergonimics.rcaRemark.toString())) {
-    error.ergonimics = "This field is empty";
+    error.ergonimics = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.procedures.rcaRemark.toString())) {
-    error.procedures = "This field is empty";
+    error.procedures = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.others.rcaRemark.toString())) {
-    error.others = "This field is empty";
+    error.others = "Fill the information";
     isValid = false;
   }
 

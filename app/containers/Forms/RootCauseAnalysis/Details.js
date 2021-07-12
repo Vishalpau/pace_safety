@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Details = () => {
   const [incidents, setIncidents] = useState([]);
-
+  const putId = useRef("");
   const [form, setForm] = useState({
     evidenceSupport: "N/A",
     evidenceContradiction: "N/A",
@@ -59,25 +59,13 @@ const Details = () => {
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
+    fkIncidentId: putId.current || parseInt(localStorage.getItem("fkincidentId")),
   });
 
   const [error, setError] = useState({});
-
-  const [nextPageUrl, setNextPageUrl] = useState("");
-  const putId = useRef("");
   const pkValue = useRef("");
   const history = useHistory();
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
+  const checkPost = useRef()
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -85,18 +73,14 @@ const Details = () => {
 
   // get data for put
   const handelUpdateCheck = async () => {
-    let tempApiData = {};
-    let tempApiDataId = [];
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
 
-    if (!isNaN(lastItem)) {
-      let previousData = await api.get(
-        `/api/v1/incidents/${lastItem}/causeanalysis/`
-      );
-      let allApiData = previousData.data.data.results[0];
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
+    let allApiData = previousData.data.data.results[0];
+
+    if (!isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
       setForm({
         ...form,
@@ -105,7 +89,8 @@ const Details = () => {
         evidenceNotSupport: allApiData.evidenceNotSupport,
         rcaRecommended: allApiData.rcaRecommended,
       });
-      putId.current = lastItem;
+      putId.current = incidentId;
+      checkPost.current = false
     }
   };
 
@@ -126,8 +111,8 @@ const Details = () => {
   const handelRcaRecommended = (e, value) => {
     if (value == "Five why analysis") {
       setHideArray([
-        "Hazardious acts",
-        "Hazardious conditions",
+        "Hazardous acts",
+        "Hazardous conditions",
         "Cause and action",
         "Basic cause",
         "Basic cause and action",
@@ -135,49 +120,35 @@ const Details = () => {
         "Root cause analysis",
       ]);
     } else if (value == "Pace cause analysis") {
-      setHideArray(["Root cause analysis", "Why analysis"]);
+      setHideArray(["Root cause analysis", "5 Why analysis"]);
     } else if (value == "Root cause analysis") {
       setHideArray([
-        "Hazardious acts",
-        "Hazardious conditions",
+        "Hazardous acts",
+        "Hazardous conditions",
         "Cause and action",
         "Basic cause",
         "Basic cause and action",
         "Corrective actions",
-        "Why analysis",
+        "5 Why analysis",
       ]);
     }
     setForm({ ...form, rcaRecommended: value });
   };
 
   const handelNext = async (e) => {
-    // console.log(form);
     const { error, isValid } = DetailValidation(form);
     let nextPageLink = 0;
     setError(error);
     if (Object.keys(error).length == 0) {
-      console.log(form);
-      if (putId.current == "") {
-        const res = await api.post(
-          `/api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/causeanalysis/`,
-          form
-        );
+      if (checkPost.current !== false) {
+        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/`, form);
         if (res.status == 201) {
-          console.log("request done");
           nextPageLink = res.status;
         }
       } else {
         form["pk"] = pkValue.current;
-        const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/causeanalysis/${pkValue.current}/`,
-          form
-        );
+        const res = await api.put(`/api/v1/incidents/${putId.current}/causeanalysis/${pkValue.current}/`, form);
         if (res.status == 200) {
-          console.log("request done");
           nextPageLink = res.status;
         }
       }
@@ -201,8 +172,7 @@ const Details = () => {
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       if (form.rcaRecommended == "Five why analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/why-analysis/${putId.current
-          }`
+          `/app/incident-management/registration/root-cause-analysis/why-analysis/`
         );
       } else if (form.rcaRecommended == "Pace cause analysis") {
         history.push(
@@ -276,7 +246,7 @@ const Details = () => {
                 ampm={false}
                 value={selectedDate}
                 onChange={handleDateChange}
-                label="Incident end date"
+                label="Investigation end date"
                 disabled
               />
             </MuiPickersUtilsProvider>

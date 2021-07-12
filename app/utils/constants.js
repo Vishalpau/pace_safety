@@ -66,7 +66,7 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/management-control/",
   "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
-  "Why analysis":
+  "5 Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
