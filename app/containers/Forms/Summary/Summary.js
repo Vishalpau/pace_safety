@@ -317,7 +317,9 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink href="/app/incident-management/registration/investigation/initial-details/">
+                    <ListItemLink
+                      href="/app/incident-management/registration/investigation/investigation-overview/"
+                    >
                       <ListItemIcon>
                         <Edit />
                       </ListItemIcon>
@@ -343,18 +345,18 @@ const Summary = () => {
                       </ListItemLink>
                     )}
                     {localStorage.getItem("RootCause") == "Done" ? (
-                    <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                      <ListItemText primary="Modify RCA" />
-                    </ListItemLink>):(
+                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary="Modify RCA" />
+                      </ListItemLink>) : (
                       <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
-                      <ListItemIcon>
-                        <Add />
-                      </ListItemIcon>
-                      <ListItemText primary="Perform RCA" />
-                    </ListItemLink>
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <ListItemText primary="Perform RCA" />
+                      </ListItemLink>
                     )}
 
                     <ListItemLink
