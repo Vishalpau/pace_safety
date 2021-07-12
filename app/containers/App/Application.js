@@ -300,6 +300,10 @@ function Application(props) {
           path="/app/incident-management/registration/investigation/worker-details/"
           component={WorkerDetails}
         />
+        <Route exact
+          path="/app/incident-management/registration/investigation/worker-details/:id"
+          component={WorkerDetails}
+        />
 
 
         {/* form root cause analysis */}
