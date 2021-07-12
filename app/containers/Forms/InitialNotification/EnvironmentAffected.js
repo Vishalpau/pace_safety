@@ -93,6 +93,8 @@ const EnvironmentAffected = () => {
   // SetState in update time
   const [isChecked, setIsChecked] = useState([]);
 
+  const nextPath = localStorage.getItem('nextPath')
+  
   const questionMap = useRef({
     "Were there any spills?": "Details of spills affected",
     "Were there any release?": "Details of release affected",
@@ -259,6 +261,28 @@ const EnvironmentAffected = () => {
     // await setPersonAffect(isavailable)
     // await setIsLoading(true);
   };
+
+   // handle go back
+  const handleBack = ()=>{
+    if (nextPath.equipmentAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+      );
+    }
+    else if (nextPath.propertyAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/property-affected/${id}`
+      );
+    }else if (nextPath.personAffect === 'Yes') {
+      history.push(
+        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+      );
+      }else{
+      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    }
+  }
+
+
   useEffect(() => {
     fetchEnviornmentAffectedValue();
     fetchAnyReleaseValue();
@@ -603,7 +627,7 @@ const EnvironmentAffected = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleNext}
+                onClick={() => handleBack()}
                 className={classes.button}
                 // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
               >

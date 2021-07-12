@@ -96,6 +96,8 @@ const EqiptmentAffected = () => {
       fkIncidentId: localStorage.getItem('fkincidentId'),
     },
   ]);
+  
+  const nextPath = localStorage.getItem('nextPath')
 
   // set state for update
   const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
@@ -273,6 +275,21 @@ const EqiptmentAffected = () => {
     const result = res.data.data.results;
     await setequipmentAffected(result);
   };
+
+  const handleBack = ()=>{
+   if (nextPath.propertyAffect === "Yes") {
+      history.push(
+        `/app/incident-management/registration/initial-notification/property-affected/${id}`
+      );
+    }else if (nextPath.personAffect === 'Yes') {
+      history.push(
+        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+      );
+      }else{
+      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    }
+  }
+
 
   useEffect(() => {
     fetchEquipmentAffectedValue();
@@ -540,7 +557,7 @@ Add details of additional equipment affected?
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                onClick={() => handleNext()}
+                onClick={() => handleBack()}
               >
                 Next
               </Button>
