@@ -107,7 +107,7 @@ const ReportingAndNotification = () => {
 
   const { id } = useParams();
   const history = useHistory();
-  const nextPath = localStorage.getItem('nextPath')
+  
 
   const [form, setForm] = useState({
     reportedto: [],
@@ -501,11 +501,15 @@ const ReportingAndNotification = () => {
 
   // handle go back
   const handleGoBack = ()=>{
+    const nextPath = JSON.parse(localStorage.getItem('nextPath'))
+    console.log(nextPath)
     if (nextPath.environmentAffect === "Yes") {
+      
       history.push(
         `/app/incident-management/registration/initial-notification/environment-affected/${id}`
       );
     } else if (nextPath.equipmentAffect === "Yes") {
+      
       history.push(
         `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
       );

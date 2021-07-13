@@ -264,6 +264,7 @@ const EnvironmentAffected = () => {
 
    // handle go back
   const handleBack = ()=>{
+    const nextPath = JSON.parse(localStorage.getItem('nextPath'))
     if (nextPath.equipmentAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
@@ -619,7 +620,8 @@ const EnvironmentAffected = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+                onClick={() => handleBack()}
+                // onClick={() => history.goBack()}
                 // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
               >
                 Previous
@@ -627,7 +629,7 @@ const EnvironmentAffected = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleBack()}
+                onClick ={()=>handleNext()}
                 className={classes.button}
                 // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
               >
