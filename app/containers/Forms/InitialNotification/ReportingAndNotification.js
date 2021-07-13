@@ -300,7 +300,7 @@ const ReportingAndNotification = () => {
       let status = 0;
 
       // Create new entries.
-      const { error, isValid } = ReportingValidation(form);
+      const { error, isValid } = ReportingValidation(form,reportOtherData);
       setError(error);
 
       if (isValid === true) {
@@ -429,6 +429,7 @@ const ReportingAndNotification = () => {
           reportToData[i] !== "OHS" ||
           reportToData[i] !== "Environment Officer" ||
           reportToData[i] !== "Police" ||
+          reportToData[i] !== "Mutual Aid" ||
           reportToData[i] !== "Others"
         ) {
           await setReportOtherData(reportToData[i]);
@@ -591,6 +592,12 @@ const ReportingAndNotification = () => {
                   id="Other"
                   variant="outlined"
                   label="Other"
+                  error={error && error[`otherData`]}
+                          helperText={
+                            error && error[`otherData`]
+                              ? error[`otherData`]
+                              : null
+                          }
                   defaultValue={reportOtherData}
                   className={classes.formControl}
                   onChange={(e) => {
