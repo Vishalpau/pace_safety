@@ -6,14 +6,21 @@ function LessionLearnedValidator(data) {
   let isValid = true;
   const error = {};
 
-  if (validator.isEmpty(data.team.toString())) {
-    error.team = "This field is empty";
-    isValid = false;
-  }
+  for (let i = 0; i < data.length; i++) {
+    if (validator.isEmpty(data[i].teamOrDepartment.toString())) {
+      error[`teamOrDepartment${[i]}`] = "Please select property type";
+      isValid = false;
+    }
 
-  if (validator.isEmpty(data.teamLearning.toString())) {
-    error.teamLearning = "This field is empty";
-    isValid = false;
+    // if (validator.isEmpty(data[i].propertyOtherType.toString())) {
+    //   error[`propertyOtherType${[i]}`] = "This field is empty";
+    //   isValid = false;
+    // }
+
+    if (validator.isEmpty(data[i].learnings.toString())) {
+      error[`learnings${[i]}`] = "Please enter damage details";
+      isValid = false;
+    }
   }
 
   // const result =

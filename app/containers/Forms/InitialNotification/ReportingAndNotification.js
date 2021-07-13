@@ -38,6 +38,7 @@ import {
   access_token,
   ACCOUNT_API_URL,
   INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL
 } from '../../../utils/constants';
 // import FormHeader from '../FormHeader';
 
@@ -464,14 +465,16 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
-        const result = response.data.data.results[0].roles[0].users;
-        // let role = []
-        // role = result
-        // role.push({ name: 'other' })
-        setSuperVisorName([...result, { name: 'other' }]);
-        
+        if(response.status === 200){
+          const result = response.data.data.results[0].roles[0].users;
+          setSuperVisorName([...result, { name: 'other' }]);
+        }
+        // else{
+        //   window.location.href = {LOGIN_URL}
+        // }
       })
       .catch((error) => {
+        // window.location.href = {LOGIN_URL}
       });
   };
 
@@ -487,15 +490,22 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
+        if(response.status === 200){
+          const result = response.data.data.results[0].users;
+          let user = [];
+          user = result;
+  
+          setReportedByName([...result, { name: 'other' }]);
+        }
+        // else{
+        //   window.location.href = {LOGIN_URL}
+        // }
        
-        const result = response.data.data.results[0].users;
-        let user = [];
-        user = result;
-
-        setReportedByName([...result, { name: 'other' }]);
+       
        
       })
       .catch((error) => {
+        // window.location.href = {LOGIN_URL}
       });
   };
 

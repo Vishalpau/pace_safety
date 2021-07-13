@@ -100,6 +100,17 @@ const Summary = () => {
     await setIncidents(allIncidents.data.data.results);
     await setIsLoading(true);
   };
+  const fetchLessonLerned = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/learnings/`);
+    const result = res.data.data.results;
+    if(result.length > 0 ){
+      localStorage.setItem("LessionLearnt", "Done")
+    }
+    else{
+      localStorage.setItem("LessionLearnt", "Pending")
+    }
+  
+  };
 
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -115,6 +126,7 @@ const Summary = () => {
 
   useEffect(() => {
     fetchIncidentData();
+    fetchLessonLerned();
   }, []);
 
   return (
@@ -354,7 +366,7 @@ const Summary = () => {
                         </ListItemIcon>
                         <ListItemText primary="Modify RCA" />
                       </ListItemLink>) : (
-                      <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
+                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>

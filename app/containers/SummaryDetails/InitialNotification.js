@@ -460,9 +460,8 @@ const IncidentDetailsSummary = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {reportsData.length !== 0
-              ? reportsData.map((report, key) => (
-                  <Grid container item xs={12} spacing={3} key={key}>
+           
+                  <Grid container item xs={12} spacing={3} >
                     <Grid item md={6}>
                       <Typography
                         variant="h6"
@@ -471,10 +470,13 @@ const IncidentDetailsSummary = () => {
                       >
                         Reported to
                       </Typography>
-
+ {reportsData.length !== 0
+              ? reportsData.map((report, key) => (
                       <Typography className={Fonts.labelValue}>
                         {report.reportTo}
                       </Typography>
+                      ))
+              : null}
                     </Grid>
 
                     <Grid item md={6}>
@@ -485,14 +487,17 @@ const IncidentDetailsSummary = () => {
                       >
                         Report description
                       </Typography>
-
+                      {reportsData.length !== 0
+              ? reportsData.map((report, key) => (
                       <Typography className={Fonts.labelValue}>
-                        {report.reportingNote}
+                       {report.reportingNote}
                       </Typography>
+                      ))
+              : null}
+                     
                     </Grid>
                   </Grid>
-                ))
-              : null}
+                
           </AccordionDetails>
         </Accordion>
       </Grid>

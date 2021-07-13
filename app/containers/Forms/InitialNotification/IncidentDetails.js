@@ -540,6 +540,7 @@ const IncidentDetails = () => {
             <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
+                required
                   error={error.incidentdate}
                   disableFuture
                   className={classes.formControl}
