@@ -790,7 +790,12 @@ const PeoplesAffected = () => {
                           />
                         </Grid>
                         <Grid item md={12}>
-                          <FormControl component="fieldset">
+                          <FormControl component="fieldset"
+                          required
+                          error={error && error[`personMedicalCare${[key]}`]
+                          ? error[`personMedicalCare${[key]}`]
+                          : null}
+                           >
                             <FormLabel component="legend">
                               Was that person taken to medical care?
                             </FormLabel>
@@ -798,6 +803,7 @@ const PeoplesAffected = () => {
                               className={classes.inlineRadioGroup}
                               aria-label="personAffect"
                               name="personAffect"
+                              aria-required
                               // value={value.personMedicalCare}
                               defaultValue={
                                 value.personMedicalCare === "N/A"
@@ -819,6 +825,11 @@ const PeoplesAffected = () => {
                                   ))
                                 : null}
                             </RadioGroup>
+                            {error && error[`personMedicalCare${[key]}`] && (
+                              <FormHelperText>
+                                {error[`personMedicalCare${[key]}`]}
+                              </FormHelperText>
+                            )}
                           </FormControl>
                         </Grid>
                         <Grid item md={6}>

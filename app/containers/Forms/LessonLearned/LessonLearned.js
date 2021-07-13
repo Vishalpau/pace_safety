@@ -409,7 +409,7 @@ const LessionLearned = () => {
                   // href="#contained-buttons"
                   onClick={() => handleNext()}
                 >
-                  Next
+                  Submit
                 </Button>
               </Box>
             </Grid>
