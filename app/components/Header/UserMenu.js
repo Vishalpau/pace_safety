@@ -36,6 +36,7 @@ import {
   access_token,
   ACCOUNT_API_URL,
   LOGIN_URL,
+  SSO_CLIENT_ID
 } from "../../utils/constants";
 import axios from "axios";
 
@@ -100,29 +101,21 @@ function UserMenu(props) {
           console.log(response)
           localStorage.removeItem('access_token')
           localStorage.clear();
-          // alert('okey')
-          setInterval(()=>{
-            // alert('ram')
-            window.location.href =`https://dev-accounts-api.paceos.io/user/logout/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1`
-            // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
-
-          },5000)
-          // window.location.href = LOGIN_URL
-         
-          // window.location.href = "https://dev-accounts-api.paceos.io/login";
+            window.location.href =`https://dev-accounts-api.paceos.io/user/logout/?client_id=${SSO_CLIENT_ID}`
+           
         }
-        alert(res.status)
         if(res.status === 401){
-          window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
+          // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1`
 
           // window.location.href = LOGIN_URL
+          return
         }
        
       })
       .catch((error) => {
         // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
 
-        // window.location.href = LOGIN_URL
+        window.location.href = LOGIN_URL
       });
 
     // window.location.href = LOGIN_URL;

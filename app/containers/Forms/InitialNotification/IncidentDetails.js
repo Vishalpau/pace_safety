@@ -554,6 +554,7 @@ const IncidentDetails = () => {
               {console.log(error)}
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
+                required
                   error={error.incidentdate}
                   required
                   className={classes.formControl}

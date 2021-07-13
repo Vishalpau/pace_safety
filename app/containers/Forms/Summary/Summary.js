@@ -101,6 +101,17 @@ const Summary = () => {
     await setIncidents(allIncidents.data.data.results);
     await setIsLoading(true);
   };
+  const fetchLessonLerned = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/learnings/`);
+    const result = res.data.data.results;
+    if(result.length > 0 ){
+      localStorage.setItem("LessionLearnt", "Done")
+    }
+    else{
+      localStorage.setItem("LessionLearnt", "Pending")
+    }
+  
+  };
 
   const rootCauseAnalysisCheck = async () => {
     let page_url = window.location.href;
@@ -143,6 +154,7 @@ const Summary = () => {
 
   useEffect(() => {
     fetchIncidentData();
+    fetchLessonLerned();
     rootCauseAnalysisCheck();
   }, []);
 
@@ -382,9 +394,8 @@ const Summary = () => {
                           <Edit />
                         </ListItemIcon>
                         <ListItemText primary="Modify RCA" />
-                      </ListItemLink>
-                    ) : (
-                      <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
+                      </ListItemLink>) : (
+                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>

@@ -38,7 +38,8 @@ import {
   access_token,
   ACCOUNT_API_URL,
   INITIAL_NOTIFICATION_FORM,
-} from "../../../utils/constants";
+  LOGIN_URL
+} from '../../../utils/constants';
 // import FormHeader from '../FormHeader';
 
 import ReportingValidation from "../../Validator/ReportingValidation";
@@ -299,7 +300,7 @@ const ReportingAndNotification = () => {
       let status = 0;
 
       // Create new entries.
-      const { error, isValid } = ReportingValidation(form);
+      const { error, isValid } = ReportingValidation(form,reportOtherData);
       setError(error);
 
       if (isValid === true) {
@@ -428,6 +429,7 @@ const ReportingAndNotification = () => {
           reportToData[i] !== "OHS" ||
           reportToData[i] !== "Environment Officer" ||
           reportToData[i] !== "Police" ||
+          reportToData[i] !== "Mutual Aid" ||
           reportToData[i] !== "Others"
         ) {
           await setReportOtherData(reportToData[i]);
@@ -467,13 +469,17 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
-        const result = response.data.data.results[0].roles[0].users;
-        // let role = []
-        // role = result
-        // role.push({ name: 'other' })
-        setSuperVisorName([...result, { name: "other" }]);
+        if(response.status === 200){
+          const result = response.data.data.results[0].roles[0].users;
+          setSuperVisorName([...result, { name: 'other' }]);
+        }
+        // else{
+        //   window.location.href = {LOGIN_URL}
+        // }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        // window.location.href = {LOGIN_URL}
+      });
   };
 
   const fetchReportedBy = () => {
@@ -488,13 +494,23 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
-        const result = response.data.data.results[0].users;
-        let user = [];
-        user = result;
-
-        setReportedByName([...result, { name: "other" }]);
+        if(response.status === 200){
+          const result = response.data.data.results[0].users;
+          let user = [];
+          user = result;
+  
+          setReportedByName([...result, { name: 'other' }]);
+        }
+        // else{
+        //   window.location.href = {LOGIN_URL}
+        // }
+       
+       
+       
       })
-      .catch((error) => {});
+      .catch((error) => {
+        // window.location.href = {LOGIN_URL}
+      });
   };
 
   // handle go back
@@ -576,6 +592,12 @@ const ReportingAndNotification = () => {
                   id="Other"
                   variant="outlined"
                   label="Other"
+                  error={error && error[`otherData`]}
+                          helperText={
+                            error && error[`otherData`]
+                              ? error[`otherData`]
+                              : null
+                          }
                   defaultValue={reportOtherData}
                   className={classes.formControl}
                   onChange={(e) => {

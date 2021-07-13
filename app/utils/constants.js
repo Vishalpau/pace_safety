@@ -16,17 +16,17 @@ export const access_token = localStorage.getItem("access_token");
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details":
-    "/app/incident-management/registration/initial-notification/incident-details/",
+    `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem('fkincidentId')}`,
   "People affected":
-    "/app/incident-management/registration/initial-notification/peoples-afftected/",
+    `/app/incident-management/registration/initial-notification/peoples-afftected/${localStorage.getItem('fkincidentId')}`,
   "Property affected":
-    "/app/incident-management/registration/initial-notification/property-affected/",
+    `/app/incident-management/registration/initial-notification/property-affected/${localStorage.getItem('fkincidentId')}`,
   "Equipment affected":
-    "/app/incident-management/registration/initial-notification/equipment-affected/",
+    `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem('fkincidentId')}`,
   "Environment affected":
-    "/app/incident-management/registration/initial-notification/environment-affected/",
+    `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem('fkincidentId')}`,
   "Reporting and notification":
-    "/app/incident-management/registration/initial-notification/reporting-and-notification/",
+    `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem('fkincidentId')}`,
 };
 
 export const EVIDENCE_FORM = {

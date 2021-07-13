@@ -25,10 +25,13 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
 
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import {
+  LOGIN_URL,
   access_token,
   ACCOUNT_API_URL,
   LESSION_LEARNED_FORM,
@@ -65,64 +68,63 @@ const LessionLearned = () => {
   const history = useHistory();
   const { id } = useParams();
   const [error, setError] = useState({});
-  const [form, setForm] = useState({ team: "", teamLearning: "" });
+  const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
   const [learningList, setLearningList] = useState([]);
-  const [whyCount, setWhyCount] = useState(["ram", "ram"]);
+  // const [whyCount, setWhyCount] = useState(["ram", "ram"]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
 
-  // set state onChange update
-  const handleUpdateLessonLearned = async (e, key, fieldname, lessonId) => {
-    const temp = learningList;
-    const value = e.target.value.toString();
-    temp[key][fieldname] = value;
-    temp[key]["updatedBy"] = 0;
-    await setLearningList(temp);
+  const handleForm = (e, key, fieldname) => {
+    const temp = [...form];
+    const { value } = e.target;
+    if (e.target.value === "Don't Know") {
+      temp[key][fieldname] = "N/A";
+    } else {
+      temp[key][fieldname] = value;
+    }
+    setForm(temp);
   };
 
+  const addNewTeamOrDeparment = async()=>{
+    alert('hey ram')
+    await setForm([
+      ...form,
+      { teamOrDepartment: "", learnings: "" },
+    ]);
+  }
   const handleNext = async () => {
     // sent put request
-    let status = 0;
-    if (learningList.length > 0) {
-      for (var i = 0; i < learningList.length; i++) {
-        const res = await api.put(
-          `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
-          {
-            teamOrDepartment: learningList[i].teamOrDepartment,
-            learnings: learningList[i].learnings,
-            status: "Active",
-            updatedBy: 0,
-          }
-        );
-        status = res.status;
-      }
-      if (status === 200) {
-        history.push(
-          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-            "fkincidentId"
-          )}`
-        );
-      }
-    } else {
+    let status =0
       // sent post request
       const { isValid, error } = LessionLearnedValidator(form);
       setError(error);
       console.log(error, isValid);
 
       if (isValid === true) {
+        if (learningList.length>0) {
+          for (var i = 0; i < learningList.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
+            )
+          }
+        }
+        for( var i =0 ; i< form.length; i++){
+          console.log(form)
         const res = await api.post(
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/learnings/`,
           {
-            teamOrDepartment: form.team,
-            learnings: form.teamLearning,
+            teamOrDepartment: form[i].teamOrDepartment,
+            learnings: form[i].learnings,
             status: "Active",
             createdBy: 0,
             updatedBy: 0,
             fkIncidentId: localStorage.getItem("fkincidentId"),
           }
         );
-        if (res.status === 201) {
+        status = res.status
+        }
+        if (status === 201) {
           history.push(
             `/app/incident-management/registration/summary/summary/${localStorage.getItem(
               "fkincidentId"
@@ -131,14 +133,22 @@ const LessionLearned = () => {
           localStorage.setItem("LessionLearnt", "Done");
         }
       }
-    }
+    
+    
   };
 
   //  Fetch Lession learn data
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
     const result = res.data.data.results;
-    await setLearningList(result);
+  
+     
+      let temp = [...form]
+      temp = result
+      await setForm(temp)
+      console.log('result',result)
+      await setLearningList(result);
+      setIsLoading(true)
   };
 
   // fetch incident data
@@ -148,7 +158,6 @@ const LessionLearned = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-    await setIsLoading(true);
   };
 
   // fetch team or deparment
@@ -162,17 +171,32 @@ const LessionLearned = () => {
     };
     axios(config)
       .then(function(response) {
-        console.log(response);
-        const result = response.data.data.results;
-        console.log(result);
-        setDepartment(result);
+        if(response.status === 200){
+          console.log(response);
+          const result = response.data.data.results;
+          console.log(result);
+          setDepartment(result);
+        }
+        else{
+          // window.location.href = {LOGIN_URL}
+        }
+       
       })
       .catch(function(error) {
-        console.log(error);
+        // window.location.href = {LOGIN_URL}
       });
   };
 
+    // hablde Remove
+
+    const handleRemove = async (key) => {
+      // this condition using when create new
+      const temp = form;
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
+    };
   useEffect(() => {
+    
     fetchDepartment();
     if (id) {
       fetchLessonLerned();
@@ -183,6 +207,7 @@ const LessionLearned = () => {
     <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
+          {console.log(form)}
           <Grid container item md={9} justify="flex-start" spacing={3}>
             <Grid item md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
@@ -266,73 +291,8 @@ const LessionLearned = () => {
                 Key learnings
               </Typography>
 
-              {learningList.length !== 0 ? (
-                learningList.map((item, index) => (
-                  <Grid container item spacing={3} md={12}>
-                    <Grid item md={12}>
-                      <FormControl
-                        variant="outlined"
-                        required
-                        className={classes.formControl}
-                        error={error.team}
-                      >
-                        <InputLabel id="demo-simple-select-label">
-                          Team/department
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          label="Team/department"
-                          defaultValue={item.teamOrDepartment}
-                          onChange={(e) =>
-                            handleUpdateLessonLearned(
-                              e,
-                              index,
-                              "teamOrDepartment",
-                              item.id
-                            )
-                          }
-                        >
-                          {department.map((selectValues, index) => (
-                            <MenuItem
-                              value={selectValues.departmentName}
-                              key={index}
-                            >
-                              {selectValues.departmentDescription}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                        {error && error.team && (
-                          <FormHelperText>{error.team}</FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-                    <Grid item md={12}>
-                      <TextField
-                        id="outlined-search"
-                        className={classes.formControl}
-                        label="Team/department learnings"
-                        variant="outlined"
-                        rows="3"
-                        multiline
-                        required
-                        defaultValue={item.learnings}
-                        error={error.teamLearning}
-                        helperText={error ? error.teamLearning : ""}
-                        onChange={(e) =>
-                          handleUpdateLessonLearned(
-                            e,
-                            index,
-                            "learnings",
-                            item.id
-                          )
-                        }
-                      />
-                    </Grid>
-                  </Grid>
-                ))
-              ) : (
-                <Grid container spacing={3} item md={12}>
+              {form.map((value,key)=>
+                <Grid container spacing={3} item md={12} key={key}>
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
@@ -347,11 +307,9 @@ const LessionLearned = () => {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         label="Team/department"
+                        value={value.teamOrDepartment || ""}
                         onChange={(e) =>
-                          setForm({
-                            ...form,
-                            team: e.target.value.toString(),
-                          })
+                         handleForm(e,key,'teamOrDepartment')
                         }
                       >
                         {department.map((selectValues, index) => (
@@ -371,25 +329,48 @@ const LessionLearned = () => {
                   <Grid item md={12}>
                     {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
 
-                    <TextField
-                      id="outlined-search"
-                      className={classes.formControl}
-                      error={error.teamLearning}
-                      label="Team/department learnings"
-                      variant="outlined"
-                      rows="3"
-                      required
-                      multiline
-                      helperText={error ? error.teamLearning : ""}
-                      onChange={(e) =>
-                        setForm({ ...form, teamLearning: e.target.value })
-                      }
-                    />
+                   
+                      <TextField
+                        id="outlined-search"
+                        error={error.teamLearning}
+                        label="Team/department learnings"
+                        variant="outlined"
+                        rows="3"
+                        multiline
+                        value={value.learnings||''}
+                        helperText={error ? error.teamLearning : ""}
+                        onChange={(e) =>
+                          handleForm(e,key,'learnings')
+                        }
+                      />
+                      {/* {error && error.teamLearning && (
+                          <p>{error.teamLearning}</p>
+                        )} */}
+                  
                   </Grid>
+                  {form.length > 1 ? (
+                          <Grid item md={3}>
+                            <Button
+                              onClick={() => handleRemove(key)}
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Remove
+                            </Button>
+                          </Grid>
+                        ) : null}
                 </Grid>
               )}
             </Grid>
-
+            <Grid item md={12}>
+                    <button
+                      className={classes.textButton}
+                      onClick={()=>addNewTeamOrDeparment()}
+                    >
+                      <PersonAddIcon />  Add learnings from another team/department
+                    </button>
+                  </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>
                 <Button
