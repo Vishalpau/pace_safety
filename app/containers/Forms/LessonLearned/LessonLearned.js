@@ -83,8 +83,8 @@ const LessionLearned = () => {
 
   const handleNext = async () => {
     // sent put request
-    let status =0
-    if (learningList.length>0) {
+    let status = 0;
+    if (learningList.length > 0) {
       for (var i = 0; i < learningList.length; i++) {
         const res = await api.put(
           `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
@@ -92,10 +92,10 @@ const LessionLearned = () => {
             teamOrDepartment: learningList[i].teamOrDepartment,
             learnings: learningList[i].learnings,
             status: "Active",
-            updatedBy: 0
+            updatedBy: 0,
           }
         );
-        status = res.status
+        status = res.status;
       }
       if (status === 200) {
         history.push(
@@ -132,7 +132,6 @@ const LessionLearned = () => {
         }
       }
     }
-    
   };
 
   //  Fetch Lession learn data
@@ -181,7 +180,7 @@ const LessionLearned = () => {
     fetchIncidentsData();
   }, []);
   return (
-    <PapperBlock title="Lessions Learned" icon="ion-md-list-box">
+    <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} justify="flex-start" spacing={3}>
@@ -402,23 +401,21 @@ const LessionLearned = () => {
             </Grid>
 
             <Grid item md={12}>
-              <Box marginTop={4}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  // href="#contained-buttons"
-                  onClick={() => handleNext()}
-                >
-                  Next
-                </Button>
-              </Box>
+              <Button
+                variant="contained"
+                color="primary"
+                // href="#contained-buttons"
+                onClick={() => handleNext()}
+              >
+                Submit
+              </Button>
             </Grid>
           </Grid>
           <Grid item md={3}>
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lession learned"}
+              selectedItem={"Lesson learned"}
             />
           </Grid>
         </Grid>

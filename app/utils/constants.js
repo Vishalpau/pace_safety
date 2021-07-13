@@ -12,7 +12,8 @@ export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvw
 
 export const API_URL = "https://dev-safety-api.paceos.io/";
 export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
-export const access_token = localStorage.getItem("access_token") || 'GIgqhTAr8BLUZuq7exBqrpdptGUzGs';
+export const access_token =
+  localStorage.getItem("access_token") || "GIgqhTAr8BLUZuq7exBqrpdptGUzGs";
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details":
@@ -77,7 +78,7 @@ export const SUMMERY_FORM = {
 };
 
 export const LESSION_LEARNED_FORM = {
-  "Lession learned":
+  "Lesson learned":
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 

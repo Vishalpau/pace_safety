@@ -93,8 +93,8 @@ const EnvironmentAffected = () => {
   // SetState in update time
   const [isChecked, setIsChecked] = useState([]);
 
-  const nextPath = localStorage.getItem('nextPath')
-  
+  const nextPath = localStorage.getItem("nextPath");
+
   const questionMap = useRef({
     "Were there any spills?": "Details of spills affected",
     "Were there any release?": "Details of release affected",
@@ -262,26 +262,26 @@ const EnvironmentAffected = () => {
     // await setIsLoading(true);
   };
 
-   // handle go back
-  const handleBack = ()=>{
+  // handle go back
+  const handleBack = () => {
     if (nextPath.equipmentAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
       );
-    }
-    else if (nextPath.propertyAffect === "Yes") {
+    } else if (nextPath.propertyAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/property-affected/${id}`
       );
-    }else if (nextPath.personAffect === 'Yes') {
+    } else if (nextPath.personAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
       );
-      }else{
-      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    } else {
+      history.push(
+        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+      );
     }
-  }
-
+  };
 
   useEffect(() => {
     fetchEnviornmentAffectedValue();
@@ -529,7 +529,7 @@ const EnvironmentAffected = () => {
                           ? err.envAnswerDetails
                           : null
                       }
-                      label="Details of Wildlife Affected"
+                      label="Details of wildlife affected"
                       className={classes.fullWidth}
                       onChange={(e) => {
                         handleForm(e, 2, "envAnswerDetails");
@@ -620,7 +620,6 @@ const EnvironmentAffected = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
               >
                 Previous
               </Button>
@@ -629,7 +628,6 @@ const EnvironmentAffected = () => {
                 color="primary"
                 onClick={() => handleBack()}
                 className={classes.button}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
               >
                 Next
               </Button>

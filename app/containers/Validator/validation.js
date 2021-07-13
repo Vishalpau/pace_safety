@@ -31,6 +31,13 @@ function validate(data) {
     isValid = true;
   }
 
+  if (data.incidentdate === null) {
+    error.incidentdate = "Please enter incident date and time";
+    isValid = false;
+  } else {
+    isValid = true;
+  }
+
   // if (validator.isEmpty(data.description)){
   //     error.description = "this filed is empty"
   //     isValid = false
