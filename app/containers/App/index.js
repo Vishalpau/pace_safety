@@ -23,7 +23,7 @@ import {
 import api from "../../utils/axios";
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
-// client_id:  client_secret:  
+// client_id:  client_secret:
 function App() {
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -32,8 +32,7 @@ function App() {
     if (code) {
       let data = JSON.stringify({
         grant_type: "authorization_code",
-        client_id:
-          "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1",
+        client_id: "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1",
         // "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
         client_secret:
           "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW",
@@ -51,15 +50,14 @@ function App() {
       };
       console.log(config);
       await axios(config)
-        .then(function (response) {
+        .then(function(response) {
           if (response.status === 200) {
             console.log(response);
             localStorage.setItem("access_token", response.data.access_token);
-            window.location.href = '/';
+            window.location.href = "/";
           }
-
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
     }

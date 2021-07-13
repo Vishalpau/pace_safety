@@ -621,7 +621,7 @@ const PeoplesAffected = () => {
                                 : null
                             }
                             variant="outlined"
-                            label="Worker taken offisite for further assesment?"
+                            label="Worker taken offisite for further assessment?"
                             className={classes.formControl}
                             defaultValue={people.workerOffsiteAssessment}
                             onChange={(e) =>
@@ -646,7 +646,7 @@ const PeoplesAffected = () => {
                                 ? error[`locationAssessmentCenter${[key]}`]
                                 : null
                             }
-                            label="Location details of assesment center?"
+                            label="Location details of assessment center?"
                             className={classes.formControl}
                             defaultValue={people.locationAssessmentCenter}
                             onChange={(e) =>
@@ -790,12 +790,15 @@ const PeoplesAffected = () => {
                           />
                         </Grid>
                         <Grid item md={12}>
-                          <FormControl component="fieldset"
-                          required
-                          error={error && error[`personMedicalCare${[key]}`]
-                          ? error[`personMedicalCare${[key]}`]
-                          : null}
-                           >
+                          <FormControl
+                            component="fieldset"
+                            required
+                            error={
+                              error && error[`personMedicalCare${[key]}`]
+                                ? error[`personMedicalCare${[key]}`]
+                                : null
+                            }
+                          >
                             <FormLabel component="legend">
                               Was that person taken to medical care?
                             </FormLabel>

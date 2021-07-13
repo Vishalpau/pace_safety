@@ -61,10 +61,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-    margin: ".5rem 0",
-  },
-  spacer: {
-    marginTop: "1rem",
   },
   customLabel: {
     marginBottom: 0,
@@ -205,10 +201,9 @@ const ReportingAndNotification = () => {
     );
   };
 
-// send request other data in report to 
-  const setOtherDataReportTo = async()=>{
-
-     if (reportOtherData !== "") {
+  // send request other data in report to
+  const setOtherDataReportTo = async () => {
+    if (reportOtherData !== "") {
       try {
         const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
           reportTo: reportOtherData,
@@ -216,60 +211,56 @@ const ReportingAndNotification = () => {
           fkIncidentId: localStorage.getItem("fkincidentId") || id,
         });
       } catch (err) {}
+    } else {
+      return;
     }
-    else{
-      return
-    }
-  }
+  };
 
   const handelNext = async (e) => {
     // set in reportTo otherData
     await setOtherDataReportTo();
-    
 
-    // create New Initial Evidance 
-      await handleInitialEvidance();
+    // create New Initial Evidance
+    await handleInitialEvidance();
 
     // getting fileds for update
-  
 
     // put call for update incident Details
     handleUpdateIncidentDetails();
-   
+
     const { error, isValid } = ReportingValidation(form);
     setError(error);
 
-    if(isValid === true){
-    // Delete existing report to and create new ones.
-    for (let key in reportedToObj) {
-      let reportId = reportedToObj[key].id;
-      try {
-        const res = await api.delete(
-          `/api/v1/incidents/${id}/reports/${reportId}/`
-        );
-      } catch (err) {}
+    if (isValid === true) {
+      // Delete existing report to and create new ones.
+      for (let key in reportedToObj) {
+        let reportId = reportedToObj[key].id;
+        try {
+          const res = await api.delete(
+            `/api/v1/incidents/${id}/reports/${reportId}/`
+          );
+        } catch (err) {}
+      }
+
+      // Create new entries.
+      for (let key in form.reportedto) {
+        let name = form.reportedto[key];
+
+        try {
+          const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
+            reportTo: name,
+            createdBy: 1,
+            fkIncidentId: localStorage.getItem("fkincidentId") || id,
+          });
+        } catch (err) {}
+      }
+
+      history.push(
+        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+          "fkincidentId"
+        )}`
+      );
     }
-
-    // Create new entries.
-    for (let key in form.reportedto) {
-      let name = form.reportedto[key];
-
-      try {
-        const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
-          reportTo: name,
-          createdBy: 1,
-          fkIncidentId: localStorage.getItem("fkincidentId") || id,
-        });
-      } catch (err) {}
-    }
-
-    history.push(
-      `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-        "fkincidentId"
-      )}`
-    );
-    }
-
   };
 
   const handelReportedTo = async (e, value, type) => {
@@ -423,11 +414,12 @@ const ReportingAndNotification = () => {
                       label="Other"
                       // defaultValue={"Orher name"}
                       className={classes.formControl}
-                      onChange={(e) => setForm({
-                        ...form,
-                        reportedto: [...form.reportedto, e.target.value],
-                      })
-                    }
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          reportedto: [...form.reportedto, e.target.value],
+                        })
+                      }
                     />
                   ) : null}
                 </FormGroup>
@@ -468,7 +460,7 @@ const ReportingAndNotification = () => {
 
               <Box marginTop={3} marginBottom={4}>
                 <Typography variant="h6" gutterBottom>
-                  Initial Evidences
+                  Initial evidences
                 </Typography>
               </Box>
               {/* <UploadInputAll/> */}
@@ -515,7 +507,7 @@ const ReportingAndNotification = () => {
               <TextField
                 id="supervisor-name"
                 variant="outlined"
-                label="Supervisor Name"
+                label="Supervisor name"
                 defaultValue={incidentsListData.supervisorByName || ""}
                 className={classes.formControl}
                 onChange={(e) => {
@@ -531,7 +523,7 @@ const ReportingAndNotification = () => {
               <TextField
                 id="othersName"
                 variant="outlined"
-                label="Others Name"
+                label="Others name"
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -555,7 +547,7 @@ const ReportingAndNotification = () => {
                   format="yyyy/MM/dd HH:mm"
                   required
                   inputVariant="outlined"
-                  label="Reporting Date"
+                  label="Reporting date"
                   value={
                     form.reportingdate || incidentsListData.incidentReportedOn
                   }
@@ -577,11 +569,11 @@ const ReportingAndNotification = () => {
                 className={classes.formControl}
                 error={error && error.reportedby}
               >
-                <InputLabel id="reportedBy-label">Reported By</InputLabel>
+                <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
                   labelId="reportedBy-label"
                   id="reportedBy"
-                  label="Reported By"
+                  label="Reported by"
                   defaultValue={
                     incidentsListData.incidentReportedByName
                       ? incidentsListData.incidentReportedByName
@@ -627,7 +619,7 @@ const ReportingAndNotification = () => {
                 <TextField
                   id="reason"
                   variant="outlined"
-                  label="Resaon for Reporting Later than 4 Hours"
+                  label="Reason for reporting later than 4 hours"
                   multiline
                   error={error && error.latereporting}
                   required
@@ -651,7 +643,7 @@ const ReportingAndNotification = () => {
               <TextField
                 id="additionalDetails"
                 variant="outlined"
-                label="Additional Details if Any"
+                label="Additional details if any"
                 multiline
                 rows="4"
                 defaultValue={incidentsListData.notificationComments}

@@ -36,7 +36,7 @@ import MomentUtils from "@date-io/moment";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
 import ListIcon from "@material-ui/icons/List";
 import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
@@ -44,6 +44,7 @@ import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import MessageIcon from "@material-ui/icons/Message";
 import BuildIcon from "@material-ui/icons/Build";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
@@ -105,6 +106,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
   },
 }));
+
+const ILink = withStyles({
+  root: {
+    display: "inline-block",
+    marginLeft: ".5rem",
+    color: "rgba(0, 0, 0, .85)",
+  },
+})(Link);
 
 function BlankPage() {
   const [incidents, setIncidents] = useState([]);
@@ -172,8 +181,7 @@ function BlankPage() {
       name: "Incident Number",
       options: {
         filter: true,
-
-      }
+      },
     },
     {
       name: "Incident reported by",
@@ -205,12 +213,13 @@ function BlankPage() {
     data: incidents,
     // onRowsDelete:(rows)=>{console.log(rows)},
     onRowsDelete: (rowsDeleted) => {
-      const idsToDelete = rowsDeleted.data.map(d => incidents[d.dataIndex].id);
-      console.log(idsToDelete)
+      const idsToDelete = rowsDeleted.data.map(
+        (d) => incidents[d.dataIndex].id
+      );
+      console.log(idsToDelete);
       for (var i = 0; i < idsToDelete.length; i++) {
-        const res = api.delete(`api/v1/incidents/${idsToDelete[i]}/`)
+        const res = api.delete(`api/v1/incidents/${idsToDelete[i]}/`);
       }
-
     },
     filterType: "dropdown",
     responsive: "vertical",
@@ -302,9 +311,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                              // display="inline"
-                              //
-                              // className={Fonts.listingLabelValue}
+                                // display="inline"
+                                //
+                                // className={Fonts.listingLabelValue}
                               >
                                 {/* {item[1]["incidentTitle"]} */}
                                 Lorem ipsum dolor sit amet consectetur
@@ -336,8 +345,9 @@ function BlankPage() {
                               >
                                 Number:
                                 <Link
-                                  href={`/app/incident-management/registration/summary/summary/${item[1].id
-                                    }`}
+                                  href={`/app/incident-management/registration/summary/summary/${
+                                    item[1].id
+                                  }`}
                                   variant="subtitle2"
                                   className={Fonts.listingLabelValue}
                                   style={{
@@ -361,8 +371,11 @@ function BlankPage() {
                             </Grid>
 
                             <Grid item md={3}>
-                              <Typography display="inline">
-                                <i className="ion-ios-calendar-outline" />
+                              <Typography
+                                display="inline"
+                                className={Fonts.listingLabelName}
+                              >
+                                <CalendarTodayIcon fontSize="small" />
                                 <span className={Incidents.dateValue}>
                                   {moment(item[1]["incidentOccuredOn"]).format(
                                     "Do MMM YYYY, h:mm a"
@@ -444,7 +457,7 @@ function BlankPage() {
                             <MessageIcon fontSize="small" /> Comments:
                           </Typography>
                           <Typography variant="body2" display="inline">
-                            <Link href="#">3</Link>
+                            <ILink href="#">3</ILink>
                           </Typography>
                         </Grid>
 
@@ -457,7 +470,7 @@ function BlankPage() {
                             <BuildIcon fontSize="small" /> Actions:
                           </Typography>
                           <Typography variant="body2" display="inline">
-                            <Link href="#">3</Link>
+                            <ILink href="#">3</ILink>
                           </Typography>
                         </Grid>
                         <Grid item xs={6} md={3}>
@@ -469,7 +482,7 @@ function BlankPage() {
                             <AttachmentIcon fontSize="small" /> Evidences:
                           </Typography>
                           <Typography variant="body2" display="inline">
-                            <Link href="#">3</Link>
+                            <ILink href="#">3</ILink>
                           </Typography>
                         </Grid>
                         {/* <Grid item xs={6} md={3} lg={3}>
@@ -532,9 +545,9 @@ function BlankPage() {
                             <Grid item xs={10}>
                               <Typography
                                 variant="h6"
-                              // display="inline"
-                              //
-                              // className={Fonts.listingLabelValue}
+                                // display="inline"
+                                //
+                                // className={Fonts.listingLabelValue}
                               >
                                 {item[1]["incidentTitle"]}
                                 {/* {item[index]["incidentTitle"]} */}
@@ -550,8 +563,8 @@ function BlankPage() {
                               <Chip
                                 avatar={<Avatar src="/images/pp_boy.svg" />}
                                 label="Admin"
-                              // onDelete={handleDelete}
-                              // className={classes.chip}
+                                // onDelete={handleDelete}
+                                // className={classes.chip}
                               />
                             </Grid>
                           </Grid>
@@ -566,8 +579,9 @@ function BlankPage() {
                               >
                                 Number:
                                 <Link
-                                  href={`/app/incident-management/registration/summary/summary/${item[1].id
-                                    }`}
+                                  href={`/app/incident-management/registration/summary/summary/${
+                                    item[1].id
+                                  }`}
                                   variant="subtitle2"
                                   className={Fonts.listingLabelValue}
                                   style={{
@@ -591,8 +605,11 @@ function BlankPage() {
                             </Grid>
 
                             <Grid item md={3}>
-                              <Typography variant="body1" display="inline">
-                                <i className="ion-ios-calendar-outline" />
+                              <Typography
+                                display="inline"
+                                className={Fonts.listingLabelName}
+                              >
+                                <CalendarTodayIcon fontSize="small" />
                                 <span className={Incidents.dateValue}>
                                   {moment(item[1]["incidentOccuredOn"]).format(
                                     "Do MMM YYYY, h:mm a"
@@ -678,7 +695,7 @@ function BlankPage() {
                             <MessageIcon fontSize="small" /> Comments:
                           </Typography>
                           <Typography variant="body2" display="inline">
-                            <Link href="#">3</Link>
+                            <ILink href="#">3</ILink>
                           </Typography>
                         </Grid>
 
@@ -691,7 +708,7 @@ function BlankPage() {
                             <BuildIcon fontSize="small" /> Actions:
                           </Typography>
                           <Typography variant="body2" display="inline">
-                            <Link href="#">3</Link>
+                            <ILink href="#">3</ILink>
                           </Typography>
                         </Grid>
                         <Grid item xs={6} md={3}>
@@ -703,26 +720,10 @@ function BlankPage() {
                             <AttachmentIcon fontSize="small" /> Evidences:
                           </Typography>
                           <Typography variant="body2" display="inline">
-                            <Link href="#">3</Link>
+                            <ILink href="#">3</ILink>
                           </Typography>
                         </Grid>
-                        {/* <Grid item xs={6} md={3} lg={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Incidents.actionsLabel}
-                      >
-                        <InfoIcon /> Status:
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        
-                        className={Type.statusHighlight}
-                      >
-                        Initial Notification
-                      </Typography>
-                    </Grid> */}
+
                         <Grid item xs={6} md={3}>
                           <Button
                             disabled
@@ -764,7 +765,7 @@ function BlankPage() {
                   "Do MMMM YYYY, h:mm:ss a"
                 ),
                 item[1]["incidentReportedByName"],
-                item[1]['id']
+                item[1]["id"],
               ])}
               columns={columns}
               options={options}

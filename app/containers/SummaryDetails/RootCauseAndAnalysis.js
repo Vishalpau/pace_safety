@@ -76,21 +76,17 @@ const RootCauseAnalysisSummary = () => {
       <Grid item md={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Root Cause</Typography>
+            <Typography className={classes.heading}>Root cause</Typography>
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>
-              <Table
-                className={classes.table}
-                size="small"
-                aria-label="a dense table"
-              >
+              <Table className={classes.table} size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>Cause of Incident</TableCell>
-                    <TableCell>Recommended Solution</TableCell>
-                    <TableCell>Corrective Action</TableCell>
+                    <TableCell>Cause of incident</TableCell>
+                    <TableCell>Recommended solution</TableCell>
+                    <TableCell>Corrective action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -117,15 +113,11 @@ const RootCauseAnalysisSummary = () => {
       <Grid item md={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Five Why</Typography>
+            <Typography className={classes.heading}>Five why</Typography>
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>
-              <Table
-                className={classes.table}
-                size="small"
-                aria-label="a dense table"
-              >
+              <Table className={classes.table} size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
@@ -156,7 +148,7 @@ const RootCauseAnalysisSummary = () => {
       <Grid item md={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Casue analysis</Typography>
+            <Typography className={classes.heading}>Cause analysis</Typography>
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>
@@ -197,20 +189,18 @@ const RootCauseAnalysisSummary = () => {
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>
-              <Table
-                className={classes.table}
-                size="small"
-                aria-label="a dense table"
-              >
+              <Table style={{ minWidth: 900 }} size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>RCA Number</TableCell>
-                    <TableCell>RCA Type</TableCell>
-                    <TableCell>RCA Sub Type</TableCell>
-                    <TableCell>RCA Remark</TableCell>
-                    <TableCell>RCA Remark Type</TableCell>
-                    <TableCell>Status</TableCell>
+                    <TableCell style={{ width: 200 }}>ID</TableCell>
+                    <TableCell style={{ width: 200 }}>RCA number</TableCell>
+                    <TableCell style={{ width: 200 }}>RCA type</TableCell>
+                    <TableCell style={{ width: 200 }}>RCA sub type</TableCell>
+                    <TableCell style={{ width: 400 }}>RCA Remark</TableCell>
+                    <TableCell style={{ width: 300 }}>
+                      RCA remark type
+                    </TableCell>
+                    <TableCell style={{ width: 200 }}>Status</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -234,9 +224,6 @@ const RootCauseAnalysisSummary = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-            />
           </AccordionDetails>
         </Accordion>
       </Grid>

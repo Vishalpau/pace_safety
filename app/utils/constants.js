@@ -77,7 +77,7 @@ export const SUMMERY_FORM = {
 };
 
 export const LESSION_LEARNED_FORM = {
-  "Lession learned":
+  "Lesson learned":
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 

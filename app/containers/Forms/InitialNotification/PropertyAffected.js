@@ -81,7 +81,7 @@ const PropertyAffected = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
   const [isOther, setIsOther] = useState(true);
-  const nextPath = localStorage.getItem('nextPath')
+  const nextPath = localStorage.getItem("nextPath");
 
   // Default form.
   const [form, setForm] = useState([
@@ -330,16 +330,18 @@ const PropertyAffected = () => {
   };
 
   // handle go back
-  const handleBack = ()=>{
-    const nextPath = JSON.parse(localStorage.getItem('nextPath'))
-  if (nextPath.personAffect === 'Yes') {
+  const handleBack = () => {
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+    if (nextPath.personAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
       );
-      }else{
-      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    } else {
+      history.push(
+        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+      );
     }
-  }
+  };
 
   useEffect(() => {
     fetchPropertyAffectedValue();
@@ -353,7 +355,7 @@ const PropertyAffected = () => {
   }, []);
 
   return (
-    <PapperBlock title="Details of Proprties Affected?" icon="ion-md-list-box">
+    <PapperBlock title="Details of Properties Affected?" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
