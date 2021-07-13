@@ -96,8 +96,6 @@ const EqiptmentAffected = () => {
       fkIncidentId: localStorage.getItem('fkincidentId'),
     },
   ]);
-  
-  const nextPath = localStorage.getItem('nextPath')
 
   // set state for update
   const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
@@ -259,7 +257,10 @@ const EqiptmentAffected = () => {
     const res = await api.get(`api/v1/incidents/${id}/equipments/`);
     const result = res.data.data.results;
     setEquipmentListData(result);
-    await setIsLoading(true);
+    if(res.status === 200){
+await setIsLoading(true);
+    }
+    
   };
 
   // fetch equipment type value for dropdown
@@ -548,7 +549,7 @@ Add details of additional equipment affected?
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+                onClick={() => handleBack()}
               >
                 Previous
               </Button>
@@ -557,7 +558,7 @@ Add details of additional equipment affected?
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                onClick={() => handleBack()}
+                
               >
                 Next
               </Button>

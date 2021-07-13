@@ -229,32 +229,30 @@ const EvidenceSummary = () => {
                               {value.evidenceRemark}
                             </Typography>
                           </Grid>
-                          {value.evidenceDocument ? (
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence Document
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                <Tooltip title="File Name">
-                                  <IconButton
-                                    onClick={() =>
-                                      handleOpen(value.evidenceDocument)
-                                    }
-                                    className={classes.fileIcon}
-                                  >
-                                    <PhotoSizeSelectActualIcon />
-                                  </IconButton>
-                                </Tooltip>
-                              </Typography>
-                            </Grid>
-                          ) : null}
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Document
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              <Tooltip title="File Name">
+                                <IconButton
+                                  onClick={() =>
+                                    handleOpen(value.evidenceDocument)
+                                  }
+                                  className={classes.fileIcon}
+                                >
+                                  <PhotoSizeSelectActualIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
                     ))

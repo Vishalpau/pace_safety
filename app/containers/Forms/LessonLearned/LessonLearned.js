@@ -401,14 +401,16 @@ const LessionLearned = () => {
             </Grid>
 
             <Grid item md={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                // href="#contained-buttons"
-                onClick={() => handleNext()}
-              >
-                Submit
-              </Button>
+              <Box marginTop={4}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  // href="#contained-buttons"
+                  onClick={() => handleNext()}
+                >
+                  Submit
+                </Button>
+              </Box>
             </Grid>
           </Grid>
           <Grid item md={3}>
