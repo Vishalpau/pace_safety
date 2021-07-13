@@ -14,7 +14,6 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   icon: {
     minWidth: 0,
-    marginRight: ".5rem",
   },
   activeList: {
     color: theme.palette.primary.main,
