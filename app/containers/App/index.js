@@ -32,12 +32,12 @@ function App() {
     if (code) {
       let data = JSON.stringify({
         grant_type: "authorization_code",
-        client_id:
+        client_id: "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
         //  "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1",
-        "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
-        client_secret:
+       
+        client_secret:"pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
         // "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW",
-          "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
+          
         code: code,
       });
 
@@ -62,13 +62,13 @@ function App() {
           console.log(error);
         });
     }
-    else{
-      console.log(localStorage.getItem('access_token')!== null)
-      if(localStorage.getItem('access_token')=== null){
-        window.location.href = {LOGIN_URL}
-        // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
-      }
-    }
+    // else{
+    //   console.log(localStorage.getItem('access_token')!== null)
+    //   if(localStorage.getItem('access_token')=== null){
+    //     window.location.href = `${LOGIN_URL}`
+    //     // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
+    //   }
+    // }
     // if (code) {
     //   const response = await api.post(`${SSO_URL}/api/v1/user/auth/token/`, {
     //     grant_type: 'authorization_code',
@@ -89,7 +89,7 @@ function App() {
   });
   return (
     <ThemeWrapper>
-      {localStorage.getItem("access_token") !== null ? (
+      {/* {localStorage.getItem("access_token") !== null ? ( */}
         <Switch>
           <Route path="/app" exact component={LandingCorporate} />
           <Route path="/landing-creative" exact component={LandingCreative} />
@@ -98,7 +98,7 @@ function App() {
           <Route component={Auth} />
           <Route component={NotFound} />
         </Switch>
-      ):null}
+      {/* ):null} */}
         {/* ) : (
          <Switch>
            <Route component={Authentication} />

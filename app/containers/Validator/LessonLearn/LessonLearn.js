@@ -8,7 +8,7 @@ function LessionLearnedValidator(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].teamOrDepartment.toString())) {
-      error[`teamOrDepartment${[i]}`] = "Please select property type";
+      error[`teamOrDepartment${[i]}`] = "Please select team or department";
       isValid = false;
     }
 
@@ -18,7 +18,7 @@ function LessionLearnedValidator(data) {
     // }
 
     if (validator.isEmpty(data[i].learnings.toString())) {
-      error[`learnings${[i]}`] = "Please enter damage details";
+      error[`learnings${[i]}`] = "Please enter learning";
       isValid = false;
     }
   }

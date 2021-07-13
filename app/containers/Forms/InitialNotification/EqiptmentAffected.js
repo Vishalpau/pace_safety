@@ -248,7 +248,6 @@ const EqiptmentAffected = () => {
       `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
     );
     const result = res.data.data.results;
-    console.log(result.equipmentDamagedComments);
     const envComments = result.equipmentDamagedComments;
     setEequipmentDamagedComments(envComments);
     await setIncidentsListdata(result);
@@ -466,7 +465,7 @@ Add details of additional equipment affected?
                   variant="outlined"
                   label="Describe any equipment affect"
                   className={classes.fullWidth}
-                  defaultValue={equipmentDamagedComments}
+                  value={equipmentDamagedComments || ""}
                   onChange={(e) => setEequipmentDamagedComments(e.target.value)}
                 />
               </Grid>

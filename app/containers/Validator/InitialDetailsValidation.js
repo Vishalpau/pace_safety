@@ -1,7 +1,7 @@
 import validator from "validator";
 
 function initialdetailvalidate(data) {
-  console.log(data);
+  
 
   const error = {};
 

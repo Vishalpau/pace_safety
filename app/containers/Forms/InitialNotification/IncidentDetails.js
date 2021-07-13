@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import Typography from "@material-ui/core/Typography";
 import DateFnsUtils from "@date-io/date-fns";
-import MomentUtils from "@date-io/moment";
 import {
   // TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
-  KeyboardTimePicker,
 } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -33,10 +28,8 @@ import { useHistory, useParams } from "react-router";
 import FormSideBar from "../FormSideBar";
 
 import {
-  INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 
@@ -82,7 +75,7 @@ const IncidentDetails = () => {
     environmentAffect: "",
   });
 
-  const [clearedDate, setClearData] = useState(null);
+  
 
   // Initial forms.
   const [form, setForm] = useState({
@@ -102,10 +95,7 @@ const IncidentDetails = () => {
     environmentaffected: "",
   });
 
-  // handle date
-  const handledate = async (e) => {
-    await setForm({ ...form, incidentdate: moment(e).toISOString() });
-  };
+
   // Function called on next button click.
   const handelNext = async (e) => {
     // Create case if id is not null and means it is an update case.
@@ -270,7 +260,6 @@ const IncidentDetails = () => {
       // Create case if id is not null and means it is an add new registration case.
       const { error, isValid } = validate(form);
       await setError(error);
-      console.log(error, isValid);
 
       if (isValid === true) {
         const formData = {
@@ -486,7 +475,6 @@ const IncidentDetails = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                {console.log(error)}
                 {error && error.projectname && (
                   <FormHelperText>{error.projectname}</FormHelperText>
                 )}
@@ -551,7 +539,6 @@ const IncidentDetails = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              {console.log(error)}
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                 required

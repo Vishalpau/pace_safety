@@ -95,7 +95,6 @@ const PropertyAffected = () => {
   ]);
 
   const addNewPropertyDetails = () => {
-    // alert('ram')
     setForm([
       ...form,
       {
@@ -124,14 +123,6 @@ const PropertyAffected = () => {
     }
   };
 
-  // set state when update
-  const handleUpdateProperty = async (e, key, fieldname, propertyId) => {
-    const temp = propertyListData;
-    const value = e.target.value;
-    temp[key][fieldname] = value;
-    temp[key]["updatedBy"] = 0;
-    await setPropertyListData(temp);
-  };
 
   const handlePropertyType = (e, key, fieldname) => {
     const temp = [...form];

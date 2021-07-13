@@ -1,7 +1,6 @@
 import validator from "validator";
 
 function PeopleValidate(data) {
-  console.log(data);
   let isValid = true;
   const error = {};
 
@@ -42,7 +41,6 @@ function PeopleValidate(data) {
     // }
   }
 
-  console.log(error);
   return { error, isValid };
 }
 
