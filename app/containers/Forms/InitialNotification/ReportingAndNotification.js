@@ -501,7 +501,6 @@ const ReportingAndNotification = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     console.log(nextPath);
     if (nextPath.environmentAffect === "Yes") {
-      alert(nextPath);
       history.push(
         `/app/incident-management/registration/initial-notification/environment-affected/${id}`
       );
