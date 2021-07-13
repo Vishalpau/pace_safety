@@ -8,7 +8,6 @@ function ReportingValidation(data, otherData) {
 
   if (report.length === 0) {
     error.reportedto = "Please select reportable to.";
-    console.log(report);
     isValid = false;
   } else {
     for (var i = 0; i < report.length; i++) {
@@ -20,7 +19,6 @@ function ReportingValidation(data, otherData) {
       }
     }
   }
-  console.log(isValid);
 
   // if (validator.isEmpty(data.isnotificationsent)) {
   //   error.isnotificationsent = "This Field is Empty";

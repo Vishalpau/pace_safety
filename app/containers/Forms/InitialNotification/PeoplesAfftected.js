@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -136,33 +134,12 @@ const PeoplesAffected = () => {
     setForm(temp);
   };
 
-  // set the state in update time
-
-  // const handleUpdatePeople = async (e, key, fieldname, peopleId) => {
-  //   const temp = peopleData;
-  //   const { value } = e.target;
-  //   if (e.target.value === "Don't Know") {
-  //     temp[key][fieldname] = "N/A";
-  //   } else {
-  //     temp[key][fieldname] = value;
-  //   }
-  //   temp[key].updatedBy = 0;
-  //   await setPeopleData(temp);
-  // };
 
   // Next button click event handling.
   const handleNext = async () => {
     // Next path handlings.
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-    /*
-      This condition is there, because it has been assumed that peopleData length
-      will be 0 and on the people change in the yes section we have hit the put
-      API. However it is wrong implementation. Therefore, it is checked that if
-      people data is there then just redirect user to next page.
-
-      This is wrong implementation.
-    */
     
       // This is the condition when Yes is clicked on the form.
       if (personAffect === "Yes") {
@@ -183,7 +160,6 @@ const PeoplesAffected = () => {
         // Loop over all the people added and hit them with the help of the Post API.
         // We don't have single API.
 
-        console.log(isValid, error)
 
         if(isValid){
           for (var i = 0; i < form.length; i++) {
@@ -367,7 +343,6 @@ const PeoplesAffected = () => {
       
       setIncidentsListdata(result);
       if (!id) {
-        console.log(personAffect)
         await setIsLoading(true);
       }
     }
@@ -379,7 +354,6 @@ const PeoplesAffected = () => {
     const res = await api.get(`api/v1/incidents/${id}/people/`);
     const result = res.data.data.results;
     await setPeopleData(result);
-    console.log(result)
     if(result.length>0){
       let temp = [...form]
       temp = result

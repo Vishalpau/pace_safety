@@ -134,10 +134,8 @@ const Summary = () => {
       rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
       whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
     ) {
-      console.log("here")
       rootCauseStatus.current = true
     }
-    console.log(rootCauseStatus.current)
   }
 
   const [selectedDate, setSelectedDate] = React.useState(
@@ -302,7 +300,7 @@ const Summary = () => {
                     setLessionlearn(true);
                   }}
                 >
-                  Lessions Learnt
+                  Lessons Learnt
                 </Button>
                 <Typography variant="caption" display="block">
                   {localStorage.getItem("LessionLearnt") == "Done"
@@ -409,13 +407,13 @@ const Summary = () => {
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
-                        <ListItemText primary="Lessions Learnt" />
+                        <ListItemText primary="Lessons Learned" />
                       </ListItemLink>
                     ) : (
                       <ListItemLink
                         onClick={() =>
                           history.push(
-                            "/app/incident-management/registration/lession-learned/lession-learned/"
+                            `/app/incident-management/registration/lession-learned/lession-learned/${id}`
                           )
                         }
                       >

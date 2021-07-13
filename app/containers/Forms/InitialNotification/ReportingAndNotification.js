@@ -283,6 +283,10 @@ const ReportingAndNotification = () => {
   };
 
   const handelNext = async (e) => {
+    
+     // handle remove existing report
+     await handleRemoveExitingReport();
+
     // set in reportTo otherData
     await setOtherDataReportTo();
 
@@ -292,8 +296,7 @@ const ReportingAndNotification = () => {
     // handle Initail evidance
     await handleInitialEvidance();
 
-    // handle remove existing report
-    await handleRemoveExitingReport();
+   
 
     // check initial evidance
     if (evidanceCkecked === true) {
@@ -516,7 +519,6 @@ const ReportingAndNotification = () => {
   // handle go back
   const handleGoBack = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
-    console.log(nextPath);
     if (nextPath.environmentAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/environment-affected/${id}`

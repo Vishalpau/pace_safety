@@ -129,7 +129,7 @@ const IncidentDetailsSummary = () => {
         </Typography>
 
         <Typography className={Fonts.labelValue}>
-          {incidents["incidentReportedByName"]}
+          {incidents["incidentType"]}
         </Typography>
       </Grid>
 
@@ -333,7 +333,7 @@ const IncidentDetailsSummary = () => {
                         {propertydata.propertyOtherType}
                       </Typography>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item md={12}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -384,7 +384,7 @@ const IncidentDetailsSummary = () => {
                         {key + 1}: Details of equipment
                       </Typography>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item md={12}>
                       <Typography
                         variant="h6"
                         gutterBottom

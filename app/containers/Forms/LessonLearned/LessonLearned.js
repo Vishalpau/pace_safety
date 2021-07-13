@@ -87,7 +87,6 @@ const LessionLearned = () => {
   };
 
   const addNewTeamOrDeparment = async()=>{
-    alert('hey ram')
     await setForm([
       ...form,
       { teamOrDepartment: "", learnings: "" },
@@ -99,7 +98,6 @@ const LessionLearned = () => {
       // sent post request
       const { isValid, error } = LessionLearnedValidator(form);
       setError(error);
-      console.log(error, isValid);
 
       if (isValid === true) {
         if (learningList.length>0) {
@@ -110,7 +108,6 @@ const LessionLearned = () => {
           }
         }
         for( var i =0 ; i< form.length; i++){
-          console.log(form)
         const res = await api.post(
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/learnings/`,
           {
@@ -142,11 +139,11 @@ const LessionLearned = () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
     const result = res.data.data.results;
   
-     
+     if(result.length>0){
       let temp = [...form]
       temp = result
       await setForm(temp)
-      console.log('result',result)
+     }
       await setLearningList(result);
       setIsLoading(true)
   };
@@ -172,9 +169,7 @@ const LessionLearned = () => {
     axios(config)
       .then(function(response) {
         if(response.status === 200){
-          console.log(response);
           const result = response.data.data.results;
-          console.log(result);
           setDepartment(result);
         }
         else{
@@ -207,7 +202,6 @@ const LessionLearned = () => {
     <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          {console.log(form)}
           <Grid container item md={9} justify="flex-start" spacing={3}>
             <Grid item md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
@@ -298,7 +292,8 @@ const LessionLearned = () => {
                       variant="outlined"
                       required
                       className={classes.formControl}
-                      error={error.team}
+                      error={error && error[`teamOrDepartment${[key]}`]}
+                      required
                     >
                       <InputLabel id="demo-simple-select-label">
                         Team/department
@@ -321,9 +316,11 @@ const LessionLearned = () => {
                           </MenuItem>
                         ))}
                       </Select>
-                      {error && error.team && (
-                        <FormHelperText>{error.team}</FormHelperText>
-                      )}
+                      {error && error[`teamOrDepartment${[key]}`] && (
+                              <FormHelperText>
+                                {error[`teamOrDepartment${[key]}`]}
+                              </FormHelperText>
+                            )}
                     </FormControl>
                   </Grid>
                   <Grid item md={12}>
@@ -332,7 +329,13 @@ const LessionLearned = () => {
                    
                       <TextField
                         id="outlined-search"
-                        error={error.teamLearning}
+                        required
+                        error={error && error[`learnings${[key]}`]}
+                        helperText={
+                          error && error[`learnings${[key]}`]
+                            ? error[`learnings${[key]}`]
+                            : null
+                        }
                         label="Team/department learnings"
                         variant="outlined"
                         rows="3"
