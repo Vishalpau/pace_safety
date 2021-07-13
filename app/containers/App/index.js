@@ -89,20 +89,19 @@ function App() {
   return (
     <ThemeWrapper>
       {/* {localStorage.getItem("access_token") !== null ? ( */}
-      <Switch>
-        <Route path="/app" exact component={LandingCorporate} />
-        <Route path="/landing-creative" exact component={LandingCreative} />
-        <Route path="/" component={Application} />
-        <Route path="/blog" component={ArticleNews} />
-        <Route component={Auth} />
-        <Route component={NotFound} />
-      </Switch>
-      {/* ):null} */}
-      {/* // ) : (
-      //   <Switch>
-      //     <Route component={Authentication} />
-      //   </Switch>
-      // )} */}
+        <Switch>
+          <Route path="/app" exact component={LandingCorporate} />
+          <Route path="/landing-creative" exact component={LandingCreative} />
+          <Route path="/" component={Application} />
+          <Route path="/blog" component={ArticleNews} />
+          <Route component={Auth} />
+          <Route component={NotFound} />
+        </Switch>
+      {/* ) : (
+        <Switch>
+          <Route component={Authentication} />
+        </Switch>
+      )} */}
     </ThemeWrapper>
   );
 }
