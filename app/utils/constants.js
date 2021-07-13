@@ -304,7 +304,7 @@ export const MANAGEMENTCONTROL = [
 
 export const RCAOPTION = [
   "Five why analysis",
-  "Pace cause analysis",
+  "PACE cause analysis",
   "Root cause analysis",
 ];
 
