@@ -12,12 +12,12 @@ function PeopleValidate(data) {
     }
 
     if (validator.isEmpty(data[i].personDepartment.toString())) {
-      error[`personDepartment${[i]}`] = "Please select department.";
+      error[`personDepartment${[i]}`] = "Please select department";
       isValid = false;
     }
 
     if (validator.isEmpty(data[i].personName.toString())) {
-      error[`personName${[i]}`] = "Please enter person name.";
+      error[`personName${[i]}`] = "Please enter person name";
       isValid = false;
     }
 
@@ -27,7 +27,7 @@ function PeopleValidate(data) {
     // }
 
     if (validator.isEmpty(data[i].personMedicalCare.toString())) {
-      error[`personMedicalCare${[i]}`] = "Please choose medical care.";
+      error[`personMedicalCare${[i]}`] = "Please choose medical care";
       isValid = false;
     }
 
