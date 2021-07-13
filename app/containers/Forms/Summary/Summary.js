@@ -91,8 +91,8 @@ const Summary = () => {
 
   const { id } = useParams();
   const history = useHistory();
-  if(id){
-    localStorage.setItem('fkincidentId', id);
+  if (id) {
+    localStorage.setItem("fkincidentId", id);
   }
 
   const fetchIncidentData = async () => {
@@ -332,9 +332,7 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink
-                      href="/app/incident-management/registration/investigation/investigation-overview/"
-                    >
+                    <ListItemLink href="/app/incident-management/registration/investigation/investigation-overview/">
                       <ListItemIcon>
                         <Edit />
                       </ListItemIcon>
@@ -360,7 +358,9 @@ const Summary = () => {
                       </ListItemLink>
                     )}
                     {localStorage.getItem("RootCause") == "Done" ? (
-                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
+                      <ListItemLink
+                        href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
+                      >
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
@@ -374,28 +374,29 @@ const Summary = () => {
                       </ListItemLink>
                     )}
                     {localStorage.getItem("LessionLearnt") == "Done" ? (
-                      <ListItemLink href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}>
+                      <ListItemLink
+                        href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}
+                      >
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
                         <ListItemText primary="Lessions Learnt" />
-                      </ListItemLink>) : (
-                       <ListItemLink
-                       onClick={() =>
-                         history.push(
-                           "/app/incident-management/registration/lession-learned/lession-learned/"
-                         )
-                       }
-                     >
-                       <ListItemIcon>
-                         <Add />
-                       </ListItemIcon>
-                       <ListItemText primary="Lessions Learnt" />
-                     </ListItemLink>
- 
+                      </ListItemLink>
+                    ) : (
+                      <ListItemLink
+                        onClick={() =>
+                          history.push(
+                            "/app/incident-management/registration/lession-learned/lession-learned/"
+                          )
+                        }
+                      >
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <ListItemText primary="Lessons Learned" />
+                      </ListItemLink>
                     )}
 
-                   
                     <ListItem button divider>
                       <ListItemIcon>
                         <Close />

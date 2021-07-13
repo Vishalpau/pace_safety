@@ -225,7 +225,7 @@ const LessionLearned = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentOccuredOn).format(
-                  "YYYY/DD/MM HH:mm"
+                  "Do MMMM YYYY, h:mm:ss a"
                 )}
               </Typography>
             </Grid>
@@ -236,7 +236,7 @@ const LessionLearned = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentReportedOn).format(
-                  "YYYY/DD/MM HH:mm"
+                  "Do MMMM YYYY, h:mm:ss a"
                 )}
               </Typography>
             </Grid>
@@ -255,7 +255,6 @@ const LessionLearned = () => {
                 Incident type
               </Typography>
               <Typography className={Type.labelValue}>
-                {" "}
                 {incidentsListData.incidentType}{" "}
               </Typography>
             </Grid>
@@ -297,6 +296,7 @@ const LessionLearned = () => {
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
+                      required
                       className={classes.formControl}
                       error={error.team}
                     >
@@ -328,10 +328,8 @@ const LessionLearned = () => {
                   </Grid>
                   <Grid item md={12}>
                     {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-                    <FormControl
-                      variant="outlined"
-                      className={classes.formControl}
-                    >
+
+                   
                       <TextField
                         id="outlined-search"
                         error={error.teamLearning}
@@ -348,7 +346,7 @@ const LessionLearned = () => {
                       {/* {error && error.teamLearning && (
                           <p>{error.teamLearning}</p>
                         )} */}
-                    </FormControl>
+                  
                   </Grid>
                   {form.length > 1 ? (
                           <Grid item md={3}>
@@ -390,7 +388,7 @@ const LessionLearned = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lession learned"}
+              selectedItem={"Lesson learned"}
             />
           </Grid>
         </Grid>

@@ -77,7 +77,7 @@ const CorrectiveAction = () => {
   const { id } = useParams();
   const history = useHistory();
   const updateIds = useRef();
-  const checkPost = useRef()
+  const checkPost = useRef();
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -89,8 +89,12 @@ const CorrectiveAction = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/pacecauses/`
+    );
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 19) {
@@ -107,7 +111,7 @@ const CorrectiveAction = () => {
       });
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
-      checkPost.current = false
+      checkPost.current = false;
 
       // set fetched spervised data
       setForm({
@@ -206,7 +210,9 @@ const CorrectiveAction = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
+            `/api/v1/incidents/${putId.current}/pacecauses/${
+              callObjects[key].pk
+            }/`,
             callObjects[key]
           );
           if (res.status == 200) {
@@ -234,7 +240,8 @@ const CorrectiveAction = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${putId.current
+          `/app/incident-management/registration/summary/summary/${
+            putId.current
           }`
         );
       }
@@ -297,7 +304,9 @@ const CorrectiveAction = () => {
               ))}
             </FormControl>
             {error && error.managementControl && (
-              <FormHelperText style={{ color: "red" }}>{error.managementControl}</FormHelperText>
+              <FormHelperText style={{ color: "red" }}>
+                {error.managementControl}
+              </FormHelperText>
             )}
           </Grid>
 

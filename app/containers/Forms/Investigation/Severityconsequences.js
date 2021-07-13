@@ -18,6 +18,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from "react-router";
 
 import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
@@ -40,6 +41,8 @@ const InvestigationOverview = () => {
   const [error, setError] = useState({});
   const putId = useRef("");
   const investigationId = useRef("")
+  const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
 
   const selectValues = [1, 2, 3, 4];
   const healthAndSafetyValues = useRef([])
@@ -64,6 +67,7 @@ const InvestigationOverview = () => {
       `api/v1/incidents/${incidentId}/investigations/`
     );
     let allApiData = previousData.data.data.results[0];
+    console.log(allApiData.id)
     if (!isNaN(allApiData.id)) {
       await setForm(allApiData);
       investigationId.current = allApiData.id
@@ -76,9 +80,7 @@ const InvestigationOverview = () => {
     // setError(error);
     // console.log(error, isValid);
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-    if (res.status === 200) {
-      console.log("request done");
-    }
+    history.push(`/app/incident-management/registration/investigation/worker-details/`)
   };
 
   const handelDeaultValue = (value) => {
@@ -87,20 +89,25 @@ const InvestigationOverview = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-
-  useEffect(async () => {
-    handelUpdateCheck();
+  const picList = async () => {
     classificationValues.current = await PickListData(40)
     healthAndSafetyValues.current = await PickListData(42)
     environmentValues.current = await PickListData(43)
     regulationValues.current = await PickListData(44)
     reputaionValues.current = await PickListData(45)
     financialValues.current = await PickListData(46)
+    await setIsLoading(true);
+  }
+
+  useEffect(() => {
+    handelUpdateCheck();
+    picList()
+    
   }, []);
 
   return (
     <PapperBlock title="Severity Consequences" icon="ion-md-list-box">
-      {console.log(form.healthSafetyActual)}
+      {isLoading ? (
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
@@ -494,7 +501,7 @@ const InvestigationOverview = () => {
             selectedItem="Severity consequences"
           />
         </Grid>
-      </Grid>
+      </Grid>):(<h1>Loading...</h1>)}
     </PapperBlock>
   );
 };

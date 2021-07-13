@@ -439,6 +439,7 @@ const HazardiousActs = () => {
       title="Immediate Causes - Hazardous Acts"
       icon="ion-md-list-box"
     >
+      {console.log("here")}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>

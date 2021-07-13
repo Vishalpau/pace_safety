@@ -135,7 +135,7 @@ const IncidentDetailsSummary = () => {
 
       <Grid item md={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incidnet description
+          Incident description
         </Typography>
 
         {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
@@ -184,7 +184,7 @@ const IncidentDetailsSummary = () => {
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>People Affected</Typography>
+            <Typography className={classes.heading}>People affected</Typography>
           </AccordionSummary>
           <AccordionDetails>
             {peopleData.length !== 0
@@ -196,7 +196,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        {key + 1}: Details of People
+                        {key + 1}: Details of people
                       </Typography>
                     </Grid>
                     <Grid item md={6}>
@@ -253,7 +253,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Person Department
+                        Person department
                       </Typography>
                       <Typography className={Fonts.labelValue}>
                         {peopledata.personDepartment}
@@ -277,7 +277,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Worker offsite assesments
+                        Worker offsite assessments
                       </Typography>
                       <Typography className={Fonts.labelValue}>
                         {peopledata.workerOffsiteAssessment}
@@ -289,7 +289,6 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      {/* Property Affected */}
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -316,7 +315,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Property Type
+                        Property type
                       </Typography>
                       <Typography className={Fonts.labelValue}>
                         {propertydata.propertyType}
@@ -382,7 +381,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        {key + 1}:Details of equipment
+                        {key + 1}: Details of equipment
                       </Typography>
                     </Grid>
                     <Grid item md={6}>
@@ -420,7 +419,7 @@ const IncidentDetailsSummary = () => {
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
-              Enviroment affected
+              Environment affected
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -456,7 +455,7 @@ const IncidentDetailsSummary = () => {
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
-              Reports & Noticefication
+              Reporting & notification
             </Typography>
           </AccordionSummary>
           <AccordionDetails>

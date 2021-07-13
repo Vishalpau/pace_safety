@@ -15,10 +15,10 @@ function RootCauseValidation(data) {
     isValid = false;
   }
 
-  // if (validator.isEmpty(data.wouldItPreventIncident)) {
-  //   error.wouldItPreventIncident = "This field is empty";
-  //   isValid = false;
-  // }
+  if (validator.isEmpty(data.wouldItPreventIncident)) {
+    error.wouldItPreventIncident = "This field is empty";
+    isValid = false;
+  }
 
   if (data.wouldItPreventIncident === "Yes" && validator.isEmpty(data.recommendSolution)) {
     error.recommendSolution = "Fill the information";

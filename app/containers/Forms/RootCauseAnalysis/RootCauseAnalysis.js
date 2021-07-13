@@ -14,6 +14,7 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
+import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -49,7 +50,7 @@ const RootCauseAnalysis = () => {
   const [form, setForm] = useState({
     causeOfIncident: "",
     correctiveAction: "",
-    wouldItPreventIncident: "N/A",
+    wouldItPreventIncident: "No",
     recommendSolution: "",
     status: "Active",
     createdBy: 0,
@@ -148,6 +149,7 @@ const RootCauseAnalysis = () => {
 
   return (
     <PapperBlock title="Root Cause Analysis" icon="ion-md-list-box">
+      {console.log(incidents.incidentOccuredOn)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
@@ -232,18 +234,14 @@ const RootCauseAnalysis = () => {
           </Grid>
 
           <Grid item lg={6} md={12} sm={12}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <KeyboardDateTimePicker
-                autoOk
-                inputVariant="outlined"
-                className={classes.formControl}
-                ampm={false}
-                value={incidents.incidentOccuredOn}
-                onChange={handleDateChange}
-                label="Incident date and time"
-                disabled
-              />
-            </MuiPickersUtilsProvider>
+            <TextField
+              variant="outlined"
+              label="Incident date and time"
+              className={classes.formControl}
+              id="filled-basic"
+              value={moment(incidents.incidentOccuredOn).format('MM/DD/YYYY')}
+              disabled
+            />
           </Grid>
 
           <Grid item md={6}>
@@ -299,7 +297,7 @@ const RootCauseAnalysis = () => {
           <Grid item md={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">
-                Would corrective actions prevent simailar incidents in future?
+                Would corrective actions prevent simailar incidents in future?*
               </FormLabel>
               <RadioGroup className={classes.inlineRadioGroup}>
                 {radioDecide.map((value) => (

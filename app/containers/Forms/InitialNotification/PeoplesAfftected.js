@@ -555,12 +555,15 @@ const PeoplesAffected = () => {
                           />
                         </Grid>
                         <Grid item md={12}>
-                          <FormControl component="fieldset"
-                          required
-                          error={error && error[`personMedicalCare${[key]}`]
-                          ? error[`personMedicalCare${[key]}`]
-                          : null}
-                           >
+                          <FormControl
+                            component="fieldset"
+                            required
+                            error={
+                              error && error[`personMedicalCare${[key]}`]
+                                ? error[`personMedicalCare${[key]}`]
+                                : null
+                            }
+                          >
                             <FormLabel component="legend">
                               Was that person taken to medical care?
                             </FormLabel>

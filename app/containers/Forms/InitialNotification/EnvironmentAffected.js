@@ -93,8 +93,8 @@ const EnvironmentAffected = () => {
   // SetState in update time
   const [isChecked, setIsChecked] = useState([]);
 
-  const nextPath = localStorage.getItem('nextPath')
-  
+  const nextPath = localStorage.getItem("nextPath");
+
   const questionMap = useRef({
     "Were there any spills?": "Details of spills affected",
     "Were there any release?": "Details of release affected",
@@ -262,27 +262,27 @@ const EnvironmentAffected = () => {
     // await setIsLoading(true);
   };
 
-   // handle go back
-  const handleBack = ()=>{
-    const nextPath = JSON.parse(localStorage.getItem('nextPath'))
+  // handle go back
+  const handleBack = () => {
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     if (nextPath.equipmentAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
       );
-    }
-    else if (nextPath.propertyAffect === "Yes") {
+    } else if (nextPath.propertyAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/property-affected/${id}`
       );
-    }else if (nextPath.personAffect === 'Yes') {
+    } else if (nextPath.personAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
       );
-      }else{
-      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    } else {
+      history.push(
+        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+      );
     }
-  }
-
+  };
 
   useEffect(() => {
     fetchEnviornmentAffectedValue();
@@ -302,7 +302,7 @@ const EnvironmentAffected = () => {
           <Grid container item md={9} spacing={3}>
             {environmentListData.length !== 0 ? (
               environmentListData.map((env, key) => (
-                <Grid container item md={12} key={key}>
+                <Grid container item spacing={3} md={12} key={key}>
                   <Grid item md={6}>
                     <FormControl component="fieldset">
                       <FormLabel component="legend">
@@ -310,7 +310,6 @@ const EnvironmentAffected = () => {
                       </FormLabel>
                       <RadioGroup
                         className={classes.inlineRadioGroup}
-                        aria-label="detailsOfPropertyAffect"
                         name="detailsOfPropertyAffect"
                         defaultValue={env.envQuestionOption}
                         onChange={(e) => {
@@ -342,7 +341,7 @@ const EnvironmentAffected = () => {
                         multiline
                         rows="3"
                         variant="outlined"
-                        label={`Details of ${env.envQuestion.slice(14, -2)}`}
+                        label={`Details of ${env.envQuestion.slice(14, -1)}`}
                         error={error && error.envAnswerDetails}
                         helperText={
                           error && error.envAnswerDetails
@@ -530,7 +529,7 @@ const EnvironmentAffected = () => {
                           ? err.envAnswerDetails
                           : null
                       }
-                      label="Details of Wildlife Affected"
+                      label="Details of wildlife affected"
                       className={classes.fullWidth}
                       onChange={(e) => {
                         handleForm(e, 2, "envAnswerDetails");
@@ -629,9 +628,8 @@ const EnvironmentAffected = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick ={()=>handleNext()}
+                onClick={() => handleNext()}
                 className={classes.button}
-                // href="http://localhost:3000/app/incident-management/registration/initial-notification/eqiptment-affected/"
               >
                 Next
               </Button>

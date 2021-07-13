@@ -23,12 +23,12 @@ import {
 import api from "../../utils/axios";
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
-// client_id:  client_secret:  
+// client_id:  client_secret:
 function App() {
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
-    
+
     if (code) {
       let data = JSON.stringify({
         grant_type: "authorization_code",
@@ -52,12 +52,11 @@ function App() {
       console.log(config);
       await axios(config)
         .then(function(response) {
-          if(response.status === 200){
+          if (response.status === 200) {
             console.log(response);
             localStorage.setItem("access_token", response.data.access_token);
-            window.location.href= '/';
+            window.location.href = "/";
           }
-          
         })
         .catch(function(error) {
           console.log(error);
