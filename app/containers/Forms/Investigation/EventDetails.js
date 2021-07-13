@@ -16,6 +16,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useHistory } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -69,6 +70,7 @@ const EventDetails = () => {
   const eventId = useRef("")
   const weatherId = useRef([])
   const overAllCostId = useRef([])
+  const history = useHistory();
 
   const [weather, setWeather] = useState([
     {
@@ -680,7 +682,8 @@ const EventDetails = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
+              onClick={() => history.goBack()}
+              // href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
             >
               Previous
             </Button>
