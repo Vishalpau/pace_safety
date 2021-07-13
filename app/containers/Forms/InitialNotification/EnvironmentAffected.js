@@ -302,7 +302,7 @@ const EnvironmentAffected = () => {
           <Grid container item md={9} spacing={3}>
             {environmentListData.length !== 0 ? (
               environmentListData.map((env, key) => (
-                <Grid container item md={12} key={key}>
+                <Grid container item spacing={3} md={12} key={key}>
                   <Grid item md={6}>
                     <FormControl component="fieldset">
                       <FormLabel component="legend">
@@ -310,7 +310,6 @@ const EnvironmentAffected = () => {
                       </FormLabel>
                       <RadioGroup
                         className={classes.inlineRadioGroup}
-                        aria-label="detailsOfPropertyAffect"
                         name="detailsOfPropertyAffect"
                         defaultValue={env.envQuestionOption}
                         onChange={(e) => {
@@ -342,7 +341,7 @@ const EnvironmentAffected = () => {
                         multiline
                         rows="3"
                         variant="outlined"
-                        label={`Details of ${env.envQuestion.slice(14, -2)}`}
+                        label={`Details of ${env.envQuestion.slice(14, -1)}`}
                         error={error && error.envAnswerDetails}
                         helperText={
                           error && error.envAnswerDetails

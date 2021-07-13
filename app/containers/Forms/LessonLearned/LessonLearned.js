@@ -200,7 +200,7 @@ const LessionLearned = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentOccuredOn).format(
-                  "YYYY/DD/MM HH:mm"
+                  "Do MMMM YYYY, h:mm:ss a"
                 )}
               </Typography>
             </Grid>
@@ -211,7 +211,7 @@ const LessionLearned = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentReportedOn).format(
-                  "YYYY/DD/MM HH:mm"
+                  "Do MMMM YYYY, h:mm:ss a"
                 )}
               </Typography>
             </Grid>
@@ -230,7 +230,6 @@ const LessionLearned = () => {
                 Incident type
               </Typography>
               <Typography className={Type.labelValue}>
-                {" "}
                 {incidentsListData.incidentType}{" "}
               </Typography>
             </Grid>
@@ -273,6 +272,7 @@ const LessionLearned = () => {
                     <Grid item md={12}>
                       <FormControl
                         variant="outlined"
+                        required
                         className={classes.formControl}
                         error={error.team}
                       >
@@ -308,32 +308,26 @@ const LessionLearned = () => {
                       </FormControl>
                     </Grid>
                     <Grid item md={12}>
-                      <FormControl
-                        variant="outlined"
+                      <TextField
+                        id="outlined-search"
                         className={classes.formControl}
-                      >
-                        <TextField
-                          id="outlined-search"
-                          label="Team/department learnings"
-                          variant="outlined"
-                          rows="3"
-                          multiline
-                          defaultValue={item.learnings}
-                          error={error.teamLearning}
-                          helperText={error ? error.teamLearning : ""}
-                          onChange={(e) =>
-                            handleUpdateLessonLearned(
-                              e,
-                              index,
-                              "learnings",
-                              item.id
-                            )
-                          }
-                        />
-                        {/* {error && error.teamLearning && (
-                            <p>{error.teamLearning}</p>
-                          )} */}
-                      </FormControl>
+                        label="Team/department learnings"
+                        variant="outlined"
+                        rows="3"
+                        multiline
+                        required
+                        defaultValue={item.learnings}
+                        error={error.teamLearning}
+                        helperText={error ? error.teamLearning : ""}
+                        onChange={(e) =>
+                          handleUpdateLessonLearned(
+                            e,
+                            index,
+                            "learnings",
+                            item.id
+                          )
+                        }
+                      />
                     </Grid>
                   </Grid>
                 ))
@@ -342,6 +336,7 @@ const LessionLearned = () => {
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
+                      required
                       className={classes.formControl}
                       error={error.team}
                     >
@@ -375,26 +370,21 @@ const LessionLearned = () => {
                   </Grid>
                   <Grid item md={12}>
                     {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-                    <FormControl
-                      variant="outlined"
+
+                    <TextField
+                      id="outlined-search"
                       className={classes.formControl}
-                    >
-                      <TextField
-                        id="outlined-search"
-                        error={error.teamLearning}
-                        label="Team/department learnings"
-                        variant="outlined"
-                        rows="3"
-                        multiline
-                        helperText={error ? error.teamLearning : ""}
-                        onChange={(e) =>
-                          setForm({ ...form, teamLearning: e.target.value })
-                        }
-                      />
-                      {/* {error && error.teamLearning && (
-                          <p>{error.teamLearning}</p>
-                        )} */}
-                    </FormControl>
+                      error={error.teamLearning}
+                      label="Team/department learnings"
+                      variant="outlined"
+                      rows="3"
+                      required
+                      multiline
+                      helperText={error ? error.teamLearning : ""}
+                      onChange={(e) =>
+                        setForm({ ...form, teamLearning: e.target.value })
+                      }
+                    />
                   </Grid>
                 </Grid>
               )}
