@@ -5,32 +5,32 @@ function BasicCauseValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.personal.rcaRemark.toString())) {
-    error.personal = "This field is empty";
+    error.personal = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.wellnessFactors.rcaRemark.toString())) {
-    error.wellnessFactors = "This field is empty";
+    error.wellnessFactors = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.otherHumanFactor.rcaRemark.toString())) {
-    error.otherHumanFactor = "This field is empty";
+    error.otherHumanFactor = "Fill other human factor";
     isValid = false;
   }
 
   if (validator.isEmpty(data.leadership.rcaRemark.toString())) {
-    error.leadership = "This field is empty";
+    error.leadership = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.processes.rcaRemark.toString())) {
-    error.processes = "This field is empty";
+    error.processes = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.otherJobFactors.rcaRemark.toString())) {
-    error.otherJobFactors = "This field is empty";
+    error.otherJobFactors = "Fill other job factor";
     isValid = false;
   }
 

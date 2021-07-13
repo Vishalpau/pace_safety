@@ -5,27 +5,27 @@ function HazardiousConditionsValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.warningSystem.rcaRemark.toString())) {
-    error.warningSystem = "This field is empty";
+    error.warningSystem = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.energyTypes.rcaRemark.toString())) {
-    error.energyTypes = "This field is empty";
+    error.energyTypes = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.tools.rcaRemark.toString())) {
-    error.tools = "This field is empty";
+    error.tools = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.safetyitems.rcaRemark.toString())) {
-    error.safetyitems = "This field is empty";
+    error.safetyitems = "Select at least one checkbox";
     isValid = false;
   }
 
   if (validator.isEmpty(data.others.rcaRemark.toString())) {
-    error.others = "This field is empty";
+    error.others = "Fill the information";
     isValid = false;
   }
 

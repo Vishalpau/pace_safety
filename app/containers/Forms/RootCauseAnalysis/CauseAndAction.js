@@ -142,8 +142,7 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -226,11 +225,12 @@ const BasicCauseAndAction = () => {
                     <ListItemText primary={value} />
                   </ListItem>
                 ))}
+                <button className={classes.textButton}>
+                  <AddCircleOutlineIcon /> Add a new action
+                </button>
               </List>
             ))}
-            <button className={classes.textButton}>
-              <AddCircleOutlineIcon /> Add a new action
-            </button>
+
           </Grid>
 
           <Grid item md={12}>

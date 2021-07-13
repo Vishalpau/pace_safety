@@ -196,7 +196,12 @@ const BasicCauseAndAction = () => {
                     <ListItemText primary={value} />
                   </ListItem>
                 ))}
+
+                <button className={classes.textButton}>
+                  <AddCircleOutlineIcon /> Add a new action
+                </button>
               </List>
+
             ))}
             <button className={classes.textButton}>
               <AddCircleOutlineIcon /> Add a new action
