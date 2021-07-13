@@ -152,7 +152,6 @@ const PeoplesAffected = () => {
 
   // Next button click event handling.
   const handleNext = async () => {
-    console.log(form)
     // Next path handlings.
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
@@ -184,6 +183,8 @@ const PeoplesAffected = () => {
         // Loop over all the people added and hit them with the help of the Post API.
         // We don't have single API.
 
+        console.log(isValid, error)
+
         if(isValid){
           for (var i = 0; i < form.length; i++) {
             const res = await api.post(
@@ -201,10 +202,7 @@ const PeoplesAffected = () => {
               }
             );
           }
-        }
-      
-
-        // We have hit the API to create person Affected.
+                  // We have hit the API to create person Affected.
         // Now we are hitting the put api to send is person available is true in other API.
         const temp = incidentsListData;
         temp.isPersonDetailsAvailable =
@@ -252,6 +250,10 @@ const PeoplesAffected = () => {
             "/app/incident-management/registration/initial-notification/reporting-and-notification/"
           );
         }
+        }
+      
+
+
 
         // Case when form has No option selected.
       } else {
@@ -612,7 +614,7 @@ const PeoplesAffected = () => {
                                 : null
                             }
                             variant="outlined"
-                            label="Worker taken offsite for further assesment?"
+                            label="Worker taken offsite for further assessment?"
                             className={classes.formControl}
                             value={value.workerOffsiteAssessment}
                             onChange={(e) =>
@@ -632,7 +634,7 @@ const PeoplesAffected = () => {
                                 ? error[`locationAssessmentCenter${[key]}`]
                                 : null
                             }
-                            label="Location details of assesment center?"
+                            label="Location details of assessment center?"
                             className={classes.formControl}
                             value={value.locationAssessmentCenter}
                             onChange={(e) =>
