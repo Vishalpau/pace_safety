@@ -12,7 +12,7 @@ export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvw
 
 export const API_URL = "https://dev-safety-api.paceos.io/";
 export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
-export const access_token = localStorage.getItem("access_token") || 'GIgqhTAr8BLUZuq7exBqrpdptGUzGs';
+export const access_token = localStorage.getItem("access_token");
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details":
@@ -68,7 +68,7 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/management-control/",
   "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
-  "Why analysis":
+  "5 Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
@@ -77,7 +77,7 @@ export const SUMMERY_FORM = {
 };
 
 export const LESSION_LEARNED_FORM = {
-  "Lession learned":
+  "Lesson learned":
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 
@@ -304,7 +304,7 @@ export const MANAGEMENTCONTROL = [
 
 export const RCAOPTION = [
   "Five why analysis",
-  "Pace cause analysis",
+  "PACE cause analysis",
   "Root cause analysis",
 ];
 

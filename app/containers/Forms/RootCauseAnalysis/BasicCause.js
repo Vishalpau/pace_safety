@@ -73,6 +73,8 @@ const BasicCause = () => {
   const history = useHistory();
   const updateIds = useRef();
   const [incidentDetail, setIncidentDetail] = useState({});
+  const checkPost = useRef()
+
   // get data and set to states
 
   const handelUpdateCheck = async () => {
@@ -82,12 +84,14 @@ const BasicCause = () => {
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-    if (!isNaN(lastItem)) {
-      let previousData = await api.get(
-        `/api/v1/incidents/${lastItem}/pacecauses/`
-      );
-      putId.current = lastItem;
-      let allApiData = previousData.data.data.results;
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let allApiData = previousData.data.data.results;
+
+    if (allApiData.length > 14) {
+      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`);
+      putId.current = incidentId;
+      // let allApiData = previousData.data.data.results;
       allApiData.map((value) => {
         if (BASIC_CAUSE_SUB_TYPES.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
@@ -98,6 +102,8 @@ const BasicCause = () => {
       });
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
+      checkPost.current = false
+
       // set fetched spervised data
       setForm({
         ...form,
@@ -141,6 +147,7 @@ const BasicCause = () => {
         },
       });
     }
+    console.log(allApiData)
   };
 
   const handelPersonal = (e, value) => {
@@ -255,6 +262,7 @@ const BasicCause = () => {
   };
   const selectValues = ["Option1", "Option2", "...."];
   const classes = useStyles();
+
   const handelNext = async (e) => {
     const { error, isValid } = BasicCauseValidation(form);
     await setError(error);
@@ -262,7 +270,7 @@ const BasicCause = () => {
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       // post request object
-      if (putId.current == "") {
+      if (checkPost.current !== false) {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
@@ -277,7 +285,7 @@ const BasicCause = () => {
       } else {
         let temp = {
           createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
+          fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString(),
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
@@ -293,11 +301,9 @@ const BasicCause = () => {
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-        if (putId.current !== "") {
+        if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/${callObjects[key].pk}/`,
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
             callObjects[key]
           );
           if (res.status == 200) {
@@ -329,6 +335,7 @@ const BasicCause = () => {
       );
     }
     // api call //
+
   };
 
   const fetchIncidentDetails = async () => {
@@ -421,7 +428,7 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               rows={4}
-              label="Other human factors"
+              label="Other human factors*"
               error={error.otherHumanFactor}
               value={form.otherHumanFactor.rcaRemark}
               helperText={error ? error.otherHumanFactor : ""}
@@ -487,7 +494,7 @@ const BasicCause = () => {
               value={form.otherJobFactors.rcaRemark}
               helperText={error ? error.otherJobFactors : ""}
               rows={3}
-              label="Other job factors"
+              label="Other job factors*"
               className={classes.formControl}
               onChange={async (e) => handelOtherJobFactors(e)}
             />

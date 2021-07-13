@@ -83,8 +83,8 @@ const LessionLearned = () => {
 
   const handleNext = async () => {
     // sent put request
-    let status =0
-    if (learningList.length>0) {
+    let status = 0;
+    if (learningList.length > 0) {
       for (var i = 0; i < learningList.length; i++) {
         const res = await api.put(
           `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
@@ -92,10 +92,10 @@ const LessionLearned = () => {
             teamOrDepartment: learningList[i].teamOrDepartment,
             learnings: learningList[i].learnings,
             status: "Active",
-            updatedBy: 0
+            updatedBy: 0,
           }
         );
-        status = res.status
+        status = res.status;
       }
       if (status === 200) {
         history.push(
@@ -132,7 +132,6 @@ const LessionLearned = () => {
         }
       }
     }
-    
   };
 
   //  Fetch Lession learn data
@@ -181,7 +180,7 @@ const LessionLearned = () => {
     fetchIncidentsData();
   }, []);
   return (
-    <PapperBlock title="Lessions Learned" icon="ion-md-list-box">
+    <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} justify="flex-start" spacing={3}>
@@ -201,7 +200,7 @@ const LessionLearned = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentOccuredOn).format(
-                  "YYYY/DD/MM HH:mm"
+                  "Do MMMM YYYY, h:mm:ss a"
                 )}
               </Typography>
             </Grid>
@@ -212,7 +211,7 @@ const LessionLearned = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentReportedOn).format(
-                  "YYYY/DD/MM HH:mm"
+                  "Do MMMM YYYY, h:mm:ss a"
                 )}
               </Typography>
             </Grid>
@@ -231,7 +230,6 @@ const LessionLearned = () => {
                 Incident type
               </Typography>
               <Typography className={Type.labelValue}>
-                {" "}
                 {incidentsListData.incidentType}{" "}
               </Typography>
             </Grid>
@@ -274,6 +272,7 @@ const LessionLearned = () => {
                     <Grid item md={12}>
                       <FormControl
                         variant="outlined"
+                        required
                         className={classes.formControl}
                         error={error.team}
                       >
@@ -309,32 +308,26 @@ const LessionLearned = () => {
                       </FormControl>
                     </Grid>
                     <Grid item md={12}>
-                      <FormControl
-                        variant="outlined"
+                      <TextField
+                        id="outlined-search"
                         className={classes.formControl}
-                      >
-                        <TextField
-                          id="outlined-search"
-                          label="Team/department learnings"
-                          variant="outlined"
-                          rows="3"
-                          multiline
-                          defaultValue={item.learnings}
-                          error={error.teamLearning}
-                          helperText={error ? error.teamLearning : ""}
-                          onChange={(e) =>
-                            handleUpdateLessonLearned(
-                              e,
-                              index,
-                              "learnings",
-                              item.id
-                            )
-                          }
-                        />
-                        {/* {error && error.teamLearning && (
-                            <p>{error.teamLearning}</p>
-                          )} */}
-                      </FormControl>
+                        label="Team/department learnings"
+                        variant="outlined"
+                        rows="3"
+                        multiline
+                        required
+                        defaultValue={item.learnings}
+                        error={error.teamLearning}
+                        helperText={error ? error.teamLearning : ""}
+                        onChange={(e) =>
+                          handleUpdateLessonLearned(
+                            e,
+                            index,
+                            "learnings",
+                            item.id
+                          )
+                        }
+                      />
                     </Grid>
                   </Grid>
                 ))
@@ -343,6 +336,7 @@ const LessionLearned = () => {
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
+                      required
                       className={classes.formControl}
                       error={error.team}
                     >
@@ -376,26 +370,21 @@ const LessionLearned = () => {
                   </Grid>
                   <Grid item md={12}>
                     {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-                    <FormControl
-                      variant="outlined"
+
+                    <TextField
+                      id="outlined-search"
                       className={classes.formControl}
-                    >
-                      <TextField
-                        id="outlined-search"
-                        error={error.teamLearning}
-                        label="Team/department learnings"
-                        variant="outlined"
-                        rows="3"
-                        multiline
-                        helperText={error ? error.teamLearning : ""}
-                        onChange={(e) =>
-                          setForm({ ...form, teamLearning: e.target.value })
-                        }
-                      />
-                      {/* {error && error.teamLearning && (
-                          <p>{error.teamLearning}</p>
-                        )} */}
-                    </FormControl>
+                      error={error.teamLearning}
+                      label="Team/department learnings"
+                      variant="outlined"
+                      rows="3"
+                      required
+                      multiline
+                      helperText={error ? error.teamLearning : ""}
+                      onChange={(e) =>
+                        setForm({ ...form, teamLearning: e.target.value })
+                      }
+                    />
                   </Grid>
                 </Grid>
               )}
@@ -409,7 +398,7 @@ const LessionLearned = () => {
                   // href="#contained-buttons"
                   onClick={() => handleNext()}
                 >
-                  Next
+                  Submit
                 </Button>
               </Box>
             </Grid>
@@ -418,7 +407,7 @@ const LessionLearned = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lession learned"}
+              selectedItem={"Lesson learned"}
             />
           </Grid>
         </Grid>

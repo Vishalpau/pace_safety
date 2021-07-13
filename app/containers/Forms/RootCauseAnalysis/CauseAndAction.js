@@ -84,42 +84,40 @@ const BasicCauseAndAction = () => {
     setSelectedDate(date);
   };
   const putId = useRef("");
+
   const subValues = [
-    "Others conditions",
-    "Safety items",
-    "Tools",
-    "Energy types",
-    "Warning system",
-    "Other acts",
-    "Procedures",
-    "Ergonimics",
-    "Safety issues",
-    "Behaviour issue",
-    "Equipment machinery",
-    "Workpackage",
     "Supervision",
-  ];
+    "Workpackage",
+    "Equipment machinery",
+    "Behaviour issue",
+    "Safety issues",
+    "Ergonimics",
+    "Procedures",
+    "Other acts",
+    "Warning system",
+    "Energy types",
+    "Tools",
+    "Safety items",
+    "Others conditions",
+  ]
+
+
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
       HAZARDIOUS_CONDITION_SUB_TYPES
     );
-
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
-
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
-        tempApiData[valueQuestion] = valueAnser.includes(",")
-          ? valueAnser.split(",")
-          : [valueAnser];
+        tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser];
       }
     });
-
     await setData(tempApiData);
   };
 
@@ -142,8 +140,7 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -170,6 +167,7 @@ const BasicCauseAndAction = () => {
       title="Actions against Immediate Causes"
       icon="ion-md-list-box"
     >
+      {/* {console.log(data)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -202,7 +200,8 @@ const BasicCauseAndAction = () => {
               Option Selected from Hazardious Acts and Condition
             </Typography>
 
-            {Object.entries(data).map(([key, value], index) => (
+            {Object.entries(data).reverse().map(([key, value], index) => (
+
               <List
                 className={classes.list}
                 component="nav"
@@ -226,11 +225,12 @@ const BasicCauseAndAction = () => {
                     <ListItemText primary={value} />
                   </ListItem>
                 ))}
+                <button className={classes.textButton}>
+                  <AddCircleOutlineIcon /> Add a new action
+                </button>
               </List>
             ))}
-            <button className={classes.textButton}>
-              <AddCircleOutlineIcon /> Add a new action
-            </button>
+
           </Grid>
 
           <Grid item md={12}>
