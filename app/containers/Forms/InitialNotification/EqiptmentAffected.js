@@ -278,6 +278,7 @@ await setIsLoading(true);
   };
 
   const handleBack = ()=>{
+    const nextPath = JSON.parse(localStorage.getItem('nextPath'))
    if (nextPath.propertyAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/property-affected/${id}`

@@ -331,6 +331,7 @@ const PropertyAffected = () => {
 
   // handle go back
   const handleBack = ()=>{
+    const nextPath = JSON.parse(localStorage.getItem('nextPath'))
   if (nextPath.personAffect === 'Yes') {
       history.push(
         `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
