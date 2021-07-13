@@ -21,7 +21,7 @@ function DetailValidation(data) {
   // }
 
   if (validator.isEmpty(data.rcaRecommended)) {
-    error.rcaRecommended = "This field is empty";
+    error.rcaRecommended = "Select one option";
     isValid = false;
   }
 

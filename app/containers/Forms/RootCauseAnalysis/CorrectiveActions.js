@@ -77,6 +77,7 @@ const CorrectiveAction = () => {
   const { id } = useParams();
   const history = useHistory();
   const updateIds = useRef();
+  const checkPost = useRef()
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -88,13 +89,14 @@ const CorrectiveAction = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    if (!isNaN(lastItem)) {
-      let previousData = await api.get(
-        `/api/v1/incidents/${lastItem}/pacecauses/`
-      );
-      putId.current = lastItem;
-      let allApiData = previousData.data.data.results;
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let allApiData = previousData.data.data.results;
 
+    if (allApiData.length > 19) {
+      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`);
+      putId.current = lastItem;
+      // let allApiData = previousData.data.data.results;
       allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
@@ -105,6 +107,7 @@ const CorrectiveAction = () => {
       });
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
+      checkPost.current = false
 
       // set fetched spervised data
       setForm({
@@ -169,7 +172,7 @@ const CorrectiveAction = () => {
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       // post request object
-      if (putId.current == "") {
+      if (checkPost.current !== false) {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
@@ -184,7 +187,7 @@ const CorrectiveAction = () => {
       } else {
         let temp = {
           createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
+          fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString(),
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
@@ -201,11 +204,9 @@ const CorrectiveAction = () => {
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-        if (putId.current !== "") {
+        if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/${callObjects[key].pk}/`,
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
             callObjects[key]
           );
           if (res.status == 200) {
@@ -233,8 +234,7 @@ const CorrectiveAction = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -296,6 +296,9 @@ const CorrectiveAction = () => {
                 />
               ))}
             </FormControl>
+            {error && error.managementControl && (
+              <FormHelperText style={{ color: "red" }}>{error.managementControl}</FormHelperText>
+            )}
           </Grid>
 
           <Grid item md={12}>
@@ -328,7 +331,7 @@ const CorrectiveAction = () => {
               className={classes.button}
               onClick={(e) => handelNext(e)}
             >
-              Next
+              Submit
             </Button>
           </Grid>
         </Grid>

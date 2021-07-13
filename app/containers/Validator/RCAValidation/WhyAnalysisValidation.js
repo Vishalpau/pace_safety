@@ -7,22 +7,10 @@ function WhyAnalysisValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].why)) {
-      error[`why${[i]}`] = "This field is empty";
+      error[`why${[i]}`] = "Fill the information";
       isValid = false;
     }
-
-    // if (validator.isEmpty(data[i].locationAssessmentCenter.toString())) {
-    //     error[`locationAssessmentCenter${[i]}`] = "This field is empty"
-    //     isValid = false
-    // }
-
-    // for (let i = 0; i < data.length; i++) {
-    //   if (validator.isEmpty(data[i].why)) {
-    //     error[`why${[i]}`] = "This field is empty";
-    //     isValid = false;
-    //   }
-    return { error, isValid };
-    // }
   }
+  return { error, isValid };
 }
 export default WhyAnalysisValidate;

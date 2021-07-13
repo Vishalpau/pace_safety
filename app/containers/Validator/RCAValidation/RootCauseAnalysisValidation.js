@@ -6,12 +6,12 @@ function RootCauseValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.causeOfIncident)) {
-    error.causeOfIncident = "This field is empty";
+    error.causeOfIncident = "Fill the information";
     isValid = false;
   }
 
   if (validator.isEmpty(data.correctiveAction)) {
-    error.correctiveAction = "This field is empty";
+    error.correctiveAction = "Fill the information";
     isValid = false;
   }
 
@@ -20,10 +20,10 @@ function RootCauseValidation(data) {
   //   isValid = false;
   // }
 
-  // if (validator.isEmpty(data.recommendSolution)) {
-  //   error.recommendSolution = "This field is empty";
-  //   isValid = false;
-  // }
+  if (data.wouldItPreventIncident === "Yes" && validator.isEmpty(data.recommendSolution)) {
+    error.recommendSolution = "Fill the information";
+    isValid = false;
+  }
 
   console.log(error);
   return { error, isValid };

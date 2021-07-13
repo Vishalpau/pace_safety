@@ -4,29 +4,24 @@ import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import {
   DateTimePicker,
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
+  KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import DateFnsUtils from "@date-io/date-fns";
 import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormLabel from "@material-ui/core/FormLabel";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
-import FormHelperText from "@material-ui/core/FormHelperText";
 
-import FormHeader from "../FormHeader";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
@@ -49,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RootCauseAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
+  const putId = useRef("");
 
   const [form, setForm] = useState({
     causeOfIncident: "",
@@ -58,48 +54,26 @@ const RootCauseAnalysis = () => {
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
+    fkIncidentId: putId.current || parseInt(localStorage.getItem("fkincidentId")),
   });
 
   const [error, setError] = useState({});
   const history = useHistory();
-  const fetchIncidentData = async () => {
-    const allIncidents = await api.get(
-      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    await setIncidents(allIncidents.data.data.results);
-  };
-
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-
-  const notificationSent = ["Manage", "SuperVisor"];
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-  const putId = useRef("");
+  const checkPost = useRef()
   const pkValue = useRef("");
 
   const handelUpdateCheck = async () => {
-    let tempApiData = {};
-    let tempApiDataId = [];
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
+    let allApiData = previousData.data.data.results[0];
 
-    if (!isNaN(lastItem)) {
-      let previousData = await api.get(
-        `/api/v1/incidents/${lastItem}/rootcauses/`
-      );
-      let allApiData = previousData.data.data.results[0];
+    if (!isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
       setForm({
         ...form,
@@ -108,9 +82,18 @@ const RootCauseAnalysis = () => {
         wouldItPreventIncident: allApiData.wouldItPreventIncident,
         recommendSolution: allApiData.recommendSolution,
       });
-      putId.current = lastItem;
+      putId.current = incidentId;
+      checkPost.current = false
     }
   };
+
+  const fetchIncidentData = async () => {
+    const allIncidents = await api.get(
+      `api/v1/incidents/${putId.current !== "" ? putId.current : localStorage.getItem("fkincidentId")}/`
+    );
+    await setIncidents(allIncidents.data.data.results);
+  };
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -122,7 +105,7 @@ const RootCauseAnalysis = () => {
     setError(error);
     let nextPageLink = 0;
     if (Object.keys(error).length == 0) {
-      if (putId.current == "") {
+      if (checkPost.current !== false) {
         const res = await api.post(
           `/api/v1/incidents/${localStorage.getItem(
             "fkincidentId"
@@ -130,19 +113,15 @@ const RootCauseAnalysis = () => {
           form
         );
         if (res.status == 201) {
-          console.log("request done");
           nextPageLink = res.status;
         }
       } else {
         form["pk"] = pkValue.current;
         const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/rootcauses/${pkValue.current}/`,
+          `/api/v1/incidents/${putId.current}/rootcauses/${pkValue.current}/`,
           form
         );
         if (res.status == 200 && Object.keys(error).length === 0) {
-          console.log("request done");
           nextPageLink = res.status;
         }
       }
@@ -154,8 +133,7 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -165,7 +143,7 @@ const RootCauseAnalysis = () => {
 
   useEffect(() => {
     handelUpdateCheck();
-    fetchIncidentData();
+    setTimeout(fetchIncidentData(), 1000);
   }, []);
 
   return (
@@ -255,12 +233,12 @@ const RootCauseAnalysis = () => {
 
           <Grid item lg={6} md={12} sm={12}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker
+              <KeyboardDateTimePicker
                 autoOk
                 inputVariant="outlined"
                 className={classes.formControl}
                 ampm={false}
-                value={selectedDate}
+                value={incidents.incidentOccuredOn}
                 onChange={handleDateChange}
                 label="Incident date and time"
                 disabled
@@ -310,7 +288,7 @@ const RootCauseAnalysis = () => {
               label="Corrective actions"
               required
               error={error.correctiveAction}
-              defaultValue={form.correctiveAction}
+              value={form.correctiveAction}
               helperText={error ? error.correctiveAction : ""}
               onChange={(e) =>
                 setForm({ ...form, correctiveAction: e.target.value })
@@ -343,22 +321,25 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
-            <TextField
-              className={classes.formControl}
-              id="filled-basic"
-              variant="outlined"
-              multiline
-              error={error && error.recommendSolution}
-              helperText={null}
-              label="If no please recommended correct solution?"
-              rows="3"
-              defaultValue={form.recommendSolution}
-              onChange={(e) =>
-                setForm({ ...form, recommendSolution: e.target.value })
-              }
-            />
-          </Grid>
+          {form.wouldItPreventIncident === "Yes" ?
+            <Grid item md={12}>
+              <TextField
+                className={classes.formControl}
+                id="filled-basic"
+                variant="outlined"
+                multiline
+                error={error && error.recommendSolution}
+                helperText={null}
+                label="If no please recommended correct solution?*"
+                rows="3"
+                value={form.recommendSolution}
+                onChange={(e) =>
+                  setForm({ ...form, recommendSolution: e.target.value })
+                }
+              />
+            </Grid>
+            : null}
+
 
           <Grid item md={12}>
             <Button
@@ -375,7 +356,7 @@ const RootCauseAnalysis = () => {
               className={classes.button}
               onClick={(e) => handelNext(e)}
             >
-              Next
+              Submit
             </Button>
           </Grid>
         </Grid>

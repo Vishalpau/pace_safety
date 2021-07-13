@@ -57,12 +57,11 @@ const WhyAnalysis = () => {
 
   const [error, setError] = useState({});
 
-  const [data, setData] = useState([]);
   const history = useHistory();
   const [form, setForm] = useState([{ why: "", whyCount: "" }]);
 
   const updateIds = useRef();
-
+  const checkPost = useRef()
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
@@ -71,14 +70,15 @@ const WhyAnalysis = () => {
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    let allApiData = previousData.data.data.results;
 
-    if (!isNaN(lastItem)) {
+    if (allApiData.length > 0) {
       form.length = 0;
-      let previousData = await api.get(
-        `/api/v1/incidents/${lastItem}/fivewhy/`
-      );
+      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/fivewhy/`);
       putId.current = lastItem;
-      let allApiData = previousData.data.data.results;
+      // let allApiData = previousData.data.data.results;
       allApiData.map((value) => {
         form.push({
           why: value.why,
@@ -86,6 +86,7 @@ const WhyAnalysis = () => {
           whyId: value.id,
         });
       });
+      checkPost.current = false
     }
     updateIds.current = tempApiDataId;
   };
@@ -127,7 +128,7 @@ const WhyAnalysis = () => {
     let callObjects = form;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-        if (putId.current == "") {
+        if (checkPost.current !== false) {
           let postObject = { ...whyData, ...callObjects[key] };
           const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
@@ -195,7 +196,7 @@ const WhyAnalysis = () => {
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
-            <Typography className={Type.labelValue}>5 Why Analysis</Typography>
+            <Typography className={Type.labelValue}>Five why analysis</Typography>
           </Grid>
 
           <Grid item md={12}>
@@ -231,8 +232,10 @@ const WhyAnalysis = () => {
                 <Grid item xs={11}>
                   <TextField
                     id="filled-basic"
-                    label={`Why ${index}`}
+                    label={`Why ${index + 1}`}
                     variant="outlined"
+                    multiline
+                    rows={15}
                     error={error[`why${[index]}`]}
                     value={form[index].why || ""}
                     helperText={error ? error[`why${[index]}`] : ""}
@@ -288,7 +291,7 @@ const WhyAnalysis = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Why Analysis"}
+            selectedItem={"5 Why analysis"}
           />
         </Grid>
       </Grid>
