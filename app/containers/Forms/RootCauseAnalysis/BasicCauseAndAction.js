@@ -69,13 +69,13 @@ const BasicCauseAndAction = () => {
   const putId = useRef("");
   const [incidentDetail, setIncidentDetail] = useState({});
   let sub_values = [
-    "Others job factors",
-    "Processes",
-    "Leadership",
-    "Other human factors",
-    "Wellness factors",
     "Personal",
-  ];
+    "Wellness factors",
+    "Other human factors",
+    "Leadership",
+    "Processes",
+    "Others job factors",
+  ]
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = BASIC_CAUSE_SUB_TYPES;
@@ -172,7 +172,7 @@ const BasicCauseAndAction = () => {
               Option selected from basic cause
             </Typography>
 
-            {Object.entries(data).map(([key, value], index) => (
+            {Object.entries(data).reverse().map(([key, value], index) => (
               <List
                 className={classes.list}
                 component="nav"

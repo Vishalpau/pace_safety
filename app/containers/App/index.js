@@ -47,11 +47,11 @@ function App() {
       };
       console.log(config);
       await axios(config)
-        .then(function(response) {
+        .then(function (response) {
           console.log(response);
           localStorage.setItem("access_token", response.data.access_token);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     }
@@ -75,20 +75,20 @@ function App() {
   });
   return (
     <ThemeWrapper>
-      {localStorage.getItem("access_token") !== null ? (
-        <Switch>
-          <Route path="/app" exact component={LandingCorporate} />
-          <Route path="/landing-creative" exact component={LandingCreative} />
-          <Route path="/" component={Application} />
-          <Route path="/blog" component={ArticleNews} />
-          <Route component={Auth} />
-          <Route component={NotFound} />
-        </Switch>
-      ) : (
+      {/* {localStorage.getItem("access_token") !== null ? ( */}
+      <Switch>
+        <Route path="/app" exact component={LandingCorporate} />
+        <Route path="/landing-creative" exact component={LandingCreative} />
+        <Route path="/" component={Application} />
+        <Route path="/blog" component={ArticleNews} />
+        <Route component={Auth} />
+        <Route component={NotFound} />
+      </Switch>
+      {/* ) : (
         <Switch>
           <Route component={Authentication} />
         </Switch>
-      )}
+      )} */}
     </ThemeWrapper>
   );
 }

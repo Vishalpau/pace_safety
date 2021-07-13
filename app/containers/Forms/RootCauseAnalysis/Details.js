@@ -52,9 +52,9 @@ const Details = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
   const [form, setForm] = useState({
-    evidenceSupport: "N/A",
-    evidenceContradiction: "N/A",
-    evidenceNotSupport: "N/A",
+    evidenceSupport: "Yes",
+    evidenceContradiction: "Yes",
+    evidenceNotSupport: "Yes",
     rcaRecommended: "",
     status: "Active",
     createdBy: 0,
@@ -80,7 +80,7 @@ const Details = () => {
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
     let allApiData = previousData.data.data.results[0];
 
-    if (!isNaN(allApiData.id)) {
+    if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
       setForm({
         ...form,
@@ -119,7 +119,7 @@ const Details = () => {
         "Corrective actions",
         "Root cause analysis",
       ]);
-    } else if (value == "Pace cause analysis") {
+    } else if (value == "PACE cause analysis") {
       setHideArray(["Root cause analysis", "5 Why analysis"]);
     } else if (value == "Root cause analysis") {
       setHideArray([
@@ -159,7 +159,7 @@ const Details = () => {
         history.push(
           "/app/incident-management/registration/root-cause-analysis/why-analysis/"
         );
-      } else if (form.rcaRecommended == "Pace cause analysis") {
+      } else if (form.rcaRecommended == "PACE cause analysis") {
         history.push(
           "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
         );
@@ -174,7 +174,7 @@ const Details = () => {
         history.push(
           `/app/incident-management/registration/root-cause-analysis/why-analysis/`
         );
-      } else if (form.rcaRecommended == "Pace cause analysis") {
+      } else if (form.rcaRecommended == "PACE cause analysis") {
         history.push(
           `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
           }`
@@ -293,8 +293,8 @@ const Details = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-            // required
-            // error={error.evidenceSupport}
+              required
+              error={error.evidenceSupport}
             >
               <FormLabel component="legend">
                 Evidence collected supports the incident event took place?
@@ -312,17 +312,17 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {/* {error && error.evidenceSupport && (
+              {error && error.evidenceSupport && (
                 <FormHelperText>{error.evidenceSupport}</FormHelperText>
-              )} */}
+              )}
             </FormControl>
           </Grid>
 
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-            // required
-            // error={error.evidenceContradiction}
+              required
+              error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
                 Contradictions between evidence and the description of incident?
@@ -346,17 +346,17 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {/* {error && error.evidenceContradiction && (
+              {error && error.evidenceContradiction && (
                 <FormHelperText>{error.evidenceContradiction}</FormHelperText>
-              )} */}
+              )}
             </FormControl>
           </Grid>
 
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-            // required
-            // error={error.evidenceContradiction}
+              required
+              error={error.evidenceContradiction}
             >
               <FormLabel component="legend">
                 Evidence does not supports the incident event as described?
@@ -377,9 +377,9 @@ const Details = () => {
                   />
                 ))}
               </RadioGroup>
-              {/* {error && error.evidenceNotSupport && (
+              {error && error.evidenceNotSupport && (
                 <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
-              )} */}
+              )}
             </FormControl>
           </Grid>
 

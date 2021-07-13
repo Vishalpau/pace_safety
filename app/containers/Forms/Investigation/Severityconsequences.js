@@ -64,6 +64,7 @@ const InvestigationOverview = () => {
       `api/v1/incidents/${incidentId}/investigations/`
     );
     let allApiData = previousData.data.data.results[0];
+    console.log(allApiData.id)
     if (!isNaN(allApiData.id)) {
       await setForm(allApiData);
       investigationId.current = allApiData.id
@@ -100,7 +101,7 @@ const InvestigationOverview = () => {
 
   return (
     <PapperBlock title="Severity Consequences" icon="ion-md-list-box">
-      {console.log(form.healthSafetyActual)}
+      {/* {console.log(form.healthSafetyActual)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
