@@ -61,7 +61,7 @@ const WhyAnalysis = () => {
   const [form, setForm] = useState([{ why: "", whyCount: "" }]);
 
   const updateIds = useRef();
-  const checkPost = useRef()
+  const checkPost = useRef();
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
@@ -70,8 +70,12 @@ const WhyAnalysis = () => {
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/fivewhy/`
+    );
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 0) {
@@ -86,7 +90,7 @@ const WhyAnalysis = () => {
           whyId: value.id,
         });
       });
-      checkPost.current = false
+      checkPost.current = false;
     }
     updateIds.current = tempApiDataId;
   };
@@ -170,8 +174,8 @@ const WhyAnalysis = () => {
         );
       }
     }
-    localStorage.setItem("RootCause", "Done")
-  }
+    localStorage.setItem("RootCause", "Done");
+  };
 
   useEffect(() => {
     handelUpdateCheck();
@@ -180,7 +184,7 @@ const WhyAnalysis = () => {
 
   const classes = useStyles();
   return (
-    <PapperBlock title="Why Analysis" icon="ion-md-list-box">
+    <PapperBlock title="5 Why Analysis" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -196,7 +200,9 @@ const WhyAnalysis = () => {
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
-            <Typography className={Type.labelValue}>Five why analysis</Typography>
+            <Typography className={Type.labelValue}>
+              Five why analysis
+            </Typography>
           </Grid>
 
           <Grid item md={12}>
@@ -235,6 +241,7 @@ const WhyAnalysis = () => {
                     label={`Why ${index + 1}`}
                     variant="outlined"
                     multiline
+                    required
                     rows={15}
                     error={error[`why${[index]}`]}
                     value={form[index].why || ""}

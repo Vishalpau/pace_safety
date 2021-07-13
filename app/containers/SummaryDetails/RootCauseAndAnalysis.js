@@ -80,13 +80,19 @@ const RootCauseAnalysisSummary = () => {
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>
-              <Table className={classes.table} size="small">
+              <Table style={{ minWidth: 900 }} size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Cause of incident</TableCell>
-                    <TableCell>Recommended solution</TableCell>
-                    <TableCell>Corrective action</TableCell>
+                    <TableCell style={{ width: 100 }}>ID</TableCell>
+                    <TableCell style={{ width: 200 }}>
+                      Cause of incident
+                    </TableCell>
+                    <TableCell style={{ width: 200 }}>
+                      Recommended solution
+                    </TableCell>
+                    <TableCell style={{ width: 280 }}>
+                      Corrective action
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -113,16 +119,16 @@ const RootCauseAnalysisSummary = () => {
       <Grid item md={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Five why</Typography>
+            <Typography className={classes.heading}>5 why analysis</Typography>
           </AccordionSummary>
           <AccordionDetails classes={{ root: "details-wrapper" }}>
             <TableContainer component={Paper}>
-              <Table className={classes.table} size="small">
+              <Table style={{ minWidth: 900 }} size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Why</TableCell>
-                    <TableCell>Why Count</TableCell>
+                    <TableCell style={{ width: 150 }}>ID</TableCell>
+                    <TableCell style={{ width: 300 }}>Why</TableCell>
+                    <TableCell style={{ width: 120 }}>Why Count</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -193,7 +199,7 @@ const RootCauseAnalysisSummary = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell style={{ width: 200 }}>ID</TableCell>
-                    <TableCell style={{ width: 200 }}>RCA number</TableCell>
+                    <TableCell style={{ width: 340 }}>RCA number</TableCell>
                     <TableCell style={{ width: 200 }}>RCA type</TableCell>
                     <TableCell style={{ width: 200 }}>RCA sub type</TableCell>
                     <TableCell style={{ width: 400 }}>RCA Remark</TableCell>
