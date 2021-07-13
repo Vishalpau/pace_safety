@@ -135,7 +135,7 @@ const IncidentDetailsSummary = () => {
 
       <Grid item md={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incidnet description
+          Incident description
         </Typography>
 
         {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
