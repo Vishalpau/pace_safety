@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -88,10 +88,11 @@ const Summary = () => {
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const rootCauseStatus = useRef(false)
 
   const { id } = useParams();
   const history = useHistory();
-  if(id){
+  if (id) {
     localStorage.setItem('fkincidentId', id);
   }
 
@@ -100,6 +101,33 @@ const Summary = () => {
     await setIncidents(allIncidents.data.data.results);
     await setIsLoading(true);
   };
+
+  const rootCauseAnalysisCheck = async () => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+
+    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let paceCauseData = paceCause.data.data.results;
+
+    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
+    let rootCauseData = rootCause.data.data.results[0];
+
+    let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    let whyAnalysisData = whyAnalysis.data.data.results;
+
+    if (paceCauseData.length > 0 && typeof paceCauseData !== "undefined" ||
+      rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
+      whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
+    ) {
+      console.log("here")
+      rootCauseStatus.current = true
+    }
+    console.log(rootCauseStatus.current)
+  }
 
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -115,6 +143,7 @@ const Summary = () => {
 
   useEffect(() => {
     fetchIncidentData();
+    rootCauseAnalysisCheck();
   }, []);
 
   return (
@@ -368,22 +397,22 @@ const Summary = () => {
                         </ListItemIcon>
                         <ListItemText primary="Lessions Learnt" />
                       </ListItemLink>) : (
-                       <ListItemLink
-                       onClick={() =>
-                         history.push(
-                           "/app/incident-management/registration/lession-learned/lession-learned/"
-                         )
-                       }
-                     >
-                       <ListItemIcon>
-                         <Add />
-                       </ListItemIcon>
-                       <ListItemText primary="Lessions Learnt" />
-                     </ListItemLink>
- 
+                      <ListItemLink
+                        onClick={() =>
+                          history.push(
+                            "/app/incident-management/registration/lession-learned/lession-learned/"
+                          )
+                        }
+                      >
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+                        <ListItemText primary="Lessions Learnt" />
+                      </ListItemLink>
+
                     )}
 
-                   
+
                     <ListItem button divider>
                       <ListItemIcon>
                         <Close />

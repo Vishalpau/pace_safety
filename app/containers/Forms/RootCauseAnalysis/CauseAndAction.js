@@ -197,7 +197,7 @@ const BasicCauseAndAction = () => {
 
           <Grid item md={12}>
             <Typography variant="h6">
-              Option Selected from Hazardious Acts and Condition
+              Option Selected from Hazardous Acts and Condition
             </Typography>
 
             {Object.entries(data).reverse().map(([key, value], index) => (
