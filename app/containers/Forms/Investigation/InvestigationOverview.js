@@ -18,6 +18,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from "react-router";
 
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const InvestigationOverview = () => {
   const [error, setError] = useState({});
   const putId = useRef("")
+  const history = useHistory();
   const investigationId = useRef("")
   const severityValues = useRef([])
 
@@ -75,25 +77,30 @@ const InvestigationOverview = () => {
 
     if (putId.current == "") {
       const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-      if (res.status === 201) {
-        console.log("request done");
-      }
+      
+      history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
+        
+      
     } else if (putId.current !== "") {
       console.log(putId.current)
       form["updatedBy"] = "0"
       const res = api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-      if (res.status === 200) {
-        console.log("request done");
-      }
+      
+      // if (res.status === 200) {
+        history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
+      // }
     }
 
   };
 
   const classes = useStyles();
-
-  useEffect(async () => {
-    handelUpdateCheck()
+  const callback = async() => {
+    await handelUpdateCheck()
     severityValues.current = await PickListData(41)
+  }
+
+  useEffect( () => {
+    callback()
   }, []);
 
   return (

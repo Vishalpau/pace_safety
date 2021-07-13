@@ -92,6 +92,42 @@ const WorkerDetails = () => {
   const supervisorTimeInCompany = useRef([]);
   const supervisorTimeOnProject = useRef([]);
   const { id } = useParams();
+  const [workerData , setWorkerData ] = useState([]);
+
+
+  const putId = useRef("");
+  const investigationId = useRef("");
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
+    let allApiData = previousData.data.data.results[0];
+    if (!isNaN(allApiData.id)) {
+      // await setForm(allApiData);
+      investigationId.current = allApiData.id;
+    }
+
+    const res = await api.get(
+      `/api/v1/incidents/${putId.current}/investigations/${
+        investigationId.current
+      }/workers/`
+    );
+    const result = res.data.data.results;
+    console.log(result);
+    
+
+    await setWorkerData(result);
+    await setIsLoading(true);
+  };
 
   const [form, setForm] = useState({
     name: "",
@@ -106,7 +142,7 @@ const WorkerDetails = () => {
     timeInCompany: "",
     timeOnProject: "",
     timeInIndustry: "",
-    attechments: "",
+    attachments: "",
     eventLeadingToInjury: "",
     injuryObject: "",
     primaryBodyPartWithSide: "",
@@ -133,7 +169,7 @@ const WorkerDetails = () => {
     reasonForTestNotDone: "",
     status: "Active",
     createdBy: 0,
-    fkInvestigationId: 11,
+    fkInvestigationId: investigationId.current,
   });
 
   const handleDateChange = (date) => {
@@ -145,22 +181,18 @@ const WorkerDetails = () => {
 
   const handelTestTaken = (e) => {
     if (e.target.value == "Yes") {
-      console.log(e.target.value);
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       seTesttaken(true);
     } else if (e.target.value == "No") {
-      console.log(e.target.value);
-      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
+      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value,dateOfAlcoholDrugTest:"2000-07-15T10:48:00.000Z"});
+
       seTesttaken(false);
     }
   };
 
   const handleFile = async (e) => {
-    console.log(e.target.files[0]);
     const temp = { ...form };
-    console.log(e.target.files[0]);
-    temp.attechments = e.target.files[0];
-    console.log("sgs");
+    temp.attachments = e.target.files[0];
     await setForm(temp);
   };
 
@@ -170,7 +202,6 @@ const WorkerDetails = () => {
     if (!isValid) {
       return;
     }
-    console.log("saaa");
     let data = new FormData();
     data.append("name", form.name);
     data.append("workerType", form.workerType);
@@ -184,21 +215,21 @@ const WorkerDetails = () => {
     data.append("timeInCompany", form.timeInCompany);
     data.append("timeOnProject", form.timeOnProject);
     data.append("timeInIndustry", form.timeInIndustry);
-    data.append("attechments", form.attechments);
+    data.append("attachments", form.attachments);
     data.append("eventLeadingToInjury", form.eventLeadingToInjury);
     data.append("injuryObject", form.injuryObject);
     data.append("primaryBodyPartWithSide", form.primaryBodyPartWithSide);
     data.append("secondaryBodyPartWithSide", form.secondaryBodyPartWithSide);
     data.append("typeOfInjury", form.typeOfInjury);
-    data.append("NoOfDaysAway", form.NoOfDaysAway),
-      data.append("medicalResponseTaken", form.medicalResponseTaken);
+    data.append("NoOfDaysAway", form.NoOfDaysAway);
+    data.append("medicalResponseTaken", form.medicalResponseTaken);
     data.append("treatmentDate", form.treatmentDate);
     data.append("higherMedicalResponder", form.higherMedicalResponder);
     data.append("injuryStatus", form.injuryStatus);
     data.append("firstAidTreatment", form.firstAidTreatment);
     data.append("mechanismOfInjury", form.mechanismOfInjury);
-    data.append("isMedicationIssued", form.isMedicationIssued),
-      data.append("isPrescriptionIssued", form.isPrescriptionIssued);
+    data.append("isMedicationIssued", form.isMedicationIssued);
+    data.append("isPrescriptionIssued", form.isPrescriptionIssued);
     data.append("isNonPrescription", form.isNonPrescription);
     data.append("isAnyLimitation", form.isAnyLimitation);
     data.append("supervisorName", form.supervisorName);
@@ -208,23 +239,34 @@ const WorkerDetails = () => {
     data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
     data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
     data.append("isWorkerClearedTest", form.isWorkerClearedTest);
-    data.append("reasonForTestNotDone", form.reasonForTestNotDone),
-      data.append("status", form.status);
+    data.append("reasonForTestNotDone", form.reasonForTestNotDone);
+    data.append("status", form.status);
     data.append("createdBy", form.createdBy);
-    data.append("fkInvestigationId", form.fkInvestigationId);
-    console.log("sagar");
+    data.append("fkInvestigationId", investigationId.current);
     if (form.id) {
       data.append("id", form.id);
       const res = await api.put(
-        `/api/v1/incidents/400/investigations/11/workers/${form.id}/`,
+        `/api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
+        }/workers/${form.id}/`,
         data
       );
-    } else {
+      
+    }
+    else{
       const res = await api.post(
-        `/api/v1/incidents/400/investigations/11/workers/`,
+        `/api/v1/incidents/${localStorage.getItem(
+          "fkincidentId"
+        )}/investigations/${investigationId.current}/workers/`,
         data
       );
-      console.log(res.data.data.results);
+      if (res.status === 201) {
+        const workerId = res.data.data.results.id;
+
+        // Set the fkincidentId and it will be used for future reference forms.
+        localStorage.setItem("workerId", workerId);
+        history.push(`/app/incident-management/registration/investigation/event-details/`)
+      }
     }
   };
 
@@ -250,21 +292,10 @@ const WorkerDetails = () => {
     supervisorTimeInCompany.current = await PickListData(56);
     await setIsLoading(true);
   };
-  console.log(form);
-  // const fetchWorkersData = async() => {
-  //   console.log(id)
-  //   const res = await api.get(`/api/v1/incidents/400/investigations/11/workers/74/`);
-  //   console.log(res)
-  //   const result = res.data.data.results
 
-  //   await setForm(result)
-  //   await setIsLoading(true);
-
-  // }
+  //
   useEffect(() => {
-    // handelUpdateCheck()
-    // console.log(id)
-    //   fetchWorkersData()
+    handelUpdateCheck();
 
     PickList();
   }, []);
@@ -278,13 +309,14 @@ const WorkerDetails = () => {
             <Grid item md={12}>
               <Typography variant="h6">Worker details</Typography>
             </Grid>
+            {workerData.map((value, index)=>(<>
             <Grid item md={6}>
               <TextField
                 id="title"
                 variant="outlined"
                 label="Name"
                 required
-                defaultValue={form.name}
+                defaultValue={value.name}
                 error={error && error.name}
                 helperText={error && error.name ? error.name : null}
                 className={classes.formControl}
@@ -293,7 +325,6 @@ const WorkerDetails = () => {
                     ...form,
                     name: e.target.value,
                   });
-                  console.log(e.target.value);
                 }}
               />
             </Grid>
@@ -311,7 +342,7 @@ const WorkerDetails = () => {
                   id="unit-name"
                   label="Type"
                   // defaultValue={incidentsListData.fkUnitId}
-                  defaultValue={form.workerType}
+                  defaultValue={value.workerType}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -342,14 +373,12 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Department"
-                  defaultValue={form.department}
+                  defaultValue={value.department}
                   onChange={(e) => {
-                    console.log("here");
                     setForm({
                       ...form,
                       department: e.target.value,
                     });
-                    console.log(e.target.value);
                   }}
                 >
                   {departmentName.current.map((value) => (
@@ -375,9 +404,8 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Number of Scheduled Work Hours"
-                  defaultValue={form.workHours}
+                  defaultValue={value.workHours}
                   onChange={(e) => {
-                    console.log("here");
                     setForm({
                       ...form,
                       workHours: e.target.value,
@@ -397,14 +425,13 @@ const WorkerDetails = () => {
                 <KeyboardTimePicker
                   disableFuture
                   className={classes.formControl}
-                  defaultValue={form.shiftTimeStart}
+                  defaultValue={value.shiftTimeStart}
                   label="Start of shift time"
                   value={form.shiftTimeStart}
                   // value={
                   //   form.incidentdate || incidentsListData.incidentOccuredOn
                   // }
                   onChange={(e) => {
-                    console.log(e);
                     setForm({
                       ...form,
                       shiftTimeStart: moment(e).toISOString(),
@@ -415,30 +442,6 @@ const WorkerDetails = () => {
                   disableFuture="true"
                 />
               </MuiPickersUtilsProvider>
-              {/* <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-              <KeyboardTimePicker
-                
-                disableFuture
-                required
-                className={classes.formControl}
-                label="Start of shift time"
-                
-                // onChange={(date) => {
-                //     handleDateChange(date);
-                //     // handelTimeCompare();
-                //   }}
-                onChange={(e) => {
-                  console.log(e);
-                  setForm({
-                    ...form,
-                    shiftTimeStart: moment(e).toISOString(),
-                  });
-                }}
-                format="HH:mm"
-                inputVariant="outlined"
-                disableFuture="true"
-              />
-            </MuiPickersUtilsProvider> */}
             </Grid>
 
             {/* type of shift */}
@@ -449,8 +452,8 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Type of Shift"
+                  defaultValue={value.shiftType}
                   onChange={(e) => {
-                    console.log("here");
                     setForm({
                       ...form,
                       shiftType: e.target.value,
@@ -477,9 +480,8 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Occupation"
-                  defaultValue={form.occupation}
+                  defaultValue={value.occupation}
                   onChange={(e) => {
-                    console.log("here");
                     setForm({
                       ...form,
                       occupation: e.target.value,
@@ -509,9 +511,8 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Shift Cycle"
-                  defaultValue={form.shiftCycle}
+                  defaultValue={value.shiftCycle}
                   onChange={(e) => {
-                    console.log("here");
                     setForm({
                       ...form,
                       shiftCycle: e.target.value,
@@ -542,7 +543,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Number of Days into Shift"
-                  defaultValue={form.noOfDaysIntoShift}
+                  defaultValue={value.noOfDaysIntoShift}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -573,7 +574,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time in company"
-                  defaultValue={form.timeInCompany}
+                  defaultValue={value.timeInCompany}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -603,7 +604,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time on project"
-                  defaultValue={form.timeOnProject}
+                  defaultValue={value.timeOnProject}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -634,7 +635,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time in Industry"
-                  defaultValue={form.timeInIndustry}
+                  defaultValue={value.timeInIndustry}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -665,7 +666,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Event leading to injury"
                 className={classes.formControl}
-                defaultValue={form.eventLeadingToInjury}
+                defaultValue={value.eventLeadingToInjury}
                 error={error && error.eventLeadingToInjury}
                 helperText={
                   error && error.eventLeadingToInjury
@@ -689,7 +690,7 @@ const WorkerDetails = () => {
                 label="Injury object"
                 className={classes.formControl}
                 error={error && error.injuryObject}
-                defaultValue={form.injuryObject}
+                defaultValue={value.injuryObject}
                 helperText={
                   error && error.injuryObject ? error.injuryObject : null
                 }
@@ -717,7 +718,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Primary Body Part Side Included"
-                  defaultValue={form.primaryBodyPartWithSide}
+                  defaultValue={value.primaryBodyPartWithSide}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -751,7 +752,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Secondary Body Part Included"
-                  defaultValue={form.secondaryBodyPartWithSide}
+                  defaultValue={value.secondaryBodyPartWithSide}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -785,7 +786,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Type of injury illness"
-                  defaultValue={form.typeOfInjury}
+                  defaultValue={value.typeOfInjury}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -810,7 +811,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Number of Days Away/On Restriction"
                 error={error && error.NoOfDaysAway}
-                defaultValue={form.NoOfDaysAway}
+                defaultValue={value.NoOfDaysAway}
                 helperText={
                   error && error.NoOfDaysAway ? error.NoOfDaysAway : null
                 }
@@ -830,7 +831,7 @@ const WorkerDetails = () => {
                 id="title"
                 variant="outlined"
                 label="Medical Response Taken"
-                defaultValue={form.medicalResponseTaken}
+                defaultValue={value.medicalResponseTaken}
                 error={error && error.medicalResponseTaken}
                 helperText={
                   error && error.medicalResponseTaken
@@ -849,40 +850,17 @@ const WorkerDetails = () => {
 
             {/* treatment date  */}
             <Grid item md={6}>
-              {/* <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                error={error.treatmentDate}
-                required
-                className={classes.treatmentDate}
-                label="Treatment Date"
-                helperText={error.treatmentDate ? error.treatmentDate : null}
-                onChange={(e) => {
-                  console.log(e);
-                  setForm({
-                    ...form,
-                    treatmentDate: moment(e).toDate(),
-                  });
-                }}
-                format="yyyy/MM/dd"
-                inputVariant="outlined"
-              />
-            </MuiPickersUtilsProvider> */}
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   className={classes.formControl}
                   label="Treatment Date"
                   value={form.treatmentDate}
-                  defaultValue={form.treatmentDate}
-                  // helperText={error.incidentdate ? error.incidentdate : null}
-                  // value={
-                  //   form.incidentdate || incidentsListData.incidentOccuredOn
-                  // }
+                  defaultValue={value.treatmentDate}
                   onChange={(e) => {
                     setForm({
                       ...form,
                       treatmentDate: moment(e).toISOString(),
                     });
-                    console.log(moment(e).toISOString());
                   }}
                   format="yyyy/MM/dd"
                   inputVariant="outlined"
@@ -906,7 +884,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Highest Medical Responder"
-                  defaultValue={form.higherMedicalResponder}
+                  defaultValue={value.higherMedicalResponder}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -933,7 +911,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Status Update"
                 error={error && error.injuryStatus}
-                defaultValue={form.injuryStatus}
+                defaultValue={value.injuryStatus}
                 helperText={
                   error && error.injuryStatus ? error.injuryStatus : null
                 }
@@ -961,7 +939,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="First Aid Treatment"
-                  defaultValue={form.firstAidTreatment}
+                  defaultValue={value.firstAidTreatment}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -993,13 +971,12 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Mechanism of Injury"
-                  defaultValue={form.mechanismOfInjury}
+                  defaultValue={value.mechanismOfInjury}
                   onChange={(e) => {
                     setForm({
                       ...form,
                       mechanismOfInjury: e.target.value,
                     });
-                    console.log(e.target.value);
                   }}
                 >
                   {mechanismOfInjury.current.map((value) => (
@@ -1023,7 +1000,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Medical Issued ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isMedicationIssued}
+                  defaultValue={value.isMedicationIssued}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1047,7 +1024,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Prescription Issues ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isPrescriptionIssued}
+                  defaultValue={value.isPrescriptionIssued}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1071,7 +1048,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Non-Prescription ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isNonPrescription}
+                  defaultValue={value.isNonPrescription}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1090,33 +1067,12 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
-            {/* any limitaion */}
-            {/* <Grid item md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Any Limitation ?"
-              error={error && error.isAnyLimitation}
-              helperText={
-                error && error && error.isAnyLimitation
-                  ? error && error.isAnyLimitation
-                  : null
-              }
-              className={classes.formControl}
-            onChange={(e) => {
-              setForm({
-                ...form,
-                isAnyLimitation: e.target.value,
-              });
-            }}
-            />
-          </Grid> */}
             <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Any Limitation ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isAnyLimitation}
+                  defaultValue={value.isAnyLimitation}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1147,8 +1103,8 @@ const WorkerDetails = () => {
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   defaultValue={
-                    form.isAlcoholDrugTestTaken
-                      ? form.isAlcoholDrugTestTaken
+                    value.isAlcoholDrugTestTaken
+                      ? value.isAlcoholDrugTestTaken
                       : "No"
                   }
                   onChange={(e) => handelTestTaken(e)}
@@ -1174,14 +1130,13 @@ const WorkerDetails = () => {
                       error={error.incidentdate}
                       required
                       className={classes.formControl}
-                      value={form.dateOfAlcoholDrugTest}
-                      defaultValue={form.dateOfAlcoholDrugTest}
+                      value={value.dateOfAlcoholDrugTest}
+                      defaultValue={value.dateOfAlcoholDrugTest}
                       label="Date of Test"
                       helperText={
                         error.incidentdate ? error.incidentdate : null
                       }
                       onChange={(e) => {
-                        console.log(e);
                         setForm({
                           ...form,
                           dateOfAlcoholDrugTest: moment(e).toISOString(),
@@ -1201,7 +1156,7 @@ const WorkerDetails = () => {
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
-                      defaultValue={form.isWorkerClearedTest}
+                      defaultValue={value.isWorkerClearedTest}
                       onChange={(e) => {
                         setForm({
                           ...form,
@@ -1227,19 +1182,12 @@ const WorkerDetails = () => {
                   variant="outlined"
                   label="Why was the test not conducted?"
                   className={classes.formControl}
-                  error={error && error.constructionManagerName}
-                  defaultValue={form.constructionManagerName}
-                  helperText={
-                    error && error.constructionManagerName
-                      ? error.constructionManagerName
-                      : null
-                  }
+                  defaultValue={value.reasonForTestNotDone}
                   onChange={(e) => {
                     setForm({
                       ...form,
                       reasonForTestNotDone: e.target.value,
                     });
-                    console.log(e.target.value);
                   }}
                 />
               </Grid>
@@ -1260,7 +1208,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Supervisor Name"
                 error={error && error.supervisorName}
-                defaultValue={form.supervisorName}
+                defaultValue={value.supervisorName}
                 helperText={
                   error && error.supervisorName ? error.supervisorName : null
                 }
@@ -1289,7 +1237,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Supervisor Time in Industry"
-                  defaultValue={form.supervisorTimeInIndustry}
+                  defaultValue={value.supervisorTimeInIndustry}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1329,7 +1277,7 @@ const WorkerDetails = () => {
                       supervisorTimeInCompany: e.target.value,
                     });
                   }}
-                  defaultValue={form.supervisorTimeInCompany}
+                  defaultValue={value.supervisorTimeInCompany}
                 >
                   {supervisorTimeInCompany.current.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
@@ -1363,7 +1311,7 @@ const WorkerDetails = () => {
                       supervisorTimeOnProject: e.target.value,
                     });
                   }}
-                  defaultValue={form.supervisorTimeOnProject}
+                  defaultValue={value.supervisorTimeOnProject}
                 >
                   {supervisorTimeOnProject.current.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
@@ -1384,27 +1332,15 @@ const WorkerDetails = () => {
             </Grid>
 
             <Grid item xs={12} justify="flex-start">
-              {/* <MaterialDropZone
-              files={files}
-              showPreviews
-              maxSize={5000000}
-              filesLimit={5}
-              text="Drag and drop file(s) here or click the button below"
-              showButton
-              onClick={(e) => {
-                                handleFile(e);
-             console.log("sagar") }}/>
-            {error && error.fileupload ? <p>{error.fileupload}</p> : null} */}
               <input
                 type="file"
                 className={classes.fullWidth}
                 name="file"
                 onChange={(e) => {
                   handleFile(e);
-                  // setForm([{ ...form, evidenceCheck: e.target.value }]);
                 }}
               />
-            </Grid>
+            </Grid></>))}
 
             <Grid item md={12}>
               <button
@@ -1424,7 +1360,7 @@ const WorkerDetails = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                href="/app/incident-management/registration/investigation/investigation-overview/"
+                onClick={() => history.goBack()}
               >
                 Previous
               </Button>

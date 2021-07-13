@@ -75,7 +75,7 @@ function App() {
   });
   return (
     <ThemeWrapper>
-      {localStorage.getItem("access_token") !== null ? (
+      {/* {localStorage.getItem("access_token") !== null ? ( */}
         <Switch>
           <Route path="/app" exact component={LandingCorporate} />
           <Route path="/landing-creative" exact component={LandingCreative} />
@@ -84,11 +84,11 @@ function App() {
           <Route component={Auth} />
           <Route component={NotFound} />
         </Switch>
-      ) : (
+      {/* ) : (
         <Switch>
           <Route component={Authentication} />
         </Switch>
-      )}
+      )} */}
     </ThemeWrapper>
   );
 }

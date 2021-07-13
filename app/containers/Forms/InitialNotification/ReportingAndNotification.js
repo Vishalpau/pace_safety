@@ -237,7 +237,7 @@ const ReportingAndNotification = () => {
         ) {
          
           formData.append('evidenceDocument', evidanceForm[i].evidenceDocument);
-          formData.append('evidenceDocument', evidanceForm[i].evidenceRemark);
+          formData.append('evidenceRemark', evidanceForm[i].evidenceRemark);
           formData.append('evidenceCheck', 'Yes');
           formData.append('evidenceCategory', 'Initial Evidence ');
           formData.append('createdBy', '1');
