@@ -79,68 +79,70 @@ const WorkerDetails = () => {
 
   const putId = useRef("");
   const investigationId = useRef("");
-
-  const [form, setForm] = useState([{
-    name: "",
-    workerType: "",
-    department: "",
-    workHours: "",
-    shiftTimeStart: null,
-    shiftType: "",
-    occupation: "",
-    shiftCycle: "",
-    noOfDaysIntoShift: "",
-    timeInCompany: "",
-    timeOnProject: "",
-    timeInIndustry: "",
-    attachments: "",
-    eventLeadingToInjury: "",
-    injuryObject: "",
-    primaryBodyPartWithSide: "",
-    secondaryBodyPartWithSide: "",
-    typeOfInjury: "",
-    NoOfDaysAway: "",
-    medicalResponseTaken: "",
-    treatmentDate: null,
-    higherMedicalResponder: "",
-    injuryStatus: "",
-    firstAidTreatment: "",
-    mechanismOfInjury: "",
-    isMedicationIssued: "",
-    isPrescriptionIssued: "",
-    isNonPrescription: "",
-    isAnyLimitation: "",
-    supervisorName: "",
-    supervisorTimeInIndustry: "",
-    supervisorTimeInCompany: "",
-    supervisorTimeOnProject: "",
-    isAlcoholDrugTestTaken: "No",
-    dateOfAlcoholDrugTest: "",
-    isWorkerClearedTest: "N/A",
-    reasonForTestNotDone: "",
-    status: "Active",
-    createdBy: 0,
-    fkInvestigationId: investigationId.current,
-  }]);
-
+  const [form, setForm] = useState([])
 
   const handelUpdateCheck = async (e) => {
+    let workerData = {
+      name: "",
+      workerType: "",
+      department: "",
+      workHours: "",
+      shiftTimeStart: null,
+      shiftType: "",
+      occupation: "",
+      shiftCycle: "",
+      noOfDaysIntoShift: "",
+      timeInCompany: "",
+      timeOnProject: "",
+      timeInIndustry: "",
+      attachments: "",
+      eventLeadingToInjury: "",
+      injuryObject: "",
+      primaryBodyPartWithSide: "",
+      secondaryBodyPartWithSide: "",
+      typeOfInjury: "",
+      NoOfDaysAway: "",
+      medicalResponseTaken: "",
+      treatmentDate: null,
+      higherMedicalResponder: "",
+      injuryStatus: "",
+      firstAidTreatment: "",
+      mechanismOfInjury: "",
+      isMedicationIssued: "",
+      isPrescriptionIssued: "",
+      isNonPrescription: "",
+      isAnyLimitation: "",
+      supervisorName: "",
+      supervisorTimeInIndustry: "",
+      supervisorTimeInCompany: "",
+      supervisorTimeOnProject: "",
+      isAlcoholDrugTestTaken: "No",
+      dateOfAlcoholDrugTest: "",
+      isWorkerClearedTest: "N/A",
+      reasonForTestNotDone: "",
+      status: "Active",
+      createdBy: 0,
+      fkInvestigationId: investigationId.current,
+    }
     let page_url = window.location.href;
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
 
-
     let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
     let PeopleAffectedData = PeopleAffected.data.data.results
 
-    const temp = [...form]
-    PeopleAffectedData.map((value) => {
-      temp.push({ name: value.personName, department: value.personDepartment })
+    let temp = []
+    PeopleAffectedData.map((value, i) => {
+      temp.push({
+        ...workerData, ...{
+          "name": value.personName,
+          "department": value.personDepartment
+        }
+      })
     })
 
     setForm(temp)
-
 
     let investigationData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = investigationData.data.data.results[0];
@@ -278,6 +280,7 @@ const WorkerDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
+
       {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
