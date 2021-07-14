@@ -25,7 +25,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { PapperBlock } from "dan-components";
-import { useHistory, useParams} from "react-router";
+import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -109,6 +109,9 @@ const ActionTaken = () => {
               id="filled-basic"
               label="Pre event mitigation"
               value={form.preEventMitigations}
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -145,7 +148,7 @@ const ActionTaken = () => {
               color="primary"
               className={classes.button}
               onClick={() => history.goBack()}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
+            // href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
             >
               Previous
             </Button>

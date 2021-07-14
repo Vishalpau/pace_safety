@@ -116,7 +116,7 @@ const InvestigationOverview = () => {
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6">
-                Potential severity level scenerio
+                Potential severity level scenario
               </Typography>
             </Grid>
 
@@ -488,6 +488,13 @@ const InvestigationOverview = () => {
             </Grid>
 
             <Grid item md={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => history.goBack()}
+              >
+                Previous
+              </Button>
               <Button
                 variant="contained"
                 color="primary"

@@ -265,6 +265,7 @@ const WorkerDetails = () => {
     //   history.push(`/app/incident-management/registration/investigation/event-details/`)
 
     // }
+    console.log("here")
     history.push(`/app/incident-management/registration/investigation/event-details/`)
   };
 
@@ -299,7 +300,7 @@ const WorkerDetails = () => {
 
   const classes = useStyles();
   return (
-    <PapperBlock title="Details of Person Affected" icon="ion-md-list-box">
+    <PapperBlock title="Worker details" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
