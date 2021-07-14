@@ -147,14 +147,12 @@ const EnvironmentAffected = () => {
   };
 
   // set State when u want to update
-  const handleUpdateEnvironement = async (e, key, fieldname, envId) => {
+  const handleUpdateEnvironement = async (e, key, fieldname) => {
     const temp = [...environmentListData];
     const { value } = e.target;
     temp[key][fieldname] = value;
-    if (temp[key]["envQuestionOption"] === "Yes") {
-      temp[key]["envAnswerDetails"] = "Yes";
-    } else {
-      temp[key]["envAnswerDetails"] = "No";
+    if (temp[key]["envQuestionOption"] !== "Yes") {
+      temp[key]["envAnswerDetails"] = temp[key]["envQuestionOption"];
     }
     temp[key].updatedBy = 0;
     temp[key].updatedAt = moment(new Date()).toISOString();

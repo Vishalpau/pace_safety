@@ -3,7 +3,6 @@ import validator from "validator";
 function validate(data) {
   let isValid = true;
   const error = {};
-  console.log(data.projectname);
 
   if (data.projectname == 0) {
     error.projectname = "Please select project name";
@@ -30,14 +29,13 @@ function validate(data) {
   } else {
     isValid = true;
   }
-
+  
   if (data.incidentdate === null) {
-    error.incidentdate = "Please enter incident date and time";
+    error.incidentdate = "Please select date and time";
     isValid = false;
   } else {
     isValid = true;
   }
-
   // if (validator.isEmpty(data.description)){
   //     error.description = "this filed is empty"
   //     isValid = false
