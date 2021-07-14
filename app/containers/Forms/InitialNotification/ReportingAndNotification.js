@@ -416,7 +416,7 @@ const ReportingAndNotification = () => {
           reportToData[i] !== "Mutual Aid" ||
           reportToData[i] !== "Others"
         ) {
-          alert(reportToData[i])
+        
           await setReportOtherData(reportToData[i]);
         }
       }
