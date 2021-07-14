@@ -21,10 +21,8 @@ import { useHistory, useParams } from "react-router";
 import FormSideBar from "../FormSideBar";
 
 import {
-  INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
 import api from "../../../utils/axios";
 import "../../../styles/custom.css";
@@ -61,13 +59,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const PeoplesAffected = () => {
   // Props defination
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    moment,
-  ];
+  
   const classes = useStyles();
   const history = useHistory();
 
@@ -84,6 +76,10 @@ const PeoplesAffected = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [peopleData, setPeopleData] = useState([]);
+
+   // State for the error defination.
+  const [error, setError] = useState({});
+
 
   // Forms definations.
   const [form, setForm] = useState([
@@ -143,9 +139,10 @@ const PeoplesAffected = () => {
     
       // This is the condition when Yes is clicked on the form.
       if (personAffect === "Yes") {
+        //  remove previous data
         if (peopleData.length > 0) {
           const temp = peopleData
-          for (var i = 0; i < peopleData.length; i++) {
+          for (var i = 0; i < temp.length; i++) {
             const res = await api.delete(
               `api/v1/incidents/${id}/people/${temp[i].id}/`,
             );
@@ -209,28 +206,9 @@ const PeoplesAffected = () => {
             );
           }
           // Here it is the new entry create case. We will redirect to next pages without ids.
-        } else if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/property-affected/"
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
-        } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
-        }
+        } 
         }
       
-
-
-
         // Case when form has No option selected.
       } else {
         // When no is selected we just have to send the comment and yes/no flag to API via put request.
@@ -267,24 +245,7 @@ const PeoplesAffected = () => {
               `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
             );
           }
-          // Here it is the new entry create case. We will redirect to next pages without ids.
-        } else if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/property-affected/"
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
-        } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
-        }
+        } 
       }
     
   };
@@ -297,9 +258,6 @@ const PeoplesAffected = () => {
     const newData = temp.filter((item, index) => index !== key);
     await setForm(newData);
   };
-
-  // State for the error defination.
-  const [error, setError] = useState({});
 
   // Fetch the radio button values for Do-you-have-details-to-share-about-the-individuals-Affected.
   const fetchIndividualAffectValue = async () => {
@@ -403,6 +361,7 @@ const PeoplesAffected = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
+            {/* Click yes  */}
             {personAffect === "Yes" ? (
               <>
                 <Grid item md={12}>
@@ -414,6 +373,7 @@ const PeoplesAffected = () => {
                     </Box>
                   </Box>
                 </Grid>
+
                {form.map((value, key) => (
                       <Grid
                         container
@@ -423,6 +383,7 @@ const PeoplesAffected = () => {
                         spacing={3}
                         className="repeatedGrid"
                       >
+                        {/*  person type */}
                         <Grid item md={6}>
                           <FormControl
                             variant="outlined"
@@ -458,6 +419,7 @@ const PeoplesAffected = () => {
                             )}
                           </FormControl>
                         </Grid>
+                        {/* person department */}
                         <Grid item md={6}>
                           <FormControl
                             variant="outlined"
@@ -493,6 +455,8 @@ const PeoplesAffected = () => {
                             )}
                           </FormControl>
                         </Grid>
+                        
+                        {/* person Name  */}
                         <Grid item md={6}>
                           <TextField
                             id={`name-Affected${key}`}
@@ -510,6 +474,8 @@ const PeoplesAffected = () => {
                             onChange={(e) => handleForm(e, key, "personName")}
                           />
                         </Grid>
+                        
+                        {/* person identification */}
                         <Grid item md={6}>
                           <TextField
                             id={`id-num${key}`}
@@ -530,6 +496,7 @@ const PeoplesAffected = () => {
                             }
                           />
                         </Grid>
+                       {/* Person medical taken */}
                         <Grid item md={12}>
                           <FormControl
                             component="fieldset"
@@ -576,6 +543,7 @@ const PeoplesAffected = () => {
                             )}
                           </FormControl>
                         </Grid>
+                        {/* work offsite Assessment */}
                         <Grid item md={6}>
                           <TextField
                             id={`worker-taken${key}`}
@@ -596,6 +564,7 @@ const PeoplesAffected = () => {
                             }
                           />
                         </Grid>
+                        {/* location Assessment */}
                         <Grid item md={6}>
                           <TextField
                             variant="outlined"
@@ -616,6 +585,8 @@ const PeoplesAffected = () => {
                             }
                           />
                         </Grid>
+                        
+                        {/* set remove button */}
                         {form.length > 1 ? (
                           <Grid item md={3}>
                             <Button
@@ -632,7 +603,7 @@ const PeoplesAffected = () => {
                       </Grid>
                     ))}
 
-              
+              {/* Addition add button */}
                   <Grid item md={12}>
                     <button
                       className={classes.textButton}
@@ -644,6 +615,8 @@ const PeoplesAffected = () => {
 
               </>
             ):null}
+
+            {/* Text comment if person affect */}
             <Grid item md={12}>
               {personAffect === "Yes" ? null : (
                 <TextField
@@ -658,7 +631,9 @@ const PeoplesAffected = () => {
                 />
               )}
             </Grid>
+           
             <Grid item md={6}>
+               {/* Go back previous */}
               <Button
                 onClick={() =>
                   history.push(
@@ -673,17 +648,18 @@ const PeoplesAffected = () => {
               >
                 Previous
               </Button>
+              {/* Go next page */}
               <Button
                 onClick={() => handleNext()}
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                // onClick={(e) => handelNext(e)}
               >
                 Next
               </Button>
             </Grid>
           </Grid>
+          {/* Right side bar */}
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}

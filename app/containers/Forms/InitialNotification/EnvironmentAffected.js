@@ -205,10 +205,6 @@ const EnvironmentAffected = () => {
           history.push(
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
-        } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
         }
       }
     }

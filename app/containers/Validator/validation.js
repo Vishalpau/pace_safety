@@ -3,9 +3,9 @@ import validator from "validator";
 function validate(data) {
   let isValid = true;
   const error = {};
-
-  if (data.projectname == 0) {
-    error.projectname = "Please select project name";
+  
+  if (data.fkProjectId == 0) {
+    error.fkProjectId = "Please select project name";
     isValid = false;
   }
 
@@ -16,22 +16,22 @@ function validate(data) {
   //     isValid = true
   // }
 
-  if (validator.isEmpty(data.incidenttype)) {
-    error.incidenttype = "Please select incident type";
+  if (validator.isEmpty(data.incidentType)) {
+    error.incidentType = "Please select incident type";
     isValid = false;
   } else {
     isValid = true;
   }
 
-  if (validator.isEmpty(data.title)) {
-    error.title = "Please enter incident title";
+  if (validator.isEmpty(data.incidentTitle)) {
+    error.incidentTitle = "Please enter incident title";
     isValid = false;
   } else {
     isValid = true;
   }
   
-  if (data.incidentdate === null) {
-    error.incidentdate = "Please select date and time";
+  if (data.incidentOccuredOn === null) {
+    error.incidentOccuredOn = "Please select date and time";
     isValid = false;
   } else {
     isValid = true;
@@ -71,34 +71,33 @@ function validate(data) {
   //     isValid = true
   // }
 
-  if (validator.isEmpty(data.personaffected)) {
-    error.personaffected = "Please choose person affected";
+  if (validator.isEmpty(data.isPersonAffected)) {
+    error.isPersonAffected = "Please choose person affected";
+    isValid = false;
+  } else {
+    isValid = true;
+  }
+  
+  if (validator.isEmpty(data.isPropertyDamaged)) {
+    error.isPropertyDamaged = "Please choose property affected";
     isValid = false;
   } else {
     isValid = true;
   }
 
-  if (validator.isEmpty(data.propertyaffected)) {
-    error.propertyaffected = "Please choose property affected";
+  if (validator.isEmpty(data.isEquipmentDamaged)) {
+    error.isEquipmentDamaged = "Please choose equipment affected";
     isValid = false;
   } else {
     isValid = true;
   }
 
-  if (validator.isEmpty(data.equiptmenteffected)) {
-    error.equiptmenteffected = "Please choose equipment affected";
+  if (validator.isEmpty(data.isEnviromentalImpacted)) {
+    error.isEnviromentalImpacted = "Please choose enviornment affected";
     isValid = false;
   } else {
     isValid = true;
   }
-
-  if (validator.isEmpty(data.environmentaffected)) {
-    error.environmentaffected = "Please choose enviornment affected";
-    isValid = false;
-  } else {
-    isValid = true;
-  }
-
   return { error, isValid };
 }
 

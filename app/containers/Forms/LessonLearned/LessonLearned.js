@@ -324,9 +324,7 @@ const LessionLearned = () => {
                     </FormControl>
                   </Grid>
                   <Grid item md={12}>
-                    {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-
-                   
+                    
                       <TextField
                         id="outlined-search"
                         required

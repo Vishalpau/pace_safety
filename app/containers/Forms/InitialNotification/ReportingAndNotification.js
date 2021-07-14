@@ -128,25 +128,6 @@ const ReportingAndNotification = () => {
   const notificationSent = ["Manager", "Supervisor"];
   let evidanceCkecked = true;
 
-  // const handelTimeCompare = async (e) => {
-  //   const rpTime = form.reportingtime;
-  //   const rpDate = form.reportingdate;
-  //   const startDate = `${rpDate} ${rpTime}`;
-  //   // let startDate = form.reportingdate.concat(form.reportingtime)
-  //   const start_date = moment(
-  //     form.reportingdate || incidentsListData.incidentReportedOn,
-  //     'YYYY-MM-DD HH:mm:ss'
-  //   );
-  //   const end_date = moment(new Date(), 'YYYY-MM-DD HH:mm:ss');
-  //   const duration = moment.duration(end_date.diff(start_date));
-  //   const Hours = duration.asHours();
-  //   if (Hours > 4) {
-  //     await SetLateReport(true);
-  //   } else {
-  //     await SetLateReport(false);
-  //   }
-  // };
-
   const handleDateChange = async (date) => {
     // compare time
     const time = date || incidentsListData.incidentReportedOn;
@@ -287,8 +268,7 @@ const ReportingAndNotification = () => {
      // handle remove existing report
      await handleRemoveExitingReport();
 
-    // set in reportTo otherData
-    await setOtherDataReportTo();
+  
 
     // update incident details
     await handleUpdateIncidentDetails();
@@ -324,7 +304,8 @@ const ReportingAndNotification = () => {
             status = res.status;
           } catch (err) {}
         }
-
+        // set in reportTo otherData
+        await setOtherDataReportTo();
         if (status === 201) {
           history.push(
             `/app/incident-management/registration/summary/summary/${localStorage.getItem(
@@ -435,6 +416,7 @@ const ReportingAndNotification = () => {
           reportToData[i] !== "Mutual Aid" ||
           reportToData[i] !== "Others"
         ) {
+          alert(reportToData[i])
           await setReportOtherData(reportToData[i]);
         }
       }
