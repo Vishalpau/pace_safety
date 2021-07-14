@@ -5,10 +5,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { MaterialDropZone, PapperBlock } from "dan-components";
+import { PapperBlock } from "dan-components";
 import {
   // TimePicker,
   MuiPickersUtilsProvider,
@@ -28,7 +27,6 @@ import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
-import { SignalCellularNullTwoTone } from "@material-ui/icons";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,23 +51,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WorkerDetails = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
   const [isLoading, setIsLoading] = useState(false);
   const [testTaken, seTesttaken] = useState(false);
   const [error, setError] = useState({});
-  const severity_level = ["Level1", "Level2", "Level3", "Level4"];
+
   const [files, setFile] = React.useState([]);
   const history = useHistory();
   const workerType = useRef([]);
@@ -91,46 +76,11 @@ const WorkerDetails = () => {
   const supervisorTimeInIndustry = useRef([]);
   const supervisorTimeInCompany = useRef([]);
   const supervisorTimeOnProject = useRef([]);
-  const { id } = useParams();
-  const [workerData, setWorkerData] = useState([]);
-
 
   const putId = useRef("");
   const investigationId = useRef("");
-  const handelUpdateCheck = async (e) => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    putId.current = incidentId;
 
-    let previousData = await api.get(
-      `api/v1/incidents/${incidentId}/investigations/`
-    );
-    let allApiData = previousData.data.data.results[0];
-    if (!isNaN(allApiData.id)) {
-      // await setForm(allApiData);
-      investigationId.current = allApiData.id;
-    }
-
-    const res = await api.get(
-      `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
-      }/workers/${form.id}/`
-    );
-
-    const result = res.data.data.results;
-    console.log(result);
-
-
-    // await setWorkerData(result);
-    await setForm(result)
-    await setIsLoading(true);
-  };
-
-  const [form, setForm] = useState({
+  const [form, setForm] = useState([{
     name: "",
     workerType: "",
     department: "",
@@ -171,10 +121,38 @@ const WorkerDetails = () => {
     status: "Active",
     createdBy: 0,
     fkInvestigationId: investigationId.current,
-  });
+  }]);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+
+
+    let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
+    let PeopleAffectedData = PeopleAffected.data.data.results
+
+    const temp = [...form]
+    PeopleAffectedData.map((value) => {
+      temp.push({ name: value.personName, department: value.personDepartment })
+    })
+
+    setForm(temp)
+
+
+    let investigationData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let allApiData = investigationData.data.data.results[0];
+    if (!isNaN(allApiData.id)) {
+      investigationId.current = allApiData.id;
+    }
+
+    const res = await api.get(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${form.id}/`);
+    const result = res.data.data.results;
+
+    await setForm(result)
+    await setIsLoading(true);
   };
 
   const radioDecide = ["Yes", "No", "N/A"];
@@ -265,7 +243,6 @@ const WorkerDetails = () => {
     //   history.push(`/app/incident-management/registration/investigation/event-details/`)
 
     // }
-    console.log("here")
     history.push(`/app/incident-management/registration/investigation/event-details/`)
   };
 
@@ -301,6 +278,7 @@ const WorkerDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
+      {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
