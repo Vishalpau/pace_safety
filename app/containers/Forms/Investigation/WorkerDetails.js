@@ -92,7 +92,7 @@ const WorkerDetails = () => {
   const supervisorTimeInCompany = useRef([]);
   const supervisorTimeOnProject = useRef([]);
   const { id } = useParams();
-  const [workerData , setWorkerData ] = useState([]);
+  const [workerData, setWorkerData] = useState([]);
 
 
   const putId = useRef("");
@@ -117,14 +117,13 @@ const WorkerDetails = () => {
     }
 
     const res = await api.get(
-      `/api/v1/incidents/${putId.current}/investigations/${
-        investigationId.current
+      `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
       }/workers/${form.id}/`
     );
 
     const result = res.data.data.results;
     console.log(result);
-    
+
 
     // await setWorkerData(result);
     await setForm(result)
@@ -186,7 +185,7 @@ const WorkerDetails = () => {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       seTesttaken(true);
     } else if (e.target.value == "No") {
-      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value,dateOfAlcoholDrugTest:"2000-07-15T10:48:00.000Z"});
+      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value, dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z" });
 
       seTesttaken(false);
     }
@@ -245,31 +244,28 @@ const WorkerDetails = () => {
     data.append("status", form.status);
     data.append("createdBy", form.createdBy);
     data.append("fkInvestigationId", investigationId.current);
-    if (form.id) {
-      data.append("id", form.id);
-      const res = await api.put(
-        `/api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
-        }/workers/${form.id}/`,
-        data
-      );
-      
-    }
-    else{
-      const res = await api.post(
-        `/api/v1/incidents/${localStorage.getItem(
-          "fkincidentId"
-        )}/investigations/${investigationId.current}/workers/`,
-        data
-      );
-      if (res.status === 201) {
-        // const workerId = res.data.data.results.id;
+    // if (form.id) {
+    //   data.append("id", form.id);
+    //   const res = await api.put(
+    //     `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+    //     }/workers/${form.id}/`,
+    //     data
+    //   );
 
-        // Set the fkincidentId and it will be used for future reference forms.
-        localStorage.setItem("workerId", workerId);
-        history.push(`/app/incident-management/registration/investigation/event-details/`)
-      }
-    }
+    // }
+    // else {
+    //   const res = await api.post(
+    //     `/api/v1/incidents/${localStorage.getItem(
+    //       "fkincidentId"
+    //     )}/investigations/${investigationId.current}/workers/`,
+    //     data
+    //   );
+
+    //   localStorage.setItem("workerId", workerId);
+    //   history.push(`/app/incident-management/registration/investigation/event-details/`)
+
+    // }
+    history.push(`/app/incident-management/registration/investigation/event-details/`)
   };
 
   const PickList = async () => {
@@ -298,7 +294,6 @@ const WorkerDetails = () => {
   //
   useEffect(() => {
     handelUpdateCheck();
-
     PickList();
   }, []);
 
@@ -1372,7 +1367,7 @@ const WorkerDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-                // href="/app/incident-management/registration/investigation/property-impact-details/"
+              // href="/app/incident-management/registration/investigation/property-impact-details/"
               >
                 Next
               </Button>

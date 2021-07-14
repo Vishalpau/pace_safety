@@ -80,10 +80,11 @@ const InvestigationOverview = () => {
     // setError(error);
     // console.log(error, isValid);
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-    if(putId.current){
-      history.push(`/app/incident-management/registration/investigation/event-details/${putId.current}`)
-    }else{
-    history.push(`/app/incident-management/registration/investigation/event-details/`)}
+    if (putId.current) {
+      history.push(`/app/incident-management/registration/investigation/worker-details/${putId.current}`)
+    } else {
+      history.push(`/app/incident-management/registration/investigation/worker-details/`)
+    }
   };
 
   const handelDeaultValue = (value) => {
@@ -105,406 +106,406 @@ const InvestigationOverview = () => {
   useEffect(() => {
     handelUpdateCheck();
     picList()
-    
+
   }, []);
 
   return (
     <PapperBlock title="Severity Consequences" icon="ion-md-list-box">
       {isLoading ? (
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
-            <Typography variant="h6">
-              Potential severity level scenerio
-            </Typography>
-          </Grid>
+        <Grid container spacing={3}>
+          <Grid container item md={9} spacing={3}>
+            <Grid item md={12}>
+              <Typography variant="h6">
+                Potential severity level scenerio
+              </Typography>
+            </Grid>
 
-          {/* health and safety  */}
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Health & safety - actual consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Health & safety - actual consequences"
-                value={handelDeaultValue(form.healthSafetyActual)}
+            {/* health and safety  */}
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Health & safety - actual consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Health & safety - actual consequences"
+                  value={handelDeaultValue(form.healthSafetyActual)}
+                >
+                  {healthAndSafetyValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          healthSafetyActual: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Health & safety - potential consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label=" Health & Safety - Potential Consequences"
+                  value={handelDeaultValue(form.healthSafetyPotential)}
+                >
+                  {healthAndSafetyValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          healthSafetyPotential: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Environment */}
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Environment - actual consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label=" Environment - actual consequences"
+                  value={handelDeaultValue(form.environmentActual)}
+                >
+                  {environmentValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          environmentActual: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Environment - potential consequences
+                </InputLabel>
+                <Select
+                  labelId=""
+                  id="unit-name"
+                  label="Environment - potential consequences"
+                  value={handelDeaultValue(form.environmentPotential)}
+                >
+                  {environmentValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          environmentPotential: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Regulatory */}
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Regulatory - actual consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Regulatory - actual consequences"
+                  value={handelDeaultValue(form.regulatoryActual)}
+                >
+                  {regulationValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          regulatoryActual: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Regulatory - potential consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Regulatory - potential consequences"
+                  value={handelDeaultValue(form.regulatoryPotential)}
+                >
+                  {regulationValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          regulatoryPotential: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* reuptation */}
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Reputaion - actual consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Reputaion -  Actual Consequences"
+                  value={handelDeaultValue(form.reputationActual)}
+                >
+                  {reputaionValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          reputationActual: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Reputaion - potential consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Reputaion - potential consequences"
+                  value={handelDeaultValue(form.reputationPotential)}
+                >
+                  {reputaionValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          reputationPotential: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* financial */}
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Financial - actual consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Financial - actual consequences"
+                  value={handelDeaultValue(form.financialActual)}
+                >
+                  {financialValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          financialActual: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Financial potential consequences
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Financial potential consequences"
+                  value={handelDeaultValue(form.financialPotential)}
+                >
+                  {financialValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          financialPotential: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* highest potentsial impact receptor */}
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">
+                  Highest potential impact receptor
+                </InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Highest potential impact receptor"
+                  value={handelDeaultValue(form.highestPotentialImpactReceptor)}
+                >
+                  {HIGHESTPOTENTIALIMPACTOR.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          highestPotentialImpactReceptor: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Classification */}
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">Classification</InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Classification"
+                  value={handelDeaultValue(form.classification)}
+                >
+                  {classificationValues.current.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          classification: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="unit-name-label">Rca recommended</InputLabel>
+                <Select
+                  labelId="unit-name-label"
+                  id="unit-name"
+                  label="Rca recommended"
+                  value={handelDeaultValue(form.rcaRecommended)}
+                >
+                  {RCAOPTION.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => {
+                        setForm({
+                          ...form,
+                          rcaRecommended: selectValues,
+                        });
+                      }}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item md={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleNext()}
+              // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
               >
-                {healthAndSafetyValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        healthSafetyActual: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                Next
+              </Button>
+            </Grid>
           </Grid>
-
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Health & safety - potential consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label=" Health & Safety - Potential Consequences"
-                value={handelDeaultValue(form.healthSafetyPotential)}
-              >
-                {healthAndSafetyValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        healthSafetyPotential: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={[1, 2, 3]}
+              listOfItems={INVESTIGATION_FORM}
+              selectedItem="Severity consequences"
+            />
           </Grid>
-
-          {/* Environment */}
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Environment - actual consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label=" Environment - actual consequences"
-                value={handelDeaultValue(form.environmentActual)}
-              >
-                {environmentValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        environmentActual: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Environment - potential consequences
-              </InputLabel>
-              <Select
-                labelId=""
-                id="unit-name"
-                label="Environment - potential consequences"
-                value={handelDeaultValue(form.environmentPotential)}
-              >
-                {environmentValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        environmentPotential: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* Regulatory */}
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Regulatory - actual consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Regulatory - actual consequences"
-                value={handelDeaultValue(form.regulatoryActual)}
-              >
-                {regulationValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        regulatoryActual: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Regulatory - potential consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Regulatory - potential consequences"
-                value={handelDeaultValue(form.regulatoryPotential)}
-              >
-                {regulationValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        regulatoryPotential: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* reuptation */}
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Reputaion - actual consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Reputaion -  Actual Consequences"
-                value={handelDeaultValue(form.reputationActual)}
-              >
-                {reputaionValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        reputationActual: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Reputaion - potential consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Reputaion - potential consequences"
-                value={handelDeaultValue(form.reputationPotential)}
-              >
-                {reputaionValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        reputationPotential: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* financial */}
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Financial - actual consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Financial - actual consequences"
-                value={handelDeaultValue(form.financialActual)}
-              >
-                {financialValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        financialActual: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Financial potential consequences
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Financial potential consequences"
-                value={handelDeaultValue(form.financialPotential)}
-              >
-                {financialValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        financialPotential: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* highest potentsial impact receptor */}
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">
-                Highest potential impact receptor
-              </InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Highest potential impact receptor"
-                value={handelDeaultValue(form.highestPotentialImpactReceptor)}
-              >
-                {HIGHESTPOTENTIALIMPACTOR.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        highestPotentialImpactReceptor: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* Classification */}
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">Classification</InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Classification"
-                value={handelDeaultValue(form.classification)}
-              >
-                {classificationValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        classification: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="unit-name-label">Rca recommended</InputLabel>
-              <Select
-                labelId="unit-name-label"
-                id="unit-name"
-                label="Rca recommended"
-                value={handelDeaultValue(form.rcaRecommended)}
-              >
-                {RCAOPTION.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        rcaRecommended: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleNext()}
-            // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
-            >
-              Next
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            deleteForm={[1, 2, 3]}
-            listOfItems={INVESTIGATION_FORM}
-            selectedItem="Severity consequences"
-          />
-        </Grid>
-      </Grid>):(<h1>Loading...</h1>)}
+        </Grid>) : (<h1>Loading...</h1>)}
     </PapperBlock>
   );
 };
