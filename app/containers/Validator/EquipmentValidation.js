@@ -1,7 +1,7 @@
 import validator from "validator";
 
 function EquipmentValidate(data) {
-  console.log(data);
+ 
   let isValid = true;
   const error = {};
 
@@ -36,7 +36,7 @@ function EquipmentValidate(data) {
   //     isValid = false
   // }
 
-  console.log(error);
+
   return { error, isValid };
 }
 

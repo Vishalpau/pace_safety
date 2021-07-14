@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -88,11 +88,12 @@ const Summary = () => {
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const rootCauseStatus = useRef(false)
 
   const { id } = useParams();
   const history = useHistory();
   if (id) {
-    localStorage.setItem("fkincidentId", id);
+    localStorage.setItem('fkincidentId', id);
   }
 
   const fetchIncidentData = async () => {
@@ -100,6 +101,42 @@ const Summary = () => {
     await setIncidents(allIncidents.data.data.results);
     await setIsLoading(true);
   };
+  const fetchLessonLerned = async () => {
+    const res = await api.get(`api/v1/incidents/${id}/learnings/`);
+    const result = res.data.data.results;
+    if(result.length > 0 ){
+      localStorage.setItem("LessionLearnt", "Done")
+    }
+    else{
+      localStorage.setItem("LessionLearnt", "Pending")
+    }
+  
+  };
+
+  const rootCauseAnalysisCheck = async () => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+
+    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let paceCauseData = paceCause.data.data.results;
+
+    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
+    let rootCauseData = rootCause.data.data.results[0];
+
+    let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    let whyAnalysisData = whyAnalysis.data.data.results;
+
+    if (paceCauseData.length > 0 && typeof paceCauseData !== "undefined" ||
+      rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
+      whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
+    ) {
+      rootCauseStatus.current = true
+    }
+  }
 
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -115,6 +152,8 @@ const Summary = () => {
 
   useEffect(() => {
     fetchIncidentData();
+    fetchLessonLerned();
+    rootCauseAnalysisCheck();
   }, []);
 
   return (
@@ -274,7 +313,7 @@ const Summary = () => {
                     setLessionlearn(true);
                   }}
                 >
-                  Lessions Learnt
+                  Lessons Learnt
                 </Button>
                 <Typography variant="caption" display="block">
                   {localStorage.getItem("LessionLearnt") == "Done"
@@ -378,9 +417,8 @@ const Summary = () => {
                           <Edit />
                         </ListItemIcon>
                         <ListItemText primary="Modify RCA" />
-                      </ListItemLink>
-                    ) : (
-                      <ListItemLink href="/app/incident-management/registration/root-cause-analysis/details/">
+                      </ListItemLink>) : (
+                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>
@@ -394,13 +432,13 @@ const Summary = () => {
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
-                        <ListItemText primary="Lessions Learnt" />
+                        <ListItemText primary="Lessons Learned" />
                       </ListItemLink>
                     ) : (
                       <ListItemLink
                         onClick={() =>
                           history.push(
-                            "/app/incident-management/registration/lession-learned/lession-learned/"
+                            `/app/incident-management/registration/lession-learned/lession-learned/${id}`
                           )
                         }
                       >

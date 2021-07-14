@@ -95,7 +95,6 @@ const PropertyAffected = () => {
   ]);
 
   const addNewPropertyDetails = () => {
-    // alert('ram')
     setForm([
       ...form,
       {
@@ -124,14 +123,6 @@ const PropertyAffected = () => {
     }
   };
 
-  // set state when update
-  const handleUpdateProperty = async (e, key, fieldname, propertyId) => {
-    const temp = propertyListData;
-    const value = e.target.value;
-    temp[key][fieldname] = value;
-    temp[key]["updatedBy"] = 0;
-    await setPropertyListData(temp);
-  };
 
   const handlePropertyType = (e, key, fieldname) => {
     const temp = [...form];
@@ -164,31 +155,22 @@ const PropertyAffected = () => {
     // If property data there then don't do anything as we are doing put request on each change.
 
     // if check property have or not . if property data have then put else create new
-    if (propertyListData.length > 0) {
-      for (var i = 0; i < propertyListData.length; i++) {
-        const res = await api.put(
-          `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
-          propertyListData[i]
-        );
-      }
+   
 
-      if (nextPath.equipmentAffect === "Yes") {
-        history.push(
-          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-        );
-      } else if (nextPath.environmentAffect === "Yes") {
-        history.push(
-          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-        );
-      } else {
-        history.push(
-          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-        );
-      }
-      // If that is not the case as if,
-    } else {
       // If yes selected.
       if (detailsOfPropertyAffect === "Yes") {
+
+        if (propertyListData.length > 0) {
+          for (var i = 0; i < propertyListData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
+            );
+          }
+    
+          // If that is not the case as if,
+        } 
+
+
         // Validate property data.
         const { error, isValid } = PropertyValidate(form);
         setError(error);
@@ -198,7 +180,13 @@ const PropertyAffected = () => {
             `api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
             )}/properties/`,
-            form[i]
+            {
+              propertyType: form[i].propertyType,
+              propertyOtherType: form[i].propertyOtherType,
+              damageDetails: form[i].damageDetails,
+              fkIncidentId: localStorage.getItem("fkincidentId"),
+              createdBy: 2,
+            }
           );
           status = res.status;
         }
@@ -294,7 +282,7 @@ const PropertyAffected = () => {
           }
         }
       }
-    }
+    
   };
 
   const fetchPropertyAffectedValue = async () => {
@@ -324,7 +312,11 @@ const PropertyAffected = () => {
   const fetchPropertyListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/properties/`);
     const result = res.data.data.results;
-
+    if(result.length>0){
+      let temp = [...form]
+      temp = result
+      await setForm(temp)
+    }
     await setPropertyListData(result);
     await setIsLoading(true);
   };
@@ -392,96 +384,7 @@ const PropertyAffected = () => {
                     </Typography>
                   </Box>
                 </Grid>
-                {propertyListData.length !== 0
-                  ? propertyListData.map((property, index) => (
-                      <Grid
-                        container
-                        item
-                        md={12}
-                        spacing={3}
-                        className="repeatedGrid"
-                      >
-                        <Grid item md={6}>
-                          {/* <p>person type</p> */}
-                          <FormControl
-                            variant="outlined"
-                            required
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="person-type-label">
-                              Property type
-                            </InputLabel>
-                            <Select
-                              labelId="person-type-label"
-                              id={`property-type${index}`}
-                              label="Person type"
-                              value={property.propertyType || ""}
-                              onChange={(e) =>
-                                handleUpdateProperty(
-                                  e,
-                                  index,
-                                  "propertyType",
-                                  property.id
-                                )
-                              }
-                            >
-                              {propertyTypeValue.length !== 0
-                                ? propertyTypeValue.map(
-                                    (selectValues, index) => (
-                                      <MenuItem
-                                        key={index}
-                                        value={selectValues.inputValue}
-                                      >
-                                        {selectValues.inputLabel}
-                                      </MenuItem>
-                                    )
-                                  )
-                                : null}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item md={6}>
-                          {/* <p>Name of people affected</p> */}
-                          <TextField
-                            id={`other-property${index}`}
-                            variant="outlined"
-                            label="If others, describe"
-                            className={classes.formControl}
-                            value={property.propertyOtherType || ""}
-                            onChange={(e) =>
-                              handleUpdateProperty(
-                                e,
-                                index,
-                                "propertyOtherType",
-                                property.id
-                              )
-                            }
-                          />
-                        </Grid>
-
-                        <Grid item md={12}>
-                          {/* <p>Name of people affected</p> */}
-                          <TextField
-                            id={`damage-property${index}`}
-                            variant="outlined"
-                            label="Describe the damage"
-                            required
-                            className={classes.formControl}
-                            value={property.damageDetails || ""}
-                            onChange={(e) =>
-                              handleUpdateProperty(
-                                e,
-                                index,
-                                "damageDetails",
-                                property.id
-                              )
-                            }
-                          />
-                        </Grid>
-                      </Grid>
-                    ))
-                  : form.map((value, index) => (
+                {form.map((value, index) => (
                       <Grid
                         container
                         item
@@ -593,7 +496,6 @@ const PropertyAffected = () => {
                         ) : null}
                       </Grid>
                     ))}
-                {propertyListData.length > 0 ? null : (
                   <Grid item md={12}>
                     <button
                       className={classes.textButton}
@@ -602,7 +504,7 @@ const PropertyAffected = () => {
                       <PersonAddIcon /> Add details of another property affected
                     </button>
                   </Grid>
-                )}
+              
               </>
             ) : null}
             <Grid item md={12}>

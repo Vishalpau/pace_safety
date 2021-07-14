@@ -34,7 +34,6 @@ function PropertyValidate(data) {
   //     isValid = false
   // }
 
-  console.log(error);
   return { error, isValid };
 }
 

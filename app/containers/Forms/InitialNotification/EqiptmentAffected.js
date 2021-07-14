@@ -142,26 +142,27 @@ const EqiptmentAffected = () => {
   const handleNext = async () => {
     const nextPath = JSON.parse(localStorage.getItem('nextPath'));
     //  cheack condition equipment is already filled or new creation
-    if (equipmentListdata.length > 0) {
-      // send request for update
-
-      for (let i = 0; i < equipmentListdata.length; i++) {
-        const res = await api.put(
-          `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`,
-          equipmentListdata[i]
-        );
+     if (detailsOfEquipmentAffect === 'Yes') {
+      if (equipmentListdata.length > 0) {
+        // send request for update
+  
+        for (let i = 0; i < equipmentListdata.length; i++) {
+          const res = await api.delete(
+            `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`,
+          
+          );
+        }
+        // decide for next path
+        if (nextPath.environmentAffect === 'Yes') {
+          history.push(
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+          );
+        } else {
+          history.push(
+            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+          );
+        }
       }
-      // decide for next path
-      if (nextPath.environmentAffect === 'Yes') {
-        history.push(
-          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-        );
-      } else {
-        history.push(
-          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-        );
-      }
-    } else if (detailsOfEquipmentAffect === 'Yes') {
       const { error, isValid } = EquipmentValidate(form);
       setError(error);
       const status = 0;
@@ -171,7 +172,13 @@ const EqiptmentAffected = () => {
           `/api/v1/incidents/${localStorage.getItem(
             'fkincidentId'
           )}/equipments/`,
-          form[i]
+          {
+            equipmentType: form[i].equipmentType,
+            equipmentOtherType: form[i].equipmentOtherType,
+            equipmentDeatils: form[i].equipmentDeatils,
+            createdBy: 1,
+            fkIncidentId: localStorage.getItem('fkincidentId'),
+          }
         );
       }
       const temp = incidentsListData;
@@ -241,7 +248,6 @@ const EqiptmentAffected = () => {
       `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
     );
     const result = res.data.data.results;
-    console.log(result.equipmentDamagedComments);
     const envComments = result.equipmentDamagedComments;
     setEequipmentDamagedComments(envComments);
     await setIncidentsListdata(result);
@@ -256,6 +262,12 @@ const EqiptmentAffected = () => {
   const fetchEquipmentListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/equipments/`);
     const result = res.data.data.results;
+    
+    if(result.length>0){
+      let temp = [...form]
+      temp = result
+      await setForm(temp)
+    }
     setEquipmentListData(result);
     if(res.status === 200){
 await setIsLoading(true);
@@ -335,93 +347,7 @@ await setIsLoading(true);
             </Grid>
             {detailsOfEquipmentAffect === 'Yes' ? (
               <>
-                {equipmentListdata.length > 0
-                  ? equipmentListdata.map((equipment, key) => (
-                    <Grid
-                      container
-                      item
-                      md={12}
-                      spacing={3}
-                      className="repeatedGrid"
-                    >
-                      <Grid item md={6}>
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControl}
-                        >
-                          <InputLabel id="eq-type-label">
-                              Equipment type
-                          </InputLabel>
-                          <Select
-                            labelId="eq-type-label"
-                            id={`equipment-type${key + 1}`}
-                            label="Equipment type"
-                            defaultValue={equipment.equipmentType || ''}
-                            onChange={(e) => handleUpdateEquipment(
-                              e,
-                              key,
-                              'equipmentType',
-                              equipment.id
-                            )
-                            }
-                          >
-                            {equipmentTypeValue.length !== 0
-                              ? equipmentTypeValue.map(
-                                (selectValues, index) => (
-                                  <MenuItem
-                                    key={index}
-                                    value={selectValues.inputValue}
-                                  >
-                                    {selectValues.inputLabel}
-                                  </MenuItem>
-                                )
-                              )
-                              : null}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={6}>
-                        <TextField
-                          variant="outlined"
-                          id={`If-others-describe-property${key}`}
-                          label="If others, describe"
-                          className={classes.formControl}
-                          defaultValue={equipment.equipmentOtherType}
-                          disabled={
-                            equipment.equipmentType !== 'Other'
-                          }
-                          onChange={(e) => handleUpdateEquipment(
-                            e,
-                            key,
-                            'equipmentOtherType',
-                            equipment.id
-                          )
-                          }
-                        />
-                      </Grid>
-
-                      <Grid item md={12}>
-                        <TextField
-                          id={`describe-damage-equipment${key}`}
-                          multiline
-                          variant="outlined"
-                          rows="3"
-                          label="Describe the damage"
-                          className={classes.fullWidth}
-                          defaultValue={equipment.equipmentDeatils}
-                          onChange={(e) => handleUpdateEquipment(
-                            e,
-                            key,
-                            'equipmentDeatils',
-                            equipment.id
-                          )
-                          }
-                        />
-                      </Grid>
-                    </Grid>
-                  ))
-                  : form.map((value, key) => (
+               { form.map((value, key) => (
                     <Grid
                       container
                       item
@@ -517,7 +443,6 @@ await setIsLoading(true);
                       ) : null}
                     </Grid>
                   ))}
-                {equipmentListdata.length > 0 ? null : (
                   <Grid item lg={12} md={6} sm={6}>
                     <button
                       className={classes.textButton}
@@ -528,7 +453,7 @@ await setIsLoading(true);
 Add details of additional equipment affected?
                     </button>
                   </Grid>
-                )}
+                
               </>
             ) : null}
             {detailsOfEquipmentAffect === 'Yes' ? null : (
@@ -540,7 +465,7 @@ Add details of additional equipment affected?
                   variant="outlined"
                   label="Describe any equipment affect"
                   className={classes.fullWidth}
-                  defaultValue={equipmentDamagedComments}
+                  value={equipmentDamagedComments || ""}
                   onChange={(e) => setEequipmentDamagedComments(e.target.value)}
                 />
               </Grid>
