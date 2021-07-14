@@ -5,10 +5,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { MaterialDropZone, PapperBlock } from "dan-components";
+import { PapperBlock } from "dan-components";
 import {
   // TimePicker,
   MuiPickersUtilsProvider,
@@ -28,7 +27,6 @@ import { INVESTIGATION_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
-import { SignalCellularNullTwoTone } from "@material-ui/icons";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,23 +51,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WorkerDetails = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
   const [isLoading, setIsLoading] = useState(false);
   const [testTaken, seTesttaken] = useState(false);
   const [error, setError] = useState({});
-  const severity_level = ["Level1", "Level2", "Level3", "Level4"];
+
   const [files, setFile] = React.useState([]);
   const history = useHistory();
   const workerType = useRef([]);
@@ -91,45 +76,11 @@ const WorkerDetails = () => {
   const supervisorTimeInIndustry = useRef([]);
   const supervisorTimeInCompany = useRef([]);
   const supervisorTimeOnProject = useRef([]);
-  const { id } = useParams();
-  const [workerData , setWorkerData ] = useState([]);
-
 
   const putId = useRef("");
   const investigationId = useRef("");
-  const handelUpdateCheck = async (e) => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    putId.current = incidentId;
 
-    let previousData = await api.get(
-      `api/v1/incidents/${incidentId}/investigations/`
-    );
-    let allApiData = previousData.data.data.results[0];
-    if (!isNaN(allApiData.id)) {
-      // await setForm(allApiData);
-      investigationId.current = allApiData.id;
-    }
-
-    const res = await api.get(
-      `/api/v1/incidents/${putId.current}/investigations/${
-        investigationId.current
-      }/workers/`
-    );
-    const result = res.data.data.results;
-    console.log(result);
-    
-
-    await setWorkerData(result);
-    await setIsLoading(true);
-  };
-
-  const [form, setForm] = useState({
+  const [form, setForm] = useState([{
     name: "",
     workerType: "",
     department: "",
@@ -170,10 +121,38 @@ const WorkerDetails = () => {
     status: "Active",
     createdBy: 0,
     fkInvestigationId: investigationId.current,
-  });
+  }]);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+
+
+    let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
+    let PeopleAffectedData = PeopleAffected.data.data.results
+
+    const temp = [...form]
+    PeopleAffectedData.map((value) => {
+      temp.push({ name: value.personName, department: value.personDepartment })
+    })
+
+    setForm(temp)
+
+
+    let investigationData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let allApiData = investigationData.data.data.results[0];
+    if (!isNaN(allApiData.id)) {
+      investigationId.current = allApiData.id;
+    }
+
+    const res = await api.get(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${form.id}/`);
+    const result = res.data.data.results;
+
+    await setForm(result)
+    await setIsLoading(true);
   };
 
   const radioDecide = ["Yes", "No", "N/A"];
@@ -184,7 +163,7 @@ const WorkerDetails = () => {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       seTesttaken(true);
     } else if (e.target.value == "No") {
-      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value,dateOfAlcoholDrugTest:"2000-07-15T10:48:00.000Z"});
+      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value, dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z" });
 
       seTesttaken(false);
     }
@@ -243,31 +222,28 @@ const WorkerDetails = () => {
     data.append("status", form.status);
     data.append("createdBy", form.createdBy);
     data.append("fkInvestigationId", investigationId.current);
-    if (form.id) {
-      data.append("id", form.id);
-      const res = await api.put(
-        `/api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
-        }/workers/${form.id}/`,
-        data
-      );
-      
-    }
-    else{
-      const res = await api.post(
-        `/api/v1/incidents/${localStorage.getItem(
-          "fkincidentId"
-        )}/investigations/${investigationId.current}/workers/`,
-        data
-      );
-      if (res.status === 201) {
-        const workerId = res.data.data.results.id;
+    // if (form.id) {
+    //   data.append("id", form.id);
+    //   const res = await api.put(
+    //     `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+    //     }/workers/${form.id}/`,
+    //     data
+    //   );
 
-        // Set the fkincidentId and it will be used for future reference forms.
-        localStorage.setItem("workerId", workerId);
-        history.push(`/app/incident-management/registration/investigation/event-details/`)
-      }
-    }
+    // }
+    // else {
+    //   const res = await api.post(
+    //     `/api/v1/incidents/${localStorage.getItem(
+    //       "fkincidentId"
+    //     )}/investigations/${investigationId.current}/workers/`,
+    //     data
+    //   );
+
+    //   localStorage.setItem("workerId", workerId);
+    //   history.push(`/app/incident-management/registration/investigation/event-details/`)
+
+    // }
+    history.push(`/app/incident-management/registration/investigation/event-details/`)
   };
 
   const PickList = async () => {
@@ -296,27 +272,27 @@ const WorkerDetails = () => {
   //
   useEffect(() => {
     handelUpdateCheck();
-
     PickList();
   }, []);
 
   const classes = useStyles();
   return (
-    <PapperBlock title="Details of Person Affected" icon="ion-md-list-box">
+    <PapperBlock title="Worker details" icon="ion-md-list-box">
+      {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6">Worker details</Typography>
             </Grid>
-            {workerData.map((value, index)=>(<>
+            {/* {workerData.map((value, index)=>(<> */}
             <Grid item md={6}>
               <TextField
                 id="title"
                 variant="outlined"
                 label="Name"
                 required
-                defaultValue={value.name}
+                defaultValue={form.name}
                 error={error && error.name}
                 helperText={error && error.name ? error.name : null}
                 className={classes.formControl}
@@ -342,7 +318,7 @@ const WorkerDetails = () => {
                   id="unit-name"
                   label="Type"
                   // defaultValue={incidentsListData.fkUnitId}
-                  defaultValue={value.workerType}
+                  defaultValue={form.workerType}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -373,7 +349,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Department"
-                  defaultValue={value.department}
+                  defaultValue={form.department}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -404,7 +380,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Number of Scheduled Work Hours"
-                  defaultValue={value.workHours}
+                  defaultValue={form.workHours}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -425,7 +401,7 @@ const WorkerDetails = () => {
                 <KeyboardTimePicker
                   disableFuture
                   className={classes.formControl}
-                  defaultValue={value.shiftTimeStart}
+                  defaultValue={form.shiftTimeStart}
                   label="Start of shift time"
                   value={form.shiftTimeStart}
                   // value={
@@ -452,7 +428,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Type of Shift"
-                  defaultValue={value.shiftType}
+                  defaultValue={form.shiftType}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -480,7 +456,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Occupation"
-                  defaultValue={value.occupation}
+                  defaultValue={form.occupation}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -511,7 +487,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Shift Cycle"
-                  defaultValue={value.shiftCycle}
+                  defaultValue={form.shiftCycle}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -543,7 +519,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Number of Days into Shift"
-                  defaultValue={value.noOfDaysIntoShift}
+                  defaultValue={form.noOfDaysIntoShift}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -574,7 +550,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time in company"
-                  defaultValue={value.timeInCompany}
+                  defaultValue={form.timeInCompany}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -604,7 +580,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time on project"
-                  defaultValue={value.timeOnProject}
+                  defaultValue={form.timeOnProject}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -635,7 +611,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time in Industry"
-                  defaultValue={value.timeInIndustry}
+                  defaultValue={form.timeInIndustry}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -666,7 +642,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Event leading to injury"
                 className={classes.formControl}
-                defaultValue={value.eventLeadingToInjury}
+                defaultValue={form.eventLeadingToInjury}
                 error={error && error.eventLeadingToInjury}
                 helperText={
                   error && error.eventLeadingToInjury
@@ -690,7 +666,7 @@ const WorkerDetails = () => {
                 label="Injury object"
                 className={classes.formControl}
                 error={error && error.injuryObject}
-                defaultValue={value.injuryObject}
+                defaultValue={form.injuryObject}
                 helperText={
                   error && error.injuryObject ? error.injuryObject : null
                 }
@@ -718,7 +694,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Primary Body Part Side Included"
-                  defaultValue={value.primaryBodyPartWithSide}
+                  defaultValue={form.primaryBodyPartWithSide}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -752,7 +728,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Secondary Body Part Included"
-                  defaultValue={value.secondaryBodyPartWithSide}
+                  defaultValue={form.secondaryBodyPartWithSide}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -786,7 +762,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Type of injury illness"
-                  defaultValue={value.typeOfInjury}
+                  defaultValue={form.typeOfInjury}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -811,7 +787,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Number of Days Away/On Restriction"
                 error={error && error.NoOfDaysAway}
-                defaultValue={value.NoOfDaysAway}
+                defaultValue={form.NoOfDaysAway}
                 helperText={
                   error && error.NoOfDaysAway ? error.NoOfDaysAway : null
                 }
@@ -831,7 +807,7 @@ const WorkerDetails = () => {
                 id="title"
                 variant="outlined"
                 label="Medical Response Taken"
-                defaultValue={value.medicalResponseTaken}
+                defaultValue={form.medicalResponseTaken}
                 error={error && error.medicalResponseTaken}
                 helperText={
                   error && error.medicalResponseTaken
@@ -855,7 +831,7 @@ const WorkerDetails = () => {
                   className={classes.formControl}
                   label="Treatment Date"
                   value={form.treatmentDate}
-                  defaultValue={value.treatmentDate}
+                  defaultValue={form.treatmentDate}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -884,7 +860,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Highest Medical Responder"
-                  defaultValue={value.higherMedicalResponder}
+                  defaultValue={form.higherMedicalResponder}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -911,7 +887,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Status Update"
                 error={error && error.injuryStatus}
-                defaultValue={value.injuryStatus}
+                defaultValue={form.injuryStatus}
                 helperText={
                   error && error.injuryStatus ? error.injuryStatus : null
                 }
@@ -939,7 +915,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="First Aid Treatment"
-                  defaultValue={value.firstAidTreatment}
+                  defaultValue={form.firstAidTreatment}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -971,7 +947,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Mechanism of Injury"
-                  defaultValue={value.mechanismOfInjury}
+                  defaultValue={form.mechanismOfInjury}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1000,7 +976,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Medical Issued ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={value.isMedicationIssued}
+                  defaultValue={form.isMedicationIssued}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1024,7 +1000,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Prescription Issues ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={value.isPrescriptionIssued}
+                  defaultValue={form.isPrescriptionIssued}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1048,7 +1024,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Non-Prescription ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={value.isNonPrescription}
+                  defaultValue={form.isNonPrescription}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1072,7 +1048,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Any Limitation ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={value.isAnyLimitation}
+                  defaultValue={form.isAnyLimitation}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1103,8 +1079,8 @@ const WorkerDetails = () => {
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   defaultValue={
-                    value.isAlcoholDrugTestTaken
-                      ? value.isAlcoholDrugTestTaken
+                    form.isAlcoholDrugTestTaken
+                      ? form.isAlcoholDrugTestTaken
                       : "No"
                   }
                   onChange={(e) => handelTestTaken(e)}
@@ -1130,8 +1106,8 @@ const WorkerDetails = () => {
                       error={error.incidentdate}
                       required
                       className={classes.formControl}
-                      value={value.dateOfAlcoholDrugTest}
-                      defaultValue={value.dateOfAlcoholDrugTest}
+                      value={form.dateOfAlcoholDrugTest}
+                      defaultValue={form.dateOfAlcoholDrugTest}
                       label="Date of Test"
                       helperText={
                         error.incidentdate ? error.incidentdate : null
@@ -1156,7 +1132,7 @@ const WorkerDetails = () => {
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
-                      defaultValue={value.isWorkerClearedTest}
+                      defaultValue={form.isWorkerClearedTest}
                       onChange={(e) => {
                         setForm({
                           ...form,
@@ -1182,7 +1158,7 @@ const WorkerDetails = () => {
                   variant="outlined"
                   label="Why was the test not conducted?"
                   className={classes.formControl}
-                  defaultValue={value.reasonForTestNotDone}
+                  defaultValue={form.reasonForTestNotDone}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1208,7 +1184,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Supervisor Name"
                 error={error && error.supervisorName}
-                defaultValue={value.supervisorName}
+                defaultValue={form.supervisorName}
                 helperText={
                   error && error.supervisorName ? error.supervisorName : null
                 }
@@ -1237,7 +1213,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Supervisor Time in Industry"
-                  defaultValue={value.supervisorTimeInIndustry}
+                  defaultValue={form.supervisorTimeInIndustry}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1277,7 +1253,7 @@ const WorkerDetails = () => {
                       supervisorTimeInCompany: e.target.value,
                     });
                   }}
-                  defaultValue={value.supervisorTimeInCompany}
+                  defaultValue={form.supervisorTimeInCompany}
                 >
                   {supervisorTimeInCompany.current.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
@@ -1311,7 +1287,7 @@ const WorkerDetails = () => {
                       supervisorTimeOnProject: e.target.value,
                     });
                   }}
-                  defaultValue={value.supervisorTimeOnProject}
+                  defaultValue={form.supervisorTimeOnProject}
                 >
                   {supervisorTimeOnProject.current.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
@@ -1340,7 +1316,8 @@ const WorkerDetails = () => {
                   handleFile(e);
                 }}
               />
-            </Grid></>))}
+            </Grid>
+            {/* </>))} */}
 
             <Grid item md={12}>
               <button
@@ -1369,7 +1346,7 @@ const WorkerDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-                // href="/app/incident-management/registration/investigation/property-impact-details/"
+              // href="/app/incident-management/registration/investigation/property-impact-details/"
               >
                 Next
               </Button>

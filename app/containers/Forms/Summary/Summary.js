@@ -359,7 +359,7 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink href="/app/incident-management/registration/investigation/investigation-overview/">
+                    <ListItemLink href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}>
                       <ListItemIcon>
                         <Edit />
                       </ListItemIcon>
