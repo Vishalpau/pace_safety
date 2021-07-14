@@ -134,7 +134,6 @@ const PeoplesAffected = () => {
     setForm(temp);
   };
 
-
   // Next button click event handling.
   const handleNext = async () => {
     // Next path handlings.
@@ -159,7 +158,6 @@ const PeoplesAffected = () => {
 
       // Loop over all the people added and hit them with the help of the Post API.
       // We don't have single API.
-
 
       if (isValid) {
         for (var i = 0; i < form.length; i++) {
@@ -286,7 +284,6 @@ const PeoplesAffected = () => {
         );
       }
     }
-
   };
 
   // hablde Remove
@@ -346,7 +343,6 @@ const PeoplesAffected = () => {
         await setIsLoading(true);
       }
     }
-
   };
 
   // Fetch the individual page data in case of the update.
@@ -387,7 +383,7 @@ const PeoplesAffected = () => {
                   className={classes.inlineRadioGroup}
                   aria-label="personAffect"
                   name="personAffect"
-                  value={personAffect || ''}
+                  value={personAffect || ""}
                   onChange={(e) => {
                     setPersonAffect(e.target.value);
                   }}
@@ -632,7 +628,6 @@ const PeoplesAffected = () => {
                   </Grid>
                 ))}
 
-
                 <Grid item md={12}>
                   <button
                     className={classes.textButton}
@@ -641,7 +636,6 @@ const PeoplesAffected = () => {
                     <PersonAddIcon /> Add details of another person affected
                   </button>
                 </Grid>
-
               </>
             ) : null}
             <Grid item md={12}>

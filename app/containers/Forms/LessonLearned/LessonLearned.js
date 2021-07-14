@@ -190,7 +190,6 @@ const LessionLearned = () => {
     await setForm(newData);
   };
   useEffect(() => {
-
     fetchDepartment();
     if (id) {
       fetchLessonLerned();
@@ -325,7 +324,6 @@ const LessionLearned = () => {
                   <Grid item md={12}>
                     {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
 
-
                     <TextField
                       id="outlined-search"
                       required
@@ -348,7 +346,6 @@ const LessionLearned = () => {
                     {/* {error && error.teamLearning && (
                           <p>{error.teamLearning}</p>
                         )} */}
-
                   </Grid>
                   {form.length > 1 ? (
                     <Grid item md={3}>
