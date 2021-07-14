@@ -80,7 +80,10 @@ const InvestigationOverview = () => {
     // setError(error);
     // console.log(error, isValid);
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-    history.push(`/app/incident-management/registration/investigation/worker-details/`)
+    if(putId.current){
+      history.push(`/app/incident-management/registration/investigation/event-details/${putId.current}`)
+    }else{
+    history.push(`/app/incident-management/registration/investigation/event-details/`)}
   };
 
   const handelDeaultValue = (value) => {

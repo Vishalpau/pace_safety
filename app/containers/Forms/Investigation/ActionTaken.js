@@ -25,6 +25,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { PapperBlock } from "dan-components";
+import { useHistory, useParams} from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -52,6 +53,7 @@ const ActionTaken = () => {
 
   const notificationSent = ["Manage", "SuperVisor"];
   const [form, setForm] = useState({});
+  const history = useHistory();
   const putId = useRef("")
   const investigationId = useRef("")
 
@@ -87,7 +89,7 @@ const ActionTaken = () => {
 
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
     if (res.status === 200) {
-      console.log("request done");
+      history.push(`/app/incident-management/registration/summary/summary/${putId.current}`)
     }
   };
 
@@ -142,7 +144,8 @@ const ActionTaken = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
+              onClick={() => history.goBack()}
+              // href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
             >
               Previous
             </Button>

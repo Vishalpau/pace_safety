@@ -78,7 +78,7 @@ const InvestigationOverview = () => {
     if (putId.current == "") {
       const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
       
-      history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
+      history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
         
       
     } else if (putId.current !== "") {
