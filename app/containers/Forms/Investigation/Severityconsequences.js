@@ -67,6 +67,7 @@ const InvestigationOverview = () => {
       `api/v1/incidents/${incidentId}/investigations/`
     );
     let allApiData = previousData.data.data.results[0];
+    console.log(allApiData)
     console.log(allApiData.id)
     if (!isNaN(allApiData.id)) {
       await setForm(allApiData);
@@ -79,11 +80,9 @@ const InvestigationOverview = () => {
     // const { error, isValid } = initialdetailvalidate(form);
     // setError(error);
     // console.log(error, isValid);
+    console.log(form)
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-    if(putId.current){
-      history.push(`/app/incident-management/registration/investigation/event-details/${putId.current}`)
-    }else{
-    history.push(`/app/incident-management/registration/investigation/event-details/`)}
+    history.push(`/app/incident-management/registration/investigation/worker-details/${putId.current}/`)
   };
 
   const handelDeaultValue = (value) => {

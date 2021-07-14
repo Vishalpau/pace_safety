@@ -91,6 +91,7 @@ const ActionTaken = () => {
     if (res.status === 200) {
       history.push(`/app/incident-management/registration/summary/summary/${putId.current}`)
     }
+    localStorage.setItem("Investigation", "Done");
   };
 
   useEffect(() => {

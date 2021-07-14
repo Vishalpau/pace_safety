@@ -115,7 +115,7 @@ const WorkerDetails = () => {
       // await setForm(allApiData);
       investigationId.current = allApiData.id;
     }
-
+    console.log('sagar');
     const res = await api.get(
       `/api/v1/incidents/${putId.current}/investigations/${
         investigationId.current
@@ -123,7 +123,7 @@ const WorkerDetails = () => {
     );
 
     const result = res.data.data.results;
-    console.log(result);
+    
     
 
     // await setWorkerData(result);
@@ -253,7 +253,7 @@ const WorkerDetails = () => {
         }/workers/${form.id}/`,
         data
       );
-      
+      history.push(`/app/incident-management/registration/investigation/event-details/${putId.current}/`)
     }
     else{
       const res = await api.post(
@@ -262,13 +262,13 @@ const WorkerDetails = () => {
         )}/investigations/${investigationId.current}/workers/`,
         data
       );
-      if (res.status === 201) {
+      // if (res.status === 201) {
         // const workerId = res.data.data.results.id;
 
         // Set the fkincidentId and it will be used for future reference forms.
-        localStorage.setItem("workerId", workerId);
+        // localStorage.setItem("workerId", workerId);
         history.push(`/app/incident-management/registration/investigation/event-details/`)
-      }
+      // }
     }
   };
 

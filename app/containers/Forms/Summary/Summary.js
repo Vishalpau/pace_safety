@@ -153,7 +153,18 @@ const Summary = () => {
                   color="primary"
                   variant="outlined"
                   size="small"
-                  endIcon={<AccessTime />}
+                  variant={
+                    localStorage.getItem("Investigation") == "Done"
+                      ? "contained"
+                      : "outlined"
+                  }
+                  endIcon={
+                    localStorage.getItem("Investigation") == "Done" ? (
+                      <CheckCircle />
+                    ) : (
+                      <AccessTime />
+                    )
+                  }
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(false);
@@ -166,7 +177,9 @@ const Summary = () => {
                   Investigation
                 </Button>
                 <Typography variant="caption" display="block">
-                  Pending
+                  {localStorage.getItem("Investigation") == "Done"
+                    ? "Done"
+                    : "Pending"}
                 </Typography>
               </div>
 
@@ -320,12 +333,24 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}>
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                      <ListItemText primary="Modify Investigation" />
-                    </ListItemLink>
+                    {localStorage.getItem("Investigation") == "Done" ? (
+                      <ListItemLink
+                        href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}
+                      >
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary="Modify Investigation" />
+                      </ListItemLink>
+                    ) : (
+                      <ListItemLink href="/app/incident-management/registration/investigation/investigation-overview/">
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
+
+                        <ListItemText primary="Add Investigation" />
+                      </ListItemLink>
+                    )}
 
                     {localStorage.getItem("Evidence") == "Done" ? (
                       <ListItemLink

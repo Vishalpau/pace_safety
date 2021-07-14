@@ -42,6 +42,7 @@ const InvestigationOverview = () => {
   const history = useHistory();
   const investigationId = useRef("")
   const severityValues = useRef([])
+  const [isLoading , setIsLoading] = useState(false)
 
   const [form, setForm] = useState({
     srartDate: "2021-07-07T13:05:22.157Z",
@@ -78,12 +79,13 @@ const InvestigationOverview = () => {
     if (putId.current == "") {
       const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
       
-      history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
+      history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}/`)
         
       
     } else if (putId.current !== "") {
       console.log(putId.current)
       form["updatedBy"] = "0"
+      console.log(form)
       const res = api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
       
       // if (res.status === 200) {
@@ -95,17 +97,24 @@ const InvestigationOverview = () => {
 
   const classes = useStyles();
   const callback = async() => {
-    await handelUpdateCheck()
+    
+    
+    console.log(severityValues.current)
     severityValues.current = await PickListData(41)
+    await setIsLoading(true);
+    
+    
   }
 
   useEffect( () => {
+    handelUpdateCheck()
     callback()
   }, []);
 
   return (
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
       {/* {console.log(form)} */}
+      {isLoading ? (
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={12}>
@@ -280,7 +289,7 @@ const InvestigationOverview = () => {
             selectedItem="Investigation overview"
           />
         </Grid>
-      </Grid>
+      </Grid>):(<h1>Loading...</h1>)}
     </PapperBlock>
   );
 };
