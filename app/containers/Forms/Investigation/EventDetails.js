@@ -217,6 +217,7 @@ const EventDetails = () => {
             }
 
           }
+          history.push(`/app/incident-management/registration/investigation/action-taken/`)
         }
         // put
       } else if (eventId.current !== "") {
@@ -239,7 +240,7 @@ const EventDetails = () => {
             console.log("request done")
           }
         }
-
+        history.push(`/app/incident-management/registration/investigation/action-taken/${putId.current}`)
       }
     }
   };
