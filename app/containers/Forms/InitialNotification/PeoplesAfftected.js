@@ -558,7 +558,7 @@ const PeoplesAffected = () => {
                                 : null
                             }
                             variant="outlined"
-                            label="Identify number of person"
+                            label="Identification number of person"
                             className={classes.formControl}
                             defaultValue={people.personIdentification}
                             onChange={(e) =>
@@ -781,7 +781,7 @@ const PeoplesAffected = () => {
                                 ? error[`personIdentification${[key]}`]
                                 : null
                             }
-                            label="Identify number of person"
+                            label="Identification number of person"
                             className={classes.formControl}
                             value={value.personIdentification}
                             onChange={(e) =>
