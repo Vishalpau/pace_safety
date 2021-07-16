@@ -239,7 +239,7 @@ const RootCauseAnalysis = () => {
               label="Incident date and time"
               className={classes.formControl}
               id="filled-basic"
-              value={moment(incidents.incidentOccuredOn).format('MM/DD/YYYY')}
+              value={moment(incidents.incidentOccuredOn).format('MM/DD/YYYY , h:mm:ss a')}
               disabled
             />
           </Grid>

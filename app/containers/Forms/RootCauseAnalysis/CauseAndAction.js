@@ -118,6 +118,7 @@ const BasicCauseAndAction = () => {
         tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser];
       }
     });
+    console.log(tempApiData)
     await setData(tempApiData);
   };
 

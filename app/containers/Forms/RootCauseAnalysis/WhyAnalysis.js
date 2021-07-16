@@ -201,7 +201,7 @@ const WhyAnalysis = () => {
               Method
             </Typography>
             <Typography className={Type.labelValue}>
-              Five why analysis
+              5 why analysis
             </Typography>
           </Grid>
 

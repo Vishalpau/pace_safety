@@ -64,12 +64,12 @@ const InvestigationOverview = () => {
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
-    if (!isNaN(allApiData.id)) {
+    if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
       investigationId.current = allApiData.id
       putId.current = incidentId;
     }
-    console.log(investigationId.current)
+
   };
 
   const handleNext = () => {
