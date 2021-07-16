@@ -108,6 +108,9 @@ const ReportingAndNotification = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  let reportedToFilterData = []
+  let filterSuperVisorName = []
+  let filterReportedByName = []
 
   const [form, setForm] = useState({
     reportedto: [],
@@ -166,6 +169,7 @@ const ReportingAndNotification = () => {
     });
   };
 
+// handle update incident
   const handleUpdateIncidentDetails = async () => {
     // const { error, isValid } = ReportingValidation(form);
     // setError(error);
@@ -282,13 +286,11 @@ const ReportingAndNotification = () => {
     }
   };
 
+  // handleSubmit incident details
   const handelNext = async (e) => {
     
      // handle remove existing report
      await handleRemoveExitingReport();
-
-    // set in reportTo otherData
-    await setOtherDataReportTo();
 
     // update incident details
     await handleUpdateIncidentDetails();
@@ -307,8 +309,10 @@ const ReportingAndNotification = () => {
       setError(error);
 
       if (isValid === true) {
-        for (const key in form.reportedto) {
-          const name = form.reportedto[key];
+       var newData =  form.reportedto.filter(item=> item !== reportOtherData)
+        for (const key in newData) {
+          
+          const name = newData[key];
 
           try {
             const res = await api.post(
@@ -325,6 +329,9 @@ const ReportingAndNotification = () => {
           } catch (err) {}
         }
 
+        // set in reportTo otherData
+        await setOtherDataReportTo();
+
         if (status === 201) {
           history.push(
             `/app/incident-management/registration/summary/summary/${localStorage.getItem(
@@ -335,7 +342,7 @@ const ReportingAndNotification = () => {
       }
     }
   };
-
+  // handle checkbox reported to 
   const handelReportedTo = async (e, value, type) => {
     if ((type = "option")) {
       if (e.target.checked == false) {
@@ -374,15 +381,16 @@ const ReportingAndNotification = () => {
       },
     ]);
   };
+
+  // handle close snackbar
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       // setOpenError(false)
       return;
     }
-
     setOpen(false);
   };
-  // handle form
+  // handle form initial evidance
   const handleEvidanceForm = async (e, key, fieldname) => {
     const temp = [...evidanceForm];
     const { value } = e.target;
@@ -413,6 +421,9 @@ const ReportingAndNotification = () => {
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
+    for(var key in result){
+      reportedToFilterData.push(result[key].inputValue)
+    }
     await setReportableTo(result);
   };
 
@@ -426,16 +437,12 @@ const ReportingAndNotification = () => {
       for (const key in result) {
         reportToData.push(result[key].reportTo);
       }
-      for (const i in reportToData) {
-        if (
-          reportToData[i] !== "Internal Leadership" ||
-          reportToData[i] !== "OHS" ||
-          reportToData[i] !== "Environment Officer" ||
-          reportToData[i] !== "Police" ||
-          reportToData[i] !== "Mutual Aid" ||
-          reportToData[i] !== "Others"
-        ) {
-          await setReportOtherData(reportToData[i]);
+      for (var i=0; i < 8;i++) {
+        if(!reportedToFilterData.includes(reportToData[i])){
+          if(reportToData[i] !== undefined){
+            setReportOtherData(reportToData[i])
+          }
+          
         }
       }
       await setReportedToObj(result);
@@ -452,6 +459,7 @@ const ReportingAndNotification = () => {
     );
     const result = res.data.data.results;
     const date = new Date(result.incidentReportedOn);
+
     await setForm({ ...form, reportingdate: date });
     await setIncidentsListdata(result);
     if (!id) {
@@ -474,6 +482,9 @@ const ReportingAndNotification = () => {
       .then((response) => {
         if(response.status === 200){
           const result = response.data.data.results[0].roles[0].users;
+          for( var i in result){
+            filterSuperVisorName.push(result[i].name)
+          }
           setSuperVisorName([...result, { name: 'other' }]);
         }
         // else{
@@ -501,7 +512,9 @@ const ReportingAndNotification = () => {
           const result = response.data.data.results[0].users;
           let user = [];
           user = result;
-  
+          for( var i in result){
+            filterReportedByName.push(result[i].name)
+          }
           setReportedByName([...result, { name: 'other' }]);
         }
         // else{
@@ -543,9 +556,9 @@ const ReportingAndNotification = () => {
   };
 
   useEffect(() => {
-    fetchIncidentsData();
     fetchSuperVisorName();
     fetchReportedBy();
+    fetchIncidentsData();
     if (id) {
       fetchReportsDataList();
     } else {
@@ -713,10 +726,8 @@ const ReportingAndNotification = () => {
                   id="supervisorname"
                   label="Supervisor name"
                   // defaultValue={incidentsListData.supervisorByName? incidentsListData.supervisorByName: ""}
-                  defaultValue={
-                    superVisorName.includes(incidentsListData.supervisorByName)
-                      ? superVisorName
-                      : ""
+                  defaultValue={incidentsListData.supervisorByName === ""?"":
+                    superVisorName.filter(item=> item.name === incidentsListData.supervisorByName).length>0?incidentsListData.supervisorByName:"other"
                   }
                   onChange={(e) => {
                     setForm({
@@ -736,14 +747,16 @@ const ReportingAndNotification = () => {
                 ) : null} */}
               </FormControl>
             </Grid>
-
             <Grid item md={6}>
               <TextField
                 id="others"
                 variant="outlined"
                 label="Others"
-                defaultValue={incidentsListData.supervisorByName || ""}
-                disabled={form.supervisorname !== "other"}
+                defaultValue={superVisorName.filter(item=> item.name === incidentsListData.supervisorByName).length>0?"":incidentsListData.supervisorByName
+              }
+                disabled={form.supervisorname === 'other'?false:true 
+                || superVisorName.filter(item=> item.name === incidentsListData.supervisorByName).length>0? false:true
+              }
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -768,11 +781,9 @@ const ReportingAndNotification = () => {
                   labelId="reportedBy-label"
                   id="reportedBy"
                   label="Reported by"
-                  defaultValue={
-                    reportedByName.includes(incidentsListData.supervisorByName)
-                      ? incidentsListData.incidentReportedByName
-                      : ""
-                  }
+                  defaultValue={ incidentsListData.incidentReportedByName === ""?"":
+                  reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?incidentsListData.incidentReportedByName:"other"
+                }
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -791,15 +802,19 @@ const ReportingAndNotification = () => {
                 ) : null} */}
               </FormControl>
             </Grid>
-
+{console.log(reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?true:false)}
             <Grid item md={6}>
               <TextField
                 id="others"
                 variant="outlined"
                 label="Others"
-                defaultValue={incidentsListData.incidentReportedByName || ""}
+                defaultValue={incidentsListData.incidentReportedByName === ""?"":
+                reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?"":incidentsListData.incidentReportedByName
+              }
                 className={classes.formControl}
-                disabled={form.reportedby !== "other"}
+                disabled={form.reportedby !== "other" ||
+                reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?true:false
+              }
                 onChange={(e) => {
                   setForm({
                     ...form,

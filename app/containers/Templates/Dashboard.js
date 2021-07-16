@@ -12,14 +12,38 @@ import LeftSidebarBigLayout from './layouts/LeftSidebarBigLayout';
 import DropMenuLayout from './layouts/DropMenuLayout';
 import MegaMenuLayout from './layouts/MegaMenuLayout';
 import styles from './appStyles-jss';
-
+import axios from 'axios';
+import {access_token, LOGIN_URL, SELF_API} from "../../utils/constants";
 function Dashboard(props) {
   // Initial header style
   const [openGuide, setOpenGuide] = useState(false);
   const [appHeight, setAppHeight] = useState(0);
-
+  // const loggingCheck= async()=>{
+    // alert('hey ram')
+    let config = {
+      method: "get",
+      url: `${SELF_API}`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    console.log('config',config);
+   axios(config)
+      .then(function(response) {
+       if(response.status !== 200){
+         window.location.href = `${LOGIN_URL}`
+       }
+       
+      })
+      .catch(function(error) {
+        console.log(response);
+        window.location.href = `${LOGIN_URL}`
+      });
+  // }
   useEffect(() => {
     const { history, loadTransition } = props;
+    // loggingCheck();
 
     // Adjust min height
     setAppHeight(window.innerHeight + 112);
@@ -71,6 +95,7 @@ function Dashboard(props) {
   const titleException = ['/app', '/app/crm-dashboard', '/app/crypto-dashboard'];
   const parts = history.location.pathname.split('/');
   const place = parts[parts.length - 1].replace('-', ' ');
+
   return (
     <div
       style={{ minHeight: appHeight }}

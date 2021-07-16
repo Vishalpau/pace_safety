@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { PropTypes } from "prop-types";
 import { Switch, Route } from "react-router-dom";
 import { ThemeContext } from "./ThemeWrapper";
@@ -123,9 +123,36 @@ import {
   UpdateIncidentDetails,
 } from "../pageListAsync";
 
+import axios from 'axios';
+import {access_token, SELF_API} from "../../utils/constants"
+
 function Application(props) {
   const { history } = props;
   const changeMode = useContext(ThemeContext);
+
+  const loggingCheck= async()=>{
+    // alert('hey ram')
+    let config = {
+      method: "get",
+      url: `${SELF_API}`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    console.log('config',config);
+    await axios(config)
+      .then(function(response) {
+       console.log(response)
+      })
+      .catch(function(error) {
+        console.log(response);
+      });
+  }
+  useEffect(()=>{
+    
+    loggingCheck();
+  },[])
   return (
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
