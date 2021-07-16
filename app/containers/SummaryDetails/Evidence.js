@@ -127,7 +127,6 @@ const EvidenceSummary = () => {
   // };
 
   // const fkid = localStorage.getItem('fkincidentId');
-  console.log(evidence);
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     await setEvidence(allEvidence.data.data.results);

@@ -122,7 +122,6 @@ const LessionLearned = () => {
             "fkincidentId"
           )}`
         );
-        localStorage.setItem("LessionLearnt", "Done");
       }
     }
   };

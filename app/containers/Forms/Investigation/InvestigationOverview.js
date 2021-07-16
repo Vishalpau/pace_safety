@@ -43,7 +43,7 @@ const InvestigationOverview = () => {
   const history = useHistory();
   const investigationId = useRef("");
   const severityValues = useRef([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState({
     srartDate: "2021-07-07T13:05:22.157Z",

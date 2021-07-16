@@ -132,7 +132,6 @@ const AdditionalDetails = () => {
         )}`
       );
     }
-    localStorage.setItem("Evidence", "Done");
   };
 
   const handleRadioData = (e, questionCode) => {

@@ -225,7 +225,6 @@ const Evidence = () => {
     if (result.length) {
       // await setForm(result);
       for (let i = 0; i < result.length; i++) {
-        console.log(result[i]);
         tempData.push({
           evidenceCategory: result[i].evidenceCategory,
           evidenceCheck: result[i].evidenceCheck,
@@ -303,7 +302,6 @@ const Evidence = () => {
     }
 
     for (let i = 0; i < form.length; i++) {
-      console.log([i]);
 
       let data = new FormData();
       data.append("evidenceCheck", form[i].evidenceCheck);
@@ -315,8 +313,6 @@ const Evidence = () => {
 
       // If update is the case.
       if (id) {
-        console.log("in put");
-        console.log("evidence id", evideceData[i].pk);
         data.append("pk", evideceData[i].pk);
 
         const res = await api.put(
@@ -333,8 +329,6 @@ const Evidence = () => {
         localStorage.getItem("fkincidentId") &&
         evideceData.length > 0
       ) {
-        console.log("dd put");
-        // console.log(evideceData)
         for (let i = 0; i < evideceData.length; i++) {
           let data = new FormData();
           data.append("pk", evideceData[i].pk);
@@ -349,7 +343,6 @@ const Evidence = () => {
           data.append("updatedBy", evideceData[i].updatedBy);
           data.append("fkIncidentId", evideceData[i].fkIncidentId);
         }
-        console.log(data);
         // const res = await api.put(
         //   `/api/v1/incidents/${localStorage.getItem(
         //     "fkincidentId"
@@ -368,7 +361,6 @@ const Evidence = () => {
         data.append("fkIncidentId", form[i].fkIncidentId);
 
         if (Object.keys(error).length == 0) {
-          console.log("in post");
           const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
@@ -376,7 +368,6 @@ const Evidence = () => {
             data
           );
 
-          console.log(res.data.data.results);
           if (res.status === 201) {
             // const queId = res.data.data.results.id;
             // localStorage.setItem("id", queId);
@@ -457,7 +448,6 @@ const Evidence = () => {
 
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
-      {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
