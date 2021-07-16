@@ -843,14 +843,14 @@ module.exports = [
   },
   {
     key: "Incidents",
-    name: "Incients",
+    name: "Incidents",
     icon: "ion-md-warning",
     multilevel: false,
     linkParent: "/app/pages/incident/",
   },
   {
     key: "assessments",
-    name: "Assesments",
+    name: "Assessments",
     icon: "ion-ios-clipboard",
     multilevel: false,
     linkParent: "/app/pages/blank-page/",

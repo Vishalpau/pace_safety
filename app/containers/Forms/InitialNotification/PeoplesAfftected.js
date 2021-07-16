@@ -139,13 +139,14 @@ const PeoplesAffected = () => {
     // Next path handlings.
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
+
     // This is the condition when Yes is clicked on the form.
     if (personAffect === "Yes") {
       if (peopleData.length > 0) {
-        const temp = peopleData;
+        const temp = peopleData
         for (var i = 0; i < peopleData.length; i++) {
           const res = await api.delete(
-            `api/v1/incidents/${id}/people/${temp[i].id}/`
+            `api/v1/incidents/${id}/people/${temp[i].id}/`,
           );
         }
       }
@@ -224,6 +225,9 @@ const PeoplesAffected = () => {
           );
         }
       }
+
+
+
 
       // Case when form has No option selected.
     } else {
@@ -347,9 +351,9 @@ const PeoplesAffected = () => {
     const result = res.data.data.results;
     await setPeopleData(result);
     if (result.length > 0) {
-      let temp = [...form];
-      temp = result;
-      await setForm(temp);
+      let temp = [...form]
+      temp = result
+      await setForm(temp)
     }
 
     await setIsLoading(true);
@@ -434,13 +438,13 @@ const PeoplesAffected = () => {
                         >
                           {personTypeValue.length !== 0
                             ? personTypeValue.map((selectValues, key) => (
-                                <MenuItem
-                                  key={key}
-                                  value={selectValues.inputValue}
-                                >
-                                  {selectValues.inputLabel}
-                                </MenuItem>
-                              ))
+                              <MenuItem
+                                key={key}
+                                value={selectValues.inputValue}
+                              >
+                                {selectValues.inputLabel}
+                              </MenuItem>
+                            ))
                             : null}
                         </Select>
                         {error && error[`personType${[key]}`] && (
@@ -469,13 +473,13 @@ const PeoplesAffected = () => {
                         >
                           {departmentValue.length !== 0
                             ? departmentValue.map((selectValues, index) => (
-                                <MenuItem
-                                  key={index}
-                                  value={selectValues.inputValue}
-                                >
-                                  {selectValues.inputLabel}
-                                </MenuItem>
-                              ))
+                              <MenuItem
+                                key={index}
+                                value={selectValues.inputValue}
+                              >
+                                {selectValues.inputLabel}
+                              </MenuItem>
+                            ))
                             : null}
                         </Select>
                         {error && error[`personDepartment${[key]}`] && (
@@ -506,7 +510,9 @@ const PeoplesAffected = () => {
                       <TextField
                         id={`id-num${key}`}
                         variant="outlined"
-                        error={error && error[`personIdentification${[key]}`]}
+                        error={
+                          error && error[`personIdentification${[key]}`]
+                        }
                         helperText={
                           error && error[`personIdentification${[key]}`]
                             ? error[`personIdentification${[key]}`]
@@ -550,13 +556,13 @@ const PeoplesAffected = () => {
                         >
                           {medicalCareValue.length !== 0
                             ? medicalCareValue.map((value, index) => (
-                                <FormControlLabel
-                                  key={index}
-                                  value={value.inputValue}
-                                  control={<Radio />}
-                                  label={value.inputLabel}
-                                />
-                              ))
+                              <FormControlLabel
+                                key={index}
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                              />
+                            ))
                             : null}
                         </RadioGroup>
                         {error && error[`personMedicalCare${[key]}`] && (
@@ -666,7 +672,7 @@ const PeoplesAffected = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                // onClick={(e) => handelNext(e)}
+              // onClick={(e) => handelNext(e)}
               >
                 Next
               </Button>
