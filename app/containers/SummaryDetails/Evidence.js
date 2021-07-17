@@ -97,6 +97,8 @@ const EvidenceSummary = () => {
   const [activity, setActivity] = useState([]);
   const [isLoading, setIsLoding] = useState(false);
   const [documentUrl, setDocumentUrl] = useState("");
+  const [expanded, setExpanded] = React.useState(false);
+
   const { id } = useParams();
 
   const [modalStyle] = React.useState(getModalStyle);
@@ -112,6 +114,10 @@ const EvidenceSummary = () => {
   };
   const downloadFile = () => {
     window.location.href = `${documentUrl}`;
+  };
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
   // const handleDownload = (url, filename) => {
@@ -153,7 +159,10 @@ const EvidenceSummary = () => {
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Accordion>
+            <Accordion
+              expanded={expanded === "panel1"}
+              onChange={handleExpand("panel1")}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>Evidence</Typography>
               </AccordionSummary>
@@ -263,7 +272,10 @@ const EvidenceSummary = () => {
             </Accordion>
           </Grid>
           <Grid item xs={12}>
-            <Accordion>
+            <Accordion
+              expanded={expanded === "panel2"}
+              onChange={handleExpand("panel2")}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>
                   Activity Details

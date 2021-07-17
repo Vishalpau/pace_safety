@@ -30,6 +30,8 @@ const IncidentDetailsSummary = () => {
   const [enviornmentData, setEnviornmentData] = useState([]);
   const [equipmentData, setEquipmentData] = useState([]);
   const [reportsData, setReportsData] = useState([]);
+  const [expanded, setExpanded] = React.useState(false);
+
   // const [fkid, setFkid] = useState(3);
 
   // useEffect(() => {
@@ -76,6 +78,10 @@ const IncidentDetailsSummary = () => {
     fetchEnviornmentAffectData();
     fetchReportsData();
   }, []);
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const classes = useStyles();
   return (
@@ -182,7 +188,10 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Accordion>
+        <Accordion
+          expanded={expanded === "panel1"}
+          onChange={handleExpand("panel1")}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>People affected</Typography>
           </AccordionSummary>
@@ -290,7 +299,10 @@ const IncidentDetailsSummary = () => {
         </Accordion>
       </Grid>
       <Grid item xs={12}>
-        <Accordion>
+        <Accordion
+          expanded={expanded === "panel2"}
+          onChange={handleExpand("panel2")}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Property affected
@@ -353,7 +365,10 @@ const IncidentDetailsSummary = () => {
       </Grid>
       {/* Equipment Affected */}
       <Grid item xs={12}>
-        <Accordion>
+        <Accordion
+          expanded={expanded === "panel3"}
+          onChange={handleExpand("panel3")}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Equipment affected
@@ -424,7 +439,10 @@ const IncidentDetailsSummary = () => {
       </Grid>
 
       <Grid item xs={12}>
-        <Accordion>
+        <Accordion
+          expanded={expanded === "panel4"}
+          onChange={handleExpand("panel4")}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Environment affected
@@ -460,7 +478,10 @@ const IncidentDetailsSummary = () => {
       </Grid>
       {/* Reports & Noticefication */}
       <Grid item xs={12}>
-        <Accordion>
+        <Accordion
+          expanded={expanded === "panel5"}
+          onChange={handleExpand("panel5")}
+        >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
               Reporting & notification

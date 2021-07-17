@@ -308,7 +308,7 @@ const Summary = () => {
                     setLessionlearn(true);
                   }}
                 >
-                  Lessons Learned
+                  Lessons Learnt
                 </Button>
                 <Typography variant="caption" display="block">
                   {localStorage.getItem("LessionLearnt") == "Done"
@@ -432,7 +432,7 @@ const Summary = () => {
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>
-                        <ListItemText primary="Lessons Learned" />
+                        <ListItemText primary="Lessons Learnt" />
                       </ListItemLink>
                     )}
 

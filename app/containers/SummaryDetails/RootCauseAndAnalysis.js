@@ -36,6 +36,11 @@ const RootCauseAnalysisSummary = () => {
   const [fiveWhy, setFiveWhy] = useState([]);
   const [causeanalysis, setCauseAnalysis] = useState([]);
   const [pacecauses, setPaceCauses] = useState([]);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const fkid = localStorage.getItem("fkincidentId");
 
@@ -73,18 +78,19 @@ const RootCauseAnalysisSummary = () => {
   const classes = useStyles();
   return (
     <Grid container spacing={3}>
-
       {/* root cause */}
-      {rootCause.length !== 0 ?
+      {rootCause.length !== 0 ? (
         <Grid item md={12}>
-          <Accordion>
+          <Accordion
+            expanded={expanded === "panel1"}
+            onChange={handleExpand("panel1")}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Root cause</Typography>
             </AccordionSummary>
 
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               <TableContainer component={Paper}>
-
                 <Table className={classes.table} size="small">
                   <TableHead>
                     <TableRow>
@@ -95,7 +101,6 @@ const RootCauseAnalysisSummary = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-
                     {rootCause.map((root, key) => (
                       <TableRow key={key}>
                         <TableCell component="th" scope="row">
@@ -105,20 +110,22 @@ const RootCauseAnalysisSummary = () => {
                         <TableCell>{root.recommendSolution}</TableCell>
                         <TableCell>{root.correctiveAction}</TableCell>
                       </TableRow>
-                    ))
-                    }
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             </AccordionDetails>
           </Accordion>
-        </Grid> :
-        null}
+        </Grid>
+      ) : null}
 
       {/* five why analysis   */}
-      {fiveWhy.length !== 0 ?
+      {fiveWhy.length !== 0 ? (
         <Grid item md={12}>
-          <Accordion>
+          <Accordion
+            expanded={expanded === "panel2"}
+            onChange={handleExpand("panel2")}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Five why</Typography>
             </AccordionSummary>
@@ -133,7 +140,6 @@ const RootCauseAnalysisSummary = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-
                     {fiveWhy.map((fw, key) => (
                       <TableRow key={key}>
                         <TableCell component="th" scope="row">
@@ -142,22 +148,25 @@ const RootCauseAnalysisSummary = () => {
                         <TableCell>{fw.why}</TableCell>
                         <TableCell>{fw.whyCount}</TableCell>
                       </TableRow>
-                    ))
-                    }
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             </AccordionDetails>
           </Accordion>
         </Grid>
-        :
-        null}
+      ) : null}
 
-      {causeanalysis.length !== 0 ?
+      {causeanalysis.length !== 0 ? (
         <Grid item md={12}>
-          <Accordion>
+          <Accordion
+            expanded={expanded === "panel3"}
+            onChange={handleExpand("panel3")}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Cause analysis</Typography>
+              <Typography className={classes.heading}>
+                Cause analysis
+              </Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               <TableContainer component={Paper}>
@@ -171,33 +180,36 @@ const RootCauseAnalysisSummary = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {
-                      causeanalysis.map((cause, key) => (
-                        <TableRow key={key}>
-                          <TableCell component="th" scope="row">
-                            {cause.id}
-                          </TableCell>
-                          <TableCell>{cause.evidenceSupport}</TableCell>
-                          <TableCell>{cause.evidenceContradiction}</TableCell>
-                          <TableCell>{cause.rcaRecommended}</TableCell>
-                        </TableRow>
-                      ))
-                    }
+                    {causeanalysis.map((cause, key) => (
+                      <TableRow key={key}>
+                        <TableCell component="th" scope="row">
+                          {cause.id}
+                        </TableCell>
+                        <TableCell>{cause.evidenceSupport}</TableCell>
+                        <TableCell>{cause.evidenceContradiction}</TableCell>
+                        <TableCell>{cause.rcaRecommended}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             </AccordionDetails>
           </Accordion>
         </Grid>
-        :
+      ) : (
         <Grid item md={12}>
-          <Typography className={classes.heading}>Root cause is pending</Typography>
+          <Typography className={classes.heading}>
+            Root cause is pending
+          </Typography>
         </Grid>
-      }
+      )}
 
-      {pacecauses.length !== 0 ?
+      {pacecauses.length !== 0 ? (
         <Grid item md={12}>
-          <Accordion>
+          <Accordion
+            expanded={expanded === "panel4"}
+            onChange={handleExpand("panel4")}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Pace cause</Typography>
             </AccordionSummary>
@@ -218,30 +230,26 @@ const RootCauseAnalysisSummary = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {
-                      pacecauses.map((pc, key) => (
-                        <TableRow key={key}>
-                          <TableCell component="th" scope="row">
-                            {pc.id}
-                          </TableCell>
-                          <TableCell>{pc.rcaNumber}</TableCell>
-                          <TableCell>{pc.rcaType}</TableCell>
-                          <TableCell>{pc.rcaSubType}</TableCell>
-                          <TableCell>{pc.rcaRemark}</TableCell>
-                          <TableCell>{pc.remarkType}</TableCell>
-                          <TableCell>{pc.status}</TableCell>
-                        </TableRow>
-                      ))
-                    }
+                    {pacecauses.map((pc, key) => (
+                      <TableRow key={key}>
+                        <TableCell component="th" scope="row">
+                          {pc.id}
+                        </TableCell>
+                        <TableCell>{pc.rcaNumber}</TableCell>
+                        <TableCell>{pc.rcaType}</TableCell>
+                        <TableCell>{pc.rcaSubType}</TableCell>
+                        <TableCell>{pc.rcaRemark}</TableCell>
+                        <TableCell>{pc.remarkType}</TableCell>
+                        <TableCell>{pc.status}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             </AccordionDetails>
           </Accordion>
         </Grid>
-        :
-        null
-      }
+      ) : null}
     </Grid>
   );
 };
