@@ -95,7 +95,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-05",
-      question: "Was FLA executed for the task?",
+      question: "Was FLHA executed for the task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -117,7 +117,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-07",
-      question: "Was per-zone planning enhanced the post-event?",
+      question: "Was pre-zone planning enhanced the post-event?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",

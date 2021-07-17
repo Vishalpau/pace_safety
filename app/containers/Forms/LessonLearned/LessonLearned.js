@@ -25,8 +25,10 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
 
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
+
+
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -50,7 +52,14 @@ const useStyles = makeStyles((theme) => ({
   fullWidth: {
     width: "100%",
   },
-  spacer: {},
+  textButton: {
+    color: "#3498db",
+    padding: 0,
+    textDecoration: "underline",
+    display: "inlineBlock",
+    marginBlock: "1.5rem",
+    backgroundColor: "transparent",
+  },
 }));
 
 const LessionLearned = () => {
@@ -86,14 +95,11 @@ const LessionLearned = () => {
   };
 
   const addNewTeamOrDeparment = async () => {
-    await setForm([
-      ...form,
-      { teamOrDepartment: "", learnings: "" },
-    ]);
-  }
+    await setForm([...form, { teamOrDepartment: "", learnings: "" }]);
+  };
   const handleNext = async () => {
     // sent put request
-    let status = 0
+    let status = 0;
     // sent post request
     const { isValid, error } = LessionLearnedValidator(form);
     setError(error);
@@ -102,8 +108,8 @@ const LessionLearned = () => {
       if (learningList.length > 0) {
         for (var i = 0; i < learningList.length; i++) {
           const res = await api.delete(
-            `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
-          )
+            `api/v1/incidents/${id}/learnings/${learningList[i].id}/`
+          );
         }
       }
       for (var i = 0; i < form.length; i++) {
@@ -118,7 +124,7 @@ const LessionLearned = () => {
             fkIncidentId: localStorage.getItem("fkincidentId"),
           }
         );
-        status = res.status
+        status = res.status;
       }
       if (status === 201) {
         history.push(
@@ -129,8 +135,6 @@ const LessionLearned = () => {
         localStorage.setItem("LessionLearnt", "Done");
       }
     }
-
-
   };
 
   //  Fetch Lession learn data
@@ -139,12 +143,12 @@ const LessionLearned = () => {
     const result = res.data.data.results;
 
     if (result.length > 0) {
-      let temp = [...form]
-      temp = result
-      await setForm(temp)
+      let temp = [...form];
+      temp = result;
+      await setForm(temp);
     }
     await setLearningList(result);
-    setIsLoading(true)
+    setIsLoading(true);
   };
 
   // fetch incident data
@@ -166,7 +170,7 @@ const LessionLearned = () => {
       },
     };
     axios(config)
-      .then(function (response) {
+      .then(function(response) {
         if (response.status === 200) {
           const result = response.data.data.results;
           setDepartment(result)
@@ -174,9 +178,8 @@ const LessionLearned = () => {
         else {
           // window.location.href = {LOGIN_URL}
         }
-
       })
-      .catch(function (error) {
+      .catch(function(error) {
         // window.location.href = {LOGIN_URL}
       });
   };
@@ -283,7 +286,7 @@ const LessionLearned = () => {
                 Key learnings
               </Typography>
 
-              {form.map((value, key) =>
+              {form.map((value, key) => (
                 <Grid container spacing={3} item md={12} key={key}>
                   <Grid item md={12}>
                     <FormControl
@@ -301,16 +304,14 @@ const LessionLearned = () => {
                         id="demo-simple-select"
                         label="Team/department"
                         value={value.teamOrDepartment || ""}
-                        onChange={(e) =>
-                          handleForm(e, key, 'teamOrDepartment')
-                        }
+                        onChange={(e) => handleForm(e, key, "teamOrDepartment")}
                       >
                         {department.map((selectValues, index) => (
                           <MenuItem
                             value={selectValues.departmentName}
                             key={index}
                           >
-                            {selectValues.departmentDescription}
+                            {selectValues.departmentName}
                           </MenuItem>
                         ))}
                       </Select>
@@ -323,7 +324,7 @@ const LessionLearned = () => {
                   </Grid>
                   <Grid item md={12}>
                     {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-
+{console.log(error && error[`learnings${[key]}`])}
                     <TextField
                       id="outlined-search"
                       required
@@ -334,14 +335,12 @@ const LessionLearned = () => {
                           : null
                       }
                       label="Team/department learnings"
+                      className={classes.formControl}
                       variant="outlined"
                       rows="3"
                       multiline
-                      value={value.learnings || ''}
-                      helperText={error ? error.teamLearning : ""}
-                      onChange={(e) =>
-                        handleForm(e, key, 'learnings')
-                      }
+                      value={value.learnings || ""}
+                      onChange={(e) => handleForm(e, key, "learnings")}
                     />
                     {/* {error && error.teamLearning && (
                           <p>{error.teamLearning}</p>
@@ -354,20 +353,21 @@ const LessionLearned = () => {
                         variant="contained"
                         color="primary"
                         className={classes.button}
+                        startIcon={<DeleteForeverIcon />}
                       >
                         Remove
                       </Button>
                     </Grid>
                   ) : null}
                 </Grid>
-              )}
+              ))}
             </Grid>
             <Grid item md={12}>
               <button
                 className={classes.textButton}
                 onClick={() => addNewTeamOrDeparment()}
               >
-                <AddIcon />  Add learnings from another team/department
+                <AddIcon /> Add learnings from another team/department
               </button>
             </Grid>
             <Grid item md={12}>

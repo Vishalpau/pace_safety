@@ -80,6 +80,11 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
+// Status Button
+function StatusButton(props) {
+  return <Button color="primary" size="large" {...props} />;
+}
+
 const Summary = () => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
@@ -95,7 +100,7 @@ const Summary = () => {
   const { id } = useParams();
   const history = useHistory();
   if (id) {
-    localStorage.setItem('fkincidentId', id);
+    localStorage.setItem("fkincidentId", id);
   }
 
   const fetchIncidentData = async () => {
@@ -139,24 +144,31 @@ const Summary = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
 
-    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let paceCause = await api.get(
+      `/api/v1/incidents/${incidentId}/pacecauses/`
+    );
     let paceCauseData = paceCause.data.data.results;
 
-    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
+    let rootCause = await api.get(
+      `/api/v1/incidents/${incidentId}/rootcauses/`
+    );
     let rootCauseData = rootCause.data.data.results[0];
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
     let whyAnalysisData = whyAnalysis.data.data.results;
 
-    if (paceCauseData.length > 0 && typeof paceCauseData !== "undefined" ||
-      rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
-      whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
+    if (
+      (paceCauseData.length > 0 && typeof paceCauseData !== "undefined") ||
+      (rootCauseData.length > 0 && typeof rootCauseData !== "undefined") ||
+      (whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined")
     ) {
-      rootCauseStatus.current = true
+      rootCauseStatus.current = true;
     }
-  }
+  };
 
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -166,8 +178,6 @@ const Summary = () => {
     setSelectedDate(date);
   };
 
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
   useEffect(() => {
@@ -332,7 +342,7 @@ const Summary = () => {
                     setLessionlearn(true);
                   }}
                 >
-                  Lessons Learnt
+                  Lessons Learned
                 </Button>
                 <Typography variant="caption" display="block">
                   {lessionLearntStatus
@@ -347,7 +357,6 @@ const Summary = () => {
           <Box marginTop={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={9}>
-                {/* summary and part */}
                 <>
                   {(() => {
                     if (
@@ -391,7 +400,9 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}>
+                    <ListItemLink
+                      href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}
+                    >
                       <ListItemIcon>
                         <Edit />
                       </ListItemIcon>
@@ -424,8 +435,11 @@ const Summary = () => {
                           <Edit />
                         </ListItemIcon>
                         <ListItemText primary="Modify RCA" />
-                      </ListItemLink>) : (
-                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
+                      </ListItemLink>
+                    ) : (
+                      <ListItemLink
+                        href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
+                      >
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>
