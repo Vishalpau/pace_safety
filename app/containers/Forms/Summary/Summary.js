@@ -80,9 +80,9 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
-// Status Button 
+// Status Button
 function StatusButton(props) {
-  return <Button color="primary" size="large" {...props} />
+  return <Button color="primary" size="large" {...props} />;
 }
 
 const Summary = () => {
@@ -93,12 +93,12 @@ const Summary = () => {
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const rootCauseStatus = useRef(false)
+  const rootCauseStatus = useRef(false);
 
   const { id } = useParams();
   const history = useHistory();
   if (id) {
-    localStorage.setItem('fkincidentId', id);
+    localStorage.setItem("fkincidentId", id);
   }
 
   const fetchIncidentData = async () => {
@@ -109,13 +109,11 @@ const Summary = () => {
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
     const result = res.data.data.results;
-    if(result.length > 0 ){
-      localStorage.setItem("LessionLearnt", "Done")
+    if (result.length > 0) {
+      localStorage.setItem("LessionLearnt", "Done");
+    } else {
+      localStorage.setItem("LessionLearnt", "Pending");
     }
-    else{
-      localStorage.setItem("LessionLearnt", "Pending")
-    }
-  
   };
 
   const rootCauseAnalysisCheck = async () => {
@@ -124,24 +122,31 @@ const Summary = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
 
-    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let paceCause = await api.get(
+      `/api/v1/incidents/${incidentId}/pacecauses/`
+    );
     let paceCauseData = paceCause.data.data.results;
 
-    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
+    let rootCause = await api.get(
+      `/api/v1/incidents/${incidentId}/rootcauses/`
+    );
     let rootCauseData = rootCause.data.data.results[0];
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
     let whyAnalysisData = whyAnalysis.data.data.results;
 
-    if (paceCauseData.length > 0 && typeof paceCauseData !== "undefined" ||
-      rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
-      whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
+    if (
+      (paceCauseData.length > 0 && typeof paceCauseData !== "undefined") ||
+      (rootCauseData.length > 0 && typeof rootCauseData !== "undefined") ||
+      (whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined")
     ) {
-      rootCauseStatus.current = true
+      rootCauseStatus.current = true;
     }
-  }
+  };
 
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
@@ -150,7 +155,6 @@ const Summary = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
 
   const classes = useStyles();
 
@@ -170,10 +174,10 @@ const Summary = () => {
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
               <div className={Styles.item}>
-                <StatusButton
-                  // color="primary"
+                <Button
+                  color="primary"
                   variant="contained"
-                  // size="small"
+                  size="small"
                   endIcon={<CheckCircle />}
                   className={classes.statusButton}
                   onClick={(e) => {
@@ -185,7 +189,7 @@ const Summary = () => {
                   }}
                 >
                   Initial Notification
-                </StatusButton>
+                </Button>
                 <Typography variant="caption" display="block">
                   Done
                 </Typography>
@@ -304,7 +308,7 @@ const Summary = () => {
                     setLessionlearn(true);
                   }}
                 >
-                  Lessons Learnt
+                  Lessons Learned
                 </Button>
                 <Typography variant="caption" display="block">
                   {localStorage.getItem("LessionLearnt") == "Done"
@@ -362,7 +366,9 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}>
+                    <ListItemLink
+                      href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}
+                    >
                       <ListItemIcon>
                         <Edit />
                       </ListItemIcon>
@@ -395,8 +401,11 @@ const Summary = () => {
                           <Edit />
                         </ListItemIcon>
                         <ListItemText primary="Modify RCA" />
-                      </ListItemLink>) : (
-                      <ListItemLink href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}>
+                      </ListItemLink>
+                    ) : (
+                      <ListItemLink
+                        href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
+                      >
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>
