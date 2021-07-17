@@ -67,22 +67,15 @@ const WhyAnalysis = () => {
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(
-      `/api/v1/incidents/${incidentId}/fivewhy/`
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 0) {
       form.length = 0;
-      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/fivewhy/`);
-      putId.current = lastItem;
-      // let allApiData = previousData.data.data.results;
+      putId.current = incidentId;
+      console.log(putId.current, 'Putid')
       allApiData.map((value) => {
         form.push({
           why: value.why,
@@ -149,10 +142,7 @@ const WhyAnalysis = () => {
           // delete callObjects[key].whyId
           let postObject = { ...whyData, ...callObjects[key] };
           if (typeof postObject != "undefined") {
-            const res = await api.put(
-              `/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`,
-              postObject
-            );
+            const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
             if (res.status == 200) {
               console.log("request done");
               nextPageLink = res.status;
@@ -176,6 +166,20 @@ const WhyAnalysis = () => {
     }
     localStorage.setItem("RootCause", "Done");
   };
+
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/`
+      );
+    }
+
+  }
 
   useEffect(() => {
     handelUpdateCheck();
@@ -221,7 +225,7 @@ const WhyAnalysis = () => {
             <Typography className={Type.labelValue}>Level 5</Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item md={11}>
             <TextField
               variant="outlined"
               id="filled-basic"
@@ -235,14 +239,15 @@ const WhyAnalysis = () => {
           {form.map((item, index) => (
             <Grid item md={12}>
               <Grid container spacing={2}>
-                <Grid item xs={11}>
+
+                <Grid item sm={11}>
                   <TextField
                     id="filled-basic"
                     label={`Why ${index + 1}`}
                     variant="outlined"
                     multiline
                     required
-                    rows={15}
+                    rows={3}
                     error={error[`why${[index]}`]}
                     value={form[index].why || ""}
                     helperText={error ? error[`why${[index]}`] : ""}
@@ -263,23 +268,27 @@ const WhyAnalysis = () => {
             </Grid>
           ))}
 
-          <Grid item md={12}>
-            {/* This button will add another entry of why input  */}
-            {putId.current == "" ? (
-              <button
-                onClick={(e) => handelAdd(e)}
-                className={classes.textButton}
-              >
-                <AddIcon /> Add
-              </button>
-            ) : null}
-          </Grid>
+          {form.length <= 4 ?
+            <Grid item md={1}>
+              {/* This button will add another entry of why input  */}
+              {putId.current == "" ? (
+                <button
+                  onClick={(e) => handelAdd(e)}
+                  className={classes.textButton}
+                >
+                  <AddIcon /> Add
+                </button>
+              ) : null}
+            </Grid>
+            : null
+          }
+
           <Grid item md={12}>
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>

@@ -142,6 +142,20 @@ const RootCauseAnalysis = () => {
     localStorage.setItem("RootCause", "Done");
   };
 
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/`
+      );
+    }
+
+  }
+
   useEffect(() => {
     handelUpdateCheck();
     setTimeout(fetchIncidentData(), 1000);
@@ -208,6 +222,8 @@ const RootCauseAnalysis = () => {
                 id="project-name"
                 labelId="project-name-label"
                 label="RCA recommended"
+                disabled
+                value="Root cause analysis"
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -225,10 +241,12 @@ const RootCauseAnalysis = () => {
                 id="project-name"
                 labelId="project-name-label"
                 label="Level of investigation"
+                disabled
               >
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
+
               </Select>
             </FormControl>
           </Grid>
@@ -326,8 +344,8 @@ const RootCauseAnalysis = () => {
                 id="filled-basic"
                 variant="outlined"
                 multiline
-                error={error && error.recommendSolution}
-                helperText={null}
+                error={error.recommendSolution}
+                helperText={error ? error.recommendSolution : ""}
                 label="If no please recommended correct solution?*"
                 rows="3"
                 value={form.recommendSolution}
@@ -344,7 +362,7 @@ const RootCauseAnalysis = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>

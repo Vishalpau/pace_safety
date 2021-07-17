@@ -91,7 +91,7 @@ const HazardiousCondition = () => {
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
     let allApiData = previousData.data.data.results;
-    console.log(allApiData)
+    // console.log(allApiData)
     if (allApiData.length > 8) {
       putId.current = incidentId;
       allApiData.map((value) => {
@@ -142,6 +142,7 @@ const HazardiousCondition = () => {
         },
       });
     }
+    console.log(checkPost.current)
   };
 
   const handelWarningSystems = (e, value) => {
@@ -219,9 +220,7 @@ const HazardiousCondition = () => {
 
   const handelSafetyItems = (e, value) => {
     if (e.target.checked == false) {
-      const newData = form.safetyitems.rcaRemark.filter(
-        (item) => item !== value
-      );
+      const newData = form.safetyitems.rcaRemark.filter((item) => item !== value);
       setForm({
         ...form,
         safetyitems: {
@@ -289,14 +288,13 @@ const HazardiousCondition = () => {
     });
 
     // api call //
+    console.log(tempData)
     let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
-          const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`
-            , callObjects[key]);
+          const res = await api.put(`/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
           if (res.status == 200) {
             console.log("request done");
             nextPageLink = res.status;
@@ -338,10 +336,27 @@ const HazardiousCondition = () => {
     await setIncidentDetail(result);
   };
 
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/`
+      );
+    }
+
+  }
+
+  const habelCallback = async () => {
+    await handelUpdateCheck();
+    await fetchIncidentDetails();
+  }
+
   useEffect(() => {
-    fetchIncidentDetails();
-    handelUpdateCheck();
-    // location.reload()
+    habelCallback()
   }, []);
 
   return (
@@ -349,7 +364,7 @@ const HazardiousCondition = () => {
       title="Immediate causes - hazardous Conditions"
       icon="ion-md-list-box"
     >
-      {console.log(checkPost.current)}
+      {/* {console.log(checkPost.current)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -487,7 +502,7 @@ const HazardiousCondition = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+                onClick={(e) => handelPrevious(e)}
               >
                 Previous
               </Button>

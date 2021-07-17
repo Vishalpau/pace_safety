@@ -53,7 +53,7 @@ export const INVESTIGATION_FORM = {
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
-  Details: "/app/incident-management/registration/root-cause-analysis/details/",
+  "RCA Details": "/app/incident-management/registration/root-cause-analysis/details/",
   "Hazardous acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
   "Hazardous conditions":
@@ -68,7 +68,7 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/management-control/",
   "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
-  "5 Why analysis":
+  "Five Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
@@ -231,7 +231,7 @@ export const CONDITIONSAFETYITEMS = [
   "Bypassing Safety Critical Devices",
   "Poor Housekeeping - Untidy or Congested Areas",
   "Improper Storage – (Flammable Material Close to Ignition Sources etc.)",
-  "Combustible Dusts - Chemical Fumes, Mists, Smoke",
+  "Combustible Dusts - Chemical Fumes- Mists- Smoke",
   "Inadequate Ventilation",
   "Poor Lighting - Wrong Type of Lighting - Glare",
 ];

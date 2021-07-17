@@ -101,7 +101,6 @@ const HazardiousActs = () => {
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
       checkPost.current = false
-
       setForm({
         ...form,
         supervision: {
@@ -421,6 +420,20 @@ const HazardiousActs = () => {
     }
   };
 
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/`
+      );
+    }
+
+  }
+
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -637,7 +650,7 @@ const HazardiousActs = () => {
               color="primary"
               className={classes.button}
               // href="/app/incident-management/registration/root-cause-analysis/details/"
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>
