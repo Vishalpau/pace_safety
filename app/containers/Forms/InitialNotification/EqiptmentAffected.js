@@ -1,99 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputLabel from '@material-ui/core/InputLabel';
-import Box from '@material-ui/core/Box';
-import { spacing } from '@material-ui/system';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { PapperBlock } from 'dan-components';
-import { useHistory, useParams } from 'react-router';
-import moment from 'moment';
-import AddIcon from '@material-ui/icons/Add';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import React, { useState, useEffect } from "react";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import Box from "@material-ui/core/Box";
+import { spacing } from "@material-ui/system";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import { PapperBlock } from "dan-components";
+import { useHistory, useParams } from "react-router";
+import moment from "moment";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
-import FormSideBar from '../FormSideBar';
+import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
-} from '../../../utils/constants';
-import FormHeader from '../FormHeader';
-import api from '../../../utils/axios';
-import EquipmentValidate from '../../Validator/EquipmentValidation';
-import '../../../styles/custom.css';
+} from "../../../utils/constants";
+import FormHeader from "../FormHeader";
+import api from "../../../utils/axios";
+import EquipmentValidate from "../../Validator/EquipmentValidation";
+import "../../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: '100%',
+    width: "100%",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   customLabel: {
     marginBottom: 0,
   },
   textButton: {
-    color: '#3498db',
+    color: "#3498db",
     padding: 0,
-    textDecoration: 'underline',
-    display: 'inlineBlock',
-    marginBlock: '1.5rem',
-    backgroundColor: 'transparent',
+    textDecoration: "underline",
+    display: "inlineBlock",
+    marginBlock: "1.5rem",
+    backgroundColor: "transparent",
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
-    flexDirection: 'row',
-    gap: '1.5rem',
+    flexDirection: "row",
+    gap: "1.5rem",
   },
 }));
 
 const EqiptmentAffected = () => {
   const reportedTo = [
-    'Internal Leadership',
-    'Police',
-    'Environment Officer',
-    'OHS',
-    'Mital Aid',
-    'Other',
+    "Internal Leadership",
+    "Police",
+    "Environment Officer",
+    "OHS",
+    "Mital Aid",
+    "Other",
   ];
 
-  const notificationSent = ['Manage', 'SuperVisor'];
+  const notificationSent = ["Manage", "SuperVisor"];
 
   const selectValues = [1, 2, 3, 4];
 
-  const radioDecide = ['Yes', 'No'];
+  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
   const [error, setError] = useState({});
   const [equipmentAffected, setequipmentAffected] = useState([]);
   const [equipmentTypeValue, setEquipmentTypeValue] = useState([]);
-  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState('No');
+  const [detailsOfEquipmentAffect, setDetailsOfEquipmentAffect] = useState(
+    "No"
+  );
   const [equipmentListdata, setEquipmentListData] = useState([]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
-  const [equipmentDamagedComments, setEequipmentDamagedComments] = useState('');
+  const [equipmentDamagedComments, setEequipmentDamagedComments] = useState("");
   const [form, setForm] = useState([
     {
-      equipmentType: '',
-      equipmentOtherType: '',
-      equipmentDeatils: '',
+      equipmentType: "",
+      equipmentOtherType: "",
+      equipmentDeatils: "",
       createdBy: 1,
-      fkIncidentId: localStorage.getItem('fkincidentId'),
+      fkIncidentId: localStorage.getItem("fkincidentId"),
     },
   ]);
 
@@ -124,11 +127,11 @@ const EqiptmentAffected = () => {
     setForm([
       ...form,
       {
-        equipmentType: '',
-        equipmentOtherType: '',
-        equipmentDeatils: '',
+        equipmentType: "",
+        equipmentOtherType: "",
+        equipmentDeatils: "",
         createdBy: 1,
-        fkIncidentId: localStorage.getItem('fkincidentId'),
+        fkIncidentId: localStorage.getItem("fkincidentId"),
       },
     ]);
   };
@@ -140,20 +143,19 @@ const EqiptmentAffected = () => {
   };
 
   const handleNext = async () => {
-    const nextPath = JSON.parse(localStorage.getItem('nextPath'));
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     //  cheack condition equipment is already filled or new creation
-     if (detailsOfEquipmentAffect === 'Yes') {
+    if (detailsOfEquipmentAffect === "Yes") {
       if (equipmentListdata.length > 0) {
         // send request for update
-  
+
         for (let i = 0; i < equipmentListdata.length; i++) {
           const res = await api.delete(
-            `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`,
-          
+            `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`
           );
         }
         // decide for next path
-        if (nextPath.environmentAffect === 'Yes') {
+        if (nextPath.environmentAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/environment-affected/${id}`
           );
@@ -170,29 +172,31 @@ const EqiptmentAffected = () => {
       for (let i = 0; i < form.length; i++) {
         const res = await api.post(
           `/api/v1/incidents/${localStorage.getItem(
-            'fkincidentId'
+            "fkincidentId"
           )}/equipments/`,
           {
             equipmentType: form[i].equipmentType,
             equipmentOtherType: form[i].equipmentOtherType,
             equipmentDeatils: form[i].equipmentDeatils,
             createdBy: 1,
-            fkIncidentId: localStorage.getItem('fkincidentId'),
+            fkIncidentId: localStorage.getItem("fkincidentId"),
           }
         );
       }
       const temp = incidentsListData;
-      temp.equipmentDamagedComments = equipmentDamagedComments || incidentsListData.equipmentDamagedComments;
-      temp.isEquipmentDamagedAvailable = detailsOfEquipmentAffect
-        || incidentsListData.isEquipmentDamagedAvailable;
+      temp.equipmentDamagedComments =
+        equipmentDamagedComments || incidentsListData.equipmentDamagedComments;
+      temp.isEquipmentDamagedAvailable =
+        detailsOfEquipmentAffect ||
+        incidentsListData.isEquipmentDamagedAvailable;
       temp.updatedAt = moment(new Date()).toISOString();
       const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
       // decide path for next
       if (id) {
-        if (nextPath.environmentAffect === 'Yes') {
+        if (nextPath.environmentAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/environment-affected/${id}`
           );
@@ -201,27 +205,29 @@ const EqiptmentAffected = () => {
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
         }
-      } else if (nextPath.environmentAffect === 'Yes') {
+      } else if (nextPath.environmentAffect === "Yes") {
         history.push(
-          '/app/incident-management/registration/initial-notification/environment-affected/'
+          "/app/incident-management/registration/initial-notification/environment-affected/"
         );
       } else {
         history.push(
-          '/app/incident-management/registration/initial-notification/reporting-and-notification/'
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
         );
       }
     } else {
       const temp = incidentsListData;
-      temp.equipmentDamagedComments = equipmentDamagedComments || incidentsListData.equipmentDamagedComments;
-      temp.isEquipmentDamagedAvailable = detailsOfEquipmentAffect
-        || incidentsListData.isEquipmentDamagedAvailable;
+      temp.equipmentDamagedComments =
+        equipmentDamagedComments || incidentsListData.equipmentDamagedComments;
+      temp.isEquipmentDamagedAvailable =
+        detailsOfEquipmentAffect ||
+        incidentsListData.isEquipmentDamagedAvailable;
       temp.updatedAt = moment(new Date()).toISOString();
       const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
       if (id !== undefined) {
-        if (nextPath.environmentAffect === 'Yes') {
+        if (nextPath.environmentAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/environment-affected/${id}`
           );
@@ -230,13 +236,13 @@ const EqiptmentAffected = () => {
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
         }
-      } else if (nextPath.environmentAffect === 'Yes') {
+      } else if (nextPath.environmentAffect === "Yes") {
         history.push(
-          '/app/incident-management/registration/initial-notification/environment-affected/'
+          "/app/incident-management/registration/initial-notification/environment-affected/"
         );
       } else {
         history.push(
-          '/app/incident-management/registration/initial-notification/reporting-and-notification/'
+          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
         );
       }
     }
@@ -245,7 +251,7 @@ const EqiptmentAffected = () => {
   // fetch incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
     const envComments = result.equipmentDamagedComments;
@@ -262,48 +268,48 @@ const EqiptmentAffected = () => {
   const fetchEquipmentListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/equipments/`);
     const result = res.data.data.results;
-    
-    if(result.length>0){
-      let temp = [...form]
-      temp = result
-      await setForm(temp)
+
+    if (result.length > 0) {
+      let temp = [...form];
+      temp = result;
+      await setForm(temp);
     }
     setEquipmentListData(result);
-    if(res.status === 200){
-await setIsLoading(true);
+    if (res.status === 200) {
+      await setIsLoading(true);
     }
-    
   };
 
   // fetch equipment type value for dropdown
   const fetchEquipmentTypeValue = async () => {
-    const res = await api.get('api/v1/lists/15/value');
+    const res = await api.get("api/v1/lists/15/value");
     const result = res.data.data.results;
     setEquipmentTypeValue(result);
   };
 
   // fetch equipment afftected radio button value
   const fetchEquipmentAffectedValue = async () => {
-    const res = await api.get('api/v1/lists/14/value');
+    const res = await api.get("api/v1/lists/14/value");
     const result = res.data.data.results;
     await setequipmentAffected(result);
   };
 
-  const handleBack = ()=>{
-    const nextPath = JSON.parse(localStorage.getItem('nextPath'))
-   if (nextPath.propertyAffect === "Yes") {
+  const handleBack = () => {
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+    if (nextPath.propertyAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/property-affected/${id}`
       );
-    }else if (nextPath.personAffect === 'Yes') {
+    } else if (nextPath.personAffect === "Yes") {
       history.push(
         `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
       );
-      }else{
-      history.push(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    } else {
+      history.push(
+        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+      );
     }
-  }
-
+  };
 
   useEffect(() => {
     fetchEquipmentAffectedValue();
@@ -327,8 +333,8 @@ await setIsLoading(true);
                 aria-label="detailsOfPropertyAffect"
                 name="detailsOfPropertyAffect"
                 value={
-                  detailsOfEquipmentAffect
-                  || incidentsListData.isEquipmentDamagedAvailable
+                  detailsOfEquipmentAffect ||
+                  incidentsListData.isEquipmentDamagedAvailable
                 }
                 onChange={(e) => {
                   setDetailsOfEquipmentAffect(e.target.value);
@@ -336,127 +342,120 @@ await setIsLoading(true);
               >
                 {equipmentAffected.length !== 0
                   ? equipmentAffected.map((value, index) => (
-                    <FormControlLabel
-                      value={value.inputValue}
-                      control={<Radio />}
-                      label={value.inputLabel}
-                    />
-                  ))
+                      <FormControlLabel
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
                   : null}
               </RadioGroup>
             </Grid>
-            {detailsOfEquipmentAffect === 'Yes' ? (
+            {detailsOfEquipmentAffect === "Yes" ? (
               <>
-               { form.map((value, key) => (
-                    <Grid
-                      container
-                      item
-                      md={12}
-                      spacing={3}
-                      className="repeatedGrid"
-                    >
-                      <Grid item md={6}>
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControl}
-                          required
-                          error={error && error[`equipmentType${[key]}`]}
+                {form.map((value, key) => (
+                  <Grid
+                    container
+                    item
+                    md={12}
+                    spacing={3}
+                    className="repeatedGrid"
+                  >
+                    <Grid item md={6}>
+                      <FormControl
+                        variant="outlined"
+                        className={classes.formControl}
+                        required
+                        error={error && error[`equipmentType${[key]}`]}
+                      >
+                        <InputLabel id="eq-type-label">
+                          Equipment type
+                        </InputLabel>
+                        <Select
+                          labelId="eq-type-label"
+                          id={`equipment-type${key}`}
+                          label="Equipment type"
+                          value={value.equipmentType || ""}
+                          onChange={(e) => handleForm(e, key, "equipmentType")}
                         >
-                          <InputLabel id="eq-type-label">
-                              Equipment type
-                          </InputLabel>
-                          <Select
-                            labelId="eq-type-label"
-                            id={`equipment-type${key}`}
-                            label="Equipment type"
-                            value={value.equipmentType || ''}
-                            onChange={(e) => handleForm(e, key, 'equipmentType')
-                            }
-                          >
-                            {equipmentTypeValue.length !== 0
-                              ? equipmentTypeValue.map(
-                                (selectValues, index) => (
-                                  <MenuItem
-                                    key={index}
-                                    value={selectValues.inputValue}
-                                  >
-                                    {selectValues.inputLabel}
-                                  </MenuItem>
-                                )
-                              )
-                              : null}
-                          </Select>
-                          {error && error[`equipmentType${[key]}`] && (
-                            <FormHelperText>
-                              {error[`equipmentType${[key]}`]}
-                            </FormHelperText>
-                          )}
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={6}>
-                        <TextField
-                          variant="outlined"
-                          id={`other-equipment${key + 1}`}
-                          label="If others, describe"
-                          className={classes.formControl}
-                          value={value.equipmentOtherType || ''}
-                          disabled={
-                            value.equipmentType !== 'Other'
-                          }
-                          onChange={(e) => handleForm(e, key, 'equipmentOtherType')
-                          }
-                        />
-                      </Grid>
-
-                      <Grid item md={12}>
-                        <TextField
-                          id={`damage-describe${key + 1}`}
-                          multiline
-                          variant="outlined"
-                          rows="3"
-                          required
-                          error={error && error[`equipmentDeatils${[key]}`]}
-                          helperText={
-                            error && error[`equipmentDeatils${[key]}`]
-                              ? error[`equipmentDeatils${[key]}`]
-                              : null
-                          }
-                          label="Describe the damage"
-                          className={classes.fullWidth}
-                          value={value.equipmentDeatils || ''}
-                          onChange={(e) => handleForm(e, key, 'equipmentDeatils')
-                          }
-                        />
-                      </Grid>
-                      {form.length > 1 ? (
-                        <Grid item md={3}>
-                          <Button
-                            onClick={() => handleRemove(key)}
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                          >
-                              Remove
-                          </Button>
-                        </Grid>
-                      ) : null}
+                          {equipmentTypeValue.length !== 0
+                            ? equipmentTypeValue.map((selectValues, index) => (
+                                <MenuItem
+                                  key={index}
+                                  value={selectValues.inputValue}
+                                >
+                                  {selectValues.inputLabel}
+                                </MenuItem>
+                              ))
+                            : null}
+                        </Select>
+                        {error && error[`equipmentType${[key]}`] && (
+                          <FormHelperText>
+                            {error[`equipmentType${[key]}`]}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
                     </Grid>
-                  ))}
-                  <Grid item lg={12} md={6} sm={6}>
-                    <button
-                      className={classes.textButton}
-                      onClick={() => addNewEquipmentDetails()}
-                    >
-                      <AddIcon />
-                      {' '}
-Add details of additional equipment affected?
-                    </button>
+
+                    <Grid item md={6}>
+                      <TextField
+                        variant="outlined"
+                        id={`other-equipment${key + 1}`}
+                        label="If others, describe"
+                        className={classes.formControl}
+                        value={value.equipmentOtherType || ""}
+                        disabled={value.equipmentType !== "Other"}
+                        onChange={(e) =>
+                          handleForm(e, key, "equipmentOtherType")
+                        }
+                      />
+                    </Grid>
+
+                    <Grid item md={12}>
+                      <TextField
+                        id={`damage-describe${key + 1}`}
+                        multiline
+                        variant="outlined"
+                        rows="3"
+                        required
+                        error={error && error[`equipmentDeatils${[key]}`]}
+                        helperText={
+                          error && error[`equipmentDeatils${[key]}`]
+                            ? error[`equipmentDeatils${[key]}`]
+                            : null
+                        }
+                        label="Describe the damage"
+                        className={classes.fullWidth}
+                        value={value.equipmentDeatils || ""}
+                        onChange={(e) => handleForm(e, key, "equipmentDeatils")}
+                      />
+                    </Grid>
+                    {form.length > 1 ? (
+                      <Grid item md={3}>
+                        <Button
+                          onClick={() => handleRemove(key)}
+                          variant="contained"
+                          startIcon={<DeleteForeverIcon />}
+                          color="primary"
+                          className={classes.button}
+                        >
+                          Remove
+                        </Button>
+                      </Grid>
+                    ) : null}
                   </Grid>
-                
+                ))}
+                <Grid item lg={12} md={6} sm={6}>
+                  <button
+                    className={classes.textButton}
+                    onClick={() => addNewEquipmentDetails()}
+                  >
+                    <AddIcon /> Add details of additional equipment affected?
+                  </button>
+                </Grid>
               </>
             ) : null}
-            {detailsOfEquipmentAffect === 'Yes' ? null : (
+            {detailsOfEquipmentAffect === "Yes" ? null : (
               <Grid item lg={12} md={6} sm={6}>
                 <TextField
                   id="describe-any-equipment-affect"
@@ -484,7 +483,6 @@ Add details of additional equipment affected?
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
-                
               >
                 Next
               </Button>

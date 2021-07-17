@@ -80,6 +80,11 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
+// Status Button 
+function StatusButton(props) {
+  return <Button color="primary" size="large" {...props} />
+}
+
 const Summary = () => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
@@ -146,8 +151,7 @@ const Summary = () => {
     setSelectedDate(date);
   };
 
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -166,10 +170,10 @@ const Summary = () => {
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
               <div className={Styles.item}>
-                <Button
-                  color="primary"
+                <StatusButton
+                  // color="primary"
                   variant="contained"
-                  size="small"
+                  // size="small"
                   endIcon={<CheckCircle />}
                   className={classes.statusButton}
                   onClick={(e) => {
@@ -181,7 +185,7 @@ const Summary = () => {
                   }}
                 >
                   Initial Notification
-                </Button>
+                </StatusButton>
                 <Typography variant="caption" display="block">
                   Done
                 </Typography>
@@ -315,7 +319,6 @@ const Summary = () => {
           <Box marginTop={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={9}>
-                {/* summary and part */}
                 <>
                   {(() => {
                     if (
