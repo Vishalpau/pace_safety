@@ -274,6 +274,7 @@ const Details = () => {
                 labelId="project-name-label"
                 label="RCA recommended"
                 value={form.rcaRecommended}
+                disabled={checkPost.current == false ? true : false}
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem

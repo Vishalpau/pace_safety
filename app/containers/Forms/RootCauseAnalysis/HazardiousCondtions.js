@@ -310,16 +310,16 @@ const HazardiousCondition = () => {
           }
         }
       }
-      if (nextPageLink == 201 && Object.keys(error).length === 0) {
-        history.push(
-          "/app/incident-management/registration/root-cause-analysis/cause-and-action/"
-        );
-      } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-        history.push(
-          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
-          }`
-        );
-      }
+    }
+    if (nextPageLink == 201 && Object.keys(error).length === 0) {
+      history.push(
+        "/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+      );
+    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
+        }`
+      );
     }
     // api call //
   };

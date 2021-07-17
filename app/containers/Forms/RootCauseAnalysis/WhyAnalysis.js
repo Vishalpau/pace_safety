@@ -188,7 +188,7 @@ const WhyAnalysis = () => {
 
   const classes = useStyles();
   return (
-    <PapperBlock title="5 Why Analysis" icon="ion-md-list-box">
+    <PapperBlock title="Five why analysis" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -205,7 +205,7 @@ const WhyAnalysis = () => {
               Method
             </Typography>
             <Typography className={Type.labelValue}>
-              5 why analysis
+              Five why analysis
             </Typography>
           </Grid>
 
@@ -307,7 +307,7 @@ const WhyAnalysis = () => {
         <Grid item md={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"5 Why analysis"}
+            selectedItem={"Five Why analysis"}
           />
         </Grid>
       </Grid>

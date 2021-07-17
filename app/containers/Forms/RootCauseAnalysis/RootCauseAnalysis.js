@@ -50,7 +50,7 @@ const RootCauseAnalysis = () => {
   const [form, setForm] = useState({
     causeOfIncident: "",
     correctiveAction: "",
-    wouldItPreventIncident: "No",
+    wouldItPreventIncident: "Yes",
     recommendSolution: "",
     status: "Active",
     createdBy: 0,
@@ -337,7 +337,7 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          {form.wouldItPreventIncident === "Yes" ?
+          {form.wouldItPreventIncident === "No" ?
             <Grid item md={12}>
               <TextField
                 className={classes.formControl}
@@ -346,7 +346,7 @@ const RootCauseAnalysis = () => {
                 multiline
                 error={error.recommendSolution}
                 helperText={error ? error.recommendSolution : ""}
-                label="If no please recommended correct solution?*"
+                label="If no, please recommended correct solution?*"
                 rows="3"
                 value={form.recommendSolution}
                 onChange={(e) =>

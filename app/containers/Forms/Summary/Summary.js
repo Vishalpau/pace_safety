@@ -104,13 +104,13 @@ const Summary = () => {
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
     const result = res.data.data.results;
-    if(result.length > 0 ){
+    if (result.length > 0) {
       localStorage.setItem("LessionLearnt", "Done")
     }
-    else{
+    else {
       localStorage.setItem("LessionLearnt", "Pending")
     }
-  
+
   };
 
   const rootCauseAnalysisCheck = async () => {
@@ -130,9 +130,9 @@ const Summary = () => {
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
     let whyAnalysisData = whyAnalysis.data.data.results;
 
-    if (paceCauseData.length > 0 && typeof paceCauseData !== "undefined" ||
-      rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
-      whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
+    if (typeof paceCauseData !== "undefined" && paceCauseData.length > 0 ||
+      typeof rootCauseData !== "undefined" && rootCauseData.length > 0 ||
+      typeof whyAnalysisData !== "undefined" && whyAnalysisData.length > 0
     ) {
       rootCauseStatus.current = true
     }

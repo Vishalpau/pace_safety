@@ -20,7 +20,7 @@ function RootCauseValidation(data) {
     isValid = false;
   }
 
-  if (data.wouldItPreventIncident === "Yes" && validator.isEmpty(data.recommendSolution)) {
+  if (data.wouldItPreventIncident === "No" && validator.isEmpty(data.recommendSolution)) {
     error.recommendSolution = "Fill the recommended solution";
     isValid = false;
   }

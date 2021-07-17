@@ -455,7 +455,7 @@ const HazardiousActs = () => {
       {console.log("here")}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
+          <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -463,6 +463,15 @@ const HazardiousActs = () => {
               {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              RCA method
+            </Typography>
+            <Typography className={Type.labelValue}>
+              PACE cause analysis
+            </Typography>
+          </Grid>
+
           <Grid item md={12}>
             <FormControl
               component="fieldset"
