@@ -29,6 +29,7 @@ import PeopleValidate from "../../Validator/PeopleValidation";
 import api from "../../../utils/axios";
 import "../../../styles/custom.css";
 import { FormHelperText, FormLabel } from "@material-ui/core";
+import AlertMessage from "./Alert";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -85,6 +86,10 @@ const PeoplesAffected = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [peopleData, setPeopleData] = useState([]);
 
+  const [open, setOpen] = useState(false);
+  const [messageType, setMessageType] = useState('');
+  const [message, setMessage] = useState('')
+
   // Forms definations.
   const [form, setForm] = useState([
     {
@@ -124,6 +129,7 @@ const PeoplesAffected = () => {
     and field name we will modify the values.
   */
   const handleForm = (e, key, fieldname) => {
+    try{
     const temp = [...form];
     const { value } = e.target;
     if (e.target.value === "Don't Know") {
@@ -132,6 +138,12 @@ const PeoplesAffected = () => {
       temp[key][fieldname] = value;
     }
     setForm(temp);
+  }
+  catch(error){
+    setMessage("Something went worng!");
+    setMessageType("error");
+    setOpen(true);
+  }
   };
 
   // Next button click event handling.
@@ -142,6 +154,7 @@ const PeoplesAffected = () => {
 
     // This is the condition when Yes is clicked on the form.
     if (personAffect === "Yes") {
+      try{
       if (peopleData.length > 0) {
         const temp = peopleData
         for (var i = 0; i < peopleData.length; i++) {
@@ -149,6 +162,12 @@ const PeoplesAffected = () => {
             `api/v1/incidents/${id}/people/${temp[i].id}/`,
           );
         }
+      }
+      }
+      catch(error){
+        setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
       }
       // Validate the form.
       const { error, isValid } = PeopleValidate(form);
@@ -160,6 +179,7 @@ const PeoplesAffected = () => {
       // We don't have single API.
 
       if (isValid) {
+        try{
         for (var i = 0; i < form.length; i++) {
           const res = await api.post(
             `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
@@ -176,6 +196,7 @@ const PeoplesAffected = () => {
             }
           );
         }
+      
         // We have hit the API to create person Affected.
         // Now we are hitting the put api to send is person available is true in other API.
         const temp = incidentsListData;
@@ -187,6 +208,12 @@ const PeoplesAffected = () => {
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
+        }
+        catch(error){
+          setMessage("Something went worng!");
+          setMessageType("error");
+          setOpen(true);
+        }
         // check condition id
         if (id) {
           if (nextPath.propertyAffect === "Yes") {
@@ -238,11 +265,16 @@ const PeoplesAffected = () => {
       temp.updatedAt = moment(new Date()).toISOString();
       temp.personAffectedComments =
         personAffectedComments || incidentsListData.personAffectedComments;
-
+      try{
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
+      }catch(error){
+        setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+      }
 
       // Case when id is available. Update case. Redirect user to specific page.
       // Here if we see, we are redirecting user to urls with /id/ in the end.
@@ -300,35 +332,63 @@ const PeoplesAffected = () => {
 
   // Fetch the radio button values for Do-you-have-details-to-share-about-the-individuals-Affected.
   const fetchIndividualAffectValue = async () => {
+    try{
     const res = await api.get("api/v1/lists/8/value");
     const result = res.data.data.results;
     setIndividualAffecctValue(result);
+    }
+    catch(error){
+      setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+    }
   };
 
   // Fetch the dropdown values for the Person-Type.
   const fetchPersonTypeValue = async () => {
-    const res = await api.get("api/v1/lists/9/value");
+    try{
+    const res = await api.get("api/v1/lists/71/value");
     const result = res.data.data.results;
     setPersonTypeValue(result);
+    }
+    catch(error){
+      setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+    }
   };
 
   // fetch the values for the Departments.
   const fetchDepartmentValue = async () => {
+    try{
     const res = await api.get("api/v1/lists/10/value");
     const result = res.data.data.results;
     setDepartmentValue(result);
+    }
+    catch(error){
+      setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+    }
   };
 
   // Fetch the radio buttons for the "Was that person taken to medical care?".
   const fetchPersonTakenMedicalCare = async () => {
+    try{
     const res = await api.get("api/v1/lists/11/value");
     const result = res.data.data.results;
     setMedicalCareValue(result);
+    }catch(error){
+      setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+    }
   };
 
   // Fetch the incident details. We are fetching it to pre-populate the data in case of the going
   // previous page.
   const fetchIncidentsData = async () => {
+    try{
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
@@ -343,10 +403,16 @@ const PeoplesAffected = () => {
         await setIsLoading(true);
       }
     }
+  }catch(error){
+    setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+  }
   };
 
   // Fetch the individual page data in case of the update.
   const fetchPersonListData = async () => {
+    try{
     const res = await api.get(`api/v1/incidents/${id}/people/`);
     const result = res.data.data.results;
     await setPeopleData(result);
@@ -357,6 +423,11 @@ const PeoplesAffected = () => {
     }
 
     await setIsLoading(true);
+  }catch(error){
+    setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+  }
   };
 
   useEffect(() => {
@@ -652,6 +723,12 @@ const PeoplesAffected = () => {
                 />
               )}
             </Grid>
+            <AlertMessage
+                message={message}
+                type={messageType}
+                open={open}
+                setOpen={setOpen}
+              />
             <Grid item md={6}>
               <Button
                 onClick={() =>

@@ -28,6 +28,8 @@ import moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
 
+
+
 import FormSideBar from "../FormSideBar";
 import {
   LOGIN_URL,
@@ -171,8 +173,9 @@ const LessionLearned = () => {
       .then(function(response) {
         if (response.status === 200) {
           const result = response.data.data.results;
-          setDepartment(result);
-        } else {
+          setDepartment(result)
+        }
+        else {
           // window.location.href = {LOGIN_URL}
         }
       })
@@ -308,7 +311,7 @@ const LessionLearned = () => {
                             value={selectValues.departmentName}
                             key={index}
                           >
-                            {selectValues.departmentDescription}
+                            {selectValues.departmentName}
                           </MenuItem>
                         ))}
                       </Select>
@@ -321,7 +324,7 @@ const LessionLearned = () => {
                   </Grid>
                   <Grid item md={12}>
                     {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-
+{console.log(error && error[`learnings${[key]}`])}
                     <TextField
                       id="outlined-search"
                       required
@@ -337,7 +340,6 @@ const LessionLearned = () => {
                       rows="3"
                       multiline
                       value={value.learnings || ""}
-                      helperText={error ? error.teamLearning : ""}
                       onChange={(e) => handleForm(e, key, "learnings")}
                     />
                     {/* {error && error.teamLearning && (
@@ -351,6 +353,7 @@ const LessionLearned = () => {
                         variant="contained"
                         color="primary"
                         className={classes.button}
+                        startIcon={<DeleteForeverIcon />}
                       >
                         Remove
                       </Button>

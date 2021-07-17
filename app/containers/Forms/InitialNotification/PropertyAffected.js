@@ -94,6 +94,7 @@ const PropertyAffected = () => {
     },
   ]);
 
+  // add new property details
   const addNewPropertyDetails = () => {
     setForm([
       ...form,
@@ -107,7 +108,7 @@ const PropertyAffected = () => {
     ]);
   };
 
-  // hablde Remove
+  // hablde Remove property details
 
   const handleRemove = async (key) => {
     // if this condition when update the data
@@ -123,24 +124,8 @@ const PropertyAffected = () => {
     }
   };
 
-
-  const handlePropertyType = (e, key, fieldname) => {
-    const temp = [...form];
-    const value = e.target.value;
-    temp[key][fieldname] = value;
-
-    setForm(temp);
-  };
-
-  const handlePropertyOtherType = (e, key, fieldname) => {
-    const temp = [...form];
-    const value = e.target.value;
-    temp[key][fieldname] = value;
-
-    setForm(temp);
-  };
-
-  const handleDamageDetails = (e, key, fieldname) => {
+//  set data in form 
+  const handlePropertyDetails = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
     temp[key][fieldname] = value;
@@ -161,6 +146,7 @@ const PropertyAffected = () => {
       if (detailsOfPropertyAffect === "Yes") {
 
         if (propertyListData.length > 0) {
+          // Remove previous data
           for (var i = 0; i < propertyListData.length; i++) {
             const res = await api.delete(
               `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
@@ -218,20 +204,6 @@ const PropertyAffected = () => {
                 `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
               );
             }
-          } else {
-            if (nextPath.equipmentAffect === "Yes") {
-              history.push(
-                "/app/incident-management/registration/initial-notification/equipment-affected/"
-              );
-            } else if (nextPath.environmentAffect === "Yes") {
-              history.push(
-                "/app/incident-management/registration/initial-notification/environment-affected/"
-              );
-            } else {
-              history.push(
-                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-              );
-            }
           }
         }
         // If no is selected on form.
@@ -264,33 +236,20 @@ const PropertyAffected = () => {
             );
           }
           // New entry case.
-        } else {
-          if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              "/app/incident-management/registration/initial-notification/equipment-affected/"
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            if (nextPath.environmentAffect === "Yes") {
-              history.push(
-                "/app/incident-management/registration/initial-notification/environment-affected/"
-              );
-            } else {
-              history.push(
-                "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-              );
-            }
-          }
         }
+        
       }
     
   };
 
+  // get peoperty affetct value radio type
   const fetchPropertyAffectedValue = async () => {
     const res = await api.get("api/v1/lists/12/value");
     const result = res.data.data.results;
     setPropertyAffectedValue(result);
   };
 
+  // get property type value for dropdown
   const fetchPropertyTypeValue = async () => {
     const res = await api.get("api/v1/lists/13/value");
     const result = res.data.data.results;
@@ -298,6 +257,7 @@ const PropertyAffected = () => {
     setPropertyTypeValue(result);
   };
 
+// get incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -309,6 +269,7 @@ const PropertyAffected = () => {
     await setDetailsOfPropertyAffect(isAvailable);
   };
 
+  // get property list data
   const fetchPropertyListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/properties/`);
     const result = res.data.data.results;
@@ -392,6 +353,7 @@ const PropertyAffected = () => {
                         spacing={3}
                         className="repeatedGrid"
                       >
+                        {/* Property type  */}
                         <Grid item md={6}>
                           <FormControl
                             variant="outlined"
@@ -408,7 +370,7 @@ const PropertyAffected = () => {
                               label="Person type"
                               value={value.propertyType || ""}
                               onChange={(e) => {
-                                handlePropertyType(e, index, "propertyType");
+                                handlePropertyDetails(e, index, "propertyType");
                                 setIsOther(e.target.value !== "Other");
                               }}
                             >
@@ -432,7 +394,7 @@ const PropertyAffected = () => {
                             )}
                           </FormControl>
                         </Grid>
-
+                      {/*Property other type  */}
                         <Grid item md={6}>
                           <TextField
                             id={`other-property${index + 1}`}
@@ -452,7 +414,7 @@ const PropertyAffected = () => {
                               value.propertyType === "Other" ? false : true
                             }
                             onChange={(e) =>
-                              handlePropertyOtherType(
+                              handlePropertyDetails(
                                 e,
                                 index,
                                 "propertyOtherType"
@@ -460,9 +422,8 @@ const PropertyAffected = () => {
                             }
                           />
                         </Grid>
-
+                          {/* Property damage details */}
                         <Grid item md={12}>
-                          {/* <p>Name of people affected</p> */}
                           <TextField
                             id={`describe-damage${index + 1}`}
                             variant="outlined"
@@ -477,12 +438,13 @@ const PropertyAffected = () => {
                             className={classes.formControl}
                             value={value.damageDetails || ""}
                             onChange={(e) =>
-                              handleDamageDetails(e, index, "damageDetails")
+                              handlePropertyDetails(e, index, "damageDetails")
                             }
                           />
                         </Grid>
                         {form.length > 1 ? (
                           <Grid item md={3}>
+                            {/* Remove previous data */}
                             <Button
                               onClick={() => handleRemove(index)}
                               variant="contained"
@@ -497,6 +459,7 @@ const PropertyAffected = () => {
                       </Grid>
                     ))}
                   <Grid item md={12}>
+                    {/* Add new property details */}
                     <button
                       className={classes.textButton}
                       onClick={() => addNewPropertyDetails()}
@@ -507,6 +470,7 @@ const PropertyAffected = () => {
               
               </>
             ) : null}
+            {/* text comment for property damage */}
             <Grid item md={12}>
               {detailsOfPropertyAffect === "Yes" ? null : (
                 <TextField
@@ -524,6 +488,7 @@ const PropertyAffected = () => {
               )}
             </Grid>
             <Grid item md={6}>
+              {/* go back previous page */}
               <Button
                 variant="contained"
                 color="primary"
@@ -532,6 +497,7 @@ const PropertyAffected = () => {
               >
                 Previous
               </Button>
+              {/* go next page */}
               <Button
                 variant="contained"
                 color="primary"
@@ -542,6 +508,7 @@ const PropertyAffected = () => {
               </Button>
             </Grid>
           </Grid>
+          {/* Right sidebar */}
           <Grid item md={3}>
             <FormSideBar
               listOfItems={INITIAL_NOTIFICATION_FORM}

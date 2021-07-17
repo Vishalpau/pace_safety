@@ -7,6 +7,15 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+
+
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import Modal from "@material-ui/core/Modal";
+import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 import api from "../../utils/axios";
 
@@ -21,7 +30,27 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    position: "absolute",
+    width: 650,
+    backgroundColor: theme.palette.background.paper,
+    // boxShadow: theme.shadows[5],
+    padding: theme.spacing(4),
+  },
 }));
+
+function getModalStyle() {
+  return {
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  };
+}
 
 const IncidentDetailsSummary = () => {
   const [incidents, setIncidents] = useState([]);
@@ -30,6 +59,21 @@ const IncidentDetailsSummary = () => {
   const [enviornmentData, setEnviornmentData] = useState([]);
   const [equipmentData, setEquipmentData] = useState([]);
   const [reportsData, setReportsData] = useState([]);
+  const [evidence,setEvidence] = useState([]);
+
+  const [documentUrl, setDocumentUrl] = useState("");
+
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = (document) => {
+    setDocumentUrl(document);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   // const [fkid, setFkid] = useState(3);
 
   // useEffect(() => {
@@ -68,6 +112,15 @@ const IncidentDetailsSummary = () => {
     await setReportsData(response.data.data.results);
   };
 
+  const fetchEvidanceData = async () => {
+    
+    const allEvidence = await api.get(`/api/v1/incidents/${fkid}/evidences/`);
+    if(allEvidence.status === 200){
+      await setEvidence(allEvidence.data.data.results);
+    }
+    
+    // await setIsLoding(true);
+  };
   useEffect(() => {
     fetchIncidentData();
     fetchPeopleAffectData();
@@ -75,6 +128,7 @@ const IncidentDetailsSummary = () => {
     fetchEquipmentAffectData();
     fetchEnviornmentAffectData();
     fetchReportsData();
+    fetchEvidanceData();
   }, []);
 
   const classes = useStyles();
@@ -247,19 +301,7 @@ const IncidentDetailsSummary = () => {
                         {peopledata.personIdentification}
                       </Typography>
                     </Grid>
-                    <Grid item md={6}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Person department
-                      </Typography>
-                      <Typography className={Fonts.labelValue}>
-                        {peopledata.personDepartment}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={6}>
+                   <Grid item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -460,6 +502,7 @@ const IncidentDetailsSummary = () => {
       </Grid>
       {/* Reports & Noticefication */}
       <Grid item xs={12}>
+
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>
@@ -501,10 +544,144 @@ const IncidentDetailsSummary = () => {
                     ))
                   : null}
               </Grid>
+              
+              <Grid item md={12}>
+              {evidence.length !== 0
+                  ? evidence.filter(item=> item.evidenceCategory === "Initial Evidence").map((value, index) => (
+                      <Grid
+                        key={index}
+                        className="repeatedGrid"
+                        container
+                        item
+                        md={12}
+                        spacing={3}
+                      >
+                        <Grid container item xs={12} spacing={3}>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence No
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceNumber}
+                            </Typography>
+                          </Grid>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Check
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceCheck}
+                            </Typography>
+                          </Grid>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Category
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceCategory}
+                            </Typography>
+                          </Grid>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Remark
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceRemark}
+                            </Typography>
+                          </Grid>
+                          {value.evidenceDocument ? (
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Evidence Document
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                <Tooltip title="File Name">
+                                  <IconButton
+                                    onClick={() =>
+                                      handleOpen(value.evidenceDocument)
+                                    }
+                                    className={classes.fileIcon}
+                                  >
+                                    <PhotoSizeSelectActualIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </Typography>
+                            </Grid>
+                          ) : null}
+                        </Grid>
+                      </Grid>
+                    ))
+                  : null}
+              </Grid>
             </Grid>
           </AccordionDetails>
         </Accordion>
+       {/* Modal */}
+        <Modal className={classes.modal} open={open} onClose={handleClose}>
+        <div className={classes.paper}>
+          <Typography variant="h6" gutterBottom>
+            View Attachment
+          </Typography>
+          <Typography>Please choose what do you want to?</Typography>
+          <Box marginTop={4}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Button
+                  // startIcon={<VisibilityIcon />}
+                  style={{ width: "100%" }}
+                  variant="contained"
+                  disableElevation
+                  href={`${documentUrl}`}
+                  target="_blank"
+                >
+                  View Attachment
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                {/* <a href={`${documentUrl}`} download /> */}
+              </Grid>
+            </Grid>
+          </Box>
+        </div>
+      </Modal>
+   
       </Grid>
+      
     </Grid>
   );
 };
