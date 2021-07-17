@@ -130,8 +130,9 @@ function Application(props) {
   const { history } = props;
   const changeMode = useContext(ThemeContext);
 
-  const loggingCheck= async()=>{
+  // const loggingCheck= async()=>{
     // alert('hey ram')
+    try{
     let config = {
       method: "get",
       url: `${SELF_API}`,
@@ -141,17 +142,21 @@ function Application(props) {
       },
     };
     console.log('config',config);
-    await axios(config)
+    axios(config)
       .then(function(response) {
        console.log(response)
       })
       .catch(function(error) {
         console.log(response);
       });
-  }
+    }catch(error){
+      window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
+
+    }
+  // }
   useEffect(()=>{
     
-    loggingCheck();
+    // loggingCheck();
   },[])
   return (
     <Dashboard history={history} changeMode={changeMode}>

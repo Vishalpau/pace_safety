@@ -38,8 +38,8 @@ import {
   access_token,
   ACCOUNT_API_URL,
   INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL
-} from '../../../utils/constants';
+  LOGIN_URL,
+} from "../../../utils/constants";
 // import FormHeader from '../FormHeader';
 
 import ReportingValidation from "../../Validator/ReportingValidation";
@@ -108,9 +108,9 @@ const ReportingAndNotification = () => {
 
   const { id } = useParams();
   const history = useHistory();
-  let reportedToFilterData = []
-  let filterSuperVisorName = []
-  let filterReportedByName = []
+  let reportedToFilterData = [];
+  let filterSuperVisorName = [];
+  let filterReportedByName = [];
 
   const [form, setForm] = useState({
     reportedto: [],
@@ -131,45 +131,16 @@ const ReportingAndNotification = () => {
   const notificationSent = ["Manager", "Supervisor"];
   let evidanceCkecked = true;
 
-  // const handelTimeCompare = async (e) => {
-  //   const rpTime = form.reportingtime;
-  //   const rpDate = form.reportingdate;
-  //   const startDate = `${rpDate} ${rpTime}`;
-  //   // let startDate = form.reportingdate.concat(form.reportingtime)
-  //   const start_date = moment(
-  //     form.reportingdate || incidentsListData.incidentReportedOn,
-  //     'YYYY-MM-DD HH:mm:ss'
-  //   );
-  //   const end_date = moment(new Date(), 'YYYY-MM-DD HH:mm:ss');
-  //   const duration = moment.duration(end_date.diff(start_date));
-  //   const Hours = duration.asHours();
-  //   if (Hours > 4) {
-  //     await SetLateReport(true);
-  //   } else {
-  //     await SetLateReport(false);
-  //   }
-  // };
-
   const handleDateChange = async (date) => {
     // compare time
-    const time = date || incidentsListData.incidentReportedOn;
-    const start_time = new Date(time);
-    const end_time = new Date();
-    const diff = end_time - start_time;
-    const hours = Math.floor(diff / 1000 / 60 / 60);
 
-    if (hours >= 4) {
-      await SetLateReport(true);
-    } else {
-      await SetLateReport(false);
-    }
     await setForm({
       ...form,
       reportingdate: date,
     });
   };
 
-// handle update incident
+  // handle update incident
   const handleUpdateIncidentDetails = async () => {
     // const { error, isValid } = ReportingValidation(form);
     // setError(error);
@@ -244,13 +215,12 @@ const ReportingAndNotification = () => {
           evidanceForm[i].evidenceDocument !== "" &&
           evidanceForm[i].evidenceRemark !== ""
         ) {
-         
-          formData.append('evidenceDocument', evidanceForm[i].evidenceDocument);
-          formData.append('evidenceRemark', evidanceForm[i].evidenceRemark);
-          formData.append('evidenceCheck', 'Yes');
-          formData.append('evidenceCategory', 'Initial Evidence ');
-          formData.append('createdBy', '1');
-          formData.append('fkIncidentId', localStorage.getItem('fkincidentId'));
+          formData.append("evidenceDocument", evidanceForm[i].evidenceDocument);
+          formData.append("evidenceRemark", evidanceForm[i].evidenceRemark);
+          formData.append("evidenceCheck", "Yes");
+          formData.append("evidenceCategory", "Initial Evidence ");
+          formData.append("createdBy", "1");
+          formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
           const evidanceResponse = await api.post(
             `api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
@@ -275,22 +245,22 @@ const ReportingAndNotification = () => {
   // send request other data in report to
   const setOtherDataReportTo = async () => {
     if (reportOtherData !== "") {
-      try {
-        const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
-          reportTo: reportOtherData,
-          createdBy: 1,
-          fkIncidentId: localStorage.getItem("fkincidentId") || id,
-        });
-      } catch (err) {}
-    } else {
+      if (form.reportedto.includes("Others")) {
+        try {
+          const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
+            reportTo: reportOtherData,
+            createdBy: 1,
+            fkIncidentId: localStorage.getItem("fkincidentId") || id,
+          });
+        } catch (err) {}
+      }
     }
   };
 
   // handleSubmit incident details
   const handelNext = async (e) => {
-    
-     // handle remove existing report
-     await handleRemoveExitingReport();
+    // handle remove existing report
+    await handleRemoveExitingReport();
 
     // update incident details
     await handleUpdateIncidentDetails();
@@ -298,20 +268,30 @@ const ReportingAndNotification = () => {
     // handle Initail evidance
     await handleInitialEvidance();
 
-   
-
     // check initial evidance
     if (evidanceCkecked === true) {
       let status = 0;
 
       // Create new entries.
-      const { error, isValid } = ReportingValidation(form,reportOtherData);
+      const { error, isValid } = ReportingValidation(form, reportOtherData);
       setError(error);
 
       if (isValid === true) {
-       var newData =  form.reportedto.filter(item=> item !== reportOtherData)
+        var newData = [];
+        reportedToFilterData = [];
+        console.log(reportedTo);
+        for (var key in reportedTo) {
+          reportedToFilterData.push(reportedTo[key].inputValue);
+        }
+        for (var i = 0; i < 8; i++) {
+          if (reportedToFilterData.includes(form.reportedto[i])) {
+            if (form.reportedto[i] !== undefined) {
+              newData.push(form.reportedto[i]);
+            }
+          }
+        }
+        console.log(newData);
         for (const key in newData) {
-          
           const name = newData[key];
 
           try {
@@ -342,7 +322,7 @@ const ReportingAndNotification = () => {
       }
     }
   };
-  // handle checkbox reported to 
+  // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
     if ((type = "option")) {
       if (e.target.checked == false) {
@@ -421,8 +401,8 @@ const ReportingAndNotification = () => {
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
-    for(var key in result){
-      reportedToFilterData.push(result[key].inputValue)
+    for (var key in result) {
+      reportedToFilterData.push(result[key].inputValue);
     }
     await setReportableTo(result);
   };
@@ -437,12 +417,11 @@ const ReportingAndNotification = () => {
       for (const key in result) {
         reportToData.push(result[key].reportTo);
       }
-      for (var i=0; i < 8;i++) {
-        if(!reportedToFilterData.includes(reportToData[i])){
-          if(reportToData[i] !== undefined){
-            setReportOtherData(reportToData[i])
+      for (var i = 0; i < 8; i++) {
+        if (!reportedToFilterData.includes(reportToData[i])) {
+          if (reportToData[i] !== undefined) {
+            setReportOtherData(reportToData[i]);
           }
-          
         }
       }
       await setReportedToObj(result);
@@ -457,13 +436,36 @@ const ReportingAndNotification = () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
-    const result = res.data.data.results;
-    const date = new Date(result.incidentReportedOn);
 
-    await setForm({ ...form, reportingdate: date });
-    await setIncidentsListdata(result);
-    if (!id) {
-      await setIsLoading(true);
+    if (res.status === 200) {
+      const result = res.data.data.results;
+      const incidentOccuredOn = result.incidentOccuredOn;
+      const start_time = new Date(incidentOccuredOn);
+      const incidentReportedOn = result.incidentReportedOn
+      const end_time = new Date(incidentReportedOn);
+      const diff = end_time - start_time;
+      const hours = Math.floor(diff / 1000 / 60 / 60);
+
+      if (hours >= 4) {
+        await SetLateReport(true);
+      } else {
+        await SetLateReport(false);
+      }
+      await setIncidentsListdata(result);
+      console.log('ram',superVisorName)
+      if(filterSuperVisorName.filter(
+        (item) =>
+          item.name === result.supervisorByName
+      ).length > 0){
+        alert(superVisorName.filter(
+          (item) =>
+            item.name === result.supervisorByName
+        ).length > 0)
+        await setForm({...form,supervisorname:"other"})
+      }
+      if (!id) {
+        await setIsLoading(true);
+      }
     }
   };
 
@@ -480,12 +482,10 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
-        if(response.status === 200){
+        if (response.status === 200) {
           const result = response.data.data.results[0].roles[0].users;
-          for( var i in result){
-            filterSuperVisorName.push(result[i].name)
-          }
-          setSuperVisorName([...result, { name: 'other' }]);
+          filterSuperVisorName = result;
+          setSuperVisorName([...result, { name: "other" }]);
         }
         // else{
         //   window.location.href = {LOGIN_URL}
@@ -508,21 +508,18 @@ const ReportingAndNotification = () => {
 
     axios(config)
       .then((response) => {
-        if(response.status === 200){
+        if (response.status === 200) {
           const result = response.data.data.results[0].users;
           let user = [];
           user = result;
-          for( var i in result){
-            filterReportedByName.push(result[i].name)
+          for (var i in result) {
+            filterReportedByName.push(result[i].name);
           }
-          setReportedByName([...result, { name: 'other' }]);
+          setReportedByName([...result, { name: "other" }]);
         }
         // else{
         //   window.location.href = {LOGIN_URL}
         // }
-       
-       
-       
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
@@ -608,11 +605,9 @@ const ReportingAndNotification = () => {
                   variant="outlined"
                   label="Other"
                   error={error && error[`otherData`]}
-                          helperText={
-                            error && error[`otherData`]
-                              ? error[`otherData`]
-                              : null
-                          }
+                  helperText={
+                    error && error[`otherData`] ? error[`otherData`] : null
+                  }
                   defaultValue={reportOtherData}
                   className={classes.formControl}
                   onChange={(e) => {
@@ -726,8 +721,15 @@ const ReportingAndNotification = () => {
                   id="supervisorname"
                   label="Supervisor name"
                   // defaultValue={incidentsListData.supervisorByName? incidentsListData.supervisorByName: ""}
-                  defaultValue={incidentsListData.supervisorByName === ""?"":
-                    superVisorName.filter(item=> item.name === incidentsListData.supervisorByName).length>0?incidentsListData.supervisorByName:"other"
+                  defaultValue={
+                    incidentsListData.supervisorByName === ""
+                      ? ""
+                      : superVisorName.filter(
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
+                      ? incidentsListData.supervisorByName
+                      : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -752,11 +754,16 @@ const ReportingAndNotification = () => {
                 id="others"
                 variant="outlined"
                 label="Others"
-                defaultValue={superVisorName.filter(item=> item.name === incidentsListData.supervisorByName).length>0?"":incidentsListData.supervisorByName
-              }
-                disabled={form.supervisorname === 'other'?false:true 
-                || superVisorName.filter(item=> item.name === incidentsListData.supervisorByName).length>0? false:true
-              }
+                defaultValue={
+                  superVisorName.filter(
+                    (item) => item.name === incidentsListData.supervisorByName
+                  ).length > 0
+                    ? ""
+                    : incidentsListData.supervisorByName
+                }
+                disabled={
+                  form.supervisorname !== "other"
+                }
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -781,9 +788,17 @@ const ReportingAndNotification = () => {
                   labelId="reportedBy-label"
                   id="reportedBy"
                   label="Reported by"
-                  defaultValue={ incidentsListData.incidentReportedByName === ""?"":
-                  reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?incidentsListData.incidentReportedByName:"other"
-                }
+                  defaultValue={
+                    incidentsListData.incidentReportedByName === ""
+                      ? ""
+                      : reportedByName.filter(
+                          (item) =>
+                            item.name ===
+                            incidentsListData.incidentReportedByName
+                        ).length > 0
+                      ? incidentsListData.incidentReportedByName
+                      : ""
+                  }
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -802,19 +817,25 @@ const ReportingAndNotification = () => {
                 ) : null} */}
               </FormControl>
             </Grid>
-{console.log(reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?true:false)}
             <Grid item md={6}>
               <TextField
                 id="others"
                 variant="outlined"
                 label="Others"
-                defaultValue={incidentsListData.incidentReportedByName === ""?"":
-                reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?"":incidentsListData.incidentReportedByName
-              }
+                defaultValue={
+                  incidentsListData.incidentReportedByName === ""
+                    ? ""
+                    : reportedByName.filter(
+                        (item) =>
+                          item.name === incidentsListData.incidentReportedByName
+                      ).length > 0
+                    ? ""
+                    : incidentsListData.incidentReportedByName
+                }
                 className={classes.formControl}
-                disabled={form.reportedby !== "other" ||
-                reportedByName.filter(item=> item.name === incidentsListData.incidentReportedByName).length>0?true:false
-              }
+                disabled={
+                  form.reportedby !== "other" 
+                }
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -836,17 +857,12 @@ const ReportingAndNotification = () => {
                   // required
                   inputVariant="outlined"
                   label="Reporting date"
-                  value={
-                    form.reportingdate || incidentsListData.incidentReportedOn
-                  }
-                  onChange={(date) => {
-                    handleDateChange(date);
-                    // handelTimeCompare();
-                  }}
+                  value={incidentsListData.incidentReportedOn}
                   KeyboardButtonProps={{
                     "aria-label": "change date",
                   }}
                   disableFuture
+                  disabled
                 />
               </MuiPickersUtilsProvider>
             </Grid>

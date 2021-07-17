@@ -88,6 +88,8 @@ const Summary = () => {
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [initialNoticeficationStatus, setInitialNotificationStatus] = useState(false);
+  const [lessionLearntStatus, setLessionLearntStatus] = useState(false)
   const rootCauseStatus = useRef(false)
 
   const { id } = useParams();
@@ -98,19 +100,37 @@ const Summary = () => {
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
-    await setIncidents(allIncidents.data.data.results);
-    await setIsLoading(true);
+    if(allIncidents.status === 200){
+      await setIncidents(allIncidents.data.data.results);
+      await setIsLoading(true);
+      if(result.length > 0 ){
+        localStorage.setItem("LessionLearnt", "Done")
+      }
+      else{
+        localStorage.setItem("LessionLearnt", "Pending")
+      }
+    }    
   };
+
+  const fetchReortedByDataList = async()=>{
+    
+    const res = await api.get(`/api/v1/incidents/${id}/reports/`);
+    if(res.status===200){
+      const result = res.data.data.results;
+      if(result.length > 0){
+        setInitialNotificationStatus(true)
+      }
+    }
+
+  }
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
-    const result = res.data.data.results;
-    if(result.length > 0 ){
-      localStorage.setItem("LessionLearnt", "Done")
-    }
-    else{
-      localStorage.setItem("LessionLearnt", "Pending")
-    }
-  
+    if(res.status===200){
+      const result = res.data.data.results;
+      if(result.length > 0){
+        setLessionLearntStatus(true)
+      }
+    } 
   };
 
   const rootCauseAnalysisCheck = async () => {
@@ -154,6 +174,7 @@ const Summary = () => {
     fetchIncidentData();
     fetchLessonLerned();
     rootCauseAnalysisCheck();
+    fetchReortedByDataList();
   }, []);
 
   return (
@@ -168,9 +189,20 @@ const Summary = () => {
               <div className={Styles.item}>
                 <Button
                   color="primary"
-                  variant="contained"
+                  variant={
+                    initialNoticeficationStatus
+                      ? "contained"
+                      : "outlined"
+                  }
                   size="small"
-                  endIcon={<CheckCircle />}
+                  className={classes.statusButton}
+                  endIcon={
+                    initialNoticeficationStatus ? (
+                      <CheckCircle />
+                    ) : (
+                      <AccessTime />
+                    )
+                  }
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(true);
@@ -183,7 +215,7 @@ const Summary = () => {
                   Initial Notification
                 </Button>
                 <Typography variant="caption" display="block">
-                  Done
+                  {initialNoticeficationStatus? "Done": "Pending"}
                 </Typography>
               </div>
 
@@ -279,14 +311,14 @@ const Summary = () => {
                 <Button
                   color="primary"
                   variant={
-                    localStorage.getItem("LessionLearnt") == "Done"
+                    lessionLearntStatus
                       ? "contained"
                       : "outlined"
                   }
                   size="small"
                   className={classes.statusButton}
                   endIcon={
-                    localStorage.getItem("LessionLearnt") == "Done" ? (
+                    lessionLearntStatus ? (
                       <CheckCircle />
                     ) : (
                       <AccessTime />
@@ -303,7 +335,7 @@ const Summary = () => {
                   Lessons Learnt
                 </Button>
                 <Typography variant="caption" display="block">
-                  {localStorage.getItem("LessionLearnt") == "Done"
+                  {lessionLearntStatus
                     ? "Done"
                     : "Pending"}
                 </Typography>
@@ -400,7 +432,7 @@ const Summary = () => {
                         <ListItemText primary="Perform RCA" />
                       </ListItemLink>
                     )}
-                    {localStorage.getItem("LessionLearnt") == "Done" ? (
+                    {lessionLearntStatus ? (
                       <ListItemLink
                         href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}
                       >

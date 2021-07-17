@@ -169,7 +169,7 @@ const LessionLearned = () => {
       .then(function (response) {
         if (response.status === 200) {
           const result = response.data.data.results;
-          setDepartment(result);
+          setDepartment(result)
         }
         else {
           // window.location.href = {LOGIN_URL}

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -26,7 +24,6 @@ import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from '../../../utils/constants';
-import FormHeader from '../FormHeader';
 import api from '../../../utils/axios';
 import EquipmentValidate from '../../Validator/EquipmentValidation';
 import '../../../styles/custom.css';
@@ -71,11 +68,7 @@ const EqiptmentAffected = () => {
     'Other',
   ];
 
-  const notificationSent = ['Manage', 'SuperVisor'];
 
-  const selectValues = [1, 2, 3, 4];
-
-  const radioDecide = ['Yes', 'No'];
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
@@ -97,16 +90,7 @@ const EqiptmentAffected = () => {
     },
   ]);
 
-  // set state for update
-  const handleUpdateEquipment = async (e, key, fieldname, equipmentId) => {
-    const temp = equipmentListdata;
-    const { value } = e.target;
-    temp[key][fieldname] = value;
-    temp[key].updatedBy = 0;
-    await setEquipmentListData(temp);
-  };
-
-  // hablde Remove
+  // hablde Remove preivous data
 
   const handleRemove = async (key) => {
     if (equipmentListdata.length > 1) {
@@ -120,6 +104,7 @@ const EqiptmentAffected = () => {
     }
   };
 
+  // Add new equipment details
   const addNewEquipmentDetails = () => {
     setForm([
       ...form,
@@ -132,6 +117,8 @@ const EqiptmentAffected = () => {
       },
     ]);
   };
+
+  // set  state form value 
   const handleForm = (e, key, fieldname) => {
     const temp = [...form];
     const { value } = e.target;
@@ -139,6 +126,7 @@ const EqiptmentAffected = () => {
     setForm(temp);
   };
 
+  // hit next button for next page
   const handleNext = async () => {
     const nextPath = JSON.parse(localStorage.getItem('nextPath'));
     //  cheack condition equipment is already filled or new creation

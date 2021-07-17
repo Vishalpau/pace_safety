@@ -20,27 +20,7 @@ function Dashboard(props) {
   const [appHeight, setAppHeight] = useState(0);
   // const loggingCheck= async()=>{
     // alert('hey ram')
-    let config = {
-      method: "get",
-      url: `${SELF_API}`,
-      headers: { 
-        'Authorization': `Bearer ${access_token}`,
-        "Content-Type": "application/json",
-      },
-    };
-    console.log('config',config);
-   axios(config)
-      .then(function(response) {
-       if(response.status !== 200){
-         window.location.href = `${LOGIN_URL}`
-       }
-       
-      })
-      .catch(function(error) {
-        console.log(response);
-        window.location.href = `${LOGIN_URL}`
-      });
-  // }
+  
   useEffect(() => {
     const { history, loadTransition } = props;
     // loggingCheck();
