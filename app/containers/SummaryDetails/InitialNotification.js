@@ -9,7 +9,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-
+import classNames from "classnames";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Modal from "@material-ui/core/Modal";
@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
+  },
+  incidentTitle: {
+    fontSize: "1.35rem !important",
   },
 }));
 
@@ -139,13 +142,14 @@ const IncidentDetailsSummary = () => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident overview
         </Typography>
-      </Grid>
-
-      <Grid item xs={12}>
-        <Typography variant="h5">{incidents.incidentTitle}</Typography>
+        <Typography
+          className={classNames(classes.incidentTitle, Fonts.labelValue)}
+        >
+          {incidents.incidentTitle}
+        </Typography>
       </Grid>
 
       <Grid item md={6}>
