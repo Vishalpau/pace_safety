@@ -64,7 +64,6 @@ const InvestigationOverview = () => {
 
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
-    console.log(allApiData)
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       console.log("here")
       await setForm(allApiData);
