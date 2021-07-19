@@ -72,7 +72,6 @@ const RootCauseAnalysisSummary = () => {
       await setPaceCauses(paceData)
     }
   };
-
   useEffect(() => {
     fetchRootCauseData();
     fetchFiveWhyData();
