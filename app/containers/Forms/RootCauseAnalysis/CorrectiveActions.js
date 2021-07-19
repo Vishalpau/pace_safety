@@ -210,8 +210,7 @@ const CorrectiveAction = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${
-              callObjects[key].pk
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
             }/`,
             callObjects[key]
           );
@@ -240,8 +239,7 @@ const CorrectiveAction = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -249,6 +247,19 @@ const CorrectiveAction = () => {
     // api call //
     localStorage.setItem("RootCause", "Done");
   };
+
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/`
+      );
+    }
+  }
 
   const classes = useStyles();
 
@@ -330,7 +341,7 @@ const CorrectiveAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>

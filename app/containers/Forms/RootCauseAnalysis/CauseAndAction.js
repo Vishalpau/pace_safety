@@ -110,6 +110,7 @@ const BasicCauseAndAction = () => {
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
+    console.log(previousData)
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
@@ -118,6 +119,8 @@ const BasicCauseAndAction = () => {
         tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser];
       }
     });
+    console.log("---------------------------------------------------------------------------------")
+    console.log(tempApiData)
     await setData(tempApiData);
   };
 
@@ -134,9 +137,7 @@ const BasicCauseAndAction = () => {
 
   const handelNext = () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
@@ -156,6 +157,20 @@ const BasicCauseAndAction = () => {
     const result = res.data.data.results;
     await setIncidentDetail(result);
   };
+
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/`
+      );
+    }
+
+  }
 
   useEffect(() => {
     fetchIncidentDetails();
@@ -238,7 +253,7 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>

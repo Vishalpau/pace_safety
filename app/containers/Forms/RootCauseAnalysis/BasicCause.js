@@ -150,6 +150,20 @@ const BasicCause = () => {
     console.log(allApiData)
   };
 
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/`
+      );
+    }
+
+  }
+
   const handelPersonal = (e, value) => {
     if (e.target.checked == false) {
       let newData = form.personal.rcaRemark.filter((item) => item !== value);
@@ -504,7 +518,7 @@ const BasicCause = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>

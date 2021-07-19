@@ -54,9 +54,6 @@ const WorkerDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [testTaken, seTesttaken] = useState(false);
   const [error, setError] = useState({});
-
-  const [files, setFile] = React.useState([]);
-  const history = useHistory();
   const workerType = useRef([]);
   const departmentName = useRef([]);
   const workHours = useRef([]);
@@ -77,96 +74,88 @@ const WorkerDetails = () => {
   const supervisorTimeInCompany = useRef([]);
   const supervisorTimeOnProject = useRef([]);
 
+
   const putId = useRef("");
   const investigationId = useRef("");
   const [form, setForm] = useState([])
 
+  let [workerData, setworkerData] = useState({
+    name: "",
+    workerType: "",
+    department: "",
+    workHours: "",
+    shiftTimeStart: null,
+    shiftType: "",
+    occupation: "",
+    shiftCycle: "",
+    noOfDaysIntoShift: "",
+    timeInCompany: "",
+    timeOnProject: "",
+    timeInIndustry: "",
+    attachments: "",
+    eventLeadingToInjury: "",
+    injuryObject: "",
+    primaryBodyPartWithSide: "",
+    secondaryBodyPartWithSide: "",
+    typeOfInjury: "",
+    NoOfDaysAway: "",
+    medicalResponseTaken: "",
+    treatmentDate: null,
+    higherMedicalResponder: "",
+    injuryStatus: "",
+    firstAidTreatment: "",
+    mechanismOfInjury: "",
+    isMedicationIssued: "",
+    isPrescriptionIssued: "",
+    isNonPrescription: "",
+    isAnyLimitation: "",
+    supervisorName: "",
+    supervisorTimeInIndustry: "",
+    supervisorTimeInCompany: "",
+    supervisorTimeOnProject: "",
+    isAlcoholDrugTestTaken: "No",
+    dateOfAlcoholDrugTest: "",
+    isWorkerClearedTest: "N/A",
+    reasonForTestNotDone: "",
+    status: "Active",
+    createdBy: 0,
+    fkInvestigationId: investigationId.current,
+  })
   const handelUpdateCheck = async (e) => {
-    let workerData = {
-      name: "",
-      workerType: "",
-      department: "",
-      workHours: "",
-      shiftTimeStart: null,
-      shiftType: "",
-      occupation: "",
-      shiftCycle: "",
-      noOfDaysIntoShift: "",
-      timeInCompany: "",
-      timeOnProject: "",
-      timeInIndustry: "",
-      attachments: "",
-      eventLeadingToInjury: "",
-      injuryObject: "",
-      primaryBodyPartWithSide: "",
-      secondaryBodyPartWithSide: "",
-      typeOfInjury: "",
-      NoOfDaysAway: "",
-      medicalResponseTaken: "",
-      treatmentDate: null,
-      higherMedicalResponder: "",
-      injuryStatus: "",
-      firstAidTreatment: "",
-      mechanismOfInjury: "",
-      isMedicationIssued: "",
-      isPrescriptionIssued: "",
-      isNonPrescription: "",
-      isAnyLimitation: "",
-      supervisorName: "",
-      supervisorTimeInIndustry: "",
-      supervisorTimeInCompany: "",
-      supervisorTimeOnProject: "",
-      isAlcoholDrugTestTaken: "No",
-      dateOfAlcoholDrugTest: "",
-      isWorkerClearedTest: "N/A",
-      reasonForTestNotDone: "",
-      status: "Active",
-      createdBy: 0,
-      fkInvestigationId: investigationId.current,
-    }
+
     let page_url = window.location.href;
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
 
-    let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
-    let PeopleAffectedData = PeopleAffected.data.data.results
-
-    let temp = []
-    PeopleAffectedData.map((value, i) => {
-      temp.push({
-        ...workerData, ...{
-          "name": value.personName,
-          "department": value.personDepartment
-        }
-      })
-    })
-
-    setForm(temp)
+    // getting person affected data 
+    const url = window.location.pathname.split('/')
+    const workerNum = url[url.length - 2]
+    let allEffectedPersonData = localStorage.getItem("personEffected")
+    let particularEffected = JSON.parse(allEffectedPersonData)[workerNum]
+    if (typeof particularEffected !== "undefined") {
+      setForm(particularEffected)
+    }
+    // getting person affected data end
 
     let investigationData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = investigationData.data.data.results[0];
-    if (!isNaN(allApiData.id)) {
+
+    if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
     }
-
-    const res = await api.get(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${form.id}/`);
-    const result = res.data.data.results;
-
-    await setForm(result)
     await setIsLoading(true);
   };
 
   const radioDecide = ["Yes", "No", "N/A"];
   const radioYesNo = ["Yes", "No"];
 
-  const handelTestTaken = (e) => {
+  const handelTestTaken = async (e) => {
     if (e.target.value == "Yes") {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       seTesttaken(true);
     } else if (e.target.value == "No") {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value, dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z" });
-
       seTesttaken(false);
     }
   };
@@ -176,13 +165,9 @@ const WorkerDetails = () => {
     temp.attachments = e.target.files[0];
     await setForm(temp);
   };
-
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
-    if (!isValid) {
-      return;
-    }
     let data = new FormData();
     data.append("name", form.name);
     data.append("workerType", form.workerType);
@@ -224,28 +209,16 @@ const WorkerDetails = () => {
     data.append("status", form.status);
     data.append("createdBy", form.createdBy);
     data.append("fkInvestigationId", investigationId.current);
-    // if (form.id) {
-    //   data.append("id", form.id);
-    //   const res = await api.put(
-    //     `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
-    //     }/workers/${form.id}/`,
-    //     data
-    //   );
 
-    // }
-    // else {
-    //   const res = await api.post(
-    //     `/api/v1/incidents/${localStorage.getItem(
-    //       "fkincidentId"
-    //     )}/investigations/${investigationId.current}/workers/`,
-    //     data
-    //   );
-
+    const res = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
+    if (res.status == 201) {
+      console.log("request done")
+    }
     //   localStorage.setItem("workerId", workerId);
     //   history.push(`/app/incident-management/registration/investigation/event-details/`)
 
     // }
-    history.push(`/app/incident-management/registration/investigation/event-details/`)
+    // history.push(`/app/incident-management/registration/investigation/event-details/`)
   };
 
   const PickList = async () => {
@@ -271,7 +244,6 @@ const WorkerDetails = () => {
     await setIsLoading(true);
   };
 
-  //
   useEffect(() => {
     handelUpdateCheck();
     PickList();
@@ -280,14 +252,14 @@ const WorkerDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
-
-      {console.log(form)}
+      {/* {console.log(form)} */}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6">Worker details</Typography>
             </Grid>
+
             {/* {workerData.map((value, index)=>(<> */}
             <Grid item md={6}>
               <TextField
