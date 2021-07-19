@@ -361,7 +361,7 @@ const HazardiousCondition = () => {
 
   return (
     <PapperBlock
-      title="Immediate causes - hazardous Conditions"
+      title="Immediate causes - hazardous conditions"
       icon="ion-md-list-box"
     >
       {/* {console.log(checkPost.current)} */}
@@ -388,8 +388,8 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.warningSystem}
+              // required
+              // error={error.warningSystem}
             >
               <FormLabel component="legend">Warning system</FormLabel>
               <FormGroup>
@@ -402,9 +402,9 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.warningSystem && (
+              {/* {error && error.warningSystem && (
                 <FormHelperText>{error.warningSystem}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -413,8 +413,8 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.energyTypes}
+              // required
+              // error={error.energyTypes}
             >
               <FormLabel component="legend">Energy types</FormLabel>
               <FormGroup>
@@ -427,16 +427,18 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.energyTypes && (
+              {/* {error && error.energyTypes && (
                 <FormHelperText>{error.energyTypes}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* tools */}
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.tools}>
+            <FormControl component="fieldset" 
+            // required error={error.tools}
+            >
               <FormLabel component="legend">Tools</FormLabel>
               <FormGroup>
                 {TOOLS.map((value) => (
@@ -448,9 +450,9 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.tools && (
+              {/* {error && error.tools && (
                 <FormHelperText>{error.tools}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -459,8 +461,8 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.safetyitems}
+              // required
+              // error={error.safetyitems}
             >
               <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
@@ -473,9 +475,9 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.safetyitems && (
+              {/* {error && error.safetyitems && (
                 <FormHelperText>{error.safetyitems}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -486,10 +488,10 @@ const HazardiousCondition = () => {
               id="filled-basic"
               label="Others"
               multiline
-              required
-              error={error.others}
+              // required
+              // error={error.others}
               value={form.others.rcaRemark}
-              helperText={error ? error.others : ""}
+              // helperText={error ? error.others : ""}
               rows={3}
               className={classes.formControl}
               onChange={async (e) => handelOthers(e)}
