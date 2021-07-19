@@ -454,7 +454,7 @@ const Summary = () => {
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>
-                        <ListItemText primary="Lessons Learned" />
+                        <ListItemText primary="Lessons Learnt" />
                       </ListItemLink>
                     )}
 

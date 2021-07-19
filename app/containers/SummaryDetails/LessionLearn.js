@@ -80,7 +80,7 @@ const LessionLearnSummary = () => {
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Lesson Learn</Typography>
+            <Typography className={classes.heading}>Lessons Learnt</Typography>
           </AccordionSummary>
           <AccordionDetails>
             {lessionlearn.length !== 0
