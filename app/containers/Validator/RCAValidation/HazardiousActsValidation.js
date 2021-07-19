@@ -41,7 +41,7 @@ function HazardiousActsValidation(data) {
   }
 
   if (validator.isEmpty(data.others.rcaRemark.toString())) {
-    error.others = "Fill the information";
+    error.others = "Fill the other field";
     isValid = false;
   }
 

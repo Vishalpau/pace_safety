@@ -39,6 +39,11 @@ const RootCauseAnalysisSummary = () => {
 
   const fkid = localStorage.getItem("fkincidentId");
 
+  const subValues = ["Supervision", "Workpackage", "Equipment machinery", "Behaviour issue",
+    "Safety issues", "Ergonimics", "Procedures", "Other acts", "Warning system", "Energy types",
+    "Tools", "Safety items", "Others conditions", "personal", "wellnessFactors", "Others human factors",
+    "Leadership", "processes", "Others job factors", "Management control", "Region support above"]
+
   const fetchRootCauseData = async () => {
     const allRootCause = await api.get(`/api/v1/incidents/${fkid}/rootcauses/`);
     await setRootCause(allRootCause.data.data.results);
@@ -53,14 +58,19 @@ const RootCauseAnalysisSummary = () => {
     const allCauseAnalysis = await api.get(
       `/api/v1/incidents/${fkid}/causeanalysis/`
     );
-    await setCauseAnalysis(allCauseAnalysis.data.data.results);
+    await setCauseAnalysis(allCauseAnalysis.data.data.results[0]);
   };
 
   const fetchPaceCausesData = async () => {
     const allPaceCauses = await api.get(
       `/api/v1/incidents/${fkid}/pacecauses/`
     );
-    await setPaceCauses(allPaceCauses.data.data.results);
+    let paceData = allPaceCauses.data.data.results
+    if (typeof paceData[0] !== "undefined" && paceData[0].rcaSubType === "regionsupportabove") {
+      await setPaceCauses(paceData.reverse())
+    } else {
+      await setPaceCauses(paceData)
+    }
   };
 
   useEffect(() => {
@@ -73,6 +83,42 @@ const RootCauseAnalysisSummary = () => {
   const classes = useStyles();
   return (
     <Grid container spacing={3}>
+      {/* {console.log(causeanalysis)} */}
+      {causeanalysis.length !== 0 ?
+        <Grid item md={12}>
+
+          <Typography className={classes.heading}>Cause analysis</Typography>
+
+
+          <Typography variant="h6" gutterBottom>
+            Evidence collected supports the incident event took place?
+          </Typography>
+          <Typography variant="h8" gutterBottom>
+            {causeanalysis.evidenceSupport}
+          </Typography>
+
+          <Typography variant="h6" gutterBottom>
+            Contradictions between evidence and the description of incident?
+          </Typography>
+          <Typography variant="h8" gutterBottom>
+            {causeanalysis.evidenceContradiction}
+          </Typography>
+
+          <Typography variant="h6" gutterBottom>
+            Evidence does not supports the incident event as described?
+          </Typography>
+          <Typography variant="h8" gutterBottom>
+            {causeanalysis.evidenceNotSupport}
+          </Typography>
+
+
+
+        </Grid>
+        :
+        <Grid item md={12}>
+          <Typography className={classes.heading}>Root cause is pending</Typography>
+        </Grid>
+      }
 
       {/* root cause */}
       {rootCause.length !== 0 ?
@@ -81,36 +127,42 @@ const RootCauseAnalysisSummary = () => {
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Root cause</Typography>
             </AccordionSummary>
-
             <AccordionDetails classes={{ root: "details-wrapper" }}>
-              <TableContainer component={Paper}>
+              {rootCause.map((root, key) => (
+                <Grid item md={12}>
 
-                <Table className={classes.table} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Cause of incident</TableCell>
-                      <TableCell>Recommended solution</TableCell>
-                      <TableCell>Corrective action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
+                  {/* cause of incident */}
+                  <Typography variant="h6" gutterBottom>
+                    Cause on incident
+                  </Typography>
+                  <Typography variant="h8" gutterBottom>
+                    {root.causeOfIncident}
+                  </Typography>
 
-                    {rootCause.map((root, key) => (
-                      <TableRow key={key}>
-                        <TableCell component="th" scope="row">
-                          {root.id}
-                        </TableCell>
-                        <TableCell>{root.causeOfIncident}</TableCell>
-                        <TableCell>{root.recommendSolution}</TableCell>
-                        <TableCell>{root.correctiveAction}</TableCell>
-                      </TableRow>
-                    ))
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                  {/* corrective action */}
+                  <Typography variant="h6" gutterBottom>
+                    Corrective solution
+                  </Typography>
+                  <Typography variant="h8" gutterBottom>
+                    {root.correctiveAction}
+                  </Typography>
+
+                  {/* recommended solution */}
+                  {root.recommendSolution !== "" ? <>
+                    <Typography variant="h6" gutterBottom>
+                      Recommended solution
+                    </Typography>
+                    <Typography variant="h8" gutterBottom>
+                      {root.recommendSolution}
+                    </Typography>
+                  </> : null
+                  }
+                </Grid>
+              ))
+              }
             </AccordionDetails>
+
+
           </Accordion>
         </Grid> :
         null}
@@ -120,116 +172,52 @@ const RootCauseAnalysisSummary = () => {
         <Grid item md={12}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Five why</Typography>
+              <Typography className={classes.heading}>Five why analysis</Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
-              <TableContainer component={Paper}>
-                <Table className={classes.table} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Why</TableCell>
-                      <TableCell>Why Count</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
 
-                    {fiveWhy.map((fw, key) => (
-                      <TableRow key={key}>
-                        <TableCell component="th" scope="row">
-                          {fw.id}
-                        </TableCell>
-                        <TableCell>{fw.why}</TableCell>
-                        <TableCell>{fw.whyCount}</TableCell>
-                      </TableRow>
-                    ))
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              {fiveWhy.map((fw, key) => (
+                <Grid item md={12}>
+                  <Typography variant="h6" gutterBottom>
+                    Why {fw.whyCount + 1}
+                  </Typography>
+                  <Typography variant="h8" gutterBottom>
+                    {fw.why}
+                  </Typography>
+
+                </Grid>
+              ))}
             </AccordionDetails>
           </Accordion>
         </Grid>
         :
         null}
 
-      {causeanalysis.length !== 0 ?
-        <Grid item md={12}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Cause analysis</Typography>
-            </AccordionSummary>
-            <AccordionDetails classes={{ root: "details-wrapper" }}>
-              <TableContainer component={Paper}>
-                <Table className={classes.table} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Evidence support</TableCell>
-                      <TableCell>Evidence contradiction</TableCell>
-                      <TableCell>RCA recommended</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {
-                      causeanalysis.map((cause, key) => (
-                        <TableRow key={key}>
-                          <TableCell component="th" scope="row">
-                            {cause.id}
-                          </TableCell>
-                          <TableCell>{cause.evidenceSupport}</TableCell>
-                          <TableCell>{cause.evidenceContradiction}</TableCell>
-                          <TableCell>{cause.rcaRecommended}</TableCell>
-                        </TableRow>
-                      ))
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-        :
-        <Grid item md={12}>
-          <Typography className={classes.heading}>Root cause is pending</Typography>
-        </Grid>
-      }
-
       {pacecauses.length !== 0 ?
         <Grid item md={12}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Pace cause</Typography>
+              <Typography className={classes.heading}>PACE cause analysis</Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               <TableContainer component={Paper}>
                 <Table style={{ minWidth: 900 }} size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell style={{ width: 200 }}>ID</TableCell>
                       <TableCell style={{ width: 200 }}>RCA number</TableCell>
-                      <TableCell style={{ width: 200 }}>RCA type</TableCell>
+                      <TableCell style={{ width: 100 }}>RCA type</TableCell>
                       <TableCell style={{ width: 200 }}>RCA sub type</TableCell>
                       <TableCell style={{ width: 400 }}>RCA Remark</TableCell>
-                      <TableCell style={{ width: 300 }}>
-                        RCA remark type
-                      </TableCell>
-                      <TableCell style={{ width: 200 }}>Status</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {
                       pacecauses.map((pc, key) => (
                         <TableRow key={key}>
-                          <TableCell component="th" scope="row">
-                            {pc.id}
-                          </TableCell>
                           <TableCell>{pc.rcaNumber}</TableCell>
                           <TableCell>{pc.rcaType}</TableCell>
-                          <TableCell>{pc.rcaSubType}</TableCell>
+                          <TableCell>{subValues[key]}</TableCell>
                           <TableCell>{pc.rcaRemark}</TableCell>
-                          <TableCell>{pc.remarkType}</TableCell>
-                          <TableCell>{pc.status}</TableCell>
                         </TableRow>
                       ))
                     }

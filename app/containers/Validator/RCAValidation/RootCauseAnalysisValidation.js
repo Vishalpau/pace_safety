@@ -6,12 +6,12 @@ function RootCauseValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.causeOfIncident)) {
-    error.causeOfIncident = "Fill the information";
+    error.causeOfIncident = "Fill the cause of incident";
     isValid = false;
   }
 
   if (validator.isEmpty(data.correctiveAction)) {
-    error.correctiveAction = "Fill the information";
+    error.correctiveAction = "Fill the corrective action";
     isValid = false;
   }
 
@@ -20,8 +20,8 @@ function RootCauseValidation(data) {
     isValid = false;
   }
 
-  if (data.wouldItPreventIncident === "Yes" && validator.isEmpty(data.recommendSolution)) {
-    error.recommendSolution = "Fill the information";
+  if (data.wouldItPreventIncident === "No" && validator.isEmpty(data.recommendSolution)) {
+    error.recommendSolution = "Fill the recommended solution";
     isValid = false;
   }
 

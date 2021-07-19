@@ -62,23 +62,77 @@ const InvestigationOverview = () => {
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
 
-
-    let previousData = await api.get(
-      `api/v1/incidents/${incidentId}/investigations/`
-    );
+    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
-    console.log(allApiData.id)
-    if (!isNaN(allApiData.id)) {
+
+    if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
+      console.log("here")
       await setForm(allApiData);
       investigationId.current = allApiData.id
     }
+    // people affected data in local storage
+    let workerData = {
+      name: "",
+      workerType: "",
+      department: "",
+      workHours: "",
+      shiftTimeStart: "2000-07-15T10:11:11.382000Z",
+      shiftType: "2000-07-15T10:11:11.382000Z",
+      occupation: "",
+      shiftCycle: "",
+      noOfDaysIntoShift: "",
+      timeInCompany: "",
+      timeOnProject: "",
+      timeInIndustry: "",
+      attachments: "",
+      eventLeadingToInjury: "",
+      injuryObject: "",
+      primaryBodyPartWithSide: "",
+      secondaryBodyPartWithSide: "",
+      typeOfInjury: "",
+      NoOfDaysAway: "",
+      medicalResponseTaken: "",
+      treatmentDate: "2000-07-15T10:11:11.382000Z",
+      higherMedicalResponder: "",
+      injuryStatus: "",
+      firstAidTreatment: "",
+      mechanismOfInjury: "",
+      isMedicationIssued: "No",
+      isPrescriptionIssued: "No",
+      isNonPrescription: "No",
+      isAnyLimitation: "No",
+      supervisorName: "",
+      supervisorTimeInIndustry: "",
+      supervisorTimeInCompany: "",
+      supervisorTimeOnProject: "",
+      isAlcoholDrugTestTaken: "No",
+      dateOfAlcoholDrugTest: "2000-07-15T10:11:11.382000Z",
+      isWorkerClearedTest: "N/A",
+      reasonForTestNotDone: "",
+      status: "Active",
+      createdBy: 0,
+      fkInvestigationId: investigationId.current,
+    }
+    let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
+    let PeopleAffectedData = PeopleAffected.data.data.results
+
+    let temp = []
+    PeopleAffectedData.map((value, i) => {
+      temp.push({
+        ...workerData, ...{
+          "name": value.personName,
+          "department": value.personDepartment
+        }
+      })
+    })
+    localStorage.setItem("personEffected", JSON.stringify(temp))
   };
 
   const handleNext = async (e) => {
-    console.log(form);
     // const { error, isValid } = initialdetailvalidate(form);
     // setError(error);
     // console.log(error, isValid);
+    console.log(form)
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
     if (putId.current) {
       history.push(`/app/incident-management/registration/investigation/worker-details/${putId.current}`)
@@ -93,7 +147,8 @@ const InvestigationOverview = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-  const picList = async () => {
+  const handelCall = async () => {
+    await handelUpdateCheck();
     classificationValues.current = await PickListData(40)
     healthAndSafetyValues.current = await PickListData(42)
     environmentValues.current = await PickListData(43)
@@ -103,10 +158,9 @@ const InvestigationOverview = () => {
     await setIsLoading(true);
   }
 
-  useEffect(() => {
-    handelUpdateCheck();
-    picList()
 
+  useEffect(() => {
+    handelCall()
   }, []);
 
   return (

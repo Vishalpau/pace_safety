@@ -218,19 +218,20 @@ const Evidence = () => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const fetchEvidenceList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    let lastItem = id ? id : localStorage.getItem("fkincidentId")
+    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
+    console.log(res)
     const result = res.data.data.results;
 
     let tempData = [];
     if (result.length) {
       // await setForm(result);
       for (let i = 0; i < result.length; i++) {
-        console.log(result[i]);
         tempData.push({
           evidenceCategory: result[i].evidenceCategory,
           evidenceCheck: result[i].evidenceCheck,
           evidenceRemark: result[i].evidenceRemark,
-          evidenceDocument: "",
+          evidenceDocument: result[i].evidenceDocument,
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
@@ -239,9 +240,15 @@ const Evidence = () => {
         });
       }
     }
-    await setEvideceData(tempData);
-    await setForm(tempData);
+   
+    if(result.length > 1){
+      await setForm(tempData);
+      await setEvideceData(tempData);
+      console.log(form)
+      
+    }
     await setIsLoading(true);
+    
   };
 
   // const fetchEvidenceData = async () => {
@@ -289,6 +296,7 @@ const Evidence = () => {
     );
     const result = res.data.data.results;
     await setIncidentDetail(result);
+    
   };
 
   // On the next button click function call.
@@ -303,7 +311,6 @@ const Evidence = () => {
     }
 
     for (let i = 0; i < form.length; i++) {
-      console.log([i]);
 
       let data = new FormData();
       data.append("evidenceCheck", form[i].evidenceCheck);
@@ -315,8 +322,6 @@ const Evidence = () => {
 
       // If update is the case.
       if (id) {
-        console.log("in put");
-        console.log("evidence id", evideceData[i].pk);
         data.append("pk", evideceData[i].pk);
 
         const res = await api.put(
@@ -333,30 +338,33 @@ const Evidence = () => {
         localStorage.getItem("fkincidentId") &&
         evideceData.length > 0
       ) {
-        console.log("dd put");
-        // console.log(evideceData)
         for (let i = 0; i < evideceData.length; i++) {
           let data = new FormData();
           data.append("pk", evideceData[i].pk);
           data.append("evidenceCheck", evideceData[i].evidenceCheck);
           data.append("evidenceNumber", evideceData[i].evidenceNumber);
           data.append("evidenceCategory", evideceData[i].evidenceCategory);
-          data.append("evidenceDocument", evideceData[i].evidenceDocument);
-          data.append("status", "Active");
+          if(evideceData[i].evidenceDocument){
+            data.append("evidenceDocument", "");
+          }else{
+            data.append("evidenceDocument", evideceData[i].evidenceDocument);
+          }
+          
+          data.append("status", "");
           data.append("createdAt", evideceData[i].createdAt);
           data.append("createdBy", evideceData[i].createdBy);
           data.append("updatedAt", evideceData[i].updatedAt);
           data.append("updatedBy", evideceData[i].updatedBy);
           data.append("fkIncidentId", evideceData[i].fkIncidentId);
         }
-        console.log(data);
-        // const res = await api.put(
-        //   `/api/v1/incidents/${localStorage.getItem(
-        //     "fkincidentId"
-        //   )}/evidences/${evideceData[i].pk}/`,
-        //   data
-        // );
-
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/evidences/${evideceData[i].pk}/`,
+          data
+        );
+        console.log("dd put")
+            
         history.push(
           `/app/incident-management/registration/evidence/activity-detail/`
         );
@@ -368,7 +376,6 @@ const Evidence = () => {
         data.append("fkIncidentId", form[i].fkIncidentId);
 
         if (Object.keys(error).length == 0) {
-          console.log("in post");
           const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
@@ -376,7 +383,6 @@ const Evidence = () => {
             data
           );
 
-          console.log(res.data.data.results);
           if (res.status === 201) {
             // const queId = res.data.data.results.id;
             // localStorage.setItem("id", queId);
@@ -447,17 +453,19 @@ const Evidence = () => {
 
   useEffect(() => {
     // fetchEvidenceData();
+    // fetchEvidenceList();
     fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
     } else {
-      setIsLoading(true);
+      fetchEvidenceList();
+      // setIsLoading(true);
     }
   }, []);
 
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
-      {console.log(form)}
+    {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -552,12 +560,13 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
+                                {form[index].evidenceDocument ? <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> :
                                   <input
                                     type="file"
                                     className={classes.fullWidth}
                                     accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
                                     disabled={
-                                      value.evidenceCheck !== "Yes"
+                                      value.evidenceCheck !== "Yes" || value.evidenceDocument
                                         ? true
                                         : false
                                     }
@@ -566,14 +575,14 @@ const Evidence = () => {
                                       handleFile(e, index);
                                       // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
-                                  />
+                                  />}
                                 </TableCell>
                               </TableRow>
                             </>
                           ))}
                       </>
                     ) : (
-                      <>
+                      <>{console.log("sagar")}
                         {Object.entries(form)
                         .map(([index, value]) => (
                           <>

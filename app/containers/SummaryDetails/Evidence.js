@@ -37,6 +37,14 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 
+// Table
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+
 // Icons
 import Print from "@material-ui/icons/Print";
 import Share from "@material-ui/icons/Share";
@@ -127,9 +135,9 @@ const EvidenceSummary = () => {
   // };
 
   // const fkid = localStorage.getItem('fkincidentId');
-  console.log(evidence);
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    console.log(allEvidence)
     await setEvidence(allEvidence.data.data.results);
     await setIsLoding(true);
   };
@@ -158,7 +166,52 @@ const EvidenceSummary = () => {
                 <Typography className={classes.heading}>Evidence</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {evidence.length !== 0
+              <TableContainer component={Paper}>
+                <Table style={{ minWidth: 900 }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ width: 200 }}>Evidence No</TableCell>
+                      <TableCell style={{ width: 300 }}>Evidence Check</TableCell>
+                      <TableCell style={{ width: 300 }}>Evidence Category</TableCell>
+                      <TableCell style={{ width: 400 }}>Evidence Remark</TableCell>
+                      <TableCell style={{ width: 300 }}>
+                      Evidence Document
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  {evidence.length !== 0
+                  ? evidence.map((value, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{value.evidenceNumber}</TableCell>
+                          <TableCell>{value.evidenceCheck}</TableCell>
+                          <TableCell>{value.evidenceCategory}</TableCell>
+                          <TableCell>{value.evidenceRemark}</TableCell>
+                          {value.evidenceDocument ? (<TableCell><Tooltip title="File Name">
+                                  <IconButton
+                                    onClick={() =>
+                                      handleOpen(value.evidenceDocument)
+                                    }
+                                    className={classes.fileIcon}
+                                  >
+                                    <PhotoSizeSelectActualIcon />
+                                  </IconButton>
+                                </Tooltip></TableCell>):null}
+                          
+                        </TableRow>
+                      ))
+                 : null}
+                  {/* {fiveWhy.map((fw, key) => (
+                      <TableRow key={key}>
+                        <TableCell>{fw.whyCount + 1}</TableCell>
+                        <TableCell>{fw.why}</TableCell>
+                      </TableRow>
+                    ))
+                    } */}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+                {/* {evidence.length !== 0
                   ? evidence.map((value, index) => (
                       <Grid
                         key={index}
@@ -242,23 +295,14 @@ const EvidenceSummary = () => {
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                <Tooltip title="File Name">
-                                  <IconButton
-                                    onClick={() =>
-                                      handleOpen(value.evidenceDocument)
-                                    }
-                                    className={classes.fileIcon}
-                                  >
-                                    <PhotoSizeSelectActualIcon />
-                                  </IconButton>
-                                </Tooltip>
+                                
                               </Typography>
                             </Grid>
                           ) : null}
                         </Grid>
                       </Grid>
                     ))
-                  : null}
+                  : null} */}
               </AccordionDetails>
             </Accordion>
           </Grid>
@@ -321,19 +365,19 @@ const EvidenceSummary = () => {
                 </Button>
               </Grid>
               <Grid item xs={6}>
-                {/* <Button
+                <Button
                   startIcon={<GetAppIcon />}
                   style={{ width: "100%" }}
                   variant="contained"
                   color="primary"
-                  href={`${documentUrl}`} 
+                  
                   onClick={()=>downloadFile()}
                   disableElevation
-                  // target='_blank'
+                  target="_blank"
                 >
-                
-                  Download Attachment
-                </Button> */}
+                 Download Attachment 
+                  
+                </Button>
                 {/* <button
                 crossorigin="anonymous"
                   onClick={() => {
@@ -345,10 +389,10 @@ const EvidenceSummary = () => {
                   Download Image
                 </button> */}
 
-                {/* <a href="https://www.w3schools.com/images/myw3schoolsimage.jpg"
+                {/* <a href=""
                 
                 download> Download Here </a> */}
-                <a href={`${documentUrl}`} download />
+                {/* <a href={`${documentUrl}`} target="_blank" download >dd</a> */}
               </Grid>
             </Grid>
           </Box>
