@@ -72,7 +72,6 @@ const RootCauseAnalysisSummary = () => {
       await setPaceCauses(paceData)
     }
   };
-
   useEffect(() => {
     fetchRootCauseData();
     fetchFiveWhyData();
@@ -83,8 +82,7 @@ const RootCauseAnalysisSummary = () => {
   const classes = useStyles();
   return (
     <Grid container spacing={3}>
-      {/* {console.log(causeanalysis)} */}
-      {causeanalysis.length !== 0 ?
+      {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ?
         <Grid item md={12}>
 
           <Typography className={classes.heading}>Cause analysis</Typography>
