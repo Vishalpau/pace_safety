@@ -235,6 +235,8 @@ const IncidentDetailsSummary = () => {
           {incidents["subContractor"]}
         </Typography>
       </Grid>
+      {/* People Affected */}
+      {peopleData.length>0?
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -331,6 +333,9 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
+     :null}
+     {/* Property affect */}
+     {propertyData.length>0?
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -393,7 +398,9 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      {/* Equipment Affected */}
+     :null}
+     {/* Equipment Affected */}
+     {equipmentData.length>0?
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -464,7 +471,9 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-
+      :null}
+      {/* Environment Affected */}
+      {enviornmentData.length?
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -500,7 +509,8 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      {/* Reports & Noticefication */}
+     :null}
+     {/* Reports & Noticefication */}
       <Grid item xs={12}>
 
         <Accordion>
@@ -648,16 +658,13 @@ const IncidentDetailsSummary = () => {
                     ))
                   : null}
               </Grid>
+           
             </Grid>
           </AccordionDetails>
         </Accordion>
        {/* Modal */}
         <Modal className={classes.modal} open={open} onClose={handleClose}>
         <div className={classes.paper}>
-          <Typography variant="h6" gutterBottom>
-            View Attachment
-          </Typography>
-          <Typography>Please choose what do you want to?</Typography>
           <Box marginTop={4}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
