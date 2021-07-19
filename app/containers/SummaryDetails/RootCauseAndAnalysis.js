@@ -20,6 +20,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 // Styles
 import api from "../../utils/axios";
 import "../../styles/custom/summary.css";
+import Fonts from "dan-styles/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -111,28 +112,59 @@ const RootCauseAnalysisSummary = () => {
     <Grid container spacing={3}>
       {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (
         <Grid item md={12}>
-          <Typography className={classes.heading}>Cause analysis</Typography>
+          <Accordion
+            expanded={expanded === "panel1"}
+            onChange={handleExpand("panel1")}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Cause analysis
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails classes={{ root: "details-wrapper" }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
+                    Evidence collected supports the incident event took place?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceSupport}
+                  </Typography>
+                </Grid>
 
-          <Typography variant="h6" gutterBottom>
-            Evidence collected supports the incident event took place?
-          </Typography>
-          <Typography variant="h8" gutterBottom>
-            {causeanalysis.evidenceSupport}
-          </Typography>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
+                    Contradictions between evidence and the description of
+                    incident?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceContradiction}
+                  </Typography>
+                </Grid>
 
-          <Typography variant="h6" gutterBottom>
-            Contradictions between evidence and the description of incident?
-          </Typography>
-          <Typography variant="h8" gutterBottom>
-            {causeanalysis.evidenceContradiction}
-          </Typography>
-
-          <Typography variant="h6" gutterBottom>
-            Evidence does not supports the incident event as described?
-          </Typography>
-          <Typography variant="h8" gutterBottom>
-            {causeanalysis.evidenceNotSupport}
-          </Typography>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
+                    Evidence does not supports the incident event as described?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceNotSupport}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
       ) : (
         <Grid item md={12}>
@@ -142,12 +174,11 @@ const RootCauseAnalysisSummary = () => {
         </Grid>
       )}
 
-      {/* root cause */}
       {rootCause.length !== 0 ? (
         <Grid item md={12}>
           <Accordion
-            expanded={expanded === "panel1"}
-            onChange={handleExpand("panel1")}
+            expanded={expanded === "panel2"}
+            onChange={handleExpand("panel2")}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Root cause</Typography>
@@ -156,28 +187,40 @@ const RootCauseAnalysisSummary = () => {
               {rootCause.map((root, key) => (
                 <Grid item md={12}>
                   {/* cause of incident */}
-                  <Typography variant="h6" gutterBottom>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
                     Cause on incident
                   </Typography>
-                  <Typography variant="h8" gutterBottom>
+                  <Typography className={Fonts.labelValue}>
                     {root.causeOfIncident}
                   </Typography>
 
                   {/* corrective action */}
-                  <Typography variant="h6" gutterBottom>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
                     Corrective solution
                   </Typography>
-                  <Typography variant="h8" gutterBottom>
+                  <Typography className={Fonts.labelValue}>
                     {root.correctiveAction}
                   </Typography>
 
                   {/* recommended solution */}
                   {root.recommendSolution !== "" ? (
                     <>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography
+                        variant="h6"
+                        className={Fonts.labelName}
+                        gutterBottom
+                      >
                         Recommended solution
                       </Typography>
-                      <Typography variant="h8" gutterBottom>
+                      <Typography className={Fonts.labelValue}>
                         {root.recommendSolution}
                       </Typography>
                     </>
@@ -204,12 +247,14 @@ const RootCauseAnalysisSummary = () => {
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               {fiveWhy.map((fw, key) => (
                 <Grid item md={12}>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
                     Why {fw.whyCount + 1}
                   </Typography>
-                  <Typography variant="h8" gutterBottom>
-                    {fw.why}
-                  </Typography>
+                  <Typography className={Fonts.labelValue}>{fw.why}</Typography>
                 </Grid>
               ))}
             </AccordionDetails>
