@@ -146,6 +146,7 @@ const Summary = () => {
       `/api/v1/incidents/${incidentId}/pacecauses/`
     );
     let paceCauseData = paceCause.data.data.results[0];
+    console.log(paceCauseData)
     await setPaceCauseData(paceCauseData);
 
     let rootCause = await api.get(

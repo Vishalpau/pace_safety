@@ -218,7 +218,9 @@ const Evidence = () => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const fetchEvidenceList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    let lastItem = id ? id : localStorage.getItem("fkincidentId")
+    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
+    console.log(res)
     const result = res.data.data.results;
 
     let tempData = [];
@@ -229,7 +231,7 @@ const Evidence = () => {
           evidenceCategory: result[i].evidenceCategory,
           evidenceCheck: result[i].evidenceCheck,
           evidenceRemark: result[i].evidenceRemark,
-          evidenceDocument: "",
+          evidenceDocument: result[i].evidenceDocument,
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
@@ -238,9 +240,15 @@ const Evidence = () => {
         });
       }
     }
-    await setEvideceData(tempData);
-    await setForm(tempData);
+   
+    if(result.length > 1){
+      await setForm(tempData);
+      await setEvideceData(tempData);
+      console.log(form)
+      
+    }
     await setIsLoading(true);
+    
   };
 
   // const fetchEvidenceData = async () => {
@@ -288,6 +296,7 @@ const Evidence = () => {
     );
     const result = res.data.data.results;
     await setIncidentDetail(result);
+    
   };
 
   // On the next button click function call.
@@ -335,21 +344,27 @@ const Evidence = () => {
           data.append("evidenceCheck", evideceData[i].evidenceCheck);
           data.append("evidenceNumber", evideceData[i].evidenceNumber);
           data.append("evidenceCategory", evideceData[i].evidenceCategory);
-          data.append("evidenceDocument", evideceData[i].evidenceDocument);
-          data.append("status", "Active");
+          if(evideceData[i].evidenceDocument){
+            data.append("evidenceDocument", "");
+          }else{
+            data.append("evidenceDocument", evideceData[i].evidenceDocument);
+          }
+          
+          data.append("status", "");
           data.append("createdAt", evideceData[i].createdAt);
           data.append("createdBy", evideceData[i].createdBy);
           data.append("updatedAt", evideceData[i].updatedAt);
           data.append("updatedBy", evideceData[i].updatedBy);
           data.append("fkIncidentId", evideceData[i].fkIncidentId);
         }
-        // const res = await api.put(
-        //   `/api/v1/incidents/${localStorage.getItem(
-        //     "fkincidentId"
-        //   )}/evidences/${evideceData[i].pk}/`,
-        //   data
-        // );
-
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/evidences/${evideceData[i].pk}/`,
+          data
+        );
+        console.log("dd put")
+            
         history.push(
           `/app/incident-management/registration/evidence/activity-detail/`
         );
@@ -438,16 +453,19 @@ const Evidence = () => {
 
   useEffect(() => {
     // fetchEvidenceData();
+    // fetchEvidenceList();
     fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
     } else {
-      setIsLoading(true);
+      fetchEvidenceList();
+      // setIsLoading(true);
     }
   }, []);
 
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
+    {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -542,12 +560,13 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
+                                {form[index].evidenceDocument ? <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> :
                                   <input
                                     type="file"
                                     className={classes.fullWidth}
                                     accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
                                     disabled={
-                                      value.evidenceCheck !== "Yes"
+                                      value.evidenceCheck !== "Yes" || value.evidenceDocument
                                         ? true
                                         : false
                                     }
@@ -556,14 +575,14 @@ const Evidence = () => {
                                       handleFile(e, index);
                                       // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
-                                  />
+                                  />}
                                 </TableCell>
                               </TableRow>
                             </>
                           ))}
                       </>
                     ) : (
-                      <>
+                      <>{console.log("sagar")}
                         {Object.entries(form)
                         .map(([index, value]) => (
                           <>

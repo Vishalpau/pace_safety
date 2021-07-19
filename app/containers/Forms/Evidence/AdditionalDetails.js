@@ -88,7 +88,8 @@ const AdditionalDetails = () => {
   ]);
 
   const fetchActivityList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/activities/`);
+    let lastId = id ? id : localStorage.getItem("fkincidentId")
+    const res = await api.get(`/api/v1/incidents/${lastId}/activities/`);
     const result = res.data.data.results;
     console.log(result);
     console.log(result.length);

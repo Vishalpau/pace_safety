@@ -88,7 +88,6 @@ const RootCauseAnalysisSummary = () => {
                 <Table className={classes.table} size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell>ID</TableCell>
                       <TableCell>Cause of incident</TableCell>
                       <TableCell>Recommended solution</TableCell>
                       <TableCell>Corrective action</TableCell>
@@ -98,9 +97,6 @@ const RootCauseAnalysisSummary = () => {
 
                     {rootCause.map((root, key) => (
                       <TableRow key={key}>
-                        <TableCell component="th" scope="row">
-                          {root.id}
-                        </TableCell>
                         <TableCell>{root.causeOfIncident}</TableCell>
                         <TableCell>{root.recommendSolution}</TableCell>
                         <TableCell>{root.correctiveAction}</TableCell>
@@ -127,20 +123,16 @@ const RootCauseAnalysisSummary = () => {
                 <Table className={classes.table} size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Why</TableCell>
                       <TableCell>Why Count</TableCell>
+                      <TableCell>Why</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
 
                     {fiveWhy.map((fw, key) => (
                       <TableRow key={key}>
-                        <TableCell component="th" scope="row">
-                          {fw.id}
-                        </TableCell>
+                        <TableCell>{fw.whyCount + 1}</TableCell>
                         <TableCell>{fw.why}</TableCell>
-                        <TableCell>{fw.whyCount}</TableCell>
                       </TableRow>
                     ))
                     }
@@ -164,7 +156,6 @@ const RootCauseAnalysisSummary = () => {
                 <Table className={classes.table} size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell>ID</TableCell>
                       <TableCell>Evidence support</TableCell>
                       <TableCell>Evidence contradiction</TableCell>
                       <TableCell>RCA recommended</TableCell>
@@ -174,9 +165,6 @@ const RootCauseAnalysisSummary = () => {
                     {
                       causeanalysis.map((cause, key) => (
                         <TableRow key={key}>
-                          <TableCell component="th" scope="row">
-                            {cause.id}
-                          </TableCell>
                           <TableCell>{cause.evidenceSupport}</TableCell>
                           <TableCell>{cause.evidenceContradiction}</TableCell>
                           <TableCell>{cause.rcaRecommended}</TableCell>
@@ -199,14 +187,13 @@ const RootCauseAnalysisSummary = () => {
         <Grid item md={12}>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Pace cause</Typography>
+              <Typography className={classes.heading}>PACE cause</Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               <TableContainer component={Paper}>
                 <Table style={{ minWidth: 900 }} size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell style={{ width: 200 }}>ID</TableCell>
                       <TableCell style={{ width: 200 }}>RCA number</TableCell>
                       <TableCell style={{ width: 200 }}>RCA type</TableCell>
                       <TableCell style={{ width: 200 }}>RCA sub type</TableCell>
@@ -221,9 +208,6 @@ const RootCauseAnalysisSummary = () => {
                     {
                       pacecauses.map((pc, key) => (
                         <TableRow key={key}>
-                          <TableCell component="th" scope="row">
-                            {pc.id}
-                          </TableCell>
                           <TableCell>{pc.rcaNumber}</TableCell>
                           <TableCell>{pc.rcaType}</TableCell>
                           <TableCell>{pc.rcaSubType}</TableCell>

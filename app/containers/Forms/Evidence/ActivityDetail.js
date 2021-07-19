@@ -73,7 +73,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-03",
-      question: "Was per-job safety discussion held?",
+      question: "Was pre-job safety discussion held?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -95,7 +95,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-05",
-      question: "Was FLA executed for the task?",
+      question: "Was FLHA executed for the task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -117,7 +117,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-07",
-      question: "Was per-zone planning enhanced the post-event?",
+      question: "Was pre-zone planning enhanced the post-event?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -282,7 +282,10 @@ const ActivityDetails = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+
+                onClick={() => {if(id){history.push(`/app/incident-management/registration/evidence/evidence/${id}`)
+
+                }else{ history.push(`/app/incident-management/registration/evidence/evidence/`)}}}
                 // href="/app/incident-management/registration/evidence/evidence/"
               >
                 Previous
