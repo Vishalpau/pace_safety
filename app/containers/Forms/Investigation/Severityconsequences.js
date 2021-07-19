@@ -64,11 +64,11 @@ const InvestigationOverview = () => {
 
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
-
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       console.log("here")
       await setForm(allApiData);
       investigationId.current = allApiData.id
+      console.log(investigationId.current)
     }
     // people affected data in local storage
     let workerData = {
