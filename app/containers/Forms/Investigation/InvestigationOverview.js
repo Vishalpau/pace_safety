@@ -44,6 +44,19 @@ const InvestigationOverview = () => {
   const investigationId = useRef("")
   const severityValues = useRef([])
 
+  const handelUpdateCheck = async (e) => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let allApiData = previousData.data.data.results[0];
+    console.log(incidentId)
+    if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
+      await setForm(allApiData);
+      investigationId.current = allApiData.id
+      putId.current = incidentId;
+    }
+  };
 
   const [form, setForm] = useState({
     srartDate: "2021-07-07T13:05:22.157Z",
@@ -58,41 +71,20 @@ const InvestigationOverview = () => {
     fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
   });
 
-  const handelUpdateCheck = async (e) => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
-    let allApiData = previousData.data.data.results[0];
-    if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
-      await setForm(allApiData);
-      investigationId.current = allApiData.id
-      putId.current = incidentId;
-    }
-
-  };
-
-  const handleNext = () => {
+  const handleNext = async () => {
     console.log(putId.current)
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
 
     if (putId.current == "") {
-      const res = api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-
-      history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
-
-
+      const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
+      await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`)
     } else if (putId.current !== "") {
       console.log(putId.current)
       form["updatedBy"] = "0"
-      const res = api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-
-      // if (res.status === 200) {
-      history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
-      // }
+      const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
+      await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
     }
-
   };
 
   const classes = useStyles();

@@ -54,21 +54,16 @@ const InvestigationOverview = () => {
 
   const [form, setForm] = useState({});
 
-  const severity_level = ["Level1", "Level2", "Level3", "Level4"];
-
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
-      console.log("here")
       await setForm(allApiData);
       investigationId.current = allApiData.id
-      console.log(investigationId.current)
     }
     // people affected data in local storage
     let workerData = {
@@ -129,14 +124,17 @@ const InvestigationOverview = () => {
   };
 
   const handleNext = async (e) => {
-    // const { error, isValid } = initialdetailvalidate(form);
-    // setError(error);
-    // console.log(error, isValid);
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
     if (putId.current) {
-      history.push(`/app/incident-management/registration/investigation/worker-details/${putId.current}`)
+      if (JSON.parse(localStorage.getItem("personEffected")).length > 0) {
+        history.push(`/app/incident-management/registration/investigation/worker-details/0/${putId.current}`)
+      }
+
     } else {
-      history.push(`/app/incident-management/registration/investigation/worker-details/`)
+      if (JSON.parse(localStorage.getItem("personEffected")).length > 0) {
+        history.push(`/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`)
+      }
+
     }
   };
 

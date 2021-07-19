@@ -78,14 +78,16 @@ const WorkerDetails = () => {
   const putId = useRef("");
   const investigationId = useRef("");
   const [form, setForm] = useState([])
+  const [workerNumber, setWorkerNumber] = useState("")
+  const history = useHistory();
 
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
     department: "",
     workHours: "",
-    shiftTimeStart: null,
-    shiftType: "",
+    shiftTimeStart: "2000-07-15T10:11:11.382000Z",
+    shiftType: "2000-07-15T10:11:11.382000Z",
     occupation: "",
     shiftCycle: "",
     noOfDaysIntoShift: "",
@@ -100,29 +102,29 @@ const WorkerDetails = () => {
     typeOfInjury: "",
     NoOfDaysAway: "",
     medicalResponseTaken: "",
-    treatmentDate: null,
+    treatmentDate: "2000-07-15T10:11:11.382000Z",
     higherMedicalResponder: "",
     injuryStatus: "",
     firstAidTreatment: "",
     mechanismOfInjury: "",
-    isMedicationIssued: "",
-    isPrescriptionIssued: "",
-    isNonPrescription: "",
-    isAnyLimitation: "",
+    isMedicationIssued: "No",
+    isPrescriptionIssued: "No",
+    isNonPrescription: "No",
+    isAnyLimitation: "No",
     supervisorName: "",
     supervisorTimeInIndustry: "",
     supervisorTimeInCompany: "",
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
-    dateOfAlcoholDrugTest: "",
+    dateOfAlcoholDrugTest: "2000-07-15T10:11:11.382000Z",
     isWorkerClearedTest: "N/A",
     reasonForTestNotDone: "",
     status: "Active",
     createdBy: 0,
     fkInvestigationId: investigationId.current,
   })
-  const handelUpdateCheck = async (e) => {
 
+  const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
@@ -131,21 +133,37 @@ const WorkerDetails = () => {
     // getting person affected data 
     const url = window.location.pathname.split('/')
     const workerNum = url[url.length - 2]
+    setWorkerNumber(workerNum)
     let allEffectedPersonData = localStorage.getItem("personEffected")
     let particularEffected = JSON.parse(allEffectedPersonData)[workerNum]
+    console.log(workerNum)
     if (typeof particularEffected !== "undefined") {
+
       setForm(particularEffected)
     }
     // getting person affected data end
 
     let investigationData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = investigationData.data.data.results[0];
-
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
     }
     await setIsLoading(true);
+
+    // JSON.parse(allEffectedPersonData).map((value, i) => {
+    //   INVESTIGATION_FORM[`Worker${i}`] = `/app/incident-management/registration/investigation/worker-details/${i}/${incidentId}`
+    // })
+    console.log(workerNumber)
   };
+
+  const handelAddNew = async () => {
+    let worker = JSON.parse(localStorage.getItem("personEffected"))
+
+    await worker.splice(parseInt(workerNumber) + 1, 0, workerData)
+    await localStorage.setItem("personEffected", JSON.stringify(worker))
+    // await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) + 1}/${localStorage.getItem("fkincidentId")}`)
+    await handleNext()
+  }
 
   const radioDecide = ["Yes", "No", "N/A"];
   const radioYesNo = ["Yes", "No"];
@@ -212,16 +230,23 @@ const WorkerDetails = () => {
 
     const res = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
     if (res.status == 201) {
-      console.log("request done")
-    }
-    //   localStorage.setItem("workerId", workerId);
-    //   history.push(`/app/incident-management/registration/investigation/event-details/`)
+      let worker = JSON.parse(localStorage.getItem("personEffected"))
+      form["id"] = res.data.data.results.id
 
-    // }
-    // history.push(`/app/incident-management/registration/investigation/event-details/`)
+      worker[workerNumber] = form
+      await localStorage.setItem("personEffected", JSON.stringify(worker))
+
+      if (typeof worker[parseInt(workerNumber) + 1] !== "undefined") {
+        await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) + 1}/${localStorage.getItem("fkincidentId")}`)
+      } else {
+        await history.push(`/app/incident-management/registration/investigation/event-details/`)
+      }
+    }
+    await handelUpdateCheck()
   };
 
   const PickList = async () => {
+    await handelUpdateCheck()
     workerType.current = await PickListData(71);
     departmentName.current = await PickListData(10);
     workHours.current = await PickListData(70);
@@ -244,8 +269,18 @@ const WorkerDetails = () => {
     await setIsLoading(true);
   };
 
+  const handelPrevious = async () => {
+
+    let worker = JSON.parse(localStorage.getItem("personEffected"))
+    if (typeof worker[parseInt(workerNumber) - 1] !== "undefined") {
+      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) - 1}/${localStorage.getItem("fkincidentId")}`)
+    } else {
+      await history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
+    }
+    await handelUpdateCheck()
+  }
+
   useEffect(() => {
-    handelUpdateCheck();
     PickList();
   }, []);
 
@@ -267,7 +302,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Name"
                 required
-                defaultValue={form.name}
+                value={form.name}
                 error={error && error.name}
                 helperText={error && error.name ? error.name : null}
                 className={classes.formControl}
@@ -292,8 +327,8 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Type"
-                  // defaultValue={incidentsListData.fkUnitId}
-                  defaultValue={form.workerType}
+                  // value={incidentsListData.fkUnitId}
+                  value={form.workerType}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -324,7 +359,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Department"
-                  defaultValue={form.department}
+                  value={form.department}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -355,7 +390,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Number of Scheduled Work Hours"
-                  defaultValue={form.workHours}
+                  value={form.workHours}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -376,7 +411,7 @@ const WorkerDetails = () => {
                 <KeyboardTimePicker
                   disableFuture
                   className={classes.formControl}
-                  defaultValue={form.shiftTimeStart}
+                  value={form.shiftTimeStart}
                   label="Start of shift time"
                   value={form.shiftTimeStart}
                   // value={
@@ -403,7 +438,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Type of Shift"
-                  defaultValue={form.shiftType}
+                  value={form.shiftType}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -431,7 +466,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Occupation"
-                  defaultValue={form.occupation}
+                  value={form.occupation}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -462,7 +497,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Shift Cycle"
-                  defaultValue={form.shiftCycle}
+                  value={form.shiftCycle}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -494,7 +529,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Number of Days into Shift"
-                  defaultValue={form.noOfDaysIntoShift}
+                  value={form.noOfDaysIntoShift}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -525,7 +560,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time in company"
-                  defaultValue={form.timeInCompany}
+                  value={form.timeInCompany}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -555,7 +590,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time on project"
-                  defaultValue={form.timeOnProject}
+                  value={form.timeOnProject}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -586,7 +621,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Time in Industry"
-                  defaultValue={form.timeInIndustry}
+                  value={form.timeInIndustry}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -617,7 +652,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Event leading to injury"
                 className={classes.formControl}
-                defaultValue={form.eventLeadingToInjury}
+                value={form.eventLeadingToInjury}
                 error={error && error.eventLeadingToInjury}
                 helperText={
                   error && error.eventLeadingToInjury
@@ -641,7 +676,7 @@ const WorkerDetails = () => {
                 label="Injury object"
                 className={classes.formControl}
                 error={error && error.injuryObject}
-                defaultValue={form.injuryObject}
+                value={form.injuryObject}
                 helperText={
                   error && error.injuryObject ? error.injuryObject : null
                 }
@@ -669,7 +704,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Primary Body Part Side Included"
-                  defaultValue={form.primaryBodyPartWithSide}
+                  value={form.primaryBodyPartWithSide}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -703,7 +738,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Secondary Body Part Included"
-                  defaultValue={form.secondaryBodyPartWithSide}
+                  value={form.secondaryBodyPartWithSide}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -737,7 +772,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Type of injury illness"
-                  defaultValue={form.typeOfInjury}
+                  value={form.typeOfInjury}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -762,7 +797,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Number of Days Away/On Restriction"
                 error={error && error.NoOfDaysAway}
-                defaultValue={form.NoOfDaysAway}
+                value={form.NoOfDaysAway}
                 helperText={
                   error && error.NoOfDaysAway ? error.NoOfDaysAway : null
                 }
@@ -782,7 +817,7 @@ const WorkerDetails = () => {
                 id="title"
                 variant="outlined"
                 label="Medical Response Taken"
-                defaultValue={form.medicalResponseTaken}
+                value={form.medicalResponseTaken}
                 error={error && error.medicalResponseTaken}
                 helperText={
                   error && error.medicalResponseTaken
@@ -806,7 +841,7 @@ const WorkerDetails = () => {
                   className={classes.formControl}
                   label="Treatment Date"
                   value={form.treatmentDate}
-                  defaultValue={form.treatmentDate}
+                  value={form.treatmentDate}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -835,7 +870,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Highest Medical Responder"
-                  defaultValue={form.higherMedicalResponder}
+                  value={form.higherMedicalResponder}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -862,7 +897,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Status Update"
                 error={error && error.injuryStatus}
-                defaultValue={form.injuryStatus}
+                value={form.injuryStatus}
                 helperText={
                   error && error.injuryStatus ? error.injuryStatus : null
                 }
@@ -890,7 +925,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="First Aid Treatment"
-                  defaultValue={form.firstAidTreatment}
+                  value={form.firstAidTreatment}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -922,7 +957,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Mechanism of Injury"
-                  defaultValue={form.mechanismOfInjury}
+                  value={form.mechanismOfInjury}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -951,7 +986,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Medical Issued ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isMedicationIssued}
+                  value={form.isMedicationIssued}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -975,7 +1010,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Prescription Issues ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isPrescriptionIssued}
+                  value={form.isPrescriptionIssued}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -999,7 +1034,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Non-Prescription ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isNonPrescription}
+                  value={form.isNonPrescription}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1023,7 +1058,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Any Limitation ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={form.isAnyLimitation}
+                  value={form.isAnyLimitation}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1053,7 +1088,7 @@ const WorkerDetails = () => {
                 <FormLabel component="legend">Was the test taken?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
-                  defaultValue={
+                  value={
                     form.isAlcoholDrugTestTaken
                       ? form.isAlcoholDrugTestTaken
                       : "No"
@@ -1082,7 +1117,7 @@ const WorkerDetails = () => {
                       required
                       className={classes.formControl}
                       value={form.dateOfAlcoholDrugTest}
-                      defaultValue={form.dateOfAlcoholDrugTest}
+                      value={form.dateOfAlcoholDrugTest}
                       label="Date of Test"
                       helperText={
                         error.incidentdate ? error.incidentdate : null
@@ -1107,7 +1142,7 @@ const WorkerDetails = () => {
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
-                      defaultValue={form.isWorkerClearedTest}
+                      value={form.isWorkerClearedTest}
                       onChange={(e) => {
                         setForm({
                           ...form,
@@ -1133,7 +1168,7 @@ const WorkerDetails = () => {
                   variant="outlined"
                   label="Why was the test not conducted?"
                   className={classes.formControl}
-                  defaultValue={form.reasonForTestNotDone}
+                  value={form.reasonForTestNotDone}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1159,7 +1194,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Supervisor Name"
                 error={error && error.supervisorName}
-                defaultValue={form.supervisorName}
+                value={form.supervisorName}
                 helperText={
                   error && error.supervisorName ? error.supervisorName : null
                 }
@@ -1188,7 +1223,7 @@ const WorkerDetails = () => {
                   labelId="unit-name-label"
                   id="unit-name"
                   label="Supervisor Time in Industry"
-                  defaultValue={form.supervisorTimeInIndustry}
+                  value={form.supervisorTimeInIndustry}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1228,7 +1263,7 @@ const WorkerDetails = () => {
                       supervisorTimeInCompany: e.target.value,
                     });
                   }}
-                  defaultValue={form.supervisorTimeInCompany}
+                  value={form.supervisorTimeInCompany}
                 >
                   {supervisorTimeInCompany.current.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
@@ -1262,7 +1297,7 @@ const WorkerDetails = () => {
                       supervisorTimeOnProject: e.target.value,
                     });
                   }}
-                  defaultValue={form.supervisorTimeOnProject}
+                  value={form.supervisorTimeOnProject}
                 >
                   {supervisorTimeOnProject.current.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
@@ -1297,11 +1332,7 @@ const WorkerDetails = () => {
             <Grid item md={12}>
               <button
                 className={classes.textButton}
-                onClick={(e) =>
-                  history.push(
-                    "/app/incident-management/registration/investigation/worker-details/"
-                  )
-                }
+                onClick={(e) => handelAddNew()}
               >
                 Add new worker
               </button>
@@ -1312,7 +1343,7 @@ const WorkerDetails = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+                onClick={() => handelPrevious()}
               >
                 Previous
               </Button>
