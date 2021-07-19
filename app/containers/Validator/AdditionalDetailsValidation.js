@@ -9,7 +9,7 @@ function AdditionalDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        dataObj.error = "This field is required";
+        dataObj.error = "please enter label name";
         error.push(dataObj);
         isValid = false;
       } else {

@@ -209,7 +209,6 @@ const PersonalAndPpeDetails = () => {
 
   const handleNext = async () => {
     if (id && ppeList.length > 19) {
-      console.log("sagar");
       const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
       if (res.status === 200) {
         history.push(
@@ -228,7 +227,6 @@ const PersonalAndPpeDetails = () => {
       }
     } else {
       const valdation = ppeData;
-      console.log(valdation);
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
       await setError(error);
       if (!isValid) {
@@ -239,7 +237,6 @@ const PersonalAndPpeDetails = () => {
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         ppeData
       );
-      console.log(res);
 
       history.push(
         "/app/incident-management/registration/evidence/additional-details/"
@@ -270,13 +267,11 @@ const PersonalAndPpeDetails = () => {
     }
     await setIsLoading(true);
   };
-  console.log(ppeList);
   const fetchppeDetails = async () => {
     const res = await api.get(
       `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
     );
     const result = res.data.data.results;
-    console.log(result);
 
     await setPpeList(result);
 
@@ -356,7 +351,6 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
                 {ppeData.slice(4, 9).map((value, index) => (
                   <>
-                    {console.log(index)}
                     <Grid item md={6}>
                       <FormControl
                         component="fieldset"
@@ -471,7 +465,6 @@ const PersonalAndPpeDetails = () => {
             ) : (
               <>
                 <Grid item md={6}>
-                  {console.log(ppeList)}
                   <FormControl
                     component="fieldset"
                     required

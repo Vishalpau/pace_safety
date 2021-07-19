@@ -80,22 +80,21 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
-// Status Button
-function StatusButton(props) {
-  return <Button color="primary" size="large" {...props} />;
-}
-
 const Summary = () => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
+  const [investigationOverview, setInvestigationOverview] = useState({});
   const [investigation, setInvestigation] = useState(false);
+  const [evidencesData, setEvidencesData] = useState({});
   const [evidence, setEvidence] = useState(false);
+  const [paceCauseData, setPaceCauseData] = useState({});
+  const [rootCausesData, setRootCausesData] = useState({});
+  const [whyData, setWhyData] = useState({});
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
+  const [lessionlearnData, setLessionLearnData] = useState({});
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialNoticeficationStatus, setInitialNotificationStatus] = useState(false);
-  const [lessionLearntStatus, setLessionLearntStatus] = useState(false)
-  const rootCauseStatus = useRef(false)
+  const rootCauseStatus = useRef(false);
 
   const { id } = useParams();
   const history = useHistory();
@@ -105,37 +104,32 @@ const Summary = () => {
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
-    if(allIncidents.status === 200){
-      await setIncidents(allIncidents.data.data.results);
-      await setIsLoading(true);
-      if(result.length > 0 ){
-        localStorage.setItem("LessionLearnt", "Done")
-      }
-      else{
-        localStorage.setItem("LessionLearnt", "Pending")
-      }
-    }    
+    await setIncidents(allIncidents.data.data.results);
+    await setIsLoading(true);
   };
 
-  const fetchReortedByDataList = async()=>{
-    
-    const res = await api.get(`/api/v1/incidents/${id}/reports/`);
-    if(res.status===200){
-      const result = res.data.data.results;
-      if(result.length > 0){
-        setInitialNotificationStatus(true)
-      }
-    }
+  const fetchInvestigationData = async () => {
+    let res = await api.get(`/api/v1/incidents/${id}/investigations/`);
+    let result = res.data.data.results[0];
+    await setInvestigationOverview(result);
+  };
 
-  }
+  const fetchEvidenceData = async () => {
+    const allEvidence = await api.get(`/api/v1/incidents/${id}/activities/`);
+    const result = allEvidence.data.data.results[24];
+    await setEvidencesData(result);
+  };
+
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
-    if(res.status===200){
-      const result = res.data.data.results;
-      if(result.length > 0){
-        setLessionLearntStatus(true)
-      }
-    } 
+    const result = res.data.data.results[0];
+    await setLessionLearnData(result);
+    //   if(result.length > 0 ){
+    //     localStorage.setItem("LessionLearnt", "Done")
+    //   }
+    //   else{
+    //     localStorage.setItem("LessionLearnt", "Pending")
+    //   }
   };
 
   const rootCauseAnalysisCheck = async () => {
@@ -151,23 +145,26 @@ const Summary = () => {
     let paceCause = await api.get(
       `/api/v1/incidents/${incidentId}/pacecauses/`
     );
-    let paceCauseData = paceCause.data.data.results;
+    let paceCauseData = paceCause.data.data.results[0];
+    console.log(paceCauseData)
+    await setPaceCauseData(paceCauseData);
 
     let rootCause = await api.get(
       `/api/v1/incidents/${incidentId}/rootcauses/`
     );
     let rootCauseData = rootCause.data.data.results[0];
+    await setRootCausesData(rootCauseData);
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
-    let whyAnalysisData = whyAnalysis.data.data.results;
+    let whyAnalysisData = whyAnalysis.data.data.results[0];
+    await setWhyData(whyAnalysisData);
 
-    if (
-      (paceCauseData.length > 0 && typeof paceCauseData !== "undefined") ||
-      (rootCauseData.length > 0 && typeof rootCauseData !== "undefined") ||
-      (whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined")
-    ) {
-      rootCauseStatus.current = true;
-    }
+    // if (paceCauseData.length > 0 && typeof paceCauseData !== "undefined" ||
+    //   rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
+    //   whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
+    // ) {
+    //   rootCauseStatus.current = true
+    // }
   };
 
   const [selectedDate, setSelectedDate] = React.useState(
@@ -178,13 +175,16 @@ const Summary = () => {
     setSelectedDate(date);
   };
 
+  const selectValues = [1, 2, 3, 4];
+  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
   useEffect(() => {
     fetchIncidentData();
+    fetchInvestigationData();
+    fetchEvidenceData();
     fetchLessonLerned();
     rootCauseAnalysisCheck();
-    fetchReortedByDataList();
   }, []);
 
   return (
@@ -199,15 +199,13 @@ const Summary = () => {
               <div className={Styles.item}>
                 <Button
                   color="primary"
-                  variant={
-                    initialNoticeficationStatus
-                      ? "contained"
-                      : "outlined"
-                  }
+                  variant="contained"
                   size="small"
-                  className={classes.statusButton}
+                  variant={
+                    incidents.isEquipmentDamaged ? "contained" : "outlined"
+                  }
                   endIcon={
-                    initialNoticeficationStatus ? (
+                    incidents.isEquipmentDamaged ? (
                       <CheckCircle />
                     ) : (
                       <AccessTime />
@@ -225,7 +223,7 @@ const Summary = () => {
                   Initial Notification
                 </Button>
                 <Typography variant="caption" display="block">
-                  {initialNoticeficationStatus? "Done": "Pending"}
+                  {incidents.isEquipmentDamaged ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -234,7 +232,10 @@ const Summary = () => {
                   color="primary"
                   variant="outlined"
                   size="small"
-                  endIcon={<AccessTime />}
+                  variant={investigationOverview ? "contained" : "outlined"}
+                  endIcon={
+                    investigationOverview ? <CheckCircle /> : <AccessTime />
+                  }
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(false);
@@ -247,27 +248,17 @@ const Summary = () => {
                   Investigation
                 </Button>
                 <Typography variant="caption" display="block">
-                  Pending
+                  {investigationOverview ? "Done" : "Pending"}
                 </Typography>
               </div>
 
               <div className={Styles.item}>
                 <Button
                   color="primary"
-                  variant={
-                    localStorage.getItem("Evidence") == "Done"
-                      ? "contained"
-                      : "outlined"
-                  }
+                  variant={evidencesData ? "contained" : "outlined"}
                   size="small"
                   className={classes.statusButton}
-                  endIcon={
-                    localStorage.getItem("Evidence") == "Done" ? (
-                      <CheckCircle />
-                    ) : (
-                      <AccessTime />
-                    )
-                  }
+                  endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
                     setInitialNotification(false);
                     setInvestigation(false);
@@ -279,23 +270,21 @@ const Summary = () => {
                   Evidence
                 </Button>
                 <Typography variant="caption" display="block">
-                  {localStorage.getItem("Evidence") == "Done"
-                    ? "Done"
-                    : "Pending"}
+                  {evidencesData ? "Done" : "Pending"}
                 </Typography>
               </div>
               <div className={Styles.item}>
                 <Button
                   color="primary"
                   variant={
-                    localStorage.getItem("RootCause") == "Done"
+                    paceCauseData || rootCausesData || whyData
                       ? "contained"
                       : "outlined"
                   }
                   size="small"
                   className={classes.statusButton}
                   endIcon={
-                    localStorage.getItem("RootCause") == "Done" ? (
+                    paceCauseData || rootCausesData || whyData ? (
                       <CheckCircle />
                     ) : (
                       <AccessTime />
@@ -312,7 +301,7 @@ const Summary = () => {
                   Root Cause & Analysis
                 </Button>
                 <Typography variant="caption" display="block">
-                  {localStorage.getItem("RootCause") == "Done"
+                  {paceCauseData || rootCausesData || whyData
                     ? "Done"
                     : "Pending"}
                 </Typography>
@@ -320,20 +309,10 @@ const Summary = () => {
               <div className={Styles.item}>
                 <Button
                   color="primary"
-                  variant={
-                    lessionLearntStatus
-                      ? "contained"
-                      : "outlined"
-                  }
+                  variant={lessionlearnData ? "contained" : "outlined"}
                   size="small"
                   className={classes.statusButton}
-                  endIcon={
-                    lessionLearntStatus ? (
-                      <CheckCircle />
-                    ) : (
-                      <AccessTime />
-                    )
-                  }
+                  endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
                     setInitialNotification(false);
                     setInvestigation(false);
@@ -345,9 +324,7 @@ const Summary = () => {
                   Lessons Learnt
                 </Button>
                 <Typography variant="caption" display="block">
-                  {lessionLearntStatus
-                    ? "Done"
-                    : "Pending"}
+                  {lessionlearnData ? "Done" : "Pending"}
                 </Typography>
               </div>
             </div>
@@ -357,6 +334,7 @@ const Summary = () => {
           <Box marginTop={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={9}>
+                {/* summary and part */}
                 <>
                   {(() => {
                     if (
@@ -400,16 +378,26 @@ const Summary = () => {
                       <ListItemText primary="Modify Notification" />
                     </ListItemLink>
 
-                    <ListItemLink
-                      href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}
-                    >
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                      <ListItemText primary="Modify Investigation" />
-                    </ListItemLink>
+                    {investigationOverview ? (
+                      <ListItemLink
+                        href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}
+                      >
+                        <ListItemIcon>
+                          <Edit />
+                        </ListItemIcon>
+                        <ListItemText primary="Modify Investigation" />
+                      </ListItemLink>
+                    ) : (
+                      <ListItemLink href="/app/incident-management/registration/investigation/investigation-overview/">
+                        <ListItemIcon>
+                          <Add />
+                        </ListItemIcon>
 
-                    {localStorage.getItem("Evidence") == "Done" ? (
+                        <ListItemText primary="Add Investigation" />
+                      </ListItemLink>
+                    )}
+
+                    {evidencesData ? (
                       <ListItemLink
                         href={`/app/incident-management/registration/evidence/evidence/${id}`}
                       >
@@ -427,7 +415,7 @@ const Summary = () => {
                         <ListItemText primary="Add Evidence" />
                       </ListItemLink>
                     )}
-                    {localStorage.getItem("RootCause") == "Done" ? (
+                    {paceCauseData || rootCausesData || whyData ? (
                       <ListItemLink
                         href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
                       >
@@ -446,7 +434,7 @@ const Summary = () => {
                         <ListItemText primary="Perform RCA" />
                       </ListItemLink>
                     )}
-                    {lessionLearntStatus ? (
+                    {lessionlearnData ? (
                       <ListItemLink
                         href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}
                       >

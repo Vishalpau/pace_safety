@@ -101,7 +101,6 @@ const HazardiousActs = () => {
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
       checkPost.current = false
-
       setForm({
         ...form,
         supervision: {
@@ -421,6 +420,20 @@ const HazardiousActs = () => {
     }
   };
 
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/`
+      );
+    }
+
+  }
+
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -442,7 +455,7 @@ const HazardiousActs = () => {
       {console.log("here")}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
+          <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -450,6 +463,15 @@ const HazardiousActs = () => {
               {incidentDetail.incidentNumber}
             </Typography>
           </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              RCA method
+            </Typography>
+            <Typography className={Type.labelValue}>
+              PACE cause analysis
+            </Typography>
+          </Grid>
+
           <Grid item md={12}>
             <FormControl
               component="fieldset"
@@ -637,7 +659,7 @@ const HazardiousActs = () => {
               color="primary"
               className={classes.button}
               // href="/app/incident-management/registration/root-cause-analysis/details/"
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>

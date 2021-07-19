@@ -122,6 +122,20 @@ const BasicCauseAndAction = () => {
     }
   };
 
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/`
+      );
+    }
+
+  }
+
   let form_link = window.location.href;
 
   const fetchIncidentDetails = async () => {
@@ -203,9 +217,7 @@ const BasicCauseAndAction = () => {
               </List>
 
             ))}
-            <button className={classes.textButton}>
-              <AddCircleOutlineIcon /> Add a new action
-            </button>
+
           </Grid>
 
           <Grid item md={12}>
@@ -213,7 +225,7 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={() => history.goBack()}
+              onClick={(e) => handelPrevious(e)}
             >
               Previous
             </Button>
