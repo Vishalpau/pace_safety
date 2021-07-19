@@ -47,6 +47,13 @@ function Header(props) {
   const [fullScreen, setFullScreen] = useState(false);
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
+  
+  // const [projectDataList, setProjectListData] = useState({})
+
+  // get project data
+  
+  let projectData = JSON.parse(localStorage.getItem('projectDataList'))
+  // setProjectListData(projectData)
 
   // Initial header style
   let flagDarker = false;
@@ -178,25 +185,13 @@ function Header(props) {
             <MuiThemeProvider theme={theme}>
               <div className={classes.projectSwitcher}>
                 <Typography variant="body2">Project:</Typography>
-                <FormControl
-                  size="small"
-                  variant="outlined"
-                  className={classes.projectSelect}
-                >
-                  {/* <InputLabel id="projectSwitch-label">Project</InputLabel> */}
-                  <Select
-                    labelId="projectSwitch-label"
-                    id="projectSwitch"
-                    value={age}
-                    // label="Project"
-                    aria-label="Project"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
+                <Breadcrumbs
+              className={classes.projectBreadcrumbs}
+              separator={<NavigateNextIcon fontSize="small" />}
+            >
+              <Chip size="large" label={projectData.projectName} />
+              
+            </Breadcrumbs>
               </div>
             </MuiThemeProvider>
 

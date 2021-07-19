@@ -78,7 +78,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -89,7 +89,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id||localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -100,7 +100,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -111,7 +111,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -122,7 +122,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -133,7 +133,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -144,7 +144,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -155,7 +155,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id||localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -166,7 +166,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -177,7 +177,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId") ,
       error: "",
     },
     {
@@ -188,7 +188,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -199,7 +199,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -210,7 +210,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
   ]);
@@ -218,30 +218,38 @@ const Evidence = () => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const fetchEvidenceList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    let lastItem = id ? id : localStorage.getItem("fkincidentId")
+    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
+    console.log(res)
     const result = res.data.data.results;
 
     let tempData = [];
     if (result.length) {
       // await setForm(result);
       for (let i = 0; i < result.length; i++) {
-        console.log(result[i]);
+        console.log(result[i].evidenceDocument)
         tempData.push({
           evidenceCategory: result[i].evidenceCategory,
           evidenceCheck: result[i].evidenceCheck,
           evidenceRemark: result[i].evidenceRemark,
-          evidenceDocument: "",
+          evidenceDocument: result[i].evidenceDocument,
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
-          fkIncidentId: localStorage.getItem("fkincidentId"),
+          fkIncidentId:id|| localStorage.getItem("fkincidentId"),
           pk: result[i].id,
         });
       }
     }
-    await setEvideceData(tempData);
-    await setForm(tempData);
+   
+    if(result.length > 1){
+      await setForm(tempData);
+      await setEvideceData(tempData);
+      console.log(form)
+      
+    }
     await setIsLoading(true);
+    
   };
 
   // const fetchEvidenceData = async () => {
@@ -285,10 +293,11 @@ const Evidence = () => {
   // console.log(evideceData)
   const fetchIncidentDetails = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")||id}/`
     );
     const result = res.data.data.results;
     await setIncidentDetail(result);
+    
   };
 
   // On the next button click function call.
@@ -301,92 +310,42 @@ const Evidence = () => {
     if (!isValid) {
       return "Data is not valid";
     }
-
-    for (let i = 0; i < form.length; i++) {
-      console.log([i]);
-
-      let data = new FormData();
-      data.append("evidenceCheck", form[i].evidenceCheck);
-      data.append("evidenceCategory", form[i].evidenceCategory);
-      data.append("evidenceRemark", form[i].evidenceRemark);
-      data.append("evidenceDocument", form[i].evidenceDocument);
-      data.append("status", "Active");
-      data.append("updatedBy", "");
-
-      // If update is the case.
-      if (id) {
-        console.log("in put");
-        console.log("evidence id", evideceData[i].pk);
-        data.append("pk", evideceData[i].pk);
-
-        const res = await api.put(
-          `/api/v1/incidents/${id}/evidences/${evideceData[i].pk}/`,
-          data
-        );
-        if (res.status === 200) {
+    if(isValid === true){
+      if(evideceData.length > 0){
+        // const id = id || localStorage.getItem("fkincidentId")
+        alert(id)
+        let status =0;
+        for(var i =0; i<form.length; i++){
+          const res = await api.put(
+            `/api/v1/incidents/${id}/evidences/${evideceData[i].pk}/`,
+            form[i]
+          );
+          status = res.status
+        }
+        if(status === 200){
           history.push(
             `/app/incident-management/registration/evidence/activity-detail/${id}`
           );
         }
-        // If non update case is there.
-      } else if (
-        localStorage.getItem("fkincidentId") &&
-        evideceData.length > 0
-      ) {
-        console.log("dd put");
-        // console.log(evideceData)
-        for (let i = 0; i < evideceData.length; i++) {
-          let data = new FormData();
-          data.append("pk", evideceData[i].pk);
-          data.append("evidenceCheck", evideceData[i].evidenceCheck);
-          data.append("evidenceNumber", evideceData[i].evidenceNumber);
-          data.append("evidenceCategory", evideceData[i].evidenceCategory);
-          data.append("evidenceDocument", evideceData[i].evidenceDocument);
-          data.append("status", "Active");
-          data.append("createdAt", evideceData[i].createdAt);
-          data.append("createdBy", evideceData[i].createdBy);
-          data.append("updatedAt", evideceData[i].updatedAt);
-          data.append("updatedBy", evideceData[i].updatedBy);
-          data.append("fkIncidentId", evideceData[i].fkIncidentId);
-        }
-        console.log(data);
-        // const res = await api.put(
-        //   `/api/v1/incidents/${localStorage.getItem(
-        //     "fkincidentId"
-        //   )}/evidences/${evideceData[i].pk}/`,
-        //   data
-        // );
-
-        history.push(
-          `/app/incident-management/registration/evidence/activity-detail/`
+      }
+      else{
+        let status = 0
+        for(var i =0; i<form.length; i++){
+        const res = await api.post(
+          `/api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/evidences/`,
+          form[i]
         );
-      } else {
-        data.append("createdAt", form[i].createdAt);
-        data.append("createdBy", form[i].createdBy);
-        data.append("updatedAt", form[i].updatedAt);
-        data.append("updatedBy", form[i].updatedBy);
-        data.append("fkIncidentId", form[i].fkIncidentId);
-
-        if (Object.keys(error).length == 0) {
-          console.log("in post");
-          const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/evidences/`,
-            data
+        }
+        if(status === 200){
+          history.push(
+            `/app/incident-management/registration/evidence/activity-detail/${id}`
           );
-
-          console.log(res.data.data.results);
-          if (res.status === 201) {
-            // const queId = res.data.data.results.id;
-            // localStorage.setItem("id", queId);
-            history.push(
-              "/app/incident-management/registration/evidence/activity-detail/"
-            );
-          }
         }
       }
     }
+   
   };
 
   const handleClose = (event, reason) => {
@@ -408,12 +367,15 @@ const Evidence = () => {
   };
 
   const handleFile = async (e, index) => {
+    console.log(e.target.files[0])
+    const formdata = new FormData()
     let TempPpeData = [...form];
     if (
       (TempPpeData[index].evidenceDocument =
         e.target.files[0].size <= 1024 * 1024 * 25)
     ) {
-      TempPpeData[index].evidenceDocument = e.target.files[0];
+      
+      TempPpeData[index].evidenceDocument = formdata.append('evidenceDocument',e.target.files[0]);
       await setForm(TempPpeData);
     } else {
       await setOpen(true);
@@ -447,17 +409,19 @@ const Evidence = () => {
 
   useEffect(() => {
     // fetchEvidenceData();
+    // fetchEvidenceList();
     fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
     } else {
-      setIsLoading(true);
+      fetchEvidenceList();
+      // setIsLoading(true);
     }
   }, []);
 
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
-      {console.log(form)}
+    {/* {console.log(form)} */}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -552,6 +516,7 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
+                                {form[index].evidenceDocument ? <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> :
                                   <input
                                     type="file"
                                     className={classes.fullWidth}
@@ -567,13 +532,14 @@ const Evidence = () => {
                                       // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
                                   />
+                                  }
                                 </TableCell>
                               </TableRow>
                             </>
                           ))}
                       </>
                     ) : (
-                      <>
+                      <>{console.log("sagar")}
                         {Object.entries(form)
                         .map(([index, value]) => (
                           <>

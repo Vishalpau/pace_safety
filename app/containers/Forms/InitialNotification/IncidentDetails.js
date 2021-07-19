@@ -563,7 +563,6 @@ const IncidentDetails = () => {
                 )}
               </FormControl>
             </Grid>
-{console.log(error.incidentdate ? error.incidentdate : null)}
                   {/* Date and Time */}
             <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
