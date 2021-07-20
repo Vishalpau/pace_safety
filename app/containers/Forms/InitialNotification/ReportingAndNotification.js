@@ -290,9 +290,9 @@ const ReportingAndNotification = () => {
             }
           }
         }
-        console.log(newData);
-        for (const key in newData) {
-          const name = newData[key];
+        let unique = [...new Set(newData)];
+        for (const key in unique) {
+          const name = unique[key];
 
           try {
             const res = await api.post(

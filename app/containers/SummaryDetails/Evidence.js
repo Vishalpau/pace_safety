@@ -110,6 +110,8 @@ const EvidenceSummary = () => {
   const [activity, setActivity] = useState([]);
   const [isLoading, setIsLoding] = useState(false);
   const [documentUrl, setDocumentUrl] = useState("");
+  const [expanded, setExpanded] = React.useState(false);
+
   const { id } = useParams();
 
   const [modalStyle] = React.useState(getModalStyle);
@@ -127,11 +129,18 @@ const EvidenceSummary = () => {
     window.location.href = `${documentUrl}`;
   };
 
+<<<<<<< HEAD
   // const handleLink  = (e) => {
   //   if(e.endsWith("png")){
   //     return <ImageIcon/>
   //   }
   // }
+=======
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+>>>>>>> ad66bc272d1a3f50756bc59c988ce6ba1cfe75a3
   // const handleDownload = (url, filename) => {
   //   axios
   //     .get(url, {
@@ -167,11 +176,14 @@ const EvidenceSummary = () => {
 
   const classes = useStyles();
   return (
-    <PapperBlock title=" Evidences" icon="ion-md-list-box">
+    <>
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Accordion>
+            <Accordion
+              expanded={expanded === "panel1"}
+              onChange={handleExpand("panel1")}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>Evidence</Typography>
               </AccordionSummary>
@@ -280,7 +292,10 @@ const EvidenceSummary = () => {
             </Accordion>
           </Grid>
           <Grid item xs={12}>
-            <Accordion>
+            <Accordion
+              expanded={expanded === "panel2"}
+              onChange={handleExpand("panel2")}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>
                   Activity Details
@@ -369,7 +384,7 @@ const EvidenceSummary = () => {
           </Box>
         </div>
       </Modal>
-    </PapperBlock>
+    </>
   );
 };
 export default EvidenceSummary;
