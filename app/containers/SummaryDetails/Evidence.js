@@ -11,7 +11,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { useHistory, useParams } from "react-router";
 import {
@@ -60,6 +60,12 @@ import ImageIcon from "@material-ui/icons/Image";
 import VideoCallIcon from "@material-ui/icons/VideoCall";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import DescriptionIcon from "@material-ui/icons/Description";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 
 // Styles
 import Styles from "dan-styles/Summary.scss";
@@ -96,6 +102,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
   },
 }));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function getModalStyle() {
   return {
@@ -324,58 +334,30 @@ const EvidenceSummary = () => {
         <h1>Loading...</h1>
       )}
 
-      <Modal className={classes.modal} open={open} onClose={handleClose}>
-        <div className={classes.paper}>
-          <Typography variant="h6" gutterBottom>
-            View Attachment
-          </Typography>
-          <Typography>Please choose what do you want to?</Typography>
-          <Box marginTop={4}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Button
-                  startIcon={<VisibilityIcon />}
-                  style={{ width: "100%" }}
-                  variant="contained"
-                  disableElevation
-                  href={`${documentUrl}`}
-                  target="_blank"
-                >
-                  View Attachment
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button
-                  startIcon={<GetAppIcon />}
-                  style={{ width: "100%" }}
-                  variant="contained"
-                  color="primary"
-                  onClick={() => downloadFile()}
-                  disableElevation
-                  target="_blank"
-                >
-                  Download Attachment
-                </Button>
-                {/* <button
-                crossorigin="anonymous"
-                  onClick={() => {
-                    handleDownload(
-                      `${documentUrl}`
-                    );
-                  }}
-                >
-                  Download Image
-                </button> */}
-
-                {/* <a href=""
-                
-                download> Download Here </a> */}
-                {/* <a href={`${documentUrl}`} target="_blank" download >dd</a> */}
-              </Grid>
-            </Grid>
-          </Box>
-        </div>
-      </Modal>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        keepMounted
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {" Please choose what do you want to?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            <Button
+              startIcon={<GetAppIcon />}
+              variant="contained"
+              color="primary"
+              onClick={() => downloadFile()}
+              disableElevation
+              target="_blank"
+            >
+              Download Attachment
+            </Button>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
