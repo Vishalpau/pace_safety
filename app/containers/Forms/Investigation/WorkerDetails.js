@@ -55,8 +55,8 @@ const WorkerDetails = () => {
   const [testTaken, seTesttaken] = useState(false);
   const [error, setError] = useState({});
   const workerType = useRef([]);
-  const departmentName = useRef([]);
-  const workHours = useRef([]);
+  const [departmentName, setDepartmentName] = useState([]);
+  const [workHours, setworkHours] = useState([])
   const shiftType = useRef([]);
   const occupation = useRef([]);
   const shiftCycle = useRef([]);
@@ -80,6 +80,8 @@ const WorkerDetails = () => {
   const [form, setForm] = useState([])
   const [workerNumber, setWorkerNumber] = useState("")
   const history = useHistory();
+  const [workerid, setWorkerId] = useState()
+  let [localWorkerData, setLocalWorkerData] = useState([])
 
   let [workerData, setworkerData] = useState({
     name: "",
@@ -138,11 +140,13 @@ const WorkerDetails = () => {
     let particularEffected = JSON.parse(allEffectedPersonData)[workerNum]
     console.log(workerNum)
     if (typeof particularEffected !== "undefined") {
-
       setForm(particularEffected)
     }
+    if (typeof particularEffected.id !== "undefined" || particularEffected.id != "") {
+      setWorkerId(particularEffected.id)
+    }
     // getting person affected data end
-
+    setLocalWorkerData(JSON.parse(localStorage.getItem("personEffected")))
     let investigationData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = investigationData.data.data.results[0];
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
@@ -153,7 +157,6 @@ const WorkerDetails = () => {
     // JSON.parse(allEffectedPersonData).map((value, i) => {
     //   INVESTIGATION_FORM[`Worker${i}`] = `/app/incident-management/registration/investigation/worker-details/${i}/${incidentId}`
     // })
-    console.log(workerNumber)
   };
 
   const handelAddNew = async () => {
@@ -228,10 +231,32 @@ const WorkerDetails = () => {
     data.append("createdBy", form.createdBy);
     data.append("fkInvestigationId", investigationId.current);
 
-    const res = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
-    if (res.status == 201) {
+    let res = []
+    if (typeof data.get("attachments") == "string" && typeof form.id !== "undefined") {
+      console.log(form.id)
+      delete form["attachments"]
+      form["fkInvestigationId"] = investigationId.current
+      const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, form);
+      res.push(ress)
+    } else if (form.attachments == "") {
+      delete form["attachments"]
+      form["fkInvestigationId"] = investigationId.current
+      const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, form);
+      res.push(ress)
+    }
+    else {
+      form["fkInvestigationId"] = investigationId.current
+      const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
+      res.push(ress)
+    }
+
+    if (res[0].status == 201 || res[0].status == 200) {
+      console.log(res[0].status)
       let worker = JSON.parse(localStorage.getItem("personEffected"))
-      form["id"] = res.data.data.results.id
+      form["id"] = res[0].data.data.results.id
+      if (res[0].data.data.results.attachments !== null && res[0].data.data.results.attachments !== {}) {
+        form["attachments"] = res[0].data.data.results.attachments
+      }
 
       worker[workerNumber] = form
       await localStorage.setItem("personEffected", JSON.stringify(worker))
@@ -248,8 +273,10 @@ const WorkerDetails = () => {
   const PickList = async () => {
     await handelUpdateCheck()
     workerType.current = await PickListData(71);
-    departmentName.current = await PickListData(10);
-    workHours.current = await PickListData(70);
+    // departmentName.current = await PickListData(10);
+    setDepartmentName(await PickListData(10))
+    // workHours.current = await PickListData(70);
+    setworkHours(await PickListData(70))
     shiftType.current = await PickListData(47);
     occupation.current = await PickListData(48);
     shiftCycle.current = await PickListData(49);
@@ -280,6 +307,23 @@ const WorkerDetails = () => {
     await handelUpdateCheck()
   }
 
+  const handelRemove = async () => {
+    let worker_removed = JSON.parse(localStorage.getItem("personEffected"))
+    await worker_removed.splice(workerNumber, 1)
+    await localStorage.setItem("personEffected", JSON.stringify(worker_removed))
+    if (typeof worker_removed[parseInt(workerNumber)] !== "undefined") {
+      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber)}/${localStorage.getItem("fkincidentId")}`)
+    } else {
+      await history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
+    }
+    await handelUpdateCheck()
+  }
+
+  const handelWorkerNavigate = async (e, index) => {
+    await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(index)}/${localStorage.getItem("fkincidentId")}`)
+    await handelUpdateCheck()
+  }
+
   useEffect(() => {
     PickList();
   }, []);
@@ -287,7 +331,7 @@ const WorkerDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
-      {/* {console.log(form)} */}
+      {/* {console.log(workerid)} */}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -367,7 +411,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {departmentName.current.map((value) => (
+                  {departmentName.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -398,7 +442,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {workHours.current.map((value) => (
+                  {workHours.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1326,17 +1370,27 @@ const WorkerDetails = () => {
                   handleFile(e);
                 }}
               />
+              {/* {form.attachments != "" ? <p>{form.attachments}</p> : null} */}
             </Grid>
             {/* </>))} */}
 
-            <Grid item md={12}>
-              <button
-                className={classes.textButton}
+            <Grid item md={4}>
+              <Button
                 onClick={(e) => handelAddNew()}
               >
                 Add new worker
-              </button>
+              </Button>
             </Grid>
+
+            <Grid item md={4}>
+              <Button
+                onClick={(e) => handelRemove()}
+              >
+                Delete
+              </Button>
+            </Grid>
+
+
 
             <Grid item md={12}>
               <Button
@@ -1359,17 +1413,26 @@ const WorkerDetails = () => {
             </Grid>
           </Grid>
           <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem="Worker details"
-            />
+            <Grid item md={12}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={INVESTIGATION_FORM}
+                selectedItem="Worker details"
+              />
+            </Grid>
+            <Grid item md={4}>
+              {localWorkerData.map((value, index) => (
+                <Button onClick={(e) => handelWorkerNavigate(e, index)}>{`Worker ${index + 1}`}</Button>
+              ))}
+            </Grid>
+
           </Grid>
         </Grid>
       ) : (
         <h1>Loading...</h1>
-      )}
-    </PapperBlock>
+      )
+      }
+    </PapperBlock >
   );
 };
 

@@ -189,8 +189,6 @@ const Details = () => {
 
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
-    localStorage.setItem("rcaMethod", form.rcaRecommended);
-
   };
 
   useEffect(() => {

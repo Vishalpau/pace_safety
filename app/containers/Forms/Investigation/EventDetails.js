@@ -137,6 +137,7 @@ const EventDetails = () => {
 
 
     }
+    localStorage.setItem("WorkerPost", "done")
   };
 
   const handelWeather = async (e, key, value) => {
@@ -684,7 +685,7 @@ const EventDetails = () => {
               color="primary"
               className={classes.button}
               onClick={() => history.goBack()}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
+            // href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
             >
               Previous
             </Button>

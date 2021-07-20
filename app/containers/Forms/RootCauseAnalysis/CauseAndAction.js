@@ -200,7 +200,7 @@ const BasicCauseAndAction = () => {
               Method
             </Typography>
             <Typography className={Type.labelValue}>
-              {localStorage.getItem("rcaMethod")}
+              PACE cause analysis
             </Typography>
           </Grid>
 

@@ -93,6 +93,7 @@ const InvestigationOverview = () => {
     await handelUpdateCheck()
     severityValues.current = await PickListData(41)
     setIsLoading(true)
+    localStorage.removeItem("WorkerDataFetched");
   }
 
   useEffect(() => {
