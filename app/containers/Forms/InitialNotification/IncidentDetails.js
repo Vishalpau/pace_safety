@@ -506,7 +506,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
                   {/* Unit Name */}
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Unit name</InputLabel>
                 <Select
@@ -528,7 +528,7 @@ const IncidentDetails = () => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid> */}
 
                     {/* Incident Type */}
             <Grid item xs={12} md={6}>
@@ -563,7 +563,6 @@ const IncidentDetails = () => {
                 )}
               </FormControl>
             </Grid>
-{console.log(error.incidentdate ? error.incidentdate : null)}
                   {/* Date and Time */}
             <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
