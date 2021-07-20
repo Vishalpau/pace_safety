@@ -1,17 +1,21 @@
-import * as initial_details from "../constants/initialDetails"
-const initialState = {
-  usersLogin: Map({
-    email: 'johndoe@mail.com',
-    password: '12345678',
-    remember: false
-  })
-};
-const initialImmutableState = fromJS(initialState);
-export default function reducer(state = initialImmutableState, action = {}) {
-  switch (action.type) {
-    case INIT:
-      return state;
-    default:
-      return state;
-  }
+import * as actionType from '../constants/initialDetails'
+
+const INITIAL_STATE = {
+    projectName:{},
+    error:null ,
+    userDetails:[] 
 }
+
+const InitialDetailsReducer = (state = INITIAL_STATE,action)=>{
+  console.log(action)
+    switch(action.type){
+        case actionType.PROJECT_NAME:
+            return{...state, projectName:action.payload} 
+        case actionType.USER_DETAILS:
+          return{...state, projectName:action.payload} 
+        default:
+            return state
+    }
+};
+
+export default InitialDetailsReducer;
