@@ -243,6 +243,8 @@ const IncidentDetailsSummary = () => {
           {incidents["subContractor"]}
         </Typography>
       </Grid>
+      {/* People Affected */}
+      {peopleData.length>0?
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel1"}
@@ -342,6 +344,9 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
+     :null}
+     {/* Property affect */}
+     {propertyData.length>0?
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel2"}
@@ -407,7 +412,9 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      {/* Equipment Affected */}
+     :null}
+     {/* Equipment Affected */}
+     {equipmentData.length>0?
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel3"}
@@ -481,7 +488,9 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-
+      :null}
+      {/* Environment Affected */}
+      {enviornmentData.length?
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel4"}
@@ -520,7 +529,8 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      {/* Reports & Noticefication */}
+     :null}
+     {/* Reports & Noticefication */}
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel5"}
@@ -674,6 +684,7 @@ const IncidentDetailsSummary = () => {
                       ))
                   : null}
               </Grid>
+           
             </Grid>
           </AccordionDetails>
         </Accordion>
