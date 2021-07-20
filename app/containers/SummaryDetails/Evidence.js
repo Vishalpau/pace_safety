@@ -101,6 +101,14 @@ const useStyles = makeStyles((theme) => ({
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
   },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  dialogPaper: {
+    minWidth: 700,
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -339,10 +347,18 @@ const EvidenceSummary = () => {
         onClose={handleClose}
         TransitionComponent={Transition}
         keepMounted
+        PaperProps={{
+          style: {
+            width: 700,
+          },
+        }}
       >
         <DialogTitle id="alert-dialog-slide-title">
           {" Please choose what do you want to?"}
         </DialogTitle>
+        <IconButton onClick={handleClose} className={classes.closeButton}>
+          <Close />
+        </IconButton>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             <Button
