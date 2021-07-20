@@ -32,6 +32,8 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import styles from "./header-jss";
 
+import { useSelector } from "react-redux";
+import {connect } from "react-redux"
 // const useStyles = makeStyles((theme) => ({
 //   button: {
 //     color: theme.palette.primary.contrastText,
@@ -48,10 +50,22 @@ function Header(props) {
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
 
+  const quoteDetails = useSelector((state) => state);
+  console.log('state', quoteDetails)
+  
+  // const [projectDataList, setProjectListData] = useState({})
+
+  // get project data
+  
+  // let projectData = JSON.parse(localStorage.getItem('projectDataList'))
+  // setProjectListData(projectData)
+
   // Initial header style
   let flagDarker = false;
 
   let flagTitle = false;
+
+
 
   const handleScroll = () => {
     const doc = document.documentElement;
@@ -122,8 +136,10 @@ function Header(props) {
     title,
     openGuide,
     history,
+    initialValues
   } = props;
 
+  console.log('props', props.initialValues)
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -175,30 +191,19 @@ function Header(props) {
         </Fab>
         <Hidden smDown>
           <div className={classes.headerProperties}>
+          {props.initialValues.projectName === {}?null:
             <MuiThemeProvider theme={theme}>
               <div className={classes.projectSwitcher}>
                 <Typography variant="body2">Project:</Typography>
-                <FormControl
-                  size="small"
-                  variant="outlined"
-                  className={classes.projectSelect}
-                >
-                  {/* <InputLabel id="projectSwitch-label">Project</InputLabel> */}
-                  <Select
-                    labelId="projectSwitch-label"
-                    id="projectSwitch"
-                    value={age}
-                    // label="Project"
-                    aria-label="Project"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
+                <Breadcrumbs
+              className={classes.projectBreadcrumbs}
+              separator={<NavigateNextIcon fontSize="small" />}
+            >
+            <Chip size="large" label={props.initialValues.projectName.projectName || 'JWIL Project 1'} />
+              
+            </Breadcrumbs>
               </div>
-            </MuiThemeProvider>
+            </MuiThemeProvider>}
 
             <div>
               <IconButton
@@ -354,4 +359,10 @@ Header.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+const HeaderInit = connect(
+  state => ({
+    initialValues: state.getIn(['InitialDetailsReducer'])
+  }),
+)(Header);
+
+export default withStyles(styles)(HeaderInit);

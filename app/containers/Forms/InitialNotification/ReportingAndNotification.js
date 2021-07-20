@@ -392,12 +392,24 @@ const ReportingAndNotification = () => {
 
     await setEvidanceForm(temp);
   };
+
   // handle remove evidance
   const handleRemoveEvidance = async (key) => {
     const temp = [...evidanceForm];
     const newData = temp.filter((item, index) => index !== key);
     await setEvidanceForm(newData);
   };
+
+  // handle remove initial evidance from databse
+
+  const removeInitialEvidance = async (evidenceId)=>{
+    const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
+    console.log(res)
+    if(res.status === 200){
+      await fetchEvidanceData();
+    }
+
+  }
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
@@ -678,13 +690,11 @@ const ReportingAndNotification = () => {
                               <Typography
                                 variant="h6"
                                 gutterBottom
-                                className={Fonts.labelName}
                               >
                                 Evidence No
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={Fonts.labelValue}
                               >
                                 {value.evidenceNumber}
                               </Typography>
@@ -693,13 +703,11 @@ const ReportingAndNotification = () => {
                               <Typography
                                 variant="h6"
                                 gutterBottom
-                                className={Fonts.labelName}
                               >
                                 Evidence Check
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={Fonts.labelValue}
                               >
                                 {value.evidenceCheck}
                               </Typography>
@@ -708,13 +716,11 @@ const ReportingAndNotification = () => {
                               <Typography
                                 variant="h6"
                                 gutterBottom
-                                className={Fonts.labelName}
                               >
                                 Evidence Category
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={Fonts.labelValue}
                               >
                                 {value.evidenceCategory}
                               </Typography>
@@ -723,29 +729,35 @@ const ReportingAndNotification = () => {
                               <Typography
                                 variant="h6"
                                 gutterBottom
-                                className={Fonts.labelName}
                               >
                                 Evidence Remark
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={Fonts.labelValue}
                               >
                                 {value.evidenceRemark}
                               </Typography>
                             </Grid>
                             {value.evidenceDocument ? (
-                              <Grid item lg={6} md={6}>
+                              <Grid item lg={9} md={12}>
                                 <Typography
                                   variant="h6"
                                   gutterBottom
-                                  className={Fonts.labelName}
                                 >
                                   Evidence Document
                                 </Typography>
                                 <a href={`${value.evidenceDocument}`}>{value.evidenceDocument}</a>
                               </Grid>
                             ) : null}
+                            <Grid item md={1}>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={() => removeInitialEvidance(value.id)}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>
                           </Grid>
                         </Grid>
                       ))

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import NotFound from "containers/Pages/Standalone/NotFoundDedicated";
 import Auth from "./Auth";
@@ -26,24 +26,9 @@ import api from "../../utils/axios";
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 // client_id:  client_secret:
 function App() {
-  const loggingCheck= async()=>{
-    let config = {
-      method: "get",
-      url: `${SELF_API}`,
-      headers: { 
-        'Authorization': `Bearer ${access_token}`,
-        "Content-Type": "application/json",
-      },
-    };
-    console.log('config',config);
-    await axios(config)
-      .then(function(response) {
-       console.log(response)
-      })
-      .catch(function(error) {
-        console.log(response);
-      });
-  }
+  const [userData, setUserData] = useState([]);
+  const [companyListData, setCompanyListData] = useState([])
+
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
@@ -108,6 +93,7 @@ function App() {
   useEffect(() => {
     // loggingCheck();
     getToken();
+    // console.log(userData)
   },[]);
   return (
     <ThemeWrapper>

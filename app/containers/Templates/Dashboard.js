@@ -60,7 +60,6 @@ function Dashboard(props) {
 
     // Execute all arguments when page changes
     const unlisten = history.listen(() => {
-      loggingCheck();
       window.scrollTo(0, 0);
       setTimeout(() => {
         loadTransition(true);

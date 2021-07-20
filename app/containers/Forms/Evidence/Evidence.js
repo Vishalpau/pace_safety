@@ -78,7 +78,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -89,7 +89,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id||localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -100,7 +100,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -111,7 +111,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -122,7 +122,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -133,7 +133,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -144,7 +144,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -155,7 +155,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id||localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -166,7 +166,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -177,7 +177,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId") ,
       error: "",
     },
     {
@@ -188,7 +188,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -199,7 +199,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -210,7 +210,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId:id|| localStorage.getItem("fkincidentId"),
       error: "",
     },
   ]);
@@ -230,11 +230,11 @@ const Evidence = () => {
           evidenceCategory: result[i].evidenceCategory,
           evidenceCheck: result[i].evidenceCheck,
           evidenceRemark: result[i].evidenceRemark,
-          evidenceDocument: "",
+          evidenceDocument: result[i].evidenceDocument,
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
-          fkIncidentId: localStorage.getItem("fkincidentId"),
+          fkIncidentId:id|| localStorage.getItem("fkincidentId"),
           pk: result[i].id,
         });
       }
@@ -245,6 +245,7 @@ const Evidence = () => {
       await setEvideceData(tempData);
     }
     await setIsLoading(true);
+    
   };
 
   // const fetchEvidenceData = async () => {
@@ -288,10 +289,11 @@ const Evidence = () => {
   // console.log(evideceData)
   const fetchIncidentDetails = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")||id}/`
     );
     const result = res.data.data.results;
     await setIncidentDetail(result);
+    
   };
 
   // On the next button click function call.
@@ -380,6 +382,7 @@ const Evidence = () => {
         }
       }
     }
+   
   };
 
   const handleClose = (event, reason) => {
@@ -401,12 +404,15 @@ const Evidence = () => {
   };
 
   const handleFile = async (e, index) => {
+    console.log(e.target.files[0])
+    const formdata = new FormData()
     let TempPpeData = [...form];
     if (
       (TempPpeData[index].evidenceDocument =
         e.target.files[0].size <= 1024 * 1024 * 25)
     ) {
-      TempPpeData[index].evidenceDocument = e.target.files[0];
+      
+      TempPpeData[index].evidenceDocument = formdata.append('evidenceDocument',e.target.files[0]);
       await setForm(TempPpeData);
     } else {
       await setOpen(true);

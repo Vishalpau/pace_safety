@@ -90,6 +90,7 @@ const LessionLearned = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
+  const [evidence,setEvidence] = useState([])
 
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState("");
@@ -136,7 +137,7 @@ const LessionLearned = () => {
   const handleNext = async () => {
 
     // attachment 
-    alert(attachment.length)
+   
     if(attachment.evidenceDocument !=="" || attachment.length !== undefined){
       const formData = new FormData()
       formData.append('evidenceDocument',attachment.evidenceDocument)
@@ -235,7 +236,16 @@ const LessionLearned = () => {
       });
   };
 
-  // hablde Remove
+ 
+    // Fetch Evidance data
+    const fetchEvidanceData = async () => {  
+      const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
+      if(allEvidence.status === 200){
+        await setEvidence(allEvidence.data.data.results);
+      }
+    };
+
+  // handle Remove
 
   const handleRemove = async (key) => {
     // this condition using when create new
@@ -243,10 +253,22 @@ const LessionLearned = () => {
     const newData = temp.filter((item, index) => index !== key);
     await setForm(newData);
   };
+
+    // handle remove initial evidance from databse
+
+    const removeInitialEvidance = async (evidenceId)=>{
+      const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
+      console.log(res)
+      if(res.status === 200){
+        await fetchEvidanceData();
+      }
+  
+    }
   useEffect(() => {
     fetchDepartment();
     if (id) {
       fetchLessonLerned();
+      fetchEvidanceData();
     }
     fetchIncidentsData();
   }, []);
@@ -331,7 +353,100 @@ const LessionLearned = () => {
                 {incidentsListData.incidentLocation}
               </Typography>
             </Grid>
-
+            <Grid item md={12}>
+                {evidence.length !== 0
+                  ? evidence
+                      .filter(
+                        (item) => item.evidenceCategory === "Lessons Learned"
+                      )
+                      .map((value, index) => (
+                        <Grid
+                          key={index}
+                          className="repeatedGrid"
+                          container
+                          item
+                          md={12}
+                          spacing={3}
+                        >
+                          <Grid container item xs={12} spacing={3}>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                              >
+                                Evidence No
+                              </Typography>
+                              <Typography
+                                variant="body"
+                              >
+                                {value.evidenceNumber}
+                              </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                              >
+                                Evidence Check
+                              </Typography>
+                              <Typography
+                                variant="body"
+                              >
+                                {value.evidenceCheck}
+                              </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                              >
+                                Evidence Category
+                              </Typography>
+                              <Typography
+                                variant="body"
+                              >
+                                {value.evidenceCategory}
+                              </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                              >
+                                Evidence Remark
+                              </Typography>
+                              <Typography
+                                variant="body"
+                              >
+                                {value.evidenceRemark}
+                              </Typography>
+                            </Grid>
+                            {value.evidenceDocument ? (
+                              <Grid item lg={9} md={12}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                >
+                                  Evidence Document
+                                </Typography>
+                                <a href={`${value.evidenceDocument}`}>{value.evidenceDocument}</a>
+                              </Grid>
+                            ) : null}
+                            <Grid item md={1}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => removeInitialEvidance(value.id)}
+                    >
+                      {/* <DeleteForeverIcon /> */} Delete
+                    </Button>
+                  </Grid>
+                          </Grid>
+                        </Grid>
+                      ))
+                  : null}
+              </Grid>
+           
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom>
                 Key learnings
