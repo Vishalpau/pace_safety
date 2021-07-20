@@ -24,6 +24,14 @@ import { useHistory, useParams } from "react-router";
 import ImageIcon from '@material-ui/icons/Image';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import CheckIcon from "@material-ui/icons/Check";
+import Paper from "@material-ui/core/Paper";
+import List from "@material-ui/core/List";
+import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -1434,11 +1442,29 @@ const WorkerDetails = () => {
                 selectedItem="Worker details"
               />
             </Grid>
-            <Grid item md={4}>
-              {localWorkerData.map((value, index) => (
+            <Grid item md={12}>
+              {/* {localWorkerData.map((value, index) => (
                 <Button onClick={(e) => handelWorkerNavigate(e, index)}>{`Worker ${index + 1}`}</Button>
-              ))}
+              ))} */}
+              <Paper elevation={1}>
+                <List dense>
+                  {localWorkerData.map((value, index) => (
+                    <ListItem className={classes.notActiveList}>
+                      <ListItemIcon className={classes.icon}>
+                        {workerNumber == index ? <DoubleArrowIcon fontSize="small" /> : <RemoveCircleOutlineIcon />}
+                      </ListItemIcon>
+                      <ListItemText primary={
+
+                        <a onClick={(e) => handelWorkerNavigate(e, index)}>
+                          {`Worker ${index + 1}`}
+                        </a>} />
+
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
             </Grid>
+
 
           </Grid>
         </Grid>
