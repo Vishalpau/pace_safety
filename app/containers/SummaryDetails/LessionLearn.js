@@ -40,6 +40,7 @@ import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
 
 // Styles
+import "../../styles/custom.css";
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
@@ -52,7 +53,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Modal from "@material-ui/core/Modal";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,7 +75,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function getModalStyle() {
   return {
     top: "50%",
@@ -87,12 +86,12 @@ function getModalStyle() {
 const LessionLearnSummary = () => {
   const [lessionlearn, setLessionLearn] = useState([]);
   const fkid = localStorage.getItem("fkincidentId");
-  const [evidence,setEvidence] = useState([]);
+  const [evidence, setEvidence] = useState([]);
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
-  const [documentUrl, setDocumentUrl] = useState('')
-  
+  const [documentUrl, setDocumentUrl] = useState("");
+
   const handleOpen = (document) => {
     setDocumentUrl(document);
     setOpen(true);
@@ -108,9 +107,8 @@ const LessionLearnSummary = () => {
   };
 
   const fetchEvidanceData = async () => {
-    
     const allEvidence = await api.get(`/api/v1/incidents/${fkid}/evidences/`);
-    if(allEvidence.status === 200){
+    if (allEvidence.status === 200) {
       await setEvidence(allEvidence.data.data.results);
     }
   };
@@ -118,7 +116,7 @@ const LessionLearnSummary = () => {
   console.log(lessionlearn);
   useEffect(() => {
     fetchLessionLearnData();
-    console.log(open)
+    console.log(open);
     fetchEvidanceData();
   }, []);
   const classes = useStyles();
@@ -132,8 +130,13 @@ const LessionLearnSummary = () => {
           <AccordionDetails>
             {lessionlearn.length !== 0
               ? lessionlearn.map((lession, key) => (
-                  <Grid container item md={9} spacing={3} key={key}>
-                    <Grid lg={6} md={6}>
+                  <Grid
+                    container
+                    spacing={3}
+                    key={key}
+                    className="repeatedGrid"
+                  >
+                    <Grid item xs={12}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -141,15 +144,11 @@ const LessionLearnSummary = () => {
                       >
                         Team Or Department
                       </Typography>
-                      <Typography
-                        variant="p"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {lession.teamOrDepartment}
                       </Typography>
                     </Grid>
-                    <Grid lg={6} md={6}>
+                    <Grid item xs={12}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -157,20 +156,20 @@ const LessionLearnSummary = () => {
                       >
                         Learnings
                       </Typography>
-                      <Typography
-                        variant="p"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {lession.learnings}
                       </Typography>
                     </Grid>
                   </Grid>
                 ))
               : null}
-                <Grid item md={12}>
+            <Grid item md={12}>
               {evidence.length !== 0
-                  ? evidence.filter(item=> item.evidenceCategory === "Lessons Learned").map((value, index) => (
+                ? evidence
+                    .filter(
+                      (item) => item.evidenceCategory === "Lessons Learned"
+                    )
+                    .map((value, index) => (
                       <Grid
                         key={index}
                         className="repeatedGrid"
@@ -269,36 +268,34 @@ const LessionLearnSummary = () => {
                         </Grid>
                       </Grid>
                     ))
-                  : null}
-              </Grid>
-                  {/* Modal */}
-        <Modal className={classes.modal} open={open} onClose={handleClose}>
-        <div className={classes.paper}>
-        <Typography variant="h6" gutterBottom>
-            View Attachment
-          </Typography>
-          <Typography>Please choose what do you want to?</Typography>
-          <Box marginTop={4}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Button
-                  startIcon={<VisibilityIcon />}
-                  style={{ width: "100%" }}
-                  variant="contained"
-                  disableElevation
-                  href={`${documentUrl}`}
-                  target="_blank"
-                >
-                  View Attachment
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-              </Grid>
+                : null}
             </Grid>
-          </Box>
-        </div>
-      </Modal>
-
+            {/* Modal */}
+            <Modal className={classes.modal} open={open} onClose={handleClose}>
+              <div className={classes.paper}>
+                <Typography variant="h6" gutterBottom>
+                  View Attachment
+                </Typography>
+                <Typography>Please choose what do you want to?</Typography>
+                <Box marginTop={4}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Button
+                        startIcon={<VisibilityIcon />}
+                        style={{ width: "100%" }}
+                        variant="contained"
+                        disableElevation
+                        href={`${documentUrl}`}
+                        target="_blank"
+                      >
+                        View Attachment
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6} />
+                  </Grid>
+                </Box>
+              </div>
+            </Modal>
           </AccordionDetails>
         </Accordion>
       </Grid>

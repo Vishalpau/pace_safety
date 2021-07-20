@@ -47,6 +47,7 @@ export const EVIDENCE_FORM = {
     "/app/incident-management/registration/evidence/additional-details/",
 };
 
+
 export const INVESTIGATION_FORM = {
   "Investigation overview":
     "/app/incident-management/registration/investigation/investigation-overview/",
@@ -57,7 +58,7 @@ export const INVESTIGATION_FORM = {
   "Event details":
     "/app/incident-management/registration/investigation/event-details/",
   "Action taken":
-    "/app/incident-management/registration/investigation/action-taken/",
+    "/app/incident-management/registration/investigation/action-taken/"
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {

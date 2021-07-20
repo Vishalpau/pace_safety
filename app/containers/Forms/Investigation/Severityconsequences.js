@@ -52,93 +52,147 @@ const InvestigationOverview = () => {
   const financialValues = useRef([])
   const classificationValues = useRef([])
 
-  const [form, setForm] = useState({});
 
-  const severity_level = ["Level1", "Level2", "Level3", "Level4"];
+  const [form, setForm] = useState({});
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
-      console.log("here")
       await setForm(allApiData);
       investigationId.current = allApiData.id
-      console.log(investigationId.current)
+    }
+    if (localStorage.getItem("WorkerPost") == "done") {
+      let worker_temp = []
+      let workerApiDataFetch = await api.get(`api/v1/incidents/${incidentId}/investigations/${investigationId.current}/workers/`);
+      let workerApiData = workerApiDataFetch.data.data.results
+      workerApiData.map((value) => {
+        worker_temp.push(value)
+      })
+      console.log(worker_temp)
+      localStorage.setItem("personEffected", JSON.stringify(worker_temp))
+    } else {
+      if (localStorage.getItem("WorkerDataFetched") !== "Yes") {
+        let workerData = {
+          name: "",
+          workerType: "",
+          department: "",
+          workHours: "",
+          shiftTimeStart: "2000-07-15T10:11:11.382000Z",
+          shiftType: "2000-07-15T10:11:11.382000Z",
+          occupation: "",
+          shiftCycle: "",
+          noOfDaysIntoShift: "",
+          timeInCompany: "",
+          timeOnProject: "",
+          timeInIndustry: "",
+          attachments: "",
+          eventLeadingToInjury: "",
+          injuryObject: "",
+          primaryBodyPartWithSide: "",
+          secondaryBodyPartWithSide: "",
+          typeOfInjury: "",
+          NoOfDaysAway: "",
+          medicalResponseTaken: "",
+          treatmentDate: "2000-07-15T10:11:11.382000Z",
+          higherMedicalResponder: "",
+          injuryStatus: "",
+          firstAidTreatment: "",
+          mechanismOfInjury: "",
+          isMedicationIssued: "No",
+          isPrescriptionIssued: "No",
+          isNonPrescription: "No",
+          isAnyLimitation: "No",
+          supervisorName: "",
+          supervisorTimeInIndustry: "",
+          supervisorTimeInCompany: "",
+          supervisorTimeOnProject: "",
+          isAlcoholDrugTestTaken: "No",
+          dateOfAlcoholDrugTest: "2000-07-15T10:11:11.382000Z",
+          isWorkerClearedTest: "N/A",
+          reasonForTestNotDone: "",
+          status: "Active",
+          createdBy: 0,
+          fkInvestigationId: investigationId.current,
+        }
+        let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
+        let PeopleAffectedData = PeopleAffected.data.data.results
+
+        let temp = []
+        PeopleAffectedData.map((value, i) => {
+          temp.push({
+            ...workerData, ...{
+              "name": value.personName,
+              "department": value.personDepartment
+            }
+          })
+        })
+        localStorage.setItem("personEffected", JSON.stringify(temp))
+      }
     }
     // people affected data in local storage
-    let workerData = {
-      name: "",
-      workerType: "",
-      department: "",
-      workHours: "",
-      shiftTimeStart: "2000-07-15T10:11:11.382000Z",
-      shiftType: "2000-07-15T10:11:11.382000Z",
-      occupation: "",
-      shiftCycle: "",
-      noOfDaysIntoShift: "",
-      timeInCompany: "",
-      timeOnProject: "",
-      timeInIndustry: "",
-      attachments: "",
-      eventLeadingToInjury: "",
-      injuryObject: "",
-      primaryBodyPartWithSide: "",
-      secondaryBodyPartWithSide: "",
-      typeOfInjury: "",
-      NoOfDaysAway: "",
-      medicalResponseTaken: "",
-      treatmentDate: "2000-07-15T10:11:11.382000Z",
-      higherMedicalResponder: "",
-      injuryStatus: "",
-      firstAidTreatment: "",
-      mechanismOfInjury: "",
-      isMedicationIssued: "No",
-      isPrescriptionIssued: "No",
-      isNonPrescription: "No",
-      isAnyLimitation: "No",
-      supervisorName: "",
-      supervisorTimeInIndustry: "",
-      supervisorTimeInCompany: "",
-      supervisorTimeOnProject: "",
-      isAlcoholDrugTestTaken: "No",
-      dateOfAlcoholDrugTest: "2000-07-15T10:11:11.382000Z",
-      isWorkerClearedTest: "N/A",
-      reasonForTestNotDone: "",
-      status: "Active",
-      createdBy: 0,
-      fkInvestigationId: investigationId.current,
-    }
-    let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
-    let PeopleAffectedData = PeopleAffected.data.data.results
 
-    let temp = []
-    PeopleAffectedData.map((value, i) => {
-      temp.push({
-        ...workerData, ...{
-          "name": value.personName,
-          "department": value.personDepartment
-        }
-      })
-    })
-    localStorage.setItem("personEffected", JSON.stringify(temp))
   };
 
   const handleNext = async (e) => {
-    // const { error, isValid } = initialdetailvalidate(form);
-    // setError(error);
-    // console.log(error, isValid);
-    console.log(form)
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
     if (putId.current) {
-      history.push(`/app/incident-management/registration/investigation/worker-details/${putId.current}`)
-    } else {
-      history.push(`/app/incident-management/registration/investigation/worker-details/`)
+      if (JSON.parse(localStorage.getItem("personEffected")).length > 0) {
+        history.push(`/app/incident-management/registration/investigation/worker-details/0/${putId.current}`)
+      } else {
+        let workerData = {
+          name: "",
+          workerType: "",
+          department: "",
+          workHours: "",
+          shiftTimeStart: "2000-07-15T10:11:11.382000Z",
+          shiftType: "2000-07-15T10:11:11.382000Z",
+          occupation: "",
+          shiftCycle: "",
+          noOfDaysIntoShift: "",
+          timeInCompany: "",
+          timeOnProject: "",
+          timeInIndustry: "",
+          attachments: "",
+          eventLeadingToInjury: "",
+          injuryObject: "",
+          primaryBodyPartWithSide: "",
+          secondaryBodyPartWithSide: "",
+          typeOfInjury: "",
+          NoOfDaysAway: "",
+          medicalResponseTaken: "",
+          treatmentDate: "2000-07-15T10:11:11.382000Z",
+          higherMedicalResponder: "",
+          injuryStatus: "",
+          firstAidTreatment: "",
+          mechanismOfInjury: "",
+          isMedicationIssued: "No",
+          isPrescriptionIssued: "No",
+          isNonPrescription: "No",
+          isAnyLimitation: "No",
+          supervisorName: "",
+          supervisorTimeInIndustry: "",
+          supervisorTimeInCompany: "",
+          supervisorTimeOnProject: "",
+          isAlcoholDrugTestTaken: "No",
+          dateOfAlcoholDrugTest: "2000-07-15T10:11:11.382000Z",
+          isWorkerClearedTest: "N/A",
+          reasonForTestNotDone: "",
+          status: "Active",
+          createdBy: 0,
+          fkInvestigationId: investigationId.current,
+        }
+        localStorage.setItem("personEffected", JSON.stringify([workerData]))
+        history.push(`/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`)
+
+      }
+
     }
+    localStorage.setItem("WorkerDataFetched", "Yes")
   };
 
   const handelDeaultValue = (value) => {
