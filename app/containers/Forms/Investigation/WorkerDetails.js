@@ -21,6 +21,9 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import { useHistory, useParams } from "react-router";
+import ImageIcon from '@material-ui/icons/Image';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -238,13 +241,19 @@ const WorkerDetails = () => {
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, form);
       res.push(ress)
-    } else if (form.attachments == "") {
+    } else if (!isNaN(form.id) && typeof data.get("attachments").name == "string") {
+      form["fkInvestigationId"] = investigationId.current
+      const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
+      res.push(ress)
+    }
+    else if (form.attachments == "") {
       delete form["attachments"]
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, form);
       res.push(ress)
     }
     else {
+      console.log("here")
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
       res.push(ress)
@@ -309,6 +318,10 @@ const WorkerDetails = () => {
 
   const handelRemove = async () => {
     let worker_removed = JSON.parse(localStorage.getItem("personEffected"))
+    if (!isNaN(worker_removed[workerNumber].id)) {
+      let deleteWorkerNumber = worker_removed[workerNumber]
+      const deleteWorker = await api.delete(`api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId}/workers/${deleteWorkerNumber.id}/`)
+    }
     await worker_removed.splice(workerNumber, 1)
     await localStorage.setItem("personEffected", JSON.stringify(worker_removed))
     if (typeof worker_removed[parseInt(workerNumber)] !== "undefined") {
@@ -1027,7 +1040,7 @@ const WorkerDetails = () => {
 
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Medical Issued ?</FormLabel>
+                <FormLabel component="legend">Medical issued ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isMedicationIssued}
@@ -1051,7 +1064,7 @@ const WorkerDetails = () => {
 
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Prescription Issues ?</FormLabel>
+                <FormLabel component="legend">Prescription issues ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isPrescriptionIssued}
@@ -1075,7 +1088,7 @@ const WorkerDetails = () => {
 
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Non-Prescription ?</FormLabel>
+                <FormLabel component="legend">Non-prescription ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isNonPrescription}
@@ -1099,7 +1112,7 @@ const WorkerDetails = () => {
 
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Any Limitation ?</FormLabel>
+                <FormLabel component="legend">Any limitation ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isAnyLimitation}
@@ -1123,7 +1136,7 @@ const WorkerDetails = () => {
 
             <Grid item md={12}>
               <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6">Alcohal and drug test</Typography>
+                <Typography variant="h6">Alcohol and drug test</Typography>
               </Box>
             </Grid>
 
@@ -1236,7 +1249,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Supervisor Name"
+                label="Supervisor name"
                 error={error && error.supervisorName}
                 value={form.supervisorName}
                 helperText={
@@ -1261,12 +1274,12 @@ const WorkerDetails = () => {
                 className={classes.formControl}
               >
                 <InputLabel id="unit-name-label">
-                  Supervisor Time in Industry
+                  Supervisor time in Industry
                 </InputLabel>
                 <Select
                   labelId="unit-name-label"
                   id="unit-name"
-                  label="Supervisor Time in Industry"
+                  label="Supervisor time in industry"
                   value={form.supervisorTimeInIndustry}
                   onChange={(e) => {
                     setForm({
@@ -1370,7 +1383,7 @@ const WorkerDetails = () => {
                   handleFile(e);
                 }}
               />
-              {/* {form.attachments != "" ? <p>{form.attachments}</p> : null} */}
+              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p>Image not uploaded</p>}
             </Grid>
             {/* </>))} */}
 
@@ -1378,7 +1391,7 @@ const WorkerDetails = () => {
               <Button
                 onClick={(e) => handelAddNew()}
               >
-                Add new worker
+                Add new worker <AddIcon />
               </Button>
             </Grid>
 
@@ -1386,7 +1399,8 @@ const WorkerDetails = () => {
               <Button
                 onClick={(e) => handelRemove()}
               >
-                Delete
+                Delete <DeleteForeverIcon />
+
               </Button>
             </Grid>
 
