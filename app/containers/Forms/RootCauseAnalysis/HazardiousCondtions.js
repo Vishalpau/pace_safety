@@ -70,7 +70,7 @@ const HazardiousCondition = () => {
   const history = useHistory();
   const [incidentDetail, setIncidentDetail] = useState({});
   const updateIds = useRef();
-  const checkPost = useRef()
+  const checkPost = useRef();
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -88,10 +88,14 @@ const HazardiousCondition = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/pacecauses/`
+    );
     let allApiData = previousData.data.data.results;
-    console.log(allApiData)
+    // console.log(allApiData)
     if (allApiData.length > 8) {
       putId.current = incidentId;
       allApiData.map((value) => {
@@ -103,7 +107,7 @@ const HazardiousCondition = () => {
         }
       });
       updateIds.current = tempApiDataId.reverse();
-      checkPost.current = false
+      checkPost.current = false;
 
       setForm({
         ...form,
@@ -142,6 +146,7 @@ const HazardiousCondition = () => {
         },
       });
     }
+    console.log(checkPost.current);
   };
 
   const handelWarningSystems = (e, value) => {
@@ -289,14 +294,18 @@ const HazardiousCondition = () => {
     });
 
     // api call //
+    console.log(tempData);
     let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`
-            , callObjects[key]);
+            `/api/v1/incidents/${putId.current}/pacecauses/${
+              callObjects[key].pk
+            }/`,
+            callObjects[key]
+          );
           if (res.status == 200) {
             console.log("request done");
             nextPageLink = res.status;
@@ -304,24 +313,27 @@ const HazardiousCondition = () => {
         } else {
           const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId")}/pacecauses/`,
-            callObjects[key]);
+              "fkincidentId"
+            )}/pacecauses/`,
+            callObjects[key]
+          );
           if (res.status == 201) {
             console.log("request done");
             nextPageLink = res.status;
           }
         }
       }
-      if (nextPageLink == 201 && Object.keys(error).length === 0) {
-        history.push(
-          "/app/incident-management/registration/root-cause-analysis/cause-and-action/"
-        );
-      } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-        history.push(
-          `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
-          }`
-        );
-      }
+    }
+    if (nextPageLink == 201 && Object.keys(error).length === 0) {
+      history.push(
+        "/app/incident-management/registration/root-cause-analysis/cause-and-action/"
+      );
+    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
+          putId.current
+        }`
+      );
     }
     // api call //
   };
@@ -338,10 +350,27 @@ const HazardiousCondition = () => {
     await setIncidentDetail(result);
   };
 
+  const handelPrevious = () => {
+    if (!isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+          putId.current
+        }`
+      );
+    } else if (isNaN(putId.current)) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/`
+      );
+    }
+  };
+
+  const habelCallback = async () => {
+    await handelUpdateCheck();
+    await fetchIncidentDetails();
+  };
+
   useEffect(() => {
-    fetchIncidentDetails();
-    handelUpdateCheck();
-    // location.reload()
+    habelCallback();
   }, []);
 
   return (
@@ -349,7 +378,7 @@ const HazardiousCondition = () => {
       title="Immediate causes - hazardous conditions"
       icon="ion-md-list-box"
     >
-      {console.log(checkPost.current)}
+      {/* {console.log(checkPost.current)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -421,8 +450,9 @@ const HazardiousCondition = () => {
 
           {/* tools */}
           <Grid item md={12}>
-            <FormControl component="fieldset" 
-            // required error={error.tools}
+            <FormControl
+              component="fieldset"
+              // required error={error.tools}
             >
               <FormLabel component="legend">Tools</FormLabel>
               <FormGroup>
@@ -473,10 +503,10 @@ const HazardiousCondition = () => {
               id="filled-basic"
               label="Others"
               multiline
-              // required
-              // error={error.others}
+              required
+              error={error.others}
               value={form.others.rcaRemark}
-              // helperText={error ? error.others : ""}
+              helperText={error ? error.others : null}
               rows={3}
               className={classes.formControl}
               onChange={async (e) => handelOthers(e)}
@@ -489,7 +519,7 @@ const HazardiousCondition = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+                onClick={(e) => handelPrevious(e)}
               >
                 Previous
               </Button>

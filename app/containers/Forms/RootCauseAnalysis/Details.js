@@ -120,7 +120,7 @@ const Details = () => {
         "Root cause analysis",
       ]);
     } else if (value == "PACE cause analysis") {
-      setHideArray(["Root cause analysis", "5 Why analysis"]);
+      setHideArray(["Root cause analysis", "Five Why analysis"]);
     } else if (value == "Root cause analysis") {
       setHideArray([
         "Hazardous acts",
@@ -129,7 +129,7 @@ const Details = () => {
         "Basic cause",
         "Basic cause and action",
         "Corrective actions",
-        "5 Why analysis",
+        "Five Why analysis",
       ]);
     }
     setForm({ ...form, rcaRecommended: value });
@@ -274,6 +274,7 @@ const Details = () => {
                 labelId="project-name-label"
                 label="RCA recommended"
                 value={form.rcaRecommended}
+                disabled={checkPost.current == false ? true : false}
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem
@@ -397,7 +398,7 @@ const Details = () => {
           <FormSideBar
             deleteForm={hideArray}
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Details"}
+            selectedItem={"RCA Details"}
           />
         </Grid>
       </Grid>

@@ -184,7 +184,6 @@ const LessionLearned = () => {
             "fkincidentId"
           )}`
         );
-        localStorage.setItem("LessionLearnt", "Done");
       }
     }
   };
@@ -252,7 +251,7 @@ const LessionLearned = () => {
     fetchIncidentsData();
   }, []);
   return (
-    <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
+    <PapperBlock title="Lessons Learnt" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} justify="flex-start" spacing={3}>
@@ -456,7 +455,7 @@ const LessionLearned = () => {
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lesson learned"}
+              selectedItem={"Lessons learnt"}
             />
           </Grid>
         </Grid>

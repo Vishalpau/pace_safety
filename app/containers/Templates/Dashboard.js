@@ -18,12 +18,36 @@ function Dashboard(props) {
   // Initial header style
   const [openGuide, setOpenGuide] = useState(false);
   const [appHeight, setAppHeight] = useState(0);
-  // const loggingCheck= async()=>{
-    // alert('hey ram')
+  const [userData, setUserData] = useState([]);
+  const [companyListData, setCompanyListData] = useState([])
+
+  const loggingCheck= async()=>{
+    let config = {
+      method: "get",
+      url: `${SELF_API}`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    console.log('config',config);
+    await axios(config)
+      .then(function(response) {
+        if(response.status === 200){
+          console.log(response.data.data.results)
+          if(response.data.data.results.length > 0){
+
+          }
+          setUserData(response.data.data.results)
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }   
   
   useEffect(() => {
     const { history, loadTransition } = props;
-    // loggingCheck();
 
     // Adjust min height
     setAppHeight(window.innerHeight + 112);
@@ -36,14 +60,17 @@ function Dashboard(props) {
 
     // Execute all arguments when page changes
     const unlisten = history.listen(() => {
+      loggingCheck();
       window.scrollTo(0, 0);
       setTimeout(() => {
         loadTransition(true);
+        
       }, 500);
     });
 
     return () => {
       if (unlisten != null) {
+
         unlisten();
       }
     };
@@ -172,6 +199,7 @@ function Dashboard(props) {
           </DropMenuLayout>
         )
       }
+      
       { /* Top Bar with Mega Menu */
         layout === 'mega-menu' && (
           <MegaMenuLayout

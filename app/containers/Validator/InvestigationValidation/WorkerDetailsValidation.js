@@ -2,7 +2,7 @@ import { is } from "immutable";
 import validator from "validator";
 
 function WorkerDetailValidator(data) {
-  console.log(data);
+  // console.log(data);
   let isValid = true;
   const error = {};
 
@@ -22,7 +22,7 @@ function WorkerDetailValidator(data) {
 
   // const result =
 
-  console.log("roor", error, isValid);
+  // console.log("roor", error, isValid);
   return { error, isValid };
 }
 

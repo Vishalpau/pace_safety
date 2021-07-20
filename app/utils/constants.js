@@ -17,18 +17,24 @@ export const access_token = localStorage.getItem("access_token");
 export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/"
 
 export const INITIAL_NOTIFICATION_FORM = {
-  "Incident details":
-    `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem('fkincidentId')}`,
-  "People affected":
-    `/app/incident-management/registration/initial-notification/peoples-afftected/${localStorage.getItem('fkincidentId')}`,
-  "Property affected":
-    `/app/incident-management/registration/initial-notification/property-affected/${localStorage.getItem('fkincidentId')}`,
-  "Equipment affected":
-    `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem('fkincidentId')}`,
-  "Environment affected":
-    `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem('fkincidentId')}`,
-  "Reporting and notification":
-    `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem('fkincidentId')}`,
+  "Incident details": `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "People affected": `/app/incident-management/registration/initial-notification/peoples-afftected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Property affected": `/app/incident-management/registration/initial-notification/property-affected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Equipment affected": `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Environment affected": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Reporting and notification": `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
 };
 
 export const EVIDENCE_FORM = {
@@ -55,7 +61,7 @@ export const INVESTIGATION_FORM = {
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
-  Details: "/app/incident-management/registration/root-cause-analysis/details/",
+  "RCA Details": "/app/incident-management/registration/root-cause-analysis/details/",
   "Hazardous acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
   "Hazardous conditions":
@@ -70,7 +76,7 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/management-control/",
   "Root cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
-  "5 Why analysis":
+  "Five Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
@@ -79,7 +85,7 @@ export const SUMMERY_FORM = {
 };
 
 export const LESSION_LEARNED_FORM = {
-  "Lesson learned":
+  "Lessons learnt":
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 
@@ -233,7 +239,7 @@ export const CONDITIONSAFETYITEMS = [
   "Bypassing Safety Critical Devices",
   "Poor Housekeeping - Untidy or Congested Areas",
   "Improper Storage – (Flammable Material Close to Ignition Sources etc.)",
-  "Combustible Dusts - Chemical Fumes, Mists, Smoke",
+  "Combustible Dusts - Chemical Fumes- Mists- Smoke",
   "Inadequate Ventilation",
   "Poor Lighting - Wrong Type of Lighting - Glare",
 ];
