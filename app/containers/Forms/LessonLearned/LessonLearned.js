@@ -25,14 +25,11 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
 
-
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
-
-
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -43,7 +40,7 @@ import {
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
-
+import "../../../styles/custom.css";
 import axios from "axios";
 
 function Alert(props) {
@@ -86,12 +83,12 @@ const LessionLearned = () => {
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
   const [learningList, setLearningList] = useState([]);
-  const [attachment, setAttachment] = useState({evidenceDocument:""});
+  const [attachment, setAttachment] = useState({ evidenceDocument: "" });
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
@@ -110,45 +107,44 @@ const LessionLearned = () => {
     await setForm([...form, { teamOrDepartment: "", learnings: "" }]);
   };
 
-// handleAttchment
+  // handleAttchment
 
-  const handleAttchment = async(e)=>{
-      if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        setAttachment({...attachment,evidenceDocument:e.target.files[0]})
-        await setMessage("File uploaded successfully!");
-        await setMessageType("success");
-        await setOpen(true);
-      } else {
-        await setMessage("File uploading failed! Select file less than 25MB!");
-        await setMessageType("error");
-        await setOpen(true);
-      }
+  const handleAttchment = async (e) => {
+    if (e.target.files[0].size <= 1024 * 1024 * 25) {
+      setAttachment({ ...attachment, evidenceDocument: e.target.files[0] });
+      await setMessage("File uploaded successfully!");
+      await setMessageType("success");
+      await setOpen(true);
+    } else {
+      await setMessage("File uploading failed! Select file less than 25MB!");
+      await setMessageType("error");
+      await setOpen(true);
+    }
     await setEvidanceForm(temp);
-  }
- // handle close snackbar
- const handleClose = (event, reason) => {
-  if (reason === "clickaway") {
-    // setOpenError(false)
-    return;
-  }
-  setOpen(false);
-};
+  };
+  // handle close snackbar
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenError(false)
+      return;
+    }
+    setOpen(false);
+  };
   const handleNext = async () => {
+    // attachment
+    alert(attachment.length);
+    if (attachment.evidenceDocument !== "" || attachment.length !== undefined) {
+      const formData = new FormData();
+      formData.append("evidenceDocument", attachment.evidenceDocument);
+      formData.append("evidenceCheck", "Yes");
+      formData.append("evidenceNumber", "string");
+      formData.append("evidenceCategory", "Lessons Learned");
+      formData.append("createdBy", 0);
+      formData.append("status", "Active");
+      formData.append("fkIncidentId", id);
 
-    // attachment 
-    alert(attachment.length)
-    if(attachment.evidenceDocument !=="" || attachment.length !== undefined){
-      const formData = new FormData()
-      formData.append('evidenceDocument',attachment.evidenceDocument)
-      formData.append('evidenceCheck','Yes')
-      formData.append('evidenceNumber','string')
-      formData.append('evidenceCategory','Lessons Learned')
-      formData.append('createdBy',0)
-      formData.append('status','Active')
-      formData.append('fkIncidentId',id)
-
-      const res = await api.post( `api/v1/incidents/${id}/evidences/`,formData)
-      console.log(res)
+      const res = await api.post(`api/v1/incidents/${id}/evidences/`, formData);
+      console.log(res);
     }
     // sent put request
     let status = 0;
@@ -224,9 +220,8 @@ const LessionLearned = () => {
       .then(function(response) {
         if (response.status === 200) {
           const result = response.data.data.results;
-          setDepartment(result)
-        }
-        else {
+          setDepartment(result);
+        } else {
           // window.location.href = {LOGIN_URL}
         }
       })
@@ -336,9 +331,18 @@ const LessionLearned = () => {
               <Typography variant="h6" gutterBottom>
                 Key learnings
               </Typography>
+            </Grid>
 
+            <Grid item md={12}>
               {form.map((value, key) => (
-                <Grid container spacing={3} item md={12} key={key}>
+                <Grid
+                  container
+                  className="repeatedGrid"
+                  spacing={3}
+                  item
+                  md={12}
+                  key={key}
+                >
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
@@ -374,8 +378,6 @@ const LessionLearned = () => {
                     </FormControl>
                   </Grid>
                   <Grid item md={12}>
-                    {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-
                     <TextField
                       id="outlined-search"
                       required
@@ -388,14 +390,11 @@ const LessionLearned = () => {
                       label="Team/department learnings"
                       className={classes.formControl}
                       variant="outlined"
-                      rows="3"
+                      rows="8"
                       multiline
                       value={value.learnings || ""}
                       onChange={(e) => handleForm(e, key, "learnings")}
                     />
-                    {/* {error && error.teamLearning && (
-                          <p>{error.teamLearning}</p>
-                        )} */}
                   </Grid>
                   {form.length > 1 ? (
                     <Grid item md={3}>
@@ -422,7 +421,7 @@ const LessionLearned = () => {
               </button>
             </Grid>
             <Grid item md={12}>
-            <Snackbar
+              <Snackbar
                 open={open}
                 autoHideDuration={6000}
                 onClose={handleClose}
@@ -431,12 +430,9 @@ const LessionLearned = () => {
                   {message}
                 </Alert>
               </Snackbar>
-            <Typography  varint="p"> Add Attachment</Typography>
-            
-                 <input type="file" onChange = {(e)=> handleAttchment(e)}/>
-                
-              
-              
+              <Typography varint="p"> Add Attachment</Typography>
+
+              <input type="file" onChange={(e) => handleAttchment(e)} />
             </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>
