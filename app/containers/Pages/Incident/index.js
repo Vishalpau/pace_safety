@@ -253,7 +253,7 @@ function BlankPage() {
                         input: classes.inputInput,
                       }}
                       inputProps={{ "aria-label": "search" }}
-                      onChange={(e) => handelSearchIncident(e)}
+                      onChange={(e) => setSeacrhIncident(e.target.value)}
                     />
                   </Paper>
                   <div className="toggleViewButtons">
@@ -530,7 +530,8 @@ function BlankPage() {
               </div>
             ) : (
               <div className="gridView">
-                {Object.entries(incidents).map((item, index) => (
+                {Object.entries(incidents).filter(searchText=>{return searchText[1]['incidentTitle'].toLowerCase().includes(searchIncident.toLowerCase())
+                || searchText[1]["incidentNumber"].includes(searchIncident.toUpperCase())}).map((item, index) => (
                   <Card
                     variant="outlined"
                     className={Incidents.card}

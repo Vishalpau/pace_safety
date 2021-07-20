@@ -101,6 +101,7 @@ const EventDetails = () => {
     putId.current = incidentId;
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
+    console.log(allApiData)
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
@@ -393,7 +394,7 @@ const EventDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Temprature"
+              label="Temperature"
               value={form.temperature}
               onChange={(e) => {
                 setForm({

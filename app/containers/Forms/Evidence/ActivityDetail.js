@@ -73,7 +73,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-03",
-      question: "Was per-job safety discussion held?",
+      question: "Was pre-job safety discussion held?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -95,7 +95,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-05",
-      question: "Was FLA executed for the task?",
+      question: "Was FLHA executed for the task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -117,7 +117,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-07",
-      question: "Was per-zone planning enhanced the post-event?",
+      question: "Was pre-zone planning enhanced the post-event?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -131,8 +131,6 @@ const ActivityDetails = () => {
   const fetchActivityList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
-    console.log(result);
-    console.log(result.length);
     if (result.length) {
       await setActvityList(result);
     }
@@ -145,8 +143,6 @@ const ActivityDetails = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
     );
     const result = res.data.data.results;
-    console.log(result);
-    console.log(result.length);
     if (result.length) {
       let temp = [...activtyList]
       temp = result
@@ -165,7 +161,6 @@ const ActivityDetails = () => {
       return;
     }
     if (id && activtyList.length > 0) {
-      console.log("in put");
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
         activtyList
@@ -180,7 +175,6 @@ const ActivityDetails = () => {
       activtyList.length > 6 &&
       activtyList[0].id
     ) {
-      console.log("dd put");
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
@@ -191,7 +185,6 @@ const ActivityDetails = () => {
         );
       }
     } else {
-      console.log("in Post");
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
@@ -235,7 +228,6 @@ const ActivityDetails = () => {
       {isLoading ? (
         
         <Grid container spacing={3}>
-        {console.log(activtyList)}
           <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
@@ -265,7 +257,6 @@ const ActivityDetails = () => {
                           defaultValue={value.answer || false}
                           onChange={(e) => {
                             handleRadioData(e, value.questionCode);
-                            console.log(value.answer);
                           }}
                           // defaultValue={value.answer}
                         >
@@ -291,7 +282,10 @@ const ActivityDetails = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => history.goBack()}
+
+                onClick={() => {if(id){history.push(`/app/incident-management/registration/evidence/evidence/${id}`)
+
+                }else{ history.push(`/app/incident-management/registration/evidence/evidence/`)}}}
                 // href="/app/incident-management/registration/evidence/evidence/"
               >
                 Previous

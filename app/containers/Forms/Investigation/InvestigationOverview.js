@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const InvestigationOverview = () => {
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const putId = useRef("")
+  const putId = useRef("");
   const history = useHistory();
   const investigationId = useRef("")
   const severityValues = useRef([])
@@ -88,7 +88,6 @@ const InvestigationOverview = () => {
   };
 
   const classes = useStyles();
-
   const callback = async () => {
     await handelUpdateCheck()
     severityValues.current = await PickListData(41)
@@ -97,11 +96,11 @@ const InvestigationOverview = () => {
   }
 
   useEffect(() => {
-    callback()
+    handelUpdateCheck();
+    callback();
   }, []);
 
   return (
-
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
       {/* {console.log(form)} */}
       {isLoading ? (
@@ -280,9 +279,10 @@ const InvestigationOverview = () => {
             />
           </Grid>
         </Grid>
-      ) : (<h1>Loading...</h1>)}
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </PapperBlock>
-
   );
 };
 

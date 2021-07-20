@@ -20,6 +20,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 // Styles
 import api from "../../utils/axios";
 import "../../styles/custom/summary.css";
+import Fonts from "dan-styles/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,13 +37,37 @@ const RootCauseAnalysisSummary = () => {
   const [fiveWhy, setFiveWhy] = useState([]);
   const [causeanalysis, setCauseAnalysis] = useState([]);
   const [pacecauses, setPaceCauses] = useState([]);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const fkid = localStorage.getItem("fkincidentId");
 
-  const subValues = ["Supervision", "Workpackage", "Equipment machinery", "Behaviour issue",
-    "Safety issues", "Ergonimics", "Procedures", "Other acts", "Warning system", "Energy types",
-    "Tools", "Safety items", "Others conditions", "personal", "wellnessFactors", "Others human factors",
-    "Leadership", "processes", "Others job factors", "Management control", "Region support above"]
+  const subValues = [
+    "Supervision",
+    "Workpackage",
+    "Equipment machinery",
+    "Behaviour issue",
+    "Safety issues",
+    "Ergonimics",
+    "Procedures",
+    "Other acts",
+    "Warning system",
+    "Energy types",
+    "Tools",
+    "Safety items",
+    "Others conditions",
+    "personal",
+    "wellnessFactors",
+    "Others human factors",
+    "Leadership",
+    "processes",
+    "Others job factors",
+    "Management control",
+    "Region support above",
+  ];
 
   const fetchRootCauseData = async () => {
     const allRootCause = await api.get(`/api/v1/incidents/${fkid}/rootcauses/`);
@@ -65,11 +90,14 @@ const RootCauseAnalysisSummary = () => {
     const allPaceCauses = await api.get(
       `/api/v1/incidents/${fkid}/pacecauses/`
     );
-    let paceData = allPaceCauses.data.data.results
-    if (typeof paceData[0] !== "undefined" && paceData[0].rcaSubType === "regionsupportabove") {
-      await setPaceCauses(paceData.reverse())
+    let paceData = allPaceCauses.data.data.results;
+    if (
+      typeof paceData[0] !== "undefined" &&
+      paceData[0].rcaSubType === "regionsupportabove"
+    ) {
+      await setPaceCauses(paceData.reverse());
     } else {
-      await setPaceCauses(paceData)
+      await setPaceCauses(paceData);
     }
   };
   useEffect(() => {
@@ -82,121 +110,168 @@ const RootCauseAnalysisSummary = () => {
   const classes = useStyles();
   return (
     <Grid container spacing={3}>
-      {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ?
+      {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (
         <Grid item md={12}>
+          <Accordion
+            expanded={expanded === "panel1"}
+            onChange={handleExpand("panel1")}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Cause analysis
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails classes={{ root: "details-wrapper" }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
+                    Evidence collected supports the incident event took place?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceSupport}
+                  </Typography>
+                </Grid>
 
-          <Typography className={classes.heading}>Cause analysis</Typography>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
+                    Contradictions between evidence and the description of
+                    incident?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceContradiction}
+                  </Typography>
+                </Grid>
 
-
-          <Typography variant="h6" gutterBottom>
-            Evidence collected supports the incident event took place?
-          </Typography>
-          <Typography variant="h8" gutterBottom>
-            {causeanalysis.evidenceSupport}
-          </Typography>
-
-          <Typography variant="h6" gutterBottom>
-            Contradictions between evidence and the description of incident?
-          </Typography>
-          <Typography variant="h8" gutterBottom>
-            {causeanalysis.evidenceContradiction}
-          </Typography>
-
-          <Typography variant="h6" gutterBottom>
-            Evidence does not supports the incident event as described?
-          </Typography>
-          <Typography variant="h8" gutterBottom>
-            {causeanalysis.evidenceNotSupport}
-          </Typography>
-
-
-
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
+                    Evidence does not supports the incident event as described?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceNotSupport}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
-        :
+      ) : (
         <Grid item md={12}>
-          <Typography className={classes.heading}>Root cause is pending</Typography>
+          <Typography className={classes.heading}>
+            Root cause is pending
+          </Typography>
         </Grid>
-      }
+      )}
 
-      {/* root cause */}
-      {rootCause.length !== 0 ?
+      {rootCause.length !== 0 ? (
         <Grid item md={12}>
-          <Accordion>
+          <Accordion
+            expanded={expanded === "panel2"}
+            onChange={handleExpand("panel2")}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>Root cause</Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               {rootCause.map((root, key) => (
                 <Grid item md={12}>
-
                   {/* cause of incident */}
-                  <Typography variant="h6" gutterBottom>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
                     Cause on incident
                   </Typography>
-                  <Typography variant="h8" gutterBottom>
+                  <Typography className={Fonts.labelValue}>
                     {root.causeOfIncident}
                   </Typography>
 
                   {/* corrective action */}
-                  <Typography variant="h6" gutterBottom>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
                     Corrective solution
                   </Typography>
-                  <Typography variant="h8" gutterBottom>
+                  <Typography className={Fonts.labelValue}>
                     {root.correctiveAction}
                   </Typography>
 
                   {/* recommended solution */}
-                  {root.recommendSolution !== "" ? <>
-                    <Typography variant="h6" gutterBottom>
-                      Recommended solution
-                    </Typography>
-                    <Typography variant="h8" gutterBottom>
-                      {root.recommendSolution}
-                    </Typography>
-                  </> : null
-                  }
-                </Grid>
-              ))
-              }
-            </AccordionDetails>
-
-
-
-          </Accordion>
-        </Grid> :
-        null}
-
-      {/* five why analysis   */}
-      {fiveWhy.length !== 0 ?
-        <Grid item md={12}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Five why analysis</Typography>
-            </AccordionSummary>
-            <AccordionDetails classes={{ root: "details-wrapper" }}>
-
-              {fiveWhy.map((fw, key) => (
-                <Grid item md={12}>
-                  <Typography variant="h6" gutterBottom>
-                    Why {fw.whyCount + 1}
-                  </Typography>
-                  <Typography variant="h8" gutterBottom>
-                    {fw.why}
-                  </Typography>
-
+                  {root.recommendSolution !== "" ? (
+                    <>
+                      <Typography
+                        variant="h6"
+                        className={Fonts.labelName}
+                        gutterBottom
+                      >
+                        Recommended solution
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {root.recommendSolution}
+                      </Typography>
+                    </>
+                  ) : null}
                 </Grid>
               ))}
             </AccordionDetails>
           </Accordion>
         </Grid>
-        :
-        null}
+      ) : null}
 
-      {pacecauses.length !== 0 ?
+      {/* five why analysis   */}
+      {fiveWhy.length !== 0 ? (
         <Grid item md={12}>
-          <Accordion>
+          <Accordion
+            expanded={expanded === "panel2"}
+            onChange={handleExpand("panel2")}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>PACE cause analysis</Typography>
+              <Typography className={classes.heading}>
+                Five why analysis
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails classes={{ root: "details-wrapper" }}>
+              {fiveWhy.map((fw, key) => (
+                <Grid item md={12}>
+                  <Typography
+                    variant="h6"
+                    className={Fonts.labelName}
+                    gutterBottom
+                  >
+                    Why {fw.whyCount + 1}
+                  </Typography>
+                  <Typography className={Fonts.labelValue}>{fw.why}</Typography>
+                </Grid>
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
+      ) : null}
+
+      {pacecauses.length !== 0 ? (
+        <Grid item md={12}>
+          <Accordion
+            expanded={expanded === "panel4"}
+            onChange={handleExpand("panel4")}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                PACE cause analysis
+              </Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               <TableContainer component={Paper}>
@@ -210,25 +285,21 @@ const RootCauseAnalysisSummary = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {
-                      pacecauses.map((pc, key) => (
-                        <TableRow key={key}>
-                          <TableCell>{pc.rcaNumber}</TableCell>
-                          <TableCell>{pc.rcaType}</TableCell>
-                          <TableCell>{subValues[key]}</TableCell>
-                          <TableCell>{pc.rcaRemark}</TableCell>
-                        </TableRow>
-                      ))
-                    }
+                    {pacecauses.map((pc, key) => (
+                      <TableRow key={key}>
+                        <TableCell>{pc.rcaNumber}</TableCell>
+                        <TableCell>{pc.rcaType}</TableCell>
+                        <TableCell>{subValues[key]}</TableCell>
+                        <TableCell>{pc.rcaRemark}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             </AccordionDetails>
           </Accordion>
         </Grid>
-        :
-        null
-      }
+      ) : null}
     </Grid>
   );
 };

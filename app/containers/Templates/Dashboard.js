@@ -12,12 +12,40 @@ import LeftSidebarBigLayout from './layouts/LeftSidebarBigLayout';
 import DropMenuLayout from './layouts/DropMenuLayout';
 import MegaMenuLayout from './layouts/MegaMenuLayout';
 import styles from './appStyles-jss';
-
+import axios from 'axios';
+import {access_token, LOGIN_URL, SELF_API} from "../../utils/constants";
 function Dashboard(props) {
   // Initial header style
   const [openGuide, setOpenGuide] = useState(false);
   const [appHeight, setAppHeight] = useState(0);
+  const [userData, setUserData] = useState([]);
+  const [companyListData, setCompanyListData] = useState([])
 
+  const loggingCheck= async()=>{
+    let config = {
+      method: "get",
+      url: `${SELF_API}`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    console.log('config',config);
+    await axios(config)
+      .then(function(response) {
+        if(response.status === 200){
+          console.log(response.data.data.results)
+          if(response.data.data.results.length > 0){
+
+          }
+          setUserData(response.data.data.results)
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }   
+  
   useEffect(() => {
     const { history, loadTransition } = props;
 
@@ -32,14 +60,17 @@ function Dashboard(props) {
 
     // Execute all arguments when page changes
     const unlisten = history.listen(() => {
+      loggingCheck();
       window.scrollTo(0, 0);
       setTimeout(() => {
         loadTransition(true);
+        
       }, 500);
     });
 
     return () => {
       if (unlisten != null) {
+
         unlisten();
       }
     };
@@ -71,6 +102,7 @@ function Dashboard(props) {
   const titleException = ['/app', '/app/crm-dashboard', '/app/crypto-dashboard'];
   const parts = history.location.pathname.split('/');
   const place = parts[parts.length - 1].replace('-', ' ');
+
   return (
     <div
       style={{ minHeight: appHeight }}
@@ -167,6 +199,7 @@ function Dashboard(props) {
           </DropMenuLayout>
         )
       }
+      
       { /* Top Bar with Mega Menu */
         layout === 'mega-menu' && (
           <MegaMenuLayout
