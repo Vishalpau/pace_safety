@@ -129,18 +129,10 @@ const EvidenceSummary = () => {
     window.location.href = `${documentUrl}`;
   };
 
-<<<<<<< HEAD
-  // const handleLink  = (e) => {
-  //   if(e.endsWith("png")){
-  //     return <ImageIcon/>
-  //   }
-  // }
-=======
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
->>>>>>> ad66bc272d1a3f50756bc59c988ce6ba1cfe75a3
   // const handleDownload = (url, filename) => {
   //   axios
   //     .get(url, {

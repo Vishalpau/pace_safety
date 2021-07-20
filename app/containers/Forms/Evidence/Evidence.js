@@ -505,7 +505,7 @@ const Evidence = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {form.length == 14 ? (
+                    {form.length >= 14 ? (
                       <>
                         {Object.entries(form)
                           .slice(1, 14)
