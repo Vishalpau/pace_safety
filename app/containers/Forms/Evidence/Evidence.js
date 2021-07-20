@@ -401,6 +401,7 @@ const Evidence = () => {
   };
 
   const handleFile = async (e, index) => {
+    console.log(e.target.files[0])
     let TempPpeData = [...form];
     if (
       (TempPpeData[index].evidenceDocument =
@@ -467,6 +468,7 @@ const Evidence = () => {
 
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
+    {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -561,11 +563,12 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
-                                  {/* {form[index].evidenceDocument ? <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> : */}
+                                  {/* {form[index].evidenceDocument ?  <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> : */}
                                   <input
                                     type="file"
                                     className={classes.fullWidth}
-                                    accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
+                                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                                    // accept= "ppt/*  , word/*  , text , image/jpg , pdf , video/mp4,video/mov,video/flv,video/avi,video/mkv"
                                     disabled={
                                       value.evidenceCheck !== "Yes"
                                         ? true
@@ -642,8 +645,7 @@ const Evidence = () => {
                                 <input
                                   type="file"
                                   className={classes.fullWidth}
-                                  accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
-                                  disabled={
+                                  accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"                                  disabled={
                                     value.evidenceCheck !== "Yes" ? true : false
                                   }
                                   name="file"

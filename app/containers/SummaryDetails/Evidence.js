@@ -55,6 +55,11 @@ import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
+import ImageIcon from "@material-ui/icons/Image";
+import VideoCallIcon from "@material-ui/icons/VideoCall";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
+import DescriptionIcon from "@material-ui/icons/Description";
 
 // Styles
 import Styles from "dan-styles/Summary.scss";
@@ -122,6 +127,11 @@ const EvidenceSummary = () => {
     window.location.href = `${documentUrl}`;
   };
 
+  // const handleLink  = (e) => {
+  //   if(e.endsWith("png")){
+  //     return <ImageIcon/>
+  //   }
+  // }
   // const handleDownload = (url, filename) => {
   //   axios
   //     .get(url, {
@@ -137,7 +147,7 @@ const EvidenceSummary = () => {
   // const fkid = localStorage.getItem('fkincidentId');
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    console.log(allEvidence)
+    console.log(allEvidence);
     await setEvidence(allEvidence.data.data.results);
     await setIsLoding(true);
   };
@@ -166,143 +176,106 @@ const EvidenceSummary = () => {
                 <Typography className={classes.heading}>Evidence</Typography>
               </AccordionSummary>
               <AccordionDetails>
-              <TableContainer component={Paper}>
-                <Table style={{ minWidth: 900 }} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell style={{ width: 200 }}>Evidence No</TableCell>
-                      <TableCell style={{ width: 300 }}>Evidence Check</TableCell>
-                      <TableCell style={{ width: 300 }}>Evidence Category</TableCell>
-                      <TableCell style={{ width: 400 }}>Evidence Remark</TableCell>
-                      <TableCell style={{ width: 300 }}>
-                      Evidence Document
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                  {evidence.length !== 0
-                  ? evidence.map((value, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{value.evidenceNumber}</TableCell>
-                          <TableCell>{value.evidenceCheck}</TableCell>
-                          <TableCell>{value.evidenceCategory}</TableCell>
-                          <TableCell>{value.evidenceRemark}</TableCell>
-                          {value.evidenceDocument ? (<TableCell><Tooltip title="File Name">
-                                  <IconButton
-                                    onClick={() =>
-                                      handleOpen(value.evidenceDocument)
-                                    }
-                                    className={classes.fileIcon}
-                                  >
-                                    <PhotoSizeSelectActualIcon />
-                                  </IconButton>
-                                </Tooltip></TableCell>):null}
-                          
-                        </TableRow>
-                      ))
-                 : null}
-                  {/* {fiveWhy.map((fw, key) => (
-                      <TableRow key={key}>
-                        <TableCell>{fw.whyCount + 1}</TableCell>
-                        <TableCell>{fw.why}</TableCell>
+                <TableContainer component={Paper}>
+                  <Table style={{ minWidth: 900 }} size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell style={{ width: 200 }}>
+                          Evidence No
+                        </TableCell>
+                        <TableCell style={{ width: 300 }}>
+                          Evidence Check
+                        </TableCell>
+                        <TableCell style={{ width: 300 }}>
+                          Evidence Category
+                        </TableCell>
+                        <TableCell style={{ width: 400 }}>
+                          Evidence Remark
+                        </TableCell>
+                        <TableCell style={{ width: 300 }}>
+                          Evidence Document
+                        </TableCell>
                       </TableRow>
-                    ))
-                    } */}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-                {/* {evidence.length !== 0
-                  ? evidence.map((value, index) => (
-                      <Grid
-                        key={index}
-                        className="repeatedGrid"
-                        container
-                        item
-                        md={12}
-                        spacing={3}
-                      >
-                        <Grid container item xs={12} spacing={3}>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence No
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceNumber}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Check
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCheck}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Category
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCategory}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Remark
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceRemark}
-                            </Typography>
-                          </Grid>
-                          {value.evidenceDocument ? (
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence Document
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                
-                              </Typography>
-                            </Grid>
-                          ) : null}
-                        </Grid>
-                      </Grid>
-                    ))
-                  : null} */}
+                    </TableHead>
+                    <TableBody>
+                      {evidence.length !== 0
+                        ? evidence.map((value, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{value.evidenceNumber}</TableCell>
+                              <TableCell>{value.evidenceCheck}</TableCell>
+                              <TableCell>{value.evidenceCategory}</TableCell>
+                              <TableCell>{value.evidenceRemark}</TableCell>
+                              {value.evidenceDocument ? (
+                                <TableCell>
+                                  <Tooltip title={value.evidenceDocument}>
+                                    <IconButton
+                                      onClick={() =>
+                                        handleOpen(value.evidenceDocument)
+                                      }
+                                      className={classes.fileIcon}
+                                    >
+                                      {value.evidenceDocument.endsWith(
+                                        ".png"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".jpg"
+                                      ) ? (
+                                        <ImageIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".pdf"
+                                      ) ? (
+                                        <PictureAsPdfIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".mp4"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(".mov") ||
+                                      value.evidenceDocument.endsWith(".flv") ||
+                                      value.evidenceDocument.endsWith(
+                                        ".avi"
+                                      ) ? (
+                                        <VideoCallIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".xls"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".xlsx"
+                                      ) ? (
+                                        <DescriptionIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".ppt"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".pptx"
+                                      ) ? (
+                                        <DescriptionIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".text"
+                                      ) ? (
+                                        <TextFieldsIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".docx"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".doc"
+                                      ) ? (
+                                        <TextFieldsIcon />
+                                      ) : null}
+                                    </IconButton>
+                                  </Tooltip>
+                                </TableCell>
+                              ) : null}
+                            </TableRow>
+                          ))
+                        : null}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </AccordionDetails>
             </Accordion>
           </Grid>
@@ -370,13 +343,11 @@ const EvidenceSummary = () => {
                   style={{ width: "100%" }}
                   variant="contained"
                   color="primary"
-                  
-                  onClick={()=>downloadFile()}
+                  onClick={() => downloadFile()}
                   disableElevation
                   target="_blank"
                 >
-                 Download Attachment 
-                  
+                  Download Attachment
                 </Button>
                 {/* <button
                 crossorigin="anonymous"
