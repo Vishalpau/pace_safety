@@ -113,8 +113,6 @@ const LessionLearnSummary = () => {
     if(allEvidence.status === 200){
       await setEvidence(allEvidence.data.data.results);
     }
-    
-    // await setIsLoding(true);
   };
 
   console.log(lessionlearn);

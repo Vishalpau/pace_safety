@@ -431,7 +431,7 @@ const LessionLearned = () => {
                   {message}
                 </Alert>
               </Snackbar>
-            <Typography  varint="p"> Add Attachment</Typography>
+            <Typography  variant ="h6"> Add attachment</Typography>
             
                  <input type="file" onChange = {(e)=> handleAttchment(e)}/>
                 

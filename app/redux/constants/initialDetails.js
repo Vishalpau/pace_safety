@@ -1,1 +1,2 @@
 export const INITIAL_DETAILS = 'INITIAL_DETAILS';
+export const PROJECT_NAME = 'PROJECT_NAME';

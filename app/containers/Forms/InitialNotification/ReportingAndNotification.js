@@ -89,6 +89,7 @@ const ReportingAndNotification = () => {
   const [reportedToObj, setReportedToObj] = useState([]);
   const [superVisorName, setSuperVisorName] = useState([]);
   const [reportedByName, setReportedByName] = useState([]);
+  const [evidence, setEvidence] = useState([])
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -526,6 +527,14 @@ const ReportingAndNotification = () => {
       });
   };
 
+  // Fetch Evidance data
+  const fetchEvidanceData = async () => {  
+    const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    if(allEvidence.status === 200){
+      await setEvidence(allEvidence.data.data.results);
+    }
+  };
+
   // handle go back
   const handleGoBack = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
@@ -558,6 +567,7 @@ const ReportingAndNotification = () => {
     fetchIncidentsData();
     if (id) {
       fetchReportsDataList();
+      fetchEvidanceData();
     } else {
       fetchReportableTo();
     }
@@ -648,7 +658,101 @@ const ReportingAndNotification = () => {
                   Initial evidences
                 </Typography>
               </Box>
-
+              <Grid item md={12}>
+                {evidence.length !== 0
+                  ? evidence
+                      .filter(
+                        (item) => item.evidenceCategory === "Initial Evidence"
+                      )
+                      .map((value, index) => (
+                        <Grid
+                          key={index}
+                          className="repeatedGrid"
+                          container
+                          item
+                          md={12}
+                          spacing={3}
+                        >
+                          <Grid container item xs={12} spacing={3}>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Evidence No
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {value.evidenceNumber}
+                              </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Evidence Check
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {value.evidenceCheck}
+                              </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Evidence Category
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {value.evidenceCategory}
+                              </Typography>
+                            </Grid>
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Evidence Remark
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {value.evidenceRemark}
+                              </Typography>
+                            </Grid>
+                            {value.evidenceDocument ? (
+                              <Grid item lg={6} md={6}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                  className={Fonts.labelName}
+                                >
+                                  Evidence Document
+                                </Typography>
+                                <a href={`${value.evidenceDocument}`}>{value.evidenceDocument}</a>
+                              </Grid>
+                            ) : null}
+                          </Grid>
+                        </Grid>
+                      ))
+                  : null}
+              </Grid>
+           
+              {/* {evidence.lenght>0?evidence.map((key,value)=>)} */}
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
                   <Grid item md={5}>
