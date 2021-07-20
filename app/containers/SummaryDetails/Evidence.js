@@ -55,6 +55,11 @@ import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
+import ImageIcon from "@material-ui/icons/Image";
+import VideoCallIcon from "@material-ui/icons/VideoCall";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
+import DescriptionIcon from "@material-ui/icons/Description";
 
 // Styles
 import Styles from "dan-styles/Summary.scss";
@@ -206,14 +211,65 @@ const EvidenceSummary = () => {
                               <TableCell>{value.evidenceRemark}</TableCell>
                               {value.evidenceDocument ? (
                                 <TableCell>
-                                  <Tooltip title="File Name">
+                                  <Tooltip title={value.evidenceDocument}>
                                     <IconButton
                                       onClick={() =>
                                         handleOpen(value.evidenceDocument)
                                       }
                                       className={classes.fileIcon}
                                     >
-                                      <PhotoSizeSelectActualIcon />
+                                      {value.evidenceDocument.endsWith(
+                                        ".png"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".jpg"
+                                      ) ? (
+                                        <ImageIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".pdf"
+                                      ) ? (
+                                        <PictureAsPdfIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".mp4"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(".mov") ||
+                                      value.evidenceDocument.endsWith(".flv") ||
+                                      value.evidenceDocument.endsWith(
+                                        ".avi"
+                                      ) ? (
+                                        <VideoCallIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".xls"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".xlsx"
+                                      ) ? (
+                                        <DescriptionIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".ppt"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".pptx"
+                                      ) ? (
+                                        <DescriptionIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".text"
+                                      ) ? (
+                                        <TextFieldsIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".docx"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".doc"
+                                      ) ? (
+                                        <TextFieldsIcon />
+                                      ) : null}
                                     </IconButton>
                                   </Tooltip>
                                 </TableCell>
@@ -221,108 +277,9 @@ const EvidenceSummary = () => {
                             </TableRow>
                           ))
                         : null}
-                      {/* {fiveWhy.map((fw, key) => (
-                      <TableRow key={key}>
-                        <TableCell>{fw.whyCount + 1}</TableCell>
-                        <TableCell>{fw.why}</TableCell>
-                      </TableRow>
-                    ))
-                    } */}
                     </TableBody>
                   </Table>
                 </TableContainer>
-                {/* {evidence.length !== 0
-                  ? evidence.map((value, index) => (
-                      <Grid
-                        key={index}
-                        className="repeatedGrid"
-                        container
-                        item
-                        md={12}
-                        spacing={3}
-                      >
-                        <Grid container item xs={12} spacing={3}>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence No
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceNumber}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Check
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCheck}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Category
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCategory}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Remark
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceRemark}
-                            </Typography>
-                          </Grid>
-                          {value.evidenceDocument ? (
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence Document
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                
-                              </Typography>
-                            </Grid>
-                          ) : null}
-                        </Grid>
-                      </Grid>
-                    ))
-                  : null} */}
               </AccordionDetails>
             </Accordion>
           </Grid>
