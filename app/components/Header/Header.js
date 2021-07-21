@@ -34,6 +34,10 @@ import styles from "./header-jss";
 
 import { useSelector } from "react-redux";
 import {connect } from "react-redux"
+
+import api from '../../utils/axios'
+import { access_token } from "../../utils/constants";
+import Axios from "axios";
 // const useStyles = makeStyles((theme) => ({
 //   button: {
 //     color: theme.palette.primary.contrastText,
@@ -49,16 +53,11 @@ function Header(props) {
   const [fullScreen, setFullScreen] = useState(false);
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [breakdown2ListData, setBreakdown2ListData] = useState([]);
+  const [breakdown3ListData, setBreakdown3ListData] = useState([]);
+  let [breakdown, setBreakdown] = useState([]);
 
-  const quoteDetails = useSelector((state) => state);
-  console.log('state', quoteDetails)
-  
-  // const [projectDataList, setProjectListData] = useState({})
-
-  // get project data
-  
-  // let projectData = JSON.parse(localStorage.getItem('projectDataList'))
-  // setProjectListData(projectData)
 
   // Initial header style
   let flagDarker = false;
@@ -139,7 +138,7 @@ function Header(props) {
     initialValues
   } = props;
 
-  console.log('props', props.initialValues)
+  
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -150,6 +149,22 @@ function Header(props) {
     return classes.left;
   };
 
+  if(Object.keys(props.initialValues.projectName).length > 0){
+    localStorage.setItem('projectName',JSON.stringify(props.initialValues))
+   
+  }
+  const projectData = JSON.parse(localStorage.getItem('projectName'))
+// fetch Breakdown data
+  // const fetchBreakDownData = async()=>{
+  //   for(var i = 0; i< props.initialValues.projectName.breakdown.length ;i++ ){
+  //     console.log( 'inseide ',i)
+  //     const res = await api.get(`${i.structure[0].url}`)
+  //     console.log(res)
+  //   if(res.status === 200){
+  //     'setBreakdown'+i+'ListData'(res.data.results.data)
+  //   }
+  //   }
+  // }
   const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
@@ -168,6 +183,37 @@ function Header(props) {
 
   const filterOpen = Boolean(anchorEl);
   const id = filterOpen ? "simple-popover" : undefined;
+  useEffect(()=> {
+    
+    const callBack = async()=>{
+    // breakdownResponse is a prop.
+    
+    if(projectData!==null){
+    let breakdownValues = {}
+    console.log(projectData.projectName.breakdown)
+
+    // for(var i=0; i<projectData.projectName.breakdown.length; i++) {
+    //   console.log(projectData.projectName.breakdown[i].structure[0].url)
+    //   let structureUrl = projectData.projectName.breakdown[i].structure[0].url
+    //   const config = {
+    //     method: "get",
+    //     url: `${structureUrl}`,
+    //     headers: {
+    //       Authorization: `Bearer ${access_token}`,
+    //     },
+    //   };
+      
+    //   Axios(config)
+    //   .then(function (response) {
+    //     console.log(JSON.stringify(response.data));
+    //   })
+        
+    // }
+    // setBreakdown(breakdownValues)
+  }
+}
+callBack();
+  })
 
   return (
     <AppBar
@@ -199,7 +245,7 @@ function Header(props) {
               className={classes.projectBreadcrumbs}
               separator={<NavigateNextIcon fontSize="small" />}
             >
-            <Chip size="large" label={props.initialValues.projectName.projectName || 'JWIL Project 1'} />
+            <Chip size="medium" label={props.initialValues.projectName.projectName || 'JWIL Project 1'} />
               
             </Breadcrumbs>
               </div>
@@ -235,7 +281,38 @@ function Header(props) {
               >
                 <Box p={3}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    {projectData===null?null:projectData.projectName.breakdown.length>0?projectData.projectName.breakdown.map((item,index)=>
+                    <Grid item xs={12} key={index}>
+                      <FormControl
+                        variant="outlined"
+                        size="small"
+                        fullWidth={true}
+                        className={classes.filterSelect}
+                      >
+                        <InputLabel id="filter3-label">{item.structure[0].name}</InputLabel>
+                        <Select
+                          labelId="filter3-label"
+                          id="filter3"
+                          value={age}
+                          onChange={handleChange}
+                          label="Phases"
+                          style={{ width: "100%" }}
+                        >
+                          {/* {(async() => {
+                            const res =await api.get(item.structure[0].url)
+                            if(res.status === 200){
+                            console.log(res)
+                            }
+                          })} */}
+                          <MenuItem value={10}>Ten</MenuItem>
+                          <MenuItem value={20}>Twenty</MenuItem>
+                          <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    ):null}
+
+                    {/* <Grid item xs={12}>
                       <FormControl
                         variant="outlined"
                         size="small"
@@ -279,30 +356,7 @@ function Header(props) {
                           <MenuItem value={30}>Thirty</MenuItem>
                         </Select>
                       </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-                        <InputLabel id="filter3-label">Phases</InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={age}
-                          onChange={handleChange}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item md={12}>
                       <Button
@@ -323,9 +377,8 @@ function Header(props) {
               className={classes.projectBreadcrumbs}
               separator={<NavigateNextIcon fontSize="small" />}
             >
-              <Chip size="small" label="Phase 1" />
-              <Chip size="small" label="Unit 11" />
-              <Chip size="small" label="Work Area 11" />
+              {projectData === null?null: Object.keys(projectData.projectName).length>0?projectData.projectName.breakdown.map((item,index)=>
+              <Chip size="small" label={item.structure[0].name} />):null}
             </Breadcrumbs>
           </div>
         </Hidden>

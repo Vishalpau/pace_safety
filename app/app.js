@@ -29,7 +29,6 @@ import '!file-loader?name=[name].[ext]!../public/favicons/favicon.ico'; // eslin
 import 'file-loader?name=.htaccess!./.htaccess'; // eslint-disable-line
 
 import configureStore from './redux/configureStore';
-// import { PersistGate } from 'redux-persist/integration/react';
 
 // Import i18n messages
 import { translationMessages } from './i18n';

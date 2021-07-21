@@ -25,11 +25,14 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
 
+
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
+
+
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -40,7 +43,7 @@ import {
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
-import "../../../styles/custom.css";
+
 import axios from "axios";
 
 function Alert(props) {
@@ -83,13 +86,13 @@ const LessionLearned = () => {
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
   const [learningList, setLearningList] = useState([]);
-  const [attachment, setAttachment] = useState({ evidenceDocument: "" });
+  const [attachment, setAttachment] = useState({evidenceDocument:""});
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
   const [evidence,setEvidence] = useState([])
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
@@ -108,29 +111,29 @@ const LessionLearned = () => {
     await setForm([...form, { teamOrDepartment: "", learnings: "" }]);
   };
 
-  // handleAttchment
+// handleAttchment
 
-  const handleAttchment = async (e) => {
-    if (e.target.files[0].size <= 1024 * 1024 * 25) {
-      setAttachment({ ...attachment, evidenceDocument: e.target.files[0] });
-      await setMessage("File uploaded successfully!");
-      await setMessageType("success");
-      await setOpen(true);
-    } else {
-      await setMessage("File uploading failed! Select file less than 25MB!");
-      await setMessageType("error");
-      await setOpen(true);
-    }
+  const handleAttchment = async(e)=>{
+      if (e.target.files[0].size <= 1024 * 1024 * 25) {
+        setAttachment({...attachment,evidenceDocument:e.target.files[0]})
+        await setMessage("File uploaded successfully!");
+        await setMessageType("success");
+        await setOpen(true);
+      } else {
+        await setMessage("File uploading failed! Select file less than 25MB!");
+        await setMessageType("error");
+        await setOpen(true);
+      }
     await setEvidanceForm(temp);
-  };
-  // handle close snackbar
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      // setOpenError(false)
-      return;
-    }
-    setOpen(false);
-  };
+  }
+ // handle close snackbar
+ const handleClose = (event, reason) => {
+  if (reason === "clickaway") {
+    // setOpenError(false)
+    return;
+  }
+  setOpen(false);
+};
   const handleNext = async () => {
 
     // attachment 
@@ -222,8 +225,9 @@ const LessionLearned = () => {
       .then(function(response) {
         if (response.status === 200) {
           const result = response.data.data.results;
-          setDepartment(result);
-        } else {
+          setDepartment(result)
+        }
+        else {
           // window.location.href = {LOGIN_URL}
         }
       })
@@ -264,7 +268,6 @@ const LessionLearned = () => {
     fetchDepartment();
     if (id) {
       fetchLessonLerned();
-      fetchEvidanceData();
     }
     fetchIncidentsData();
   }, []);
@@ -349,7 +352,8 @@ const LessionLearned = () => {
                 {incidentsListData.incidentLocation}
               </Typography>
             </Grid>
-            <Grid item md={12}>
+
+            {/* <Grid item md={12}>
                 {evidence.length !== 0
                   ? evidence
                       .filter(
@@ -429,36 +433,27 @@ const LessionLearned = () => {
                               </Grid>
                             ) : null}
                             <Grid item md={1}>
-                    <Button
+                    <IconButton
                       variant="contained"
                       color="primary"
                       onClick={() => removeInitialEvidance(value.id)}
                     >
-                      {/* <DeleteForeverIcon /> */} Delete
-                    </Button>
+                      <DeleteForeverIcon />
+                    </IconButton>
                   </Grid>
                           </Grid>
                         </Grid>
                       ))
                   : null}
               </Grid>
-           
+            */}
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom>
                 Key learnings
               </Typography>
-            </Grid>
 
-            <Grid item md={12}>
               {form.map((value, key) => (
-                <Grid
-                  container
-                  className="repeatedGrid"
-                  spacing={3}
-                  item
-                  md={12}
-                  key={key}
-                >
+                <Grid container spacing={3} item md={12} key={key}>
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
@@ -494,6 +489,8 @@ const LessionLearned = () => {
                     </FormControl>
                   </Grid>
                   <Grid item md={12}>
+                    {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
+
                     <TextField
                       id="outlined-search"
                       required
@@ -506,11 +503,14 @@ const LessionLearned = () => {
                       label="Team/department learnings"
                       className={classes.formControl}
                       variant="outlined"
-                      rows="8"
+                      rows="3"
                       multiline
                       value={value.learnings || ""}
                       onChange={(e) => handleForm(e, key, "learnings")}
                     />
+                    {/* {error && error.teamLearning && (
+                          <p>{error.teamLearning}</p>
+                        )} */}
                   </Grid>
                   {form.length > 1 ? (
                     <Grid item md={3}>
@@ -537,7 +537,7 @@ const LessionLearned = () => {
               </button>
             </Grid>
             <Grid item md={12}>
-              <Snackbar
+            <Snackbar
                 open={open}
                 autoHideDuration={6000}
                 onClose={handleClose}
