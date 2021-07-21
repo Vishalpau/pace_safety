@@ -149,7 +149,7 @@ const LessionLearned = () => {
       formData.append('fkIncidentId',id)
 
       const res = await api.post( `api/v1/incidents/${id}/evidences/`,formData)
-      console.log(res)
+      
     }
     // sent put request
     let status = 0;
@@ -258,7 +258,7 @@ const LessionLearned = () => {
 
     const removeInitialEvidance = async (evidenceId)=>{
       const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
-      console.log(res)
+      
       if(res.status === 200){
         await fetchEvidanceData();
       }
@@ -353,100 +353,6 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            {/* <Grid item md={12}>
-                {evidence.length !== 0
-                  ? evidence
-                      .filter(
-                        (item) => item.evidenceCategory === "Lessons Learned"
-                      )
-                      .map((value, index) => (
-                        <Grid
-                          key={index}
-                          className="repeatedGrid"
-                          container
-                          item
-                          md={12}
-                          spacing={3}
-                        >
-                          <Grid container item xs={12} spacing={3}>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence No
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceNumber}
-                              </Typography>
-                            </Grid>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence Check
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceCheck}
-                              </Typography>
-                            </Grid>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence Category
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceCategory}
-                              </Typography>
-                            </Grid>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence Remark
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceRemark}
-                              </Typography>
-                            </Grid>
-                            {value.evidenceDocument ? (
-                              <Grid item lg={9} md={12}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                >
-                                  Evidence Document
-                                </Typography>
-                                <a href={`${value.evidenceDocument}`}>{value.evidenceDocument}</a>
-                              </Grid>
-                            ) : null}
-                            <Grid item md={1}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={() => removeInitialEvidance(value.id)}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </Grid>
-                          </Grid>
-                        </Grid>
-                      ))
-                  : null}
-              </Grid>
-            */}
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom>
                 Key learnings

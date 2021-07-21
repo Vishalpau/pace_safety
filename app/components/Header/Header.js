@@ -38,11 +38,6 @@ import {connect } from "react-redux"
 import api from '../../utils/axios'
 import { access_token } from "../../utils/constants";
 import Axios from "axios";
-// const useStyles = makeStyles((theme) => ({
-//   button: {
-//     color: theme.palette.primary.contrastText,
-//   },
-// }));
 
 const elem = document.documentElement;
 
@@ -154,17 +149,7 @@ function Header(props) {
    
   }
   const projectData = JSON.parse(localStorage.getItem('projectName'))
-// fetch Breakdown data
-  // const fetchBreakDownData = async()=>{
-  //   for(var i = 0; i< props.initialValues.projectName.breakdown.length ;i++ ){
-  //     console.log( 'inseide ',i)
-  //     const res = await api.get(`${i.structure[0].url}`)
-  //     console.log(res)
-  //   if(res.status === 200){
-  //     'setBreakdown'+i+'ListData'(res.data.results.data)
-  //   }
-  //   }
-  // }
+
   const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
@@ -192,24 +177,7 @@ function Header(props) {
     let breakdownValues = {}
     console.log(projectData.projectName.breakdown)
 
-    // for(var i=0; i<projectData.projectName.breakdown.length; i++) {
-    //   console.log(projectData.projectName.breakdown[i].structure[0].url)
-    //   let structureUrl = projectData.projectName.breakdown[i].structure[0].url
-    //   const config = {
-    //     method: "get",
-    //     url: `${structureUrl}`,
-    //     headers: {
-    //       Authorization: `Bearer ${access_token}`,
-    //     },
-    //   };
-      
-    //   Axios(config)
-    //   .then(function (response) {
-    //     console.log(JSON.stringify(response.data));
-    //   })
-        
-    // }
-    // setBreakdown(breakdownValues)
+  
   }
 }
 callBack();
@@ -298,12 +266,6 @@ callBack();
                           label="Phases"
                           style={{ width: "100%" }}
                         >
-                          {/* {(async() => {
-                            const res =await api.get(item.structure[0].url)
-                            if(res.status === 200){
-                            console.log(res)
-                            }
-                          })} */}
                           <MenuItem value={10}>Ten</MenuItem>
                           <MenuItem value={20}>Twenty</MenuItem>
                           <MenuItem value={30}>Thirty</MenuItem>
@@ -311,52 +273,6 @@ callBack();
                       </FormControl>
                     </Grid>
                     ):null}
-
-                    {/* <Grid item xs={12}>
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-                        <InputLabel id="filter3-label">Phases</InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={age}
-                          onChange={handleChange}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-                        <InputLabel id="filter3-label">Phases</InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={age}
-                          onChange={handleChange}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid> */}
 
                     <Grid item md={12}>
                       <Button
