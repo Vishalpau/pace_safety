@@ -615,7 +615,6 @@ const PeoplesAffected = () => {
                           aria-label="personAffect"
                           name="personAffect"
                           aria-required
-                          // value={value.personMedicalCare}
                           defaultValue={
                             value.personMedicalCare === "N/A"
                               ? "Don't Know"
@@ -749,7 +748,6 @@ const PeoplesAffected = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-              // onClick={(e) => handelNext(e)}
               >
                 Next
               </Button>

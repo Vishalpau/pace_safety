@@ -18,13 +18,16 @@ import {
   LOGIN_URL,
   SSO_CLIENT_ID,
   SSO_CLIENT_SECRET,
+  LOCAL_SSO_CLIENT_ID,
+  LOCAL_SSO_CLIENT_SECRET,
+  
   access_token,
   SELF_API,
+  LOCAL_LOGIN_URL,
 } from "../../utils/constants";
-import api from "../../utils/axios";
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
-// client_id:  client_secret:
+
 function App() {
   const [userData, setUserData] = useState([]);
   const [companyListData, setCompanyListData] = useState([])
@@ -36,14 +39,13 @@ function App() {
     if (code) {
       let data = JSON.stringify({
         grant_type: "authorization_code",
-        client_id: 
-        "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo",
-        //  "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1",
-       
+        client_id:
+         `${SSO_CLIENT_ID}`,
+        // `${LOCAL_SSO_CLIENT_ID}`,
+
         client_secret:
-        "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
-        // "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW",
-          
+        `${SSO_CLIENT_SECRET}`,
+        // `${LOCAL_SSO_CLIENT_SECRET}`,
         code: code,
       });
 
@@ -55,44 +57,26 @@ function App() {
         },
         data: data,
       };
-      console.log(config);
       await axios(config)
         .then(function(response) {
           if (response.status === 200) {
-            console.log(response);
             localStorage.setItem("access_token", response.data.access_token);
             window.location.href = "/";
           }
         })
         .catch(function(error) {
-          console.log(error);
         });
     }
     else{
       if(localStorage.getItem('access_token')=== null){
         window.location.href = `${LOGIN_URL}`
-        // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
+        // window.location.href = `${LOCAL_LOGIN_URL}`
       }
     }
-    // if (code) {
-    //   const response = await api.post(`${SSO_URL}/api/v1/user/auth/token/`, {
-    //     grant_type: 'authorization_code',
-    //     client_id:
-    //       { SSO_CLIENT_ID } || 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo',
-    //     client_secret:
-    //       { SSO_CLIENT_SECRET }
-    //       || "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz",
-    //     code,
-    //   });
-    //   const result = response.data.access_token;
-    //   localStorage.setItem('access_token', result);
-    // }
   };
 
   useEffect(() => {
-    // loggingCheck();
     getToken();
-    // console.log(userData)
   },[]);
   return (
     <ThemeWrapper>
@@ -106,11 +90,6 @@ function App() {
           <Route component={NotFound} />
         </Switch>
        ):null} 
-        {/* ) : (
-         <Switch>
-           <Route component={Authentication} />
-         </Switch>
-      )}  */}
     </ThemeWrapper>
   );
 }

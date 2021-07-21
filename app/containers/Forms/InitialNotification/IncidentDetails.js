@@ -8,7 +8,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
 import {
-  // TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
@@ -17,9 +16,6 @@ import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import InputAdornment from "@material-ui/core/InputAdornment";
-// import IconButton from "@material-ui/core/IconButton";
-// import Icon from "@material-ui/core/Icon";
 import FormLabel from "@material-ui/core/FormLabel";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
@@ -100,7 +96,6 @@ const IncidentDetails = () => {
 
   // Function called on next button click.
   const handelNext = async (e) => {
-    console.log(form);
     // Create case if id is not null and means it is an update case.
     if (id) {
       // Set next path.
@@ -170,7 +165,6 @@ const IncidentDetails = () => {
         subContractor: form.subContractor,
       };
       const { error, isValid } = validate(form);
-    console.log(form, isValid)
       await setError(error);
       // check condition for error
       if (isValid === true) {
@@ -463,9 +457,7 @@ const IncidentDetails = () => {
     fetchEquipmentAffectValue();
     fetchEnviornmentAffectValue();
     fetchIncidentsData();
-    // if(!id){
-    //   setIsLoading(true)
-    // }
+    
   }, []);
 
   return (
@@ -506,29 +498,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
                   {/* Unit Name */}
-            {/* <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Unit name</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Unit name"
-                  value={form.fkUnitId}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      fkUnitId: e.target.value.toString(),
-                    });
-                  }}
-                >
-                  {selectValues.map((selectValues, key) => (
-                    <MenuItem key={key} value={selectValues}>
-                      {selectValues}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid> */}
+            
 
                     {/* Incident Type */}
             <Grid item xs={12} md={6}>
@@ -608,7 +578,7 @@ const IncidentDetails = () => {
                   });
                 }}
               />
-              {/* {error && error.title && <FormHelperText>{error.title}</FormHelperText>} */}
+             
             </Grid>
 
                 {/* Incident Description */}
@@ -630,7 +600,7 @@ const IncidentDetails = () => {
                   });
                 }}
               />
-              {/* {error && error.description && <p>{error.description}</p>} */}
+            
             </Grid>
 
                 {/* Incident immediate action taken */}
@@ -670,7 +640,7 @@ const IncidentDetails = () => {
                   });
                 }}
               />
-              {/* {error && error.location && <p>{error.location}</p>} */}
+              
             </Grid>
 
                 {/* Contractor */}

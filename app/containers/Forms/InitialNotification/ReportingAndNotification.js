@@ -143,9 +143,6 @@ const ReportingAndNotification = () => {
 
   // handle update incident
   const handleUpdateIncidentDetails = async () => {
-    // const { error, isValid } = ReportingValidation(form);
-    // setError(error);
-    // getting fileds for update
     const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
     if (form.supervisorname === "other") {
@@ -280,7 +277,6 @@ const ReportingAndNotification = () => {
       if (isValid === true) {
         var newData = [];
         reportedToFilterData = [];
-        console.log(reportedTo);
         for (var key in reportedTo) {
           reportedToFilterData.push(reportedTo[key].inputValue);
         }
@@ -366,7 +362,6 @@ const ReportingAndNotification = () => {
   // handle close snackbar
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
-      // setOpenError(false)
       return;
     }
     setOpen(false);
@@ -404,7 +399,6 @@ const ReportingAndNotification = () => {
 
   const removeInitialEvidance = async (evidenceId)=>{
     const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
-    console.log(res)
     if(res.status === 200){
       await fetchEvidanceData();
     }
@@ -465,7 +459,6 @@ const ReportingAndNotification = () => {
         await SetLateReport(false);
       }
       await setIncidentsListdata(result);
-      console.log('ram',superVisorName)
       if(filterSuperVisorName.filter(
         (item) =>
           item.name === result.supervisorByName
@@ -500,13 +493,8 @@ const ReportingAndNotification = () => {
           filterSuperVisorName = result;
           setSuperVisorName([...result, { name: "other" }]);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
-      .catch((error) => {
-        // window.location.href = {LOGIN_URL}
-      });
+      .catch((error) => {});
   };
 
   const fetchReportedBy = () => {
@@ -670,101 +658,7 @@ const ReportingAndNotification = () => {
                   Initial evidences
                 </Typography>
               </Box>
-              {/* <Grid item md={12}>
-                {evidence.length !== 0
-                  ? evidence
-                      .filter(
-                        (item) => item.evidenceCategory === "Initial Evidence"
-                      )
-                      .map((value, index) => (
-                        <Grid
-                          key={index}
-                          className="repeatedGrid"
-                          container
-                          item
-                          md={12}
-                          spacing={3}
-                        >
-                          <Grid container item xs={12} spacing={3}>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence No
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceNumber}
-                              </Typography>
-                            </Grid>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence Check
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceCheck}
-                              </Typography>
-                            </Grid>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence Category
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceCategory}
-                              </Typography>
-                            </Grid>
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                              >
-                                Evidence Remark
-                              </Typography>
-                              <Typography
-                                variant="body"
-                              >
-                                {value.evidenceRemark}
-                              </Typography>
-                            </Grid>
-                            {value.evidenceDocument ? (
-                              <Grid item lg={9} md={12}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                >
-                                  Evidence Document
-                                </Typography>
-                                <a href={`${value.evidenceDocument}`}>{value.evidenceDocument}</a>
-                              </Grid>
-                            ) : null}
-                            <Grid item md={1}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={() => removeInitialEvidance(value.id)}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </Grid>
-                          </Grid>
-                        </Grid>
-                      ))
-                  : null}
-              </Grid>
-            */}
-              {/* {evidence.lenght>0?evidence.map((key,value)=>)} */}
+           
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
                   <Grid item md={5}>

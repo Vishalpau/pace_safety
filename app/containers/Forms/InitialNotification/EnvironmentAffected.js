@@ -189,7 +189,6 @@ const EnvironmentAffected = () => {
     } else {
       const { error, isValid } = EnvironmentValidate(form);
       setError(error);
-      console.log(error);
       if (isValid === true) {
         try {
           for (let i = 0; i < form.length; i++) {
@@ -265,9 +264,6 @@ const EnvironmentAffected = () => {
     if (!id) {
       setIsLoading(true);
     }
-    // const isavailable = result.isPersonDetailsAvailable
-    // await setPersonAffect(isavailable)
-    // await setIsLoading(true);
   };
 
   // handle go back
@@ -349,7 +345,6 @@ const EnvironmentAffected = () => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-                  {console.log(error && error[`envAnswerDetails${[key]}`])}
                   <Grid item md={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
@@ -387,10 +382,7 @@ const EnvironmentAffected = () => {
                     required
                     error={error && error[`envQuestionOption${[0]}`]}
                   >
-                    {console.log(
-                      "filled check",
-                      error && error[`envQuestionOption${[0]}`]
-                    )}
+                   
                     <FormLabel component="legend">
                       Were there any spills?
                     </FormLabel>
