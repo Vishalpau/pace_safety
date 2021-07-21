@@ -325,8 +325,8 @@ const WorkerDetails = () => {
     }
     await worker_removed.splice(workerNumber, 1)
     await localStorage.setItem("personEffected", JSON.stringify(worker_removed))
-    if (typeof worker_removed[parseInt(workerNumber)] !== "undefined") {
-      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber)}/${localStorage.getItem("fkincidentId")}`)
+    if (typeof worker_removed[parseInt(workerNumber - 1)] !== "undefined") {
+      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber - 1)}/${localStorage.getItem("fkincidentId")}`)
     } else {
       await history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
     }
@@ -1391,7 +1391,8 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={12} justify="flex-start">
+
+            <Grid item md={6}>
               <input
                 type="file"
                 className={classes.fullWidth}
@@ -1400,28 +1401,29 @@ const WorkerDetails = () => {
                   handleFile(e);
                 }}
               />
-              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p>Image not uploaded</p>}
             </Grid>
-            {/* </>))} */}
+            <Grid item md={6}>
+              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p></p>}
+            </Grid>
 
-            <Grid item md={4}>
+
+            {localWorkerData.length > 1 ?
+              <Grid item md={12}>
+                <Button
+                  onClick={(e) => handelRemove()}
+                >
+                  Delete <DeleteForeverIcon />
+                </Button>
+              </Grid>
+              : null}
+
+            <Grid item md={12}>
               <Button
                 onClick={(e) => handelAddNew()}
               >
                 Add new worker <AddIcon />
               </Button>
             </Grid>
-
-            <Grid item md={4}>
-              <Button
-                onClick={(e) => handelRemove()}
-              >
-                Delete <DeleteForeverIcon />
-
-              </Button>
-            </Grid>
-
-
 
             <Grid item md={12}>
               <Button
