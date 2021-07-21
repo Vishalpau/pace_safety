@@ -36,7 +36,9 @@ import {
   access_token,
   ACCOUNT_API_URL,
   LOGIN_URL,
-  SSO_CLIENT_ID
+  LOGOUT_URL,
+  SSO_CLIENT_ID,
+  SSO_URL
 } from "../../utils/constants";
 import axios from "axios";
 
@@ -102,12 +104,14 @@ function UserMenu(props) {
           console.log(response)
           localStorage.removeItem('access_token')
           localStorage.clear();
-        
-            window.location.href =`https://dev-accounts-api.paceos.io/user/logout/?client_id=${SSO_CLIENT_ID}`
-           
+            window.location.href =`${LOGOUT_URL}`          
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        localStorage.removeItem('access_token');
+        localStorage.clear();
+        window.location.href =`${LOGOUT_URL}`
+      });
   };
 
   function ListItemLink(props) {
