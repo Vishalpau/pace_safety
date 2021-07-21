@@ -39,6 +39,7 @@ import FormHeader from "../FormHeader";
 import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
+import FormDialog from "../ActionTracker"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -66,7 +67,8 @@ function ListItemLink(props) {
 const BasicCauseAndAction = () => {
   const [data, setData] = useState([]);
   const history = useHistory();
-  const putId = useRef("");
+  let putId = useRef("");
+  let id = useRef("")
   const [incidentDetail, setIncidentDetail] = useState({});
   let sub_values = [
     "Personal",
@@ -79,14 +81,17 @@ const BasicCauseAndAction = () => {
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = BASIC_CAUSE_SUB_TYPES;
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
 
-    let previousData = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
-    );
-
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+    let previousData = await api.get(`/api/v1/incidents/${putId.current}/pacecauses/`);
+    let tempid = []
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
+        tempid.push(value.id)
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
         tempApiData[valueQuestion] = valueAnser.includes(",")
@@ -94,7 +99,8 @@ const BasicCauseAndAction = () => {
           : [valueAnser];
       }
     });
-
+    id.current = tempid.reverse()
+    console.log(id.current)
     await setData(tempApiData);
   };
 
@@ -104,11 +110,6 @@ const BasicCauseAndAction = () => {
     );
   }
   const handelNext = () => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
         `/app/incident-management/registration/root-cause-analysis/management-control/${localStorage.getItem(
@@ -133,10 +134,7 @@ const BasicCauseAndAction = () => {
         `/app/incident-management/registration/root-cause-analysis/basic-cause/`
       );
     }
-
   }
-
-  let form_link = window.location.href;
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
@@ -212,7 +210,7 @@ const BasicCauseAndAction = () => {
                 ))}
 
                 <button className={classes.textButton}>
-                  <AddCircleOutlineIcon /> Add a new action
+                  <FormDialog actionContext="incidents:Pacacuase" enitityReferenceId={`${putId.current}:${id.current[index]}`} />
                 </button>
               </List>
 
