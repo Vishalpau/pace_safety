@@ -407,6 +407,7 @@ const Evidence = () => {
       (TempPpeData[index].evidenceDocument =
         e.target.files[0].size <= 1024 * 1024 * 25)
     ) {
+      
       TempPpeData[index].evidenceDocument = e.target.files[0];
       await setForm(TempPpeData);
     } else {

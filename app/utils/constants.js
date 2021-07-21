@@ -38,13 +38,21 @@ export const INITIAL_NOTIFICATION_FORM = {
 };
 
 export const EVIDENCE_FORM = {
-  Evidences: "/app/incident-management/registration/evidence/evidence/",
+  Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
   "Activity details":
-    "/app/incident-management/registration/evidence/activity-detail/",
+    `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
+      "fkincidentId"
+    )}`,
   "Personal and PPE details":
-    "/app/incident-management/registration/evidence/personal-and-ppedetails/",
+    `/app/incident-management/registration/evidence/personal-and-ppedetails/${localStorage.getItem(
+      "fkincidentId"
+    )}`,
   "Additional details":
-    "/app/incident-management/registration/evidence/additional-details/",
+    `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem(
+      "fkincidentId"
+    )}`,
 };
 
 

@@ -160,7 +160,7 @@ const ActivityDetails = () => {
     if (!isValid) {
       return;
     }
-    if (id && activtyList.length > 0) {
+    if (id && activtyList.length > 0  &&  activtyList[0].id) {
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
         activtyList
