@@ -62,7 +62,7 @@ export const INVESTIGATION_FORM = {
   "Severity consequences":
     "/app/incident-management/registration/investigation/severity-consequences/",
   "Worker details":
-    "/app/incident-management/registration/investigation/worker-details/",
+    `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`,
   "Event details":
     "/app/incident-management/registration/investigation/event-details/",
   "Action taken":

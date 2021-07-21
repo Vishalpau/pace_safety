@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  button: {
+    margin: theme.spacing(1)
+  }
 }));
 
 const InvestigationOverview = () => {
@@ -597,6 +600,7 @@ const InvestigationOverview = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className={classes.button}
                 onClick={() => history.goBack()}
               >
                 Previous
@@ -604,6 +608,7 @@ const InvestigationOverview = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className={classes.button}
                 onClick={() => handleNext()}
               // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
               >

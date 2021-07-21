@@ -32,6 +32,7 @@ import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import { spacing } from '@material-ui/system';
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -58,6 +59,13 @@ const useStyles = makeStyles((theme) => ({
     display: "inlineBlock",
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
+  },
+  activeList: {
+    color: theme.palette.primary.main,
+    borderLeft: `5px solid ${theme.palette.secondary.main}`,
+  },
+  notActiveList: {
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
   },
 }));
 
@@ -1392,7 +1400,7 @@ const WorkerDetails = () => {
             </Grid>
 
 
-            <Grid item md={6}>
+            <Grid item md={4}>
               <input
                 type="file"
                 className={classes.fullWidth}
@@ -1457,23 +1465,25 @@ const WorkerDetails = () => {
               {/* {localWorkerData.map((value, index) => (
                 <Button onClick={(e) => handelWorkerNavigate(e, index)}>{`Worker ${index + 1}`}</Button>
               ))} */}
-              <Paper elevation={1}>
-                <List dense>
-                  {localWorkerData.map((value, index) => (
-                    <ListItem className={classes.notActiveList}>
-                      <ListItemIcon className={classes.icon}>
-                        {workerNumber == index ? <DoubleArrowIcon fontSize="small" /> : <RemoveCircleOutlineIcon />}
-                      </ListItemIcon>
-                      <ListItemText primary={
+              <Box mt={4}>
+                <Paper elevation={1} >
+                  <List dense>
+                    {localWorkerData.map((value, index) => (
+                      <ListItem className={workerNumber == index ? classes.activeList : classes.notActiveList}>
+                        <ListItemIcon className={classes.icon}>
+                          {workerNumber == index ? <DoubleArrowIcon fontSize="small" /> : <RemoveCircleOutlineIcon />}
+                        </ListItemIcon>
+                        <ListItemText primary={
 
-                        <a onClick={(e) => handelWorkerNavigate(e, index)}>
-                          {`Worker ${index + 1}`}
-                        </a>} />
+                          <a onClick={(e) => handelWorkerNavigate(e, index)}>
+                            {`Worker ${index + 1}`}
+                          </a>} />
 
-                    </ListItem>
-                  ))}
-                </List>
-              </Paper>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              </Box>
             </Grid>
 
 
