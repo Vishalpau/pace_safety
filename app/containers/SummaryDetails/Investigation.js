@@ -39,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
-  },
-  workerPaper: {
-    backgroundColor: "#808080",
   }
 }));
 
@@ -141,6 +138,7 @@ const InvestigationSummary = () => {
 
       {/* investigation overview */}
       <Grid item xs={12}>
+        {/* panel will open and close accordion accoring to click on accordion expand */}
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleExpand("panel1")}
