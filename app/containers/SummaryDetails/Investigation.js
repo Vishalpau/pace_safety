@@ -9,6 +9,7 @@ import { useParams } from "react-router";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ImageIcon from '@material-ui/icons/Image';
 import Paper from "@material-ui/core/Paper";
+import Divider from '@material-ui/core/Divider';
 
 
 import api from "../../utils/axios";
@@ -38,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
-  },
-  workerPaper: {
-    backgroundColor: "#808080",
   }
 }));
 
@@ -140,6 +138,7 @@ const InvestigationSummary = () => {
 
       {/* investigation overview */}
       <Grid item xs={12}>
+        {/* panel will open and close accordion accoring to click on accordion expand */}
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleExpand("panel1")}
@@ -438,7 +437,7 @@ const InvestigationSummary = () => {
                   <>
                     {/* worker number */}
                     <Grid item lg={12}>
-                      <Typography variant="h6">
+                      <Typography variant="h7">
                         {`Worker ${index + 1}`}
                       </Typography>
                     </Grid>
@@ -703,6 +702,9 @@ const InvestigationSummary = () => {
                       </Grid>
                       : null}
 
+                    <Grid item lg={12} md={12}>
+                      <Divider />
+                    </Grid>
                   </>
                 ))}
               </Grid>

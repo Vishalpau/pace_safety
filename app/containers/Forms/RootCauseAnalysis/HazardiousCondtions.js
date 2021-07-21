@@ -329,8 +329,7 @@ const HazardiousCondition = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
-        }`
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`
       );
     }
     // api call //
@@ -351,8 +350,7 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
-        }`
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`
       );
     } else if (isNaN(putId.current)) {
       history.push(
