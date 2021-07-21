@@ -670,7 +670,7 @@ const ReportingAndNotification = () => {
                   Initial evidences
                 </Typography>
               </Box>
-              <Grid item md={12}>
+              {/* <Grid item md={12}>
                 {evidence.length !== 0
                   ? evidence
                       .filter(
@@ -763,7 +763,7 @@ const ReportingAndNotification = () => {
                       ))
                   : null}
               </Grid>
-           
+            */}
               {/* {evidence.lenght>0?evidence.map((key,value)=>)} */}
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
