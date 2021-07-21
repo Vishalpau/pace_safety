@@ -32,11 +32,12 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import styles from "./header-jss";
 
-// const useStyles = makeStyles((theme) => ({
-//   button: {
-//     color: theme.palette.primary.contrastText,
-//   },
-// }));
+import { useSelector } from "react-redux";
+import {connect } from "react-redux"
+
+import api from '../../utils/axios'
+import { access_token } from "../../utils/constants";
+import Axios from "axios";
 
 const elem = document.documentElement;
 
@@ -47,11 +48,18 @@ function Header(props) {
   const [fullScreen, setFullScreen] = useState(false);
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [breakdown2ListData, setBreakdown2ListData] = useState([]);
+  const [breakdown3ListData, setBreakdown3ListData] = useState([]);
+  let [breakdown, setBreakdown] = useState([]);
+
 
   // Initial header style
   let flagDarker = false;
 
   let flagTitle = false;
+
+
 
   const handleScroll = () => {
     const doc = document.documentElement;
@@ -122,8 +130,10 @@ function Header(props) {
     title,
     openGuide,
     history,
+    initialValues
   } = props;
 
+  
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -133,6 +143,12 @@ function Header(props) {
     }
     return classes.left;
   };
+
+  if(Object.keys(props.initialValues.projectName).length > 0){
+    localStorage.setItem('projectName',JSON.stringify(props.initialValues))
+   
+  }
+  const projectData = JSON.parse(localStorage.getItem('projectName'))
 
   const [age, setAge] = React.useState("");
 
@@ -152,6 +168,20 @@ function Header(props) {
 
   const filterOpen = Boolean(anchorEl);
   const id = filterOpen ? "simple-popover" : undefined;
+  useEffect(()=> {
+    
+    const callBack = async()=>{
+    // breakdownResponse is a prop.
+    
+    if(projectData!==null){
+    let breakdownValues = {}
+    console.log(projectData.projectName.breakdown)
+
+  
+  }
+}
+callBack();
+  })
 
   return (
     <AppBar
@@ -175,30 +205,19 @@ function Header(props) {
         </Fab>
         <Hidden smDown>
           <div className={classes.headerProperties}>
+          {props.initialValues.projectName === {}?null:
             <MuiThemeProvider theme={theme}>
               <div className={classes.projectSwitcher}>
                 <Typography variant="body2">Project:</Typography>
-                <FormControl
-                  size="small"
-                  variant="outlined"
-                  className={classes.projectSelect}
-                >
-                  {/* <InputLabel id="projectSwitch-label">Project</InputLabel> */}
-                  <Select
-                    labelId="projectSwitch-label"
-                    id="projectSwitch"
-                    value={age}
-                    // label="Project"
-                    aria-label="Project"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
+                <Breadcrumbs
+              className={classes.projectBreadcrumbs}
+              separator={<NavigateNextIcon fontSize="small" />}
+            >
+            <Chip size="medium" label={props.initialValues.projectName.projectName || 'JWIL Project 1'} />
+              
+            </Breadcrumbs>
               </div>
-            </MuiThemeProvider>
+            </MuiThemeProvider>}
 
             <div>
               <IconButton
@@ -230,14 +249,15 @@ function Header(props) {
               >
                 <Box p={3}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    {projectData===null?null:projectData.projectName.breakdown.length>0?projectData.projectName.breakdown.map((item,index)=>
+                    <Grid item xs={12} key={index}>
                       <FormControl
                         variant="outlined"
                         size="small"
                         fullWidth={true}
                         className={classes.filterSelect}
                       >
-                        <InputLabel id="filter3-label">Phases</InputLabel>
+                        <InputLabel id="filter3-label">{item.structure[0].name}</InputLabel>
                         <Select
                           labelId="filter3-label"
                           id="filter3"
@@ -252,52 +272,7 @@ function Header(props) {
                         </Select>
                       </FormControl>
                     </Grid>
-
-                    <Grid item xs={12}>
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-                        <InputLabel id="filter3-label">Phases</InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={age}
-                          onChange={handleChange}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-                        <InputLabel id="filter3-label">Phases</InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={age}
-                          onChange={handleChange}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                    ):null}
 
                     <Grid item md={12}>
                       <Button
@@ -318,9 +293,8 @@ function Header(props) {
               className={classes.projectBreadcrumbs}
               separator={<NavigateNextIcon fontSize="small" />}
             >
-              <Chip size="small" label="Phase 1" />
-              <Chip size="small" label="Unit 11" />
-              <Chip size="small" label="Work Area 11" />
+              {projectData === null?null: Object.keys(projectData.projectName).length>0?projectData.projectName.breakdown.map((item,index)=>
+              <Chip size="small" label={item.structure[0].name} />):null}
             </Breadcrumbs>
           </div>
         </Hidden>
@@ -354,4 +328,10 @@ Header.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+const HeaderInit = connect(
+  state => ({
+    initialValues: state.getIn(['InitialDetailsReducer'])
+  }),
+)(Header);
+
+export default withStyles(styles)(HeaderInit);

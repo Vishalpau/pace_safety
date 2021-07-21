@@ -78,7 +78,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -89,7 +89,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -100,7 +100,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -111,7 +111,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -122,7 +122,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -133,7 +133,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -144,7 +144,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -155,7 +155,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -166,7 +166,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -177,7 +177,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -188,7 +188,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -199,7 +199,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
     {
@@ -210,7 +210,7 @@ const Evidence = () => {
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
-      fkIncidentId: localStorage.getItem("fkincidentId"),
+      fkIncidentId: id || localStorage.getItem("fkincidentId"),
       error: "",
     },
   ]);
@@ -218,14 +218,14 @@ const Evidence = () => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const fetchEvidenceList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    let lastItem = id ? id : localStorage.getItem("fkincidentId");
+    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
     const result = res.data.data.results;
 
     let tempData = [];
     if (result.length) {
       // await setForm(result);
       for (let i = 0; i < result.length; i++) {
-        console.log(result[i]);
         tempData.push({
           evidenceCategory: result[i].evidenceCategory,
           evidenceCheck: result[i].evidenceCheck,
@@ -234,13 +234,16 @@ const Evidence = () => {
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
-          fkIncidentId: localStorage.getItem("fkincidentId"),
+          fkIncidentId: id || localStorage.getItem("fkincidentId"),
           pk: result[i].id,
         });
       }
     }
-    await setEvideceData(tempData);
-    await setForm(tempData);
+
+    if (result.length > 3) {
+      await setForm(tempData);
+      await setEvideceData(tempData);
+    }
     await setIsLoading(true);
   };
 
@@ -285,7 +288,7 @@ const Evidence = () => {
   // console.log(evideceData)
   const fetchIncidentDetails = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`
     );
     const result = res.data.data.results;
     await setIncidentDetail(result);
@@ -303,8 +306,6 @@ const Evidence = () => {
     }
 
     for (let i = 0; i < form.length; i++) {
-      console.log([i]);
-
       let data = new FormData();
       data.append("evidenceCheck", form[i].evidenceCheck);
       data.append("evidenceCategory", form[i].evidenceCategory);
@@ -315,8 +316,6 @@ const Evidence = () => {
 
       // If update is the case.
       if (id) {
-        console.log("in put");
-        console.log("evidence id", evideceData[i].pk);
         data.append("pk", evideceData[i].pk);
 
         const res = await api.put(
@@ -333,8 +332,6 @@ const Evidence = () => {
         localStorage.getItem("fkincidentId") &&
         evideceData.length > 0
       ) {
-        console.log("dd put");
-        // console.log(evideceData)
         for (let i = 0; i < evideceData.length; i++) {
           let data = new FormData();
           data.append("pk", evideceData[i].pk);
@@ -342,20 +339,19 @@ const Evidence = () => {
           data.append("evidenceNumber", evideceData[i].evidenceNumber);
           data.append("evidenceCategory", evideceData[i].evidenceCategory);
           data.append("evidenceDocument", evideceData[i].evidenceDocument);
-          data.append("status", "Active");
+          data.append("status", "");
           data.append("createdAt", evideceData[i].createdAt);
           data.append("createdBy", evideceData[i].createdBy);
           data.append("updatedAt", evideceData[i].updatedAt);
           data.append("updatedBy", evideceData[i].updatedBy);
           data.append("fkIncidentId", evideceData[i].fkIncidentId);
         }
-        console.log(data);
-        // const res = await api.put(
-        //   `/api/v1/incidents/${localStorage.getItem(
-        //     "fkincidentId"
-        //   )}/evidences/${evideceData[i].pk}/`,
-        //   data
-        // );
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/evidences/${evideceData[i].pk}/`,
+          data
+        );
 
         history.push(
           `/app/incident-management/registration/evidence/activity-detail/`
@@ -366,9 +362,7 @@ const Evidence = () => {
         data.append("updatedAt", form[i].updatedAt);
         data.append("updatedBy", form[i].updatedBy);
         data.append("fkIncidentId", form[i].fkIncidentId);
-
         if (Object.keys(error).length == 0) {
-          console.log("in post");
           const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
@@ -376,7 +370,6 @@ const Evidence = () => {
             data
           );
 
-          console.log(res.data.data.results);
           if (res.status === 201) {
             // const queId = res.data.data.results.id;
             // localStorage.setItem("id", queId);
@@ -408,17 +401,34 @@ const Evidence = () => {
   };
 
   const handleFile = async (e, index) => {
+    console.log(e.target.files[0]);
     let TempPpeData = [...form];
     if (
       (TempPpeData[index].evidenceDocument =
         e.target.files[0].size <= 1024 * 1024 * 25)
     ) {
+      
       TempPpeData[index].evidenceDocument = e.target.files[0];
       await setForm(TempPpeData);
     } else {
       await setOpen(true);
     }
   };
+  // const handleFile = async (e, index) => {
+  //   console.log(e.target.files[0])
+  //   const formdata = new FormData()
+  //   let TempPpeData = [...form];
+  //   if (
+  //     (TempPpeData[index].evidenceDocument =
+  //       e.target.files[0].size <= 1024 * 1024 * 25)
+  //   ) {
+
+  //     TempPpeData[index].evidenceDocument = formdata.append('evidenceDocument',e.target.files[0]);
+  //     await setForm(TempPpeData);
+  //   } else {
+  //     await setOpen(true);
+  //   }
+  // };
 
   const handleComment = async (e, index) => {
     let TempPpeData = [...form];
@@ -447,11 +457,13 @@ const Evidence = () => {
 
   useEffect(() => {
     // fetchEvidenceData();
+    // fetchEvidenceList();
     fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
     } else {
-      setIsLoading(true);
+      fetchEvidenceList();
+      // setIsLoading(true);
     }
   }, []);
 
@@ -552,10 +564,12 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
+                                  {/* {form[index].evidenceDocument ?  <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> : */}
                                   <input
                                     type="file"
                                     className={classes.fullWidth}
-                                    accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
+                                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                                    // accept= "ppt/*  , word/*  , text , image/jpg , pdf , video/mp4,video/mov,video/flv,video/avi,video/mkv"
                                     disabled={
                                       value.evidenceCheck !== "Yes"
                                         ? true
@@ -567,6 +581,7 @@ const Evidence = () => {
                                       // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
                                   />
+                                  {/* } */}
                                 </TableCell>
                               </TableRow>
                             </>
@@ -574,8 +589,7 @@ const Evidence = () => {
                       </>
                     ) : (
                       <>
-                        {Object.entries(form)
-                        .map(([index, value]) => (
+                        {Object.entries(form).map(([index, value]) => (
                           <>
                             <TableRow>
                               <TableCell component="th" scope="row">
@@ -632,7 +646,7 @@ const Evidence = () => {
                                 <input
                                   type="file"
                                   className={classes.fullWidth}
-                                  accept="image/png, image/jpeg , excle/xls, excel/xlsx, ppt/ppt,ppt/pptx, word/doc,word/docx, text , pdf ,  video/mp4,video/mov,video/flv,video/avi,video/mkv"
+                                  accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                                   disabled={
                                     value.evidenceCheck !== "Yes" ? true : false
                                   }

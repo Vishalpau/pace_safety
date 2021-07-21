@@ -40,12 +40,19 @@ import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
 
 // Styles
+import "../../styles/custom.css";
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
+
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import Modal from "@material-ui/core/Modal";
+import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,24 +62,62 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    position: "absolute",
+    width: 650,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(4),
+  },
 }));
+
+function getModalStyle() {
+  return {
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  };
+}
 
 const LessionLearnSummary = () => {
   const [lessionlearn, setLessionLearn] = useState([]);
   const fkid = localStorage.getItem("fkincidentId");
+  const [evidence, setEvidence] = useState([]);
 
-  // // useEffect(() => {
-  // //     setFkid(localStorage.getItem("fkincidentId"))
-  // //   });
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+  const [documentUrl, setDocumentUrl] = useState("");
+
+  const handleOpen = (document) => {
+    setDocumentUrl(document);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const fetchLessionLearnData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${fkid}/learnings/`);
     await setLessionLearn(allIncidents.data.data.results);
   };
 
+  const fetchEvidanceData = async () => {
+    const allEvidence = await api.get(`/api/v1/incidents/${fkid}/evidences/`);
+    if (allEvidence.status === 200) {
+      await setEvidence(allEvidence.data.data.results);
+    }
+  };
+
   console.log(lessionlearn);
   useEffect(() => {
     fetchLessionLearnData();
+    console.log(open);
+    fetchEvidanceData();
   }, []);
   const classes = useStyles();
   return (
@@ -80,13 +125,18 @@ const LessionLearnSummary = () => {
       <Grid item xs={12}>
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Lesson Learn</Typography>
+            <Typography className={classes.heading}>Lessons Learnt</Typography>
           </AccordionSummary>
           <AccordionDetails>
             {lessionlearn.length !== 0
               ? lessionlearn.map((lession, key) => (
-                  <Grid container item md={9} spacing={3} key={key}>
-                    <Grid lg={6} md={6}>
+                  <Grid
+                    container
+                    spacing={3}
+                    key={key}
+                    className="repeatedGrid"
+                  >
+                    <Grid item xs={12}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -94,15 +144,11 @@ const LessionLearnSummary = () => {
                       >
                         Team Or Department
                       </Typography>
-                      <Typography
-                        variant="p"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {lession.teamOrDepartment}
                       </Typography>
                     </Grid>
-                    <Grid lg={6} md={6}>
+                    <Grid item xs={12}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -110,17 +156,146 @@ const LessionLearnSummary = () => {
                       >
                         Learnings
                       </Typography>
-                      <Typography
-                        variant="p"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
+                      <Typography className={Fonts.labelValue}>
                         {lession.learnings}
                       </Typography>
                     </Grid>
                   </Grid>
                 ))
               : null}
+            <Grid item md={12}>
+              {evidence.length !== 0
+                ? evidence
+                    .filter(
+                      (item) => item.evidenceCategory === "Lessons Learned"
+                    )
+                    .map((value, index) => (
+                      <Grid
+                        key={index}
+                        className="repeatedGrid"
+                        container
+                        item
+                        md={12}
+                        spacing={3}
+                      >
+                        <Grid container item xs={12} spacing={3}>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence No
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceNumber}
+                            </Typography>
+                          </Grid>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Check
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceCheck}
+                            </Typography>
+                          </Grid>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Category
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceCategory}
+                            </Typography>
+                          </Grid>
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Evidence Remark
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {value.evidenceRemark}
+                            </Typography>
+                          </Grid>
+                          {value.evidenceDocument ? (
+                            <Grid item lg={6} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Evidence Document
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                <Tooltip title="File Name">
+                                  <IconButton
+                                    onClick={() =>
+                                      handleOpen(value.evidenceDocument)
+                                    }
+                                    className={classes.fileIcon}
+                                  >
+                                    <PhotoSizeSelectActualIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </Typography>
+                            </Grid>
+                          ) : null}
+                        </Grid>
+                      </Grid>
+                    ))
+                : null}
+            </Grid>
+            {/* Modal */}
+            <Modal className={classes.modal} open={open} onClose={handleClose}>
+              <div className={classes.paper}>
+                <Typography variant="h6" gutterBottom>
+                  View Attachment
+                </Typography>
+                <Typography>Please choose what do you want to?</Typography>
+                <Box marginTop={4}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Button
+                        startIcon={<VisibilityIcon />}
+                        style={{ width: "100%" }}
+                        variant="contained"
+                        disableElevation
+                        href={`${documentUrl}`}
+                        target="_blank"
+                      >
+                        View Attachment
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6} />
+                  </Grid>
+                </Box>
+              </div>
+            </Modal>
           </AccordionDetails>
         </Accordion>
       </Grid>

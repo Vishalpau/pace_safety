@@ -3,41 +3,67 @@ export const DAEMON = "@@saga-injector/daemon";
 export const ONCE_TILL_UNMOUNT = "@@saga-injector/once-till-unmount";
 
 const URL = "https://dev-safety.pace-os.com/";
+
 export const SSO_URL = "https://dev-accounts-api.paceos.io";
+// local
+export const LOCAL_SSO_CLIENT_SECRET =
+  "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW";
+export const LOCAL_SSO_CLIENT_ID = "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1";
+export const LOCAL_LOGIN_URL = 'https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code'
+
 export const SSO_CLIENT_SECRET =
   "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
 export const SSO_CLIENT_ID = "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo";
 // Redirect login api if login is not.
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
+export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`
+
 
 export const API_URL = "https://dev-safety-api.paceos.io/";
 export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
 export const access_token = localStorage.getItem("access_token");
 
+export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/"
+
 export const INITIAL_NOTIFICATION_FORM = {
-  "Incident details":
-    `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem('fkincidentId')}`,
-  "People affected":
-    `/app/incident-management/registration/initial-notification/peoples-afftected/${localStorage.getItem('fkincidentId')}`,
-  "Property affected":
-    `/app/incident-management/registration/initial-notification/property-affected/${localStorage.getItem('fkincidentId')}`,
-  "Equipment affected":
-    `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem('fkincidentId')}`,
-  "Environment affected":
-    `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem('fkincidentId')}`,
-  "Reporting and notification":
-    `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem('fkincidentId')}`,
+  "Incident details": `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "People affected": `/app/incident-management/registration/initial-notification/peoples-afftected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Property affected": `/app/incident-management/registration/initial-notification/property-affected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Equipment affected": `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Environment affected": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Reporting and notification": `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
 };
 
 export const EVIDENCE_FORM = {
-  Evidences: "/app/incident-management/registration/evidence/evidence/",
+  Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
   "Activity details":
-    "/app/incident-management/registration/evidence/activity-detail/",
+    `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
+      "fkincidentId"
+    )}`,
   "Personal and PPE details":
-    "/app/incident-management/registration/evidence/personal-and-ppedetails/",
+    `/app/incident-management/registration/evidence/personal-and-ppedetails/${localStorage.getItem(
+      "fkincidentId"
+    )}`,
   "Additional details":
-    "/app/incident-management/registration/evidence/additional-details/",
+    `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem(
+      "fkincidentId"
+    )}`,
 };
+
 
 export const INVESTIGATION_FORM = {
   "Investigation overview":
@@ -49,7 +75,7 @@ export const INVESTIGATION_FORM = {
   "Event details":
     "/app/incident-management/registration/investigation/event-details/",
   "Action taken":
-    "/app/incident-management/registration/investigation/action-taken/",
+    "/app/incident-management/registration/investigation/action-taken/"
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
@@ -77,7 +103,7 @@ export const SUMMERY_FORM = {
 };
 
 export const LESSION_LEARNED_FORM = {
-  "Lesson learned":
+  "Lessons learnt":
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 

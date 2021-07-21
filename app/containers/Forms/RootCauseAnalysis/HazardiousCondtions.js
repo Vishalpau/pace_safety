@@ -70,7 +70,7 @@ const HazardiousCondition = () => {
   const history = useHistory();
   const [incidentDetail, setIncidentDetail] = useState({});
   const updateIds = useRef();
-  const checkPost = useRef()
+  const checkPost = useRef();
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -88,8 +88,12 @@ const HazardiousCondition = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/pacecauses/`
+    );
     let allApiData = previousData.data.data.results;
     // console.log(allApiData)
     if (allApiData.length > 8) {
@@ -103,7 +107,7 @@ const HazardiousCondition = () => {
         }
       });
       updateIds.current = tempApiDataId.reverse();
-      checkPost.current = false
+      checkPost.current = false;
 
       setForm({
         ...form,
@@ -142,7 +146,7 @@ const HazardiousCondition = () => {
         },
       });
     }
-    console.log(checkPost.current)
+    console.log(checkPost.current);
   };
 
   const handelWarningSystems = (e, value) => {
@@ -220,7 +224,9 @@ const HazardiousCondition = () => {
 
   const handelSafetyItems = (e, value) => {
     if (e.target.checked == false) {
-      const newData = form.safetyitems.rcaRemark.filter((item) => item !== value);
+      const newData = form.safetyitems.rcaRemark.filter(
+        (item) => item !== value
+      );
       setForm({
         ...form,
         safetyitems: {
@@ -288,13 +294,18 @@ const HazardiousCondition = () => {
     });
 
     // api call //
-    console.log(tempData)
+    console.log(tempData);
     let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
-          const res = await api.put(`/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
+          const res = await api.put(
+            `/api/v1/incidents/${putId.current}/pacecauses/${
+              callObjects[key].pk
+            }/`,
+            callObjects[key]
+          );
           if (res.status == 200) {
             console.log("request done");
             nextPageLink = res.status;
@@ -302,8 +313,10 @@ const HazardiousCondition = () => {
         } else {
           const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId")}/pacecauses/`,
-            callObjects[key]);
+              "fkincidentId"
+            )}/pacecauses/`,
+            callObjects[key]
+          );
           if (res.status == 201) {
             console.log("request done");
             nextPageLink = res.status;
@@ -317,7 +330,8 @@ const HazardiousCondition = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
+          putId.current
         }`
       );
     }
@@ -339,7 +353,8 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -347,21 +362,20 @@ const HazardiousCondition = () => {
         `/app/incident-management/registration/root-cause-analysis/hazardious-acts/`
       );
     }
-
-  }
+  };
 
   const habelCallback = async () => {
     await handelUpdateCheck();
     await fetchIncidentDetails();
-  }
+  };
 
   useEffect(() => {
-    habelCallback()
+    habelCallback();
   }, []);
 
   return (
     <PapperBlock
-      title="Immediate causes - hazardous Conditions"
+      title="Immediate causes - hazardous conditions"
       icon="ion-md-list-box"
     >
       {/* {console.log(checkPost.current)} */}
@@ -388,8 +402,8 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.warningSystem}
+              // required
+              // error={error.warningSystem}
             >
               <FormLabel component="legend">Warning system</FormLabel>
               <FormGroup>
@@ -402,9 +416,9 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.warningSystem && (
+              {/* {error && error.warningSystem && (
                 <FormHelperText>{error.warningSystem}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -413,8 +427,8 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.energyTypes}
+              // required
+              // error={error.energyTypes}
             >
               <FormLabel component="legend">Energy types</FormLabel>
               <FormGroup>
@@ -427,16 +441,19 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.energyTypes && (
+              {/* {error && error.energyTypes && (
                 <FormHelperText>{error.energyTypes}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* tools */}
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.tools}>
+            <FormControl
+              component="fieldset"
+              // required error={error.tools}
+            >
               <FormLabel component="legend">Tools</FormLabel>
               <FormGroup>
                 {TOOLS.map((value) => (
@@ -448,9 +465,9 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.tools && (
+              {/* {error && error.tools && (
                 <FormHelperText>{error.tools}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -459,8 +476,8 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
-              error={error.safetyitems}
+              // required
+              // error={error.safetyitems}
             >
               <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
@@ -473,9 +490,9 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.safetyitems && (
+              {/* {error && error.safetyitems && (
                 <FormHelperText>{error.safetyitems}</FormHelperText>
-              )}
+              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -489,7 +506,7 @@ const HazardiousCondition = () => {
               required
               error={error.others}
               value={form.others.rcaRemark}
-              helperText={error ? error.others : ""}
+              helperText={error ? error.others : null}
               rows={3}
               className={classes.formControl}
               onChange={async (e) => handelOthers(e)}

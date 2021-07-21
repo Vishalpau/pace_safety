@@ -90,9 +90,6 @@ const EnvironmentAffected = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // SetState in update time
-  const [isChecked, setIsChecked] = useState([]);
-
   const nextPath = localStorage.getItem("nextPath");
 
   const questionMap = useRef({
@@ -105,7 +102,7 @@ const EnvironmentAffected = () => {
     {
       envQuestion: "Were there any spills?",
       envQuestionOption: "",
-      envAnswerDetails: "No",
+      envAnswerDetails: "",
       createdBy: 1,
       status: "Active",
       fkIncidentId: localStorage.getItem("fkincidentId"),
@@ -113,7 +110,7 @@ const EnvironmentAffected = () => {
     {
       envQuestion: "Were there any release?",
       envQuestionOption: "",
-      envAnswerDetails: "No",
+      envAnswerDetails: "",
       createdBy: 1,
       status: "Active",
       fkIncidentId: localStorage.getItem("fkincidentId"),
@@ -121,7 +118,7 @@ const EnvironmentAffected = () => {
     {
       envQuestion: "Were there any impact on wildlife?",
       envQuestionOption: "",
-      envAnswerDetails: "No",
+      envAnswerDetails: "",
       createdBy: 1,
       status: "Active",
       fkIncidentId: localStorage.getItem("fkincidentId"),
@@ -129,7 +126,7 @@ const EnvironmentAffected = () => {
     {
       envQuestion: "Were there any waterbody affected?",
       envQuestionOption: "",
-      envAnswerDetails: "No",
+      envAnswerDetails: "",
       status: "Active",
       createdBy: 1,
       fkIncidentId: localStorage.getItem("fkincidentId"),
@@ -162,54 +159,61 @@ const EnvironmentAffected = () => {
   const handleNext = async () => {
     // check condition id is defined or env data not less than 0 other wise post data
     if (environmentListData.length > 0) {
-      for (var i = 0; i < environmentListData.length; i++) {
-        const res = await api.put(
-          `api/v1/incidents/${id}/environment/${environmentListData[i].id}/`,
-          environmentListData[i]
-        );
-      }
-      const temp = incidentsListData;
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      temp["enviromentalImpactComments"] =
-        envComments || incidentsListData.enviromentalImpactComments;
-
-      await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      history.push(
-        `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-      );
-    } else {
       const { error, isValid } = EnvironmentValidate(form);
       setError(error);
-      if (isValid === true) {
-        for (let i = 0; i < form.length; i++) {
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/environment/`,
-            form[i]
-          );
-        }
+      if (isValid) {
+        try {
+          for (var i = 0; i < environmentListData.length; i++) {
+            const res = await api.put(
+              `api/v1/incidents/${id}/environment/${
+                environmentListData[i].id
+              }/`,
+              environmentListData[i]
+            );
+          }
+        } catch (error) {}
         const temp = incidentsListData;
         temp["updatedAt"] = moment(new Date()).toISOString();
         temp["enviromentalImpactComments"] =
           envComments || incidentsListData.enviromentalImpactComments;
-
-        const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-        if (id) {
+        try {
+          await api.put(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
           history.push(
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
-        } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
+        } catch (error) {}
+      }
+    } else {
+      const { error, isValid } = EnvironmentValidate(form);
+      setError(error);
+      if (isValid === true) {
+        try {
+          for (let i = 0; i < form.length; i++) {
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem(
+                "fkincidentId"
+              )}/environment/`,
+              form[i]
+            );
+          }
+          const temp = incidentsListData;
+          temp["updatedAt"] = moment(new Date()).toISOString();
+          temp["enviromentalImpactComments"] =
+            envComments || incidentsListData.enviromentalImpactComments;
+
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
           );
-        }
+          if (id) {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+        } catch (error) {}
       }
     }
   };
@@ -240,11 +244,16 @@ const EnvironmentAffected = () => {
 
   const fetchEnviornmentListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/environment/`);
-    const result = res.data.data.results;
-    const envAnswer = result.map((item) => item.envQuestionOption);
-    await setIsChecked(envAnswer);
-    await setEnvironmentListData(result);
-    await setIsLoading(true);
+    if (res.status === 200) {
+      const result = res.data.data.results;
+      if (result.length > 0) {
+        let temp = [...form];
+        temp = result;
+        setForm(temp);
+      }
+      await setEnvironmentListData(result);
+      await setIsLoading(true);
+    }
   };
   const fetchIncidentsData = async () => {
     const res = await api.get(
@@ -255,9 +264,6 @@ const EnvironmentAffected = () => {
     if (!id) {
       setIsLoading(true);
     }
-    // const isavailable = result.isPersonDetailsAvailable
-    // await setPersonAffect(isavailable)
-    // await setIsLoading(true);
   };
 
   // handle go back
@@ -302,7 +308,15 @@ const EnvironmentAffected = () => {
               environmentListData.map((env, key) => (
                 <Grid container item spacing={3} md={12} key={key}>
                   <Grid item md={6}>
-                    <FormControl component="fieldset">
+                    <FormControl
+                      component="fieldset"
+                      error={error && error[`envAnswerDetails${[key]}`]}
+                      helperText={
+                        error && error[`envAnswerDetails${[key]}`]
+                          ? error[`envAnswerDetails${[key]}`]
+                          : null
+                      }
+                    >
                       <FormLabel component="legend">
                         {env.envQuestion}
                       </FormLabel>
@@ -331,7 +345,6 @@ const EnvironmentAffected = () => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-
                   <Grid item md={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
@@ -340,10 +353,10 @@ const EnvironmentAffected = () => {
                         rows="3"
                         variant="outlined"
                         label={`Details of ${env.envQuestion.slice(14, -1)}`}
-                        error={error && error.envAnswerDetails}
+                        error={error && error[`envAnswerDetails${[key]}`]}
                         helperText={
-                          error && error.envAnswerDetails
-                            ? error.envAnswerDetails
+                          error && error[`envAnswerDetails${[key]}`]
+                            ? error[`envAnswerDetails${[key]}`]
                             : null
                         }
                         defaultValue={env.envAnswerDetails}
@@ -369,6 +382,7 @@ const EnvironmentAffected = () => {
                     required
                     error={error && error[`envQuestionOption${[0]}`]}
                   >
+                   
                     <FormLabel component="legend">
                       Were there any spills?
                     </FormLabel>
@@ -393,9 +407,9 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    {error && error[`envQuestionOption${[3]}`] ? (
+                    {error && error[`envQuestionOption${[0]}`] ? (
                       <FormHelperText>
-                        {error[`envQuestionOption${[3]}`]}
+                        {error[`envQuestionOption${[0]}`]}
                       </FormHelperText>
                     ) : null}
                   </FormControl>
@@ -407,6 +421,12 @@ const EnvironmentAffected = () => {
                       id="spills-details"
                       variant="outlined"
                       label="Details of spills"
+                      error={error && error[`envAnswerDetails${[0]}`]}
+                      helperText={
+                        error && error[`envAnswerDetails${[0]}`]
+                          ? error[`envAnswerDetails${[0]}`]
+                          : null
+                      }
                       multiline
                       rows="3"
                       className={classes.fullWidth}
@@ -447,9 +467,9 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    {error && error[`envQuestionOption${[3]}`] ? (
+                    {error && error[`envQuestionOption${[1]}`] ? (
                       <FormHelperText>
-                        {error[`envQuestionOption${[3]}`]}
+                        {error[`envQuestionOption${[1]}`]}
                       </FormHelperText>
                     ) : null}
                   </FormControl>
@@ -461,9 +481,11 @@ const EnvironmentAffected = () => {
                       id="release-details"
                       multiline
                       variant="outlined"
-                      error={error && error.envQuestion}
+                      error={error && error[`envAnswerDetails${[1]}`]}
                       helperText={
-                        error && error.envQuestion ? err.envQuestion : null
+                        error && error[`envAnswerDetails${[1]}`]
+                          ? error[`envAnswerDetails${[1]}`]
+                          : null
                       }
                       rows="3"
                       label="Details of release"
@@ -506,9 +528,9 @@ const EnvironmentAffected = () => {
                           ))
                         : null}
                     </RadioGroup>
-                    {error && error[`envQuestionOption${[3]}`] ? (
+                    {error && error[`envQuestionOption${[2]}`] ? (
                       <FormHelperText>
-                        {error[`envQuestionOption${[3]}`]}
+                        {error[`envQuestionOption${[2]}`]}
                       </FormHelperText>
                     ) : null}
                   </FormControl>
@@ -521,10 +543,10 @@ const EnvironmentAffected = () => {
                       multiline
                       rows="3"
                       variant="outlined"
-                      error={error && error.envAnswerDetails}
+                      error={error && error[`envAnswerDetails${[2]}`]}
                       helperText={
-                        error && error.envAnswerDetails
-                          ? err.envAnswerDetails
+                        error && error[`envAnswerDetails${[2]}`]
+                          ? error[`envAnswerDetails${[2]}`]
                           : null
                       }
                       label="Details of wildlife affected"
@@ -582,10 +604,10 @@ const EnvironmentAffected = () => {
                       multiline
                       rows="3"
                       variant="outlined"
-                      error={error && error.envAnswerDetails}
+                      error={error && error[`envAnswerDetails${[3]}`]}
                       helperText={
-                        error && error.envAnswerDetails
-                          ? error.envAnswerDetails
+                        error && error[`envAnswerDetails${[3]}`]
+                          ? error[`envAnswerDetails${[3]}`]
                           : null
                       }
                       label="Details of waterbody affected"

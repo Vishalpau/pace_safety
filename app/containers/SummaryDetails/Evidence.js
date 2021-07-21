@@ -11,7 +11,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { useHistory, useParams } from "react-router";
 import {
@@ -37,6 +37,14 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 
+// Table
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+
 // Icons
 import Print from "@material-ui/icons/Print";
 import Share from "@material-ui/icons/Share";
@@ -47,6 +55,17 @@ import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
+import ImageIcon from "@material-ui/icons/Image";
+import VideoCallIcon from "@material-ui/icons/VideoCall";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
+import DescriptionIcon from "@material-ui/icons/Description";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 
 // Styles
 import Styles from "dan-styles/Summary.scss";
@@ -82,7 +101,19 @@ const useStyles = makeStyles((theme) => ({
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
   },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  dialogPaper: {
+    minWidth: 700,
+  },
 }));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function getModalStyle() {
   return {
@@ -97,6 +128,8 @@ const EvidenceSummary = () => {
   const [activity, setActivity] = useState([]);
   const [isLoading, setIsLoding] = useState(false);
   const [documentUrl, setDocumentUrl] = useState("");
+  const [expanded, setExpanded] = React.useState(false);
+
   const { id } = useParams();
 
   const [modalStyle] = React.useState(getModalStyle);
@@ -114,6 +147,10 @@ const EvidenceSummary = () => {
     window.location.href = `${documentUrl}`;
   };
 
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
   // const handleDownload = (url, filename) => {
   //   axios
   //     .get(url, {
@@ -127,9 +164,9 @@ const EvidenceSummary = () => {
   // };
 
   // const fkid = localStorage.getItem('fkincidentId');
-  console.log(evidence);
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    
     await setEvidence(allEvidence.data.data.results);
     await setIsLoding(true);
   };
@@ -149,131 +186,136 @@ const EvidenceSummary = () => {
 
   const classes = useStyles();
   return (
-    <PapperBlock title=" Evidences" icon="ion-md-list-box">
+    <>
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Accordion>
+            <Accordion
+              expanded={expanded === "panel1"}
+              onChange={handleExpand("panel1")}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>Evidence</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {evidence.length !== 0
-                  ? evidence.map((value, index) => (
-                      <Grid
-                        key={index}
-                        className="repeatedGrid"
-                        container
-                        item
-                        md={12}
-                        spacing={3}
-                      >
-                        <Grid container item xs={12} spacing={3}>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence No
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceNumber}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Check
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCheck}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Category
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCategory}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Remark
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceRemark}
-                            </Typography>
-                          </Grid>
-                          {value.evidenceDocument ? (
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence Document
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                <Tooltip title="File Name">
-                                  <IconButton
-                                    onClick={() =>
-                                      handleOpen(value.evidenceDocument)
-                                    }
-                                    className={classes.fileIcon}
-                                  >
-                                    <PhotoSizeSelectActualIcon />
-                                  </IconButton>
-                                </Tooltip>
-                              </Typography>
-                            </Grid>
-                          ) : null}
-                        </Grid>
-                      </Grid>
-                    ))
-                  : null}
+                <TableContainer component={Paper}>
+                  <Table style={{ minWidth: 900 }} size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell style={{ width: 200 }}>
+                          Evidence No
+                        </TableCell>
+                        <TableCell style={{ width: 300 }}>
+                          Evidence Check
+                        </TableCell>
+                        <TableCell style={{ width: 300 }}>
+                          Evidence Category
+                        </TableCell>
+                        <TableCell style={{ width: 400 }}>
+                          Evidence Remark
+                        </TableCell>
+                        <TableCell style={{ width: 300 }}>
+                          Evidence Document
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {evidence.length !== 0
+                        ? evidence.slice(1,14).map((value, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{value.evidenceNumber}</TableCell>
+                              <TableCell>{value.evidenceCheck}</TableCell>
+                              <TableCell>{value.evidenceCategory}</TableCell>
+                              <TableCell>{value.evidenceRemark}</TableCell>
+                              {value.evidenceDocument ? (
+                                <TableCell>
+                                  <Tooltip title={value.evidenceDocument}>
+                                    <IconButton
+                                      onClick={() =>
+                                        handleOpen(value.evidenceDocument)
+                                      }
+                                      className={classes.fileIcon}
+                                    >
+                                      {value.evidenceDocument.endsWith(
+                                        ".png"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".jpg"
+                                      ) ? (
+                                        <ImageIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".pdf"
+                                      ) ? (
+                                        <PictureAsPdfIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".mp4"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(".mov") ||
+                                      value.evidenceDocument.endsWith(".flv") ||
+                                      value.evidenceDocument.endsWith(
+                                        ".avi"
+                                      ) ? (
+                                        <VideoCallIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".xls"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".xlsx"
+                                      ) ? (
+                                        <DescriptionIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".ppt"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".pptx"
+                                      ) ? (
+                                        <DescriptionIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".text"
+                                      ) ? (
+                                        <TextFieldsIcon />
+                                      ) : null}
+                                      {value.evidenceDocument.endsWith(
+                                        ".docx"
+                                      ) ||
+                                      value.evidenceDocument.endsWith(
+                                        ".doc"
+                                      ) ? (
+                                        <TextFieldsIcon />
+                                      ) : null}
+                                    </IconButton>
+                                  </Tooltip>
+                                </TableCell>
+                              ) : null}
+                            </TableRow>
+                          ))
+                        : null}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </AccordionDetails>
             </Accordion>
           </Grid>
           <Grid item xs={12}>
-            <Accordion>
+            <Accordion
+              expanded={expanded === "panel2"}
+              onChange={handleExpand("panel2")}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>
                   Activity Details
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {activity.length !== 0
-                  ? activity.map((ad, key) => (
-                      <Grid container item xs={12} spacing={3} key={key}>
-                        <Grid item md={6}>
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.map((ad, key) => (
+                        <Grid item md={6} key={key}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -288,10 +330,9 @@ const EvidenceSummary = () => {
                             {ad.answer}
                           </Typography>
                         </Grid>
-                      </Grid>
-                      // </Grid>
-                    ))
-                  : null}
+                      ))
+                    : null}
+                </Grid>
               </AccordionDetails>
             </Accordion>
           </Grid>
@@ -300,61 +341,39 @@ const EvidenceSummary = () => {
         <h1>Loading...</h1>
       )}
 
-      <Modal className={classes.modal} open={open} onClose={handleClose}>
-        <div className={classes.paper}>
-          <Typography variant="h6" gutterBottom>
-            View Attachment
-          </Typography>
-          <Typography>Please choose what do you want to?</Typography>
-          <Box marginTop={4}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Button
-                  startIcon={<VisibilityIcon />}
-                  style={{ width: "100%" }}
-                  variant="contained"
-                  disableElevation
-                  href={`${documentUrl}`}
-                  target="_blank"
-                >
-                  View Attachment
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                {/* <Button
-                  startIcon={<GetAppIcon />}
-                  style={{ width: "100%" }}
-                  variant="contained"
-                  color="primary"
-                  href={`${documentUrl}`} 
-                  onClick={()=>downloadFile()}
-                  disableElevation
-                  // target='_blank'
-                >
-                
-                  Download Attachment
-                </Button> */}
-                {/* <button
-                crossorigin="anonymous"
-                  onClick={() => {
-                    handleDownload(
-                      `${documentUrl}`
-                    );
-                  }}
-                >
-                  Download Image
-                </button> */}
-
-                {/* <a href="https://www.w3schools.com/images/myw3schoolsimage.jpg"
-                
-                download> Download Here </a> */}
-                <a href={`${documentUrl}`} download />
-              </Grid>
-            </Grid>
-          </Box>
-        </div>
-      </Modal>
-    </PapperBlock>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        keepMounted
+        PaperProps={{
+          style: {
+            width: 700,
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {" Please choose what do you want to?"}
+        </DialogTitle>
+        <IconButton onClick={handleClose} className={classes.closeButton}>
+          <Close />
+        </IconButton>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            <Button
+              startIcon={<GetAppIcon />}
+              variant="contained"
+              color="primary"
+              onClick={() => downloadFile()}
+              disableElevation
+              target="_blank"
+            >
+              Download Attachment
+            </Button>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 export default EvidenceSummary;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PropTypes } from "prop-types";
 import { Switch, Route } from "react-router-dom";
 import { ThemeContext } from "./ThemeWrapper";
@@ -123,9 +123,33 @@ import {
   UpdateIncidentDetails,
 } from "../pageListAsync";
 
+import axios from 'axios';
+import {access_token, SELF_API} from "../../utils/constants"
+
 function Application(props) {
   const { history } = props;
   const changeMode = useContext(ThemeContext);
+  const [userDetails, setUserDetails] = useState([])
+
+    try{
+    let config = {
+      method: "get",
+      url: `${SELF_API}`,
+      headers: { 
+        'Authorization': `Bearer ${access_token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    axios(config)
+      .then(function(response) {
+        setUserDetails(response.data.results)
+      })
+      .catch(function(error) {});
+    }catch(error){}
+  // }
+  useEffect(()=>{
+    
+  },[])
   return (
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>

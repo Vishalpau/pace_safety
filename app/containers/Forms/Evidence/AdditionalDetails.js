@@ -37,10 +37,10 @@ const AdditionalDetails = () => {
 
   const { id } = useParams();
   const history = useHistory();
-  // const [activtyList, setAdditionalDetailList] = useState({});
+  const [additionalDetailList, setAdditionalDetailList] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
-  const [additionalDetailList, setAdditionalDetailList] = useState([
+  const [additionalList, setAdditionalList] = useState([
     {
       questionCode: "ADD-22",
       question: "Any part/equipment sent for analysis",
@@ -88,7 +88,8 @@ const AdditionalDetails = () => {
   ]);
 
   const fetchActivityList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/activities/`);
+    let lastId = id ? id : localStorage.getItem("fkincidentId")
+    const res = await api.get(`/api/v1/incidents/${lastId}/activities/`);
     const result = res.data.data.results;
     console.log(result);
     console.log(result.length);
@@ -103,7 +104,7 @@ const AdditionalDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
     await setError(error);
-    console.log(error);
+    console.log(additionalDetailList.length);
     if (!isValid) {
       return;
     }
@@ -119,12 +120,25 @@ const AdditionalDetails = () => {
           `/app/incident-management/registration/summary/summary/${id}`
         );
       }
-    } else {
-      console.log("in Post");
+    } else if(additionalDetailList.length  == 25){
+      {
+        console.log("in ddput");
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          additionalDetailList
+        );
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`
+          );
+        }
+      }
+    } {
+      console.log(additionalDetailList.length);
 
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        additionalDetailList
+        additionalList
       );
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
@@ -132,7 +146,6 @@ const AdditionalDetails = () => {
         )}`
       );
     }
-    localStorage.setItem("Evidence", "Done");
   };
 
   const handleRadioData = (e, questionCode) => {
@@ -148,6 +161,19 @@ const AdditionalDetails = () => {
     setAdditionalDetailList(TempActivity);
   };
 
+  const handleRadioData2 = (e, questionCode) => {
+    let TempActivity = [];
+    for (let key in additionalList) {
+      let activityObj = additionalList[key];
+      if (questionCode == activityObj.questionCode) {
+        activityObj.answer = e.target.value;
+      }
+      TempActivity.push(activityObj);
+    }
+    console.log(TempActivity);
+    setAdditionalList(TempActivity);
+  };
+
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
@@ -161,10 +187,12 @@ const AdditionalDetails = () => {
   console.log(additionalDetailList);
   useEffect(() => {
     fetchIncidentDetails();
+    
     if (id) {
       fetchActivityList();
     } else {
       setIsLoading(true);
+      fetchActivityList();
     }
   }, [id]);
   return (
@@ -178,14 +206,6 @@ const AdditionalDetails = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
-            <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident description
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentDetails}
               </Typography>
             </Grid>
             {additionalDetailList.length > 24 ? (
@@ -217,7 +237,7 @@ const AdditionalDetails = () => {
               </>
             ) : (
               <>
-                {Object.entries(additionalDetailList).map(([key, value]) => (
+                {Object.entries(additionalList).map(([key, value]) => (
                   <Grid item md={12}>
                     <FormControl
                       className={classes.formControl}
@@ -228,12 +248,13 @@ const AdditionalDetails = () => {
                         variant="outlined"
                         label={value.question}
                         error={value.error}
+                        
                         required
                         helperText={value.error ? value.error : null}
                         multiline
                         rows="4"
                         onChange={(e) => {
-                          handleRadioData(e, value.questionCode);
+                          handleRadioData2(e, value.questionCode);
 
                           console.log(value.answer);
                         }}

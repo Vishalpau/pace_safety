@@ -101,6 +101,7 @@ const EventDetails = () => {
     putId.current = incidentId;
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
+    console.log(allApiData)
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
@@ -137,6 +138,7 @@ const EventDetails = () => {
 
 
     }
+    localStorage.setItem("WorkerPost", "done")
   };
 
   const handelWeather = async (e, key, value) => {
@@ -224,20 +226,24 @@ const EventDetails = () => {
         const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/`, form);
 
         // weather api call put 
-        let weatherObject = weather;
-        for (let key in weatherObject) {
-          const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/${weatherId.current[key]}/`, weatherObject[key])
-          if (resWeather == 200) {
-            console.log("request done")
+        if (weather.length > 0 && !isNaN(weatherId.current[0])) {
+          let weatherObject = weather;
+          for (let key in weatherObject) {
+            const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/${weatherId.current[key]}/`, weatherObject[key])
+            if (resWeather == 200) {
+              console.log("request done")
+            }
           }
         }
 
         // cost api call put
-        let costObject = overAllCost;
-        for (let keys in costObject) {
-          const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/${overAllCostId.current[keys]}/`, costObject[keys])
-          if (resWeather == 200) {
-            console.log("request done")
+        if (overAllCost.length > 0 && !isNaN(overAllCostId.current[0])) {
+          let costObject = overAllCost;
+          for (let keys in costObject) {
+            const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/${overAllCostId.current[keys]}/`, costObject[keys])
+            if (resWeather == 200) {
+              console.log("request done")
+            }
           }
         }
         history.push(`/app/incident-management/registration/investigation/action-taken/${putId.current}`)
@@ -392,7 +398,7 @@ const EventDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Temprature"
+              label="Temperature"
               value={form.temperature}
               onChange={(e) => {
                 setForm({
@@ -684,7 +690,7 @@ const EventDetails = () => {
               color="primary"
               className={classes.button}
               onClick={() => history.goBack()}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
+            // href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
             >
               Previous
             </Button>

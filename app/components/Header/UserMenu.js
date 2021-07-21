@@ -36,7 +36,9 @@ import {
   access_token,
   ACCOUNT_API_URL,
   LOGIN_URL,
-  SSO_CLIENT_ID
+  LOGOUT_URL,
+  SSO_CLIENT_ID,
+  SSO_URL
 } from "../../utils/constants";
 import axios from "axios";
 
@@ -84,7 +86,8 @@ function UserMenu(props) {
     setMenuAnchorEl(null);
   };
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault()
     console.log(access_token);
     const config = {
       method: "get",
@@ -97,28 +100,18 @@ function UserMenu(props) {
     console.log(config);
     axios(config)
       .then((response) => {
-        if (response.status === 201) {
+        if(response.status === 201) {
           console.log(response)
           localStorage.removeItem('access_token')
           localStorage.clear();
-            window.location.href =`https://dev-accounts-api.paceos.io/user/logout/?client_id=${SSO_CLIENT_ID}`
-           
+            window.location.href =`${LOGOUT_URL}`          
         }
-        if(res.status === 401){
-          // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1`
-
-          // window.location.href = LOGIN_URL
-          return
-        }
-       
       })
       .catch((error) => {
-        // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
-
-        window.location.href = LOGIN_URL
+        localStorage.removeItem('access_token');
+        localStorage.clear();
+        window.location.href =`${LOGOUT_URL}`
       });
-
-    // window.location.href = LOGIN_URL;
   };
 
   function ListItemLink(props) {
@@ -394,9 +387,9 @@ function UserMenu(props) {
         </MenuItem>
         <Divider />
         <MenuItem
-          onClick={() => {
+          onClick={(e) => {
             handleClose();
-            handleLogout();
+            handleLogout(e);
           }}
         >
           <ListItemIcon>
