@@ -66,9 +66,9 @@ const InvestigationOverview = () => {
       await setForm(allApiData);
       investigationId.current = allApiData.id
     }
-    if (localStorage.getItem("WorkerPost") == "done") {
+    let workerApiDataFetch = await api.get(`api/v1/incidents/${incidentId}/investigations/${investigationId.current}/workers/`);
+    if (workerApiDataFetch.data.data.results !== []) {
       let worker_temp = []
-      let workerApiDataFetch = await api.get(`api/v1/incidents/${incidentId}/investigations/${investigationId.current}/workers/`);
       let workerApiData = workerApiDataFetch.data.data.results
       workerApiData.map((value) => {
         worker_temp.push(value)
@@ -193,6 +193,7 @@ const InvestigationOverview = () => {
 
     }
     localStorage.setItem("WorkerDataFetched", "Yes")
+    localStorage.removeItem("WorkerPost")
   };
 
   const handelDeaultValue = (value) => {
@@ -403,12 +404,12 @@ const InvestigationOverview = () => {
             <Grid item md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
-                  Reputaion - actual consequences
+                  Reputation - actual consequences
                 </InputLabel>
                 <Select
                   labelId="unit-name-label"
                   id="unit-name"
-                  label="Reputaion -  Actual Consequences"
+                  label="Reputation -  Actual Consequences"
                   value={handelDeaultValue(form.reputationActual)}
                 >
                   {reputaionValues.current.map((selectValues) => (
@@ -431,12 +432,12 @@ const InvestigationOverview = () => {
             <Grid item md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
-                  Reputaion - potential consequences
+                  Reputation - potential consequences
                 </InputLabel>
                 <Select
                   labelId="unit-name-label"
                   id="unit-name"
-                  label="Reputaion - potential consequences"
+                  label="Reputation - potential consequences"
                   value={handelDeaultValue(form.reputationPotential)}
                 >
                   {reputaionValues.current.map((selectValues) => (
@@ -571,7 +572,7 @@ const InvestigationOverview = () => {
 
             <Grid item md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Rca recommended</InputLabel>
+                <InputLabel id="unit-name-label">RCA recommended</InputLabel>
                 <Select
                   labelId="unit-name-label"
                   id="unit-name"
