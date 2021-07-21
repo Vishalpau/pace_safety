@@ -312,10 +312,10 @@ const EvidenceSummary = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {activity.length !== 0
-                  ? activity.map((ad, key) => (
-                      <Grid container item xs={12} spacing={3} key={key}>
-                        <Grid item md={6}>
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.map((ad, key) => (
+                        <Grid item md={6} key={key}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -330,10 +330,9 @@ const EvidenceSummary = () => {
                             {ad.answer}
                           </Typography>
                         </Grid>
-                      </Grid>
-                      // </Grid>
-                    ))
-                  : null}
+                      ))
+                    : null}
+                </Grid>
               </AccordionDetails>
             </Accordion>
           </Grid>
