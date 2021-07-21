@@ -379,7 +379,7 @@ const WorkerDetails = () => {
                 }}
               />
             </Grid>
-
+            {/* worker type */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -442,6 +442,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* scheduled workign hours */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -643,6 +644,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* time on project */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -711,6 +713,7 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
+            {/* event leading to injury */}
             <Grid item md={6}>
               <TextField
                 id="title"
@@ -789,6 +792,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* secondary body part */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -823,6 +827,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* type of injury */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -976,6 +981,7 @@ const WorkerDetails = () => {
               />
             </Grid>
 
+            {/* first aid */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -1008,6 +1014,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* mechanish of injury */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -1046,6 +1053,7 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
+            {/* medical issues */}
             <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Medical issued ?</FormLabel>
@@ -1070,6 +1078,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* prescription issue */}
             <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Prescription issues ?</FormLabel>
@@ -1094,6 +1103,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* non prescription */}
             <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Non-prescription ?</FormLabel>
@@ -1118,6 +1128,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* any limitation */}
             <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Any limitation ?</FormLabel>
@@ -1148,6 +1159,7 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
+            {/* test taken */}
             <Grid item md={12}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Was the test taken?</FormLabel>
@@ -1252,6 +1264,7 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
+            {/* supervisor name */}
             <Grid item md={6}>
               {/* <p>Supervisor name</p> */}
               <TextField
@@ -1274,6 +1287,7 @@ const WorkerDetails = () => {
               {error && error.supervisorName && <p>{error.supervisorName}</p>}
             </Grid>
 
+            {/* supervisor time */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -1308,6 +1322,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* supervisor time */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
@@ -1342,6 +1357,7 @@ const WorkerDetails = () => {
               </FormControl>
             </Grid>
 
+            {/* supervisor time in industry */}
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
