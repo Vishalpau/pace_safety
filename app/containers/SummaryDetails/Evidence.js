@@ -148,7 +148,7 @@ const EvidenceSummary = () => {
   // const fkid = localStorage.getItem('fkincidentId');
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    console.log(allEvidence);
+    
     await setEvidence(allEvidence.data.data.results);
     await setIsLoding(true);
   };
@@ -203,7 +203,7 @@ const EvidenceSummary = () => {
                     </TableHead>
                     <TableBody>
                       {evidence.length !== 0
-                        ? evidence.map((value, index) => (
+                        ? evidence.slice(1,14).map((value, index) => (
                             <TableRow key={index}>
                               <TableCell>{value.evidenceNumber}</TableCell>
                               <TableCell>{value.evidenceCheck}</TableCell>

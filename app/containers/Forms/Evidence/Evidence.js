@@ -230,7 +230,7 @@ const Evidence = () => {
           evidenceCategory: result[i].evidenceCategory,
           evidenceCheck: result[i].evidenceCheck,
           evidenceRemark: result[i].evidenceRemark,
-          evidenceDocument: result[i].evidenceDocument,
+          evidenceDocument: "",
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
@@ -240,7 +240,7 @@ const Evidence = () => {
       }
     }
 
-    if (result.length > 1) {
+    if (result.length > 3) {
       await setForm(tempData);
       await setEvideceData(tempData);
     }
@@ -411,7 +411,7 @@ const Evidence = () => {
         e.target.files[0].size <= 1024 * 1024 * 25)
     ) {
       
-      TempPpeData[index].evidenceDocument = formdata.append('evidenceDocument',e.target.files[0]);
+      TempPpeData[index].evidenceDocument = e.target.files[0];
       await setForm(TempPpeData);
     } else {
       await setOpen(true);
@@ -509,7 +509,7 @@ const Evidence = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {form.length >= 14 ? (
+                    {form.length == 14 ? (
                       <>
                         {Object.entries(form)
                           .slice(1, 14)
