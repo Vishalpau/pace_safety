@@ -34,12 +34,17 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Modal from "@material-ui/core/Modal";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 
 import axios from "axios";
 import api from "../../utils/axios";
@@ -54,7 +59,7 @@ import { async } from "fast-glob";
 
 import { useDispatch } from "react-redux";
 
-import {projectName} from "../../redux/actions/initialDetails";
+import { projectName } from "../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,11 +77,15 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
     width: 650,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: "#fff",
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
   },
 }));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function getModalStyle() {
   return {
@@ -100,40 +109,36 @@ function PersonalDashboard(props) {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
-    
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleCompanyName = async(e,key) => {
+  const handleCompanyName = async (e, key) => {
     localStorage.setItem("companyListData", e);
     // alert()
     let newData = companyListData[key];
-   
-    if(newData){
+
+    if (newData) {
       await setProjectListData(newData.projects);
-    }
-   
-    else{
-      
+    } else {
       await setOpen(false);
-      localStorage.removeItem('projectDataList')
+      localStorage.removeItem("projectDataList");
     }
 
     // setOpen(false);
   };
 
-  const handleProjectName = async(key)=>{
+  const handleProjectName = async (key) => {
     let data = {
-      projectName: projectListData[key]
-    }
-   
-      await dispatch(projectName(data.projectName));
-      // for(var i in data.projectName.breakdown)
-  
+      projectName: projectListData[key],
+    };
+
+    await dispatch(projectName(data.projectName));
+    // for(var i in data.projectName.breakdown)
+
     // localStorage.setItem('projectDataList',JSON.stringify(data.projectName))
-  }
+  };
 
   const loggingCheck = async () => {
     let config = {
@@ -308,78 +313,97 @@ function PersonalDashboard(props) {
           </div>
         </div>
       </div>
-      <Modal className={style.modal} open={open} onClose={handleClose}>
-        <Box p={3}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <FormControl
-                variant="outlined"
-                size="small"
-                fullWidth={true}
-                className={style.filterSelect}
-              >
-                <InputLabel id="filter3-label">Company name</InputLabel>
-                <Select
-                  labelId="filter3-label"
-                  id="filter3"
-                  // value={age}
-                  label="Phases"
-                  style={{ width: "100%" }}
-                >
-                  {companyListData.map((selectValues, key) => (
-                    <MenuItem 
-                    key={key}
-                    onClick={() => handleCompanyName(selectValues.companyId,key)} 
-                    value={selectValues.companyId}>
-                      {selectValues.companyName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            {projectListData.length>0?
-            <Grid item xs={12}>
-              <FormControl
-                variant="outlined"
-                size="small"
-                fullWidth={true}
-                className={style.filterSelect}
-              >
-                <InputLabel id="filter3-label">Project</InputLabel>
-                <Select
-                  labelId="filter3-label"
-                  id="filter3"
-                  // value={age}
-                  // onChange={handleChange}
-                  label="Phases"
-                  style={{ width: "100%" }}
-                >
-                 {projectListData.map((selectValues, key) => (
-                    <MenuItem 
-                    key={key} 
-                    onClick={()=>handleProjectName(key)}
-                    value={selectValues.projectId}>
-                      {selectValues.projectName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>:null}
 
-            <Grid item md={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                disableElevation
-                onClick={()=>setOpen(false)}
-              >
-                Apply
-              </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        keepMounted
+        PaperProps={{
+          style: {
+            width: 700,
+          },
+        }}
+      >
+        <DialogTitle id="choose-project-title">
+          {"Choose a Project"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="choose-project-content">
+            <Grid container spacing={2} className={classes.paper}>
+              <Grid item xs={12}>
+                <FormControl
+                  variant="outlined"
+                  size="small"
+                  fullWidth={true}
+                  className={style.filterSelect}
+                >
+                  <InputLabel id="company-label">Company name</InputLabel>
+                  <Select
+                    labelId="company-label"
+                    id="company"
+                    // value={age}
+                    label="Company name"
+                    style={{ width: "100%" }}
+                  >
+                    {companyListData.map((selectValues, key) => (
+                      <MenuItem
+                        key={key}
+                        onClick={() =>
+                          handleCompanyName(selectValues.companyId, key)
+                        }
+                        value={selectValues.companyId}
+                      >
+                        {selectValues.companyName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              {projectListData.length > 0 ? (
+                <Grid item xs={12}>
+                  <FormControl
+                    variant="outlined"
+                    size="small"
+                    fullWidth={true}
+                    className={style.filterSelect}
+                  >
+                    <InputLabel id="project-label">Project</InputLabel>
+                    <Select
+                      labelId="project-label"
+                      id="project"
+                      label="Project"
+                      style={{ width: "100%" }}
+                    >
+                      {projectListData.map((selectValues, key) => (
+                        <MenuItem
+                          key={key}
+                          onClick={() => handleProjectName(key)}
+                          value={selectValues.projectId}
+                        >
+                          {selectValues.projectName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              ) : null}
+
+              <Grid item md={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  disableElevation
+                  onClick={() => setOpen(false)}
+                >
+                  Apply
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </Modal>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </PapperBlock>
   );
 }

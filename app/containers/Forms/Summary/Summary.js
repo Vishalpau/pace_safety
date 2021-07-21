@@ -146,7 +146,7 @@ const Summary = () => {
       `/api/v1/incidents/${incidentId}/pacecauses/`
     );
     let paceCauseData = paceCause.data.data.results[0];
-    console.log(paceCauseData)
+    console.log(paceCauseData);
     await setPaceCauseData(paceCauseData);
 
     let rootCause = await api.get(
@@ -198,9 +198,9 @@ const Summary = () => {
             <div className={Styles.incidents}>
               <div className={Styles.item}>
                 <Button
-                  color="primary"
+                  color={initialNotification ? "secondary" : "primary"}
                   variant="contained"
-                  size="small"
+                  size="large"
                   variant={
                     incidents.isEquipmentDamaged ? "contained" : "outlined"
                   }
@@ -231,7 +231,7 @@ const Summary = () => {
                 <Button
                   color="primary"
                   variant="outlined"
-                  size="small"
+                  size="large"
                   variant={investigationOverview ? "contained" : "outlined"}
                   endIcon={
                     investigationOverview ? <CheckCircle /> : <AccessTime />
@@ -256,7 +256,7 @@ const Summary = () => {
                 <Button
                   color="primary"
                   variant={evidencesData ? "contained" : "outlined"}
-                  size="small"
+                  size="large"
                   className={classes.statusButton}
                   endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
@@ -281,7 +281,7 @@ const Summary = () => {
                       ? "contained"
                       : "outlined"
                   }
-                  size="small"
+                  size="large"
                   className={classes.statusButton}
                   endIcon={
                     paceCauseData || rootCausesData || whyData ? (
@@ -310,7 +310,7 @@ const Summary = () => {
                 <Button
                   color="primary"
                   variant={lessionlearnData ? "contained" : "outlined"}
-                  size="small"
+                  size="large"
                   className={classes.statusButton}
                   endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
