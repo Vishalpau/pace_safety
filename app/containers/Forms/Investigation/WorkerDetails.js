@@ -1414,7 +1414,6 @@ const WorkerDetails = () => {
               {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p></p>}
             </Grid>
 
-
             {localWorkerData.length > 1 ?
               <Grid item md={12}>
                 <Button

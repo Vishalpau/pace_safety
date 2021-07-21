@@ -439,7 +439,7 @@ const InvestigationSummary = () => {
                   <>
                     {/* worker number */}
                     <Grid item lg={12}>
-                      <Typography variant="h6">
+                      <Typography variant="h7">
                         {`Worker ${index + 1}`}
                       </Typography>
                     </Grid>
