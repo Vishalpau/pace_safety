@@ -1462,9 +1462,6 @@ const WorkerDetails = () => {
               />
             </Grid>
             <Grid item md={12}>
-              {/* {localWorkerData.map((value, index) => (
-                <Button onClick={(e) => handelWorkerNavigate(e, index)}>{`Worker ${index + 1}`}</Button>
-              ))} */}
               <Box mt={4}>
                 <Paper elevation={1} >
                   <List dense>

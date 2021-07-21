@@ -9,6 +9,7 @@ import { useParams } from "react-router";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ImageIcon from '@material-ui/icons/Image';
 import Paper from "@material-ui/core/Paper";
+import Divider from '@material-ui/core/Divider';
 
 
 import api from "../../utils/axios";
@@ -703,6 +704,9 @@ const InvestigationSummary = () => {
                       </Grid>
                       : null}
 
+                    <Grid item lg={12} md={12}>
+                      <Divider />
+                    </Grid>
                   </>
                 ))}
               </Grid>
