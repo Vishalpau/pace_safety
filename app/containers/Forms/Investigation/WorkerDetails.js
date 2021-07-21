@@ -164,10 +164,6 @@ const WorkerDetails = () => {
       investigationId.current = allApiData.id;
     }
     await setIsLoading(true);
-
-    // JSON.parse(allEffectedPersonData).map((value, i) => {
-    //   INVESTIGATION_FORM[`Worker${i}`] = `/app/incident-management/registration/investigation/worker-details/${i}/${incidentId}`
-    // })
   };
 
   const handelAddNew = async () => {
@@ -175,7 +171,6 @@ const WorkerDetails = () => {
 
     await worker.splice(parseInt(workerNumber) + 1, 0, workerData)
     await localStorage.setItem("personEffected", JSON.stringify(worker))
-    // await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) + 1}/${localStorage.getItem("fkincidentId")}`)
     await handleNext()
   }
 
@@ -290,9 +285,7 @@ const WorkerDetails = () => {
   const PickList = async () => {
     await handelUpdateCheck()
     workerType.current = await PickListData(71);
-    // departmentName.current = await PickListData(10);
     setDepartmentName(await PickListData(10))
-    // workHours.current = await PickListData(70);
     setworkHours(await PickListData(70))
     shiftType.current = await PickListData(47);
     occupation.current = await PickListData(48);

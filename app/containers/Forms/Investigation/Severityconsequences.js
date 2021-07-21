@@ -8,8 +8,7 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 
-import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
+
 import FormControl from "@material-ui/core/FormControl";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,10 +19,8 @@ import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 
-import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM, HIGHESTPOTENTIALIMPACTOR, RCAOPTION } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
