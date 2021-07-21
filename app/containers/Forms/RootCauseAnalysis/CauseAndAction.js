@@ -64,20 +64,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BasicCauseAndAction = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
+
   const [incidentDetail, setIncidentDetail] = useState({});
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+
   const [data, setData] = useState([]);
   const history = useHistory();
   const handleDateChange = (date) => {
@@ -110,7 +99,6 @@ const BasicCauseAndAction = () => {
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
-    console.log(previousData)
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
@@ -119,8 +107,6 @@ const BasicCauseAndAction = () => {
         tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser];
       }
     });
-    console.log("---------------------------------------------------------------------------------")
-    console.log(tempApiData)
     await setData(tempApiData);
   };
 
@@ -182,7 +168,6 @@ const BasicCauseAndAction = () => {
       title="Actions against Immediate Causes"
       icon="ion-md-list-box"
     >
-      {/* {console.log(data)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -261,7 +246,6 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
               onClick={(e) => handelNext()}
             >
               Next

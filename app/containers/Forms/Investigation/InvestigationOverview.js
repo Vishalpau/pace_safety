@@ -265,7 +265,6 @@ const InvestigationOverview = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => handleNext()}
-              // href="/app/incident-management/registration/investigation/investigation-overview/"
               >
                 Next
               </Button>

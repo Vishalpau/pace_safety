@@ -164,10 +164,6 @@ const WorkerDetails = () => {
       investigationId.current = allApiData.id;
     }
     await setIsLoading(true);
-
-    // JSON.parse(allEffectedPersonData).map((value, i) => {
-    //   INVESTIGATION_FORM[`Worker${i}`] = `/app/incident-management/registration/investigation/worker-details/${i}/${incidentId}`
-    // })
   };
 
   const handelAddNew = async () => {
@@ -175,7 +171,6 @@ const WorkerDetails = () => {
 
     await worker.splice(parseInt(workerNumber) + 1, 0, workerData)
     await localStorage.setItem("personEffected", JSON.stringify(worker))
-    // await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) + 1}/${localStorage.getItem("fkincidentId")}`)
     await handleNext()
   }
 
@@ -290,9 +285,7 @@ const WorkerDetails = () => {
   const PickList = async () => {
     await handelUpdateCheck()
     workerType.current = await PickListData(71);
-    // departmentName.current = await PickListData(10);
     setDepartmentName(await PickListData(10))
-    // workHours.current = await PickListData(70);
     setworkHours(await PickListData(70))
     shiftType.current = await PickListData(47);
     occupation.current = await PickListData(48);
@@ -332,8 +325,8 @@ const WorkerDetails = () => {
     }
     await worker_removed.splice(workerNumber, 1)
     await localStorage.setItem("personEffected", JSON.stringify(worker_removed))
-    if (typeof worker_removed[parseInt(workerNumber)] !== "undefined") {
-      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber)}/${localStorage.getItem("fkincidentId")}`)
+    if (typeof worker_removed[parseInt(workerNumber - 1)] !== "undefined") {
+      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber - 1)}/${localStorage.getItem("fkincidentId")}`)
     } else {
       await history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
     }
@@ -1398,7 +1391,8 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={12} justify="flex-start">
+
+            <Grid item md={6}>
               <input
                 type="file"
                 className={classes.fullWidth}
@@ -1407,28 +1401,29 @@ const WorkerDetails = () => {
                   handleFile(e);
                 }}
               />
-              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p>Image not uploaded</p>}
             </Grid>
-            {/* </>))} */}
+            <Grid item md={6}>
+              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p></p>}
+            </Grid>
 
-            <Grid item md={4}>
+
+            {localWorkerData.length > 1 ?
+              <Grid item md={12}>
+                <Button
+                  onClick={(e) => handelRemove()}
+                >
+                  Delete <DeleteForeverIcon />
+                </Button>
+              </Grid>
+              : null}
+
+            <Grid item md={12}>
               <Button
                 onClick={(e) => handelAddNew()}
               >
                 Add new worker <AddIcon />
               </Button>
             </Grid>
-
-            <Grid item md={4}>
-              <Button
-                onClick={(e) => handelRemove()}
-              >
-                Delete <DeleteForeverIcon />
-
-              </Button>
-            </Grid>
-
-
 
             <Grid item md={12}>
               <Button

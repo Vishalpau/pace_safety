@@ -98,9 +98,7 @@ const CorrectiveAction = () => {
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 19) {
-      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`);
       putId.current = lastItem;
-      // let allApiData = previousData.data.data.results;
       allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
