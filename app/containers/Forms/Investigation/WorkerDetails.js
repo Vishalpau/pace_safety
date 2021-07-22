@@ -157,7 +157,6 @@ const WorkerDetails = () => {
     setWorkerNumber(workerNum)
     let allEffectedPersonData = localStorage.getItem("personEffected")
     let particularEffected = JSON.parse(allEffectedPersonData)[workerNum]
-    console.log(workerNum)
     if (typeof particularEffected !== "undefined") {
       setForm(particularEffected)
     }
@@ -269,7 +268,6 @@ const WorkerDetails = () => {
     }
 
     if (res[0].status == 201 || res[0].status == 200) {
-      console.log(res[0].status)
       let worker = JSON.parse(localStorage.getItem("personEffected"))
       form["id"] = res[0].data.data.results.id
       if (res[0].data.data.results.attachments !== null && res[0].data.data.results.attachments !== {}) {
@@ -351,7 +349,6 @@ const WorkerDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
-      {/* {console.log(workerid)} */}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>

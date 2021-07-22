@@ -21,6 +21,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
+import moment from "moment";
 
 
 
@@ -47,13 +48,13 @@ export default function FormDialog(props) {
         "actionCategory": "string",
         "actionShedule": "string",
         "priority": "string",
-        "severity": "string",
+        "severity": "",
         "approver": 0,
-        "assignTo": 0,
+        "assignTo": "",
         "deligateTo": 0,
         "plannedStartDate": "2021-07-21T17:05:39.604Z",
         "actualStartDate": "2021-07-21T17:05:39.604Z",
-        "plannedEndDate": "2021-07-21T17:05:39.604Z",
+        "plannedEndDate": "",
         "actualEndDate": "2021-07-21T17:05:39.604Z",
         "forecaststartDate": "2021-07-21T17:05:39.604Z",
         "forecastEndDate": "2021-07-21T17:05:39.604Z",
@@ -83,6 +84,7 @@ export default function FormDialog(props) {
     };
 
     const handleClose = () => {
+        console.log(form)
         setOpen(false);
     };
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -96,7 +98,6 @@ export default function FormDialog(props) {
 
     return (
         <Paper variant="outlined" >
-            {console.log(props)}
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 Add a new action
             </Button>
@@ -110,21 +111,16 @@ export default function FormDialog(props) {
                 <DialogContent>
                     {/* action title */}
                     <Grid item md={12}>
-                        <FormControl
-                            component="fieldset"
+                        <TextField
+                            className={classes.formControl}
+                            id="filled-basic"
+                            label="Action title"
+                            variant="outlined"
                             required
-                        >
-                            <TextField
-                                className={classes.formControl}
-                                id="filled-basic"
-                                label="Action title"
-                                variant="outlined"
-                                required
-                                value=""
-                                rows={1}
-                                onChange={async (e) => setForm({ ...form, actionTitle: e.target.value })}
-                            />
-                        </FormControl>
+                            rows={1}
+                            onChange={(e) => setForm({ ...form, actionTitle: e.target.value })}
+                        />
+
                     </Grid>
 
                     {/* assigen */}
@@ -143,6 +139,7 @@ export default function FormDialog(props) {
                                 {user.map((selectValues) => (
                                     <MenuItem
                                         value={selectValues}
+                                        onClick={(e) => setForm({ ...form, assignTo: e.target.value })}
                                     >
                                         {selectValues}
                                     </MenuItem>
@@ -157,13 +154,16 @@ export default function FormDialog(props) {
                         <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 required
-
-                                required
                                 className={classes.formControl}
                                 label="Incident date & time"
-                                format="yyyy/MM/dd"
+                                format="dd/MM/yyyy"
                                 inputVariant="outlined"
-                                disableFuture="true"
+                                onChange={(e) => {
+                                    setForm({
+                                        ...form,
+                                        plannedEndDate: moment(e).toISOString(),
+                                    });
+                                }}
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
@@ -185,6 +185,7 @@ export default function FormDialog(props) {
                                 {severity.map((selectValues) => (
                                     <MenuItem
                                         value={selectValues}
+                                        onClick={(e) => setForm({ ...form, severity: e.target.value })}
                                     >
                                         {selectValues}
                                     </MenuItem>

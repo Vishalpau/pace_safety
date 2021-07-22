@@ -67,9 +67,7 @@ const InvestigationOverview = () => {
       investigationId.current = allApiData.id
     }
     let workerApiDataFetch = await api.get(`api/v1/incidents/${incidentId}/investigations/${investigationId.current}/workers/`);
-    console.log(workerApiDataFetch.data.data.results.length)
     if (workerApiDataFetch.data.data.results.length !== 0) {
-      console.log("here1")
       let worker_temp = []
       let workerApiData = workerApiDataFetch.data.data.results
       workerApiData.map((value) => {
@@ -77,9 +75,7 @@ const InvestigationOverview = () => {
       })
       localStorage.setItem("personEffected", JSON.stringify(worker_temp))
     } else {
-      console.log("here2")
       if (localStorage.getItem("WorkerDataFetched") !== "Yes") {
-        console.log("here")
         let workerData = {
           name: "",
           workerType: "",
