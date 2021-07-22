@@ -22,8 +22,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from "@date-io/date-fns";
 import moment from "moment";
-
-
+import axios from "axios";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -32,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         margin: theme.spacing(1),
+    },
+    dialogCloseButton: {
+        position: "absolute",
+        top: theme.spacing(1),
+        right: theme.spacing(1)
     }
 }));
 
@@ -50,11 +56,11 @@ export default function FormDialog(props) {
         "priority": "string",
         "severity": "",
         "approver": 0,
-        "assignTo": "",
+        "assignTo": 0,
         "deligateTo": 0,
         "plannedStartDate": "2021-07-21T17:05:39.604Z",
         "actualStartDate": "2021-07-21T17:05:39.604Z",
-        "plannedEndDate": "",
+        "plannedEndDate": moment(new Date()).toISOString(),
         "actualEndDate": "2021-07-21T17:05:39.604Z",
         "forecaststartDate": "2021-07-21T17:05:39.604Z",
         "forecastEndDate": "2021-07-21T17:05:39.604Z",
@@ -77,15 +83,25 @@ export default function FormDialog(props) {
         "vendor": "string",
         "vendorReferenceId": "string"
     })
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/"
+    const api = axios.create({
+        baseURL: API_URL_ACTION_TRACKER,
+    });
     const [open, setOpen] = useState(false);
+    const [error, setError] = useState({ actionTitle: "" })
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
-        console.log(form)
-        setOpen(false);
+    const handleClose = async () => {
+        if (form.actionTitle == "") {
+            setError({ actionTitle: "Action title is empty" })
+        }
+        let res = await api.post("api/v1/actions/", form)
+        if (res.status == 201) {
+            await setOpen(false);
+        }
     };
     const [selectedDate, setSelectedDate] = useState(new Date());
     const handleDateChange = (date) => {
@@ -98,16 +114,25 @@ export default function FormDialog(props) {
 
     return (
         <Paper variant="outlined" >
+            {console.log(error.supervision)}
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 Add a new action
             </Button>
+
             <Dialog
                 fullWidth={true}
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="form-dialog-title"
             >
+
                 <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
+                <IconButton
+                    className={classes.dialogCloseButton}
+                    onClick={(e) => setOpen(false)}
+                >
+                    <CloseIcon />
+                </IconButton>
                 <DialogContent>
                     {/* action title */}
                     <Grid item md={12}>
@@ -118,16 +143,16 @@ export default function FormDialog(props) {
                             variant="outlined"
                             required
                             rows={1}
+                            error={error.actionTitle}
+                            helperText={error ? error.actionTitle : ""}
                             onChange={(e) => setForm({ ...form, actionTitle: e.target.value })}
                         />
-
                     </Grid>
 
                     {/* assigen */}
                     <Grid item md={12}>
                         <FormControl
                             variant="outlined"
-                            required
                             className={classes.formControl}
                         >
                             <InputLabel id="project-name-label">Assignee</InputLabel>
@@ -139,7 +164,7 @@ export default function FormDialog(props) {
                                 {user.map((selectValues) => (
                                     <MenuItem
                                         value={selectValues}
-                                        onClick={(e) => setForm({ ...form, assignTo: e.target.value })}
+                                        onClick={(e) => setForm({ ...form, assignTo: 0 })}
                                     >
                                         {selectValues}
                                     </MenuItem>
@@ -153,11 +178,11 @@ export default function FormDialog(props) {
                     <Grid item md={12}>
                         <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                             <KeyboardDatePicker
-                                required
                                 className={classes.formControl}
                                 label="Incident date & time"
                                 format="dd/MM/yyyy"
                                 inputVariant="outlined"
+                                value={form.plannedEndDate}
                                 onChange={(e) => {
                                     setForm({
                                         ...form,
@@ -173,7 +198,6 @@ export default function FormDialog(props) {
                     <Grid item md={12}>
                         <FormControl
                             variant="outlined"
-                            required
                             className={classes.formControl}
                         >
                             <InputLabel id="project-name-label">Severity</InputLabel>
@@ -185,7 +209,7 @@ export default function FormDialog(props) {
                                 {severity.map((selectValues) => (
                                     <MenuItem
                                         value={selectValues}
-                                        onClick={(e) => setForm({ ...form, severity: e.target.value })}
+                                        onClick={(e) => setForm({ ...form, severity: selectValues })}
                                     >
                                         {selectValues}
                                     </MenuItem>
