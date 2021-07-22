@@ -96,6 +96,7 @@ export default function FormDialog(props) {
 
     return (
         <Paper variant="outlined" >
+            {console.log(props)}
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 Add a new action
             </Button>
