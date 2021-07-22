@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function FormDialog(props) {
+export default function ActionTracker(props) {
     const [form, setForm] = useState({
         "fkCompanyId": 0,
         "fkProjectId": 0,
@@ -81,7 +81,7 @@ export default function FormDialog(props) {
         "closeDate": "2021-07-21T17:05:39.605Z",
         "source": "Web",
         "vendor": "string",
-        "vendorReferenceId": "string"
+        "vendorReferenceId": "string",
     })
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/"
     const api = axios.create({
@@ -95,18 +95,19 @@ export default function FormDialog(props) {
     };
 
     const handleClose = async () => {
+        await setError({ actionTitle: "" })
+        await setOpen(false)
+    };
+    const handelSubmit = async () => {
         if (form.actionTitle == "") {
             setError({ actionTitle: "Action title is empty" })
+        } else {
+            let res = await api.post("api/v1/actions/", form)
+            if (res.status == 201) {
+                await setOpen(false);
+            }
         }
-        let res = await api.post("api/v1/actions/", form)
-        if (res.status == 201) {
-            await setOpen(false);
-        }
-    };
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
+    }
 
     let user = ["user1", "user2", "user3", "user4"]
     let severity = ["Normal", "Critical", "Blocker"]
@@ -114,7 +115,6 @@ export default function FormDialog(props) {
 
     return (
         <Paper variant="outlined" >
-            {console.log(error.supervision)}
             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                 Add a new action
             </Button>
@@ -129,7 +129,7 @@ export default function FormDialog(props) {
                 <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
                 <IconButton
                     className={classes.dialogCloseButton}
-                    onClick={(e) => setOpen(false)}
+                    onClick={(e) => { setOpen(false); setError({ actionTitle: "" }) }}
                 >
                     <CloseIcon />
                 </IconButton>
@@ -223,7 +223,7 @@ export default function FormDialog(props) {
                 </DialogContent>
                 <DialogActions>
 
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={(e) => handelSubmit()} color="primary">
                         Submit
                     </Button>
                 </DialogActions>
