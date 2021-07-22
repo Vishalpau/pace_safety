@@ -32,6 +32,7 @@ import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import { spacing } from '@material-ui/system';
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -58,6 +59,13 @@ const useStyles = makeStyles((theme) => ({
     display: "inlineBlock",
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
+  },
+  activeList: {
+    color: theme.palette.primary.main,
+    borderLeft: `5px solid ${theme.palette.secondary.main}`,
+  },
+  notActiveList: {
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
   },
 }));
 
@@ -149,7 +157,6 @@ const WorkerDetails = () => {
     setWorkerNumber(workerNum)
     let allEffectedPersonData = localStorage.getItem("personEffected")
     let particularEffected = JSON.parse(allEffectedPersonData)[workerNum]
-    console.log(workerNum)
     if (typeof particularEffected !== "undefined") {
       setForm(particularEffected)
     }
@@ -164,10 +171,6 @@ const WorkerDetails = () => {
       investigationId.current = allApiData.id;
     }
     await setIsLoading(true);
-
-    // JSON.parse(allEffectedPersonData).map((value, i) => {
-    //   INVESTIGATION_FORM[`Worker${i}`] = `/app/incident-management/registration/investigation/worker-details/${i}/${incidentId}`
-    // })
   };
 
   const handelAddNew = async () => {
@@ -175,7 +178,6 @@ const WorkerDetails = () => {
 
     await worker.splice(parseInt(workerNumber) + 1, 0, workerData)
     await localStorage.setItem("personEffected", JSON.stringify(worker))
-    // await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) + 1}/${localStorage.getItem("fkincidentId")}`)
     await handleNext()
   }
 
@@ -244,7 +246,6 @@ const WorkerDetails = () => {
 
     let res = []
     if (typeof data.get("attachments") == "string" && typeof form.id !== "undefined") {
-      console.log(form.id)
       delete form["attachments"]
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, form);
@@ -261,14 +262,12 @@ const WorkerDetails = () => {
       res.push(ress)
     }
     else {
-      console.log("here")
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
       res.push(ress)
     }
 
     if (res[0].status == 201 || res[0].status == 200) {
-      console.log(res[0].status)
       let worker = JSON.parse(localStorage.getItem("personEffected"))
       form["id"] = res[0].data.data.results.id
       if (res[0].data.data.results.attachments !== null && res[0].data.data.results.attachments !== {}) {
@@ -290,9 +289,7 @@ const WorkerDetails = () => {
   const PickList = async () => {
     await handelUpdateCheck()
     workerType.current = await PickListData(71);
-    // departmentName.current = await PickListData(10);
     setDepartmentName(await PickListData(10))
-    // workHours.current = await PickListData(70);
     setworkHours(await PickListData(70))
     shiftType.current = await PickListData(47);
     occupation.current = await PickListData(48);
@@ -332,8 +329,8 @@ const WorkerDetails = () => {
     }
     await worker_removed.splice(workerNumber, 1)
     await localStorage.setItem("personEffected", JSON.stringify(worker_removed))
-    if (typeof worker_removed[parseInt(workerNumber)] !== "undefined") {
-      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber)}/${localStorage.getItem("fkincidentId")}`)
+    if (typeof worker_removed[parseInt(workerNumber - 1)] !== "undefined") {
+      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber - 1)}/${localStorage.getItem("fkincidentId")}`)
     } else {
       await history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
     }
@@ -352,7 +349,6 @@ const WorkerDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
-      {/* {console.log(workerid)} */}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -1398,7 +1394,8 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={12} justify="flex-start">
+
+            <Grid item md={4}>
               <input
                 type="file"
                 className={classes.fullWidth}
@@ -1407,28 +1404,28 @@ const WorkerDetails = () => {
                   handleFile(e);
                 }}
               />
-              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p>Image not uploaded</p>}
             </Grid>
-            {/* </>))} */}
+            <Grid item md={6}>
+              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p></p>}
+            </Grid>
 
-            <Grid item md={4}>
+            {localWorkerData.length > 1 ?
+              <Grid item md={12}>
+                <Button
+                  onClick={(e) => handelRemove()}
+                >
+                  Delete <DeleteForeverIcon />
+                </Button>
+              </Grid>
+              : null}
+
+            <Grid item md={12}>
               <Button
                 onClick={(e) => handelAddNew()}
               >
                 Add new worker <AddIcon />
               </Button>
             </Grid>
-
-            <Grid item md={4}>
-              <Button
-                onClick={(e) => handelRemove()}
-              >
-                Delete <DeleteForeverIcon />
-
-              </Button>
-            </Grid>
-
-
 
             <Grid item md={12}>
               <Button
@@ -1459,26 +1456,25 @@ const WorkerDetails = () => {
               />
             </Grid>
             <Grid item md={12}>
-              {/* {localWorkerData.map((value, index) => (
-                <Button onClick={(e) => handelWorkerNavigate(e, index)}>{`Worker ${index + 1}`}</Button>
-              ))} */}
-              <Paper elevation={1}>
-                <List dense>
-                  {localWorkerData.map((value, index) => (
-                    <ListItem className={classes.notActiveList}>
-                      <ListItemIcon className={classes.icon}>
-                        {workerNumber == index ? <DoubleArrowIcon fontSize="small" /> : <RemoveCircleOutlineIcon />}
-                      </ListItemIcon>
-                      <ListItemText primary={
+              <Box mt={4}>
+                <Paper elevation={1} >
+                  <List dense>
+                    {localWorkerData.map((value, index) => (
+                      <ListItem className={workerNumber == index ? classes.activeList : classes.notActiveList}>
+                        <ListItemIcon className={classes.icon}>
+                          {workerNumber == index ? <DoubleArrowIcon fontSize="small" /> : <RemoveCircleOutlineIcon />}
+                        </ListItemIcon>
+                        <ListItemText primary={
 
-                        <a onClick={(e) => handelWorkerNavigate(e, index)}>
-                          {`Worker ${index + 1}`}
-                        </a>} />
+                          <a onClick={(e) => handelWorkerNavigate(e, index)}>
+                            {`Worker ${index + 1}`}
+                          </a>} />
 
-                    </ListItem>
-                  ))}
-                </List>
-              </Paper>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              </Box>
             </Grid>
 
 

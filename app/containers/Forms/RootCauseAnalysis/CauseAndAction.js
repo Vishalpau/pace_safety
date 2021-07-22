@@ -42,6 +42,7 @@ import {
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
+import FormDialog from "../ActionTracker"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -64,27 +65,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BasicCauseAndAction = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
+
   const [incidentDetail, setIncidentDetail] = useState({});
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+
   const [data, setData] = useState([]);
   const history = useHistory();
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
   const putId = useRef("");
-
+  let id = useRef("")
   const subValues = [
     "Supervision",
     "Workpackage",
@@ -107,20 +97,24 @@ const BasicCauseAndAction = () => {
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
       HAZARDIOUS_CONDITION_SUB_TYPES
     );
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
-    console.log(previousData)
+    let tempid = []
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
+        tempid.push(value.id)
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
         tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser];
       }
     });
-    console.log("---------------------------------------------------------------------------------")
-    console.log(tempApiData)
+    id.current = tempid.reverse()
     await setData(tempApiData);
   };
 
@@ -141,8 +135,7 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
-        }`
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current}`
       );
     } else if (isNaN(putId.current)) {
       history.push(
@@ -161,8 +154,7 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
-        }`
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current}`
       );
     } else if (isNaN(putId.current)) {
       history.push(
@@ -182,7 +174,6 @@ const BasicCauseAndAction = () => {
       title="Actions against Immediate Causes"
       icon="ion-md-list-box"
     >
-      {/* {console.log(data)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -241,7 +232,7 @@ const BasicCauseAndAction = () => {
                   </ListItem>
                 ))}
                 <button className={classes.textButton}>
-                  <AddCircleOutlineIcon /> Add a new action
+                  <FormDialog actionContext="incidents:Pacacuase" enitityReferenceId={`${putId.current}:${id.current[index]}`} />
                 </button>
               </List>
             ))}
@@ -261,7 +252,6 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href="/app/incident-management/registration/root-cause-analysis/basic-cause/"
               onClick={(e) => handelNext()}
             >
               Next

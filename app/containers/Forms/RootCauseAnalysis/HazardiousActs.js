@@ -652,13 +652,11 @@ const HazardiousActs = () => {
             />
           </Grid>
 
-          {/* buttons */}
           <Grid item md={12}>
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
-              // href="/app/incident-management/registration/root-cause-analysis/details/"
               onClick={(e) => handelPrevious(e)}
             >
               Previous

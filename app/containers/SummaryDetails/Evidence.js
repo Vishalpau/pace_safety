@@ -106,8 +106,8 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
-  dialogPaper: {
-    minWidth: 700,
+  modalButton: {
+    width: "100%",
   },
 }));
 
@@ -131,8 +131,6 @@ const EvidenceSummary = () => {
   const [expanded, setExpanded] = React.useState(false);
 
   const { id } = useParams();
-
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = (document) => {
@@ -166,7 +164,7 @@ const EvidenceSummary = () => {
   // const fkid = localStorage.getItem('fkincidentId');
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    
+
     await setEvidence(allEvidence.data.data.results);
     await setIsLoding(true);
   };
@@ -221,7 +219,7 @@ const EvidenceSummary = () => {
                     </TableHead>
                     <TableBody>
                       {evidence.length !== 0
-                        ? evidence.slice(1,14).map((value, index) => (
+                        ? evidence.slice(1, 14).map((value, index) => (
                             <TableRow key={index}>
                               <TableCell>{value.evidenceNumber}</TableCell>
                               <TableCell>{value.evidenceCheck}</TableCell>
@@ -360,16 +358,34 @@ const EvidenceSummary = () => {
         </IconButton>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            <Button
-              startIcon={<GetAppIcon />}
-              variant="contained"
-              color="primary"
-              onClick={() => downloadFile()}
-              disableElevation
-              target="_blank"
-            >
-              Download Attachment
-            </Button>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Button
+                  startIcon={<VisibilityIcon />}
+                  variant="contained"
+                  color="primary"
+                  className={classes.modalButton}
+                  onClick={() => downloadFile()}
+                  disableElevation
+                  target="_blank"
+                >
+                  View Attachment
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button
+                  startIcon={<GetAppIcon />}
+                  variant="contained"
+                  color="primary"
+                  className={classes.modalButton}
+                  onClick={() => downloadFile()}
+                  disableElevation
+                  target="_blank"
+                >
+                  Download Attachment
+                </Button>
+              </Grid>
+            </Grid>
           </DialogContentText>
         </DialogContent>
       </Dialog>

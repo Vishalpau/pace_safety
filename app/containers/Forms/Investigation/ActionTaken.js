@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -42,16 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ActionTaken = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
 
-  const notificationSent = ["Manage", "SuperVisor"];
   const [form, setForm] = useState({});
   const history = useHistory();
   const putId = useRef("")
@@ -74,19 +64,9 @@ const ActionTaken = () => {
     }
   };
 
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
   const [error, setError] = useState({});
 
   const handleNext = async (e) => {
-    console.log(form);
-
     const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
     if (res.status === 200) {
       history.push(`/app/incident-management/registration/summary/summary/${putId.current}`)
@@ -148,7 +128,6 @@ const ActionTaken = () => {
               color="primary"
               className={classes.button}
               onClick={() => history.goBack()}
-            // href="http://localhost:3000/app/incident-management/registration/investigation/event-details/"
             >
               Previous
             </Button>
@@ -156,7 +135,6 @@ const ActionTaken = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href="http://localhost:3000/app/incident-management/registration/evidence/evidence/"
               onClick={(e) => handleNext(e)}
             >
               Submit

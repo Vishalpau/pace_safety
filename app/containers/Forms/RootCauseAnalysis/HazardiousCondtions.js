@@ -301,8 +301,7 @@ const HazardiousCondition = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${
-              callObjects[key].pk
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
             }/`,
             callObjects[key]
           );
@@ -330,9 +329,7 @@ const HazardiousCondition = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
-          putId.current
-        }`
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`
       );
     }
     // api call //
@@ -353,9 +350,7 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-          putId.current
-        }`
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`
       );
     } else if (isNaN(putId.current)) {
       history.push(
@@ -402,8 +397,6 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              // required
-              // error={error.warningSystem}
             >
               <FormLabel component="legend">Warning system</FormLabel>
               <FormGroup>
@@ -416,9 +409,7 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {/* {error && error.warningSystem && (
-                <FormHelperText>{error.warningSystem}</FormHelperText>
-              )} */}
+
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -427,8 +418,7 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              // required
-              // error={error.energyTypes}
+
             >
               <FormLabel component="legend">Energy types</FormLabel>
               <FormGroup>
@@ -441,9 +431,7 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {/* {error && error.energyTypes && (
-                <FormHelperText>{error.energyTypes}</FormHelperText>
-              )} */}
+
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -452,7 +440,6 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              // required error={error.tools}
             >
               <FormLabel component="legend">Tools</FormLabel>
               <FormGroup>
@@ -465,9 +452,6 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {/* {error && error.tools && (
-                <FormHelperText>{error.tools}</FormHelperText>
-              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -476,8 +460,6 @@ const HazardiousCondition = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              // required
-              // error={error.safetyitems}
             >
               <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
@@ -490,9 +472,6 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-              {/* {error && error.safetyitems && (
-                <FormHelperText>{error.safetyitems}</FormHelperText>
-              )} */}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>

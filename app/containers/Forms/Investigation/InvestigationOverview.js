@@ -85,6 +85,7 @@ const InvestigationOverview = () => {
       const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
       await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
     }
+    localStorage.setItem("WorkerDataFetched", "")
   };
 
   const classes = useStyles();
@@ -265,7 +266,6 @@ const InvestigationOverview = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => handleNext()}
-              // href="/app/incident-management/registration/investigation/investigation-overview/"
               >
                 Next
               </Button>

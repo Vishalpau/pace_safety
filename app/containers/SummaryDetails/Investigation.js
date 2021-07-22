@@ -7,6 +7,9 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { useParams } from "react-router";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ImageIcon from '@material-ui/icons/Image';
+import Paper from "@material-ui/core/Paper";
+import Divider from '@material-ui/core/Divider'
 
 import api from "../../utils/axios";
 
@@ -35,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
-  },
+  }
 }));
 
 const InvestigationSummary = () => {
@@ -45,15 +48,18 @@ const InvestigationSummary = () => {
   const [weather, setWeather] = useState([]);
   const [overAllCost, setOverAllCost] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
-  const fetchInvestigationData = async () => {
-    let res = await api.get(`/api/v1/incidents/${id}/investigations/`);
-    let result = res.data.data.results;
-    await setInvestigationOverview(result);
-  };
-
+  const [workerData, setWorkerData] = useState([])
   const putId = useRef("");
   const eventId = useRef("");
   const investigationId = useRef("");
+
+  const fetchInvestigationData = async () => {
+    let res = await api.get(`/api/v1/incidents/${id}/investigations/`);
+    let result = res.data.data.results;
+    console.log(result)
+    await setInvestigationOverview(result);
+  };
+
   const fetchEventData = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -71,8 +77,7 @@ const InvestigationSummary = () => {
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
       const event = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/`
       );
       const result = event.data.data.results;
@@ -84,8 +89,7 @@ const InvestigationSummary = () => {
 
       // Weather data
       const weather = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/${eventId.current}/weatherconditions/`
       );
       console.log(weather);
@@ -94,8 +98,7 @@ const InvestigationSummary = () => {
 
       // event data
       const cost = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/${eventId.current}/cost/`
       );
       const costData = cost.data.data.results;
@@ -103,21 +106,38 @@ const InvestigationSummary = () => {
     }
   };
 
+  const fecthWorkerData = async () => {
+    console.log("here")
+    let res = await api.get(`api/v1/incidents/${id}/investigations/${investigationId.current}/workers/`);
+    let result = res.data.data.results;
+    await setWorkerData(result);
+    console.log(result)
+  };
+
+  const handelCallBack = async () => {
+    await fetchInvestigationData();
+    await fetchEventData();
+    await fecthWorkerData();
+
+  }
+
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   useEffect(() => {
     if (id) {
-      fetchInvestigationData();
-      fetchEventData();
+      handelCallBack()
     }
   }, []);
   const classes = useStyles();
 
   return (
     <Grid container spacing={3}>
+
+      {/* investigation overview */}
       <Grid item xs={12}>
+        {/* panel will open and close accordion accoring to click on accordion expand */}
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleExpand("panel1")}
@@ -219,6 +239,8 @@ const InvestigationSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
+
+      {/* severity consequences */}
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel2"}
@@ -396,10 +418,305 @@ const InvestigationSummary = () => {
         </Accordion>
       </Grid>
 
+      {/* worker details */}
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel3"}
           onChange={handleExpand("panel3")}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>
+              Worker details
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <paper>
+              <Grid container item xs={12} spacing={3}>
+                {workerData.map((value, index) => (
+                  <>
+                    {/* worker number */}
+                    <Grid item lg={12}>
+                      <Typography variant="h7">
+                        {`Worker ${index + 1}`}
+                      </Typography>
+                    </Grid>
+
+                    {/* worker details */}
+
+                    {/* name */}
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Name
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {value.name}
+                      </Typography>
+                    </Grid>
+
+                    {/* worker type */}
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Worker type
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {value.workerType}
+                      </Typography>
+                    </Grid>
+
+                    {/* department */}
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Department
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {value.department}
+                      </Typography>
+                    </Grid>
+
+                    {/* injurty details */}
+                    {/* event injury */}
+
+                    {value.eventLeadingToInjury.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Event leading to injurty.
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.eventLeadingToInjury}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* injury object */}
+                    {value.injuryObject.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Injury object
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.injuryObject}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* Worker care */}
+
+                    {/* medical issue */}
+                    {value.isMedicationIssued.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Medical issue ?
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.isMedicationIssued}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* prescription issues */}
+                    {value.isPrescriptionIssued.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Prescription issued ?
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.isPrescriptionIssued}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* non-prescription */}
+                    {value.isNonPrescription.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Non-prescription ?
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.isNonPrescription}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* any limitation */}
+                    {value.isAnyLimitation.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Any limitation
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.isAnyLimitation}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* alcohal and drug test */}
+
+                    {/* test taken */}
+                    {value.isAlcoholDrugTestTaken.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Was the test taken?
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.isAlcoholDrugTestTaken}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {value.isAlcoholDrugTestTaken == "Yes" && value.isWorkerClearedTest.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Was worker cleared to work following a&d testing ?
+                        </Typography>
+
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.isWorkerClearedTest}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* supervisor details */}
+
+                    {/* supervisor name */}
+                    {value.supervisorName.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Supervisor name
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.supervisorName}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* supervisor time industry */}
+                    {value.supervisorTimeInIndustry.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Supervisor time in industry?
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.supervisorTimeInIndustry}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* supervisor time company */}
+                    {value.supervisorTimeInCompany.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Supervisor time in company?
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.supervisorTimeInCompany}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* supervisor time project */}
+                    {value.supervisorTimeOnProject.length > 0 ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Supervisor time on project?
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.supervisorTimeOnProject}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* attachmentr */}
+                    {value.attachments != "" && typeof value.attachments == "string" ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Attachment
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.attachments != "" && typeof value.attachments == "string" ? <a target="_blank" href={value.attachments}>Image<ImageIcon /></a> : <p></p>}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    <Grid item lg={12} md={12}>
+                      <Divider />
+                    </Grid>
+                  </>
+                ))}
+              </Grid>
+            </paper>
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
+
+      {/* event details */}
+      <Grid item xs={12}>
+        <Accordion
+          expanded={expanded === "panel4"}
+          onChange={handleExpand("panel4")}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Event Details</Typography>
@@ -637,10 +954,12 @@ const InvestigationSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
+
+      {/* Action taken */}
       <Grid item xs={12}>
         <Accordion
-          expanded={expanded === "panel4"}
-          onChange={handleExpand("panel4")}
+          expanded={expanded === "panel5"}
+          onChange={handleExpand("panel5")}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Action taken</Typography>

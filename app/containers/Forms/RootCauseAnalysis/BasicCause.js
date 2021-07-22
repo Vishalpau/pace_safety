@@ -89,9 +89,7 @@ const BasicCause = () => {
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 14) {
-      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`);
       putId.current = incidentId;
-      // let allApiData = previousData.data.data.results;
       allApiData.map((value) => {
         if (BASIC_CAUSE_SUB_TYPES.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
