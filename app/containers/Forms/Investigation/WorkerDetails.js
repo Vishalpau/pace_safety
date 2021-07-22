@@ -247,7 +247,6 @@ const WorkerDetails = () => {
 
     let res = []
     if (typeof data.get("attachments") == "string" && typeof form.id !== "undefined") {
-      console.log(form.id)
       delete form["attachments"]
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, form);
@@ -264,7 +263,6 @@ const WorkerDetails = () => {
       res.push(ress)
     }
     else {
-      console.log("here")
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
       res.push(ress)

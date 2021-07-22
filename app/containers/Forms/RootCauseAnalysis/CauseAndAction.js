@@ -42,6 +42,7 @@ import {
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
+import FormDialog from "../ActionTracker"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -73,7 +74,7 @@ const BasicCauseAndAction = () => {
     setSelectedDate(date);
   };
   const putId = useRef("");
-
+  let id = useRef("")
   const subValues = [
     "Supervision",
     "Workpackage",
@@ -99,14 +100,17 @@ const BasicCauseAndAction = () => {
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
+    let tempid = []
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
+        tempid.push(value.id)
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
         tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser];
       }
     });
+    id.current = tempid.reverse()
     await setData(tempApiData);
   };
 
@@ -226,7 +230,7 @@ const BasicCauseAndAction = () => {
                   </ListItem>
                 ))}
                 <button className={classes.textButton}>
-                  <AddCircleOutlineIcon /> Add a new action
+                  <FormDialog actionContext="incidents:Pacacuase" enitityReferenceId={`${putId.current}:${id.current[index]}`} />
                 </button>
               </List>
             ))}

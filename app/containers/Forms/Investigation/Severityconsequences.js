@@ -67,16 +67,19 @@ const InvestigationOverview = () => {
       investigationId.current = allApiData.id
     }
     let workerApiDataFetch = await api.get(`api/v1/incidents/${incidentId}/investigations/${investigationId.current}/workers/`);
-    if (workerApiDataFetch.data.data.results !== []) {
+    console.log(workerApiDataFetch.data.data.results.length)
+    if (workerApiDataFetch.data.data.results.length !== 0) {
+      console.log("here1")
       let worker_temp = []
       let workerApiData = workerApiDataFetch.data.data.results
       workerApiData.map((value) => {
         worker_temp.push(value)
       })
-      console.log(worker_temp)
       localStorage.setItem("personEffected", JSON.stringify(worker_temp))
     } else {
+      console.log("here2")
       if (localStorage.getItem("WorkerDataFetched") !== "Yes") {
+        console.log("here")
         let workerData = {
           name: "",
           workerType: "",
@@ -121,7 +124,6 @@ const InvestigationOverview = () => {
         }
         let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
         let PeopleAffectedData = PeopleAffected.data.data.results
-
         let temp = []
         PeopleAffectedData.map((value, i) => {
           temp.push({
@@ -135,7 +137,6 @@ const InvestigationOverview = () => {
       }
     }
     // people affected data in local storage
-
   };
 
   const handleNext = async (e) => {
@@ -188,9 +189,7 @@ const InvestigationOverview = () => {
         }
         localStorage.setItem("personEffected", JSON.stringify([workerData]))
         history.push(`/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`)
-
       }
-
     }
     localStorage.setItem("WorkerDataFetched", "Yes")
     localStorage.removeItem("WorkerPost")
