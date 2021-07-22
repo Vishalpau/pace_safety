@@ -31,6 +31,12 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -39,7 +45,7 @@ import FormHeader from "../FormHeader";
 import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-import FormDialog from "../ActionTracker"
+import ActionTracker from "../ActionTracker"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -59,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  table: {
+    minWidth: 650,
+  },
 }));
 
 function ListItemLink(props) {
@@ -70,14 +79,7 @@ const BasicCauseAndAction = () => {
   let putId = useRef("");
   let id = useRef("")
   const [incidentDetail, setIncidentDetail] = useState({});
-  let sub_values = [
-    "Personal",
-    "Wellness factors",
-    "Other human factors",
-    "Leadership",
-    "Processes",
-    "Others job factors",
-  ]
+
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = BASIC_CAUSE_SUB_TYPES;
@@ -90,7 +92,7 @@ const BasicCauseAndAction = () => {
     let tempid = []
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
-      if (subTypes.includes(value.rcaSubType)) {
+      if (subTypes.includes(value.rcaSubType) && value.rcaRemark !== "No option selected") {
         tempid.push(value.id)
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
@@ -100,7 +102,6 @@ const BasicCauseAndAction = () => {
       }
     });
     id.current = tempid.reverse()
-    console.log(id.current)
     await setData(tempApiData);
   };
 
@@ -144,6 +145,13 @@ const BasicCauseAndAction = () => {
     await setIncidentDetail(result);
   };
 
+  const handelConvert = (value) => {
+    let wordArray = value.split(/(?=[A-Z])/)
+    let wordArrayCombined = wordArray.join(' ')
+    var newString = wordArrayCombined.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) { return c.toUpperCase() });
+    return newString
+  }
+
   useEffect(() => {
     fetchIncidentDetails();
     handelShowData();
@@ -184,37 +192,37 @@ const BasicCauseAndAction = () => {
               Option selected from basic cause
             </Typography>
 
-            {Object.entries(data).reverse().map(([key, value], index) => (
-              <List
-                className={classes.list}
-                component="nav"
-                dense
-                subheader={
-                  <ListSubheader
-                    disableGutters
-                    disableSticky
-                    component="div"
-                    id="selected-options"
-                  >
-                    {sub_values[index]}
-                  </ListSubheader>
-                }
-              >
-                {value.map((value) => (
-                  <ListItem>
-                    <ListItemIcon>
-                      <FiberManualRecordIcon className="smallIcon" />
-                    </ListItemIcon>
-                    <ListItemText primary={value} />
-                  </ListItem>
-                ))}
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableBody>
+                  {Object.entries(data).reverse().map(([key, value], index) => (
+                    <TableRow >
+                      <TableCell align="left" scope="row">{handelConvert(key)}</TableCell>
+                      <TableCell align="right">
+                        {value.map((value) => (
 
-                <button className={classes.textButton}>
-                  <FormDialog actionContext="incidents:Pacacuase" enitityReferenceId={`${putId.current}:${id.current[index]}`} />
-                </button>
-              </List>
+                          <ListItem>
+                            <ListItemIcon>
+                              <FiberManualRecordIcon className="smallIcon" />
+                            </ListItemIcon>
+                            <ListItemText primary={value} />
+                          </ListItem>
 
-            ))}
+                        ))}
+                      </TableCell>
+                      <TableCell align="right">
+                        <button className={classes.textButton}>
+                          <ActionTracker
+                            actionContext="incidents:Pacacuase"
+                            enitityReferenceId={`${putId.current}:${id.current[index]}`}
+                          />
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
           </Grid>
 
