@@ -108,13 +108,11 @@ export default function FormDialog(props) {
             >
                 <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
                 <DialogContent>
-
                     {/* action title */}
                     <Grid item md={12}>
                         <FormControl
                             component="fieldset"
                             required
-                        // error={error.supervision}
                         >
                             <TextField
                                 className={classes.formControl}
@@ -122,15 +120,10 @@ export default function FormDialog(props) {
                                 label="Action title"
                                 variant="outlined"
                                 required
-                                // error={error.others}
                                 value=""
-                                // helperText={error ? error.others : ""}
                                 rows={1}
                                 onChange={async (e) => setForm({ ...form, actionTitle: e.target.value })}
                             />
-                            {/* {error && error.supervision && (
-                                <FormHelperText>{error.supervision}</FormHelperText>
-                            )} */}
                         </FormControl>
                     </Grid>
 
@@ -140,28 +133,22 @@ export default function FormDialog(props) {
                             variant="outlined"
                             required
                             className={classes.formControl}
-                        // error={error && error.rcaRecommended}
                         >
                             <InputLabel id="project-name-label">Assignee</InputLabel>
                             <Select
                                 id="project-name"
                                 labelId="project-name-label"
                                 label="RCA recommended"
-                            // value={form.rcaRecommended}
-                            // disabled={checkPost.current == false ? true : false}
                             >
                                 {user.map((selectValues) => (
                                     <MenuItem
                                         value={selectValues}
-                                    // onClick={(e) => handelRcaRecommended(e, selectValues)}
                                     >
                                         {selectValues}
                                     </MenuItem>
                                 ))}
                             </Select>
-                            {/* {error && error.rcaRecommended && (
-                                <FormHelperText>{error.rcaRecommended}</FormHelperText>
-                            )} */}
+
                         </FormControl>
                     </Grid>
 
@@ -170,21 +157,10 @@ export default function FormDialog(props) {
                         <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 required
-                                // error={error.incidentOccuredOn}
+
                                 required
                                 className={classes.formControl}
                                 label="Incident date & time"
-                                // error={error.incidentOccuredOn}
-                                // helperText={error.incidentOccuredOn ? error.incidentOccuredOn : null}
-                                // value={
-                                //     form.incidentOccuredOn || null
-                                // }
-                                onChange={(e) => {
-                                    // setForm({
-                                    //     ...form,
-                                    //     incidentOccuredOn: moment(e).toISOString(),
-                                    // });
-                                }}
                                 format="yyyy/MM/dd"
                                 inputVariant="outlined"
                                 disableFuture="true"
@@ -199,28 +175,21 @@ export default function FormDialog(props) {
                             variant="outlined"
                             required
                             className={classes.formControl}
-                        // error={error && error.rcaRecommended}
                         >
                             <InputLabel id="project-name-label">Severity</InputLabel>
                             <Select
                                 id="project-name"
                                 labelId="project-name-label"
                                 label="RCA recommended"
-                            // value={form.rcaRecommended}
-                            // disabled={checkPost.current == false ? true : false}
                             >
                                 {severity.map((selectValues) => (
                                     <MenuItem
                                         value={selectValues}
-                                    // onClick={(e) => handelRcaRecommended(e, selectValues)}
                                     >
                                         {selectValues}
                                     </MenuItem>
                                 ))}
                             </Select>
-                            {/* {error && error.rcaRecommended && (
-                                <FormHelperText>{error.rcaRecommended}</FormHelperText>
-                            )} */}
                         </FormControl>
                     </Grid>
 
