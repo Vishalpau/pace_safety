@@ -247,7 +247,6 @@ const WorkerDetails = () => {
 
     let res = []
     if (typeof data.get("attachments") == "string" && typeof form.id !== "undefined") {
-      console.log(form.id)
       delete form["attachments"]
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, form);
@@ -264,7 +263,6 @@ const WorkerDetails = () => {
       res.push(ress)
     }
     else {
-      console.log("here")
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
       res.push(ress)
@@ -1414,7 +1412,6 @@ const WorkerDetails = () => {
               {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p></p>}
             </Grid>
 
-
             {localWorkerData.length > 1 ?
               <Grid item md={12}>
                 <Button
@@ -1462,9 +1459,6 @@ const WorkerDetails = () => {
               />
             </Grid>
             <Grid item md={12}>
-              {/* {localWorkerData.map((value, index) => (
-                <Button onClick={(e) => handelWorkerNavigate(e, index)}>{`Worker ${index + 1}`}</Button>
-              ))} */}
               <Box mt={4}>
                 <Paper elevation={1} >
                   <List dense>

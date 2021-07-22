@@ -85,6 +85,7 @@ const InvestigationOverview = () => {
       const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
       await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
     }
+    localStorage.setItem("WorkerDataFetched", "")
   };
 
   const classes = useStyles();
