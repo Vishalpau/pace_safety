@@ -38,6 +38,12 @@ import Comment from "@material-ui/icons/Comment";
 import History from "@material-ui/icons/History";
 import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 
 // Styles
 import "../../styles/custom.css";
@@ -73,7 +79,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(4),
   },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  modalButton: {
+    width: "100%",
+  },
 }));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function getModalStyle() {
   return {
@@ -271,19 +289,32 @@ const LessionLearnSummary = () => {
                 : null}
             </Grid>
             {/* Modal */}
-            <Modal className={classes.modal} open={open} onClose={handleClose}>
-              <div className={classes.paper}>
-                <Typography variant="h6" gutterBottom>
-                  View Attachment
-                </Typography>
-                <Typography>Please choose what do you want to?</Typography>
-                <Box marginTop={4}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
+
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              TransitionComponent={Transition}
+              keepMounted
+              PaperProps={{
+                style: {
+                  width: 700,
+                },
+              }}
+            >
+              <DialogTitle id="alert-dialog-slide-title">
+                {"Please choose what do you want to?"}
+              </DialogTitle>
+              <IconButton onClick={handleClose} className={classes.closeButton}>
+                <Close />
+              </IconButton>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  <Grid container>
+                    <Grid item xs={12} md={6}>
                       <Button
                         startIcon={<VisibilityIcon />}
-                        style={{ width: "100%" }}
                         variant="contained"
+                        className={classes.modalButton}
                         disableElevation
                         href={`${documentUrl}`}
                         target="_blank"
@@ -291,11 +322,10 @@ const LessionLearnSummary = () => {
                         View Attachment
                       </Button>
                     </Grid>
-                    <Grid item xs={6} />
                   </Grid>
-                </Box>
-              </div>
-            </Modal>
+                </DialogContentText>
+              </DialogContent>
+            </Dialog>
           </AccordionDetails>
         </Accordion>
       </Grid>
