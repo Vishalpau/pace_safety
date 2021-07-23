@@ -226,7 +226,7 @@ const BasicCauseAndAction = () => {
                   {Object.entries(data)
                     .reverse()
                     .map(([key, value], index) => (
-                      <TableRow>
+                      <TableRow key={key}>
                         <TableCell
                           align="left"
                           scope="row"
@@ -236,8 +236,8 @@ const BasicCauseAndAction = () => {
                         </TableCell>
                         <TableCell className={classes.tableCell}>
                           <ul className={classes.tableUlList}>
-                            {value.map((value) => (
-                              <li>{value}</li>
+                            {value.map((value, key) => (
+                              <li key={key}>{value}</li>
                             ))}
                           </ul>
                         </TableCell>
