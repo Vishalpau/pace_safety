@@ -4,10 +4,10 @@ function validate(data) {
   let isValid = true;
   const error = {};
   
-  if (data.fkProjectId == 0) {
-    error.fkProjectId = "Please select project name";
-    isValid = false;
-  }
+  // if (data.fkProjectId == 0) {
+  //   error.fkProjectId = "Please select project name";
+  //   isValid = false;
+  // }
 
   // if (validator.isEmpty(data.unitname)){
   //     error.unitname = "this filed is empty"

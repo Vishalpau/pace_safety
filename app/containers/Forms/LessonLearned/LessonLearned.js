@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -82,6 +82,7 @@ const LessionLearned = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const history = useHistory();
+  const ref = useRef()
   const { id } = useParams();
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
@@ -91,6 +92,7 @@ const LessionLearned = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
   const [evidence,setEvidence] = useState([])
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState("");
@@ -114,17 +116,30 @@ const LessionLearned = () => {
 // handleAttchment
 
   const handleAttchment = async(e)=>{
+    
+    let file = e.target.files[0].name.split(".")
+    
+    if(file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png"){
+      
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
         setAttachment({...attachment,evidenceDocument:e.target.files[0]})
         await setMessage("File uploaded successfully!");
         await setMessageType("success");
         await setOpen(true);
       } else {
+        ref.current.value=""
         await setMessage("File uploading failed! Select file less than 25MB!");
         await setMessageType("error");
         await setOpen(true);
       }
     await setEvidanceForm(temp);
+    }else{
+      ref.current.value=""
+      await setMessage("Only JPG & PNG File is allowed!");
+      await setMessageType("error");
+      await setOpen(true);
+    }
+  
   }
  // handle close snackbar
  const handleClose = (event, reason) => {
@@ -138,13 +153,14 @@ const LessionLearned = () => {
 
     // attachment 
    
-    if(attachment.evidenceDocument !=="" || attachment.length !== undefined){
+    if(!attachment.evidenceDocument || !attachment.length){
+    
       const formData = new FormData()
       formData.append('evidenceDocument',attachment.evidenceDocument)
       formData.append('evidenceCheck','Yes')
       formData.append('evidenceNumber','string')
       formData.append('evidenceCategory','Lessons Learned')
-      formData.append('createdBy',0)
+      formData.append('createdBy',parseInt(userId))
       formData.append('status','Active')
       formData.append('fkIncidentId',id)
 
@@ -172,8 +188,8 @@ const LessionLearned = () => {
             teamOrDepartment: form[i].teamOrDepartment,
             learnings: form[i].learnings,
             status: "Active",
-            createdBy: 0,
-            updatedBy: 0,
+            createdBy: parseInt(userId),
+            updatedBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId"),
           }
         );
@@ -454,7 +470,7 @@ const LessionLearned = () => {
               </Snackbar>
             <Typography  variant ="h6"> Add attachment</Typography>
             
-                 <input type="file" onChange = {(e)=> handleAttchment(e)}/>
+                 <input type="file" ref={ref}  accept=".png, jpg, jpeg" onChange = {(e)=> handleAttchment(e)}/>
                 
               
               

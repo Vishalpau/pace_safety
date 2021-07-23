@@ -25,6 +25,9 @@ export const access_token = localStorage.getItem("access_token");
 
 export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/"
 
+// Header authenticatuon 
+export const HEADER_AUTH = {'Authorization': `Bearer ${access_token}`  }
+
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details": `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
     "fkincidentId"

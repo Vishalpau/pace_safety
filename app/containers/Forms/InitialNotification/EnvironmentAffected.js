@@ -89,6 +89,7 @@ const EnvironmentAffected = () => {
   const [envComments, setEnvComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   const nextPath = localStorage.getItem("nextPath");
 
@@ -103,7 +104,7 @@ const EnvironmentAffected = () => {
       envQuestion: "Were there any spills?",
       envQuestionOption: "",
       envAnswerDetails: "",
-      createdBy: 1,
+      createdBy: parseInt(userId),
       status: "Active",
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
@@ -111,7 +112,7 @@ const EnvironmentAffected = () => {
       envQuestion: "Were there any release?",
       envQuestionOption: "",
       envAnswerDetails: "",
-      createdBy: 1,
+      createdBy: parseInt(userId),
       status: "Active",
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
@@ -119,7 +120,7 @@ const EnvironmentAffected = () => {
       envQuestion: "Were there any impact on wildlife?",
       envQuestionOption: "",
       envAnswerDetails: "",
-      createdBy: 1,
+      createdBy: parseInt(userId),
       status: "Active",
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
@@ -128,7 +129,7 @@ const EnvironmentAffected = () => {
       envQuestionOption: "",
       envAnswerDetails: "",
       status: "Active",
-      createdBy: 1,
+      createdBy: parseInt(userId),
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
   ]);
@@ -151,7 +152,7 @@ const EnvironmentAffected = () => {
     if (temp[key]["envQuestionOption"] !== "Yes") {
       temp[key]["envAnswerDetails"] = temp[key]["envQuestionOption"];
     }
-    temp[key].updatedBy = 0;
+    temp[key].updatedBy = parseInt(userId);
     temp[key].updatedAt = moment(new Date()).toISOString();
     await setEnvironmentListData(temp);
   };
