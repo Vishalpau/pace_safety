@@ -33,7 +33,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import styles from "./header-jss";
 
 import { useSelector } from "react-redux";
-import {connect } from "react-redux"
+import { connect } from "react-redux"
 
 import api from '../../utils/axios'
 import { access_token } from "../../utils/constants";
@@ -133,7 +133,7 @@ function Header(props) {
     initialValues
   } = props;
 
-  
+
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -144,9 +144,9 @@ function Header(props) {
     return classes.left;
   };
 
-  if(Object.keys(props.initialValues.projectName).length > 0){
-    localStorage.setItem('projectName',JSON.stringify(props.initialValues))
-   
+  if (Object.keys(props.initialValues.projectName).length > 0) {
+    localStorage.setItem('projectName', JSON.stringify(props.initialValues))
+
   }
   const projectData = JSON.parse(localStorage.getItem('projectName'))
 
@@ -168,19 +168,16 @@ function Header(props) {
 
   const filterOpen = Boolean(anchorEl);
   const id = filterOpen ? "simple-popover" : undefined;
-  useEffect(()=> {
-    
-    const callBack = async()=>{
-    // breakdownResponse is a prop.
-    
-    if(projectData!==null){
-    let breakdownValues = {}
-    console.log(projectData.projectName.breakdown)
+  useEffect(() => {
 
-  
-  }
-}
-callBack();
+    const callBack = async () => {
+      // breakdownResponse is a prop.
+
+      if (projectData !== null) {
+        let breakdownValues = {}
+      }
+    }
+    callBack();
   })
 
   return (
@@ -205,19 +202,19 @@ callBack();
         </Fab>
         <Hidden smDown>
           <div className={classes.headerProperties}>
-          {props.initialValues.projectName === {}?null:
-            <MuiThemeProvider theme={theme}>
-              <div className={classes.projectSwitcher}>
-                <Typography variant="body2">Project:</Typography>
-                <Breadcrumbs
-              className={classes.projectBreadcrumbs}
-              separator={<NavigateNextIcon fontSize="small" />}
-            >
-            <Chip size="medium" label={props.initialValues.projectName.projectName || 'JWIL Project 1'} />
-              
-            </Breadcrumbs>
-              </div>
-            </MuiThemeProvider>}
+            {props.initialValues.projectName === {} ? null :
+              <MuiThemeProvider theme={theme}>
+                <div className={classes.projectSwitcher}>
+                  <Typography variant="body2">Project:</Typography>
+                  <Breadcrumbs
+                    className={classes.projectBreadcrumbs}
+                    separator={<NavigateNextIcon fontSize="small" />}
+                  >
+                    <Chip size="medium" label={props.initialValues.projectName.projectName || 'JWIL Project 1'} />
+
+                  </Breadcrumbs>
+                </div>
+              </MuiThemeProvider>}
 
             <div>
               <IconButton
@@ -249,30 +246,30 @@ callBack();
               >
                 <Box p={3}>
                   <Grid container spacing={2}>
-                    {projectData===null?null:projectData.projectName.breakdown.length>0?projectData.projectName.breakdown.map((item,index)=>
-                    <Grid item xs={12} key={index}>
-                      <FormControl
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-                        <InputLabel id="filter3-label">{item.structure[0].name}</InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={age}
-                          onChange={handleChange}
-                          label="Phases"
-                          style={{ width: "100%" }}
+                    {projectData === null ? null : projectData.projectName.breakdown.length > 0 ? projectData.projectName.breakdown.map((item, index) =>
+                      <Grid item xs={12} key={index}>
+                        <FormControl
+                          variant="outlined"
+                          size="small"
+                          fullWidth={true}
+                          className={classes.filterSelect}
                         >
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    ):null}
+                          <InputLabel id="filter3-label">{item.structure[0].name}</InputLabel>
+                          <Select
+                            labelId="filter3-label"
+                            id="filter3"
+                            value={age}
+                            onChange={handleChange}
+                            label="Phases"
+                            style={{ width: "100%" }}
+                          >
+                            <MenuItem value={10}>Ten</MenuItem>
+                            <MenuItem value={20}>Twenty</MenuItem>
+                            <MenuItem value={30}>Thirty</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    ) : null}
 
                     <Grid item md={12}>
                       <Button
@@ -293,8 +290,8 @@ callBack();
               className={classes.projectBreadcrumbs}
               separator={<NavigateNextIcon fontSize="small" />}
             >
-              {projectData === null?null: Object.keys(projectData.projectName).length>0?projectData.projectName.breakdown.map((item,index)=>
-              <Chip size="small" label={item.structure[0].name} />):null}
+              {projectData === null ? null : Object.keys(projectData.projectName).length > 0 ? projectData.projectName.breakdown.map((item, index) =>
+                <Chip size="small" label={item.structure[0].name} />) : null}
             </Breadcrumbs>
           </div>
         </Hidden>
