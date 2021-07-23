@@ -343,7 +343,7 @@ const HazardiousActs = () => {
           fkIncidentId: localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
         };
@@ -355,7 +355,7 @@ const HazardiousActs = () => {
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
           pk: updateIds.current[index],
@@ -456,7 +456,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.supervision}
             >
               <FormLabel component="legend">Supervision</FormLabel>
@@ -481,7 +480,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.workpackage}
             >
               <FormLabel component="legend">Work package</FormLabel>
@@ -506,7 +504,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.equipmentMachinery}
             >
               <FormLabel component="legend">Equipment & machinery</FormLabel>
@@ -530,7 +527,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.behaviourIssue}
             >
               <FormLabel component="legend">Behaviour issue</FormLabel>
@@ -555,7 +551,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.safetyIssues}
             >
               <FormLabel component="legend">Saftey items</FormLabel>
@@ -577,7 +572,7 @@ const HazardiousActs = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.procedures}>
+            <FormControl component="fieldset" error={error.procedures}>
               <FormLabel component="legend">Ergonomics</FormLabel>
               <FormGroup>
                 {ERGONOMICS.map((value) => (
@@ -597,7 +592,7 @@ const HazardiousActs = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.procedures}>
+            <FormControl component="fieldset" error={error.procedures}>
               <FormLabel component="legend">Procedure</FormLabel>
               <FormGroup>
                 {PROCEDURES.map((value) => (
@@ -624,7 +619,6 @@ const HazardiousActs = () => {
               label="Others"
               variant="outlined"
               multiline
-              required
               error={error.others}
               value={form.others.rcaRemark !== "No option selected" ? form.others.rcaRemark : ""}
               helperText={error ? error.others : ""}
