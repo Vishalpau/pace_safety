@@ -57,17 +57,19 @@ function App() {
         data: data,
       };
       await axios(config)
-        .then(function(response) {
+        .then(function (response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
             window.location.href = "/";
           }
         })
-        .catch(function(error) {});
-    } else {
-      if (localStorage.getItem("access_token") === null) {
+        .catch(function (error) {
+        });
+    }
+    else {
+      if (localStorage.getItem('access_token') === null) {
         // window.location.href = `${LOGIN_URL}`
-        window.location.href = `${LOCAL_LOGIN_URL}`;
+        window.location.href = `${LOCAL_LOGIN_URL}`
       }
     }
   };
