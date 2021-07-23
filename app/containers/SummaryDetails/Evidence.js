@@ -168,6 +168,14 @@ const EvidenceSummary = () => {
     await setActivity(allEvidence.data.data.results);
   };
 
+  const handelFileName = (value) => {
+    const fileNameArray = value.split('/')
+    const fileName = fileNameArray[fileNameArray.length - 1]
+    console.log(fileName)
+    return fileName
+
+  }
+
   useEffect(() => {
     if (id) {
       fetchEvidanceData();
@@ -214,78 +222,78 @@ const EvidenceSummary = () => {
                     <TableBody>
                       {evidence.length !== 0
                         ? evidence.slice(1, 14).map((value, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{value.evidenceNumber}</TableCell>
-                              <TableCell>{value.evidenceCheck}</TableCell>
-                              <TableCell>{value.evidenceCategory}</TableCell>
-                              <TableCell>{value.evidenceRemark}</TableCell>
-                              {value.evidenceDocument ? (
-                                <TableCell>
-                                  <Tooltip title={handleFile(value.evidenceDocument)}>
-                                    <IconButton
-                                      onClick={() =>
-                                        handleOpen(value.evidenceDocument)
-                                      }
-                                      className={classes.fileIcon}
-                                    >
-                                      {value.evidenceDocument.endsWith(
-                                        ".png"
-                                      ) ||
+                          <TableRow key={index}>
+                            <TableCell>{value.evidenceNumber}</TableCell>
+                            <TableCell>{value.evidenceCheck}</TableCell>
+                            <TableCell>{value.evidenceCategory}</TableCell>
+                            <TableCell>{value.evidenceRemark}</TableCell>
+                            {value.evidenceDocument ? (
+                              <TableCell>
+                                <Tooltip title={handelFileName(value.evidenceDocument)}>
+                                  <IconButton
+                                    onClick={() =>
+                                      handleOpen(value.evidenceDocument)
+                                    }
+                                    className={classes.fileIcon}
+                                  >
+                                    {value.evidenceDocument.endsWith(
+                                      ".png"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".jpg"
                                       ) ? (
-                                        <ImageIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".pdf"
-                                      ) ? (
-                                        <PictureAsPdfIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".mp4"
-                                      ) ||
+                                      <ImageIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".pdf"
+                                    ) ? (
+                                      <PictureAsPdfIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".mp4"
+                                    ) ||
                                       value.evidenceDocument.endsWith(".mov") ||
                                       value.evidenceDocument.endsWith(".flv") ||
                                       value.evidenceDocument.endsWith(
                                         ".avi"
                                       ) ? (
-                                        <VideoCallIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".xls"
-                                      ) ||
+                                      <VideoCallIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".xls"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".xlsx"
                                       ) ? (
-                                        <DescriptionIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".ppt"
-                                      ) ||
+                                      <DescriptionIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".ppt"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".pptx"
                                       ) ? (
-                                        <DescriptionIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".text"
-                                      ) ? (
-                                        <TextFieldsIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".docx"
-                                      ) ||
+                                      <DescriptionIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".text"
+                                    ) ? (
+                                      <TextFieldsIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".docx"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".doc"
                                       ) ? (
-                                        <TextFieldsIcon />
-                                      ) : null}
-                                    </IconButton>
-                                  </Tooltip>
-                                </TableCell>
-                              ) : null}
-                            </TableRow>
-                          ))
+                                      <TextFieldsIcon />
+                                    ) : null}
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
+                            ) : null}
+                          </TableRow>
+                        ))
                         : null}
                     </TableBody>
                   </Table>
@@ -307,22 +315,22 @@ const EvidenceSummary = () => {
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.map((ad, key) => (
-                        <Grid item md={6} key={key}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            {ad.question}
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {ad.answer}
-                          </Typography>
-                        </Grid>
-                      ))
+                      <Grid item md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
                     : null}
                 </Grid>
               </AccordionDetails>
