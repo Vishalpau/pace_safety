@@ -112,59 +112,68 @@ const RootCauseAnalysisSummary = () => {
     <Grid container spacing={3}>
       {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (
         <Grid item md={12}>
-          <Accordion
-            expanded={expanded === "panel1"}
-            onChange={handleExpand("panel1")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>
-                Cause analysis
+
+          <Grid container spacing={3}>
+            <Typography className={classes.heading}>
+              RCA details
+            </Typography>
+          </Grid>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography
+                variant="h6"
+                className={Fonts.labelName}
+                gutterBottom
+              >
+                RCA recommended
               </Typography>
-            </AccordionSummary>
-            <AccordionDetails classes={{ root: "details-wrapper" }}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <Typography
-                    variant="h6"
-                    className={Fonts.labelName}
-                    gutterBottom
-                  >
-                    Evidence collected supports the incident event took place?
-                  </Typography>
-                  <Typography className={Fonts.labelValue} gutterBottom>
-                    {causeanalysis.evidenceSupport}
-                  </Typography>
-                </Grid>
+              <Typography className={Fonts.labelValue} gutterBottom>
+                {causeanalysis.rcaRecommended}
+              </Typography>
+            </Grid>
 
-                <Grid item xs={12}>
-                  <Typography
-                    variant="h6"
-                    className={Fonts.labelName}
-                    gutterBottom
-                  >
-                    Contradictions between evidence and the description of
-                    incident?
-                  </Typography>
-                  <Typography className={Fonts.labelValue} gutterBottom>
-                    {causeanalysis.evidenceContradiction}
-                  </Typography>
-                </Grid>
+            <Grid item xs={12}>
+              <Typography
+                variant="h6"
+                className={Fonts.labelName}
+                gutterBottom
+              >
+                Evidence collected supports the incident event took place?
+              </Typography>
+              <Typography className={Fonts.labelValue} gutterBottom>
+                {causeanalysis.evidenceSupport}
+              </Typography>
+            </Grid>
 
-                <Grid item xs={12}>
-                  <Typography
-                    variant="h6"
-                    className={Fonts.labelName}
-                    gutterBottom
-                  >
-                    Evidence does not supports the incident event as described?
-                  </Typography>
-                  <Typography className={Fonts.labelValue} gutterBottom>
-                    {causeanalysis.evidenceNotSupport}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
+            <Grid item xs={12}>
+              <Typography
+                variant="h6"
+                className={Fonts.labelName}
+                gutterBottom
+              >
+                Contradictions between evidence and the description of
+                incident?
+              </Typography>
+              <Typography className={Fonts.labelValue} gutterBottom>
+                {causeanalysis.evidenceContradiction}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography
+                variant="h6"
+                className={Fonts.labelName}
+                gutterBottom
+              >
+                Evidence does not supports the incident event as described?
+              </Typography>
+              <Typography className={Fonts.labelValue} gutterBottom>
+                {causeanalysis.evidenceNotSupport}
+              </Typography>
+            </Grid>
+          </Grid>
+
         </Grid>
       ) : (
         <Grid item md={12}>
@@ -181,7 +190,7 @@ const RootCauseAnalysisSummary = () => {
             onChange={handleExpand("panel2")}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Root cause</Typography>
+              <Typography className={classes.heading}>Root cause analysis</Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               {rootCause.map((root, key) => (
