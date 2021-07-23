@@ -25,14 +25,11 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
 
-
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
-
-
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -43,6 +40,7 @@ import {
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
+import "../../../styles/custom.css";
 
 import axios from "axios";
 
@@ -87,14 +85,14 @@ const LessionLearned = () => {
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
   const [learningList, setLearningList] = useState([]);
-  const [attachment, setAttachment] = useState({evidenceDocument:""});
+  const [attachment, setAttachment] = useState({ evidenceDocument: "" });
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
   const [evidence,setEvidence] = useState([])
   const userId = JSON.parse(localStorage.getItem('userDetails')).id;
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
@@ -241,9 +239,8 @@ const LessionLearned = () => {
       .then(function(response) {
         if (response.status === 200) {
           const result = response.data.data.results;
-          setDepartment(result)
-        }
-        else {
+          setDepartment(result);
+        } else {
           // window.location.href = {LOGIN_URL}
         }
       })
@@ -252,14 +249,13 @@ const LessionLearned = () => {
       });
   };
 
- 
-    // Fetch Evidance data
-    const fetchEvidanceData = async () => {  
-      const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-      if(allEvidence.status === 200){
-        await setEvidence(allEvidence.data.data.results);
-      }
-    };
+  // Fetch Evidance data
+  const fetchEvidanceData = async () => {
+    const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    if (allEvidence.status === 200) {
+      await setEvidence(allEvidence.data.data.results);
+    }
+  };
 
   // handle Remove
 
@@ -270,16 +266,17 @@ const LessionLearned = () => {
     await setForm(newData);
   };
 
-    // handle remove initial evidance from databse
+  // handle remove initial evidance from databse
 
-    const removeInitialEvidance = async (evidenceId)=>{
-      const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
-      
-      if(res.status === 200){
-        await fetchEvidanceData();
-      }
-  
+  const removeInitialEvidance = async (evidenceId) => {
+    const res = await api.delete(
+      `api/v1/incidents/${id}/evidences/${evidenceId}/`
+    );
+
+    if (res.status === 200) {
+      await fetchEvidanceData();
     }
+  };
   useEffect(() => {
     fetchDepartment();
     if (id) {
@@ -373,9 +370,18 @@ const LessionLearned = () => {
               <Typography variant="h6" gutterBottom>
                 Key learnings
               </Typography>
+            </Grid>
 
+            <Grid item md={12}>
               {form.map((value, key) => (
-                <Grid container spacing={3} item md={12} key={key}>
+                <Grid
+                  container
+                  spacing={3}
+                  item
+                  md={12}
+                  className="repeatedGrid"
+                  key={key}
+                >
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
@@ -411,8 +417,6 @@ const LessionLearned = () => {
                     </FormControl>
                   </Grid>
                   <Grid item md={12}>
-                    {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
-
                     <TextField
                       id="outlined-search"
                       required
@@ -430,9 +434,6 @@ const LessionLearned = () => {
                       value={value.learnings || ""}
                       onChange={(e) => handleForm(e, key, "learnings")}
                     />
-                    {/* {error && error.teamLearning && (
-                          <p>{error.teamLearning}</p>
-                        )} */}
                   </Grid>
                   {form.length > 1 ? (
                     <Grid item md={3}>
@@ -459,7 +460,7 @@ const LessionLearned = () => {
               </button>
             </Grid>
             <Grid item md={12}>
-            <Snackbar
+              <Snackbar
                 open={open}
                 autoHideDuration={6000}
                 onClose={handleClose}

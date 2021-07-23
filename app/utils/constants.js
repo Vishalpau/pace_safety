@@ -74,7 +74,7 @@ export const INVESTIGATION_FORM = {
   "Severity consequences":
     "/app/incident-management/registration/investigation/severity-consequences/",
   "Worker details":
-    "/app/incident-management/registration/investigation/worker-details/",
+    `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`,
   "Event details":
     "/app/incident-management/registration/investigation/event-details/",
   "Action taken":
@@ -124,73 +124,36 @@ export const FORM_HEADER = {
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 
-export const BASIC_CAUSE_SUB_TYPE = [
-  "Perosonal",
-  "Wellness factors",
-  "Other human factors",
-  "Leadership",
-  "Processes",
-  "Others job factors",
-];
 
 export const HAZARDIOUS_ACTS_SUB_TYPES = [
   "Supervision",
-  "Workpackage",
+  "workPackage",
   "equipmentMachinery",
   "behaviourIssue",
   "safetyIssues",
   "ergonimics",
   "procedures",
-  "otheracts",
-];
-
-export const ACTS_SUB_TYPES = [
-  "Supervision",
-  "Work package",
-  "Equipment machinery",
-  "Behaviour issue",
-  "Safety issues",
-  "Ergonimics",
-  "Procedures",
-  "Other acts",
+  "otherActs",
 ];
 
 export const HAZARDIOUS_CONDITION_SUB_TYPES = [
   "warningSystem",
   "energyTypes",
   "tools",
-  "safetyitems",
-  "othersconditions",
-];
-
-export const CONDITION_SUB_TYPES = [
-  "Warning system",
-  "Energy types",
-  "Tools",
-  "Safety items",
-  "Others conditions",
+  "safetyItems",
+  "othersConditions",
 ];
 
 export const BASIC_CAUSE_SUB_TYPES = [
   "personal",
   "wellnessFactors",
-  "othershumanfactors",
+  "othersHumanFactors",
   "leadership",
   "processes",
-  "othersjobfactors",
+  "othersJobFactors",
 ];
 
 // option in root cause and anlysis
-
-export const HAZARDIOUS_ACTS = [
-  "Supervison",
-  "Workpackage",
-  "Equimentmachinary",
-  "Behaviousissues",
-  "Safetyitems",
-  "Ergonomics",
-  "Procedure",
-];
 
 export const SUPERVISON = [
   "No Supervision at Work Site",

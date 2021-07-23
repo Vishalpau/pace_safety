@@ -49,32 +49,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const BasicCause = () => {
-  const [commonForm, setCommonForm] = useState({
-    rcaNumber: "string",
-    rcaType: "string",
-    status: "Active",
-    createdBy: 0,
-    updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
-  });
-  const [error, setError] = useState({});
-  const [data, setData] = useState([]);
+
   const [form, setForm] = useState({
-    personal: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    wellnessFactors: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    otherHumanFactor: { remarkType: "", rcaSubType: "", rcaRemark: "" },
-    leadership: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    processes: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    otherJobFactors: { remarkType: "", rcaSubType: "", rcaRemark: "" },
+    personal: { remarkType: "options", rcaSubType: "personal", rcaRemark: [] },
+    wellnessFactors: { remarkType: "options", rcaSubType: "wellnessFactors", rcaRemark: [] },
+    otherHumanFactor: { remarkType: "remark", rcaSubType: "othersHumanFactors", rcaRemark: "" },
+    leadership: { remarkType: "options", rcaSubType: "leadership", rcaRemark: [] },
+    processes: { remarkType: "options", rcaSubType: "processes", rcaRemark: [] },
+    otherJobFactors: { remarkType: "remark", rcaSubType: "othersJobFactors", rcaRemark: "" },
   });
   const putId = useRef("");
   const [fetchApiData, setFetchApiData] = useState({});
   const { id } = useParams();
   const history = useHistory();
   const updateIds = useRef();
+  const [error, setError] = useState({});
   const [incidentDetail, setIncidentDetail] = useState({});
   const checkPost = useRef()
 
+  const setRemark = (value) => {
+    let remark = value.includes(",") ? value.split(",") : [value]
+    if (remark.includes("No option selected") && remark.length > 0) {
+      let removeItemIndex = remark.indexOf("No option selected")
+      remark.splice(removeItemIndex, 1)
+    }
+    return remark
+  }
   // get data and set to states
 
   const handelUpdateCheck = async () => {
@@ -89,9 +89,7 @@ const BasicCause = () => {
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 14) {
-      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`);
       putId.current = incidentId;
-      // let allApiData = previousData.data.data.results;
       allApiData.map((value) => {
         if (BASIC_CAUSE_SUB_TYPES.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
@@ -110,44 +108,35 @@ const BasicCause = () => {
         personal: {
           remarkType: "options",
           rcaSubType: "personal",
-          rcaRemark: tempApiData.personal.includes(",")
-            ? tempApiData.personal.split(",")
-            : [tempApiData.personal],
+          rcaRemark: setRemark(tempApiData.personal),
         },
         wellnessFactors: {
           remarkType: "options",
           rcaSubType: "wellnessFactors",
-          rcaRemark: tempApiData.wellnessFactors.includes(",")
-            ? tempApiData.wellnessFactors.split(",")
-            : [tempApiData.wellnessFactors],
+          rcaRemark: setRemark(tempApiData.wellnessFactors),
         },
         otherHumanFactor: {
           remarkType: "remark",
-          rcaSubType: "othershumanfactors",
-          rcaRemark: tempApiData.othershumanfactors,
+          rcaSubType: "othersHumanFactors",
+          rcaRemark: tempApiData.othersHumanFactors,
         },
         leadership: {
           remarkType: "options",
           rcaSubType: "leadership",
-          rcaRemark: tempApiData.leadership.includes(",")
-            ? tempApiData.leadership.split(",")
-            : [tempApiData.leadership],
+          rcaRemark: setRemark(tempApiData.leadership),
         },
         processes: {
           remarkType: "options",
           rcaSubType: "processes",
-          rcaRemark: tempApiData.processes.includes(",")
-            ? tempApiData.processes.split(",")
-            : [tempApiData.processes],
+          rcaRemark: setRemark(tempApiData.processes),
         },
         otherJobFactors: {
           remarkType: "remark",
-          rcaSubType: "othersjobfactors",
-          rcaRemark: tempApiData.othersjobfactors,
+          rcaSubType: "othersJobFactors",
+          rcaRemark: tempApiData.othersJobFactors,
         },
       });
     }
-    console.log(allApiData)
   };
 
   const handelPrevious = () => {
@@ -215,7 +204,7 @@ const BasicCause = () => {
       ...form,
       otherHumanFactor: {
         remarkType: "remark",
-        rcaSubType: "othershumanfactors",
+        rcaSubType: "othersHumanFactors",
         rcaRemark: e.target.value,
       },
     });
@@ -269,7 +258,7 @@ const BasicCause = () => {
       ...form,
       otherJobFactors: {
         remarkType: "remark",
-        rcaSubType: "othersjobfactors",
+        rcaSubType: "othersJobFactors",
         rcaRemark: e.target.value,
       },
     });
@@ -278,8 +267,6 @@ const BasicCause = () => {
   const classes = useStyles();
 
   const handelNext = async (e) => {
-    const { error, isValid } = BasicCauseValidation(form);
-    await setError(error);
     let tempData = [];
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
@@ -288,7 +275,7 @@ const BasicCause = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -300,7 +287,7 @@ const BasicCause = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -321,7 +308,6 @@ const BasicCause = () => {
             callObjects[key]
           );
           if (res.status == 200) {
-            console.log("request done");
             nextPageLink = res.status;
           }
         } else {
@@ -332,7 +318,6 @@ const BasicCause = () => {
             callObjects[key]
           );
           if (res.status == 201) {
-            console.log("request done");
             nextPageLink = res.status;
           }
         }
@@ -393,7 +378,7 @@ const BasicCause = () => {
             </Box>
           </Grid>
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.personal}>
+            <FormControl component="fieldset" error={error.personal}>
               <FormLabel component="legend">Personal</FormLabel>
               <FormGroup>
                 {PERSONAL.map((value) => (
@@ -415,7 +400,6 @@ const BasicCause = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.wellnessFactors}
             >
               <FormLabel component="legend">Wellness factors</FormLabel>
@@ -444,7 +428,7 @@ const BasicCause = () => {
               rows={4}
               label="Other human factors*"
               error={error.otherHumanFactor}
-              value={form.otherHumanFactor.rcaRemark}
+              value={form.otherHumanFactor.rcaRemark !== "No option selected" ? form.otherHumanFactor.rcaRemark : ""}
               helperText={error ? error.otherHumanFactor : ""}
               className={classes.formControl}
               onChange={async (e) => handelOtherHumanFactors(e)}
@@ -460,7 +444,7 @@ const BasicCause = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.leadership}>
+            <FormControl component="fieldset" error={error.leadership}>
               <FormLabel component="legend">Leadership</FormLabel>
               <FormGroup>
                 {LEADERSHIP.map((value) => (
@@ -480,7 +464,7 @@ const BasicCause = () => {
           </Grid>
           {/* processes */}
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.processes}>
+            <FormControl component="fieldset" error={error.processes}>
               <FormLabel component="legend">Processes</FormLabel>
               <FormGroup>
                 {PROCESSES.map((value) => (
@@ -505,7 +489,7 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               error={error.otherJobFactors}
-              value={form.otherJobFactors.rcaRemark}
+              value={form.otherJobFactors.rcaRemark !== "No option selected" ? form.otherJobFactors.rcaRemark : ""}
               helperText={error ? error.otherJobFactors : ""}
               rows={3}
               label="Other job factors*"

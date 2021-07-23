@@ -139,7 +139,6 @@ const WhyAnalysis = () => {
           }
         } else {
           let dataID = callObjects[key].whyId;
-          // delete callObjects[key].whyId
           let postObject = { ...whyData, ...callObjects[key] };
           if (typeof postObject != "undefined") {
             const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
@@ -297,7 +296,6 @@ const WhyAnalysis = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href={Object.keys(error).length > 0 ? '#' : `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`}
               onClick={(e) => handelApiCall(e)}
             >
               Submit

@@ -8,8 +8,7 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 
-import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
+
 import FormControl from "@material-ui/core/FormControl";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,10 +19,8 @@ import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 
-import initialdetailvalidate from "../../Validator/InitialDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM, HIGHESTPOTENTIALIMPACTOR, RCAOPTION } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
@@ -34,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  button: {
+    margin: theme.spacing(1)
+  }
 }));
 
 const InvestigationOverview = () => {
@@ -67,13 +67,12 @@ const InvestigationOverview = () => {
       investigationId.current = allApiData.id
     }
     let workerApiDataFetch = await api.get(`api/v1/incidents/${incidentId}/investigations/${investigationId.current}/workers/`);
-    if (workerApiDataFetch.data.data.results !== []) {
+    if (workerApiDataFetch.data.data.results.length !== 0) {
       let worker_temp = []
       let workerApiData = workerApiDataFetch.data.data.results
       workerApiData.map((value) => {
         worker_temp.push(value)
       })
-      console.log(worker_temp)
       localStorage.setItem("personEffected", JSON.stringify(worker_temp))
     } else {
       if (localStorage.getItem("WorkerDataFetched") !== "Yes") {
@@ -121,13 +120,13 @@ const InvestigationOverview = () => {
         }
         let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
         let PeopleAffectedData = PeopleAffected.data.data.results
-
         let temp = []
         PeopleAffectedData.map((value, i) => {
           temp.push({
             ...workerData, ...{
               "name": value.personName,
-              "department": value.personDepartment
+              "department": value.personDepartment,
+              "workerType": value.personType
             }
           })
         })
@@ -135,7 +134,6 @@ const InvestigationOverview = () => {
       }
     }
     // people affected data in local storage
-
   };
 
   const handleNext = async (e) => {
@@ -188,9 +186,7 @@ const InvestigationOverview = () => {
         }
         localStorage.setItem("personEffected", JSON.stringify([workerData]))
         history.push(`/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`)
-
       }
-
     }
     localStorage.setItem("WorkerDataFetched", "Yes")
     localStorage.removeItem("WorkerPost")
@@ -600,6 +596,7 @@ const InvestigationOverview = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className={classes.button}
                 onClick={() => history.goBack()}
               >
                 Previous
@@ -607,6 +604,7 @@ const InvestigationOverview = () => {
               <Button
                 variant="contained"
                 color="primary"
+                className={classes.button}
                 onClick={() => handleNext()}
               // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
               >

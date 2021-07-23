@@ -1,7 +1,6 @@
 import validator from "validator";
 
 function AdditionalDetailValidate(data) {
-  console.log("data", data);
 
   const error = [];
   let isValid = true;
@@ -9,9 +8,24 @@ function AdditionalDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        dataObj.error = "please enter label name";
+        if(dataObj.question == "Any part/equipment sent for analysis"){
+          dataObj.error = "Please enter equipment";
         error.push(dataObj);
         isValid = false;
+        }else if (dataObj.question == "Evidence analysis notes"){
+          dataObj.error = "Please enter evidence analysis";
+        error.push(dataObj);
+        isValid = false;
+        }else if (dataObj.question == "Evidence summary"){
+          dataObj.error = "Please enter evidence summary";
+        error.push(dataObj);
+        isValid = false;
+        }else if (dataObj.question == "Additional notes if any"){
+          dataObj.error = "Please enter additional notes";
+        error.push(dataObj);
+        isValid = false;
+        }
+        
       } else {
         dataObj.error = "";
       }
@@ -20,7 +34,6 @@ function AdditionalDetailValidate(data) {
     }
     error.push(dataObj);
   }
-  console.log("------", error, isValid);
   return { error, isValid };
 }
 

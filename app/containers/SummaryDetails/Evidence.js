@@ -106,8 +106,8 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
-  dialogPaper: {
-    minWidth: 700,
+  modalButton: {
+    width: "100%",
   },
 }));
 
@@ -131,8 +131,6 @@ const EvidenceSummary = () => {
   const [expanded, setExpanded] = React.useState(false);
 
   const { id } = useParams();
-
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = (document) => {
@@ -151,22 +149,16 @@ const EvidenceSummary = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // const handleDownload = (url, filename) => {
-  //   axios
-  //     .get(url, {
-  //       responseType: "blob",
-  //       headers: {"Access-Control-Allow-Origin": "*"}
-  //     }
-  //     )
-  //     .then((res) => {
-  //       fileDownload(res.data, filename);
-  //     });
-  // };
+  const handleFile = (value) => {
+    console.log(value)
+    const temp = value.split("/")
+    console.log(temp[6])
+    return temp[6]
+  } 
 
-  // const fkid = localStorage.getItem('fkincidentId');
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    
+
     await setEvidence(allEvidence.data.data.results);
     await setIsLoding(true);
   };
@@ -175,6 +167,14 @@ const EvidenceSummary = () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/activities/`);
     await setActivity(allEvidence.data.data.results);
   };
+
+  const handelFileName = (value) => {
+    const fileNameArray = value.split('/')
+    const fileName = fileNameArray[fileNameArray.length - 1]
+    console.log(fileName)
+    return fileName
+
+  }
 
   useEffect(() => {
     if (id) {
@@ -221,79 +221,79 @@ const EvidenceSummary = () => {
                     </TableHead>
                     <TableBody>
                       {evidence.length !== 0
-                        ? evidence.slice(1,14).map((value, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{value.evidenceNumber}</TableCell>
-                              <TableCell>{value.evidenceCheck}</TableCell>
-                              <TableCell>{value.evidenceCategory}</TableCell>
-                              <TableCell>{value.evidenceRemark}</TableCell>
-                              {value.evidenceDocument ? (
-                                <TableCell>
-                                  <Tooltip title={value.evidenceDocument}>
-                                    <IconButton
-                                      onClick={() =>
-                                        handleOpen(value.evidenceDocument)
-                                      }
-                                      className={classes.fileIcon}
-                                    >
-                                      {value.evidenceDocument.endsWith(
-                                        ".png"
-                                      ) ||
+                        ? evidence.slice(1, 14).map((value, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{value.evidenceNumber}</TableCell>
+                            <TableCell>{value.evidenceCheck}</TableCell>
+                            <TableCell>{value.evidenceCategory}</TableCell>
+                            <TableCell>{value.evidenceRemark}</TableCell>
+                            {value.evidenceDocument ? (
+                              <TableCell>
+                                <Tooltip title={handelFileName(value.evidenceDocument)}>
+                                  <IconButton
+                                    onClick={() =>
+                                      handleOpen(value.evidenceDocument)
+                                    }
+                                    className={classes.fileIcon}
+                                  >
+                                    {value.evidenceDocument.endsWith(
+                                      ".png"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".jpg"
                                       ) ? (
-                                        <ImageIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".pdf"
-                                      ) ? (
-                                        <PictureAsPdfIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".mp4"
-                                      ) ||
+                                      <ImageIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".pdf"
+                                    ) ? (
+                                      <PictureAsPdfIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".mp4"
+                                    ) ||
                                       value.evidenceDocument.endsWith(".mov") ||
                                       value.evidenceDocument.endsWith(".flv") ||
                                       value.evidenceDocument.endsWith(
                                         ".avi"
                                       ) ? (
-                                        <VideoCallIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".xls"
-                                      ) ||
+                                      <VideoCallIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".xls"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".xlsx"
                                       ) ? (
-                                        <DescriptionIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".ppt"
-                                      ) ||
+                                      <DescriptionIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".ppt"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".pptx"
                                       ) ? (
-                                        <DescriptionIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".text"
-                                      ) ? (
-                                        <TextFieldsIcon />
-                                      ) : null}
-                                      {value.evidenceDocument.endsWith(
-                                        ".docx"
-                                      ) ||
+                                      <DescriptionIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".text"
+                                    ) ? (
+                                      <TextFieldsIcon />
+                                    ) : null}
+                                    {value.evidenceDocument.endsWith(
+                                      ".docx"
+                                    ) ||
                                       value.evidenceDocument.endsWith(
                                         ".doc"
                                       ) ? (
-                                        <TextFieldsIcon />
-                                      ) : null}
-                                    </IconButton>
-                                  </Tooltip>
-                                </TableCell>
-                              ) : null}
-                            </TableRow>
-                          ))
+                                      <TextFieldsIcon />
+                                    ) : null}
+                                  </IconButton>
+                                </Tooltip>
+                              </TableCell>
+                            ) : null}
+                          </TableRow>
+                        ))
                         : null}
                     </TableBody>
                   </Table>
@@ -315,22 +315,22 @@ const EvidenceSummary = () => {
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.map((ad, key) => (
-                        <Grid item md={6} key={key}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            {ad.question}
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {ad.answer}
-                          </Typography>
-                        </Grid>
-                      ))
+                      <Grid item md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
                     : null}
                 </Grid>
               </AccordionDetails>
@@ -360,16 +360,34 @@ const EvidenceSummary = () => {
         </IconButton>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            <Button
-              startIcon={<GetAppIcon />}
-              variant="contained"
-              color="primary"
-              onClick={() => downloadFile()}
-              disableElevation
-              target="_blank"
-            >
-              Download Attachment
-            </Button>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Button
+                  startIcon={<VisibilityIcon />}
+                  variant="contained"
+                  color="primary"
+                  className={classes.modalButton}
+                  onClick={() => downloadFile()}
+                  disableElevation
+                  target="_blank"
+                >
+                  View Attachment
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button
+                  startIcon={<GetAppIcon />}
+                  variant="contained"
+                  color="primary"
+                  className={classes.modalButton}
+                  onClick={() => downloadFile()}
+                  disableElevation
+                  target="_blank"
+                >
+                  Download Attachment
+                </Button>
+              </Grid>
+            </Grid>
           </DialogContentText>
         </DialogContent>
       </Dialog>

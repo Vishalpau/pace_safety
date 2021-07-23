@@ -68,8 +68,8 @@ const CorrectiveAction = () => {
   const [data, setData] = useState([]);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = useState({
-    managementControl: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    regionSupport: { remarkType: "", rcaSubType: "", rcaRemark: "" },
+    managementControl: { remarkType: "options", rcaSubType: "managementControl", rcaRemark: [] },
+    regionSupport: { remarkType: "remark", rcaSubType: "regionSupportAbove", rcaRemark: "" },
   });
 
   const putId = useRef("");
@@ -79,9 +79,18 @@ const CorrectiveAction = () => {
   const updateIds = useRef();
   const checkPost = useRef();
 
+  const setRemark = (value) => {
+    let remark = value.includes(",") ? value.split(",") : [value]
+    if (remark.includes("No option selected") && remark.length > 0) {
+      let removeItemIndex = remark.indexOf("No option selected")
+      remark.splice(removeItemIndex, 1)
+    }
+    return remark
+  }
+
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let allrcaSubType = ["managementcontrol", "regionsupportabove"];
+    let allrcaSubType = ["managementControl", "regionSupportAbove"];
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
@@ -98,9 +107,7 @@ const CorrectiveAction = () => {
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 19) {
-      // let previousData = await api.get(`/api/v1/incidents/${lastItem}/pacecauses/`);
       putId.current = lastItem;
-      // let allApiData = previousData.data.data.results;
       allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
@@ -118,15 +125,13 @@ const CorrectiveAction = () => {
         ...form,
         managementControl: {
           remarkType: "options",
-          rcaSubType: "managementcontrol",
-          rcaRemark: tempApiData.managementcontrol.includes(",")
-            ? tempApiData.managementcontrol.split(",")
-            : [tempApiData.managementcontrol],
+          rcaSubType: "managementControl",
+          rcaRemark: setRemark(tempApiData.managementControl),
         },
         regionSupport: {
           remarkType: "remark",
-          rcaSubType: "regionsupportabove",
-          rcaRemark: tempApiData.regionsupportabove,
+          rcaSubType: "regionSupportAbove",
+          rcaRemark: tempApiData.regionSupportAbove,
         },
       });
     }
@@ -141,7 +146,7 @@ const CorrectiveAction = () => {
         ...form,
         managementControl: {
           remarkType: "options",
-          rcaSubType: "managementcontrol",
+          rcaSubType: "managementControl",
           rcaRemark: newData,
         },
       });
@@ -150,7 +155,7 @@ const CorrectiveAction = () => {
         ...form,
         managementControl: {
           remarkType: "options",
-          rcaSubType: "managementcontrol",
+          rcaSubType: "managementControl",
           rcaRemark: [...form.managementControl.rcaRemark, value],
         },
       });
@@ -162,15 +167,13 @@ const CorrectiveAction = () => {
       ...form,
       regionSupport: {
         remarkType: "remark",
-        rcaSubType: "regionsupportabove",
+        rcaSubType: "regionSupportAbove",
         rcaRemark: e.target.value,
       },
     });
   };
 
   const handelNext = async (e) => {
-    const { error, isValid } = CorrectiveActionValidation(form);
-    await setError(error);
     let tempData = [];
 
     Object.entries(form).map(async (item, index) => {
@@ -180,7 +183,7 @@ const CorrectiveAction = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -192,7 +195,7 @@ const CorrectiveAction = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -301,7 +304,6 @@ const CorrectiveAction = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.managementControl}
             >
               <FormLabel component="legend">Management control</FormLabel>
@@ -326,9 +328,8 @@ const CorrectiveAction = () => {
               id="filled-basic"
               variant="outlined"
               multiline
-              required
               error={error.regionSupport}
-              value={form.regionSupport.rcaRemark}
+              value={form.regionSupport.rcaRemark !== "No option selected" ? form.regionSupport.rcaRemark : ""}
               helperText={error ? error.regionSupport : ""}
               rows={3}
               label="Details of the reasons to support above"

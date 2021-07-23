@@ -94,14 +94,12 @@ const EventDetails = () => {
   const [error, setError] = useState({});
 
   const handelUpdateCheck = async (e) => {
-    console.log("here")
     let page_url = window.location.href;
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
     let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     let allApiData = previousData.data.data.results[0];
-    console.log(allApiData)
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
@@ -142,7 +140,6 @@ const EventDetails = () => {
   };
 
   const handelWeather = async (e, key, value) => {
-    console.log(e.target.value);
     const temp = [...weather];
     temp[key]["weatherCondition"] = value;
     await setWeather(temp);
@@ -189,10 +186,8 @@ const EventDetails = () => {
   };
 
   const handelNext = async (e) => {
-    // console.log(form);
     const { error, isValid } = EventDetailsValidate(form);
     setError(error);
-    console.log(error, isValid);
     // event api call
     if (Object.keys(error).length == 0) {
       if (eventId.current === "") {
@@ -690,7 +685,6 @@ const EventDetails = () => {
               color="primary"
               className={classes.button}
               onClick={() => history.goBack()}
-            // href="http://localhost:3000/app/incident-management/registration/investigation/Equipment-impact-details/"
             >
               Previous
             </Button>
@@ -698,7 +692,6 @@ const EventDetails = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/action-taken/"
               onClick={(e) => handelNext(e)}
             >
               Next

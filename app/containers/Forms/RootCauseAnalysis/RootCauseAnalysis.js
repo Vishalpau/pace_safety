@@ -346,7 +346,7 @@ const RootCauseAnalysis = () => {
                 multiline
                 error={error.recommendSolution}
                 helperText={error ? error.recommendSolution : ""}
-                label="If no, please recommended correct solution?*"
+                label="If no, please recommended correct solution?"
                 rows="3"
                 value={form.recommendSolution}
                 onChange={(e) =>
