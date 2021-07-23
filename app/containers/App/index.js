@@ -20,7 +20,6 @@ import {
   SSO_CLIENT_SECRET,
   LOCAL_SSO_CLIENT_ID,
   LOCAL_SSO_CLIENT_SECRET,
-
   access_token,
   SELF_API,
   LOCAL_LOGIN_URL,
@@ -30,7 +29,7 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 function App() {
   const [userData, setUserData] = useState([]);
-  const [companyListData, setCompanyListData] = useState([])
+  const [companyListData, setCompanyListData] = useState([]);
 
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
