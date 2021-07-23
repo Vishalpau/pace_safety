@@ -1,7 +1,6 @@
 import validator from "validator";
 
 function AdditionalDetailValidate(data) {
-  console.log("data", data);
 
   const error = [];
   let isValid = true;
@@ -9,7 +8,6 @@ function AdditionalDetailValidate(data) {
     const dataObj = data[key];
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
-        console.log(dataObj.question)
         if(dataObj.question == "Any part/equipment sent for analysis"){
           dataObj.error = "Please enter equipment";
         error.push(dataObj);
@@ -36,7 +34,6 @@ function AdditionalDetailValidate(data) {
     }
     error.push(dataObj);
   }
-  console.log("------", error, isValid);
   return { error, isValid };
 }
 

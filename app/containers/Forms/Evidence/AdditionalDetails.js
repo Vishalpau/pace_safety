@@ -91,14 +91,10 @@ const AdditionalDetails = () => {
     let lastId = id ? id : localStorage.getItem("fkincidentId")
     const res = await api.get(`/api/v1/incidents/${lastId}/activities/`);
     const result = res.data.data.results;
-    console.log(result);
-    console.log(result.length);
     if (result.length) {
       await setAdditionalDetailList(result);
     }
     await setIsLoading(true);
-
-    console.log(additionalDetailList.length);
   };
 
   const handleNext = async () => {
@@ -106,12 +102,10 @@ const AdditionalDetails = () => {
 
     if (id && additionalDetailList.length > 24) {
       const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
-    await setError(error);
-    console.log(additionalDetailList.length);
-    if (!isValid) {
-      return;
-    }
-      console.log("in put");
+      await setError(error);
+      if (!isValid) {
+        return;
+      }
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
         additionalDetailList
@@ -123,13 +117,11 @@ const AdditionalDetails = () => {
       }
     } else if(additionalDetailList.length  == 25){
       {
-        console.log("in ddput");
         const { error, isValid } = AdditionalDetailValidate(additionalList);
-    await setError(error);
-    console.log(additionalDetailList.length);
-    if (!isValid) {
-      return;
-    }
+        await setError(error);
+        if (!isValid) {
+        return;
+        }
         const res = await api.put(
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
           additionalDetailList
@@ -141,11 +133,9 @@ const AdditionalDetails = () => {
         }
       }
     }else {
-      console.log(additionalDetailList.length);
       const { error, isValid } = AdditionalDetailValidate(additionalList);
-    await setError(error);
-    console.log(additionalDetailList.length);
-    if (!isValid) {
+      await setError(error);
+      if (!isValid) {
       return;
     }
 
@@ -170,7 +160,6 @@ const AdditionalDetails = () => {
       }
       TempActivity.push(activityObj);
     }
-    console.log(TempActivity);
     setAdditionalDetailList(TempActivity);
   };
 
@@ -183,7 +172,6 @@ const AdditionalDetails = () => {
       }
       TempActivity.push(activityObj);
     }
-    console.log(TempActivity);
     setAdditionalList(TempActivity);
   };
 
@@ -197,7 +185,6 @@ const AdditionalDetails = () => {
     const result = res.data.data.results;
     await setIncidentDetail(result);
   };
-  console.log(additionalDetailList);
   useEffect(() => {
     fetchIncidentDetails();
     
@@ -240,8 +227,6 @@ const AdditionalDetails = () => {
                           defaultValue={value.answer}
                           onChange={(e) => {
                             handleRadioData(e, value.questionCode);
-
-                            console.log(value.answer);
                           }}
                         />
                       </FormControl>
@@ -268,8 +253,6 @@ const AdditionalDetails = () => {
                         rows="4"
                         onChange={(e) => {
                           handleRadioData2(e, value.questionCode);
-
-                          console.log(value.answer);
                         }}
                       />
                     </FormControl>

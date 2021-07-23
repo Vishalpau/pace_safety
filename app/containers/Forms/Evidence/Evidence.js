@@ -64,11 +64,11 @@ const Evidence = () => {
   let [error, setError] = useState({});
   const { id } = useParams();
   const history = useHistory();
-  const ref = useRef();
 
   const [evideceData, setEvideceData] = useState([]);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [files, setFiles] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = React.useState([
     {
@@ -349,6 +349,14 @@ const Evidence = () => {
 
     setOpen(false);
   };
+  
+  const handleFileClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setFiles(false);
+  };
 
   const handleChange = async (e, index) => {
     let TempPpeData = [...form];
@@ -359,7 +367,6 @@ const Evidence = () => {
     }else {
       TempPpeData[index].evidenceDocument = ""
       TempPpeData[index].evidenceCheck = e.target.value;
-      ref.current.value = ""
  
     await setForm(TempPpeData);
     }
@@ -367,10 +374,9 @@ const Evidence = () => {
   };
 
   const handleFile = async (e, index) => {
-    console.log(e.target.files[0]);
-    
-
-    let TempPpeData = [...form];
+    const file = e.target.files[0].name.toLowerCase().split(".")
+    if(file[1] == "jpg" ||file[1] == "png" || file[1] == "pdf" || file[1] == "xlsx" || file[1] == "xls" || file[1] == "ppt" || file[1] == "pptx" || file[1] == "doc" || file[1] == "docx" || file[1] == "text" || file[1] == "mp4" || file[1] == "mov" || file[1] == "flv" || file[1] == "avi" || file[1] == "mkv") {
+      let TempPpeData = [...form];
     
     if (
       (TempPpeData[index].evidenceDocument =
@@ -382,6 +388,10 @@ const Evidence = () => {
     } else {
       await setOpen(true);
     }
+
+    }else{
+      await setFiles(true)
+    }
   };
 
   const handleComment = async (e, index) => {
@@ -390,8 +400,6 @@ const Evidence = () => {
     await setForm(TempPpeData);
   };
 
-
-  const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No", "N/A"];
 
   useEffect(() => {
@@ -406,7 +414,6 @@ const Evidence = () => {
 
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
-      {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -502,7 +509,6 @@ const Evidence = () => {
                                 <TableCell style={{ width: "220px" }}>
                                   <input
                                     type="file"
-                                    ref = {ref}
                                     className={classes.fullWidth}
                                     accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                                     disabled={
@@ -603,6 +609,15 @@ const Evidence = () => {
               >
                 <Alert onClose={handleClose} severity="error">
                   The file you are attaching is bigger than the 25mb.
+                </Alert>
+              </Snackbar>
+              <Snackbar
+                open={files}
+                autoHideDuration={6000}
+                onClose={handleFileClose}
+              >
+                <Alert onClose={handleFileClose} severity="error">
+                  This file format is not allow , only (png/jpg/xls/xlsx/ppt/pptx/doc/docx/text/pdf/mp4/mov/flv/avi/mkv) file format is allow here.
                 </Alert>
               </Snackbar>
             </Grid>

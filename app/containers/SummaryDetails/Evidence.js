@@ -149,19 +149,13 @@ const EvidenceSummary = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // const handleDownload = (url, filename) => {
-  //   axios
-  //     .get(url, {
-  //       responseType: "blob",
-  //       headers: {"Access-Control-Allow-Origin": "*"}
-  //     }
-  //     )
-  //     .then((res) => {
-  //       fileDownload(res.data, filename);
-  //     });
-  // };
+  const handleFile = (value) => {
+    console.log(value)
+    const temp = value.split("/")
+    console.log(temp[6])
+    return temp[6]
+  } 
 
-  // const fkid = localStorage.getItem('fkincidentId');
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
 
@@ -227,7 +221,7 @@ const EvidenceSummary = () => {
                               <TableCell>{value.evidenceRemark}</TableCell>
                               {value.evidenceDocument ? (
                                 <TableCell>
-                                  <Tooltip title={value.evidenceDocument}>
+                                  <Tooltip title={handleFile(value.evidenceDocument)}>
                                     <IconButton
                                       onClick={() =>
                                         handleOpen(value.evidenceDocument)
