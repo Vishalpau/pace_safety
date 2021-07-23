@@ -221,7 +221,7 @@ const ActivityDetails = () => {
     if (id) {
       fetchActivityList();
     } 
-  }, [id]);
+  }, []);
 
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
