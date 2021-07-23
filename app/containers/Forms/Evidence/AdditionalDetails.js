@@ -102,14 +102,15 @@ const AdditionalDetails = () => {
   };
 
   const handleNext = async () => {
-    const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
+    
+
+    if (id && additionalDetailList.length > 24) {
+      const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
     await setError(error);
     console.log(additionalDetailList.length);
     if (!isValid) {
       return;
     }
-
-    if (id && additionalDetailList.length > 0) {
       console.log("in put");
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
@@ -123,6 +124,12 @@ const AdditionalDetails = () => {
     } else if(additionalDetailList.length  == 25){
       {
         console.log("in ddput");
+        const { error, isValid } = AdditionalDetailValidate(additionalList);
+    await setError(error);
+    console.log(additionalDetailList.length);
+    if (!isValid) {
+      return;
+    }
         const res = await api.put(
           `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
           additionalDetailList
@@ -133,8 +140,14 @@ const AdditionalDetails = () => {
           );
         }
       }
-    } {
+    }else {
       console.log(additionalDetailList.length);
+      const { error, isValid } = AdditionalDetailValidate(additionalList);
+    await setError(error);
+    console.log(additionalDetailList.length);
+    if (!isValid) {
+      return;
+    }
 
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
