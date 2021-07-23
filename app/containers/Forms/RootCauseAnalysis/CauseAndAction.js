@@ -151,8 +151,7 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -172,8 +171,7 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -188,7 +186,7 @@ const BasicCauseAndAction = () => {
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
         return c.toUpperCase();
       });
     return newString;
@@ -256,16 +254,15 @@ const BasicCauseAndAction = () => {
                         <TableCell className={classes.tableCell}>
                           <ul class={classes.tableUlList}>
                             {value.map((value) => (
-                              <li>{value}</li>
+                              <li key={value}>{value}</li>
                             ))}
                           </ul>
                         </TableCell>
                         <TableCell className={classes.tableCell} align="right">
                           <ActionTracker
                             actionContext="incidents:Pacacuase"
-                            enitityReferenceId={`${putId.current}:${
-                              id.current[index]
-                            }`}
+                            enitityReferenceId={`${putId.current}:${id.current[index]
+                              }`}
                           />
                         </TableCell>
                       </TableRow>

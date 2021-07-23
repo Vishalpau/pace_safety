@@ -16,6 +16,11 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+
 
 // Styles
 import api from "../../utils/axios";
@@ -100,6 +105,23 @@ const RootCauseAnalysisSummary = () => {
       await setPaceCauses(paceData);
     }
   };
+
+  const handelConvert = (value) => {
+    let wordArray = value.split(/(?=[A-Z])/);
+    let wordArrayCombined = wordArray.join(" ");
+    var newString = wordArrayCombined
+      .toLowerCase()
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
+        return c.toUpperCase();
+      });
+    return newString;
+  };
+
+  const handelStringToArray = (value) => {
+    let valueArray = value.replace(',', ',  ')
+    return valueArray
+  }
+
   useEffect(() => {
     fetchRootCauseData();
     fetchFiveWhyData();
@@ -173,49 +195,62 @@ const RootCauseAnalysisSummary = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>
-              {rootCause.map((root, key) => (
-                <Grid item md={12}>
-                  {/* cause of incident */}
-                  <Typography
-                    variant="h6"
-                    className={Fonts.labelName}
-                    gutterBottom
-                  >
-                    Cause on incident
-                  </Typography>
-                  <Typography className={Fonts.labelValue}>
-                    {root.causeOfIncident}
-                  </Typography>
+              <Grid container spacing={5}>
+                {rootCause.map((root, key) => (
 
-                  {/* corrective action */}
-                  <Typography
-                    variant="h6"
-                    className={Fonts.labelName}
-                    gutterBottom
-                  >
-                    Corrective solution
-                  </Typography>
-                  <Typography className={Fonts.labelValue}>
-                    {root.correctiveAction}
-                  </Typography>
+                  <>
+                    <Grid item md={12}>
 
-                  {/* recommended solution */}
-                  {root.recommendSolution !== "" ? (
-                    <>
+                      {/* cause of incident */}
                       <Typography
                         variant="h6"
                         className={Fonts.labelName}
                         gutterBottom
                       >
-                        Recommended solution
+                        Cause on incident
                       </Typography>
                       <Typography className={Fonts.labelValue}>
-                        {root.recommendSolution}
+                        {root.causeOfIncident}
                       </Typography>
-                    </>
-                  ) : null}
-                </Grid>
-              ))}
+
+                    </Grid>
+
+                    <Grid item md={12}>
+
+                      {/* corrective action */}
+                      <Typography
+                        variant="h6"
+                        className={Fonts.labelName}
+                        gutterBottom
+                      >
+                        Corrective solution
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {root.correctiveAction}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item md={12}>
+                      {/* recommended solution */}
+                      {root.recommendSolution !== "" ? (
+                        <>
+                          <Typography
+                            variant="h6"
+                            className={Fonts.labelName}
+                            gutterBottom
+                          >
+                            Recommended solution
+                          </Typography>
+                          <Typography className={Fonts.labelValue}>
+                            {root.recommendSolution}
+                          </Typography>
+                        </>
+                      ) : null}
+                    </Grid>
+
+                  </>
+                ))}
+              </Grid>
             </AccordionDetails>
           </Accordion>
         </Grid>
@@ -282,8 +317,12 @@ const RootCauseAnalysisSummary = () => {
                       <TableRow key={key}>
                         <TableCell>{pc.rcaNumber}</TableCell>
                         <TableCell>{pc.rcaType}</TableCell>
-                        <TableCell>{subValues[key]}</TableCell>
-                        <TableCell>{pc.rcaRemark}</TableCell>
+                        <TableCell>{handelConvert(pc.rcaSubType)}</TableCell>
+                        <TableCell>
+                          {
+                            handelStringToArray(pc.rcaRemark)
+                          }
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -292,8 +331,9 @@ const RootCauseAnalysisSummary = () => {
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null}
-    </Grid>
+      ) : null
+      }
+    </Grid >
   );
 };
 export default RootCauseAnalysisSummary;
