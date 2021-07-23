@@ -92,13 +92,11 @@ const RootCauseAnalysisSummary = () => {
   };
 
   const fetchPaceCausesData = async () => {
-    const allPaceCauses = await api.get(
-      `/api/v1/incidents/${fkid}/pacecauses/`
-    );
+    const allPaceCauses = await api.get(`/api/v1/incidents/${fkid}/pacecauses/`);
     let paceData = allPaceCauses.data.data.results;
     if (
       typeof paceData[0] !== "undefined" &&
-      paceData[0].rcaSubType === "regionsupportabove"
+      paceData[0].rcaSubType === "regionSupportAbove"
     ) {
       await setPaceCauses(paceData.reverse());
     } else {
@@ -314,16 +312,19 @@ const RootCauseAnalysisSummary = () => {
                   </TableHead>
                   <TableBody>
                     {pacecauses.map((pc, key) => (
-                      <TableRow key={key}>
-                        <TableCell>{pc.rcaNumber}</TableCell>
-                        <TableCell>{pc.rcaType}</TableCell>
-                        <TableCell>{handelConvert(pc.rcaSubType)}</TableCell>
-                        <TableCell>
-                          {
-                            handelStringToArray(pc.rcaRemark)
-                          }
-                        </TableCell>
-                      </TableRow>
+                      pc.rcaRemark !== "No option selected" ?
+                        <TableRow key={key}>
+                          <TableCell>{pc.rcaNumber}</TableCell>
+                          <TableCell>{pc.rcaType}</TableCell>
+                          <TableCell>{handelConvert(pc.rcaSubType)}</TableCell>
+                          <TableCell>
+                            {
+                              handelStringToArray(pc.rcaRemark)
+                            }
+                          </TableCell>
+                        </TableRow>
+                        :
+                        null
                     ))}
                   </TableBody>
                 </Table>

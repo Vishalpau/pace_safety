@@ -255,7 +255,7 @@ const HazardiousCondition = () => {
           fkIncidentId: localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
         };
@@ -267,7 +267,7 @@ const HazardiousCondition = () => {
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
           pk: updateIds.current[index],
@@ -460,7 +460,6 @@ const HazardiousCondition = () => {
               id="filled-basic"
               label="Others"
               multiline
-              required
               error={error.others}
               value={form.others.rcaRemark !== "No option selected" ? form.others.rcaRemark : ""}
               helperText={error ? error.others : null}

@@ -378,7 +378,7 @@ const BasicCause = () => {
             </Box>
           </Grid>
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.personal}>
+            <FormControl component="fieldset" error={error.personal}>
               <FormLabel component="legend">Personal</FormLabel>
               <FormGroup>
                 {PERSONAL.map((value) => (
@@ -400,7 +400,6 @@ const BasicCause = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.wellnessFactors}
             >
               <FormLabel component="legend">Wellness factors</FormLabel>
@@ -445,7 +444,7 @@ const BasicCause = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.leadership}>
+            <FormControl component="fieldset" error={error.leadership}>
               <FormLabel component="legend">Leadership</FormLabel>
               <FormGroup>
                 {LEADERSHIP.map((value) => (
@@ -465,7 +464,7 @@ const BasicCause = () => {
           </Grid>
           {/* processes */}
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.processes}>
+            <FormControl component="fieldset" error={error.processes}>
               <FormLabel component="legend">Processes</FormLabel>
               <FormGroup>
                 {PROCESSES.map((value) => (

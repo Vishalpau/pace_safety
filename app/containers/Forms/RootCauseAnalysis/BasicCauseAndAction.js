@@ -150,8 +150,7 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -169,12 +168,12 @@ const BasicCauseAndAction = () => {
     await setIncidentDetail(result);
   };
 
-  const handelConvert = (value) => {
+  const handleConvert = (value) => {
     let wordArray = value.split(/(?=[A-Z])/);
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
         return c.toUpperCase();
       });
     return newString;
@@ -232,7 +231,7 @@ const BasicCauseAndAction = () => {
                           scope="row"
                           className={classes.tableCell}
                         >
-                          {handelConvert(key)}
+                          {handleConvert(key)}
                         </TableCell>
                         <TableCell className={classes.tableCell}>
                           <ul className={classes.tableUlList}>
@@ -244,9 +243,8 @@ const BasicCauseAndAction = () => {
                         <TableCell align="right" className={classes.tableCell}>
                           <ActionTracker
                             actionContext="incidents:Pacacuase"
-                            enitityReferenceId={`${putId.current}:${
-                              id.current[index]
-                            }`}
+                            enitityReferenceId={`${putId.current}:${id.current[index]
+                              }`}
                           />
                         </TableCell>
                       </TableRow>
