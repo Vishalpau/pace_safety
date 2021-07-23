@@ -21,7 +21,7 @@ function DetailValidation(data) {
   }
 
   if (validator.isEmpty(data.rcaRecommended)) {
-    error.rcaRecommended = "Select one option";
+    error.rcaRecommended = "Please select RCA recommended";
     isValid = false;
   }
   return { error, isValid };
