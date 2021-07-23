@@ -198,7 +198,7 @@ const Summary = () => {
             <div className={Styles.incidents}>
               <div className={Styles.item}>
                 <Button
-                  color={initialNotification ? "secondary" : "primary"}
+                  color="primary"
                   variant="contained"
                   size="large"
                   variant={
