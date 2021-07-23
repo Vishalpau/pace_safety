@@ -31,12 +31,12 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -45,7 +45,7 @@ import FormHeader from "../FormHeader";
 import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-import ActionTracker from "../ActionTracker"
+import ActionTracker from "../ActionTracker";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -66,7 +66,21 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   table: {
+    width: "100%",
     minWidth: 650,
+  },
+  rootTable: {
+    width: "100%",
+    overflowX: "auto",
+  },
+  tableCell: {
+    minWidth: 200,
+  },
+  tableUlList: {
+    listStyleType: "square",
+    "& li + li": {
+      marginTop: theme.spacing(0.5),
+    },
   },
 }));
 
@@ -77,23 +91,32 @@ const BasicCauseAndAction = () => {
   const [data, setData] = useState([]);
   const history = useHistory();
   let putId = useRef("");
-  let id = useRef("")
+  let id = useRef("");
   const [incidentDetail, setIncidentDetail] = useState({});
 
   const handelShowData = async () => {
     let tempApiData = {};
     let subTypes = BASIC_CAUSE_SUB_TYPES;
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
 
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-    let previousData = await api.get(`/api/v1/incidents/${putId.current}/pacecauses/`);
-    let tempid = []
+    let previousData = await api.get(
+      `/api/v1/incidents/${putId.current}/pacecauses/`
+    );
+    let tempid = [];
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
-      if (subTypes.includes(value.rcaSubType) && value.rcaRemark !== "No option selected") {
-        tempid.push(value.id)
+      if (
+        subTypes.includes(value.rcaSubType) &&
+        value.rcaRemark !== "No option selected"
+      ) {
+        tempid.push(value.id);
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
         tempApiData[valueQuestion] = valueAnser.includes(",")
@@ -101,7 +124,7 @@ const BasicCauseAndAction = () => {
           : [valueAnser];
       }
     });
-    id.current = tempid.reverse()
+    id.current = tempid.reverse();
     await setData(tempApiData);
   };
 
@@ -127,7 +150,8 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -135,7 +159,7 @@ const BasicCauseAndAction = () => {
         `/app/incident-management/registration/root-cause-analysis/basic-cause/`
       );
     }
-  }
+  };
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
@@ -146,11 +170,15 @@ const BasicCauseAndAction = () => {
   };
 
   const handelConvert = (value) => {
-    let wordArray = value.split(/(?=[A-Z])/)
-    let wordArrayCombined = wordArray.join(' ')
-    var newString = wordArrayCombined.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) { return c.toUpperCase() });
-    return newString
-  }
+    let wordArray = value.split(/(?=[A-Z])/);
+    let wordArrayCombined = wordArray.join(" ");
+    var newString = wordArrayCombined
+      .toLowerCase()
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
+        return c.toUpperCase();
+      });
+    return newString;
+  };
 
   useEffect(() => {
     fetchIncidentDetails();
@@ -192,38 +220,40 @@ const BasicCauseAndAction = () => {
               Option selected from basic cause
             </Typography>
 
-            <TableContainer component={Paper}>
+            <div className={classes.rootTable}>
               <Table className={classes.table} aria-label="simple table">
                 <TableBody>
-                  {Object.entries(data).reverse().map(([key, value], index) => (
-                    <TableRow >
-                      <TableCell align="left" scope="row">{handelConvert(key)}</TableCell>
-                      <TableCell align="right">
-                        {value.map((value) => (
-
-                          <ListItem>
-                            <ListItemIcon>
-                              <FiberManualRecordIcon className="smallIcon" />
-                            </ListItemIcon>
-                            <ListItemText primary={value} />
-                          </ListItem>
-
-                        ))}
-                      </TableCell>
-                      <TableCell align="right">
-                        <button className={classes.textButton}>
+                  {Object.entries(data)
+                    .reverse()
+                    .map(([key, value], index) => (
+                      <TableRow>
+                        <TableCell
+                          align="left"
+                          scope="row"
+                          className={classes.tableCell}
+                        >
+                          {handelConvert(key)}
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          <ul className={classes.tableUlList}>
+                            {value.map((value) => (
+                              <li>{value}</li>
+                            ))}
+                          </ul>
+                        </TableCell>
+                        <TableCell align="right" className={classes.tableCell}>
                           <ActionTracker
                             actionContext="incidents:Pacacuase"
-                            enitityReferenceId={`${putId.current}:${id.current[index]}`}
+                            enitityReferenceId={`${putId.current}:${
+                              id.current[index]
+                            }`}
                           />
-                        </button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
-            </TableContainer>
-
+            </div>
           </Grid>
 
           <Grid item md={12}>

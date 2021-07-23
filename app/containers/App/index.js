@@ -20,7 +20,6 @@ import {
   SSO_CLIENT_SECRET,
   LOCAL_SSO_CLIENT_ID,
   LOCAL_SSO_CLIENT_SECRET,
-
   access_token,
   SELF_API,
   LOCAL_LOGIN_URL,
@@ -30,7 +29,7 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 function App() {
   const [userData, setUserData] = useState([]);
-  const [companyListData, setCompanyListData] = useState([])
+  const [companyListData, setCompanyListData] = useState([]);
 
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -40,12 +39,12 @@ function App() {
       let data = JSON.stringify({
         grant_type: "authorization_code",
         client_id:
-          `${SSO_CLIENT_ID}`,
-        // `${LOCAL_SSO_CLIENT_ID}`,
+          // `${SSO_CLIENT_ID}`,
+          `${LOCAL_SSO_CLIENT_ID}`,
 
         client_secret:
-          `${SSO_CLIENT_SECRET}`,
-        // `${LOCAL_SSO_CLIENT_SECRET}`,
+          // `${SSO_CLIENT_SECRET}`,
+          `${LOCAL_SSO_CLIENT_SECRET}`,
         code: code,
       });
 
@@ -58,19 +57,17 @@ function App() {
         data: data,
       };
       await axios(config)
-        .then(function (response) {
+        .then(function(response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
             window.location.href = "/";
           }
         })
-        .catch(function (error) {
-        });
-    }
-    else {
-      if (localStorage.getItem('access_token') === null) {
-        window.location.href = `${LOGIN_URL}`
-        // window.location.href = `${LOCAL_LOGIN_URL}`
+        .catch(function(error) {});
+    } else {
+      if (localStorage.getItem("access_token") === null) {
+        // window.location.href = `${LOGIN_URL}`
+        window.location.href = `${LOCAL_LOGIN_URL}`;
       }
     }
   };
