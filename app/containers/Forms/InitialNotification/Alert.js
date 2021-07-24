@@ -32,7 +32,6 @@ export default function AlertMessage({message, type, setOpen, open}) {
 
     setOpen(false);
   };
-console.log(message,type)
   return (
     <div className={classes.root}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

@@ -48,7 +48,10 @@ import Slide from "@material-ui/core/Slide";
 
 import axios from "axios";
 import api from "../../utils/axios";
-import { access_token, SELF_API } from "../../utils/constants";
+import {
+  HEADER_AUTH,
+  SELF_API,
+} from "../../utils/constants";
 
 // Styles
 import Fonts from "dan-styles/Fonts.scss";
@@ -59,7 +62,9 @@ import { async } from "fast-glob";
 
 import { useDispatch } from "react-redux";
 
-import { projectName } from "../../redux/actions/initialDetails";
+import {
+  projectName,
+} from "../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,12 +105,10 @@ function PersonalDashboard(props) {
   const description = brand.desc;
   const { classes } = props;
   const style = useStyles();
+  // define props
   const [userData, setUserData] = useState([]);
   const [companyListData, setCompanyListData] = useState([]);
   const [projectListData, setProjectListData] = useState([]);
-  const [selectData, setSelectData] = useState([]);
-  const [isCompneyDropDown, setIsCommpaneyDropDown] = useState(true);
-  const [isProjectDropDown, setIsProjectDropDown] = useState(false);
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
@@ -114,61 +117,71 @@ function PersonalDashboard(props) {
     setOpen(false);
   };
 
-  const handleCompanyName = async (e, key) => {
-    localStorage.setItem("companyListData", e);
-    // alert()
+  // compney name get
+  const handleCompanyName = async (e, key, name) => {
+    console.log(e, key, name)
+    let companeyDetails = {};
+    companeyDetails.fkCompanyId = e;
+    companeyDetails.fkCompanyName = name;
+    localStorage.setItem("company", JSON.stringify(companeyDetails));
     let newData = companyListData[key];
-
     if (newData) {
       await setProjectListData(newData.projects);
     } else {
       await setOpen(false);
-      localStorage.removeItem("projectDataList");
     }
-
-    // setOpen(false);
   };
 
-  const handleProjectName = async (key) => {
-    let data = {
-      projectName: projectListData[key],
-    };
-
-    await dispatch(projectName(data.projectName));
-    // for(var i in data.projectName.breakdown)
-
-    // localStorage.setItem('projectDataList',JSON.stringify(data.projectName))
+  // handle project Name
+  const handleProjectName = async (key) => {    
+    let data = projectListData[key];
+    await dispatch(projectName(data));
+    localStorage.setItem("projectName", JSON.stringify(data));
+    setOpen(false);
   };
 
-  const loggingCheck = async () => {
+  // fetch user data
+  const userDetails = async () => {
     let config = {
       method: "get",
       url: `${SELF_API}`,
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        "Content-Type": "application/json",
-      },
+      headers: HEADER_AUTH,
     };
-    console.log("config", config);
     await axios(config)
       .then(function(response) {
         if (response.status === 200) {
-          console.log(response.data.data.results.data);
-          if (response.data.data.results.data.companies.length > 0) {
+          if (response.data.data.results.data.companies.length > 1) {
             setCompanyListData(response.data.data.results.data.companies);
-            setOpen(true);
+            setOpen(true)
+          }
+          if(response.data.data.results.data.companies.length === 1){
+            let companeyDetails = {};
+              companeyDetails.fkCompanyId = response.data.data.results.data.companies[0].id;
+              companeyDetails.fkCompanyName = response.data.data.results.data.companies[0].name;
+              localStorage.setItem("company", JSON.stringify(companeyDetails));
+              let newData = response.data.data.results.data.companies[0];
+              if (newData) {
+                if(newData.projects.length === 1){
+                  dispatch(projectName(newData.projects[0]))
+                  localStorage.setItem("projectName", JSON.stringify(newData.projects[0]));
+                }
+                if(newData.projects.length > 1){
+                   setProjectListData(newData.projects);
+                  setOpen(true)
+                }              
+              }
           }
           setUserData(response.data.data.results);
         }
       })
       .catch(function(error) {
-        console.log(error);
       });
   };
 
   useState(() => {
-    loggingCheck();
-  });
+    userDetails();
+  },[]);
+
   return (
     <PapperBlock title="Dashboard" icon="ion-md-warning">
       <div class="honeycomb">
@@ -313,7 +326,7 @@ function PersonalDashboard(props) {
           </div>
         </div>
       </div>
-
+      {/* Modal */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -331,6 +344,8 @@ function PersonalDashboard(props) {
         <DialogContent>
           <DialogContentText id="choose-project-content">
             <Grid container spacing={2} className={classes.paper}>
+              {/* Compney dropdown */}
+              {companyListData.length>1?
               <Grid item xs={12}>
                 <FormControl
                   variant="outlined"
@@ -346,21 +361,30 @@ function PersonalDashboard(props) {
                     label="Company name"
                     style={{ width: "100%" }}
                   >
-                    {companyListData.map((selectValues, key) => (
-                      <MenuItem
-                        key={key}
-                        onClick={() =>
-                          handleCompanyName(selectValues.companyId, key)
-                        }
-                        value={selectValues.companyId}
-                      >
-                        {selectValues.companyName}
-                      </MenuItem>
-                    ))}
+                    {companyListData.length > 0
+                      ? companyListData.map((selectValues, key) => (
+                          <MenuItem
+                            key={key}
+                            onClick={() =>
+                              handleCompanyName(
+                                selectValues.companyId,
+                                key,
+                                selectValues.companyName
+                              )
+                            }
+                            value={selectValues.companyId}
+                          >
+                            {selectValues.companyName}
+                          </MenuItem>
+                        ))
+                      : null}
                   </Select>
                 </FormControl>
               </Grid>
-              {projectListData.length > 0 ? (
+             
+                          :null}
+            {/* Project Dropdown */}
+              {projectListData.length > 1 ? (
                 <Grid item xs={12}>
                   <FormControl
                     variant="outlined"
@@ -375,7 +399,7 @@ function PersonalDashboard(props) {
                       label="Project"
                       style={{ width: "100%" }}
                     >
-                      {projectListData.map((selectValues, key) => (
+                      {projectListData.length > 0?projectListData.map((selectValues, key) => (
                         <MenuItem
                           key={key}
                           onClick={() => handleProjectName(key)}
@@ -383,23 +407,11 @@ function PersonalDashboard(props) {
                         >
                           {selectValues.projectName}
                         </MenuItem>
-                      ))}
+                      )):null}
                     </Select>
                   </FormControl>
                 </Grid>
               ) : null}
-
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  disableElevation
-                  onClick={() => setOpen(false)}
-                >
-                  Apply
-                </Button>
-              </Grid>
             </Grid>
           </DialogContentText>
         </DialogContent>
