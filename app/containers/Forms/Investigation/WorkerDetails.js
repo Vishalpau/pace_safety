@@ -255,7 +255,7 @@ const WorkerDetails = () => {
       const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
       res.push(ress)
     }
-    else if (form.attachments == "" || typeof form.attachments == "undefined" || typeof data.get("attachments") == "undefined") {
+    else if (form.attachments == "" || !form.attachments || !data.get("attachments")) {
       delete form["attachments"]
       form["fkInvestigationId"] = investigationId.current
       const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, form);
