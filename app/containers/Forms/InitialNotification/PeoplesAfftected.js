@@ -89,6 +89,7 @@ const PeoplesAffected = () => {
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('')
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   // Forms definations.
   const [form, setForm] = useState([
@@ -100,7 +101,7 @@ const PeoplesAffected = () => {
       personMedicalCare: "",
       workerOffsiteAssessment: "",
       locationAssessmentCenter: "",
-      createdBy: 1,
+      createdBy: parseInt(userId),
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
   ]);
@@ -117,7 +118,7 @@ const PeoplesAffected = () => {
         personMedicalCare: "",
         workerOffsiteAssessment: "",
         locationAssessmentCenter: "",
-        createdBy: 1,
+        createdBy: parseInt(userId),
         fkIncidentId: localStorage.getItem("fkincidentId"),
       },
     ]);
@@ -143,7 +144,7 @@ const PeoplesAffected = () => {
     setMessage("Something went worng!");
     setMessageType("error");
     setOpen(true);
-  }
+    }
   };
 
   // Next button click event handling.
@@ -191,7 +192,7 @@ const PeoplesAffected = () => {
               personMedicalCare: form[i].personMedicalCare,
               workerOffsiteAssessment: form[i].workerOffsiteAssessment,
               locationAssessmentCenter: form[i].locationAssessmentCenter,
-              createdBy: 1,
+              createdBy: parseInt(userId),
               fkIncidentId: localStorage.getItem("fkincidentId"),
             }
           );

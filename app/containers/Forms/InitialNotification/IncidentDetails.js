@@ -27,6 +27,8 @@ import { INITIAL_NOTIFICATION_FORM } from "../../../utils/constants";
 import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
+import { Typography } from "@material-ui/core";
+import Type from "../../../styles/components/Fonts.scss";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -78,8 +80,6 @@ const IncidentDetails = () => {
 
   // Initial forms.
   const [form, setForm] = useState({
-    fkProjectId: 0,
-    unitname: 0,
     incidentType: "",
     incidentOccuredOn: null,
     incidentTitle: "",
@@ -93,6 +93,17 @@ const IncidentDetails = () => {
     isEquipmentDamaged: "",
     isEnviromentalImpacted: "",
   });
+
+  const fkCompanyId  = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+  const project= JSON.parse(localStorage.getItem('projectName')).projectName;
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const userName  = JSON.parse(localStorage.getItem('userDetails')).name;
+  const selectBreakdown = JSON.parse(localStorage.getItem('selectBreakDown'));
+  var struct=""
+  for(var i in selectBreakdown){
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`
+  }
+  const fkProjectStructureIds = struct.slice(0,-1)
 
   // Function called on next button click.
   const handelNext = async (e) => {
@@ -114,10 +125,9 @@ const IncidentDetails = () => {
 
       const formData = {
         id: parseInt(id),
-        fkCompanyId: incidentsListData.fkCompanyId || 1,
-        fkProjectId: form.fkProjectId,
-        fkPhaseId: incidentsListData.fkPhaseId || 1,
-        fkUnitId: incidentsListData.fkUnitId || 1,
+        fkCompanyId: incidentsListData.fkCompanyId,
+        fkProjectId: incidentsListData.fkProjectId,
+        fkProjectStructureIds:incidentsListData.fkProjectStructureIds,
         incidentNumber: incidentsListData.incidentNumber,
         incidentType: form.incidentType,
         incidentTitle: form.incidentTitle,
@@ -157,7 +167,7 @@ const IncidentDetails = () => {
         updatedAt: moment(new Date()).toISOString(),
         assignTo: incidentsListData.assignTo,
         createdBy: incidentsListData.createdBy,
-        updatedBy: "0",
+        updatedBy: userId,
         source: "Web",
         vendor: "string",
         vendorReferenceId: "string",
@@ -222,10 +232,9 @@ const IncidentDetails = () => {
 
       if (isValid === true) {
         const formData = {
-          fkCompanyId: 1,
-          fkProjectId: parseInt(form.fkProjectId),
-          fkPhaseId: 1,
-          fkUnitId: parseInt(form.unitname),
+          fkCompanyId: parseInt(fkCompanyId),
+          fkProjectId: parseInt(project.projectId),
+          fkProjectStructureIds:fkProjectStructureIds,
           incidentNumber: "",
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -246,19 +255,19 @@ const IncidentDetails = () => {
           supervisorByName: "",
           supervisorById: 0,
           incidentReportedOn: new Date().toISOString(),
-          incidentReportedByName: "Vani",
+          incidentReportedByName: userName,
           incidentReportedById: 0,
           reasonLateReporting: "",
           notificationComments: "",
           reviewedBy: 0,
-          reviewDate: "2021-06-17T01:02:49.099Z",
+          reviewDate: new Date().toISOString(),
           closedBy: 0,
-          closeDate: "2021-06-17T01:02:49.099Z",
+          closeDate: new Date().toISOString(),
           status: "Active",
           incidentLocation: form.incidentLocation,
           assignTo: 0,
-          createdBy: 0,
-          updatedBy: 0,
+          createdBy: parseInt(userId),
+          updatedBy: userId,
           source: "Web",
           vendor: "string",
           vendorReferenceId: "string",
@@ -466,36 +475,11 @@ const IncidentDetails = () => {
         <Grid container spacing={3}>
           <Grid container item xs={12} md={9} spacing={3}>
             {/* Project Name */}
-            <Grid item xs={12} md={6}>
-              <FormControl
-                error={error.fkProjectId}
-                required
-                variant="outlined"
-                className={classes.formControl}
-              >
-                <InputLabel id="project-name-label">Project name</InputLabel>
-                <Select
-                  id="project-name"
-                  labelId="project-name-label"
-                  label="Project name"
-                  value={form.fkProjectId ||""}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      fkProjectId: e.target.value,
-                    });
-                  }}
-                >
-                  {companyName.map((selectValues, key) => (
-                    <MenuItem key={key} value={key + 1}>
-                      {selectValues}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {error && error.fkProjectId && (
-                  <FormHelperText>{error.fkProjectId}</FormHelperText>
-                )}
-              </FormControl>
+            <Grid item xs={12} md={12}>
+             
+                <Typography variant="h6" className={Type.labelName} gutterBottom id="project-name-label">Project name</Typography>
+               <Typography className={Type.labelValue}>{project.projectName}</Typography>
+             
             </Grid>
                   {/* Unit Name */}
             

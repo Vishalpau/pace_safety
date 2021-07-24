@@ -68,6 +68,7 @@ const Evidence = () => {
   const [evideceData, setEvideceData] = useState([]);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [files, setFiles] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = React.useState([
     {
@@ -224,7 +225,6 @@ const Evidence = () => {
 
     let tempData = [];
     if (result.length) {
-      // await setForm(result);
       for (let i = 0; i < result.length; i++) {
         tempData.push({
           evidenceCategory: result[i].evidenceCategory,
@@ -247,45 +247,6 @@ const Evidence = () => {
     await setIsLoading(true);
   };
 
-  // const fetchEvidenceData = async () => {
-  //   console.log("sagar");
-  //   const res = await api.get(
-  //     `/api/v1/incidents/${localStorage.getItem(
-  //       "fkincidentId"
-  //     )}/evidences/`
-  //   );
-  //   const result = res.data.data.results;
-
-  //   console.log(result);
-  //   let tempData = []
-  //   if(result.length){
-  //     // await setForm(result);
-  //     for(let i=0; i<result.length; i++){
-
-  //       tempData.push(
-  //         {
-  //           evidenceCategory: result[i].evidenceCategory,
-  //           evidenceCheck: result[i].evidenceCheck,
-  //           evidenceRemark: result[i].evidenceRemark,
-  //           evidenceDocument: "",
-  //           status: "Active",
-  //           createdBy: 0,
-  //           updatedBy: 0,
-  //           fkIncidentId: localStorage.getItem("fkincidentId"),
-  //           pk : result[i].id
-  //         },
-  //       )
-
-  //     }
-  //     // await setForm(tempData)
-  //     console.log(tempData)
-  //     await setEvideceData(tempData);
-
-  //   }
-
-  // await setIsLoading(true);
-  // };
-  // console.log(evideceData)
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`
@@ -371,8 +332,6 @@ const Evidence = () => {
           );
 
           if (res.status === 201) {
-            // const queId = res.data.data.results.id;
-            // localStorage.setItem("id", queId);
             history.push(
               "/app/incident-management/registration/evidence/activity-detail/"
             );
@@ -384,51 +343,56 @@ const Evidence = () => {
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
-      // setOpenError(false)
       return;
     }
 
     setOpen(false);
   };
+  
+  const handleFileClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setFiles(false);
+  };
 
   const handleChange = async (e, index) => {
     let TempPpeData = [...form];
     TempPpeData[index].evidenceCheck = e.target.value;
-    // if (e.target.value !== "Yes"){
-
-    // }
-    await setForm(TempPpeData);
+    if (e.target.value == "Yes"){
+      TempPpeData[index].evidenceCheck = e.target.value;
+      await setForm(TempPpeData);
+    }else {
+      document.getElementById(`evidenceDocument${index}`).value = ''
+      TempPpeData[index].evidenceDocument = ""
+      TempPpeData[index].evidenceCheck = e.target.value;
+ 
+      await setForm(TempPpeData);
+    }
+    
   };
 
+
   const handleFile = async (e, index) => {
-    console.log(e.target.files[0]);
-    let TempPpeData = [...form];
+    const file = e.target.files[0].name.toLowerCase().split(".")
+    if(file[1] == "jpg" ||file[1] == "png" || file[1] == "pdf" || file[1] == "xlsx" || file[1] == "xls" || file[1] == "ppt" || file[1] == "pptx" || file[1] == "doc" || file[1] == "docx" || file[1] == "text" || file[1] == "mp4" || file[1] == "mov" || file[1] == "flv" || file[1] == "avi" || file[1] == "mkv") {
+      let TempPpeData = [...form];
+    
     if (
       (TempPpeData[index].evidenceDocument =
         e.target.files[0].size <= 1024 * 1024 * 25)
     ) {
-      
       TempPpeData[index].evidenceDocument = e.target.files[0];
       await setForm(TempPpeData);
     } else {
       await setOpen(true);
     }
-  };
-  // const handleFile = async (e, index) => {
-  //   console.log(e.target.files[0])
-  //   const formdata = new FormData()
-  //   let TempPpeData = [...form];
-  //   if (
-  //     (TempPpeData[index].evidenceDocument =
-  //       e.target.files[0].size <= 1024 * 1024 * 25)
-  //   ) {
 
-  //     TempPpeData[index].evidenceDocument = formdata.append('evidenceDocument',e.target.files[0]);
-  //     await setForm(TempPpeData);
-  //   } else {
-  //     await setOpen(true);
-  //   }
-  // };
+    }else{
+      await setFiles(true)
+    }
+  };
 
   const handleComment = async (e, index) => {
     let TempPpeData = [...form];
@@ -436,40 +400,19 @@ const Evidence = () => {
     await setForm(TempPpeData);
   };
 
-  // const handleChangeEvidence = async (e ,index) => {
-  //   let TempPpeData = [...evideceData];
-  //   TempPpeData[index].evidenceCheck = e.target.value;
-
-  //   await setEvideceData(TempPpeData)
-
-  // }
-
-  // const handleFileEvidence = async (e, index) => {
-  //   let TempPpeData = [...evideceData];
-  //   TempPpeData[index].evidenceDocument = e.target.files[0];
-
-  //   await setEvideceData(TempPpeData)
-  //   console.log(evideceData)
-  // };
-
-  const selectValues = [1, 2, 3, 4];
   const radioDecide = ["Yes", "No", "N/A"];
 
   useEffect(() => {
-    // fetchEvidenceData();
-    // fetchEvidenceList();
     fetchIncidentDetails();
     if (id) {
       fetchEvidenceList();
     } else {
       fetchEvidenceList();
-      // setIsLoading(true);
     }
   }, []);
 
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
-      {console.log(form)}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -534,7 +477,6 @@ const Evidence = () => {
                                       defaultValue={form[index].evidenceCheck}
                                       onChange={(e) => {
                                         handleChange(e, index);
-                                        // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                       }}
                                     >
                                       {radioDecide.map((value) => (
@@ -564,12 +506,11 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
-                                  {/* {form[index].evidenceDocument ?  <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> : */}
                                   <input
                                     type="file"
+                                    id = {`evidenceDocument${index}`}
                                     className={classes.fullWidth}
                                     accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                                    // accept= "ppt/*  , word/*  , text , image/jpg , pdf , video/mp4,video/mov,video/flv,video/avi,video/mkv"
                                     disabled={
                                       value.evidenceCheck !== "Yes"
                                         ? true
@@ -578,10 +519,8 @@ const Evidence = () => {
                                     name="file"
                                     onChange={(e) => {
                                       handleFile(e, index);
-                                      // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
                                   />
-                                  {/* } */}
                                 </TableCell>
                               </TableRow>
                             </>
@@ -613,7 +552,6 @@ const Evidence = () => {
                                     defaultValue={form[index].evidenceCheck}
                                     onChange={(e) => {
                                       handleChange(e, index);
-                                      // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
                                   >
                                     {radioDecide.map((value) => (
@@ -645,6 +583,7 @@ const Evidence = () => {
                               <TableCell style={{ width: "220px" }}>
                                 <input
                                   type="file"
+                                  id = {`evidenceDocument${index}`}
                                   className={classes.fullWidth}
                                   accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                                   disabled={
@@ -653,7 +592,6 @@ const Evidence = () => {
                                   name="file"
                                   onChange={(e) => {
                                     handleFile(e, index);
-                                    // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                   }}
                                 />
                               </TableCell>
@@ -672,6 +610,15 @@ const Evidence = () => {
               >
                 <Alert onClose={handleClose} severity="error">
                   The file you are attaching is bigger than the 25mb.
+                </Alert>
+              </Snackbar>
+              <Snackbar
+                open={files}
+                autoHideDuration={6000}
+                onClose={handleFileClose}
+              >
+                <Alert onClose={handleFileClose} severity="error">
+                  This file format is not allow , only (png/jpg/xls/xlsx/ppt/pptx/doc/docx/text/pdf/mp4/mov/flv/avi/mkv) file format is allow here.
                 </Alert>
               </Snackbar>
             </Grid>

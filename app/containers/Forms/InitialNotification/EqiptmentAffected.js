@@ -90,12 +90,14 @@ const EqiptmentAffected = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
   const [equipmentDamagedComments, setEequipmentDamagedComments] = useState("");
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+
   const [form, setForm] = useState([
     {
       equipmentType: "",
       equipmentOtherType: "",
       equipmentDeatils: "",
-      createdBy: 1,
+      createdBy: parseInt(userId),
       fkIncidentId: localStorage.getItem("fkincidentId"),
     },
   ]);
@@ -122,7 +124,7 @@ const EqiptmentAffected = () => {
         equipmentType: "",
         equipmentOtherType: "",
         equipmentDeatils: "",
-        createdBy: 1,
+        createdBy: parseInt(userId),
         fkIncidentId: localStorage.getItem("fkincidentId"),
       },
     ]);
@@ -173,7 +175,7 @@ const EqiptmentAffected = () => {
             equipmentType: form[i].equipmentType,
             equipmentOtherType: form[i].equipmentOtherType,
             equipmentDeatils: form[i].equipmentDeatils,
-            createdBy: 1,
+            createdBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId"),
           }
         );
