@@ -225,7 +225,6 @@ const Evidence = () => {
 
     let tempData = [];
     if (result.length) {
-      // await setForm(result);
       for (let i = 0; i < result.length; i++) {
         tempData.push({
           evidenceCategory: result[i].evidenceCategory,
@@ -333,8 +332,6 @@ const Evidence = () => {
           );
 
           if (res.status === 201) {
-            // const queId = res.data.data.results.id;
-            // localStorage.setItem("id", queId);
             history.push(
               "/app/incident-management/registration/evidence/activity-detail/"
             );
@@ -346,7 +343,6 @@ const Evidence = () => {
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
-      // setOpenError(false)
       return;
     }
 
@@ -368,6 +364,7 @@ const Evidence = () => {
       TempPpeData[index].evidenceCheck = e.target.value;
       await setForm(TempPpeData);
     }else {
+      document.getElementById(`evidenceDocument${index}`).value = ''
       TempPpeData[index].evidenceDocument = ""
       TempPpeData[index].evidenceCheck = e.target.value;
  
@@ -375,6 +372,7 @@ const Evidence = () => {
     }
     
   };
+
 
   const handleFile = async (e, index) => {
     const file = e.target.files[0].name.toLowerCase().split(".")
@@ -479,7 +477,6 @@ const Evidence = () => {
                                       defaultValue={form[index].evidenceCheck}
                                       onChange={(e) => {
                                         handleChange(e, index);
-                                        // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                       }}
                                     >
                                       {radioDecide.map((value) => (
@@ -509,12 +506,11 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
-                                  {/* {form[index].evidenceDocument ?  <a target ="_blank" href={form[index].evidenceDocument}>{form[index].evidenceDocument}</a> : */}
                                   <input
                                     type="file"
+                                    id = {`evidenceDocument${index}`}
                                     className={classes.fullWidth}
                                     accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                                    // accept= "ppt/*  , word/*  , text , image/jpg , pdf , video/mp4,video/mov,video/flv,video/avi,video/mkv"
                                     disabled={
                                       value.evidenceCheck !== "Yes"
                                         ? true
@@ -523,10 +519,8 @@ const Evidence = () => {
                                     name="file"
                                     onChange={(e) => {
                                       handleFile(e, index);
-                                      // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
                                   />
-                                  {/* } */}
                                 </TableCell>
                               </TableRow>
                             </>
@@ -558,7 +552,6 @@ const Evidence = () => {
                                     defaultValue={form[index].evidenceCheck}
                                     onChange={(e) => {
                                       handleChange(e, index);
-                                      // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                     }}
                                   >
                                     {radioDecide.map((value) => (
@@ -590,6 +583,7 @@ const Evidence = () => {
                               <TableCell style={{ width: "220px" }}>
                                 <input
                                   type="file"
+                                  id = {`evidenceDocument${index}`}
                                   className={classes.fullWidth}
                                   accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                                   disabled={
@@ -598,7 +592,6 @@ const Evidence = () => {
                                   name="file"
                                   onChange={(e) => {
                                     handleFile(e, index);
-                                    // setForm([{ ...form, evidenceCheck: e.target.value }]);
                                   }}
                                 />
                               </TableCell>
