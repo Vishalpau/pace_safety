@@ -3,6 +3,7 @@ import validator from "validator";
 function validate(data) {
   let isValid = true;
   const error = {};
+  
 
 
   if (validator.isEmpty(data.incidentType)) {
@@ -18,11 +19,14 @@ function validate(data) {
     error.incidentOccuredOn = "Please select date and time";
     isValid = false;
   }
+ 
 
   if (validator.isEmpty(data.contractor)) {
     error.contractor = "Please select contractor name";
     isValid = false;
-  }
+  } 
+
+
 
   if (validator.isEmpty(data.isPersonAffected)) {
     error.isPersonAffected = "Please choose person affected";
