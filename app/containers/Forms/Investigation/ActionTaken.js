@@ -14,6 +14,7 @@ import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import DateFnsUtils from "@date-io/date-fns";
+import moment from "moment";
 import MomentUtils from "@date-io/moment";
 import {
   TimePicker,
@@ -87,8 +88,9 @@ const ActionTaken = () => {
             <TextField
               variant="outlined"
               id="filled-basic"
-              label="Pre event mitigation"
+              label="Pre - event mitigation"
               value={form.preEventMitigations}
+              placeholder="Per - event mitigation"
               InputLabelProps={{
                 shrink: true,
               }}
@@ -107,17 +109,18 @@ const ActionTaken = () => {
               <KeyboardDatePicker
                 className={classes.formControl}
                 id="date-picker-dialog"
-                error={error && error.reportingdate}
-                helperText={
-                  error && error.reportingdate ? error.reportingdate : null
-                }
+                value={form.correctionActionClosedAt}
+                disableFuture={true}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    correctionActionClosedAt: moment(e).toISOString(),
+                  });
+                }}
                 format="yyyy/MM/dd"
-                required
+
                 inputVariant="outlined"
                 label="Correction action date completed"
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
               />
             </MuiPickersUtilsProvider>
           </Grid>

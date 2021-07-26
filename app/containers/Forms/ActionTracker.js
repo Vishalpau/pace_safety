@@ -64,7 +64,7 @@ export default function ActionTracker(props) {
     deligateTo: 0,
     plannedStartDate: "2021-07-21T17:05:39.604Z",
     actualStartDate: "2021-07-21T17:05:39.604Z",
-    plannedEndDate: moment(new Date()).toISOString(),
+    plannedEndDate: null,
     actualEndDate: "2021-07-21T17:05:39.604Z",
     forecaststartDate: "2021-07-21T17:05:39.604Z",
     forecastEndDate: "2021-07-21T17:05:39.604Z",
@@ -104,11 +104,12 @@ export default function ActionTracker(props) {
   };
   const handelSubmit = async () => {
     if (form.actionTitle == "") {
-      setError({ actionTitle: "Action title is empty" });
+      setError({ actionTitle: "Please enter action title" });
     } else {
       let res = await api.post("api/v1/actions/", form);
       if (res.status == 201) {
         await setOpen(false);
+
       }
     }
   };
@@ -188,10 +189,11 @@ export default function ActionTracker(props) {
             <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
               <KeyboardDatePicker
                 className={classes.formControl}
-                label="Incident date & time"
+                label="due date"
                 format="dd/MM/yyyy"
                 inputVariant="outlined"
                 value={form.plannedEndDate}
+                disableFuture={true}
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -228,7 +230,7 @@ export default function ActionTracker(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handelSubmit()} color="primary">
-            Submit
+            Create action
           </Button>
         </DialogActions>
       </Dialog>

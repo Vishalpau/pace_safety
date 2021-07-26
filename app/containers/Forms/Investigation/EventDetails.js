@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button, Grid, Container, Input, Select } from "@material-ui/core";
-import FormHelperText from "@material-ui/core/FormHelperText";
-
+import { FormHelperText, FormLabel } from "@material-ui/core";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
@@ -25,6 +27,8 @@ import { useSelector } from "react-redux";
 import { ContactlessOutlined } from "@material-ui/icons";
 import api from "../../../utils/axios";
 import EventDetailsValidate from "../../Validator/InvestigationValidation/EventDetailsValdiate";
+import EventDetailsWeatherValidate from "../../Validator/InvestigationValidation/EventDetailsWeatherValidate";
+import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(1),
-  },
+  }
 }));
 
 const EventDetails = () => {
@@ -71,6 +75,9 @@ const EventDetails = () => {
   const weatherId = useRef([])
   const overAllCostId = useRef([])
   const history = useHistory();
+  const CheckPost = useRef()
+  const radioYesNo = ["Yes", "No"];
+  const [overAllCostShow, SetOverAllCostShow] = useState("")
 
   const [weather, setWeather] = useState([
     {
@@ -92,6 +99,8 @@ const EventDetails = () => {
 
 
   const [error, setError] = useState({});
+  const [errorWeather, setErrorWeather] = useState({})
+  const [errorCost, setErrorCost] = useState({})
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -108,6 +117,7 @@ const EventDetails = () => {
       const event = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/`)
       const eventData = event.data.data.results[0]
       if (typeof eventData !== "undefined") {
+        CheckPost.current = false
         setForm(eventData)
         eventId.current = eventData.id
       }
@@ -131,10 +141,9 @@ const EventDetails = () => {
         setOverAllCost(costData)
         costData.map((value) => {
           overAllCostId.current.push(value.id)
+          SetOverAllCostShow("Yes")
         })
       }
-
-
     }
     localStorage.setItem("WorkerPost", "done")
   };
@@ -187,9 +196,13 @@ const EventDetails = () => {
 
   const handelNext = async (e) => {
     const { error, isValid } = EventDetailsValidate(form);
+    const { errorWeather } = EventDetailsWeatherValidate(weather)
+    const { errorCost } = EventDetailsCostValidate(overAllCost)
     setError(error);
+    setErrorWeather(errorWeather)
+    setErrorCost(errorCost)
     // event api call
-    if (Object.keys(error).length == 0) {
+    if (Object.keys(error).length == 0 && Object.keys(errorWeather).length == 0 && Object.keys(errorCost).length == 0) {
       if (eventId.current === "") {
         const res = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/`, form);
         if (res.status === 201) {
@@ -206,13 +219,14 @@ const EventDetails = () => {
           }
           // cost api call
           let costObject = overAllCost;
-          for (let keys in costObject) {
-            costObject[keys]["fkEventDetailsId"] = eventID
-            const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/cost/`, costObject[keys])
-            if (resWeather == 201) {
-              console.log("request done")
+          if (overAllCostShow == "Yes") {
+            for (let keys in costObject) {
+              costObject[keys]["fkEventDetailsId"] = eventID
+              const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/cost/`, costObject[keys])
+              if (resWeather == 201) {
+                console.log("request done")
+              }
             }
-
           }
           history.push(`/app/incident-management/registration/investigation/action-taken/`)
         }
@@ -264,7 +278,6 @@ const EventDetails = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
-      {console.log(weatherId.current)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
 
@@ -350,7 +363,11 @@ const EventDetails = () => {
           {weather.map((value, index) => (
             <>
               <Grid item md={10}>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl
+                  error={errorWeather && errorWeather[`weatherCondition${[index]}`]}
+                  variant="outlined"
+                  required
+                  className={classes.formControl}>
                   <InputLabel id="project-name-label">Weather</InputLabel>
                   <Select
                     id="project-name"
@@ -368,9 +385,14 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
+                {errorWeather && errorWeather[`weatherCondition${[index]}`] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {errorWeather[`weatherCondition${[index]}`]}
+                  </FormHelperText>
+                )}
               </Grid>
 
-              {weather.length > 1 ? (
+              {weather.length > 1 && CheckPost.current !== false ? (
                 <Grid item md={1}>
                   <IconButton onClick={(e) => handelRemove(e, index)}>
                     <RemoveCircleOutlineIcon />
@@ -380,7 +402,7 @@ const EventDetails = () => {
             </>
           ))}
 
-          {weather.length < 3 ? (
+          {weather.length < 3 && CheckPost.current !== false ? (
             <Grid item md={1}>
               <IconButton onClick={(e) => handelAdd(e)}>
                 <AddIcon />
@@ -590,93 +612,149 @@ const EventDetails = () => {
 
           <Grid item md={12}>
             <Typography variant="h6">Overall cost</Typography>
+            <FormControl component="fieldset" required>
+              <FormLabel component="legend" >Overall cost</FormLabel>
+              <RadioGroup
+                className={classes.inlineRadioGroup}
+                value={overAllCostShow}
+                onChange={(e) => SetOverAllCostShow(e.target.value)}
+
+              >
+                {radioYesNo.map((value) => (
+                  <FormControlLabel
+                    disabled={CheckPost.current == false}
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
           </Grid>
 
-          {/* cost incurred         */}
-          {overAllCost.map((value, index) => (
-            <Grid container item md={11} spacing={2} alignItems="center">
-              <Grid item md={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Cost type</InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Cost type"
-                    value={overAllCost[index].costType}
-                  >
-                    {costTypeValues.current.map((selectValues) => (
-                      <MenuItem
-                        value={selectValues}
-                        onClick={async (e) => {
-                          const temp = [...overAllCost];
-                          temp[index]["costType"] = selectValues;
-                          await setOverAllCost(temp);
-                        }}
-                      >
-                        {selectValues}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+          {/* cost incurred  */}
+          <Grid item md={11}>
+            {overAllCostShow == "Yes" ?
+              <>
 
-              <Grid item md={4}>
-                {/* <p>Eqipment Invoked</p> */}
-                <TextField
-                  id="title"
-                  variant="outlined"
-                  label="Cost amount"
-                  value={overAllCost[index].costAmount}
-                  className={classes.formControl}
-                  onChange={
-                    async (e) => {
-                      const temp = [...overAllCost];
-                      temp[index]["costAmount"] = e.target.value;
-                      await setOverAllCost(temp);
-                    }}
-                />
-              </Grid>
+                {overAllCost.map((value, index) => (
+                  <Grid container item md={12} spacing={2} alignItems="center">
+                    {/* cost type */}
+                    <Grid item md={4}>
+                      <FormControl
+                        variant="outlined"
+                        error={errorCost && errorCost[`costType${[index]}`]}
+                        required
+                        className={classes.formControl}>
+                        <InputLabel id="project-name-label">Cost type</InputLabel>
+                        <Select
+                          id="project-name"
+                          labelId="project-name-label"
+                          label="Cost type"
+                          value={overAllCost[index].costType}
+                        >
+                          {costTypeValues.current.map((selectValues) => (
+                            <MenuItem
+                              value={selectValues}
+                              onClick={async (e) => {
+                                const temp = [...overAllCost];
+                                temp[index]["costType"] = selectValues;
+                                await setOverAllCost(temp);
+                              }}
+                            >
+                              {selectValues}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      {errorCost && errorCost[`costType${[index]}`] && (
+                        <FormHelperText style={{ color: "red" }}>
+                          {errorCost[`costType${[index]}`]}
+                        </FormHelperText>
+                      )}
+                    </Grid>
 
-              <Grid item md={2}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Casual factor</InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Casual factor"
-                    value={overAllCost[index].casualFactor}
-                  >
-                    {casualFactorTypeValues.current.map((selectValues) => (
-                      <MenuItem
-                        value={selectValues}
-                        onClick={async (e) => {
-                          const temp = [...overAllCost];
-                          temp[index]["casualFactor"] = selectValues;
-                          await setOverAllCost(temp);
-                        }}
-                      >
-                        {selectValues}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              {overAllCost.length > 1 ? (
-                <Grid item md={1}>
-                  <IconButton
-                    onClick={(e) => handelOverallCostRemove(e, index)}
-                  >
-                    <RemoveCircleOutlineIcon />
-                  </IconButton>
-                </Grid>
-              ) : null}
-            </Grid>
-          ))}
+                    {/* cost amount */}
+                    <Grid item md={4}>
+                      <TextField
+                        id="title"
+                        error={errorCost && errorCost[`costAmount${[index]}`]}
+                        required
+                        variant="outlined"
+                        label="Cost amount"
+                        value={overAllCost[index].costAmount}
+                        className={classes.formControl}
+                        onChange={
+                          async (e) => {
+                            const temp = [...overAllCost];
+                            temp[index]["costAmount"] = e.target.value;
+                            await setOverAllCost(temp);
+                          }}
+                      />
+                      {errorCost && errorCost[`costAmount${[index]}`] && (
+                        <FormHelperText style={{ color: "red" }}>
+                          {errorCost[`costAmount${[index]}`]}
+                        </FormHelperText>
+                      )}
+                    </Grid>
 
-          <Grid item md={1}>
-            <IconButton onClick={(e) => handelOveallCostAdd(e)}>
-              <AddIcon />
-            </IconButton>
+                    {/* cost factor */}
+                    <Grid item md={3}>
+                      <FormControl
+                        error={errorCost && errorCost[`casualFactor${[index]}`]}
+                        required
+                        variant="outlined"
+                        className={classes.formControl}>
+                        <InputLabel id="project-name-label">Casual factor</InputLabel>
+                        <Select
+                          id="project-name"
+                          labelId="project-name-label"
+                          label="Casual factor"
+                          value={overAllCost[index].casualFactor}
+                        >
+                          {casualFactorTypeValues.current.map((selectValues) => (
+                            <MenuItem
+                              value={selectValues}
+                              onClick={async (e) => {
+                                const temp = [...overAllCost];
+                                temp[index]["casualFactor"] = selectValues;
+                                await setOverAllCost(temp);
+                              }}
+                            >
+                              {selectValues}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      {errorCost && errorCost[`casualFactor${[index]}`] && (
+                        <FormHelperText style={{ color: "red" }}>
+                          {errorCost[`casualFactor${[index]}`]}
+                        </FormHelperText>
+                      )}
+                    </Grid>
+                    {overAllCost.length > 1 && CheckPost.current !== false ? (
+                      <Grid item md={1}>
+                        <IconButton
+                          onClick={(e) => handelOverallCostRemove(e, index)}
+                        >
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                      </Grid>
+                    ) : null}
+                  </Grid>
+                ))}
+
+                {overAllCost.length < 4 && CheckPost.current !== false ?
+                  <Grid item md={1}>
+                    <IconButton onClick={(e) => handelOveallCostAdd(e)}>
+                      <AddIcon />
+                    </IconButton>
+                  </Grid>
+                  :
+                  null
+                }
+              </>
+              : null}
           </Grid>
 
           <Grid item md={12}>

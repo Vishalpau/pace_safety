@@ -7,9 +7,22 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { useParams } from "react-router";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import IconButton from '@material-ui/core/IconButton';
 import ImageIcon from '@material-ui/icons/Image';
 import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 import Divider from '@material-ui/core/Divider'
+import Tooltip from "@material-ui/core/Tooltip";
+import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import Slide from "@material-ui/core/Slide";
+import Close from "@material-ui/icons/Close";
+
+
 
 import api from "../../utils/axios";
 
@@ -38,8 +51,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
-  }
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
 }));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const InvestigationSummary = () => {
   const { id } = useParams();
@@ -56,7 +78,6 @@ const InvestigationSummary = () => {
   const fetchInvestigationData = async () => {
     let res = await api.get(`/api/v1/incidents/${id}/investigations/`);
     let result = res.data.data.results;
-    console.log(result)
     await setInvestigationOverview(result);
   };
 
@@ -92,7 +113,6 @@ const InvestigationSummary = () => {
         `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/${eventId.current}/weatherconditions/`
       );
-      console.log(weather);
       const weatherData = weather.data.data.results;
       await setWeather(weatherData);
 
@@ -107,11 +127,9 @@ const InvestigationSummary = () => {
   };
 
   const fecthWorkerData = async () => {
-    console.log("here")
     let res = await api.get(`api/v1/incidents/${id}/investigations/${investigationId.current}/workers/`);
     let result = res.data.data.results;
     await setWorkerData(result);
-    console.log(result)
   };
 
   const handelCallBack = async () => {
@@ -123,6 +141,17 @@ const InvestigationSummary = () => {
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+  };
+  const [documentUrl, setDocumentUrl] = useState("");
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = (document) => {
+    setDocumentUrl(document);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -206,7 +235,7 @@ const InvestigationSummary = () => {
                       Contact no
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.hseSpecialistContactNo}
+                      {value.hseSpecialistContactNo != "" ? value.hseSpecialistContactNo : "--"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -230,7 +259,7 @@ const InvestigationSummary = () => {
                       Potential serverity level
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.potentialSeverityLevel}
+                      {value.potentialSeverityLevel != "" ? value.potentialSeverityLevel : "-"}
                     </Typography>
                   </Grid>
                 </>
@@ -276,7 +305,7 @@ const InvestigationSummary = () => {
                       Health & Safety potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.healthSafetyPotential}
+                      {value.healthSafetyPotential != null ? value.healthSafetyPotential : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -288,7 +317,7 @@ const InvestigationSummary = () => {
                       Environment-actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.environmentActual}
+                      {value.environmentActual != null ? value.environmentActual : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -300,7 +329,7 @@ const InvestigationSummary = () => {
                       Environment-potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.environmentPotential}
+                      {value.environmentPotential != null ? value.environmentPotential : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -312,7 +341,7 @@ const InvestigationSummary = () => {
                       Regulatory actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.regulatoryActual}
+                      {value.regulatoryActual != null ? value.regulatoryActual : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -324,7 +353,7 @@ const InvestigationSummary = () => {
                       Regulatory potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.regulatoryPotential}
+                      {value.regulatoryPotential != null ? value.regulatoryPotential : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -336,7 +365,7 @@ const InvestigationSummary = () => {
                       Reputation actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.reputationActual}
+                      {value.reputationActual != null ? value.reputationActual : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -348,7 +377,7 @@ const InvestigationSummary = () => {
                       Reputation potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.reputationPotential}
+                      {value.reputationPotential != null ? value.reputationPotential : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -360,7 +389,7 @@ const InvestigationSummary = () => {
                       Financial actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.financialActual}
+                      {value.financialActual != null ? value.financialActual : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -372,7 +401,7 @@ const InvestigationSummary = () => {
                       Financial potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.financialPotential}
+                      {value.financialPotential != null ? value.financialPotential : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -384,7 +413,7 @@ const InvestigationSummary = () => {
                       Highest potential impact receptor
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.highestPotentialImpactReceptor}
+                      {value.highestPotentialImpactReceptor != null ? value.highestPotentialImpactReceptor : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -396,7 +425,7 @@ const InvestigationSummary = () => {
                       Classification
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.classification}
+                      {value.classification != null ? value.classification : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -408,7 +437,7 @@ const InvestigationSummary = () => {
                       Rca recommended
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.rcaRecommended}
+                      {value.rcaRecommended != null ? value.rcaRecommended : "-"}
                     </Typography>
                   </Grid>
                 </>
@@ -685,19 +714,21 @@ const InvestigationSummary = () => {
                       </Grid>
                       : null}
 
-                    {/* attachmentr */}
+                    {/* attachment */}
                     {value.attachments != "" && typeof value.attachments == "string" ?
+
+
                       <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Attachment
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.attachments != "" && typeof value.attachments == "string" ? <a target="_blank" href={value.attachments}>Image<ImageIcon /></a> : <p></p>}
-                        </Typography>
+                        <Tooltip title="File Name">
+                          <IconButton
+                            onClick={() =>
+                              handleOpen(value.attachments)
+                            }
+                            className={classes.fileIcon}
+                          >
+                            <PhotoSizeSelectActualIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Grid>
                       : null}
 
@@ -710,6 +741,43 @@ const InvestigationSummary = () => {
             </paper>
           </AccordionDetails>
         </Accordion>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Transition}
+          keepMounted
+          PaperProps={{
+            style: {
+              width: 700,
+            },
+          }}
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {" Please choose what do you want to?"}
+          </DialogTitle>
+          <IconButton onClick={handleClose} className={classes.closeButton}>
+            <Close />
+          </IconButton>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Button
+                    startIcon={<VisibilityIcon />}
+                    variant="contained"
+                    disableElevation
+                    className={classes.modalButton}
+                    href={`${documentUrl}`}
+                    target="_blank"
+                  >
+                    View Attachment
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+
       </Grid>
 
       {/* event details */}
@@ -974,10 +1042,10 @@ const InvestigationSummary = () => {
                       gutterBottom
                       className={Fonts.labelName}
                     >
-                      Pre event mitigations
+                      Pre-event mitigations
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.preEventMitigations}
+                      {value.preEventMitigations != null ? value.preEventMitigations : "-"}
                     </Typography>
                   </Grid>
                   <Grid item lg={6} md={6}>
@@ -986,10 +1054,10 @@ const InvestigationSummary = () => {
                       gutterBottom
                       className={Fonts.labelName}
                     >
-                      Correction action closedAt
+                      Correction action date completed
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.correctionActionClosedAt}
+                      {value.correctionActionClosedAt != null ? value.correctionActionClosedAt.substring(0, 10) : "-"}
                     </Typography>
                   </Grid>
                 </>

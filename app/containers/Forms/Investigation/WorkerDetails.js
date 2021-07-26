@@ -21,9 +21,9 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import { useHistory, useParams } from "react-router";
-import ImageIcon from '@material-ui/icons/Image';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import ImageIcon from "@material-ui/icons/Image";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -32,7 +32,7 @@ import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import { spacing } from '@material-ui/system';
+import { spacing } from "@material-ui/system";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -40,6 +40,7 @@ import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
+import { object } from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -75,7 +76,7 @@ const WorkerDetails = () => {
   const [error, setError] = useState({});
   const workerType = useRef([]);
   const [departmentName, setDepartmentName] = useState([]);
-  const [workHours, setworkHours] = useState([])
+  const [workHours, setworkHours] = useState([]);
   const shiftType = useRef([]);
   const occupation = useRef([]);
   const shiftCycle = useRef([]);
@@ -93,21 +94,20 @@ const WorkerDetails = () => {
   const supervisorTimeInCompany = useRef([]);
   const supervisorTimeOnProject = useRef([]);
 
-
   const putId = useRef("");
   const investigationId = useRef("");
-  const [form, setForm] = useState([])
-  const [workerNumber, setWorkerNumber] = useState("")
+  const [form, setForm] = useState([]);
+  const [workerNumber, setWorkerNumber] = useState("");
   const history = useHistory();
-  const [workerid, setWorkerId] = useState()
-  let [localWorkerData, setLocalWorkerData] = useState([])
+  const [workerid, setWorkerId] = useState();
+  let [localWorkerData, setLocalWorkerData] = useState([]);
 
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
     department: "",
     workHours: "",
-    shiftTimeStart: "",
+    shiftTimeStart: null,
     shiftType: "",
     occupation: "",
     shiftCycle: "",
@@ -115,7 +115,7 @@ const WorkerDetails = () => {
     timeInCompany: "",
     timeOnProject: "",
     timeInIndustry: "",
-    attachments: "",
+    attachments: null,
     eventLeadingToInjury: "",
     injuryObject: "",
     primaryBodyPartWithSide: "",
@@ -123,7 +123,7 @@ const WorkerDetails = () => {
     typeOfInjury: "",
     NoOfDaysAway: "",
     medicalResponseTaken: "",
-    treatmentDate: "",
+    treatmentDate: null,
     higherMedicalResponder: "",
     injuryStatus: "",
     firstAidTreatment: "",
@@ -137,49 +137,50 @@ const WorkerDetails = () => {
     supervisorTimeInCompany: "",
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
-    dateOfAlcoholDrugTest: "",
+    dateOfAlcoholDrugTest: null,
     isWorkerClearedTest: "N/A",
     reasonForTestNotDone: "",
     status: "Active",
     createdBy: 0,
     fkInvestigationId: investigationId.current,
-  })
+  });
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
 
-    // getting person affected data 
-    const url = window.location.pathname.split('/')
-    const workerNum = url[url.length - 2]
-    setWorkerNumber(workerNum)
-    let allEffectedPersonData = localStorage.getItem("personEffected")
-    let particularEffected = JSON.parse(allEffectedPersonData)[workerNum]
+    // getting person affected data
+    const url = window.location.pathname.split("/");
+    const workerNum = url[url.length - 2];
+    setWorkerNumber(workerNum);
+    let allEffectedPersonData = localStorage.getItem("personEffected");
+    let particularEffected = JSON.parse(allEffectedPersonData)[workerNum];
     if (typeof particularEffected !== "undefined") {
-      setForm(particularEffected)
+      setForm(particularEffected);
     }
-    if (typeof particularEffected.id !== "undefined" || particularEffected.id != "") {
-      setWorkerId(particularEffected.id)
+    if (
+      typeof particularEffected.id !== "undefined" ||
+      particularEffected.id != ""
+    ) {
+      setWorkerId(particularEffected.id);
     }
     // getting person affected data end
-    setLocalWorkerData(JSON.parse(localStorage.getItem("personEffected")))
-    let investigationData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    setLocalWorkerData(JSON.parse(localStorage.getItem("personEffected")));
+    let investigationData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
     let allApiData = investigationData.data.data.results[0];
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
     }
     await setIsLoading(true);
   };
-
-  const handelAddNew = async () => {
-    let worker = JSON.parse(localStorage.getItem("personEffected"))
-
-    await worker.splice(parseInt(workerNumber) + 1, 0, workerData)
-    await localStorage.setItem("personEffected", JSON.stringify(worker))
-    await handleNext()
-  }
 
   const radioDecide = ["Yes", "No", "N/A"];
   const radioYesNo = ["Yes", "No"];
@@ -189,7 +190,11 @@ const WorkerDetails = () => {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       seTesttaken(true);
     } else if (e.target.value == "No") {
-      setForm({ ...form, isAlcoholDrugTestTaken: e.target.value, dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z" });
+      setForm({
+        ...form,
+        isAlcoholDrugTestTaken: e.target.value,
+        dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z",
+      });
       seTesttaken(false);
     }
   };
@@ -207,12 +212,11 @@ const WorkerDetails = () => {
     data.append("workerType", form.workerType);
     data.append("department", form.department);
     data.append("workHours", form.workHours);
-    if (form.shiftTimeStart != "") {
+    if (form.shiftTimeStart != null) {
       data.append("shiftTimeStart", form.shiftTimeStart);
-    } else {
+    } else if (form.shiftTimeStart == null) {
       delete form["shiftTimeStart"]
     }
-
     data.append("shiftType", form.shiftType);
     data.append("occupation", form.occupation);
     data.append("shiftCycle", form.shiftCycle);
@@ -220,7 +224,14 @@ const WorkerDetails = () => {
     data.append("timeInCompany", form.timeInCompany);
     data.append("timeOnProject", form.timeOnProject);
     data.append("timeInIndustry", form.timeInIndustry);
-    data.append("attachments", form.attachments);
+    if (form.attachments !== null && typeof form.attachments !== "undefined") {
+      if (typeof form.attachments !== "string") {
+        data.append("attachments", form.attachments);
+      }
+    } else if (form.attachments == null) {
+      console.log("here2")
+      delete form["attachments"]
+    }
     data.append("eventLeadingToInjury", form.eventLeadingToInjury);
     data.append("injuryObject", form.injuryObject);
     data.append("primaryBodyPartWithSide", form.primaryBodyPartWithSide);
@@ -228,9 +239,10 @@ const WorkerDetails = () => {
     data.append("typeOfInjury", form.typeOfInjury);
     data.append("NoOfDaysAway", form.NoOfDaysAway);
     data.append("medicalResponseTaken", form.medicalResponseTaken);
-    if (form.treatmentDate != "") {
+
+    if (form.treatmentDate != null) {
       data.append("treatmentDate", form.treatmentDate);
-    } else {
+    } else if (form.shiftTimeStart == null) {
       delete form["treatmentDate"]
     }
     data.append("higherMedicalResponder", form.higherMedicalResponder);
@@ -246,9 +258,9 @@ const WorkerDetails = () => {
     data.append("supervisorTimeInCompany", form.supervisorTimeInCompany);
     data.append("supervisorTimeOnProject", form.supervisorTimeOnProject);
     data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
-    if (form.dateOfAlcoholDrugTest != "") {
+    if (form.dateOfAlcoholDrugTest != null) {
       data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
-    } else {
+    } else if (form.shiftTimeStart == null) {
       delete form["treatmentDate"]
     }
     data.append("isWorkerClearedTest", form.isWorkerClearedTest);
@@ -257,53 +269,59 @@ const WorkerDetails = () => {
     data.append("createdBy", form.createdBy);
     data.append("fkInvestigationId", investigationId.current);
 
-    let res = []
-    if (typeof data.get("attachments") == "string" && typeof form.id !== "undefined") {
-      delete form["attachments"]
-      form["fkInvestigationId"] = investigationId.current
-      const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, form);
-      res.push(ress)
-    } else if (!isNaN(form.id) && typeof data.get("attachments").name == "string") {
-      form["fkInvestigationId"] = investigationId.current
+    let res = [];
+    if (!isNaN(form.id)) {
+      form["fkInvestigationId"] = investigationId.current;
       const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
-      res.push(ress)
-    }
-    else if (form.attachments == "" || !form.attachments || !data.get("attachments")) {
-      delete form["attachments"]
-      form["fkInvestigationId"] = investigationId.current
-      const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, form);
-      res.push(ress)
-    }
-    else {
-      form["fkInvestigationId"] = investigationId.current
+      res.push(ress);
+    } else {
+      form["fkInvestigationId"] = investigationId.current;
       const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
-      res.push(ress)
+      res.push(ress);
     }
 
     if (res[0].status == 201 || res[0].status == 200) {
-      let worker = JSON.parse(localStorage.getItem("personEffected"))
-      form["id"] = res[0].data.data.results.id
-      if (res[0].data.data.results.attachments !== null && res[0].data.data.results.attachments !== {}) {
-        form["attachments"] = res[0].data.data.results.attachments
+      let worker = JSON.parse(localStorage.getItem("personEffected"));
+      form["id"] = res[0].data.data.results.id;
+      if (
+        res[0].data.data.results.attachments !== null &&
+        res[0].data.data.results.attachments !== {}
+      ) {
+        form["attachments"] = res[0].data.data.results.attachments;
       }
 
-      worker[workerNumber] = form
-      await localStorage.setItem("personEffected", JSON.stringify(worker))
+      worker[workerNumber] = form;
+      await localStorage.setItem("personEffected", JSON.stringify(worker));
 
       if (typeof worker[parseInt(workerNumber) + 1] !== "undefined") {
-        await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) + 1}/${localStorage.getItem("fkincidentId")}`)
+        await history.push(
+          `/app/incident-management/registration/investigation/worker-details/${parseInt(
+            workerNumber
+          ) + 1}/${localStorage.getItem("fkincidentId")}`
+        );
       } else {
-        await history.push(`/app/incident-management/registration/investigation/event-details/`)
+        await history.push(
+          `/app/incident-management/registration/investigation/event-details/`
+        );
       }
     }
-    await handelUpdateCheck()
+    await handelUpdateCheck();
+  };
+
+  const handelAddNew = async () => {
+    if (form.name !== "" && form.workerType !== "" && form.department !== "") {
+      let worker = JSON.parse(localStorage.getItem("personEffected"));
+      await worker.splice(parseInt(workerNumber) + 1, 0, workerData);
+      await localStorage.setItem("personEffected", JSON.stringify(worker));
+      await handleNext();
+    }
   };
 
   const PickList = async () => {
-    await handelUpdateCheck()
+    await handelUpdateCheck();
     workerType.current = await PickListData(71);
-    setDepartmentName(await PickListData(10))
-    setworkHours(await PickListData(70))
+    setDepartmentName(await PickListData(10));
+    setworkHours(await PickListData(70));
     shiftType.current = await PickListData(47);
     occupation.current = await PickListData(48);
     shiftCycle.current = await PickListData(49);
@@ -324,36 +342,57 @@ const WorkerDetails = () => {
   };
 
   const handelPrevious = async () => {
-
-    let worker = JSON.parse(localStorage.getItem("personEffected"))
+    let worker = JSON.parse(localStorage.getItem("personEffected"));
     if (typeof worker[parseInt(workerNumber) - 1] !== "undefined") {
-      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber) - 1}/${localStorage.getItem("fkincidentId")}`)
+      await history.push(
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(
+          workerNumber
+        ) - 1}/${localStorage.getItem("fkincidentId")}`
+      );
     } else {
-      await history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
+      await history.push(
+        `/app/incident-management/registration/investigation/severity-consequences/`
+      );
     }
-    await handelUpdateCheck()
-  }
+    await handelUpdateCheck();
+  };
 
   const handelRemove = async () => {
-    let worker_removed = JSON.parse(localStorage.getItem("personEffected"))
+    let worker_removed = JSON.parse(localStorage.getItem("personEffected"));
     if (!isNaN(worker_removed[workerNumber].id)) {
-      let deleteWorkerNumber = worker_removed[workerNumber]
-      const deleteWorker = await api.delete(`api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId}/workers/${deleteWorkerNumber.id}/`)
+      let deleteWorkerNumber = worker_removed[workerNumber];
+      const deleteWorker = await api.delete(
+        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
+        }/workers/${deleteWorkerNumber.id}/`
+      );
     }
-    await worker_removed.splice(workerNumber, 1)
-    await localStorage.setItem("personEffected", JSON.stringify(worker_removed))
+    await worker_removed.splice(workerNumber, 1);
+    await localStorage.setItem(
+      "personEffected",
+      JSON.stringify(worker_removed)
+    );
     if (typeof worker_removed[parseInt(workerNumber - 1)] !== "undefined") {
-      await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(workerNumber - 1)}/${localStorage.getItem("fkincidentId")}`)
+      await history.push(
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(
+          workerNumber - 1
+        )}/${localStorage.getItem("fkincidentId")}`
+      );
     } else {
-      await history.push(`/app/incident-management/registration/investigation/severity-consequences/`)
+      await history.push(
+        `/app/incident-management/registration/investigation/severity-consequences/`
+      );
     }
-    await handelUpdateCheck()
-  }
+    await handelUpdateCheck();
+  };
 
   const handelWorkerNavigate = async (e, index) => {
-    await history.push(`/app/incident-management/registration/investigation/worker-details/${parseInt(index)}/${localStorage.getItem("fkincidentId")}`)
-    await handelUpdateCheck()
-  }
+    await history.push(
+      `/app/incident-management/registration/investigation/worker-details/${parseInt(
+        index
+      )}/${localStorage.getItem("fkincidentId")}`
+    );
+    await handelUpdateCheck();
+  };
 
   useEffect(() => {
     PickList();
@@ -455,7 +494,6 @@ const WorkerDetails = () => {
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
-                required
                 className={classes.formControl}
               >
                 <InputLabel id="unit-name-label">
@@ -527,12 +565,7 @@ const WorkerDetails = () => {
 
             {/* Occupation */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Occupation</InputLabel>
                 <Select
                   labelId="unit-name-label"
@@ -550,20 +583,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.occupation && (
-                  <FormHelperText>{error.occupation}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* Shift cycle */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Shift cycle</InputLabel>
                 <Select
                   labelId="unit-name-label"
@@ -581,19 +606,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.shiftCycle && (
-                  <FormHelperText>{error.shiftCycle}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* number of days */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Number of days into shift
                 </InputLabel>
@@ -613,20 +631,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.noOfDaysIntoShift && (
-                  <FormHelperText>{error.noOfDaysIntoShift}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* time in comapany */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                required
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Time in company</InputLabel>
                 <Select
                   labelId="unit-name-label"
@@ -644,20 +654,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.timeInCompany && (
-                  <FormHelperText>{error.timeInCompany}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* time on project */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                required
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Time on project</InputLabel>
                 <Select
                   labelId="unit-name-label"
@@ -675,20 +677,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.timeOnProject && (
-                  <FormHelperText>{error.timeOnProject}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* time in industry */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                required
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Time in industry</InputLabel>
                 <Select
                   labelId="unit-name-label"
@@ -706,9 +700,6 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.timeInIndustry && (
-                  <FormHelperText>{error.timeInIndustry}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
@@ -727,12 +718,6 @@ const WorkerDetails = () => {
                 label="Event leading to injury"
                 className={classes.formControl}
                 value={form.eventLeadingToInjury}
-                error={error && error.eventLeadingToInjury}
-                helperText={
-                  error && error.eventLeadingToInjury
-                    ? error.eventLeadingToInjury
-                    : null
-                }
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -749,11 +734,7 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Injury object"
                 className={classes.formControl}
-                error={error && error.injuryObject}
                 value={form.injuryObject}
-                helperText={
-                  error && error.injuryObject ? error.injuryObject : null
-                }
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -765,12 +746,7 @@ const WorkerDetails = () => {
 
             {/* primary body part included */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Primary body part side included
                 </InputLabel>
@@ -790,22 +766,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.primaryBodyPartWithSide && (
-                  <FormHelperText>
-                    {error.primaryBodyPartWithSide}
-                  </FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* secondary body part */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Secondary body part included
                 </InputLabel>
@@ -825,11 +791,6 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.secondaryBodyPartWithSide && (
-                  <FormHelperText>
-                    {error.secondaryBodyPartWithSide}
-                  </FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
@@ -837,7 +798,6 @@ const WorkerDetails = () => {
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
-                required
                 error={error && error.actualSeverityLevel}
                 className={classes.formControl}
               >
@@ -872,11 +832,7 @@ const WorkerDetails = () => {
                 id="title"
                 variant="outlined"
                 label="Number of Days Away/On Restriction"
-                error={error && error.NoOfDaysAway}
                 value={form.NoOfDaysAway}
-                helperText={
-                  error && error.NoOfDaysAway ? error.NoOfDaysAway : null
-                }
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -895,11 +851,6 @@ const WorkerDetails = () => {
                 label="Medical Response Taken"
                 value={form.medicalResponseTaken}
                 error={error && error.medicalResponseTaken}
-                helperText={
-                  error && error.medicalResponseTaken
-                    ? error.medicalResponseTaken
-                    : null
-                }
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -916,7 +867,7 @@ const WorkerDetails = () => {
                 <KeyboardDatePicker
                   className={classes.formControl}
                   label="Treatment Date"
-                  value={form.treatmentDate}
+                  value={!form.treatmentDate ? null : form.treatmentDate}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -932,12 +883,7 @@ const WorkerDetails = () => {
 
             {/* highest medical responder */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.higherMedicalResponder}
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Highest medical responder
                 </InputLabel>
@@ -957,11 +903,6 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.higherMedicalResponder && (
-                  <FormHelperText>
-                    {error.higherMedicalResponder}
-                  </FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
@@ -971,11 +912,7 @@ const WorkerDetails = () => {
                 id="title"
                 variant="outlined"
                 label="Status Update"
-                error={error && error.injuryStatus}
                 value={form.injuryStatus}
-                helperText={
-                  error && error.injuryStatus ? error.injuryStatus : null
-                }
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -990,7 +927,6 @@ const WorkerDetails = () => {
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
-                required
                 error={error && error.actualSeverityLevel}
                 className={classes.formControl}
               >
@@ -1021,12 +957,7 @@ const WorkerDetails = () => {
 
             {/* mechanish of injury */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                required
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Mechanism of injury
                 </InputLabel>
@@ -1046,9 +977,6 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.mechanismOfInjury && (
-                  <FormHelperText>{error.mechanismOfInjury}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
@@ -1166,8 +1094,8 @@ const WorkerDetails = () => {
 
             {/* test taken */}
             <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" required>Was the test taken?</FormLabel>
+              <FormControl component="fieldset" required>
+                <FormLabel component="legend" >Was the test taken?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={
@@ -1195,14 +1123,9 @@ const WorkerDetails = () => {
                     utils={DateFnsUtils}
                   >
                     <KeyboardDatePicker
-                      error={error.incidentdate}
                       className={classes.formControl}
                       value={form.dateOfAlcoholDrugTest}
-                      value={form.dateOfAlcoholDrugTest}
                       label="Date of Test"
-                      helperText={
-                        error.incidentdate ? error.incidentdate : null
-                      }
                       onChange={(e) => {
                         setForm({
                           ...form,
@@ -1218,7 +1141,7 @@ const WorkerDetails = () => {
                 <Grid item md={6}>
                   {/* <p>Was worker cleared to work following A&D testing?</p> */}
                   <FormControl component="fieldset">
-                    <FormLabel component="legend">
+                    <FormLabel component="legend" required>
                       Was worker cleared to work following a&d testing?
                     </FormLabel>
                     <RadioGroup
@@ -1271,16 +1194,11 @@ const WorkerDetails = () => {
 
             {/* supervisor name */}
             <Grid item md={6}>
-              {/* <p>Supervisor name</p> */}
               <TextField
                 id="title"
                 variant="outlined"
                 label="Supervisor name"
-                error={error && error.supervisorName}
                 value={form.supervisorName}
-                helperText={
-                  error && error.supervisorName ? error.supervisorName : null
-                }
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -1289,17 +1207,11 @@ const WorkerDetails = () => {
                   });
                 }}
               />
-              {error && error.supervisorName && <p>{error.supervisorName}</p>}
             </Grid>
 
             {/* supervisor time */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                required
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Supervisor time in Industry
                 </InputLabel>
@@ -1319,22 +1231,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.supervisorTimeInIndustry && (
-                  <FormHelperText>
-                    {error.supervisorTimeInIndustry}
-                  </FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* supervisor time */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                required
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Supervisor time in company
                 </InputLabel>
@@ -1354,22 +1256,12 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.supervisorTimeInCompany && (
-                  <FormHelperText>
-                    {error.supervisorTimeInCompany}
-                  </FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
             {/* supervisor time in industry */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                required
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Supervisor time on project
                 </InputLabel>
@@ -1389,11 +1281,6 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.supervisorTimeOnProject && (
-                  <FormHelperText>
-                    {error.supervisorTimeOnProject}
-                  </FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
@@ -1403,35 +1290,42 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
+            {typeof form.attachments == "string" ?
+              <>
 
-            <Grid item md={4}>
-              <input
-                type="file"
-                className={classes.fullWidth}
-                name="file"
-                onChange={(e) => {
-                  handleFile(e);
-                }}
-              />
-            </Grid>
-            <Grid item md={6}>
-              {form.attachments != "" && typeof form.attachments == "string" ? <a target="_blank" href={form.attachments}>Image<ImageIcon /></a> : <p></p>}
-            </Grid>
-
-            {localWorkerData.length > 1 ?
+                <Grid item md={6}>
+                  {form.attachments != "" && typeof form.attachments == "string" ? (
+                    <a target="_blank" href={form.attachments}>
+                      Image
+                      <ImageIcon />
+                    </a>
+                  ) : (
+                    <p />
+                  )}
+                </Grid>
+              </>
+              :
+              <Grid item md={4}>
+                <input
+                  type="file"
+                  className={classes.fullWidth}
+                  name="file"
+                  onChange={(e) => {
+                    handleFile(e);
+                  }}
+                />
+              </Grid>
+            }
+            {localWorkerData.length > 1 ? (
               <Grid item md={12}>
-                <Button
-                  onClick={(e) => handelRemove()}
-                >
+                <Button onClick={(e) => handelRemove()}>
                   Delete <DeleteForeverIcon />
                 </Button>
               </Grid>
-              : null}
+            ) : null}
 
             <Grid item md={12}>
-              <Button
-                onClick={(e) => handelAddNew()}
-              >
+              <Button onClick={(e) => handelAddNew()}>
                 Add new worker <AddIcon />
               </Button>
             </Grid>
@@ -1450,7 +1344,6 @@ const WorkerDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-              // href="/app/incident-management/registration/investigation/property-impact-details/"
               >
                 Next
               </Button>
@@ -1466,34 +1359,42 @@ const WorkerDetails = () => {
             </Grid>
             <Grid item md={12}>
               <Box mt={4}>
-                <Paper elevation={1} >
+                <Paper elevation={1}>
                   <List dense>
                     {localWorkerData.map((value, index) => (
-                      <ListItem className={workerNumber == index ? classes.activeList : classes.notActiveList}>
+                      <ListItem
+                        className={
+                          workerNumber == index
+                            ? classes.activeList
+                            : classes.notActiveList
+                        }
+                      >
                         <ListItemIcon className={classes.icon}>
-                          {workerNumber == index ? <DoubleArrowIcon fontSize="small" /> : <RemoveCircleOutlineIcon />}
+                          {workerNumber == index ? (
+                            <DoubleArrowIcon fontSize="small" />
+                          ) : (
+                            <RemoveCircleOutlineIcon />
+                          )}
                         </ListItemIcon>
-                        <ListItemText primary={
-
-                          <a onClick={(e) => handelWorkerNavigate(e, index)}>
-                            {`Worker ${index + 1}`}
-                          </a>} />
-
+                        <ListItemText
+                          primary={
+                            <a onClick={(e) => handelWorkerNavigate(e, index)}>
+                              {`Worker ${index + 1}`}
+                            </a>
+                          }
+                        />
                       </ListItem>
                     ))}
                   </List>
                 </Paper>
               </Box>
             </Grid>
-
-
           </Grid>
         </Grid>
       ) : (
         <h1>Loading...</h1>
-      )
-      }
-    </PapperBlock >
+      )}
+    </PapperBlock>
   );
 };
 
