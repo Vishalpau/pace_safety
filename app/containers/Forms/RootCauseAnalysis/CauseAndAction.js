@@ -31,6 +31,13 @@ import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Divider from "@material-ui/core/Divider";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -42,7 +49,7 @@ import {
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-import FormDialog from "../ActionTracker"
+import ActionTracker from "../ActionTracker";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -62,35 +69,34 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  table: {
+    width: "100%",
+    minWidth: 650,
+  },
+  rootTable: {
+    width: "100%",
+    overflowX: "auto",
+  },
+  tableCell: {
+    minWidth: 200,
+  },
+  tableUlList: {
+    listStyleType: "square",
+    "& li + li": {
+      marginTop: theme.spacing(0.5),
+    },
+  },
 }));
 
 const BasicCauseAndAction = () => {
-
   const [incidentDetail, setIncidentDetail] = useState({});
 
   const [data, setData] = useState([]);
   const history = useHistory();
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const putId = useRef("");
-  let id = useRef("")
-  const subValues = [
-    "Supervision",
-    "Workpackage",
-    "Equipment machinery",
-    "Behaviour issue",
-    "Safety issues",
-    "Ergonimics",
-    "Procedures",
-    "Other acts",
-    "Warning system",
-    "Energy types",
-    "Tools",
-    "Safety items",
-    "Others conditions",
-  ]
 
+  const putId = useRef("");
+  let id = useRef("");
+  const [action, setAction] = useState({});
 
   const handelShowData = async () => {
     let tempApiData = {};
@@ -98,23 +104,34 @@ const BasicCauseAndAction = () => {
       HAZARDIOUS_CONDITION_SUB_TYPES
     );
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
-    let tempid = []
+    let tempid = [];
+    let all_pace_data = [];
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
-      if (subTypes.includes(value.rcaSubType)) {
-        tempid.push(value.id)
+      if (
+        subTypes.includes(value.rcaSubType) &&
+        value.rcaRemark !== "No option selected"
+      ) {
+        all_pace_data.push(value);
+        tempid.push(value.id);
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
-        tempApiData[valueQuestion] = valueAnser.includes(",") ? valueAnser.split(",") : [valueAnser];
+        tempApiData[valueQuestion] = valueAnser.includes(",")
+          ? valueAnser.split(",")
+          : [valueAnser];
       }
     });
-    id.current = tempid.reverse()
+    id.current = tempid.reverse();
     await setData(tempApiData);
   };
 
@@ -124,18 +141,18 @@ const BasicCauseAndAction = () => {
     );
   }
 
-  const radioDecide = ["Yes", "No"];
-
-  let form_link = window.location.href;
   const classes = useStyles();
 
   const handelNext = () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current}`
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        }`
       );
     } else if (isNaN(putId.current)) {
       history.push(
@@ -154,15 +171,26 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current}`
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
+        }`
       );
     } else if (isNaN(putId.current)) {
       history.push(
         `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/`
       );
     }
+  };
 
-  }
+  const handelConvert = (value) => {
+    let wordArray = value.split(/(?=[A-Z])/);
+    let wordArrayCombined = wordArray.join(" ");
+    var newString = wordArrayCombined
+      .toLowerCase()
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
+        return c.toUpperCase();
+      });
+    return newString;
+  };
 
   useEffect(() => {
     fetchIncidentDetails();
@@ -202,41 +230,46 @@ const BasicCauseAndAction = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6">
-              Option Selected from Hazardous Acts and Condition
-            </Typography>
+            <Divider />
+            <Box paddingTop={3}>
+              <Typography variant="h6">
+                Option Selected from Hazardous Acts and Condition
+              </Typography>
+            </Box>
 
-            {Object.entries(data).reverse().map(([key, value], index) => (
-
-              <List
-                className={classes.list}
-                component="nav"
-                dense
-                subheader={
-                  <ListSubheader
-                    disableGutters
-                    disableSticky
-                    component="div"
-                    id="selected-options"
-                  >
-                    {subValues[index]}
-                  </ListSubheader>
-                }
-              >
-                {value.map((value) => (
-                  <ListItem>
-                    <ListItemIcon>
-                      <FiberManualRecordIcon className="smallIcon" />
-                    </ListItemIcon>
-                    <ListItemText primary={value} />
-                  </ListItem>
-                ))}
-                <button className={classes.textButton}>
-                  <FormDialog actionContext="incidents:Pacacuase" enitityReferenceId={`${putId.current}:${id.current[index]}`} />
-                </button>
-              </List>
-            ))}
-
+            <div className={classes.rootTable}>
+              <Table className={classes.table}>
+                <TableBody>
+                  {Object.entries(data)
+                    .reverse()
+                    .map(([key, value], index) => (
+                      <TableRow>
+                        <TableCell
+                          align="left"
+                          scope="row"
+                          className={classes.tableCell}
+                        >
+                          {handelConvert(key)}
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          <ul class={classes.tableUlList}>
+                            {value.map((value) => (
+                              <li key={value}>{value}</li>
+                            ))}
+                          </ul>
+                        </TableCell>
+                        <TableCell className={classes.tableCell} align="right">
+                          <ActionTracker
+                            actionContext="incidents:Pacacuase"
+                            enitityReferenceId={`${putId.current}:${id.current[index]
+                              }`}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </div>
           </Grid>
 
           <Grid item md={12}>

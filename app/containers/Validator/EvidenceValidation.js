@@ -2,7 +2,6 @@
 import validator from "validator";
 
 function EvidenceValidate(data) {
-  console.log(data);
   let isValid = true;
   const error = {};
 
@@ -12,7 +11,6 @@ function EvidenceValidate(data) {
             isValid = false;
         }
     }
-    console.log("------", error);
   return { error, isValid };
 }
 

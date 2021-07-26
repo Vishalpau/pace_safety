@@ -82,6 +82,7 @@ const PropertyAffected = () => {
   const [error, setError] = useState({});
   const [isOther, setIsOther] = useState(true);
   const nextPath = localStorage.getItem("nextPath");
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   // Default form.
   const [form, setForm] = useState([
@@ -90,7 +91,7 @@ const PropertyAffected = () => {
       propertyOtherType: "",
       damageDetails: "",
       fkIncidentId: localStorage.getItem("fkincidentId"),
-      createdBy: 2,
+      createdBy: parseInt(userId),
     },
   ]);
 
@@ -103,7 +104,7 @@ const PropertyAffected = () => {
         propertyOtherType: "",
         damageDetails: "",
         fkIncidentId: localStorage.getItem("fkincidentId"),
-        createdBy: 2,
+        createdBy: parseInt(userId),
       },
     ]);
   };
@@ -171,7 +172,7 @@ const PropertyAffected = () => {
               propertyOtherType: form[i].propertyOtherType,
               damageDetails: form[i].damageDetails,
               fkIncidentId: localStorage.getItem("fkincidentId"),
-              createdBy: 2,
+              createdBy: parseInt(userId),
             }
           );
           status = res.status;

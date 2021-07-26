@@ -25,6 +25,7 @@ import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousAc
 import { call } from "file-loader";
 
 import {
+  HAZARDIOUS_ACTS_SUB_TYPES,
   SUPERVISON,
   WORKPACKAGE,
   EQUIMENTMACHINARY,
@@ -46,18 +47,18 @@ const useStyles = makeStyles((theme) => ({
 
 const HazardiousActs = () => {
   const [form, setForm] = useState({
-    supervision: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    workpackage: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    equipmentMachinery: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    behaviourIssue: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    safetyIssues: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    ergonimics: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    procedures: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    others: { remarkType: "", rcaSubType: "", rcaRemark: "" },
+    supervision: { remarkType: "options", rcaSubType: "Supervision", rcaRemark: [] },
+    workpackage: { remarkType: "options", rcaSubType: "workPackage", rcaRemark: [] },
+    equipmentMachinery: { remarkType: "options", rcaSubType: "equipmentMachinery", rcaRemark: [] },
+    behaviourIssue: { remarkType: "options", rcaSubType: "behaviourIssue", rcaRemark: [] },
+    safetyIssues: { remarkType: "options", rcaSubType: "safetyIssues", rcaRemark: [] },
+    ergonimics: { remarkType: "options", rcaSubType: "ergonimics", rcaRemark: [] },
+    procedures: { remarkType: "options", rcaSubType: "procedures", rcaRemark: [] },
+    others: { remarkType: "remark", rcaSubType: "otherActs", rcaRemark: "" },
   });
 
   const [error, setError] = useState({});
-  const [data, setData] = useState([]);
+
   const putId = useRef("");
   const [fetchApiData, setFetchApiData] = useState({});
   const { id } = useParams();
@@ -66,18 +67,18 @@ const HazardiousActs = () => {
   const updateIds = useRef();
   const checkPost = useRef()
 
+  const setRemark = (value) => {
+    let remark = value.includes(",") ? value.split(",") : [value]
+    if (remark.includes("No option selected") && remark.length > 0) {
+      let removeItemIndex = remark.indexOf("No option selected")
+      remark.splice(removeItemIndex, 1)
+    }
+    return remark
+  }
+
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let allrcaSubType = [
-      "Supervision",
-      "Workpackage",
-      "equipmentMachinery",
-      "behaviourIssue",
-      "safetyIssues",
-      "ergonimics",
-      "procedures",
-      "otheracts",
-    ];
+
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
@@ -91,7 +92,7 @@ const HazardiousActs = () => {
     if (allApiData.length !== 0) {
       putId.current = incidentId;
       allApiData.map((value) => {
-        if (allrcaSubType.includes(value.rcaSubType)) {
+        if (HAZARDIOUS_ACTS_SUB_TYPES.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
           let valueAnser = value.rcaRemark;
           tempApiData[valueQuestion] = valueAnser;
@@ -106,56 +107,43 @@ const HazardiousActs = () => {
         supervision: {
           remarkType: "options",
           rcaSubType: "Supervision",
-          rcaRemark: tempApiData.Supervision.includes(",")
-            ? tempApiData.Supervision.split(",")
-            : [tempApiData.Supervision],
+          rcaRemark: setRemark(tempApiData.Supervision),
         },
         workpackage: {
           remarkType: "options",
-          rcaSubType: "Workpackage",
-          rcaRemark: tempApiData.Workpackage.includes(",")
-            ? tempApiData.Workpackage.split(",")
-            : [tempApiData.Workpackage],
+          rcaSubType: "workPackage",
+
+          rcaRemark: setRemark(tempApiData.workPackage),
         },
         equipmentMachinery: {
           remarkType: "options",
           rcaSubType: "equipmentMachinery",
-          rcaRemark: tempApiData.equipmentMachinery.includes(",")
-            ? tempApiData.equipmentMachinery.split(",")
-            : [tempApiData.equipmentMachinery],
+          rcaRemark: setRemark(tempApiData.equipmentMachinery),
         },
         behaviourIssue: {
           remarkType: "options",
           rcaSubType: "behaviourIssue",
-          rcaRemark: tempApiData.behaviourIssue.includes(",")
-            ? tempApiData.behaviourIssue.split(",")
-            : [tempApiData.behaviourIssue],
+          rcaRemark: setRemark(tempApiData.behaviourIssue),
         },
         safetyIssues: {
           remarkType: "options",
           rcaSubType: "safetyIssues",
-          rcaRemark: tempApiData.safetyIssues.includes(",")
-            ? tempApiData.safetyIssues.split(",")
-            : [tempApiData.safetyIssues],
+          rcaRemark: setRemark(tempApiData.safetyIssues),
         },
         ergonimics: {
           remarkType: "options",
           rcaSubType: "ergonimics",
-          rcaRemark: tempApiData.ergonimics.includes(",")
-            ? tempApiData.ergonimics.split(",")
-            : [tempApiData.ergonimics],
+          rcaRemark: setRemark(tempApiData.ergonimics),
         },
         procedures: {
           remarkType: "options",
           rcaSubType: "procedures",
-          rcaRemark: tempApiData.procedures.includes(",")
-            ? tempApiData.procedures.split(",")
-            : [tempApiData.procedures],
+          rcaRemark: setRemark(tempApiData.procedures),
         },
         others: {
           remarkType: "remark",
-          rcaSubType: "otheracts",
-          rcaRemark: tempApiData.otheracts,
+          rcaSubType: "otherActs",
+          rcaRemark: tempApiData.otherActs,
         },
       });
     }
@@ -191,7 +179,7 @@ const HazardiousActs = () => {
         ...form,
         workpackage: {
           remarkType: "options",
-          rcaSubType: "Workpackage",
+          rcaSubType: "workPackage",
           rcaRemark: newData,
         },
       });
@@ -200,7 +188,7 @@ const HazardiousActs = () => {
         ...form,
         workpackage: {
           remarkType: "options",
-          rcaSubType: "Workpackage",
+          rcaSubType: "workPackage",
           rcaRemark: [...form.workpackage.rcaRemark, value],
         },
       });
@@ -333,7 +321,7 @@ const HazardiousActs = () => {
       ...form,
       others: {
         remarkType: "remark",
-        rcaSubType: "otheracts",
+        rcaSubType: "otherActs",
         rcaRemark: e.target.value,
       },
     });
@@ -344,9 +332,6 @@ const HazardiousActs = () => {
   const classes = useStyles();
 
   const handelNext = async (e) => {
-    const { error, isValid } = HazardiousActsValidation(form);
-    await setError(error);
-    console.log(error);
     let tempData = [];
 
     Object.entries(form).map(async (item, index) => {
@@ -356,9 +341,9 @@ const HazardiousActs = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
         };
@@ -368,9 +353,9 @@ const HazardiousActs = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
           pk: updateIds.current[index],
@@ -390,7 +375,6 @@ const HazardiousActs = () => {
             callObjects[key]
           );
           if (res.status == 200) {
-            console.log("request done");
             nextPageLink = res.status;
           }
         } else {
@@ -401,12 +385,10 @@ const HazardiousActs = () => {
             callObjects[key]
           );
           if (res.status == 201) {
-            console.log("request done");
             nextPageLink = res.status;
           }
         }
       }
-      console.log(nextPageLink);
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push(
@@ -452,7 +434,6 @@ const HazardiousActs = () => {
       title="Immediate Causes - Hazardous Acts"
       icon="ion-md-list-box"
     >
-      {console.log("here")}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -475,7 +456,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.supervision}
             >
               <FormLabel component="legend">Supervision</FormLabel>
@@ -500,7 +480,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.workpackage}
             >
               <FormLabel component="legend">Work package</FormLabel>
@@ -525,7 +504,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.equipmentMachinery}
             >
               <FormLabel component="legend">Equipment & machinery</FormLabel>
@@ -549,7 +527,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.behaviourIssue}
             >
               <FormLabel component="legend">Behaviour issue</FormLabel>
@@ -574,7 +551,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              required
               error={error.safetyIssues}
             >
               <FormLabel component="legend">Saftey items</FormLabel>
@@ -596,7 +572,7 @@ const HazardiousActs = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.procedures}>
+            <FormControl component="fieldset" error={error.procedures}>
               <FormLabel component="legend">Ergonomics</FormLabel>
               <FormGroup>
                 {ERGONOMICS.map((value) => (
@@ -616,7 +592,7 @@ const HazardiousActs = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" required error={error.procedures}>
+            <FormControl component="fieldset" error={error.procedures}>
               <FormLabel component="legend">Procedure</FormLabel>
               <FormGroup>
                 {PROCEDURES.map((value) => (
@@ -643,9 +619,8 @@ const HazardiousActs = () => {
               label="Others"
               variant="outlined"
               multiline
-              required
               error={error.others}
-              value={form.others.rcaRemark}
+              value={form.others.rcaRemark !== "No option selected" ? form.others.rcaRemark : ""}
               helperText={error ? error.others : ""}
               rows={3}
               onChange={async (e) => handelOthers(e)}

@@ -25,6 +25,9 @@ export const access_token = localStorage.getItem("access_token");
 
 export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/"
 
+// Header authenticatuon 
+export const HEADER_AUTH = {'Authorization': `Bearer ${access_token}`  }
+
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details": `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
     "fkincidentId"
@@ -121,73 +124,36 @@ export const FORM_HEADER = {
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
 
-export const BASIC_CAUSE_SUB_TYPE = [
-  "Perosonal",
-  "Wellness factors",
-  "Other human factors",
-  "Leadership",
-  "Processes",
-  "Others job factors",
-];
 
 export const HAZARDIOUS_ACTS_SUB_TYPES = [
   "Supervision",
-  "Workpackage",
+  "workPackage",
   "equipmentMachinery",
   "behaviourIssue",
   "safetyIssues",
   "ergonimics",
   "procedures",
-  "otheracts",
-];
-
-export const ACTS_SUB_TYPES = [
-  "Supervision",
-  "Work package",
-  "Equipment machinery",
-  "Behaviour issue",
-  "Safety issues",
-  "Ergonimics",
-  "Procedures",
-  "Other acts",
+  "otherActs",
 ];
 
 export const HAZARDIOUS_CONDITION_SUB_TYPES = [
   "warningSystem",
   "energyTypes",
   "tools",
-  "safetyitems",
-  "othersconditions",
-];
-
-export const CONDITION_SUB_TYPES = [
-  "Warning system",
-  "Energy types",
-  "Tools",
-  "Safety items",
-  "Others conditions",
+  "safetyItems",
+  "othersConditions",
 ];
 
 export const BASIC_CAUSE_SUB_TYPES = [
   "personal",
   "wellnessFactors",
-  "othershumanfactors",
+  "othersHumanFactors",
   "leadership",
   "processes",
-  "othersjobfactors",
+  "othersJobFactors",
 ];
 
 // option in root cause and anlysis
-
-export const HAZARDIOUS_ACTS = [
-  "Supervison",
-  "Workpackage",
-  "Equimentmachinary",
-  "Behaviousissues",
-  "Safetyitems",
-  "Ergonomics",
-  "Procedure",
-];
 
 export const SUPERVISON = [
   "No Supervision at Work Site",

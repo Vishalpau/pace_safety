@@ -26,6 +26,7 @@ import {
 } from "../../../utils/constants";
 import HazardiousConditionsValidation from "../../Validator/RCAValidation/HazardiousConditonsValidation";
 import {
+  HAZARDIOUS_CONDITION_SUB_TYPES,
   WARNINGSYSTEM,
   ENERGIES,
   TOOLS,
@@ -43,25 +44,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HazardiousCondition = () => {
-  const [commonForm, setCommonForm] = useState({
-    rcaNumber: "string",
-    rcaType: "string",
-    status: "Active",
-    createdBy: 0,
-    updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
-  });
-
-  const [error, setError] = useState({});
-
-  const [data, setData] = useState([]);
 
   const [form, setForm] = useState({
-    warningSystem: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    energyTypes: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    tools: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    safetyitems: { remarkType: "", rcaSubType: "", rcaRemark: [] },
-    others: { remarkType: "", rcaSubType: "", rcaRemark: "" },
+    warningSystem: { remarkType: "options", rcaSubType: "warningSystem", rcaRemark: [] },
+    energyTypes: { remarkType: "options", rcaSubType: "energyTypes", rcaRemark: [] },
+    tools: { remarkType: "options", rcaSubType: "tools", rcaRemark: [] },
+    safetyitems: { remarkType: "options", rcaSubType: "safetyItems", rcaRemark: [] },
+    others: { remarkType: "remark", rcaSubType: "othersConditions", rcaRemark: "" },
   });
 
   const putId = useRef("");
@@ -69,18 +58,21 @@ const HazardiousCondition = () => {
   const { id } = useParams();
   const history = useHistory();
   const [incidentDetail, setIncidentDetail] = useState({});
+  const [error, setError] = useState({});
   const updateIds = useRef();
   const checkPost = useRef();
 
+  const setRemark = (value) => {
+    let remark = value.includes(",") ? value.split(",") : [value]
+    if (remark.includes("No option selected") && remark.length > 0) {
+      let removeItemIndex = remark.indexOf("No option selected")
+      remark.splice(removeItemIndex, 1)
+    }
+    return remark
+  }
+
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let allrcaSubType = [
-      "warningSystem",
-      "energyTypes",
-      "tools",
-      "safetyitems",
-      "othersconditions",
-    ];
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
@@ -95,11 +87,11 @@ const HazardiousCondition = () => {
       `/api/v1/incidents/${incidentId}/pacecauses/`
     );
     let allApiData = previousData.data.data.results;
-    // console.log(allApiData)
+
     if (allApiData.length > 8) {
       putId.current = incidentId;
       allApiData.map((value) => {
-        if (allrcaSubType.includes(value.rcaSubType)) {
+        if (HAZARDIOUS_CONDITION_SUB_TYPES.includes(value.rcaSubType)) {
           let valueQuestion = value.rcaSubType;
           let valueAnser = value.rcaRemark;
           tempApiData[valueQuestion] = valueAnser;
@@ -114,39 +106,30 @@ const HazardiousCondition = () => {
         warningSystem: {
           remarkType: "options",
           rcaSubType: "warningSystem",
-          rcaRemark: tempApiData.warningSystem.includes(",")
-            ? tempApiData.warningSystem.split(",")
-            : [tempApiData.warningSystem],
+          rcaRemark: setRemark(tempApiData.warningSystem),
         },
         energyTypes: {
           remarkType: "options",
           rcaSubType: "energyTypes",
-          rcaRemark: tempApiData.energyTypes.includes(",")
-            ? tempApiData.energyTypes.split(",")
-            : [tempApiData.energyTypes],
+          rcaRemark: setRemark(tempApiData.energyTypes),
         },
         tools: {
           remarkType: "options",
           rcaSubType: "tools",
-          rcaRemark: tempApiData.tools.includes(",")
-            ? tempApiData.tools.split(",")
-            : [tempApiData.tools],
+          rcaRemark: setRemark(tempApiData.tools),
         },
         safetyitems: {
           remarkType: "options",
-          rcaSubType: "safetyitems",
-          rcaRemark: tempApiData.safetyitems.includes(",")
-            ? tempApiData.safetyitems.split(",")
-            : [tempApiData.safetyitems],
+          rcaSubType: "safetyItems",
+          rcaRemark: setRemark(tempApiData.safetyItems),
         },
         others: {
           remarkType: "remark",
-          rcaSubType: "othersconditions",
-          rcaRemark: tempApiData.othersconditions,
+          rcaSubType: "othersConditions",
+          rcaRemark: tempApiData.othersConditions,
         },
       });
     }
-    console.log(checkPost.current);
   };
 
   const handelWarningSystems = (e, value) => {
@@ -231,7 +214,7 @@ const HazardiousCondition = () => {
         ...form,
         safetyitems: {
           remarkType: "options",
-          rcaSubType: "safetyitems",
+          rcaSubType: "safetyItems",
           rcaRemark: newData,
         },
       });
@@ -240,7 +223,7 @@ const HazardiousCondition = () => {
         ...form,
         safetyitems: {
           remarkType: "options",
-          rcaSubType: "safetyitems",
+          rcaSubType: "safetyItems",
           rcaRemark: [...form.safetyitems.rcaRemark, value],
         },
       });
@@ -252,15 +235,15 @@ const HazardiousCondition = () => {
       ...form,
       others: {
         remarkType: "remark",
-        rcaSubType: "othersconditions",
+        rcaSubType: "othersConditions",
         rcaRemark: e.target.value,
       },
     });
   };
 
   const handelNext = async (e) => {
-    const { error, isValid } = HazardiousConditionsValidation(form);
-    await setError(error);
+    // const { error, isValid } = HazardiousConditionsValidation(form);
+    // await setError(error);
     let tempData = [];
 
     Object.entries(form).map(async (item, index) => {
@@ -270,9 +253,9 @@ const HazardiousCondition = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
         };
@@ -282,9 +265,9 @@ const HazardiousCondition = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString(),
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "Immediate",
           remarkType: api_data["remarkType"],
           status: "Active",
           pk: updateIds.current[index],
@@ -294,19 +277,16 @@ const HazardiousCondition = () => {
     });
 
     // api call //
-    console.log(tempData);
     let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
-            }/`,
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
             callObjects[key]
           );
           if (res.status == 200) {
-            console.log("request done");
             nextPageLink = res.status;
           }
         } else {
@@ -317,7 +297,6 @@ const HazardiousCondition = () => {
             callObjects[key]
           );
           if (res.status == 201) {
-            console.log("request done");
             nextPageLink = res.status;
           }
         }
@@ -373,7 +352,6 @@ const HazardiousCondition = () => {
       title="Immediate causes - hazardous conditions"
       icon="ion-md-list-box"
     >
-      {/* {console.log(checkPost.current)} */}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -482,9 +460,8 @@ const HazardiousCondition = () => {
               id="filled-basic"
               label="Others"
               multiline
-              required
               error={error.others}
-              value={form.others.rcaRemark}
+              value={form.others.rcaRemark !== "No option selected" ? form.others.rcaRemark : ""}
               helperText={error ? error.others : null}
               rows={3}
               className={classes.formControl}

@@ -125,7 +125,8 @@ const InvestigationOverview = () => {
           temp.push({
             ...workerData, ...{
               "name": value.personName,
-              "department": value.personDepartment
+              "department": value.personDepartment,
+              "workerType": value.personType
             }
           })
         })

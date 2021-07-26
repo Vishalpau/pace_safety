@@ -93,6 +93,8 @@ const ReportingAndNotification = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+
   const [evidanceForm, setEvidanceForm] = useState([
     {
       evidenceCheck: "Yes",
@@ -101,8 +103,8 @@ const ReportingAndNotification = () => {
       evidenceRemark: "",
       evidenceDocument: "",
       status: "Active",
-      createdBy: 1,
-      updatedBy: 1,
+      createdBy: parseInt(userId),
+      updatedBy: parseInt(userId),
       fkIncidentId: localStorage.getItem(""),
     },
   ]);
@@ -171,7 +173,7 @@ const ReportingAndNotification = () => {
     temp.notificationComments =
       form.additionaldetails || incidentsListData.notificationComments;
     temp.updatedAt = moment(new Date()).toISOString();
-    temp.updatedBy = "0";
+    temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
     const res = await api.put(
@@ -217,7 +219,7 @@ const ReportingAndNotification = () => {
           formData.append("evidenceRemark", evidanceForm[i].evidenceRemark);
           formData.append("evidenceCheck", "Yes");
           formData.append("evidenceCategory", "Initial Evidence ");
-          formData.append("createdBy", "1");
+          formData.append("createdBy", parseInt(userId));
           formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
           const evidanceResponse = await api.post(
             `api/v1/incidents/${localStorage.getItem(
@@ -247,7 +249,7 @@ const ReportingAndNotification = () => {
         try {
           const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
-            createdBy: 1,
+            createdBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           });
         } catch (err) {}
@@ -298,7 +300,7 @@ const ReportingAndNotification = () => {
               )}/reports/`,
               {
                 reportTo: name,
-                createdBy: 1,
+                createdBy: parseInt(userId),
                 fkIncidentId: localStorage.getItem("fkincidentId") || id,
               }
             );
@@ -352,8 +354,8 @@ const ReportingAndNotification = () => {
         evidenceRemark: "",
         evidenceDocument: "",
         status: "Active",
-        createdBy: 1,
-        updatedBy: 1,
+        createdBy: parseInt(userId),
+        updatedBy: parseInt(userId),
         fkIncidentId: localStorage.getItem(""),
       },
     ]);

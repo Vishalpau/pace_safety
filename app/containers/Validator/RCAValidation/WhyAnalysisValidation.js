@@ -7,7 +7,7 @@ function WhyAnalysisValidate(data) {
 
   for (let i = 0; i < data.length; i++) {
     if (validator.isEmpty(data[i].why)) {
-      error[`why${[i]}`] = `Fill the why ${[i + 1]}`;
+      error[`why${[i]}`] = `Please enter why ${[i + 1]}`;
       isValid = false;
     }
   }
