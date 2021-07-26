@@ -32,7 +32,7 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 function App() {
   const [userData, setUserData] = useState([]);
   const [companyListData, setCompanyListData] = useState([])
-  try{
+  try {
     let config = {
       method: "get",
       url: `${SELF_API}`,
@@ -61,11 +61,9 @@ function App() {
         grant_type: "authorization_code",
         client_id:
           `${SSO_CLIENT_ID}`,
-          // `${LOCAL_SSO_CLIENT_ID}`,
-
         client_secret:
           `${SSO_CLIENT_SECRET}`,
-          // `${LOCAL_SSO_CLIENT_SECRET}`,
+        // `${LOCAL_SSO_CLIENT_SECRET}`,
         code: code,
       });
 
