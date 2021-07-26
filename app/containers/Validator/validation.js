@@ -4,17 +4,7 @@ function validate(data) {
   let isValid = true;
   const error = {};
   
-  // if (data.fkProjectId == 0) {
-  //   error.fkProjectId = "Please select project name";
-  //   isValid = false;
-  // }
 
-  // if (validator.isEmpty(data.unitname)){
-  //     error.unitname = "this filed is empty"
-  //     isValid = false
-  // }else{
-  //     isValid = true
-  // }
 
   if (validator.isEmpty(data.incidentType)) {
     error.incidentType = "Please select incident type";
@@ -31,38 +21,14 @@ function validate(data) {
     error.incidentOccuredOn = "Please select date and time";
     isValid = false;
   }
-  // if (validator.isEmpty(data.description)){
-  //     error.description = "this filed is empty"
-  //     isValid = false
-  // }else{
-  //     isValid = true
-  // }
-
-  // if (validator.isEmpty(data.immediateactiontaken)){
-  //     error.immediateactiontaken = "this filed is empty"
-  //     isValid = false
-  // }else{
-  //     isValid = true
-  // }
-
-  // if (validator.isEmpty(data.location)){
-  //     error.location = "this filed is empty"
-  //     isValid = false
-  // }else{
-  //     isValid = true
-  // }
+ 
 
   if (validator.isEmpty(data.contractor)) {
     error.contractor = "Please select contractor name";
     isValid = false;
   } 
 
-  // if (validator.isEmpty(data.subcontractor)){
-  //     error.subcontractor = "this filed is empty"
-  //     isValid = false
-  // }else{
-  //     isValid = true
-  // }
+
 
   if (validator.isEmpty(data.isPersonAffected)) {
     error.isPersonAffected = "Please choose person affected";
