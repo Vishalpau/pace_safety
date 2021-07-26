@@ -949,12 +949,7 @@ const WorkerDetails = () => {
 
             {/* first aid */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   First aid treatment
                 </InputLabel>
@@ -974,9 +969,6 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.firstAidTreatment && (
-                  <FormHelperText>{error.firstAidTreatment}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
