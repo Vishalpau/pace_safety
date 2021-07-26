@@ -87,7 +87,7 @@ const ActionTaken = () => {
             <TextField
               variant="outlined"
               id="filled-basic"
-              label="Pre event mitigation"
+              label="Pre - event mitigation"
               value={form.preEventMitigations}
               InputLabelProps={{
                 shrink: true,
@@ -112,12 +112,9 @@ const ActionTaken = () => {
                   error && error.reportingdate ? error.reportingdate : null
                 }
                 format="yyyy/MM/dd"
-                required
+
                 inputVariant="outlined"
                 label="Correction action date completed"
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
               />
             </MuiPickersUtilsProvider>
           </Grid>
