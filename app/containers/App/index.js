@@ -43,20 +43,15 @@ function App() {
         console.log('index', response.data.data)
         localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
         if (response.status !== 200) {
-          // window.location.href = `${LOCAL_LOGIN_URL}`;
-          window.location.href = `${LOGIN_URL}`;
+          window.location.href = `${LOCAL_LOGIN_URL}`;
+
         }
       })
       .catch(function (error) {
-        if (error) {
-          // window.location.href = `${LOCAL_LOGIN_URL}`;
-          window.location.href = `${LOGIN_URL}`;
-        }
+        if (error) { }
 
       });
   } catch (error) {
-    // window.location.href = `https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code`
-
   }
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -66,10 +61,11 @@ function App() {
       let data = JSON.stringify({
         grant_type: "authorization_code",
         client_id:
-          `${SSO_CLIENT_ID}`,
+          // `${SSO_CLIENT_ID}`,
+          `${LOCAL_SSO_CLIENT_ID}`,
         client_secret:
-          `${SSO_CLIENT_SECRET}`,
-        // `${LOCAL_SSO_CLIENT_SECRET}`,
+          // `${SSO_CLIENT_SECRET}`,
+          `${LOCAL_SSO_CLIENT_SECRET}`,
         code: code,
       });
 
@@ -93,8 +89,8 @@ function App() {
     }
     else {
       if (localStorage.getItem('access_token') === null) {
-        window.location.href = `${LOGIN_URL}`
-        // window.location.href = `${LOCAL_LOGIN_URL}`
+        // window.location.href = `${LOGIN_URL}`
+        window.location.href = `${LOCAL_LOGIN_URL}`
       }
     }
   };

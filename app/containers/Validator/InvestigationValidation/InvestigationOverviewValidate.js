@@ -5,22 +5,22 @@ function InvestigationOverviewValidate(data) {
     const error = {};
 
     if (validator.isEmpty(data.constructionManagerName.toString())) {
-        error.constructionManagerName = "This field is empty";
+        error.constructionManagerName = "Please fill construction manager name";
         isValid = false;
     }
 
     if (validator.isEmpty(data.constructionManagerContactNo.toString())) {
-        error.constructionManagerContactNo = "This field is empty";
+        error.constructionManagerContactNo = "Please fill construction manager contact number";
         isValid = false;
     }
 
     if (validator.isEmpty(data.hseSpecialistName.toString())) {
-        error.hseSpecialistName = "This field is empty";
+        error.hseSpecialistName = "Please fill hse specialist contact number";
         isValid = false;
     }
 
     if (validator.isEmpty(data.hseSpecialistContactNo.toString())) {
-        error.hseSpecialistContactNo = "This field is empty";
+        error.hseSpecialistContactNo = "Please fill hse specialist contact number";
         isValid = false;
     }
 

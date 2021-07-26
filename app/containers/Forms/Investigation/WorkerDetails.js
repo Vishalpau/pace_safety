@@ -107,8 +107,8 @@ const WorkerDetails = () => {
     workerType: "",
     department: "",
     workHours: "",
-    shiftTimeStart: "2000-07-15T10:11:11.382000Z",
-    shiftType: "2000-07-15T10:11:11.382000Z",
+    shiftTimeStart: "",
+    shiftType: "",
     occupation: "",
     shiftCycle: "",
     noOfDaysIntoShift: "",
@@ -123,7 +123,7 @@ const WorkerDetails = () => {
     typeOfInjury: "",
     NoOfDaysAway: "",
     medicalResponseTaken: "",
-    treatmentDate: "2000-07-15T10:11:11.382000Z",
+    treatmentDate: "",
     higherMedicalResponder: "",
     injuryStatus: "",
     firstAidTreatment: "",
@@ -137,7 +137,7 @@ const WorkerDetails = () => {
     supervisorTimeInCompany: "",
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
-    dateOfAlcoholDrugTest: "2000-07-15T10:11:11.382000Z",
+    dateOfAlcoholDrugTest: "",
     isWorkerClearedTest: "N/A",
     reasonForTestNotDone: "",
     status: "Active",
@@ -207,7 +207,12 @@ const WorkerDetails = () => {
     data.append("workerType", form.workerType);
     data.append("department", form.department);
     data.append("workHours", form.workHours);
-    data.append("shiftTimeStart", form.shiftTimeStart);
+    if (form.shiftTimeStart != "") {
+      data.append("shiftTimeStart", form.shiftTimeStart);
+    } else {
+      delete form["shiftTimeStart"]
+    }
+
     data.append("shiftType", form.shiftType);
     data.append("occupation", form.occupation);
     data.append("shiftCycle", form.shiftCycle);
@@ -223,7 +228,11 @@ const WorkerDetails = () => {
     data.append("typeOfInjury", form.typeOfInjury);
     data.append("NoOfDaysAway", form.NoOfDaysAway);
     data.append("medicalResponseTaken", form.medicalResponseTaken);
-    data.append("treatmentDate", form.treatmentDate);
+    if (form.treatmentDate != "") {
+      data.append("treatmentDate", form.treatmentDate);
+    } else {
+      delete form["treatmentDate"]
+    }
     data.append("higherMedicalResponder", form.higherMedicalResponder);
     data.append("injuryStatus", form.injuryStatus);
     data.append("firstAidTreatment", form.firstAidTreatment);
@@ -237,7 +246,11 @@ const WorkerDetails = () => {
     data.append("supervisorTimeInCompany", form.supervisorTimeInCompany);
     data.append("supervisorTimeOnProject", form.supervisorTimeOnProject);
     data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
-    data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
+    if (form.dateOfAlcoholDrugTest != "") {
+      data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
+    } else {
+      delete form["treatmentDate"]
+    }
     data.append("isWorkerClearedTest", form.isWorkerClearedTest);
     data.append("reasonForTestNotDone", form.reasonForTestNotDone);
     data.append("status", form.status);
@@ -471,14 +484,11 @@ const WorkerDetails = () => {
             <Grid item md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardTimePicker
-                  disableFuture
                   className={classes.formControl}
+                  helperText={""}
                   value={form.shiftTimeStart}
                   label="Start of shift time"
                   value={form.shiftTimeStart}
-                  // value={
-                  //   form.incidentdate || incidentsListData.incidentOccuredOn
-                  // }
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -1051,7 +1061,7 @@ const WorkerDetails = () => {
             {/* medical issues */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Medical issued ?</FormLabel>
+                <FormLabel component="legend" required>Medical issued?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isMedicationIssued}
@@ -1076,7 +1086,7 @@ const WorkerDetails = () => {
             {/* prescription issue */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Prescription issues ?</FormLabel>
+                <FormLabel component="legend" required>Prescription issues ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isPrescriptionIssued}
@@ -1101,7 +1111,7 @@ const WorkerDetails = () => {
             {/* non prescription */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Non-prescription ?</FormLabel>
+                <FormLabel component="legend" required>Non-prescription ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isNonPrescription}
@@ -1126,7 +1136,7 @@ const WorkerDetails = () => {
             {/* any limitation */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Any limitation ?</FormLabel>
+                <FormLabel component="legend" required>Any limitation ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isAnyLimitation}
@@ -1157,7 +1167,7 @@ const WorkerDetails = () => {
             {/* test taken */}
             <Grid item md={12}>
               <FormControl component="fieldset">
-                <FormLabel component="legend">Was the test taken?</FormLabel>
+                <FormLabel component="legend" required>Was the test taken?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={
@@ -1186,7 +1196,6 @@ const WorkerDetails = () => {
                   >
                     <KeyboardDatePicker
                       error={error.incidentdate}
-                      required
                       className={classes.formControl}
                       value={form.dateOfAlcoholDrugTest}
                       value={form.dateOfAlcoholDrugTest}
@@ -1215,6 +1224,7 @@ const WorkerDetails = () => {
                     <RadioGroup
                       className={classes.inlineRadioGroup}
                       value={form.isWorkerClearedTest}
+                      required
                       onChange={(e) => {
                         setForm({
                           ...form,
