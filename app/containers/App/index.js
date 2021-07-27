@@ -39,19 +39,20 @@ function App() {
       headers: HEADER_AUTH,
     };
     axios(config)
-      .then(function(response) {
-       console.log('index',response.data.data)
-       localStorage.setItem('userDetails',JSON.stringify(response.data.data.results.data))
-       if(response.status !== 200){
-       window.location.href = `${LOCAL_LOGIN_URL}`;
-       }
+      .then(function (response) {
+        console.log('index', response.data.data)
+        localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+        if (response.status !== 200) {
+          window.location.href = `${LOCAL_LOGIN_URL}`;
+
+        }
       })
-      .catch(function(error) {
-        if(error){ }
-        
+      .catch(function (error) {
+        if (error) { }
+
       });
-    }catch(error){
-    }
+  } catch (error) {
+  }
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
@@ -60,10 +61,11 @@ function App() {
       let data = JSON.stringify({
         grant_type: "authorization_code",
         client_id:
-          `${SSO_CLIENT_ID}`,
+          // `${SSO_CLIENT_ID}`,
+          `${LOCAL_SSO_CLIENT_ID}`,
         client_secret:
-          `${SSO_CLIENT_SECRET}`,
-        // `${LOCAL_SSO_CLIENT_SECRET}`,
+          // `${SSO_CLIENT_SECRET}`,
+          `${LOCAL_SSO_CLIENT_SECRET}`,
         code: code,
       });
 
@@ -87,8 +89,8 @@ function App() {
     }
     else {
       if (localStorage.getItem('access_token') === null) {
-        window.location.href = `${LOGIN_URL}`
-        // window.location.href = `${LOCAL_LOGIN_URL}`
+        // window.location.href = `${LOGIN_URL}`
+        window.location.href = `${LOCAL_LOGIN_URL}`
       }
     }
   };

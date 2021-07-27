@@ -22,7 +22,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormLabel from "@material-ui/core/FormLabel";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
-
+import moment from "moment";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
@@ -31,6 +31,7 @@ import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import { RCAOPTION } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import { FormHelperText } from "@material-ui/core";
+import { PassThrough } from "stream";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -70,6 +71,7 @@ const Details = () => {
     new Date("2014-08-18T21:11:54")
   );
   let [hideArray, setHideArray] = useState([]);
+  let investigationData = useRef({})
 
   // get data for put
   const handelUpdateCheck = async () => {
@@ -79,6 +81,17 @@ const Details = () => {
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
     let allApiData = previousData.data.data.results[0];
+    let investigationpreviousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let investigationData = investigationpreviousData.data.data.results[0];
+    if (investigationData != null) {
+      if (investigationData.rcaRecommended != "") {
+        setForm({ ...form, rcaRecommended: investigationData.rcaRecommended })
+      }
+      investigationData.current = {
+        "startData": investigationData.srartDate,
+        "endDate": investigationData.endDate
+      }
+    }
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
@@ -227,7 +240,7 @@ const Details = () => {
                 inputVariant="outlined"
                 className={classes.formControl}
                 ampm={false}
-                value={selectedDate}
+                value={moment(investigationData.current["startData"]).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation start date"
                 disabled
@@ -242,7 +255,7 @@ const Details = () => {
                 inputVariant="outlined"
                 className={classes.formControl}
                 ampm={false}
-                value={selectedDate}
+                value={moment(investigationData.current["endData"]).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation end date"
                 disabled

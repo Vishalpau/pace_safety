@@ -254,16 +254,21 @@ const BasicCauseAndAction = () => {
                         <TableCell className={classes.tableCell}>
                           <ul class={classes.tableUlList}>
                             {value.map((value) => (
-                              <li key={value}>{value}</li>
+                              <Box padding={2}>
+                                <li key={value}>
+                                  <span>{value}</span>
+                                  <ActionTracker
+                                    actionContext="incidents:Pacacuase"
+                                    enitityReferenceId={`${putId.current}:${id.current[index]
+                                      }`}
+                                  />
+                                </li>
+                              </Box>
                             ))}
                           </ul>
                         </TableCell>
                         <TableCell className={classes.tableCell} align="right">
-                          <ActionTracker
-                            actionContext="incidents:Pacacuase"
-                            enitityReferenceId={`${putId.current}:${id.current[index]
-                              }`}
-                          />
+
                         </TableCell>
                       </TableRow>
                     ))}

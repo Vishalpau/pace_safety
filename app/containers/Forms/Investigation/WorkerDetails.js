@@ -40,6 +40,7 @@ import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
+import { object } from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -71,27 +72,28 @@ const useStyles = makeStyles((theme) => ({
 
 const WorkerDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [testTaken, seTesttaken] = useState(false);
+  const [testTaken, setTesttaken] = useState(false);
   const [error, setError] = useState({});
   const workerType = useRef([]);
   const [departmentName, setDepartmentName] = useState([]);
   const [workHours, setworkHours] = useState([]);
-  const shiftType = useRef([]);
-  const occupation = useRef([]);
-  const shiftCycle = useRef([]);
-  const noOfDaysIntoShift = useRef([]);
-  const timeInCompany = useRef([]);
-  const timeOnProject = useRef([]);
-  const timeInIndustry = useRef([]);
-  const primaryBodyPartWithSide = useRef([]);
-  const secondaryBodyPartWithSide = useRef([]);
-  const typeOfInjury = useRef([]);
-  const higherMedicalResponder = useRef([]);
-  const treatmentType = useRef([]);
-  const mechanismOfInjury = useRef([]);
-  const supervisorTimeInIndustry = useRef([]);
-  const supervisorTimeInCompany = useRef([]);
-  const supervisorTimeOnProject = useRef([]);
+  /////////
+  const [shiftType, setShiftType] = useState([]);
+  const [occupation, setOccupation] = useState([]);
+  const [shiftCycle, setShiftCycle] = useState([]);
+  const [noOfDaysIntoShift, setNoOfDaysIntoShift] = useState([]);
+  const [timeInCompany, setTimeInCompany] = useState([]);
+  const [timeOnProject, setTimeOnProject] = useState([]);
+  const [timeInIndustry, setTimeInIndustry] = useState([]);
+  const [primaryBodyPartWithSide, setPrimaryBodyPartWithSide] = useState([]);
+  const [secondaryBodyPartWithSide, setSecondaryBodyPartWithSide] = useState([]);
+  const [typeOfInjury, setTypeOfInjury] = useState([]);
+  const [higherMedicalResponder, setHigherMedicalResponder] = useState([]);
+  const [treatmentType, setTreatmentType] = useState([]);
+  const [mechanismOfInjury, setMechanismOfInjury] = useState([]);
+  const [supervisorTimeInIndustry, setSupervisorTimeInIndustry] = useState([]);
+  const [supervisorTimeInCompany, setSupervisorTimeInCompany] = useState([]);
+  const [supervisorTimeOnProject, setSupervisorTimeOnProject] = useState([]);
 
   const putId = useRef("");
   const investigationId = useRef("");
@@ -106,15 +108,15 @@ const WorkerDetails = () => {
     workerType: "",
     department: "",
     workHours: "",
-    shiftTimeStart: "2000-07-15T10:11:11.382000Z",
-    shiftType: "2000-07-15T10:11:11.382000Z",
+    shiftTimeStart: null,
+    shiftType: "",
     occupation: "",
     shiftCycle: "",
     noOfDaysIntoShift: "",
     timeInCompany: "",
     timeOnProject: "",
     timeInIndustry: "",
-    attachments: "",
+    attachments: null,
     eventLeadingToInjury: "",
     injuryObject: "",
     primaryBodyPartWithSide: "",
@@ -122,7 +124,7 @@ const WorkerDetails = () => {
     typeOfInjury: "",
     NoOfDaysAway: "",
     medicalResponseTaken: "",
-    treatmentDate: "2000-07-15T10:11:11.382000Z",
+    treatmentDate: null,
     higherMedicalResponder: "",
     injuryStatus: "",
     firstAidTreatment: "",
@@ -136,7 +138,7 @@ const WorkerDetails = () => {
     supervisorTimeInCompany: "",
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
-    dateOfAlcoholDrugTest: "2000-07-15T10:11:11.382000Z",
+    dateOfAlcoholDrugTest: null,
     isWorkerClearedTest: "N/A",
     reasonForTestNotDone: "",
     status: "Active",
@@ -153,7 +155,7 @@ const WorkerDetails = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-
+    setError({})
     // getting person affected data
     const url = window.location.pathname.split("/");
     const workerNum = url[url.length - 2];
@@ -181,14 +183,6 @@ const WorkerDetails = () => {
     await setIsLoading(true);
   };
 
-  const handelAddNew = async () => {
-    let worker = JSON.parse(localStorage.getItem("personEffected"));
-
-    await worker.splice(parseInt(workerNumber) + 1, 0, workerData);
-    await localStorage.setItem("personEffected", JSON.stringify(worker));
-    await handleNext();
-  };
-
   const radioDecide = ["Yes", "No", "N/A"];
   const radioYesNo = ["Yes", "No"];
 
@@ -214,149 +208,119 @@ const WorkerDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
-    let data = new FormData();
-    data.append("name", form.name);
-    data.append("workerType", form.workerType);
-    data.append("department", form.department);
-    data.append("workHours", form.workHours);
-    data.append("shiftTimeStart", form.shiftTimeStart);
-    data.append("shiftType", form.shiftType);
-    data.append("occupation", form.occupation);
-    data.append("shiftCycle", form.shiftCycle);
-    data.append("noOfDaysIntoShift", form.noOfDaysIntoShift);
-    data.append("timeInCompany", form.timeInCompany);
-    data.append("timeOnProject", form.timeOnProject);
-    data.append("timeInIndustry", form.timeInIndustry);
-    data.append("attachments", form.attachments);
-    data.append("eventLeadingToInjury", form.eventLeadingToInjury);
-    data.append("injuryObject", form.injuryObject);
-    data.append("primaryBodyPartWithSide", form.primaryBodyPartWithSide);
-    data.append("secondaryBodyPartWithSide", form.secondaryBodyPartWithSide);
-    data.append("typeOfInjury", form.typeOfInjury);
-    data.append("NoOfDaysAway", form.NoOfDaysAway);
-    data.append("medicalResponseTaken", form.medicalResponseTaken);
-    data.append("treatmentDate", form.treatmentDate);
-    data.append("higherMedicalResponder", form.higherMedicalResponder);
-    data.append("injuryStatus", form.injuryStatus);
-    data.append("firstAidTreatment", form.firstAidTreatment);
-    data.append("mechanismOfInjury", form.mechanismOfInjury);
-    data.append("isMedicationIssued", form.isMedicationIssued);
-    data.append("isPrescriptionIssued", form.isPrescriptionIssued);
-    data.append("isNonPrescription", form.isNonPrescription);
-    data.append("isAnyLimitation", form.isAnyLimitation);
-    data.append("supervisorName", form.supervisorName);
-    data.append("supervisorTimeInIndustry", form.supervisorTimeInIndustry);
-    data.append("supervisorTimeInCompany", form.supervisorTimeInCompany);
-    data.append("supervisorTimeOnProject", form.supervisorTimeOnProject);
-    data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
-    data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
-    data.append("isWorkerClearedTest", form.isWorkerClearedTest);
-    data.append("reasonForTestNotDone", form.reasonForTestNotDone);
-    data.append("status", form.status);
-    data.append("createdBy", form.createdBy);
-    data.append("fkInvestigationId", investigationId.current);
-
-    let res = [];
-    if (
-      typeof data.get("attachments") == "string" &&
-      typeof form.id !== "undefined"
-    ) {
-      delete form["attachments"];
-      form["fkInvestigationId"] = investigationId.current;
-      const ress = await api.put(
-        `/api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
-        }/workers/${workerid}/`,
-        form
-      );
-      res.push(ress);
-    } else if (
-      !isNaN(form.id) &&
-      typeof data.get("attachments").name == "string"
-    ) {
-      form["fkInvestigationId"] = investigationId.current;
-      const ress = await api.put(
-        `/api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
-        }/workers/${workerid}/`,
-        data
-      );
-      res.push(ress);
-    } else if (
-      form.attachments == "" ||
-      !form.attachments ||
-      !data.get("attachments")
-    ) {
-      delete form["attachments"];
-      form["fkInvestigationId"] = investigationId.current;
-      const ress = await api.post(
-        `/api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
-        }/workers/`,
-        form
-      );
-      res.push(ress);
-    } else {
-      form["fkInvestigationId"] = investigationId.current;
-      const ress = await api.post(
-        `/api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
-        }/workers/`,
-        data
-      );
-      res.push(ress);
-    }
-
-    if (res[0].status == 201 || res[0].status == 200) {
-      let worker = JSON.parse(localStorage.getItem("personEffected"));
-      form["id"] = res[0].data.data.results.id;
-      if (
-        res[0].data.data.results.attachments !== null &&
-        res[0].data.data.results.attachments !== {}
-      ) {
-        form["attachments"] = res[0].data.data.results.attachments;
+    if (Object.keys(error).length === 0) {
+      let data = new FormData();
+      data.append("name", form.name);
+      data.append("workerType", form.workerType);
+      data.append("department", form.department);
+      data.append("workHours", form.workHours);
+      if (form.shiftTimeStart != null) {
+        data.append("shiftTimeStart", form.shiftTimeStart);
+      } else if (form.shiftTimeStart == null) {
+        delete form["shiftTimeStart"]
       }
+      data.append("shiftType", form.shiftType);
+      data.append("occupation", form.occupation);
+      data.append("shiftCycle", form.shiftCycle);
+      data.append("noOfDaysIntoShift", form.noOfDaysIntoShift);
+      data.append("timeInCompany", form.timeInCompany);
+      data.append("timeOnProject", form.timeOnProject);
+      data.append("timeInIndustry", form.timeInIndustry);
+      if (form.attachments !== null && typeof form.attachments !== "undefined") {
+        if (typeof form.attachments !== "string") {
+          data.append("attachments", form.attachments);
+        }
+      } else if (form.attachments == null) {
+        console.log("here2")
+        delete form["attachments"]
+      }
+      data.append("eventLeadingToInjury", form.eventLeadingToInjury);
+      data.append("injuryObject", form.injuryObject);
+      data.append("primaryBodyPartWithSide", form.primaryBodyPartWithSide);
+      data.append("secondaryBodyPartWithSide", form.secondaryBodyPartWithSide);
+      data.append("typeOfInjury", form.typeOfInjury);
+      data.append("NoOfDaysAway", form.NoOfDaysAway);
+      data.append("medicalResponseTaken", form.medicalResponseTaken);
 
-      worker[workerNumber] = form;
-      await localStorage.setItem("personEffected", JSON.stringify(worker));
+      if (form.treatmentDate != null) {
+        data.append("treatmentDate", form.treatmentDate);
+      } else if (form.shiftTimeStart == null) {
+        delete form["treatmentDate"]
+      }
+      data.append("higherMedicalResponder", form.higherMedicalResponder);
+      data.append("injuryStatus", form.injuryStatus);
+      data.append("firstAidTreatment", form.firstAidTreatment);
+      data.append("mechanismOfInjury", form.mechanismOfInjury);
+      data.append("isMedicationIssued", form.isMedicationIssued);
+      data.append("isPrescriptionIssued", form.isPrescriptionIssued);
+      data.append("isNonPrescription", form.isNonPrescription);
+      data.append("isAnyLimitation", form.isAnyLimitation);
+      data.append("supervisorName", form.supervisorName);
+      data.append("supervisorTimeInIndustry", form.supervisorTimeInIndustry);
+      data.append("supervisorTimeInCompany", form.supervisorTimeInCompany);
+      data.append("supervisorTimeOnProject", form.supervisorTimeOnProject);
+      data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
+      if (form.dateOfAlcoholDrugTest != null) {
+        data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
+      } else if (form.shiftTimeStart == null) {
+        delete form["treatmentDate"]
+      }
+      data.append("isWorkerClearedTest", form.isWorkerClearedTest);
+      data.append("reasonForTestNotDone", form.reasonForTestNotDone);
+      data.append("status", form.status);
+      data.append("createdBy", form.createdBy);
+      data.append("fkInvestigationId", investigationId.current);
 
-      if (typeof worker[parseInt(workerNumber) + 1] !== "undefined") {
-        await history.push(
-          `/app/incident-management/registration/investigation/worker-details/${parseInt(
-            workerNumber
-          ) + 1}/${localStorage.getItem("fkincidentId")}`
-        );
+      let res = [];
+      if (!isNaN(form.id)) {
+        form["fkInvestigationId"] = investigationId.current;
+        const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
+        res.push(ress);
       } else {
-        await history.push(
-          `/app/incident-management/registration/investigation/event-details/`
-        );
+        form["fkInvestigationId"] = investigationId.current;
+        const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
+        res.push(ress);
       }
+
+      if (res[0].status == 201 || res[0].status == 200) {
+        let worker = JSON.parse(localStorage.getItem("personEffected"));
+        form["id"] = res[0].data.data.results.id;
+        if (
+          res[0].data.data.results.attachments !== null &&
+          res[0].data.data.results.attachments !== {}
+        ) {
+          form["attachments"] = res[0].data.data.results.attachments;
+        }
+
+        worker[workerNumber] = form;
+        await localStorage.setItem("personEffected", JSON.stringify(worker));
+
+        if (typeof worker[parseInt(workerNumber) + 1] !== "undefined") {
+          await history.push(
+            `/app/incident-management/registration/investigation/worker-details/${parseInt(
+              workerNumber
+            ) + 1}/${localStorage.getItem("fkincidentId")}`
+          );
+        } else {
+          await history.push(
+            `/app/incident-management/registration/investigation/event-details/`
+          );
+        }
+      }
+
+      await handelUpdateCheck();
     }
-    await handelUpdateCheck();
   };
 
-  const PickList = async () => {
-    await handelUpdateCheck();
-    workerType.current = await PickListData(71);
-    setDepartmentName(await PickListData(10));
-    setworkHours(await PickListData(70));
-    shiftType.current = await PickListData(47);
-    occupation.current = await PickListData(48);
-    shiftCycle.current = await PickListData(49);
-    noOfDaysIntoShift.current = await PickListData(50);
-    timeInCompany.current = await PickListData(51);
-    timeOnProject.current = await PickListData(52);
-    timeInIndustry.current = await PickListData(53);
-    primaryBodyPartWithSide.current = await PickListData(57);
-    secondaryBodyPartWithSide.current = await PickListData(58);
-    typeOfInjury.current = await PickListData(59);
-    higherMedicalResponder.current = await PickListData(60);
-    treatmentType.current = await PickListData(61);
-    mechanismOfInjury.current = await PickListData(62);
-    supervisorTimeInIndustry.current = await PickListData(54);
-    supervisorTimeOnProject.current = await PickListData(55);
-    supervisorTimeInCompany.current = await PickListData(56);
-    await setIsLoading(true);
+  const handelAddNew = async () => {
+    const { error, isValid } = WorkerDetailValidator(form);
+    await setError(error);
+    if (form.name !== "" && form.workerType !== "" && form.department !== "") {
+      let worker = JSON.parse(localStorage.getItem("personEffected"));
+      await worker.splice(parseInt(workerNumber) + 1, 0, workerData);
+      await localStorage.setItem("personEffected", JSON.stringify(worker));
+      await handleNext();
+    }
   };
 
   const handelPrevious = async () => {
@@ -380,8 +344,7 @@ const WorkerDetails = () => {
     if (!isNaN(worker_removed[workerNumber].id)) {
       let deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${
-          deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
@@ -396,9 +359,21 @@ const WorkerDetails = () => {
           workerNumber - 1
         )}/${localStorage.getItem("fkincidentId")}`
       );
-    } else {
+    } else if (typeof worker_removed[parseInt(workerNumber + 1)] !== "undefined") {
       await history.push(
-        `/app/incident-management/registration/investigation/severity-consequences/`
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(
+          workerNumber + 1
+        )}/${localStorage.getItem("fkincidentId")}`
+      );
+    }
+    else if (typeof worker_removed[parseInt(0)] !== "undefined") {
+      await history.push(
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(0)}/${localStorage.getItem("fkincidentId")}`
+      );
+    }
+    else {
+      await history.push(
+        `/app/incident-management/registration/investigation/event-details/`
       );
     }
     await handelUpdateCheck();
@@ -411,6 +386,30 @@ const WorkerDetails = () => {
       )}/${localStorage.getItem("fkincidentId")}`
     );
     await handelUpdateCheck();
+  };
+
+  const PickList = async () => {
+    await handelUpdateCheck();
+    workerType.current = await PickListData(71);
+    setDepartmentName(await PickListData(10));
+    setworkHours(await PickListData(70));
+    setShiftType(await PickListData(47));
+    setOccupation(await PickListData(48));
+    setShiftCycle(await PickListData(49));
+    setNoOfDaysIntoShift(await PickListData(50));
+    setTimeInCompany(await PickListData(51));
+    setTimeOnProject(await PickListData(52));
+    setTimeInIndustry(await PickListData(53));
+    setPrimaryBodyPartWithSide(await PickListData(57));
+    setSecondaryBodyPartWithSide(await PickListData(58));
+    setTypeOfInjury(await PickListData(59));
+    setHigherMedicalResponder(await PickListData(60));
+    setTreatmentType(await PickListData(61));
+    setMechanismOfInjury(await PickListData(62));
+    setSupervisorTimeInIndustry(await PickListData(54));
+    setSupervisorTimeOnProject(await PickListData(55));
+    setSupervisorTimeInCompany(await PickListData(56));
+    await setIsLoading(true);
   };
 
   useEffect(() => {
@@ -513,7 +512,6 @@ const WorkerDetails = () => {
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
-                required
                 className={classes.formControl}
               >
                 <InputLabel id="unit-name-label">
@@ -542,14 +540,11 @@ const WorkerDetails = () => {
             <Grid item md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardTimePicker
-                  disableFuture
                   className={classes.formControl}
+                  helperText={""}
                   value={form.shiftTimeStart}
                   label="Start of shift time"
                   value={form.shiftTimeStart}
-                  // value={
-                  //   form.incidentdate || incidentsListData.incidentOccuredOn
-                  // }
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -579,7 +574,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {shiftType.current.map((value) => (
+                  {shiftType.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -602,7 +597,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {occupation.current.map((value) => (
+                  {occupation.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -625,7 +620,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {shiftCycle.current.map((value) => (
+                  {shiftCycle.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -650,7 +645,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {noOfDaysIntoShift.current.map((value) => (
+                  {noOfDaysIntoShift.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -673,7 +668,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {timeInCompany.current.map((value) => (
+                  {timeInCompany.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -696,7 +691,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {timeOnProject.current.map((value) => (
+                  {timeOnProject.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -719,7 +714,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {timeInIndustry.current.map((value) => (
+                  {timeInIndustry.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -785,7 +780,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {primaryBodyPartWithSide.current.map((value) => (
+                  {primaryBodyPartWithSide.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -810,7 +805,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {secondaryBodyPartWithSide.current.map((value) => (
+                  {secondaryBodyPartWithSide.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -821,7 +816,6 @@ const WorkerDetails = () => {
             <Grid item md={6}>
               <FormControl
                 variant="outlined"
-                required
                 error={error && error.actualSeverityLevel}
                 className={classes.formControl}
               >
@@ -840,7 +834,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {typeOfInjury.current.map((value) => (
+                  {typeOfInjury.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -872,7 +866,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Medical Response Taken"
+                label="Medical response taken"
                 value={form.medicalResponseTaken}
                 error={error && error.medicalResponseTaken}
                 className={classes.formControl}
@@ -891,7 +885,7 @@ const WorkerDetails = () => {
                 <KeyboardDatePicker
                   className={classes.formControl}
                   label="Treatment Date"
-                  value={form.treatmentDate}
+                  value={!form.treatmentDate ? null : form.treatmentDate}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -923,7 +917,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {higherMedicalResponder.current.map((value) => (
+                  {higherMedicalResponder.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -935,7 +929,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Status Update"
+                label="Status update"
                 value={form.injuryStatus}
                 className={classes.formControl}
                 onChange={(e) => {
@@ -949,7 +943,11 @@ const WorkerDetails = () => {
 
             {/* first aid */}
             <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
+              <FormControl
+                variant="outlined"
+                error={error && error.actualSeverityLevel}
+                className={classes.formControl}
+              >
                 <InputLabel id="unit-name-label">
                   First aid treatment
                 </InputLabel>
@@ -965,7 +963,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {treatmentType.current.map((value) => (
+                  {treatmentType.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -990,7 +988,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {mechanismOfInjury.current.map((value) => (
+                  {mechanismOfInjury.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1005,8 +1003,8 @@ const WorkerDetails = () => {
 
             {/* medical issues */}
             <Grid item md={6}>
-              <FormControl component="fieldset" required>
-                <FormLabel component="legend">Medical issued ?</FormLabel>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" required>Medical issued?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isMedicationIssued}
@@ -1030,8 +1028,8 @@ const WorkerDetails = () => {
 
             {/* prescription issue */}
             <Grid item md={6}>
-              <FormControl component="fieldset" required>
-                <FormLabel component="legend">Prescription issues ?</FormLabel>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" required>Prescription issues ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isPrescriptionIssued}
@@ -1055,8 +1053,8 @@ const WorkerDetails = () => {
 
             {/* non prescription */}
             <Grid item md={6}>
-              <FormControl component="fieldset" required>
-                <FormLabel component="legend">Non-prescription ?</FormLabel>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" required>Non-prescription ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isNonPrescription}
@@ -1080,8 +1078,8 @@ const WorkerDetails = () => {
 
             {/* any limitation */}
             <Grid item md={6}>
-              <FormControl component="fieldset" required>
-                <FormLabel component="legend">Any limitation ?</FormLabel>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" required>Any limitation ?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isAnyLimitation}
@@ -1112,7 +1110,7 @@ const WorkerDetails = () => {
             {/* test taken */}
             <Grid item md={12}>
               <FormControl component="fieldset" required>
-                <FormLabel component="legend">Was the test taken?</FormLabel>
+                <FormLabel component="legend" >Was the test taken?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={
@@ -1132,7 +1130,7 @@ const WorkerDetails = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            {testTaken ? (
+            {form.isAlcoholDrugTestTaken == "Yes" ? (
               <>
                 <Grid item md={6}>
                   <MuiPickersUtilsProvider
@@ -1141,7 +1139,7 @@ const WorkerDetails = () => {
                   >
                     <KeyboardDatePicker
                       className={classes.formControl}
-                      value={form.dateOfAlcoholDrugTest}
+                      value={form.dateOfAlcoholDrugTest != null ? form.dateOfAlcoholDrugTest : null}
                       label="Date of Test"
                       onChange={(e) => {
                         setForm({
@@ -1151,6 +1149,7 @@ const WorkerDetails = () => {
                       }}
                       format="yyyy/MM/dd"
                       inputVariant="outlined"
+                      disableFuture="true"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -1158,12 +1157,13 @@ const WorkerDetails = () => {
                 <Grid item md={6}>
                   {/* <p>Was worker cleared to work following A&D testing?</p> */}
                   <FormControl component="fieldset">
-                    <FormLabel component="legend">
+                    <FormLabel component="legend" required>
                       Was worker cleared to work following a&d testing?
                     </FormLabel>
                     <RadioGroup
                       className={classes.inlineRadioGroup}
                       value={form.isWorkerClearedTest}
+                      required
                       onChange={(e) => {
                         setForm({
                           ...form,
@@ -1243,7 +1243,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {supervisorTimeInIndustry.current.map((value) => (
+                  {supervisorTimeInIndustry.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1268,7 +1268,7 @@ const WorkerDetails = () => {
                   }}
                   value={form.supervisorTimeInCompany}
                 >
-                  {supervisorTimeInCompany.current.map((value) => (
+                  {supervisorTimeInCompany.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1293,7 +1293,7 @@ const WorkerDetails = () => {
                   }}
                   value={form.supervisorTimeOnProject}
                 >
-                  {supervisorTimeOnProject.current.map((value) => (
+                  {supervisorTimeOnProject.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1306,27 +1306,32 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
-            <Grid item md={4}>
-              <input
-                type="file"
-                className={classes.fullWidth}
-                name="file"
-                onChange={(e) => {
-                  handleFile(e);
-                }}
-              />
-            </Grid>
-            <Grid item md={6}>
-              {form.attachments != "" && typeof form.attachments == "string" ? (
-                <a target="_blank" href={form.attachments}>
-                  Image
-                  <ImageIcon />
-                </a>
-              ) : (
-                <p />
-              )}
-            </Grid>
+            {typeof form.attachments == "string" ?
+              <>
 
+                <Grid item md={6}>
+                  {form.attachments != "" && typeof form.attachments == "string" ? (
+                    <a target="_blank" href={form.attachments}>
+                      Image
+                      <ImageIcon />
+                    </a>
+                  ) : (
+                    <p />
+                  )}
+                </Grid>
+              </>
+              :
+              <Grid item md={4}>
+                <input
+                  type="file"
+                  className={classes.fullWidth}
+                  name="file"
+                  onChange={(e) => {
+                    handleFile(e);
+                  }}
+                />
+              </Grid>
+            }
             {localWorkerData.length > 1 ? (
               <Grid item md={12}>
                 <Button onClick={(e) => handelRemove()}>
@@ -1355,7 +1360,6 @@ const WorkerDetails = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-                // href="/app/incident-management/registration/investigation/property-impact-details/"
               >
                 Next
               </Button>
