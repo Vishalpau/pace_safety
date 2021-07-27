@@ -77,22 +77,23 @@ const WorkerDetails = () => {
   const workerType = useRef([]);
   const [departmentName, setDepartmentName] = useState([]);
   const [workHours, setworkHours] = useState([]);
-  const shiftType = useRef([]);
-  const occupation = useRef([]);
-  const shiftCycle = useRef([]);
-  const noOfDaysIntoShift = useRef([]);
-  const timeInCompany = useRef([]);
-  const timeOnProject = useRef([]);
-  const timeInIndustry = useRef([]);
-  const primaryBodyPartWithSide = useRef([]);
-  const secondaryBodyPartWithSide = useRef([]);
-  const typeOfInjury = useRef([]);
-  const higherMedicalResponder = useRef([]);
-  const treatmentType = useRef([]);
-  const mechanismOfInjury = useRef([]);
-  const supervisorTimeInIndustry = useRef([]);
-  const supervisorTimeInCompany = useRef([]);
-  const supervisorTimeOnProject = useRef([]);
+  /////////
+  const [shiftType, setShiftType] = useState([]);
+  const [occupation, setOccupation] = useState([]);
+  const [shiftCycle, setShiftCycle] = useState([]);
+  const [noOfDaysIntoShift, setNoOfDaysIntoShift] = useState([]);
+  const [timeInCompany, setTimeInCompany] = useState([]);
+  const [timeOnProject, setTimeOnProject] = useState([]);
+  const [timeInIndustry, setTimeInIndustry] = useState([]);
+  const [primaryBodyPartWithSide, setPrimaryBodyPartWithSide] = useState([]);
+  const [secondaryBodyPartWithSide, setSecondaryBodyPartWithSide] = useState([]);
+  const [typeOfInjury, setTypeOfInjury] = useState([]);
+  const [higherMedicalResponder, setHigherMedicalResponder] = useState([]);
+  const [treatmentType, setTreatmentType] = useState([]);
+  const [mechanismOfInjury, setMechanismOfInjury] = useState([]);
+  const [supervisorTimeInIndustry, setSupervisorTimeInIndustry] = useState([]);
+  const [supervisorTimeInCompany, setSupervisorTimeInCompany] = useState([]);
+  const [supervisorTimeOnProject, setSupervisorTimeOnProject] = useState([]);
 
   const putId = useRef("");
   const investigationId = useRef("");
@@ -322,22 +323,23 @@ const WorkerDetails = () => {
     workerType.current = await PickListData(71);
     setDepartmentName(await PickListData(10));
     setworkHours(await PickListData(70));
-    shiftType.current = await PickListData(47);
-    occupation.current = await PickListData(48);
-    shiftCycle.current = await PickListData(49);
-    noOfDaysIntoShift.current = await PickListData(50);
-    timeInCompany.current = await PickListData(51);
-    timeOnProject.current = await PickListData(52);
-    timeInIndustry.current = await PickListData(53);
-    primaryBodyPartWithSide.current = await PickListData(57);
-    secondaryBodyPartWithSide.current = await PickListData(58);
-    typeOfInjury.current = await PickListData(59);
-    higherMedicalResponder.current = await PickListData(60);
-    treatmentType.current = await PickListData(61);
-    mechanismOfInjury.current = await PickListData(62);
-    supervisorTimeInIndustry.current = await PickListData(54);
-    supervisorTimeOnProject.current = await PickListData(55);
-    supervisorTimeInCompany.current = await PickListData(56);
+    setShiftType(await PickListData(47));
+    setOccupation(await PickListData(48));
+    setShiftCycle(await PickListData(49));
+    setNoOfDaysIntoShift(await PickListData(50));
+    setTimeInCompany(await PickListData(51));
+    setTimeOnProject(await PickListData(52));
+    setTimeInIndustry(await PickListData(53));
+    setPrimaryBodyPartWithSide(await PickListData(57));
+    setSecondaryBodyPartWithSide(await PickListData(58));
+    setTypeOfInjury(await PickListData(59));
+    setHigherMedicalResponder(await PickListData(60));
+    setTreatmentType(await PickListData(61));
+    setMechanismOfInjury(await PickListData(62));
+    setSupervisorTimeInIndustry(await PickListData(54));
+    setSupervisorTimeOnProject(await PickListData(55));
+    setSupervisorTimeInCompany(await PickListData(56));
+
     await setIsLoading(true);
   };
 
@@ -556,7 +558,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {shiftType.current.map((value) => (
+                  {shiftType.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -579,7 +581,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {occupation.current.map((value) => (
+                  {occupation.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -602,7 +604,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {shiftCycle.current.map((value) => (
+                  {shiftCycle.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -627,7 +629,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {noOfDaysIntoShift.current.map((value) => (
+                  {noOfDaysIntoShift.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -650,7 +652,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {timeInCompany.current.map((value) => (
+                  {timeInCompany.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -673,7 +675,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {timeOnProject.current.map((value) => (
+                  {timeOnProject.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -696,7 +698,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {timeInIndustry.current.map((value) => (
+                  {timeInIndustry.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -762,7 +764,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {primaryBodyPartWithSide.current.map((value) => (
+                  {primaryBodyPartWithSide.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -787,7 +789,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {secondaryBodyPartWithSide.current.map((value) => (
+                  {secondaryBodyPartWithSide.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -816,7 +818,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {typeOfInjury.current.map((value) => (
+                  {typeOfInjury.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -848,7 +850,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Medical Response Taken"
+                label="Medical response taken"
                 value={form.medicalResponseTaken}
                 error={error && error.medicalResponseTaken}
                 className={classes.formControl}
@@ -899,7 +901,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {higherMedicalResponder.current.map((value) => (
+                  {higherMedicalResponder.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -911,7 +913,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Status Update"
+                label="Status update"
                 value={form.injuryStatus}
                 className={classes.formControl}
                 onChange={(e) => {
@@ -945,7 +947,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {treatmentType.current.map((value) => (
+                  {treatmentType.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -973,7 +975,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {mechanismOfInjury.current.map((value) => (
+                  {mechanismOfInjury.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1227,7 +1229,7 @@ const WorkerDetails = () => {
                     });
                   }}
                 >
-                  {supervisorTimeInIndustry.current.map((value) => (
+                  {supervisorTimeInIndustry.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1252,7 +1254,7 @@ const WorkerDetails = () => {
                   }}
                   value={form.supervisorTimeInCompany}
                 >
-                  {supervisorTimeInCompany.current.map((value) => (
+                  {supervisorTimeInCompany.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
@@ -1277,7 +1279,7 @@ const WorkerDetails = () => {
                   }}
                   value={form.supervisorTimeOnProject}
                 >
-                  {supervisorTimeOnProject.current.map((value) => (
+                  {supervisorTimeOnProject.map((value) => (
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
