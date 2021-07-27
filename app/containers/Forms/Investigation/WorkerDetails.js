@@ -967,9 +967,6 @@ const WorkerDetails = () => {
                     <MenuItem value={value}>{value}</MenuItem>
                   ))}
                 </Select>
-                {error && error.firstAidTreatment && (
-                  <FormHelperText>{error.firstAidTreatment}</FormHelperText>
-                )}
               </FormControl>
             </Grid>
 
