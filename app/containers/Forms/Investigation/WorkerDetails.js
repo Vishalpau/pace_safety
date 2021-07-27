@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 
 const WorkerDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [testTaken, seTesttaken] = useState(false);
+  const [testTaken, setTesttaken] = useState(false);
   const [error, setError] = useState({});
   const workerType = useRef([]);
   const [departmentName, setDepartmentName] = useState([]);
@@ -155,7 +155,7 @@ const WorkerDetails = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-
+    setError({})
     // getting person affected data
     const url = window.location.pathname.split("/");
     const workerNum = url[url.length - 2];
@@ -208,139 +208,119 @@ const WorkerDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
-    let data = new FormData();
-    data.append("name", form.name);
-    data.append("workerType", form.workerType);
-    data.append("department", form.department);
-    data.append("workHours", form.workHours);
-    if (form.shiftTimeStart != null) {
-      data.append("shiftTimeStart", form.shiftTimeStart);
-    } else if (form.shiftTimeStart == null) {
-      delete form["shiftTimeStart"]
-    }
-    data.append("shiftType", form.shiftType);
-    data.append("occupation", form.occupation);
-    data.append("shiftCycle", form.shiftCycle);
-    data.append("noOfDaysIntoShift", form.noOfDaysIntoShift);
-    data.append("timeInCompany", form.timeInCompany);
-    data.append("timeOnProject", form.timeOnProject);
-    data.append("timeInIndustry", form.timeInIndustry);
-    if (form.attachments !== null && typeof form.attachments !== "undefined") {
-      if (typeof form.attachments !== "string") {
-        data.append("attachments", form.attachments);
+    if (Object.keys(error).length === 0) {
+      let data = new FormData();
+      data.append("name", form.name);
+      data.append("workerType", form.workerType);
+      data.append("department", form.department);
+      data.append("workHours", form.workHours);
+      if (form.shiftTimeStart != null) {
+        data.append("shiftTimeStart", form.shiftTimeStart);
+      } else if (form.shiftTimeStart == null) {
+        delete form["shiftTimeStart"]
       }
-    } else if (form.attachments == null) {
-      console.log("here2")
-      delete form["attachments"]
-    }
-    data.append("eventLeadingToInjury", form.eventLeadingToInjury);
-    data.append("injuryObject", form.injuryObject);
-    data.append("primaryBodyPartWithSide", form.primaryBodyPartWithSide);
-    data.append("secondaryBodyPartWithSide", form.secondaryBodyPartWithSide);
-    data.append("typeOfInjury", form.typeOfInjury);
-    data.append("NoOfDaysAway", form.NoOfDaysAway);
-    data.append("medicalResponseTaken", form.medicalResponseTaken);
-
-    if (form.treatmentDate != null) {
-      data.append("treatmentDate", form.treatmentDate);
-    } else if (form.shiftTimeStart == null) {
-      delete form["treatmentDate"]
-    }
-    data.append("higherMedicalResponder", form.higherMedicalResponder);
-    data.append("injuryStatus", form.injuryStatus);
-    data.append("firstAidTreatment", form.firstAidTreatment);
-    data.append("mechanismOfInjury", form.mechanismOfInjury);
-    data.append("isMedicationIssued", form.isMedicationIssued);
-    data.append("isPrescriptionIssued", form.isPrescriptionIssued);
-    data.append("isNonPrescription", form.isNonPrescription);
-    data.append("isAnyLimitation", form.isAnyLimitation);
-    data.append("supervisorName", form.supervisorName);
-    data.append("supervisorTimeInIndustry", form.supervisorTimeInIndustry);
-    data.append("supervisorTimeInCompany", form.supervisorTimeInCompany);
-    data.append("supervisorTimeOnProject", form.supervisorTimeOnProject);
-    data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
-    if (form.dateOfAlcoholDrugTest != null) {
-      data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
-    } else if (form.shiftTimeStart == null) {
-      delete form["treatmentDate"]
-    }
-    data.append("isWorkerClearedTest", form.isWorkerClearedTest);
-    data.append("reasonForTestNotDone", form.reasonForTestNotDone);
-    data.append("status", form.status);
-    data.append("createdBy", form.createdBy);
-    data.append("fkInvestigationId", investigationId.current);
-
-    let res = [];
-    if (!isNaN(form.id)) {
-      form["fkInvestigationId"] = investigationId.current;
-      const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
-      res.push(ress);
-    } else {
-      form["fkInvestigationId"] = investigationId.current;
-      const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
-      res.push(ress);
-    }
-
-    if (res[0].status == 201 || res[0].status == 200) {
-      let worker = JSON.parse(localStorage.getItem("personEffected"));
-      form["id"] = res[0].data.data.results.id;
-      if (
-        res[0].data.data.results.attachments !== null &&
-        res[0].data.data.results.attachments !== {}
-      ) {
-        form["attachments"] = res[0].data.data.results.attachments;
+      data.append("shiftType", form.shiftType);
+      data.append("occupation", form.occupation);
+      data.append("shiftCycle", form.shiftCycle);
+      data.append("noOfDaysIntoShift", form.noOfDaysIntoShift);
+      data.append("timeInCompany", form.timeInCompany);
+      data.append("timeOnProject", form.timeOnProject);
+      data.append("timeInIndustry", form.timeInIndustry);
+      if (form.attachments !== null && typeof form.attachments !== "undefined") {
+        if (typeof form.attachments !== "string") {
+          data.append("attachments", form.attachments);
+        }
+      } else if (form.attachments == null) {
+        console.log("here2")
+        delete form["attachments"]
       }
+      data.append("eventLeadingToInjury", form.eventLeadingToInjury);
+      data.append("injuryObject", form.injuryObject);
+      data.append("primaryBodyPartWithSide", form.primaryBodyPartWithSide);
+      data.append("secondaryBodyPartWithSide", form.secondaryBodyPartWithSide);
+      data.append("typeOfInjury", form.typeOfInjury);
+      data.append("NoOfDaysAway", form.NoOfDaysAway);
+      data.append("medicalResponseTaken", form.medicalResponseTaken);
 
-      worker[workerNumber] = form;
-      await localStorage.setItem("personEffected", JSON.stringify(worker));
+      if (form.treatmentDate != null) {
+        data.append("treatmentDate", form.treatmentDate);
+      } else if (form.shiftTimeStart == null) {
+        delete form["treatmentDate"]
+      }
+      data.append("higherMedicalResponder", form.higherMedicalResponder);
+      data.append("injuryStatus", form.injuryStatus);
+      data.append("firstAidTreatment", form.firstAidTreatment);
+      data.append("mechanismOfInjury", form.mechanismOfInjury);
+      data.append("isMedicationIssued", form.isMedicationIssued);
+      data.append("isPrescriptionIssued", form.isPrescriptionIssued);
+      data.append("isNonPrescription", form.isNonPrescription);
+      data.append("isAnyLimitation", form.isAnyLimitation);
+      data.append("supervisorName", form.supervisorName);
+      data.append("supervisorTimeInIndustry", form.supervisorTimeInIndustry);
+      data.append("supervisorTimeInCompany", form.supervisorTimeInCompany);
+      data.append("supervisorTimeOnProject", form.supervisorTimeOnProject);
+      data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
+      if (form.dateOfAlcoholDrugTest != null) {
+        data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
+      } else if (form.shiftTimeStart == null) {
+        delete form["treatmentDate"]
+      }
+      data.append("isWorkerClearedTest", form.isWorkerClearedTest);
+      data.append("reasonForTestNotDone", form.reasonForTestNotDone);
+      data.append("status", form.status);
+      data.append("createdBy", form.createdBy);
+      data.append("fkInvestigationId", investigationId.current);
 
-      if (typeof worker[parseInt(workerNumber) + 1] !== "undefined") {
-        await history.push(
-          `/app/incident-management/registration/investigation/worker-details/${parseInt(
-            workerNumber
-          ) + 1}/${localStorage.getItem("fkincidentId")}`
-        );
+      let res = [];
+      if (!isNaN(form.id)) {
+        form["fkInvestigationId"] = investigationId.current;
+        const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
+        res.push(ress);
       } else {
-        await history.push(
-          `/app/incident-management/registration/investigation/event-details/`
-        );
+        form["fkInvestigationId"] = investigationId.current;
+        const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
+        res.push(ress);
       }
+
+      if (res[0].status == 201 || res[0].status == 200) {
+        let worker = JSON.parse(localStorage.getItem("personEffected"));
+        form["id"] = res[0].data.data.results.id;
+        if (
+          res[0].data.data.results.attachments !== null &&
+          res[0].data.data.results.attachments !== {}
+        ) {
+          form["attachments"] = res[0].data.data.results.attachments;
+        }
+
+        worker[workerNumber] = form;
+        await localStorage.setItem("personEffected", JSON.stringify(worker));
+
+        if (typeof worker[parseInt(workerNumber) + 1] !== "undefined") {
+          await history.push(
+            `/app/incident-management/registration/investigation/worker-details/${parseInt(
+              workerNumber
+            ) + 1}/${localStorage.getItem("fkincidentId")}`
+          );
+        } else {
+          await history.push(
+            `/app/incident-management/registration/investigation/event-details/`
+          );
+        }
+      }
+
+      await handelUpdateCheck();
     }
-    await handelUpdateCheck();
   };
 
   const handelAddNew = async () => {
+    const { error, isValid } = WorkerDetailValidator(form);
+    await setError(error);
     if (form.name !== "" && form.workerType !== "" && form.department !== "") {
       let worker = JSON.parse(localStorage.getItem("personEffected"));
       await worker.splice(parseInt(workerNumber) + 1, 0, workerData);
       await localStorage.setItem("personEffected", JSON.stringify(worker));
       await handleNext();
     }
-  };
-
-  const PickList = async () => {
-    await handelUpdateCheck();
-    workerType.current = await PickListData(71);
-    setDepartmentName(await PickListData(10));
-    setworkHours(await PickListData(70));
-    setShiftType(await PickListData(47));
-    setOccupation(await PickListData(48));
-    setShiftCycle(await PickListData(49));
-    setNoOfDaysIntoShift(await PickListData(50));
-    setTimeInCompany(await PickListData(51));
-    setTimeOnProject(await PickListData(52));
-    setTimeInIndustry(await PickListData(53));
-    setPrimaryBodyPartWithSide(await PickListData(57));
-    setSecondaryBodyPartWithSide(await PickListData(58));
-    setTypeOfInjury(await PickListData(59));
-    setHigherMedicalResponder(await PickListData(60));
-    setTreatmentType(await PickListData(61));
-    setMechanismOfInjury(await PickListData(62));
-    setSupervisorTimeInIndustry(await PickListData(54));
-    setSupervisorTimeOnProject(await PickListData(55));
-    setSupervisorTimeInCompany(await PickListData(56));
-
-    await setIsLoading(true);
   };
 
   const handelPrevious = async () => {
@@ -379,9 +359,21 @@ const WorkerDetails = () => {
           workerNumber - 1
         )}/${localStorage.getItem("fkincidentId")}`
       );
-    } else {
+    } else if (typeof worker_removed[parseInt(workerNumber + 1)] !== "undefined") {
       await history.push(
-        `/app/incident-management/registration/investigation/severity-consequences/`
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(
+          workerNumber + 1
+        )}/${localStorage.getItem("fkincidentId")}`
+      );
+    }
+    else if (typeof worker_removed[parseInt(0)] !== "undefined") {
+      await history.push(
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(0)}/${localStorage.getItem("fkincidentId")}`
+      );
+    }
+    else {
+      await history.push(
+        `/app/incident-management/registration/investigation/event-details/`
       );
     }
     await handelUpdateCheck();
@@ -394,6 +386,30 @@ const WorkerDetails = () => {
       )}/${localStorage.getItem("fkincidentId")}`
     );
     await handelUpdateCheck();
+  };
+
+  const PickList = async () => {
+    await handelUpdateCheck();
+    workerType.current = await PickListData(71);
+    setDepartmentName(await PickListData(10));
+    setworkHours(await PickListData(70));
+    setShiftType(await PickListData(47));
+    setOccupation(await PickListData(48));
+    setShiftCycle(await PickListData(49));
+    setNoOfDaysIntoShift(await PickListData(50));
+    setTimeInCompany(await PickListData(51));
+    setTimeOnProject(await PickListData(52));
+    setTimeInIndustry(await PickListData(53));
+    setPrimaryBodyPartWithSide(await PickListData(57));
+    setSecondaryBodyPartWithSide(await PickListData(58));
+    setTypeOfInjury(await PickListData(59));
+    setHigherMedicalResponder(await PickListData(60));
+    setTreatmentType(await PickListData(61));
+    setMechanismOfInjury(await PickListData(62));
+    setSupervisorTimeInIndustry(await PickListData(54));
+    setSupervisorTimeOnProject(await PickListData(55));
+    setSupervisorTimeInCompany(await PickListData(56));
+    await setIsLoading(true);
   };
 
   useEffect(() => {
@@ -1117,7 +1133,7 @@ const WorkerDetails = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            {testTaken ? (
+            {form.isAlcoholDrugTestTaken == "Yes" ? (
               <>
                 <Grid item md={6}>
                   <MuiPickersUtilsProvider
@@ -1126,7 +1142,7 @@ const WorkerDetails = () => {
                   >
                     <KeyboardDatePicker
                       className={classes.formControl}
-                      value={form.dateOfAlcoholDrugTest}
+                      value={form.dateOfAlcoholDrugTest != null ? form.dateOfAlcoholDrugTest : null}
                       label="Date of Test"
                       onChange={(e) => {
                         setForm({
@@ -1136,6 +1152,7 @@ const WorkerDetails = () => {
                       }}
                       format="yyyy/MM/dd"
                       inputVariant="outlined"
+                      disableFuture="true"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>

@@ -465,12 +465,17 @@ const InvestigationSummary = () => {
                   <>
                     {/* worker number */}
                     <Grid item lg={12}>
-                      <Typography variant="h7">
+                      <Typography variant="h5">
                         {`Worker ${index + 1}`}
                       </Typography>
                     </Grid>
 
                     {/* worker details */}
+                    <Grid item lg={12}>
+                      <Typography variant="h6">
+                        worker details
+                      </Typography>
+                    </Grid>
 
                     {/* name */}
                     <Grid item lg={6} md={6}>
@@ -514,10 +519,176 @@ const InvestigationSummary = () => {
                       </Typography>
                     </Grid>
 
+                    {/* working hours */}
+                    {value.workHours !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Working hours.
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.workHours}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* shift time start */}
+                    {value.shiftTimeStart !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          shift time start
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.shiftTimeStart}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* shift type */}
+                    {value.shiftType !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          shift type
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.shiftType}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* occupatione */}
+                    {value.occupation !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Occupation
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.occupation}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* shift cycle */}
+                    {value.shiftCycle !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Shift cycle
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.shiftCycle}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* shift cycle */}
+                    {value.shiftCycle !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Shift cycle
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.shiftCycle}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* No of days into shift */}
+                    {value.noOfDaysIntoShift !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          No of days into shift
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.noOfDaysIntoShift}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* time in company */}
+                    {value.timeInCompany !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Time in company
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.timeInCompany}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* time on project */}
+                    {value.timeOnProject !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Time on project
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.timeOnProject}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* time in industry*/}
+                    {value.timeInIndustry !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Time in industry
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.timeInIndustry}
+                        </Typography>
+                      </Grid>
+                      : null}
+
                     {/* injurty details */}
+                    <Grid item lg={12}>
+                      <Typography variant="h6">
+                        Injurty details
+                      </Typography>
+                    </Grid>
+
                     {/* event injury */}
 
-                    {value.eventLeadingToInjury.length > 0 ?
+                    {value.eventLeadingToInjury !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -533,7 +704,7 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* injury object */}
-                    {value.injuryObject.length > 0 ?
+                    {value.injuryObject !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -548,10 +719,176 @@ const InvestigationSummary = () => {
                       </Grid>
                       : null}
 
+                    {/* Primary body part with side */}
+                    {value.primaryBodyPartWithSide !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Primary body part with side
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.primaryBodyPartWithSide}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* Secondary body part with side */}
+                    {value.secondaryBodyPartWithSide !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Secondary body part with side
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.secondaryBodyPartWithSide}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* Secondary body part with side */}
+                    {value.secondaryBodyPartWithSide !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Secondary body part with side
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.secondaryBodyPartWithSide}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* type of injury */}
+                    {value.typeOfInjury !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Type of injury
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.typeOfInjury}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* Number of days away */}
+                    {value.NoOfDaysAway !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Number of days away
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.NoOfDaysAway}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* Medical response taken */}
+                    {value.medicalResponseTaken !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Medical response taken
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.medicalResponseTaken}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* treatment date */}
+                    {value.treatmentDate !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Treatment date
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.treatmentDate.substring(0, 10)}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* injury status */}
+                    {value.injuryStatus !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Injury status
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.injuryStatus}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* first aid treatment */}
+                    {value.firstAidTreatment !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          First aid treatment
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.firstAidTreatment}
+                        </Typography>
+                      </Grid>
+                      : null}
+
+                    {/* mechanismOfInjury */}
+                    {value.mechanismOfInjury !== null ?
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Mechanism of injury
+                        </Typography>
+                        <Typography variant="body" className={Fonts.labelValue}>
+                          {value.mechanismOfInjury}
+                        </Typography>
+                      </Grid>
+                      : null}
+
                     {/* Worker care */}
 
+                    <Grid item lg={12}>
+                      <Typography variant="h6">
+                        Worker care
+                      </Typography>
+                    </Grid>
+
                     {/* medical issue */}
-                    {value.isMedicationIssued.length > 0 ?
+                    {value.isMedicationIssued !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -567,7 +904,7 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* prescription issues */}
-                    {value.isPrescriptionIssued.length > 0 ?
+                    {value.isPrescriptionIssued !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -583,7 +920,7 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* non-prescription */}
-                    {value.isNonPrescription.length > 0 ?
+                    {value.isNonPrescription !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -599,7 +936,7 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* any limitation */}
-                    {value.isAnyLimitation.length > 0 ?
+                    {value.isAnyLimitation !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -616,8 +953,14 @@ const InvestigationSummary = () => {
 
                     {/* alcohal and drug test */}
 
+                    <Grid item lg={12}>
+                      <Typography variant="h6">
+                        Alcohal and drug test
+                      </Typography>
+                    </Grid>
+
                     {/* test taken */}
-                    {value.isAlcoholDrugTestTaken.length > 0 ?
+                    {value.isAlcoholDrugTestTaken !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -632,26 +975,48 @@ const InvestigationSummary = () => {
                       </Grid>
                       : null}
 
-                    {value.isAlcoholDrugTestTaken == "Yes" && value.isWorkerClearedTest.length > 0 ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Was worker cleared to work following a&d testing ?
-                        </Typography>
+                    {value.isAlcoholDrugTestTaken == "Yes" && value.isWorkerClearedTest !== null ?
+                      <>
+                        {value.dateOfAlcoholDrugTest !== null ?
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Date of the test
+                            </Typography>
 
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.isWorkerClearedTest}
-                        </Typography>
-                      </Grid>
+                            <Typography variant="body" className={Fonts.labelValue}>
+                              {value.dateOfAlcoholDrugTest.substring(0, 10)}
+                            </Typography>
+                          </Grid>
+                          : null}
+                        <Grid item lg={6} md={6}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            Was worker cleared to work following a&d testing ?
+                          </Typography>
+
+                          <Typography variant="body" className={Fonts.labelValue}>
+                            {value.isWorkerClearedTest}
+                          </Typography>
+                        </Grid>
+                      </>
                       : null}
 
                     {/* supervisor details */}
+                    <Grid item lg={12}>
+                      <Typography variant="h6">
+                        Supervisor details
+                      </Typography>
+                    </Grid>
 
                     {/* supervisor name */}
-                    {value.supervisorName.length > 0 ?
+                    {value.supervisorName !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -667,7 +1032,7 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* supervisor time industry */}
-                    {value.supervisorTimeInIndustry.length > 0 ?
+                    {value.supervisorTimeInIndustry !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -683,7 +1048,7 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* supervisor time company */}
-                    {value.supervisorTimeInCompany.length > 0 ?
+                    {value.supervisorTimeInCompany !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -699,7 +1064,7 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* supervisor time project */}
-                    {value.supervisorTimeOnProject.length > 0 ?
+                    {value.supervisorTimeOnProject !== null ?
                       <Grid item lg={6} md={6}>
                         <Typography
                           variant="h6"
@@ -715,6 +1080,12 @@ const InvestigationSummary = () => {
                       : null}
 
                     {/* attachment */}
+
+                    <Grid item lg={12}>
+                      <Typography variant="h6">
+                        Attachment
+                      </Typography>
+                    </Grid>
                     {value.attachments != "" && typeof value.attachments == "string" ?
 
 
@@ -829,6 +1200,15 @@ const InvestigationSummary = () => {
                       {value.equipmentInvolved}
                     </Typography>
                   </Grid>
+                  {/* <Grid item lg={12} md={12}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={Fonts.labelName}
+                    >
+                      Weather
+                    </Typography>
+                  </Grid> */}
 
                   {weather.map((value, index) => (
                     <>

@@ -100,6 +100,7 @@ export default function ActionTracker(props) {
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
+    await setForm({ ...form, plannedEndDate: null })
     await setOpen(false);
   };
   const handelSubmit = async () => {
@@ -108,6 +109,8 @@ export default function ActionTracker(props) {
     } else {
       let res = await api.post("api/v1/actions/", form);
       if (res.status == 201) {
+        await setError({ actionTitle: "" });
+        await setForm({ ...form, plannedEndDate: null })
         await setOpen(false);
 
       }

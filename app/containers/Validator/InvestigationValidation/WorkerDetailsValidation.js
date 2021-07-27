@@ -2,10 +2,9 @@ import { is } from "immutable";
 import validator from "validator";
 
 function WorkerDetailValidator(data) {
-  // console.log(data);
+
   let isValid = true;
   const error = {};
-
   if (validator.isEmpty(data.name.toString())) {
     error.name = "Please fill name";
     isValid = false;
@@ -20,9 +19,7 @@ function WorkerDetailValidator(data) {
     isValid = false;
   }
 
-  // const result =
 
-  // console.log("roor", error, isValid);
   return { error, isValid };
 }
 

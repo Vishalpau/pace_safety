@@ -611,9 +611,8 @@ const EventDetails = () => {
           </Grid>
 
           <Grid item md={12}>
-            <Typography variant="h6">Overall cost</Typography>
+            <Typography variant="h6">Overall cost*</Typography>
             <FormControl component="fieldset" required>
-              <FormLabel component="legend" >Overall cost</FormLabel>
               <RadioGroup
                 className={classes.inlineRadioGroup}
                 value={overAllCostShow}

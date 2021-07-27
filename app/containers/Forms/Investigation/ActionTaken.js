@@ -88,9 +88,9 @@ const ActionTaken = () => {
             <TextField
               variant="outlined"
               id="filled-basic"
-              label="Pre - event mitigation"
+              label="Pre-event mitigation"
               value={form.preEventMitigations}
-              placeholder="Per - event mitigation"
+              placeholder="Pre-event mitigation"
               InputLabelProps={{
                 shrink: true,
               }}
