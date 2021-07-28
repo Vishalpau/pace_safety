@@ -14,6 +14,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
+import axios from "axios";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -25,6 +26,7 @@ import {
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 import ActionTracker from "../ActionTracker";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -70,7 +72,7 @@ const BasicCauseAndAction = () => {
   const history = useHistory();
 
   const putId = useRef("");
-  let id = useRef("");
+  let id = useRef();
   const [action, setAction] = useState({});
 
   const handelShowData = async () => {
@@ -108,7 +110,32 @@ const BasicCauseAndAction = () => {
     });
     id.current = tempid.reverse();
     await setData(tempApiData);
+    handelActionTracker();
   };
+
+  const handelActionTracker = async () => {
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    let ActionToCause = {}
+    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTracker = allActionTrackerData.data.data.results.results
+    let allPaceID = id.current
+    allPaceID.map((paceId) => {
+      let tempActionID = []
+      allActionTracker.map((actionTracker) => {
+        let causeId = actionTracker.enitityReferenceId.split(":")[1]
+        console.log(causeId == paceId)
+        if (causeId == paceId) {
+          tempActionID.push(actionTracker.id)
+        }
+      })
+      ActionToCause[paceId] = tempActionID
+    })
+
+    console.log(ActionToCause)
+  }
 
   function ListItemLink(props) {
     return (
@@ -223,15 +250,15 @@ const BasicCauseAndAction = () => {
                           <TableRow>
                             <TableCell
                               align="left"
-                              borderBottom={1}
                             >
                               {handelConvert(key)}
                             </TableCell>
                             <TableCell
                               align="left"
                             >
-
-                              <span>{value}</span>
+                              <li key={value}>
+                                <span>{value}</span>
+                              </li>
 
                             </TableCell>
                             <TableCell

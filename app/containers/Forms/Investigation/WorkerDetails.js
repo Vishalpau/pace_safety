@@ -1334,6 +1334,7 @@ const WorkerDetails = () => {
                   type="file"
                   className={classes.fullWidth}
                   name="file"
+                  accept=".png, .jpg "
                   onChange={(e) => {
                     handleFile(e);
                   }}

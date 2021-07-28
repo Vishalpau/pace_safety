@@ -5,6 +5,7 @@ function WorkerDetailValidator(data) {
 
   let isValid = true;
   const error = {};
+
   if (validator.isEmpty(data.name.toString())) {
     error.name = "Please fill name";
     isValid = false;
@@ -35,6 +36,11 @@ function WorkerDetailValidator(data) {
     error.supervisorName = "Please fill less than 45 characters in supervisor name";
   }
 
+  if (data.attachments !== null) {
+    if (data.attachments.name.split('.')[0] !== "png" || data.attachments.name.split('.')[0] !== "jpg") {
+      error.attachments = "Only jpg and png allowed";
+    }
+  }
   console.log(error)
   return { error, isValid };
 }
