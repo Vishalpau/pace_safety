@@ -89,7 +89,7 @@ const EnvironmentAffected = () => {
   const [envComments, setEnvComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   const nextPath = localStorage.getItem("nextPath");
 
@@ -550,7 +550,7 @@ const EnvironmentAffected = () => {
                           ? error[`envAnswerDetails${[2]}`]
                           : null
                       }
-                      label="Details of wildlife affected"
+                      label="Details of impact on wildlife"
                       className={classes.fullWidth}
                       onChange={(e) => {
                         handleForm(e, 2, "envAnswerDetails");

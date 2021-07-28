@@ -197,66 +197,6 @@ const LessionLearnSummary = () => {
                         spacing={3}
                       >
                         <Grid container item xs={12} spacing={3}>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence No
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceNumber}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Check
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCheck}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Category
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceCategory}
-                            </Typography>
-                          </Grid>
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Remark
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              {value.evidenceRemark}
-                            </Typography>
-                          </Grid>
                           {value.evidenceDocument ? (
                             <Grid item lg={6} md={6}>
                               <Typography
@@ -264,7 +204,7 @@ const LessionLearnSummary = () => {
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                                Evidence Document
+                                Document
                               </Typography>
                               <Typography
                                 variant="body"
