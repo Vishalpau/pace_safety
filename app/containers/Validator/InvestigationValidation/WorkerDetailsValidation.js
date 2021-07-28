@@ -19,7 +19,23 @@ function WorkerDetailValidator(data) {
     isValid = false;
   }
 
+  if (data.injuryObject.length !== 0 && data.injuryObject.length > 255) {
+    error.injuryObject = "Please fill less than 255 characters in injury object";
+  }
 
+  if (data.injuryStatus.length !== 0 && data.injuryStatus.length > 75) {
+    error.injuryStatus = "Please fill less than 75 characters in injury status";
+  }
+
+  if (data.reasonForTestNotDone.length !== 0 && data.reasonForTestNotDone.length > 255) {
+    error.reasonForTestNotDone = "Please fill less than 255 characters in injury status";
+  }
+
+  if (data.supervisorName.length !== 0 && data.supervisorName.length > 75) {
+    error.supervisorName = "Please fill less than 45 characters in supervisor name";
+  }
+
+  console.log(error)
   return { error, isValid };
 }
 

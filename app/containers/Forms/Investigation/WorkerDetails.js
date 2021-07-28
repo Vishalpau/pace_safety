@@ -751,6 +751,8 @@ const WorkerDetails = () => {
                 id="title"
                 variant="outlined"
                 label="Injury object"
+                error={error && error.injuryObject}
+                helperText={error && error.injuryObject}
                 className={classes.formControl}
                 value={form.injuryObject}
                 onChange={(e) => {
@@ -931,6 +933,8 @@ const WorkerDetails = () => {
                 variant="outlined"
                 label="Status update"
                 value={form.injuryStatus}
+                error={error && error.injuryStatus}
+                helperText={error && error.injuryStatus}
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -1189,6 +1193,8 @@ const WorkerDetails = () => {
                   variant="outlined"
                   label="Why was the test not conducted?"
                   className={classes.formControl}
+                  error={error && error.reasonForTestNotDone}
+                  helperText={error && error.reasonForTestNotDone}
                   value={form.reasonForTestNotDone}
                   onChange={(e) => {
                     setForm({
@@ -1214,6 +1220,8 @@ const WorkerDetails = () => {
                 id="title"
                 variant="outlined"
                 label="Supervisor name"
+                error={error && error.supervisorName}
+                helperText={error && error.supervisorName}
                 value={form.supervisorName}
                 className={classes.formControl}
                 onChange={(e) => {

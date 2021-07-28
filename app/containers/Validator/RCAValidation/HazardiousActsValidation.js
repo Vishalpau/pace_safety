@@ -3,7 +3,6 @@ import validator from "validator";
 function HazardiousActsValidation(data) {
   let isValid = true;
   const error = {};
-  console.log(data.supervision.rcaSubType);
 
   if (validator.isEmpty(data.supervision.rcaRemark.toString())) {
     error.supervision = "Select at least one checkbox";
@@ -44,8 +43,6 @@ function HazardiousActsValidation(data) {
     error.others = "Fill the other field";
     isValid = false;
   }
-
-  console.log(error);
   return { error, isValid };
 }
 

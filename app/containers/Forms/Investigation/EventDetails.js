@@ -416,6 +416,8 @@ const EventDetails = () => {
               id="title"
               variant="outlined"
               label="Temperature"
+              error={error && error.temperature}
+              helperText={error && error.temperature}
               value={form.temperature}
               onChange={(e) => {
                 setForm({
@@ -465,6 +467,8 @@ const EventDetails = () => {
               variant="outlined"
               label="Speed"
               value={form.windSpeed}
+              error={error && error.windSpeed}
+              helperText={error && error.windSpeed}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -481,6 +485,8 @@ const EventDetails = () => {
               variant="outlined"
               label="Direction"
               value={form.windDirection}
+              error={error && error.windDirection}
+              helperText={error && error.windDirection}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -531,6 +537,8 @@ const EventDetails = () => {
               variant="outlined"
               label="Fluid amount"
               value={form.spillsFluidAmount}
+              value={form.spillsFluidAmount}
+              error={error && error.spillsFluidAmount}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -547,6 +555,8 @@ const EventDetails = () => {
               variant="outlined"
               label="AEL"
               value={form.acceptableExplosiveLimit}
+              error={error && error.acceptableExplosiveLimit}
+              helperText={error && error.acceptableExplosiveLimit}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -563,6 +573,8 @@ const EventDetails = () => {
               variant="outlined"
               label="PEL"
               value={form.permissableExplosiveLimit}
+              error={error && error.permissableExplosiveLimit}
+              helperText={error && error.permissableExplosiveLimit}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -584,6 +596,8 @@ const EventDetails = () => {
               variant="outlined"
               label="Impact Information"
               value={form.propertyImpactInformation}
+              error={error && error.propertyImpactInformation}
+              helperText={error && error.propertyImpactInformation}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -600,6 +614,8 @@ const EventDetails = () => {
               variant="outlined"
               label="Cost impact"
               value={form.propertyCostImpact}
+              error={error && error.propertyCostImpact}
+              helperText={error && error.propertyCostImpact}
               onChange={(e) => {
                 setForm({
                   ...form,
@@ -616,13 +632,13 @@ const EventDetails = () => {
               <RadioGroup
                 className={classes.inlineRadioGroup}
                 value={overAllCostShow}
-                onChange={(e) => SetOverAllCostShow(e.target.value)}
+                onChange={(e) => setForm({ ...form, isCostIncurred: e.target.value })}
 
               >
                 {radioYesNo.map((value) => (
                   <FormControlLabel
                     disabled={CheckPost.current == false}
-                    value={value}
+                    value={form.isCostIncurred}
                     control={<Radio />}
                     label={value}
                   />
