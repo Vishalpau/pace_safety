@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -111,59 +111,59 @@ const LessionLearned = () => {
     await setForm([...form, { teamOrDepartment: "", learnings: "" }]);
   };
 
-// handleAttchment
+  // handleAttchment
 
-  const handleAttchment = async(e)=>{
-    
+  const handleAttchment = async (e) => {
+
     let file = e.target.files[0].name.split(".")
-    
-    if(file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png"){
-      
+
+    if (file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png") {
+
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        setAttachment({...attachment,evidenceDocument:e.target.files[0]})
+        setAttachment({ ...attachment, evidenceDocument: e.target.files[0] })
         await setMessage("File uploaded successfully!");
         await setMessageType("success");
         await setOpen(true);
       } else {
-        ref.current.value=""
+        ref.current.value = ""
         await setMessage("File uploading failed! Select file less than 25MB!");
         await setMessageType("error");
         await setOpen(true);
       }
-    await setEvidanceForm(temp);
-    }else{
-      ref.current.value=""
+      await setEvidanceForm(temp);
+    } else {
+      ref.current.value = ""
       await setMessage("Only JPG & PNG File is allowed!");
       await setMessageType("error");
       await setOpen(true);
     }
-  
+
   }
- // handle close snackbar
- const handleClose = (event, reason) => {
-  if (reason === "clickaway") {
-    // setOpenError(false)
-    return;
-  }
-  setOpen(false);
-};
+  // handle close snackbar
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenError(false)
+      return;
+    }
+    setOpen(false);
+  };
   const handleNext = async () => {
 
     // attachment 
-   
-    if(!attachment.evidenceDocument || !attachment.length){
-    
-      const formData = new FormData()
-      formData.append('evidenceDocument',attachment.evidenceDocument)
-      formData.append('evidenceCheck','Yes')
-      formData.append('evidenceNumber','string')
-      formData.append('evidenceCategory','Lessons Learned')
-      formData.append('createdBy',parseInt(userId))
-      formData.append('status','Active')
-      formData.append('fkIncidentId',id)
 
-      const res = await api.post( `api/v1/incidents/${id}/evidences/`,formData)
-      
+    if (!attachment.evidenceDocument || !attachment.length) {
+
+      const formData = new FormData()
+      formData.append('evidenceDocument', attachment.evidenceDocument)
+      formData.append('evidenceCheck', 'Yes')
+      formData.append('evidenceNumber', 'string')
+      formData.append('evidenceCategory', 'Lessons Learned')
+      formData.append('createdBy', parseInt(userId))
+      formData.append('status', 'Active')
+      formData.append('fkIncidentId', id)
+
+      const res = await api.post(`api/v1/incidents/${id}/evidences/`, formData)
+
     }
     // sent put request
     let status = 0;
@@ -236,7 +236,7 @@ const LessionLearned = () => {
       },
     };
     axios(config)
-      .then(function(response) {
+      .then(function (response) {
         if (response.status === 200) {
           const result = response.data.data.results;
           setDepartment(result);
@@ -244,7 +244,7 @@ const LessionLearned = () => {
           // window.location.href = {LOGIN_URL}
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         // window.location.href = {LOGIN_URL}
       });
   };
@@ -469,12 +469,12 @@ const LessionLearned = () => {
                   {message}
                 </Alert>
               </Snackbar>
-            <Typography  variant ="h6"> Add attachment</Typography>
-            
-                 <input type="file" ref={ref}  accept=".png, jpg, jpeg" onChange = {(e)=> handleAttchment(e)}/>
-                
-              
-              
+              <Typography variant="h6"> Add attachment</Typography>
+
+              <input type="file" ref={ref} accept=".png, jpg, jpeg" onChange={(e) => handleAttchment(e)} />
+
+
+
             </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>

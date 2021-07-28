@@ -189,7 +189,7 @@ const RootCauseAnalysisSummary = () => {
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>
-                Root cause analysis
+                Cause analysis
               </Typography>
             </AccordionSummary>
             <AccordionDetails classes={{ root: "details-wrapper" }}>

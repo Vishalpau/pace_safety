@@ -103,7 +103,7 @@ const IncidentDetails = () => {
   for(var i in selectBreakdown){
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`
   }
-  const fkProjectStructureIds = struct.slice(0,-1)
+  const fkProjectStructureIds = struct.slice(0, -1)
 
   // Function called on next button click.
   const handelNext = async (e) => {
@@ -127,7 +127,7 @@ const IncidentDetails = () => {
         id: parseInt(id),
         fkCompanyId: incidentsListData.fkCompanyId,
         fkProjectId: incidentsListData.fkProjectId,
-        fkProjectStructureIds:incidentsListData.fkProjectStructureIds,
+        fkProjectStructureIds: incidentsListData.fkProjectStructureIds,
         incidentNumber: incidentsListData.incidentNumber,
         incidentType: form.incidentType,
         incidentTitle: form.incidentTitle,
@@ -194,7 +194,7 @@ const IncidentDetails = () => {
      {"personAffect":"Yes","propertyAffect":"Yes","equipmentAffect":"Yes","environmentAffect":"Yes"}
    */
             localStorage.setItem("nextPath", JSON.stringify(nextPath));
-            
+
             // Decide on which path to go next.
             if (nextPath.personAffect === "Yes") {
               history.push(
@@ -205,7 +205,7 @@ const IncidentDetails = () => {
               history.push(
                 `/app/incident-management/registration/initial-notification/property-affected/${id}`
               );
-            }  else if (nextPath.equipmentAffect === "Yes") {
+            } else if (nextPath.equipmentAffect === "Yes") {
               history.push(
                 `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
               );
@@ -234,7 +234,7 @@ const IncidentDetails = () => {
         const formData = {
           fkCompanyId: parseInt(fkCompanyId),
           fkProjectId: parseInt(project.projectId),
-          fkProjectStructureIds:fkProjectStructureIds,
+          fkProjectStructureIds: fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
           incidentNumber: "",
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -275,44 +275,44 @@ const IncidentDetails = () => {
           subContractor: form.subContractor,
         };
         // sent post api
-        try{
-        const res = await api.post("/api/v1/incidents/", formData);
-        if (res.status === 201) {
-          const fkincidentId = res.data.data.results.id;
-          localStorage.setItem("fkincidentId", fkincidentId);
-          localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
-          localStorage.setItem("nextPath", JSON.stringify(nextPath));
+        try {
+          const res = await api.post("/api/v1/incidents/", formData);
+          if (res.status === 201) {
+            const fkincidentId = res.data.data.results.id;
+            localStorage.setItem("fkincidentId", fkincidentId);
+            localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
+            localStorage.setItem("nextPath", JSON.stringify(nextPath));
 
-          // Decide on which path to go next.
-          if (nextPath.personAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
-            );
-          } else if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
-            );
-          }
+            // Decide on which path to go next.
+            if (nextPath.personAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
+              );
+            } else if (nextPath.propertyAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
+              );
+            } else if (nextPath.equipmentAffect === "Yes") {
+              history.push(
+                `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
+              );
+            }
             else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
-            );
-          } else {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
-            );
+              history.push(
+                `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
+              );
+            } else {
+              history.push(
+                `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
+              );
+            }
           }
         }
-      }
-      catch (error) {
-        setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-      }
+        catch (error) {
+          setMessage("Something went worng!");
+          setMessageType("error");
+          setOpen(true);
+        }
       }
     }
   };
@@ -418,8 +418,8 @@ const IncidentDetails = () => {
         const result = res.data.data.results;
         await setIncidentsListdata(result);
         if (Object.keys(result).length > 0) {
-         
-          let temp = {...form };
+
+          let temp = { ...form };
           temp = result;
           setForm(temp);
         }
@@ -525,7 +525,7 @@ const IncidentDetails = () => {
     fetchEquipmentAffectValue();
     fetchEnviornmentAffectValue();
     fetchIncidentsData();
-    
+
   }, []);
 
   return (
@@ -540,10 +540,10 @@ const IncidentDetails = () => {
                <Typography className={Type.labelValue}>{project?project.projectName:null}</Typography>
              
             </Grid>
-                  {/* Unit Name */}
-            
+            {/* Unit Name */}
 
-                    {/* Incident Type */}
+
+            {/* Incident Type */}
             <Grid item xs={12} md={6}>
               <FormControl
                 error={error.incidentType}
@@ -558,17 +558,17 @@ const IncidentDetails = () => {
                   labelId="incident-type-label"
                   id="incident-type"
                   label="Incident type"
-                  value={form.incidentType ||""}
+                  value={form.incidentType || ""}
                   onChange={(e) => {
                     setForm({ ...form, incidentType: e.target.value });
                   }}
                 >
                   {incidentTypeValue.length !== 0
                     ? incidentTypeValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                      <MenuItem key={index} value={selectValues.inputValue}>
+                        {selectValues.inputLabel}
+                      </MenuItem>
+                    ))
                     : null}
                 </Select>
                 {error && error.incidentType && (
@@ -576,7 +576,7 @@ const IncidentDetails = () => {
                 )}
               </FormControl>
             </Grid>
-                  {/* Date and Time */}
+            {/* Date and Time */}
             <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
@@ -603,7 +603,7 @@ const IncidentDetails = () => {
               </MuiPickersUtilsProvider>
             </Grid>
 
-                  {/* Incident Title */}
+            {/* Incident Title */}
             <Grid item xs={12} md={12}>
               <TextField
                 required
@@ -612,7 +612,7 @@ const IncidentDetails = () => {
                 variant="outlined"
                 label="Title"
                 className={classes.fullWidth}
-                value={form.incidentTitle ||""}
+                value={form.incidentTitle || ""}
                 helperText={error.incidentTitle ? error.incidentTitle : ""}
                 onChange={(e) => {
                   setForm({
@@ -621,10 +621,10 @@ const IncidentDetails = () => {
                   });
                 }}
               />
-             
+
             </Grid>
 
-                {/* Incident Description */}
+            {/* Incident Description */}
             <Grid item xs={12} md={12}>
               <TextField
                 error={error.incidentDetails}
@@ -643,10 +643,10 @@ const IncidentDetails = () => {
                   });
                 }}
               />
-            
+
             </Grid>
 
-                {/* Incident immediate action taken */}
+            {/* Incident immediate action taken */}
             <Grid item xs={12} md={12}>
               <TextField
                 variant="outlined"
@@ -665,7 +665,7 @@ const IncidentDetails = () => {
               />
             </Grid>
 
-                {/* incident Location */}
+            {/* incident Location */}
             <Grid item xs={12} md={6}>
               <TextField
                 id="initial-detail-location"
@@ -683,10 +683,10 @@ const IncidentDetails = () => {
                   });
                 }}
               />
-              
+
             </Grid>
 
-                {/* Contractor */}
+            {/* Contractor */}
             <Grid item xs={12} md={6}>
               <FormControl
                 variant="outlined"
@@ -711,10 +711,10 @@ const IncidentDetails = () => {
                 >
                   {contractorValue.length !== 0
                     ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                      <MenuItem key={index} value={selectValues.inputValue}>
+                        {selectValues.inputLabel}
+                      </MenuItem>
+                    ))
                     : null}
                 </Select>
                 {error && error.contractor && (
@@ -723,7 +723,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-                  {/* Sub-Contractor */}
+            {/* Sub-Contractor */}
             <Grid item xs={12} md={6}>
               <FormControl
                 variant="outlined"
@@ -737,7 +737,7 @@ const IncidentDetails = () => {
                   labelId="sub-contractor-type-label"
                   id="sub-contractor"
                   label="Sub-Contractor"
-                  value={form.subContractor ||""}
+                  value={form.subContractor || ""}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -747,10 +747,10 @@ const IncidentDetails = () => {
                 >
                   {subContractorValue.length !== 0
                     ? subContractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                      <MenuItem key={index} value={selectValues.inputValue}>
+                        {selectValues.inputLabel}
+                      </MenuItem>
+                    ))
                     : null}
                 </Select>
                 {error && error.subContractor && (
@@ -759,7 +759,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-                  {/* Person Affected */}
+            {/* Person Affected */}
             <Grid item xs={12} md={12}>
               <FormControl
                 component="fieldset"
@@ -795,13 +795,13 @@ const IncidentDetails = () => {
                 >
                   {personAffectedValue.length !== 0
                     ? personAffectedValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                      <FormControlLabel
+                        key={index}
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
                     : null}
                 </RadioGroup>
 
@@ -811,7 +811,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-                  {/* Property Affected */}
+            {/* Property Affected */}
             <Grid item xs={12} md={12}>
               <FormControl
                 component="fieldset"
@@ -827,7 +827,7 @@ const IncidentDetails = () => {
                   aria-label="propertyaffected"
                   name="propertyaffected"
                   aria-required
-                  value={ form.isPropertyDamaged || ""}
+                  value={form.isPropertyDamaged || ""}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -846,13 +846,13 @@ const IncidentDetails = () => {
                 >
                   {propertiesAffectValue.length !== 0
                     ? propertiesAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                      <FormControlLabel
+                        key={index}
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
                     : null}
                 </RadioGroup>
                 {error && error.isPropertyDamaged && (
@@ -861,7 +861,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-                  {/* Equipment Damaged */}
+            {/* Equipment Damaged */}
             <Grid item xs={12} md={12}>
               <FormControl
                 component="fieldset"
@@ -896,12 +896,12 @@ const IncidentDetails = () => {
                 >
                   {eqiptmentAffectValue.length !== 0
                     ? eqiptmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                      <FormControlLabel
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
                     : null}
                 </RadioGroup>
                 {error && error.isEquipmentDamaged && (
@@ -910,7 +910,7 @@ const IncidentDetails = () => {
               </FormControl>
             </Grid>
 
-                  {/* Environmental Impact */}
+            {/* Environmental Impact */}
             <Grid item xs={12} md={12}>
               <FormControl
                 component="fieldset"
@@ -945,13 +945,13 @@ const IncidentDetails = () => {
                 >
                   {environmentAffectValue.length !== 0
                     ? environmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                      <FormControlLabel
+                        key={index}
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
                     : null}
                 </RadioGroup>
                 {error && error.isEnviromentalImpacted && (
@@ -963,7 +963,7 @@ const IncidentDetails = () => {
               
             </Grid>
 
-                  {/* Go to next button */}
+            {/* Go to next button */}
             <Grid item xs={12} md={12}>
               <Button
                 type="button"

@@ -9,7 +9,7 @@ function AdditionalDetailValidate(data) {
     if (dataObj) {
       if (validator.isEmpty(dataObj.answer.toString())) {
         if(dataObj.question == "Any part/equipment sent for analysis"){
-          dataObj.error = "Please enter equipment";
+          dataObj.error = "Please enter any part/equipment for analysis";
         error.push(dataObj);
         isValid = false;
         }else if (dataObj.question == "Evidence analysis notes"){
