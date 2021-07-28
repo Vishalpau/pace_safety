@@ -76,16 +76,20 @@ const InvestigationOverview = () => {
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
 
-    if (putId.current == "") {
-      const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-      await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`)
-    } else if (putId.current !== "") {
-      console.log(putId.current)
-      form["updatedBy"] = "0"
-      const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-      await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
+    if (Object.keys(error).length == 0) {
+      if (putId.current == "") {
+        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
+        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`)
+      } else if (putId.current !== "") {
+        console.log(putId.current)
+        form["updatedBy"] = "0"
+        const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
+        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
+      }
+
+      localStorage.setItem("WorkerDataFetched", "")
     }
-    localStorage.setItem("WorkerDataFetched", "")
+
   };
 
   const classes = useStyles();

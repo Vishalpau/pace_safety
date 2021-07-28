@@ -29,6 +29,7 @@ import moment from "moment";
 import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import FlashOnIcon from '@material-ui/icons/FlashOn';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -123,14 +124,14 @@ export default function ActionTracker(props) {
 
   return (
     <>
-      <Button
+      <button
         size="small"
         variant="outlined"
         color="primary"
         onClick={handleClickOpen}
       >
-        Add a new action
-      </Button>
+        <FlashOnIcon />
+      </button>
 
       <Dialog
         fullWidth={true}

@@ -21,8 +21,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
-
-
+import { saveAs } from 'file-saver'
 
 import api from "../../utils/axios";
 
@@ -152,6 +151,11 @@ const InvestigationSummary = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const download = (image_link) => {
+    saveAs(image_link, 'image.jpg')
+    // handleClose()
   };
 
   useEffect(() => {
@@ -1142,6 +1146,17 @@ const InvestigationSummary = () => {
                     target="_blank"
                   >
                     View Attachment
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Button
+                    startIcon={<VisibilityIcon />}
+                    variant="contained"
+                    disableElevation
+                    className={classes.modalButton}
+                    onClick={(e) => download(documentUrl)}
+                  >
+                    Download Attachment
                   </Button>
                 </Grid>
               </Grid>

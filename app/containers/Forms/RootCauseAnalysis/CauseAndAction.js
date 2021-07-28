@@ -2,47 +2,23 @@ import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { AccessAlarm, ThreeDRotation } from "@material-ui/icons";
+
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
-import Link from "@material-ui/core/Link";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
+import axios from "axios";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import {
   HAZARDIOUS_ACTS_SUB_TYPES,
   HAZARDIOUS_CONDITION_SUB_TYPES,
@@ -50,6 +26,7 @@ import {
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 import ActionTracker from "../ActionTracker";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -95,7 +72,7 @@ const BasicCauseAndAction = () => {
   const history = useHistory();
 
   const putId = useRef("");
-  let id = useRef("");
+  let id = useRef();
   const [action, setAction] = useState({});
 
   const handelShowData = async () => {
@@ -133,7 +110,32 @@ const BasicCauseAndAction = () => {
     });
     id.current = tempid.reverse();
     await setData(tempApiData);
+    handelActionTracker();
   };
+
+  const handelActionTracker = async () => {
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    let ActionToCause = {}
+    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTracker = allActionTrackerData.data.data.results.results
+    let allPaceID = id.current
+    allPaceID.map((paceId) => {
+      let tempActionID = []
+      allActionTracker.map((actionTracker) => {
+        let causeId = actionTracker.enitityReferenceId.split(":")[1]
+        console.log(causeId == paceId)
+        if (causeId == paceId) {
+          tempActionID.push(actionTracker.id)
+        }
+      })
+      ActionToCause[paceId] = tempActionID
+    })
+
+    console.log(ActionToCause)
+  }
 
   function ListItemLink(props) {
     return (
@@ -237,40 +239,40 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Box>
 
-            <div className={classes.rootTable}>
-              <Table className={classes.table}>
+            <div>
+              <Table border={1}>
                 <TableBody>
                   {Object.entries(data)
                     .reverse()
                     .map(([key, value], index) => (
-                      <TableRow>
-                        <TableCell
-                          align="left"
-                          scope="row"
-                          className={classes.tableCell}
-                        >
-                          {handelConvert(key)}
-                        </TableCell>
-                        <TableCell className={classes.tableCell}>
-                          <ul class={classes.tableUlList}>
-                            {value.map((value) => (
-                              <Box padding={2}>
-                                <li key={value}>
-                                  <span>{value}</span>
-                                  <ActionTracker
-                                    actionContext="incidents:Pacacuase"
-                                    enitityReferenceId={`${putId.current}:${id.current[index]
-                                      }`}
-                                  />
-                                </li>
-                              </Box>
-                            ))}
-                          </ul>
-                        </TableCell>
-                        <TableCell className={classes.tableCell} align="right">
+                      <>
+                        {value.map((value) => (
+                          <TableRow>
+                            <TableCell
+                              align="left"
+                            >
+                              {handelConvert(key)}
+                            </TableCell>
+                            <TableCell
+                              align="left"
+                            >
+                              <li key={value}>
+                                <span>{value}</span>
+                              </li>
 
-                        </TableCell>
-                      </TableRow>
+                            </TableCell>
+                            <TableCell
+                              align="right"
+                            >
+                              <ActionTracker
+                                actionContext="incidents:Pacacuase"
+                                enitityReferenceId={`${putId.current}:${id.current[index]
+                                  }`}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </>
                     ))}
                 </TableBody>
               </Table>
