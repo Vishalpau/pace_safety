@@ -15,6 +15,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Modal from "@material-ui/core/Modal";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -24,9 +25,11 @@ import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
 
 import api from "../../utils/axios";
+import { Link } from "react-router-dom";
 
 // Styles
 import Fonts from "dan-styles/Fonts.scss";
+import "../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -587,26 +590,30 @@ const IncidentDetailsSummary = () => {
                   gutterBottom
                   className={Fonts.labelName}
                 >
-                  Report description
+                  Additional Details
                 </Typography>
-                {reportsData.length !== 0
-                  ? reportsData.map((report, key) => (
-                      <Typography className={Fonts.labelValue}>
-                        {report.reportingNote}
-                      </Typography>
-                    ))
-                  : null}
+
+                <Typography className={Fonts.labelValue}>
+                  {incidents.notificationComments}
+                </Typography>
               </Grid>
+            
             </Grid>
 
-            <Grid container item xs={12} spacing={3}>
+            <>
               {evidence.length !== 0
                 ? evidence
                     .filter(
                       (item) => item.evidenceCategory === "Initial Evidence"
                     )
                     .map((value, index) => (
-                      <>
+                      <Grid
+                        container
+                        className="repeatedGrid"
+                        item
+                        xs={12}
+                        spacing={3}
+                      >
                         <Grid item md={6}>
                           <Typography
                             variant="h6"
@@ -693,10 +700,10 @@ const IncidentDetailsSummary = () => {
                             </Typography>
                           </Grid>
                         ) : null}
-                      </>
+                      </Grid>
                     ))
                 : null}
-            </Grid>
+            </>
           </AccordionDetails>
         </Accordion>
 
@@ -724,14 +731,31 @@ const IncidentDetailsSummary = () => {
                   <Button
                     startIcon={<VisibilityIcon />}
                     variant="contained"
-                    disableElevation
+                    color="primary"
                     className={classes.modalButton}
                     href={`${documentUrl}`}
+                    disableElevation
                     target="_blank"
                   >
                     View Attachment
                   </Button>
+                
                 </Grid>
+                <Grid item xs={12} md={6}>
+                    <Button
+                      startIcon={<GetAppIcon />}
+                      variant="contained"
+                      color="primary"
+                      className={classes.modalButton}
+                      href={`${documentUrl}`}
+                      disableElevation
+                      target="_blank"
+                      download
+                    >
+                       Download
+                    </Button>
+                  </Grid>
+               
               </Grid>
             </DialogContentText>
           </DialogContent>

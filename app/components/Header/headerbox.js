@@ -33,6 +33,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import styles from "./header-jss";
 
 import { connect } from "react-redux";
+import { useParams } from "react-router";
 
 import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
 import Axios from "axios";
@@ -49,6 +50,8 @@ function HeaderBreakdown(props) {
   const [showTitle, setShowTitle] = useState(false);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const {fkid}  = useParams();
+
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
@@ -268,8 +271,8 @@ function HeaderBreakdown(props) {
           headers: HEADER_AUTH,
         };
         await Axios(config)
-          .then(async (response) => {
-            console.log('fetchcallback', response.data.data.results)
+          .then(async(response)=> {
+              
             await setBreakdown1ListData([
               {
                 breakdownLabel:
@@ -287,9 +290,20 @@ function HeaderBreakdown(props) {
       }
     }
   };
+
+  const fetchIncidentData = async()=>{
+    alert(fkid)
+    const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
+        const result = res.data.data.results;
+        console.log(result)
+  }
   useEffect(() => {
-    fetchCallBack();
-  }, [props.initialValues.projectName]);
+      fetchCallBack();
+      if(fkid){
+        fetchIncidentData();
+      }
+      
+  }, [props.initialValues.projectName,fkid]);
 
   return (
     <>

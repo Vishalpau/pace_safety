@@ -93,7 +93,8 @@ const ReportingAndNotification = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const [isChecked, setIsChecked] = useState(true)
+  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   const [evidanceForm, setEvidanceForm] = useState([
     {
@@ -259,6 +260,8 @@ const ReportingAndNotification = () => {
 
   // handleSubmit incident details
   const handelNext = async (e) => {
+    if(isChecked){
+      setIsChecked(false)
     // handle remove existing report
     await handleRemoveExitingReport();
 
@@ -320,6 +323,7 @@ const ReportingAndNotification = () => {
         }
       }
     }
+  }
   };
   // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
@@ -372,7 +376,13 @@ const ReportingAndNotification = () => {
   const handleEvidanceForm = async (e, key, fieldname) => {
     const temp = [...evidanceForm];
     const { value } = e.target;
+    
+    
     if (fieldname === "evidenceDocument") {
+      let file = e.target.files[0].name.split(".")
+    
+    if(file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png"){
+      
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
         temp[key][fieldname] = e.target.files[0];
         await setMessage("File uploaded successfully!");
@@ -383,11 +393,18 @@ const ReportingAndNotification = () => {
         await setMessageType("error");
         await setOpen(true);
       }
+    }else{
+      await setMessage("Only PDF, JPG & PNG File is allowed!");
+        await setMessageType("error");
+        await setOpen(true);
+    }
     } else {
       temp[key][fieldname] = value;
     }
 
     await setEvidanceForm(temp);
+  
+
   };
 
   // handle remove evidance
@@ -465,10 +482,7 @@ const ReportingAndNotification = () => {
         (item) =>
           item.name === result.supervisorByName
       ).length > 0){
-        alert(superVisorName.filter(
-          (item) =>
-            item.name === result.supervisorByName
-        ).length > 0)
+        
         await setForm({...form,supervisorname:"other"})
       }
       if (!id) {
@@ -533,7 +547,8 @@ const ReportingAndNotification = () => {
   const fetchEvidanceData = async () => {  
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     if(allEvidence.status === 200){
-      await setEvidence(allEvidence.data.data.results);
+      const data = allEvidence.data.data.results.filter(item=>item.evidenceCategory === "Initial Evidence")
+      await setEvidence(data);
     }
   };
 
@@ -660,12 +675,14 @@ const ReportingAndNotification = () => {
                   Initial evidences
                 </Typography>
               </Box>
-           
+              
+
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
                   <Grid item md={5}>
                     <input
                       type="file"
+                      accept= ".pdf, .jpg, jpeg, .png"
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceDocument")
                       }

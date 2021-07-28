@@ -82,7 +82,7 @@ const PropertyAffected = () => {
   const [error, setError] = useState({});
   const [isOther, setIsOther] = useState(true);
   const nextPath = localStorage.getItem("nextPath");
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   // Default form.
   const [form, setForm] = useState([

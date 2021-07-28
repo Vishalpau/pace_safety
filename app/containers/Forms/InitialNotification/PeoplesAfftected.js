@@ -89,7 +89,7 @@ const PeoplesAffected = () => {
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('')
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   // Forms definations.
   const [form, setForm] = useState([
@@ -235,27 +235,9 @@ const PeoplesAffected = () => {
             );
           }
           // Here it is the new entry create case. We will redirect to next pages without ids.
-        } else if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/property-affected/"
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/equipment-affected/"
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            "/app/incident-management/registration/initial-notification/environment-affected/"
-          );
-        } else {
-          history.push(
-            "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-          );
-        }
+        } 
+       
       }
-
-
-
 
       // Case when form has No option selected.
     } else {

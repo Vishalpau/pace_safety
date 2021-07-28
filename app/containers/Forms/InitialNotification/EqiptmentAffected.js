@@ -90,7 +90,7 @@ const EqiptmentAffected = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
   const [equipmentDamagedComments, setEequipmentDamagedComments] = useState("");
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   const [form, setForm] = useState([
     {

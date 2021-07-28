@@ -222,28 +222,33 @@ const Evidence = () => {
     let lastItem = id ? id : localStorage.getItem("fkincidentId");
     const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
     const result = res.data.data.results;
+    const newData = result.filter(
+      (item) => item.evidenceCategory !== "Lessons Learned" && item.evidenceCategory !== "Initial Evidence"
+      
+      )
 
     let tempData = [];
-    if (result.length) {
-      for (let i = 0; i < result.length; i++) {
+    console.log(newData)
+    if (newData.length) {
+      for (let i = 0; i < newData.length; i++) {
         tempData.push({
-          evidenceCategory: result[i].evidenceCategory,
-          evidenceCheck: result[i].evidenceCheck,
-          evidenceRemark: result[i].evidenceRemark,
-          evidenceDocument: "",
+          evidenceCategory: newData[i].evidenceCategory,
+          evidenceCheck: newData[i].evidenceCheck,
+          evidenceRemark: newData[i].evidenceRemark,
+          evidenceDocument: newData[i].evidenceDocument,
           status: "Active",
           createdBy: 0,
           updatedBy: 0,
           fkIncidentId: id || localStorage.getItem("fkincidentId"),
-          pk: result[i].id,
+          pk: newData[i].id,
         });
       }
     }
 
-    if (result.length > 3) {
+    
       await setForm(tempData);
       await setEvideceData(tempData);
-    }
+    
     await setIsLoading(true);
   };
 
@@ -267,11 +272,21 @@ const Evidence = () => {
     }
 
     for (let i = 0; i < form.length; i++) {
+      console.log("0")
       let data = new FormData();
       data.append("evidenceCheck", form[i].evidenceCheck);
       data.append("evidenceCategory", form[i].evidenceCategory);
       data.append("evidenceRemark", form[i].evidenceRemark);
-      data.append("evidenceDocument", form[i].evidenceDocument);
+      console.log("1")
+      if(form[i].evidenceDocument !== null && typeof form[i].evidenceDocument !== "string" ){
+        console.log("2")
+        data.append("evidenceDocument", form[i].evidenceDocument);
+        console.log("3")
+      }
+      if(form[i].evidenceDocument == ""){
+        data.append("evidenceDocument", form[i].evidenceDocument);
+      }
+      console.log("4")
       data.append("status", "Active");
       data.append("updatedBy", "");
 
@@ -313,10 +328,13 @@ const Evidence = () => {
           )}/evidences/${evideceData[i].pk}/`,
           data
         );
+        if(res.status === 200){
+          history.push(
+            `/app/incident-management/registration/evidence/activity-detail/`
+          );
+        }
 
-        history.push(
-          `/app/incident-management/registration/evidence/activity-detail/`
-        );
+        
       } else {
         data.append("createdAt", form[i].createdAt);
         data.append("createdBy", form[i].createdBy);
@@ -362,6 +380,10 @@ const Evidence = () => {
     TempPpeData[index].evidenceCheck = e.target.value;
     if (e.target.value == "Yes"){
       TempPpeData[index].evidenceCheck = e.target.value;
+      if(TempPpeData[index].evidenceDocument == null){
+        TempPpeData[index].evidenceDocument = ""
+        
+      }
       await setForm(TempPpeData);
     }else {
       document.getElementById(`evidenceDocument${index}`).value = ''
@@ -373,8 +395,9 @@ const Evidence = () => {
     
   };
 
-
+  console.log(form)
   const handleFile = async (e, index) => {
+    
     const file = e.target.files[0].name.toLowerCase().split(".")
     if(file[1] == "jpg" ||file[1] == "png" || file[1] == "pdf" || file[1] == "xlsx" || file[1] == "xls" || file[1] == "ppt" || file[1] == "pptx" || file[1] == "doc" || file[1] == "docx" || file[1] == "text" || file[1] == "mp4" || file[1] == "mov" || file[1] == "flv" || file[1] == "avi" || file[1] == "mkv") {
       let TempPpeData = [...form];
@@ -385,6 +408,7 @@ const Evidence = () => {
     ) {
       TempPpeData[index].evidenceDocument = e.target.files[0];
       await setForm(TempPpeData);
+      
     } else {
       await setOpen(true);
     }
@@ -400,6 +424,15 @@ const Evidence = () => {
     await setForm(TempPpeData);
   };
 
+  const handelFileName = (value) => {
+    console.log(value)
+    const fileNameArray = value.split('/')
+    const fileName = fileNameArray[fileNameArray.length - 1]
+    console.log(fileName)
+    return fileName
+
+  }
+
   const radioDecide = ["Yes", "No", "N/A"];
 
   useEffect(() => {
@@ -407,7 +440,7 @@ const Evidence = () => {
     if (id) {
       fetchEvidenceList();
     } else {
-      fetchEvidenceList();
+      setIsLoading(true);
     }
   }, []);
 
@@ -449,10 +482,9 @@ const Evidence = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {form.length == 14 ? (
+                    {form[0].pk ? (
                       <>
                         {Object.entries(form)
-                          .slice(1, 14)
                           .map(([index, value]) => (
                             <>
                               <TableRow>
@@ -506,7 +538,8 @@ const Evidence = () => {
                                   />
                                 </TableCell>
                                 <TableCell style={{ width: "220px" }}>
-                                  <input
+                                {/* {form[index].evidenceDocument  ? "File Uploded" :  */}
+                                <input
                                     type="file"
                                     id = {`evidenceDocument${index}`}
                                     className={classes.fullWidth}
@@ -521,6 +554,8 @@ const Evidence = () => {
                                       handleFile(e, index);
                                     }}
                                   />
+                                  
+                                {/* } */}
                                 </TableCell>
                               </TableRow>
                             </>

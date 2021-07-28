@@ -131,9 +131,13 @@ function BlankPage() {
   };
 
   const fetchData = async () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    const fkProjectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
     const res = await api.get("api/v1/incidents/");
-    console.log(res.data.data.results);
-    await setIncidents(res.data.data.results.results);
+    
+    const newData = res.data.data.results.results.filter(item=>item.fkCompanyId === fkCompanyId && item.fkProjectId ===fkProjectId)
+    await setIncidents(newData);
+    console.log(newData)
   };
 
   const handlePush = async () => {
@@ -201,12 +205,7 @@ function BlankPage() {
         filter: true,
       },
     },
-    {
-      name: "link",
-      options: {
-        filter: false,
-      },
-    },
+    
   ];
 
   const options = {
@@ -395,8 +394,8 @@ function BlankPage() {
                           </Typography>
 
                           <Typography className={Fonts.listingLabelValue}>
-                            {/* {item[1]["incidentReportedByName"]} */}
-                            Not found
+                            {item[1]["incidentType"]}
+                            
                           </Typography>
                         </Grid>
                         <Grid item lg={3}>
@@ -407,7 +406,7 @@ function BlankPage() {
                             Incident location
                           </Typography>
                           <Typography className={Fonts.listingLabelValue}>
-                            {item[1]}
+                            {item[1]['incidentLocation']}
                           </Typography>
                         </Grid>
 
@@ -423,7 +422,9 @@ function BlankPage() {
                             variant="body1"
                             className={Fonts.listingLabelValue}
                           >
-                            {item[3]}
+                            {moment(item[1]["incidentReportedOn"]).format(
+                              "Do MMM YYYY, h:mm a"
+                            )}
                           </Typography>
                         </Grid>
 
@@ -436,7 +437,7 @@ function BlankPage() {
                           </Typography>
 
                           <Typography className={Fonts.listingLabelValue}>
-                            {item[1]}
+                            {item[1]["incidentReportedByName"]}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -629,7 +630,7 @@ function BlankPage() {
                             Incident type
                           </Typography>
                           <Typography className={Fonts.listingLabelValue}>
-                            Not found
+                            {item[1]["incidentType"]}
                           </Typography>
                         </Grid>
                         <Grid item lg={3}>
