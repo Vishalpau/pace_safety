@@ -157,9 +157,10 @@ function PersonalDashboard(props) {
             setOpen(true)
           }
           if(response.data.data.results.data.companies.length === 1){
+            console.log(response.data.data.results.data.companies)
             let companeyDetails = {};
-              companeyDetails.fkCompanyId = response.data.data.results.data.companies[0].id;
-              companeyDetails.fkCompanyName = response.data.data.results.data.companies[0].name;
+              companeyDetails.fkCompanyId = response.data.data.results.data.companies[0].companyId;
+              companeyDetails.fkCompanyName = response.data.data.results.data.companies[0].companyName;
               localStorage.setItem("company", JSON.stringify(companeyDetails));
               let newData = response.data.data.results.data.companies[0];
               if (newData) {

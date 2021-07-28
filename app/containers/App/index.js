@@ -30,43 +30,60 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 
 function App() {
-  const [userData, setUserData] = useState([]);
-  const [companyListData, setCompanyListData] = useState([])
-  try {
-    let config = {
-      method: "get",
-      url: `${SELF_API}`,
-      headers: HEADER_AUTH,
-    };
-    axios(config)
-      .then(function(response) {
-       console.log('index',response.data.data)
-       localStorage.setItem('userDetails',JSON.stringify(response.data.data.results.data))
-       if(response.status !== 200){
-       window.location.href = `${LOCAL_LOGIN_URL}`;
-       }
-      })
-      .catch(function(error) {
-        if(error){ }
-        
-      });
-    }catch(error){
-    }
+  const [status, setStatus] = useState(0)
+  const userLogin =()=>{
+    try {
+      let config = {
+        method: "get",
+        url: `${SELF_API}`,
+        headers: HEADER_AUTH,
+      };
+      axios(config)
+        .then(function(response) {
+         console.log('index',response.data.data)
+         localStorage.setItem('userDetails',JSON.stringify(response.data.data.results.data))
+         setStatus(response.status)
+         if(response.status !== 200){
+          if(window.location.hostname === 'localhost'){
+            window.location.href = `${LOCAL_LOGIN_URL}`;
+          } else{
+            window.location.href = `${LOGIN_URL}`
+          }
+         }
+        })
+        .catch(function(error) {
+         });
+      }catch(error){
+      }
+  }
+  useEffect(()=>{
+    userLogin();
+  },[status])
   const getToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
-
+    let data ={}
     if (code) {
-      let data = JSON.stringify({
-        grant_type: "authorization_code",
-        client_id:
-          `${SSO_CLIENT_ID}`,
-        client_secret:
-          `${SSO_CLIENT_SECRET}`,
-        // `${LOCAL_SSO_CLIENT_SECRET}`,
-        code: code,
-      });
-
+      if(window.location.hostname === 'localhost'){
+         data = JSON.stringify({
+          grant_type: "authorization_code",
+          client_id:`${LOCAL_SSO_CLIENT_ID}`,
+          client_secret:`${LOCAL_SSO_CLIENT_SECRET}`,
+          code: code,
+        });
+  
+      } else{
+        data = JSON.stringify({
+          grant_type: "authorization_code",
+          client_id:
+            `${SSO_CLIENT_ID}`,
+          client_secret:
+            `${SSO_CLIENT_SECRET}`,
+          code: code,
+        });
+  
+      }
+      
       let config = {
         method: "post",
         url: `${SSO_URL}/api/v1/user/auth/token/`,
@@ -87,14 +104,18 @@ function App() {
     }
     else {
       if (localStorage.getItem('access_token') === null) {
-        window.location.href = `${LOGIN_URL}`
-        // window.location.href = `${LOCAL_LOGIN_URL}`
+        if(window.location.hostname === 'localhost'){
+          window.location.href = `${LOCAL_LOGIN_URL}`;
+        } else{
+          window.location.href = `${LOGIN_URL}`
+        }
       }
     }
   };
 
   useEffect(() => {
     getToken();
+    
   }, []);
   return (
     <ThemeWrapper>

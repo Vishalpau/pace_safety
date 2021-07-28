@@ -90,7 +90,7 @@ const LessionLearned = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
   const [evidence,setEvidence] = useState([])
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");

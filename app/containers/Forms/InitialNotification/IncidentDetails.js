@@ -23,7 +23,7 @@ import { func } from "prop-types";
 import { useHistory, useParams } from "react-router";
 import FormSideBar from "../FormSideBar";
 
-import { INITIAL_NOTIFICATION_FORM } from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM, SSO_URL, HEADER_AUTH } from "../../../utils/constants";
 import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
@@ -94,11 +94,11 @@ const IncidentDetails = () => {
     isEnviromentalImpacted: "",
   });
 
-  const fkCompanyId  = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-  const project= JSON.parse(localStorage.getItem('projectName')).projectName;
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
-  const userName  = JSON.parse(localStorage.getItem('userDetails')).name;
-  const selectBreakdown = JSON.parse(localStorage.getItem('selectBreakDown'));
+  const fkCompanyId  = JSON.parse(localStorage.getItem('company'))!==null?JSON.parse(localStorage.getItem('company')).fkCompanyId:null;
+  const project= JSON.parse(localStorage.getItem('projectName'))!==null?JSON.parse(localStorage.getItem('projectName')).projectName:null;
+  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const userName  = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).name:null;
+  const selectBreakdown = JSON.parse(localStorage.getItem('selectBreakDown'))!==null?JSON.parse(localStorage.getItem('selectBreakDown')):null;
   var struct=""
   for(var i in selectBreakdown){
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`
@@ -201,7 +201,7 @@ const IncidentDetails = () => {
                 `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
               );
             } else if (nextPath.propertyAffect === "Yes") {
-              alert(nextPath.propertyAffect)
+              
               history.push(
                 `/app/incident-management/registration/initial-notification/property-affected/${id}`
               );
@@ -410,7 +410,7 @@ const IncidentDetails = () => {
 
   // fetch incident details data
   const fetchIncidentsData = async () => {
-    if (id === undefined) {
+    if (!id) {
       await setIsLoading(true);
     } else {
       try {
@@ -423,6 +423,8 @@ const IncidentDetails = () => {
           temp = result;
           setForm(temp);
         }
+        
+        // const user = localStorage.getItem({})
         // set right sidebar value
         if (result.isEnviromentalImpacted !== "Yes") {
           hideAffect.push("Environment affected");
@@ -437,6 +439,7 @@ const IncidentDetails = () => {
           hideAffect.push("People affected");
         }
         await setIsLoading(true);
+        await fetchBreakDownData(result.fkProjectStructureIds)
       } catch (error) {
         setMessage("Something went worng!");
         setMessageType("error");
@@ -444,6 +447,62 @@ const IncidentDetails = () => {
       }
     }
   };
+  // fetchBreakdownData
+  const fetchBreakDownData=async(projectBreakdown)=>{
+    let projectData = JSON.parse(localStorage.getItem('projectName'))
+    localStorage.removeItem('selectBreakDown')
+    let selectBreakDown=[]
+    let breakDown = projectBreakdown.split(":")
+    for (let key in breakDown){
+      if( breakDown[key].slice(0,2) === '1L'){
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
+          headers: HEADER_AUTH,
+        };
+        await api(config)
+          .then(async(response)=> {
+              let result = response.data.data.results
+             
+              result.map((item)=>{
+                
+                if(breakDown[key].slice(-2)== item.id){
+                  selectBreakDown= [...selectBreakDown,
+                      { depth: item.depth, id: item.id, name: item.name },
+                    ]
+                }
+              })
+          })
+          .catch(function(error) {
+          });
+      }else{
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key-1].slice(-2)}`,
+          headers: HEADER_AUTH,
+        };
+        
+        await api(config)
+          .then(async(response)=> {
+              let result = response.data.data.results
+              result.map((item,index)=>{
+                if(breakDown[key].slice(-2)== item.id){
+                  selectBreakDown= [...selectBreakDown,
+                    { depth: item.depth, id: item.id, name: item.name },
+                  ]
+                }
+              })
+          })
+          .catch(function(error) {
+          });
+      }
+    }
+    localStorage.setItem('selectBreakDown',JSON.stringify(selectBreakDown))
+  }
 
   //  set state for hide sidebar
   const handleHideAffect = (e, name, key) => {
@@ -478,7 +537,7 @@ const IncidentDetails = () => {
             <Grid item xs={12} md={12}>
              
                 <Typography variant="h6" className={Type.labelName} gutterBottom id="project-name-label">Project name</Typography>
-               <Typography className={Type.labelValue}>{project.projectName}</Typography>
+               <Typography className={Type.labelValue}>{project?project.projectName:null}</Typography>
              
             </Grid>
                   {/* Unit Name */}
@@ -901,12 +960,7 @@ const IncidentDetails = () => {
                   </FormHelperText>
                 )}
               </FormControl>
-              <AlertMessage
-                message={message}
-                type={messageType}
-                open={open}
-                setOpen={setOpen}
-              />
+              
             </Grid>
 
                   {/* Go to next button */}

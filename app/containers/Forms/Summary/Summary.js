@@ -53,6 +53,7 @@ import EvidenceSummary from "../../SummaryDetails/Evidence";
 import RootCauseAnalysisSummary from "../../SummaryDetails/RootCauseAndAnalysis";
 import LessionLearnSummary from "../../SummaryDetails/LessionLearn";
 
+
 // import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -94,6 +95,7 @@ const Summary = () => {
   const [lessionlearnData, setLessionLearnData] = useState({});
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [initialNoticeficationStatus,setInitialNotificationStatus] = useState(false)
   const rootCauseStatus = useRef(false);
 
   const { id } = useParams();
@@ -106,6 +108,14 @@ const Summary = () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
     await setIncidents(allIncidents.data.data.results);
     await setIsLoading(true);
+  };
+  const fetchReportData = async () => {
+    const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
+    if(allIncidents.data.data.results.length > 0){
+      await setInitialNotificationStatus(true);
+    }
+    
+    
   };
 
   const fetchInvestigationData = async () => {
@@ -185,6 +195,7 @@ const Summary = () => {
     fetchEvidenceData();
     fetchLessonLerned();
     rootCauseAnalysisCheck();
+    fetchReportData();
   }, []);
 
   return (
@@ -202,10 +213,10 @@ const Summary = () => {
                   variant="contained"
                   size="large"
                   variant={
-                    incidents.isEquipmentDamaged ? "contained" : "outlined"
+                    initialNoticeficationStatus ? "contained" : "outlined"
                   }
                   endIcon={
-                    incidents.isEquipmentDamaged ? (
+                    initialNoticeficationStatus ? (
                       <CheckCircle />
                     ) : (
                       <AccessTime />
@@ -223,7 +234,7 @@ const Summary = () => {
                   Initial Notification
                 </Button>
                 <Typography variant="caption" display="block">
-                  {incidents.isEquipmentDamaged ? "Done" : "Pending"}
+                  {initialNoticeficationStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -344,19 +355,19 @@ const Summary = () => {
                         rootcauseanalysis === false &&
                         lessionlearn === false)
                     ) {
-                      return <IncidentDetailsSummary />;
+                      return(<><p>initial noticefication</p> <IncidentDetailsSummary /></>);
                     }
                     if (investigation == true) {
-                      return <InvestigationSummary />;
+                      return(<><p> Investigation</p> <InvestigationSummary /></>) ;
                     }
                     if (evidence == true) {
-                      return <EvidenceSummary />;
+                      return (<><p>Evidence</p> <EvidenceSummary /></>);
                     }
                     if (rootcauseanalysis == true) {
-                      return <RootCauseAnalysisSummary />;
+                      return(<><p>Root Cause Analysis</p> <RootCauseAnalysisSummary /></>) ;
                     }
                     if (lessionlearn == true) {
-                      return <LessionLearnSummary />;
+                      return (<><p>Lession Learn</p> <LessionLearnSummary /></>);
                     }
                   })()}
                 </>
@@ -441,7 +452,7 @@ const Summary = () => {
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
-                        <ListItemText primary="Lessons Learned" />
+                        <ListItemText primary="Modify Lessons Learnt" />
                       </ListItemLink>
                     ) : (
                       <ListItemLink
@@ -454,7 +465,7 @@ const Summary = () => {
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>
-                        <ListItemText primary="Lessons Learnt" />
+                        <ListItemText primary="Add Lessons Learnt" />
                       </ListItemLink>
                     )}
 
