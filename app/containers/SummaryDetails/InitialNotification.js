@@ -100,11 +100,21 @@ const IncidentDetailsSummary = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  // const [fkid, setFkid] = useState(3);
-
-  // useEffect(() => {
-  //     setFkid(localStorage.getItem("fkincidentId"))
-  //   });
+  
+  
+  const download = (image_link) => {
+    let onlyImage_url = image_link.replace("https://", "")
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url
+    let imageArray = image_url.split("/")
+    let image_name = imageArray[imageArray.length - 1]
+    saveAs(image_url, image_name)
+    handleClose()
+  };
+  const handelFileName = (value) => {
+    const fileNameArray = value.split('/')
+    const fileName = fileNameArray[fileNameArray.length - 1]
+    return fileName
+  }
 
   const fkid = localStorage.getItem("fkincidentId");
 
@@ -266,7 +276,7 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
       {/* People Affected */}
-      {peopleData.length > 0 ? (
+
         <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel1"}
@@ -364,13 +374,25 @@ const IncidentDetailsSummary = () => {
                       </Grid>
                     </Grid>
                   ))
-                : null}
+                : <Grid item md={12}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  className={Fonts.labelName}
+                >
+                  Do you have details of individual affected?
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  {incidents.isPersonDetailsAvailable}
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  Details of people affected:- {incidents.personAffectedComments}
+                </Typography>
+              </Grid>}
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null}
       {/* Property affect */}
-      {propertyData.length > 0 ? (
         <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel2"}
@@ -432,13 +454,26 @@ const IncidentDetailsSummary = () => {
                       </Grid>
                     </Grid>
                   ))
-                : null}
+                : <Grid item md={12}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  className={Fonts.labelName}
+                >
+                  Do you have details to share about the properties affected?
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  {incidents.isPropertyDamagedAvailable}
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  Details of property affected:- {incidents.propertyDamagedComments}
+                </Typography>
+              </Grid>}
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null}
       {/* Equipment Affected */}
-      {equipmentData.length > 0 ? (
+     
         <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel3"}
@@ -508,11 +543,25 @@ const IncidentDetailsSummary = () => {
                       </Grid>
                     </Grid>
                   ))
-                : null}
+                : <Grid item md={12}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  className={Fonts.labelName}
+                >
+                  Do you have details to share about the equipment affected?
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  {incidents.isEquipmentDamagedAvailable}
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  Details of equipment affected:- {incidents.equipmentDamagedComments}
+                </Typography>
+              </Grid>}
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null}
+     
       {/* Environment Affected */}
       {enviornmentData.length ? (
         <Grid item xs={12}>
@@ -597,7 +646,6 @@ const IncidentDetailsSummary = () => {
                   {incidents.notificationComments}
                 </Typography>
               </Grid>
-            
             </Grid>
 
             <>
@@ -687,7 +735,7 @@ const IncidentDetailsSummary = () => {
                               variant="body"
                               className={Fonts.labelValue}
                             >
-                              <Tooltip title="File Name">
+                              <Tooltip title={handelFileName(value.evidenceDocument)}>
                                 <IconButton
                                   onClick={() =>
                                     handleOpen(value.evidenceDocument)
@@ -739,23 +787,19 @@ const IncidentDetailsSummary = () => {
                   >
                     View Attachment
                   </Button>
-                
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Button
-                      startIcon={<GetAppIcon />}
-                      variant="contained"
-                      color="primary"
-                      className={classes.modalButton}
-                      href={`${documentUrl}`}
-                      disableElevation
-                      target="_blank"
-                      download
-                    >
-                       Download
-                    </Button>
-                  </Grid>
-               
+                  <Button
+                    startIcon={<GetAppIcon />}
+                    variant="contained"
+                    color="primary"
+                    className={classes.modalButton}
+                    disableElevation
+                    onClick={()=>download(documentUrl)}
+                  >
+                    Download
+                  </Button>
+                </Grid>
               </Grid>
             </DialogContentText>
           </DialogContent>

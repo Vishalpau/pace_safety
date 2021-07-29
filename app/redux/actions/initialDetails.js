@@ -83,19 +83,10 @@ export const handleBreakdownDetails = async(data) =>{
         });
 }
 
-export const breakDownDetails = (data,name)=>{
-
-  let List=[];
-  let temp = [...List,{
-    breakdownLabel:
-      name,
-    breakdownValue: data,
-    selectValue:""
-  }]
-  List = temp
+export const breakDownDetails = (data)=>{ 
   return {
       type: actionsType.BREAKDOWN_DETAILS,
-      payload: List
+      payload: data
   }
 }
 export const addbreakDownDetails = data=>{

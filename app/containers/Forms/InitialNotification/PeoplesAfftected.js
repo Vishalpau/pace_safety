@@ -166,7 +166,7 @@ const PeoplesAffected = () => {
       }
       }
       catch(error){
-        setMessage("Something went worng!");
+        setMessage("Network error!");
         setMessageType("error");
         setOpen(true);
       }
@@ -216,7 +216,7 @@ const PeoplesAffected = () => {
           setOpen(true);
         }
         // check condition id
-        if (id) {
+        
           if (nextPath.propertyAffect === "Yes") {
             history.push(
               `/app/incident-management/registration/initial-notification/property-affected/${id}`
@@ -234,13 +234,28 @@ const PeoplesAffected = () => {
               `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
             );
           }
-          // Here it is the new entry create case. We will redirect to next pages without ids.
-        } 
-       
       }
 
       // Case when form has No option selected.
     } else {
+
+      // delete existing data if user select NO or N/A
+      try{
+        if (peopleData.length > 0) {
+          const temp = peopleData
+          for (var i = 0; i < peopleData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/people/${temp[i].id}/`,
+            );
+          }
+        }
+        }
+        catch(error){
+          setMessage("Network error!");
+          setMessageType("error");
+          setOpen(true);
+        }
+
       // When no is selected we just have to send the comment and yes/no flag to API via put request.
       const temp = incidentsListData;
       temp.isPersonDetailsAvailable =
@@ -262,7 +277,7 @@ const PeoplesAffected = () => {
       // Case when id is available. Update case. Redirect user to specific page.
       // Here if we see, we are redirecting user to urls with /id/ in the end.
       // Therefore, next page will get the input from the id and pre-fill the details.
-      if (id) {
+      
         if (nextPath.propertyAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/property-affected/${id}`
@@ -280,24 +295,6 @@ const PeoplesAffected = () => {
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
         }
-        // Here it is the new entry create case. We will redirect to next pages without ids.
-      } else if (nextPath.propertyAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/property-affected/"
-        );
-      } else if (nextPath.equipmentAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/equipment-affected/"
-        );
-      } else if (nextPath.environmentAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/environment-affected/"
-        );
-      } else {
-        history.push(
-          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-        );
-      }
     }
   };
 
