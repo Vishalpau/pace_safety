@@ -426,7 +426,7 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               rows={4}
-              label="Other human factors*"
+              label="Other human factors"
               error={error.otherHumanFactor}
               value={form.otherHumanFactor.rcaRemark !== "No option selected" ? form.otherHumanFactor.rcaRemark : ""}
               helperText={error ? error.otherHumanFactor : ""}
@@ -492,7 +492,7 @@ const BasicCause = () => {
               value={form.otherJobFactors.rcaRemark !== "No option selected" ? form.otherJobFactors.rcaRemark : ""}
               helperText={error ? error.otherJobFactors : ""}
               rows={3}
-              label="Other job factors*"
+              label="Other job factors"
               className={classes.formControl}
               onChange={async (e) => handelOtherJobFactors(e)}
             />

@@ -266,8 +266,7 @@ const BasicCauseAndAction = () => {
                             >
                               <ActionTracker
                                 actionContext="incidents:Pacacuase"
-                                enitityReferenceId={`${putId.current}:${id.current[index]
-                                  }`}
+                                enitityReferenceId={`${putId.current}:${id.current[index]}:${index}`}
                               />
                             </TableCell>
                           </TableRow>

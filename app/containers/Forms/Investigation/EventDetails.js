@@ -77,7 +77,7 @@ const EventDetails = () => {
   const history = useHistory();
   const CheckPost = useRef()
   const radioYesNo = ["Yes", "No"];
-  const [overAllCostShow, SetOverAllCostShow] = useState("")
+  const [overAllCostShow, setOverAllCostShow] = useState("")
 
   const [weather, setWeather] = useState([
     {
@@ -141,7 +141,6 @@ const EventDetails = () => {
         setOverAllCost(costData)
         costData.map((value) => {
           overAllCostId.current.push(value.id)
-          SetOverAllCostShow("Yes")
         })
       }
     }
@@ -219,7 +218,7 @@ const EventDetails = () => {
           }
           // cost api call
           let costObject = overAllCost;
-          if (overAllCostShow == "Yes") {
+          if (form.isCostIncurred == "Yes") {
             for (let keys in costObject) {
               costObject[keys]["fkEventDetailsId"] = eventID
               const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/cost/`, costObject[keys])
@@ -631,14 +630,13 @@ const EventDetails = () => {
             <FormControl component="fieldset" required>
               <RadioGroup
                 className={classes.inlineRadioGroup}
-                value={overAllCostShow}
-                onChange={(e) => setForm({ ...form, isCostIncurred: e.target.value })}
-
               >
                 {radioYesNo.map((value) => (
                   <FormControlLabel
                     disabled={CheckPost.current == false}
-                    value={form.isCostIncurred}
+                    value={value}
+                    checked={form.isCostIncurred == value}
+                    onChange={(e) => setForm({ ...form, isCostIncurred: value })}
                     control={<Radio />}
                     label={value}
                   />
@@ -648,14 +646,13 @@ const EventDetails = () => {
           </Grid>
 
           {/* cost incurred  */}
-          <Grid item md={11}>
-            {overAllCostShow == "Yes" ?
+          <Grid item md={12}>
+            {form.isCostIncurred == "Yes" ?
               <>
-
                 {overAllCost.map((value, index) => (
-                  <Grid container item md={12} spacing={2} alignItems="center">
+                  <Grid container item md={11} spacing={2} alignItems="center">
                     {/* cost type */}
-                    <Grid item md={4}>
+                    <Grid item md={3}>
                       <FormControl
                         variant="outlined"
                         error={errorCost && errorCost[`costType${[index]}`]}
@@ -690,7 +687,7 @@ const EventDetails = () => {
                     </Grid>
 
                     {/* cost amount */}
-                    <Grid item md={4}>
+                    <Grid item md={3}>
                       <TextField
                         id="title"
                         error={errorCost && errorCost[`costAmount${[index]}`]}
@@ -714,7 +711,7 @@ const EventDetails = () => {
                     </Grid>
 
                     {/* cost factor */}
-                    <Grid item md={3}>
+                    <Grid item md={4}>
                       <FormControl
                         error={errorCost && errorCost[`casualFactor${[index]}`]}
                         required
