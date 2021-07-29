@@ -102,7 +102,7 @@ const WorkerDetails = () => {
   const history = useHistory();
   const [workerid, setWorkerId] = useState();
   let [localWorkerData, setLocalWorkerData] = useState([]);
-
+  const [files] = useState([]);
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
@@ -156,6 +156,7 @@ const WorkerDetails = () => {
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
     setError({})
+
     // getting person affected data
     const url = window.location.pathname.split("/");
     const workerNum = url[url.length - 2];
@@ -165,10 +166,7 @@ const WorkerDetails = () => {
     if (typeof particularEffected !== "undefined") {
       setForm(particularEffected);
     }
-    if (
-      typeof particularEffected.id !== "undefined" ||
-      particularEffected.id != ""
-    ) {
+    if (typeof particularEffected.id !== "undefined" || particularEffected.id != "") {
       setWorkerId(particularEffected.id);
     }
     // getting person affected data end
@@ -203,6 +201,9 @@ const WorkerDetails = () => {
   const handleFile = async (e) => {
     const temp = { ...form };
     temp.attachments = e.target.files[0];
+    if (e.target.files[0].size > 1500) {
+      console.log("File too large")
+    }
     await setForm(temp);
   };
   const handleNext = async () => {
@@ -411,6 +412,12 @@ const WorkerDetails = () => {
     setSupervisorTimeInCompany(await PickListData(56));
     await setIsLoading(true);
   };
+
+  const imageNameFromUrl = (url) => {
+    let imageArray = url.split("/")
+    let image_name = imageArray[imageArray.length - 1]
+    return image_name
+  }
 
   useEffect(() => {
     PickList();
@@ -1314,33 +1321,31 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
-            {typeof form.attachments == "string" ?
-              <>
 
-                <Grid item md={6}>
-                  {form.attachments != "" && typeof form.attachments == "string" ? (
-                    <a target="_blank" href={form.attachments}>
-                      Image
-                      <ImageIcon />
-                    </a>
-                  ) : (
-                    <p />
-                  )}
-                </Grid>
-              </>
-              :
-              <Grid item md={4}>
-                <input
-                  type="file"
-                  className={classes.fullWidth}
-                  name="file"
-                  accept=".png, .jpg "
-                  onChange={(e) => {
-                    handleFile(e);
-                  }}
-                />
-              </Grid>
-            }
+            <Grid item md={4}>
+              <input
+                id="selectFile"
+                type="file"
+                className={classes.fullWidth}
+                name="file"
+                accept=".png, .jpg , .jpeg"
+                onChange={(e) => {
+                  handleFile(e);
+                }}
+              />
+            </Grid>
+
+            <Grid item md={6}>
+              {form.attachments != "" && typeof form.attachments == "string" ? (
+                <a target="_blank" href={form.attachments}>
+                  <p>{imageNameFromUrl(form.attachments)}</p>
+                  {/* <ImageIcon /> */}
+                </a>
+              ) : (
+                <p />
+              )}
+            </Grid>
+
             {localWorkerData.length > 1 ? (
               <Grid item md={12}>
                 <Button onClick={(e) => handelRemove()}>

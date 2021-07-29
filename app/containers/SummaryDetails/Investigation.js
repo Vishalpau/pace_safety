@@ -154,8 +154,12 @@ const InvestigationSummary = () => {
   };
 
   const download = (image_link) => {
-    saveAs(image_link, 'image.jpg')
-    // handleClose()
+    let onlyImage_url = image_link.replace("https://", "")
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url
+    let imageArray = image_url.split("/")
+    let image_name = imageArray[imageArray.length - 1]
+    saveAs(image_url, image_name)
+    handleClose()
   };
 
   useEffect(() => {

@@ -426,7 +426,7 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               rows={4}
-              label="Other human factors*"
+              label="Other human factors"
               error={error.otherHumanFactor}
               value={form.otherHumanFactor.rcaRemark !== "No option selected" ? form.otherHumanFactor.rcaRemark : ""}
               helperText={error ? error.otherHumanFactor : ""}
