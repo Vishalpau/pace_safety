@@ -126,9 +126,9 @@ const BasicCauseAndAction = () => {
       let tempActionID = []
       allActionTracker.map((actionTracker) => {
         let causeId = actionTracker.enitityReferenceId.split(":")[1]
-        console.log(causeId == paceId)
         if (causeId == paceId) {
-          tempActionID.push(actionTracker.id)
+          let causeSubId = actionTracker.enitityReferenceId.split(":")[2]
+          tempActionID.push([actionTracker.id, causeSubId])
         }
       })
       ActionToCause[paceId] = tempActionID
