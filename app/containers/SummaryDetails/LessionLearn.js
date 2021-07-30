@@ -59,6 +59,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Modal from "@material-ui/core/Modal";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -130,11 +131,23 @@ const LessionLearnSummary = () => {
       await setEvidence(allEvidence.data.data.results);
     }
   };
-
-  console.log(lessionlearn);
+  const download = (image_link) => {
+    let onlyImage_url = image_link.replace("https://", "")
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url
+    let imageArray = image_url.split("/")
+    let image_name = imageArray[imageArray.length - 1]
+    saveAs(image_url, image_name)
+    handleClose()
+  };
+  const handelFileName = (value) => {
+    const fileNameArray = value.split('/')
+    const fileName = fileNameArray[fileNameArray.length - 1]
+    return fileName
+  }
+  
   useEffect(() => {
     fetchLessionLearnData();
-    console.log(open);
+  
     fetchEvidanceData();
   }, []);
   const classes = useStyles();
@@ -210,7 +223,7 @@ const LessionLearnSummary = () => {
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                <Tooltip title="File Name">
+                                <Tooltip title={handelFileName(value.evidenceDocument)}>
                                   <IconButton
                                     onClick={() =>
                                       handleOpen(value.evidenceDocument)
@@ -249,19 +262,32 @@ const LessionLearnSummary = () => {
               </IconButton>
               <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
-                  <Grid container>
-                    <Grid item xs={12} md={6}>
-                      <Button
-                        startIcon={<VisibilityIcon />}
-                        variant="contained"
-                        className={classes.modalButton}
-                        disableElevation
-                        href={`${documentUrl}`}
-                        target="_blank"
-                      >
-                        View Attachment
-                      </Button>
-                    </Grid>
+                <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Button
+                  startIcon={<VisibilityIcon />}
+                  variant="contained"
+                  color="primary"
+                  className={classes.modalButton}
+                  disableElevation
+                  href={`${documentUrl}`}
+                  target="_blank"
+                >
+                  View Attachment
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={6}>
+              <Button
+                    startIcon={<VisibilityIcon />}
+                    variant="contained"
+                    disableElevation
+                    className={classes.modalButton}
+                    onClick={(e) => download(documentUrl)}
+                  >
+                    Download Attachment
+                  </Button>
+              </Grid>
+            
                   </Grid>
                 </DialogContentText>
               </DialogContent>

@@ -163,8 +163,8 @@ const EvidenceSummary = () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     const result = allEvidence.data.data.results
     const newData = result.filter(
-                      (item) => item.evidenceCategory !== "Lessons Learned" && item.evidenceCategory !== "Initial Evidence"
-                      )
+      (item) => item.evidenceCategory !== "Lessons Learned" && item.evidenceCategory !== "Initial Evidence"
+    )
     await setEvidence(newData);
     await setIsLoding(true);
   };
@@ -305,6 +305,7 @@ const EvidenceSummary = () => {
               </AccordionDetails>
             </Accordion>
           </Grid>
+
           <Grid item xs={12}>
             <Accordion
               expanded={expanded === "panel2"}
@@ -318,8 +319,29 @@ const EvidenceSummary = () => {
               <AccordionDetails>
                 <Grid container spacing={3}>
                   {activity.length !== 0
-                    ? activity.map((ad, key) => (
+                    ? activity.slice(0, 21).map((ad, key) => (
                       <Grid item md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(21, 25).map((ad, key) => (
+                      <Grid item md={12} key={key}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -340,6 +362,7 @@ const EvidenceSummary = () => {
               </AccordionDetails>
             </Accordion>
           </Grid>
+
         </Grid>
       ) : (
         <h1>Loading...</h1>
@@ -379,15 +402,15 @@ const EvidenceSummary = () => {
                 </Button>
               </Grid>
               <Grid item xs={12} md={6}>
-              <Button
-                    startIcon={<GetAppIcon />}
-                    variant="contained"
-                    disableElevation
-                    className={classes.modalButton}
-                    onClick={(e) => download(documentUrl)}
-                  >
-                    Download Attachment
-                  </Button>
+                <Button
+                  startIcon={<GetAppIcon />}
+                  variant="contained"
+                  disableElevation
+                  className={classes.modalButton}
+                  onClick={(e) => download(documentUrl)}
+                >
+                  Download Attachment
+                </Button>
               </Grid>
             </Grid>
           </DialogContentText>

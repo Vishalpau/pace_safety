@@ -593,7 +593,7 @@ const EventDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Impact Information"
+              label="Impact information"
               value={form.propertyImpactInformation}
               error={error && error.propertyImpactInformation}
               helperText={error && error.propertyImpactInformation}
@@ -646,13 +646,13 @@ const EventDetails = () => {
           </Grid>
 
           {/* cost incurred  */}
-          <Grid item md={12}>
+          <Grid container item md={12} spacing={2}>
             {form.isCostIncurred == "Yes" ?
               <>
                 {overAllCost.map((value, index) => (
-                  <Grid container item md={11} spacing={2} alignItems="center">
+                  <>
                     {/* cost type */}
-                    <Grid item md={3}>
+                    <Grid item md={4}>
                       <FormControl
                         variant="outlined"
                         error={errorCost && errorCost[`costType${[index]}`]}
@@ -687,7 +687,7 @@ const EventDetails = () => {
                     </Grid>
 
                     {/* cost amount */}
-                    <Grid item md={3}>
+                    <Grid item md={2}>
                       <TextField
                         id="title"
                         error={errorCost && errorCost[`costAmount${[index]}`]}
@@ -753,7 +753,7 @@ const EventDetails = () => {
                         </IconButton>
                       </Grid>
                     ) : null}
-                  </Grid>
+                  </>
                 ))}
 
                 {overAllCost.length < 4 && CheckPost.current !== false ?
