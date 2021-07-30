@@ -280,90 +280,90 @@ const IncidentDetailsSummary = () => {
             <AccordionDetails>
               {peopleData.length !== 0
                 ? peopleData.map((peopledata, key) => (
-                    <Grid container item xs={12} spacing={3} key={key}>
-                      <Grid item md={12}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {key + 1}: Details of people
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Person department
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {peopledata.personDepartment}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Person name
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {peopledata.personName}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Person type
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {peopledata.personType}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Person identification number
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {peopledata.personIdentification}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Location
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {peopledata.locationAssessmentCenter}
-                        </Typography>
-                      </Grid>
-                      <Grid item item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Worker offsite assessments
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {peopledata.workerOffsiteAssessment}
-                        </Typography>
-                      </Grid>
+                  <Grid container item xs={12} spacing={3} key={key}>
+                    <Grid item md={12}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        {key + 1}: Details of people
+                      </Typography>
                     </Grid>
-                  ))
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Person department
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {peopledata.personDepartment}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Person name
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {peopledata.personName}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Person type
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {peopledata.personType}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Person identification number
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {peopledata.personIdentification}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Location
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {peopledata.locationAssessmentCenter}
+                      </Typography>
+                    </Grid>
+                    <Grid item item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Worker offsite assessments
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {peopledata.workerOffsiteAssessment}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))
                 : null}
             </AccordionDetails>
           </Accordion>
@@ -384,54 +384,54 @@ const IncidentDetailsSummary = () => {
             <AccordionDetails>
               {propertyData.length !== 0
                 ? propertyData.map((propertydata, key) => (
-                    <Grid container item xs={12} spacing={3} key={key}>
-                      <Grid item md={12}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {key + 1}: Details of property
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Property type
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {propertydata.propertyType}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Property other type
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {propertydata.propertyOtherType}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={12}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Damage details
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {propertydata.damageDetails}
-                        </Typography>
-                      </Grid>
+                  <Grid container item xs={12} spacing={3} key={key}>
+                    <Grid item md={12}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        {key + 1}: Details of property
+                      </Typography>
                     </Grid>
-                  ))
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Property type
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {propertydata.propertyType}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Property other type
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {propertydata.propertyOtherType}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={12}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Damage details
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {propertydata.damageDetails}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))
                 : null}
             </AccordionDetails>
           </Accordion>
@@ -452,62 +452,62 @@ const IncidentDetailsSummary = () => {
             <AccordionDetails>
               {equipmentData.length !== 0
                 ? equipmentData.map((equipmentdata, key) => (
-                    <Grid
-                      container
-                      item
-                      xs={12}
-                      spacing={3}
-                      key={key}
-                      className="repeatedGrid"
-                    >
-                      <Grid item md={12}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {key + 1}: Details of equipment
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Equipment type
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {equipmentdata.equipmentType}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={12}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Equipment details
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {equipmentdata.equipmentDeatils}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Equipment other type
-                        </Typography>
-                        <Typography className={Fonts.labelValue}>
-                          {equipmentdata.equipmentOtherType}
-                        </Typography>
-                      </Grid>
+                  <Grid
+                    container
+                    item
+                    xs={12}
+                    spacing={3}
+                    key={key}
+                    className="repeatedGrid"
+                  >
+                    <Grid item md={12}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        {key + 1}: Details of equipment
+                      </Typography>
                     </Grid>
-                  ))
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Equipment type
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {equipmentdata.equipmentType}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item md={12}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Equipment details
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {equipmentdata.equipmentDeatils}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Equipment other type
+                      </Typography>
+                      <Typography className={Fonts.labelValue}>
+                        {equipmentdata.equipmentOtherType}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))
                 : null}
             </AccordionDetails>
           </Accordion>
@@ -528,27 +528,27 @@ const IncidentDetailsSummary = () => {
             <AccordionDetails>
               {enviornmentData.length !== 0
                 ? enviornmentData.map((envData, key) => (
-                    <Grid container item xs={12} spacing={3} key={key}>
-                      <Grid item md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {key + 1}: {envData.envQuestion}
-                        </Typography>
+                  <Grid container item xs={12} spacing={3} key={key}>
+                    <Grid item md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        {key + 1}: {envData.envQuestion}
+                      </Typography>
 
-                        <Typography className={Fonts.labelValue}>
-                          {envData.envQuestionOption}
-                        </Typography>
-                      </Grid>
-                      <Grid item md={12}>
-                        <Typography className={Fonts.labelValue}>
-                          {"Answer Details:"} {envData.envAnswerDetails}
-                        </Typography>
-                      </Grid>
+                      <Typography className={Fonts.labelValue}>
+                        {envData.envQuestionOption}
+                      </Typography>
                     </Grid>
-                  ))
+                    <Grid item md={12}>
+                      <Typography className={Fonts.labelValue}>
+                        {"Answer Details:"} {envData.envAnswerDetails}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))
                 : null}
             </AccordionDetails>
           </Accordion>
@@ -577,10 +577,10 @@ const IncidentDetailsSummary = () => {
                 </Typography>
                 {reportsData.length !== 0
                   ? reportsData.map((report, key) => (
-                      <Typography className={Fonts.labelValue}>
-                        {report.reportTo}
-                      </Typography>
-                    ))
+                    <Typography className={Fonts.labelValue}>
+                      {report.reportTo}
+                    </Typography>
+                  ))
                   : null}
               </Grid>
 
@@ -597,111 +597,111 @@ const IncidentDetailsSummary = () => {
                   {incidents.notificationComments}
                 </Typography>
               </Grid>
-            
+
             </Grid>
 
             <>
               {evidence.length !== 0
                 ? evidence
-                    .filter(
-                      (item) => item.evidenceCategory === "Initial Evidence"
-                    )
-                    .map((value, index) => (
-                      <Grid
-                        container
-                        className="repeatedGrid"
-                        item
-                        xs={12}
-                        spacing={3}
-                      >
-                        <Grid item md={6}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Evidence No
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {value.evidenceNumber}
-                          </Typography>
-                        </Grid>
-                        <Grid item lg={6} md={6}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Evidence Check
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {value.evidenceCheck}
-                          </Typography>
-                        </Grid>
-                        <Grid item lg={6} md={6}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Evidence Category
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {value.evidenceCategory}
-                          </Typography>
-                        </Grid>
-                        <Grid item lg={6} md={6}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            Evidence Remark
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {value.evidenceRemark}
-                          </Typography>
-                        </Grid>
-                        {value.evidenceDocument ? (
-                          <Grid item lg={6} md={6}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              className={Fonts.labelName}
-                            >
-                              Evidence Document
-                            </Typography>
-                            <Typography
-                              variant="body"
-                              className={Fonts.labelValue}
-                            >
-                              <Tooltip title="File Name">
-                                <IconButton
-                                  onClick={() =>
-                                    handleOpen(value.evidenceDocument)
-                                  }
-                                  className={classes.fileIcon}
-                                >
-                                  <PhotoSizeSelectActualIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Typography>
-                          </Grid>
-                        ) : null}
+                  .filter(
+                    (item) => item.evidenceCategory === "Initial Evidence"
+                  )
+                  .map((value, index) => (
+                    <Grid
+                      container
+                      className="repeatedGrid"
+                      item
+                      xs={12}
+                      spacing={3}
+                    >
+                      <Grid item md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Evidence No
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {value.evidenceNumber}
+                        </Typography>
                       </Grid>
-                    ))
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Evidence Check
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {value.evidenceCheck}
+                        </Typography>
+                      </Grid>
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Evidence Category
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {value.evidenceCategory}
+                        </Typography>
+                      </Grid>
+                      <Grid item lg={6} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Evidence Remark
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {value.evidenceRemark}
+                        </Typography>
+                      </Grid>
+                      {value.evidenceDocument ? (
+                        <Grid item lg={6} md={6}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            Evidence Document
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            <Tooltip title="File Name">
+                              <IconButton
+                                onClick={() =>
+                                  handleOpen(value.evidenceDocument)
+                                }
+                                className={classes.fileIcon}
+                              >
+                                <PhotoSizeSelectActualIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Typography>
+                        </Grid>
+                      ) : null}
+                    </Grid>
+                  ))
                 : null}
             </>
           </AccordionDetails>
@@ -739,23 +739,23 @@ const IncidentDetailsSummary = () => {
                   >
                     View Attachment
                   </Button>
-                
+
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Button
-                      startIcon={<GetAppIcon />}
-                      variant="contained"
-                      color="primary"
-                      className={classes.modalButton}
-                      href={`${documentUrl}`}
-                      disableElevation
-                      target="_blank"
-                      download
-                    >
-                       Download
-                    </Button>
-                  </Grid>
-               
+                  <Button
+                    startIcon={<GetAppIcon />}
+                    variant="contained"
+                    color="primary"
+                    className={classes.modalButton}
+                    href={`${documentUrl}`}
+                    disableElevation
+                    target="_blank"
+                    download
+                  >
+                    Download
+                  </Button>
+                </Grid>
+
               </Grid>
             </DialogContentText>
           </DialogContent>

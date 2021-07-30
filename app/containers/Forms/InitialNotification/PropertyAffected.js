@@ -82,7 +82,7 @@ const PropertyAffected = () => {
   const [error, setError] = useState({});
   const [isOther, setIsOther] = useState(true);
   const nextPath = localStorage.getItem("nextPath");
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null ? JSON.parse(localStorage.getItem('userDetails')).id : null;
 
   // Default form.
   const [form, setForm] = useState([
@@ -125,7 +125,7 @@ const PropertyAffected = () => {
     }
   };
 
-//  set data in form 
+  //  set data in form 
   const handlePropertyDetails = (e, key, fieldname) => {
     const temp = [...form];
     const value = e.target.value;
@@ -141,87 +141,56 @@ const PropertyAffected = () => {
     // If property data there then don't do anything as we are doing put request on each change.
 
     // if check property have or not . if property data have then put else create new
-   
-
-      // If yes selected.
-      if (detailsOfPropertyAffect === "Yes") {
-
-        if (propertyListData.length > 0) {
-          // Remove previous data
-          for (var i = 0; i < propertyListData.length; i++) {
-            const res = await api.delete(
-              `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
-            );
-          }
-    
-          // If that is not the case as if,
-        } 
 
 
-        // Validate property data.
-        const { error, isValid } = PropertyValidate(form);
-        setError(error);
-        let status = 0;
-        for (var i = 0; i < form.length; i++) {
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/properties/`,
-            {
-              propertyType: form[i].propertyType,
-              propertyOtherType: form[i].propertyOtherType,
-              damageDetails: form[i].damageDetails,
-              fkIncidentId: localStorage.getItem("fkincidentId"),
-              createdBy: parseInt(userId),
-            }
+    // If yes selected.
+    if (detailsOfPropertyAffect === "Yes") {
+
+      if (propertyListData.length > 0) {
+        // Remove previous data
+        for (var i = 0; i < propertyListData.length; i++) {
+          const res = await api.delete(
+            `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
           );
-          status = res.status;
         }
 
-        const temp = incidentsListData;
-        temp["propertyDamagedComments"] =
-          propertyDamagedComments || incidentsListData.propertyDamagedComments;
-        temp["isPropertyDamagedAvailable"] =
-          detailsOfPropertyAffect ||
-          incidentsListData.isPropertyDamagedAvailable;
-        temp["updatedAt"] = moment(new Date()).toISOString();
-        const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-        // If api success
-        if (status === 201) {
-          if (id) {
-            if (nextPath.equipmentAffect === "Yes") {
-              history.push(
-                `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-              );
-            } else if (nextPath.environmentAffect === "Yes") {
-              history.push(
-                `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-              );
-            } else {
-              history.push(
-                `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-              );
-            }
+        // If that is not the case as if,
+      }
+
+
+      // Validate property data.
+      const { error, isValid } = PropertyValidate(form);
+      setError(error);
+      let status = 0;
+      for (var i = 0; i < form.length; i++) {
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/properties/`,
+          {
+            propertyType: form[i].propertyType,
+            propertyOtherType: form[i].propertyOtherType,
+            damageDetails: form[i].damageDetails,
+            fkIncidentId: localStorage.getItem("fkincidentId"),
+            createdBy: parseInt(userId),
           }
-        }
-        // If no is selected on form.
-      } else {
-        const temp = incidentsListData;
-        temp["propertyDamagedComments"] =
-          propertyDamagedComments || incidentsListData.propertyDamagedComments;
-        temp["isPropertyDamagedAvailable"] =
-          detailsOfPropertyAffect ||
-          incidentsListData.isPropertyDamagedAvailable;
-        temp["updatedAt"] = moment(new Date()).toISOString();
-        const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
         );
+        status = res.status;
+      }
 
-        // Update case
+      const temp = incidentsListData;
+      temp["propertyDamagedComments"] =
+        propertyDamagedComments || incidentsListData.propertyDamagedComments;
+      temp["isPropertyDamagedAvailable"] =
+        detailsOfPropertyAffect ||
+        incidentsListData.isPropertyDamagedAvailable;
+      temp["updatedAt"] = moment(new Date()).toISOString();
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
+      // If api success
+      if (status === 201) {
         if (id) {
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
@@ -236,11 +205,42 @@ const PropertyAffected = () => {
               `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
             );
           }
-          // New entry case.
         }
-        
       }
-    
+      // If no is selected on form.
+    } else {
+      const temp = incidentsListData;
+      temp["propertyDamagedComments"] =
+        propertyDamagedComments || incidentsListData.propertyDamagedComments;
+      temp["isPropertyDamagedAvailable"] =
+        detailsOfPropertyAffect ||
+        incidentsListData.isPropertyDamagedAvailable;
+      temp["updatedAt"] = moment(new Date()).toISOString();
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
+
+      // Update case
+      if (id) {
+        if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+          );
+        } else {
+          history.push(
+            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+          );
+        }
+        // New entry case.
+      }
+
+    }
+
   };
 
   // get peoperty affetct value radio type
@@ -258,7 +258,7 @@ const PropertyAffected = () => {
     setPropertyTypeValue(result);
   };
 
-// get incident details data
+  // get incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -274,7 +274,7 @@ const PropertyAffected = () => {
   const fetchPropertyListData = async () => {
     const res = await api.get(`api/v1/incidents/${id}/properties/`);
     const result = res.data.data.results;
-    if(result.length>0){
+    if (result.length > 0) {
       let temp = [...form]
       temp = result
       await setForm(temp)
@@ -309,7 +309,7 @@ const PropertyAffected = () => {
   }, []);
 
   return (
-    <PapperBlock title="Details of Properties Affected?" icon="ion-md-list-box">
+    <PapperBlock title="Details of Properties Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
@@ -328,12 +328,12 @@ const PropertyAffected = () => {
               >
                 {propertyAffectedValue !== 0
                   ? propertyAffectedValue.map((value, index) => (
-                      <FormControlLabel
-                        value={value.inputValue}
-                        control={<Radio />}
-                        label={value.inputLabel}
-                      />
-                    ))
+                    <FormControlLabel
+                      value={value.inputValue}
+                      control={<Radio />}
+                      label={value.inputLabel}
+                    />
+                  ))
                   : null}
               </RadioGroup>
             </Grid>
@@ -347,128 +347,128 @@ const PropertyAffected = () => {
                   </Box>
                 </Grid>
                 {form.map((value, index) => (
-                      <Grid
-                        container
-                        item
-                        md={12}
-                        spacing={3}
-                        className="repeatedGrid"
+                  <Grid
+                    container
+                    item
+                    md={12}
+                    spacing={3}
+                    className="repeatedGrid"
+                  >
+                    {/* Property type  */}
+                    <Grid item md={6}>
+                      <FormControl
+                        variant="outlined"
+                        required
+                        className={classes.formControl}
+                        error={error && error[`propertyType${[index]}`]}
                       >
-                        {/* Property type  */}
-                        <Grid item md={6}>
-                          <FormControl
-                            variant="outlined"
-                            required
-                            className={classes.formControl}
-                            error={error && error[`propertyType${[index]}`]}
-                          >
-                            <InputLabel id="person-type-label">
-                              Property type
-                            </InputLabel>
-                            <Select
-                              labelId="person-type-label"
-                              id={`person-type${index + 1}`}
-                              label="Person type"
-                              value={value.propertyType || ""}
-                              onChange={(e) => {
-                                handlePropertyDetails(e, index, "propertyType");
-                                setIsOther(e.target.value !== "Other");
-                              }}
-                            >
-                              {propertyTypeValue.length !== 0
-                                ? propertyTypeValue.map(
-                                    (selectValues, index) => (
-                                      <MenuItem
-                                        key={index}
-                                        value={selectValues.inputValue}
-                                      >
-                                        {selectValues.inputLabel}
-                                      </MenuItem>
-                                    )
-                                  )
-                                : null}
-                            </Select>
-                            {error && error[`propertyType${[index]}`] && (
-                              <FormHelperText>
-                                {error[`propertyType${[index]}`]}
-                              </FormHelperText>
-                            )}
-                          </FormControl>
-                        </Grid>
-                      {/*Property other type  */}
-                        <Grid item md={6}>
-                          <TextField
-                            id={`other-property${index + 1}`}
-                            variant="outlined"
-                            label="If others, describe"
-                            value={value.propertyOtherType || ""}
-                            error={
-                              error && error[`propertyOtherType${[index]}`]
-                            }
-                            helperText={
-                              error && error[`propertyOtherType${[index]}`]
-                                ? error[`propertyOtherType${[index]}`]
-                                : null
-                            }
-                            className={classes.formControl}
-                            disabled={
-                              value.propertyType === "Other" ? false : true
-                            }
-                            onChange={(e) =>
-                              handlePropertyDetails(
-                                e,
-                                index,
-                                "propertyOtherType"
+                        <InputLabel id="person-type-label">
+                          Property type
+                        </InputLabel>
+                        <Select
+                          labelId="person-type-label"
+                          id={`person-type${index + 1}`}
+                          label="Person type"
+                          value={value.propertyType || ""}
+                          onChange={(e) => {
+                            handlePropertyDetails(e, index, "propertyType");
+                            setIsOther(e.target.value !== "Other");
+                          }}
+                        >
+                          {propertyTypeValue.length !== 0
+                            ? propertyTypeValue.map(
+                              (selectValues, index) => (
+                                <MenuItem
+                                  key={index}
+                                  value={selectValues.inputValue}
+                                >
+                                  {selectValues.inputLabel}
+                                </MenuItem>
                               )
-                            }
-                          />
-                        </Grid>
-                          {/* Property damage details */}
-                        <Grid item md={12}>
-                          <TextField
-                            id={`describe-damage${index + 1}`}
-                            variant="outlined"
-                            required
-                            error={error && error[`damageDetails${[index]}`]}
-                            helperText={
-                              error && error[`damageDetails${[index]}`]
-                                ? error[`damageDetails${[index]}`]
-                                : null
-                            }
-                            label="Describe the damage"
-                            className={classes.formControl}
-                            value={value.damageDetails || ""}
-                            onChange={(e) =>
-                              handlePropertyDetails(e, index, "damageDetails")
-                            }
-                          />
-                        </Grid>
-                        {form.length > 1 ? (
-                          <Grid item md={3}>
-                            {/* Remove previous data */}
-                            <Button
-                              onClick={() => handleRemove(index)}
-                              variant="contained"
-                              startIcon={<DeleteForeverIcon />}
-                              color="primary"
-                              className={classes.button}
-                            >
-                              Remove
-                            </Button>
-                          </Grid>
-                        ) : null}
+                            )
+                            : null}
+                        </Select>
+                        {error && error[`propertyType${[index]}`] && (
+                          <FormHelperText>
+                            {error[`propertyType${[index]}`]}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    {/*Property other type  */}
+                    <Grid item md={6}>
+                      <TextField
+                        id={`other-property${index + 1}`}
+                        variant="outlined"
+                        label="If others, describe"
+                        value={value.propertyOtherType || ""}
+                        error={
+                          error && error[`propertyOtherType${[index]}`]
+                        }
+                        helperText={
+                          error && error[`propertyOtherType${[index]}`]
+                            ? error[`propertyOtherType${[index]}`]
+                            : null
+                        }
+                        className={classes.formControl}
+                        disabled={
+                          value.propertyType === "Other" ? false : true
+                        }
+                        onChange={(e) =>
+                          handlePropertyDetails(
+                            e,
+                            index,
+                            "propertyOtherType"
+                          )
+                        }
+                      />
+                    </Grid>
+                    {/* Property damage details */}
+                    <Grid item md={12}>
+                      <TextField
+                        id={`describe-damage${index + 1}`}
+                        variant="outlined"
+                        required
+                        error={error && error[`damageDetails${[index]}`]}
+                        helperText={
+                          error && error[`damageDetails${[index]}`]
+                            ? error[`damageDetails${[index]}`]
+                            : null
+                        }
+                        label="Describe the damage"
+                        className={classes.formControl}
+                        value={value.damageDetails || ""}
+                        onChange={(e) =>
+                          handlePropertyDetails(e, index, "damageDetails")
+                        }
+                      />
+                    </Grid>
+                    {form.length > 1 ? (
+                      <Grid item md={3}>
+                        {/* Remove previous data */}
+                        <Button
+                          onClick={() => handleRemove(index)}
+                          variant="contained"
+                          startIcon={<DeleteForeverIcon />}
+                          color="primary"
+                          className={classes.button}
+                        >
+                          Remove
+                        </Button>
                       </Grid>
-                    ))}
-                  <Grid item md={12}>
-                    {/* Add new property details */}
-                    <button
-                      className={classes.textButton}
-                      onClick={() => addNewPropertyDetails()}
-                    >
-                      <PersonAddIcon /> Add details of another property affected
-                    </button>
+                    ) : null}
                   </Grid>
-              
+                ))}
+                <Grid item md={12}>
+                  {/* Add new property details */}
+                  <button
+                    className={classes.textButton}
+                    onClick={() => addNewPropertyDetails()}
+                  >
+                    <PersonAddIcon /> Add details of another property affected
+                  </button>
+                </Grid>
+
               </>
             ) : null}
             {/* text comment for property damage */}
