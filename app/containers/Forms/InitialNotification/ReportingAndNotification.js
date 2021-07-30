@@ -37,8 +37,10 @@ import FormSideBar from "../FormSideBar";
 import {
   access_token,
   ACCOUNT_API_URL,
+  HEADER_AUTH,
   INITIAL_NOTIFICATION_FORM,
   LOGIN_URL,
+  SSO_URL,
 } from "../../../utils/constants";
 // import FormHeader from '../FormHeader';
 
@@ -90,10 +92,11 @@ const ReportingAndNotification = () => {
   const [superVisorName, setSuperVisorName] = useState([]);
   const [reportedByName, setReportedByName] = useState([]);
   const [evidence, setEvidence] = useState([])
+  const [notificationSentValue, setNotificationSentValue] = useState([])
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-  const [isChecked, setIsChecked] = useState(true)
+  const [isNext, setIsnext] = useState(true)
   const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   const [evidanceForm, setEvidanceForm] = useState([
@@ -260,8 +263,8 @@ const ReportingAndNotification = () => {
 
   // handleSubmit incident details
   const handelNext = async (e) => {
-    if(isChecked){
-      setIsChecked(false)
+    if(isNext){
+      setIsnext(false)
     // handle remove existing report
     await handleRemoveExitingReport();
 
@@ -321,6 +324,8 @@ const ReportingAndNotification = () => {
             )}`
           );
         }
+      }else{
+        setIsnext(true)
       }
     }
   }
@@ -394,7 +399,7 @@ const ReportingAndNotification = () => {
         await setOpen(true);
       }
     }else{
-      await setMessage("Only PDF, JPG & PNG File is allowed!");
+      await setMessage("Only JPG & PNG File is allowed!");
         await setMessageType("error");
         await setOpen(true);
     }
@@ -420,6 +425,9 @@ const ReportingAndNotification = () => {
     const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
     if(res.status === 200){
       await fetchEvidanceData();
+      await setMessage("File removed successfully!");
+        await setMessageType("success");
+        await setOpen(true);
     }
 
   }
@@ -552,6 +560,28 @@ const ReportingAndNotification = () => {
     }
   };
 
+  // fetch value noticefication sent
+  const fetchNotificationSent = async()=>{
+    try{
+    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    var config = {
+      method: 'get',
+      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
+      headers: HEADER_AUTH
+    };
+    console.log(config)
+    const res = await api(config)
+    if(res.status === 200){
+      const result = res.data.data.results
+      setNotificationSentValue(result)
+    }
+    console.log(res.data.data.results)
+  }catch(error){
+    console.log(error)
+  }
+  } 
+
   // handle go back
   const handleGoBack = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
@@ -577,11 +607,18 @@ const ReportingAndNotification = () => {
       );
     }
   };
+    // handle file name
+    const handelFileName = (value) => {
+      const fileNameArray = value.split('/')
+      const fileName = fileNameArray[fileNameArray.length - 1]
+      return fileName
+    }
 
   useEffect(() => {
     fetchSuperVisorName();
     fetchReportedBy();
     fetchIncidentsData();
+    fetchNotificationSent()
     if (id) {
       fetchReportsDataList();
       fetchEvidanceData();
@@ -653,11 +690,12 @@ const ReportingAndNotification = () => {
                 <FormLabel component="legend">
                   Notification to be sent?
                 </FormLabel>
-                {notificationSent.map((value) => (
+                {notificationSentValue.map((value,index) => (
                   <FormControlLabel
-                    value={value}
+                  key={index}
+                    value={value.roleName}
                     control={<Checkbox />}
-                    label={value}
+                    label={value.roleName}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -676,13 +714,39 @@ const ReportingAndNotification = () => {
                 </Typography>
               </Box>
               
-
+              {evidence.length>0? evidence.map((item, index) => (
+                <Grid container item md={12} spacing={3} alignItems="center">
+                  <Grid item md={5}>
+                    <a href={`${item.evidenceDocument}`} target='_blank'>{handelFileName(item.evidenceDocument)}</a>
+                  </Grid>
+                  <Grid item md={6}>
+                    <TextField
+                      id="evidanceRemark"
+                      size="small"
+                      variant="outlined"
+                      label="Evidences remark"
+                      className={classes.formControl}
+                      disabled={true}
+                      value = {item.evidenceRemark}
+                    />
+                  </Grid>
+                  <Grid item md={1}>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={() => removeInitialEvidance(item.id)}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              )):null}
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
                   <Grid item md={5}>
                     <input
                       type="file"
-                      accept= ".pdf, .jpg, jpeg, .png"
+                      accept= ".jpg, .jpeg, .png"
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceDocument")
                       }

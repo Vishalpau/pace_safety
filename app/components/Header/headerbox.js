@@ -148,6 +148,10 @@ function HeaderBreakdown(props) {
     localStorage.setItem("projectName", JSON.stringify(props.initialValues));
   }
 
+  if(props.initialValues.breakDown.length>0){
+    localStorage.setItem('selectBreakDown',JSON.stringify(props.initialValues.breakDown))
+  }
+
 
   const projectData = JSON.parse(localStorage.getItem("projectName"));
   const breakDownData = JSON.parse(localStorage.getItem("selectBreakDown"))

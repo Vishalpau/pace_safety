@@ -191,7 +191,6 @@ const PropertyAffected = () => {
         );
         // If api success
         if (status === 201) {
-          if (id) {
             if (nextPath.equipmentAffect === "Yes") {
               history.push(
                 `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
@@ -205,10 +204,20 @@ const PropertyAffected = () => {
                 `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
               );
             }
-          }
         }
         // If no is selected on form.
       } else {
+        // if user select no or N/A remove all existing data
+        if (propertyListData.length > 0) {
+          // Remove previous data
+          for (var i = 0; i < propertyListData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`,
+            );
+          }
+    
+          // If that is not the case as if,
+        } 
         const temp = incidentsListData;
         temp["propertyDamagedComments"] =
           propertyDamagedComments || incidentsListData.propertyDamagedComments;
@@ -222,7 +231,7 @@ const PropertyAffected = () => {
         );
 
         // Update case
-        if (id) {
+        
           if (nextPath.equipmentAffect === "Yes") {
             history.push(
               `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
@@ -236,8 +245,6 @@ const PropertyAffected = () => {
               `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
             );
           }
-          // New entry case.
-        }
         
       }
     
