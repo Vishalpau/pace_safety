@@ -53,6 +53,7 @@ import EvidenceSummary from "../../SummaryDetails/Evidence";
 import RootCauseAnalysisSummary from "../../SummaryDetails/RootCauseAndAnalysis";
 import LessionLearnSummary from "../../SummaryDetails/LessionLearn";
 
+
 // import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -94,6 +95,7 @@ const Summary = () => {
   const [lessionlearnData, setLessionLearnData] = useState({});
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [initialNoticeficationStatus,setInitialNotificationStatus] = useState(false)
   const rootCauseStatus = useRef(false);
 
   const { id } = useParams();
@@ -106,6 +108,14 @@ const Summary = () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
     await setIncidents(allIncidents.data.data.results);
     await setIsLoading(true);
+  };
+  const fetchReportData = async () => {
+    const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
+    if(allIncidents.data.data.results.length > 0){
+      await setInitialNotificationStatus(true);
+    }
+    
+    
   };
 
   const fetchInvestigationData = async () => {
@@ -185,6 +195,7 @@ const Summary = () => {
     fetchEvidenceData();
     fetchLessonLerned();
     rootCauseAnalysisCheck();
+    fetchReportData();
   }, []);
 
   return (
@@ -202,15 +213,20 @@ const Summary = () => {
                   variant="contained"
                   size="large"
                   variant={
-                    incidents.isEquipmentDamaged ? "contained" : "outlined"
+                    initialNoticeficationStatus ? "contained" : "outlined"
                   }
                   endIcon={
-                    incidents.isEquipmentDamaged ? (
+                    initialNoticeficationStatus ? (
                       <CheckCircle />
                     ) : (
                       <AccessTime />
                     )
                   }
+                  // style={{backgroundColor:initialNotification == true ||
+                  //   (investigation === false &&
+                  //     evidence === false &&
+                  //     rootcauseanalysis === false &&
+                  //     lessionlearn === false)?"green":"blue"}}
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(true);
@@ -223,7 +239,7 @@ const Summary = () => {
                   Initial Notification
                 </Button>
                 <Typography variant="caption" display="block">
-                  {incidents.isEquipmentDamaged ? "Done" : "Pending"}
+                  {initialNoticeficationStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -236,6 +252,7 @@ const Summary = () => {
                   endIcon={
                     investigationOverview ? <CheckCircle /> : <AccessTime />
                   }
+                  // style={{backgroundColor:investigation?"green":"blue"}}
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(false);
@@ -257,6 +274,7 @@ const Summary = () => {
                   color="primary"
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
+                  // style={{backgroundColor:evidence?"green":"blue"}}
                   className={classes.statusButton}
                   endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
@@ -283,6 +301,7 @@ const Summary = () => {
                   }
                   size="large"
                   className={classes.statusButton}
+                  // style={{backgroundColor:rootcauseanalysis?"green":"blue"}}
                   endIcon={
                     paceCauseData || rootCausesData || whyData ? (
                       <CheckCircle />
@@ -311,6 +330,7 @@ const Summary = () => {
                   color="primary"
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
+                  // style={{backgroundColor:lessionlearn?"green":"blue"}}
                   className={classes.statusButton}
                   endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
@@ -344,19 +364,19 @@ const Summary = () => {
                         rootcauseanalysis === false &&
                         lessionlearn === false)
                     ) {
-                      return <IncidentDetailsSummary />;
+                      return(<IncidentDetailsSummary />);
                     }
                     if (investigation == true) {
-                      return <InvestigationSummary />;
+                      return(<InvestigationSummary />) ;
                     }
                     if (evidence == true) {
-                      return <EvidenceSummary />;
+                      return (<EvidenceSummary />);
                     }
                     if (rootcauseanalysis == true) {
-                      return <RootCauseAnalysisSummary />;
+                      return(<RootCauseAnalysisSummary />) ;
                     }
                     if (lessionlearn == true) {
-                      return <LessionLearnSummary />;
+                      return (<LessionLearnSummary />);
                     }
                   })()}
                 </>
@@ -441,7 +461,7 @@ const Summary = () => {
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
-                        <ListItemText primary="Lessons Learned" />
+                        <ListItemText primary="Modify Lessons Learnt" />
                       </ListItemLink>
                     ) : (
                       <ListItemLink
@@ -454,7 +474,7 @@ const Summary = () => {
                         <ListItemIcon>
                           <Add />
                         </ListItemIcon>
-                        <ListItemText primary="Lessons Learnt" />
+                        <ListItemText primary="Add Lessons Learnt" />
                       </ListItemLink>
                     )}
 

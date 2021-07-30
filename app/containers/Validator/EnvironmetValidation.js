@@ -1,7 +1,7 @@
 import validator from "validator";
 
 function EnvironmentValidate(data) {
-  
+  console.log(data)
   let isValid = true;
   const error = {};
 
@@ -12,14 +12,16 @@ function EnvironmentValidate(data) {
     }
 
     if (validator.isEmpty(data[i].envQuestionOption.toString())) {
+      let message =  data[i].envQuestion.slice(11) 
       error[`envQuestionOption${[i]}`] =
-        "Please choose given option";
+        `Please select were there  ${message}`;
       isValid = false;
     }
     if(data[i].envQuestionOption === "Yes"){
-      if (validator.isEmpty(data[i].envAnswerDetails.toString())) {   
+      if (validator.isEmpty(data[i].envAnswerDetails.toString())) {
+        let message =  data[i].envQuestion.slice(14)  
         error[`envAnswerDetails${[i]}`] =
-          "Please enter enviornment answer details.";
+          `Please enter details of ${message.slice(0,-1)}`;
         isValid = false;
       }
     }

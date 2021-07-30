@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -80,7 +80,7 @@ const LessionLearned = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const history = useHistory();
-  const ref = useRef()
+  const ref = useRef();
   const { id } = useParams();
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
@@ -89,8 +89,11 @@ const LessionLearned = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
-  const [evidence,setEvidence] = useState([])
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id;
+  const [evidence, setEvidence] = useState([]);
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -111,59 +114,74 @@ const LessionLearned = () => {
     await setForm([...form, { teamOrDepartment: "", learnings: "" }]);
   };
 
-// handleAttchment
+  // handleAttchment
 
-  const handleAttchment = async(e)=>{
+  const handleAttchment = async (e) => {
+    let file = e.target.files[0].name.split(".");
     
-    let file = e.target.files[0].name.split(".")
-    
-    if(file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png"){
-      
+    if (
+      file[1].toLowerCase() === "jpg" ||
+      file[1].toLowerCase() === "jpeg" ||
+      file[1].toLowerCase() === "png"
+    ) {
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        setAttachment({...attachment,evidenceDocument:e.target.files[0]})
-        await setMessage("File uploaded successfully!");
-        await setMessageType("success");
-        await setOpen(true);
+       
+        const formData = new FormData();
+        formData.append("evidenceDocument", e.target.files[0]);
+        formData.append("evidenceCheck", "Yes");
+        formData.append("evidenceNumber", "string");
+        formData.append("evidenceCategory", "Lessons Learned");
+        formData.append("createdBy", parseInt(userId));
+        formData.append("status", "Active");
+        formData.append("fkIncidentId", id);
+        if (evidence.length > 0) {
+          for (let key in evidence) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
+            );
+          }
+        }   
+        try {
+          const res = await api.post(
+            `api/v1/incidents/${id}/evidences/`,
+            formData
+          );
+          if (res.status === 201) {
+            await setMessage("File uploaded successfully!");
+            await setMessageType("success");
+            await setOpen(true);
+          }
+        } catch (error) {
+          await setMessage("File uploaded failed!");
+          await setMessageType("error");
+          await setOpen(true);
+          ref.current.value = "";
+        }
       } else {
-        ref.current.value=""
+        ref.current.value = "";
         await setMessage("File uploading failed! Select file less than 25MB!");
         await setMessageType("error");
         await setOpen(true);
       }
-    await setEvidanceForm(temp);
-    }else{
-      ref.current.value=""
+      await setEvidanceForm(temp);
+    } else {
+      ref.current.value = "";
       await setMessage("Only JPG & PNG File is allowed!");
       await setMessageType("error");
       await setOpen(true);
     }
-  
-  }
- // handle close snackbar
- const handleClose = (event, reason) => {
-  if (reason === "clickaway") {
-    // setOpenError(false)
-    return;
-  }
-  setOpen(false);
-};
+  };
+  // handle close snackbar
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenError(false)
+      return;
+    }
+    setOpen(false);
+  };
   const handleNext = async () => {
-
-    // attachment 
-   
-    if(!attachment.evidenceDocument || !attachment.length){
-    
-      const formData = new FormData()
-      formData.append('evidenceDocument',attachment.evidenceDocument)
-      formData.append('evidenceCheck','Yes')
-      formData.append('evidenceNumber','string')
-      formData.append('evidenceCategory','Lessons Learned')
-      formData.append('createdBy',parseInt(userId))
-      formData.append('status','Active')
-      formData.append('fkIncidentId',id)
-
-      const res = await api.post( `api/v1/incidents/${id}/evidences/`,formData)
-      
+    // attachment
+    if (attachment.evidenceDocument !== "") {
     }
     // sent put request
     let status = 0;
@@ -252,8 +270,14 @@ const LessionLearned = () => {
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
+    
     if (allEvidence.status === 200) {
-      await setEvidence(allEvidence.data.data.results);
+      
+      const newData = allEvidence.data.data.results.filter(
+        (item) => item.evidenceCategory === "Lessons Learned"
+      );
+      await setEvidence(newData);
+      console.log('lesson learned',newData)
     }
   };
 
@@ -265,6 +289,13 @@ const LessionLearned = () => {
     const newData = temp.filter((item, index) => index !== key);
     await setForm(newData);
   };
+
+  // handle file name
+  const handelFileName = (value) => {
+    const fileNameArray = value.split('/')
+    const fileName = fileNameArray[fileNameArray.length - 1]
+    return fileName
+  }
 
   // handle remove initial evidance from databse
 
@@ -281,6 +312,8 @@ const LessionLearned = () => {
     fetchDepartment();
     if (id) {
       fetchLessonLerned();
+      fetchEvidanceData();
+
     }
     fetchIncidentsData();
   }, []);
@@ -469,12 +502,18 @@ const LessionLearned = () => {
                   {message}
                 </Alert>
               </Snackbar>
-            <Typography  variant ="h6"> Add attachment</Typography>
-            
-                 <input type="file" ref={ref}  accept=".png, jpg, jpeg" onChange = {(e)=> handleAttchment(e)}/>
-                
+              <Typography variant="h6"> Add attachment</Typography>
+
+              <input
+                type="file"
+                ref={ref}
+                accept=".png, jpg, jpeg"
+                onChange={(e) => handleAttchment(e)}
               
-              
+                placeholder={evidence.length>0?evidence[0].evidenceDocument:""}
+              />
+              {evidence.length>0?
+              <a href={`${evidence[0].evidenceDocument}`} target='_blank'>{handelFileName(evidence[0].evidenceDocument)}</a>:null}
             </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>

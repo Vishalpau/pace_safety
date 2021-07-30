@@ -146,21 +146,26 @@ const EvidenceSummary = () => {
     window.location.href = `${documentUrl}`;
   };
 
+  const download = (image_link) => {
+    let onlyImage_url = image_link.replace("https://", "")
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url
+    let imageArray = image_url.split("/")
+    let image_name = imageArray[imageArray.length - 1]
+    saveAs(image_url, image_name)
+    handleClose()
+  };
+
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleFile = (value) => {
-    console.log(value)
-    const temp = value.split("/")
-    console.log(temp[6])
-    return temp[6]
-  } 
-
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-
-    await setEvidence(allEvidence.data.data.results);
+    const result = allEvidence.data.data.results
+    const newData = result.filter(
+                      (item) => item.evidenceCategory !== "Lessons Learned" && item.evidenceCategory !== "Initial Evidence"
+                      )
+    await setEvidence(newData);
     await setIsLoding(true);
   };
 
@@ -172,9 +177,7 @@ const EvidenceSummary = () => {
   const handelFileName = (value) => {
     const fileNameArray = value.split('/')
     const fileName = fileNameArray[fileNameArray.length - 1]
-    console.log(fileName)
     return fileName
-
   }
 
   useEffect(() => {
@@ -222,7 +225,7 @@ const EvidenceSummary = () => {
                     </TableHead>
                     <TableBody>
                       {evidence.length !== 0
-                        ? evidence.slice(1, 14).map((value, index) => (
+                        ? evidence.map((value, index) => (
                           <TableRow key={index}>
                             <TableCell>{value.evidenceNumber}</TableCell>
                             <TableCell>{value.evidenceCheck}</TableCell>
@@ -368,25 +371,23 @@ const EvidenceSummary = () => {
                   variant="contained"
                   color="primary"
                   className={classes.modalButton}
-                  onClick={() => downloadFile()}
                   disableElevation
+                  href={`${documentUrl}`}
                   target="_blank"
                 >
                   View Attachment
                 </Button>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Button
-                  startIcon={<GetAppIcon />}
-                  variant="contained"
-                  color="primary"
-                  className={classes.modalButton}
-                  onClick={() => downloadFile()}
-                  disableElevation
-                  target="_blank"
-                >
-                  Download Attachment
-                </Button>
+              <Button
+                    startIcon={<GetAppIcon />}
+                    variant="contained"
+                    disableElevation
+                    className={classes.modalButton}
+                    onClick={(e) => download(documentUrl)}
+                  >
+                    Download Attachment
+                  </Button>
               </Grid>
             </Grid>
           </DialogContentText>

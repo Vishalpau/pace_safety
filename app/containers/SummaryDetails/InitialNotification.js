@@ -15,6 +15,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Modal from "@material-ui/core/Modal";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -24,9 +25,11 @@ import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
 
 import api from "../../utils/axios";
+import { Link } from "react-router-dom";
 
 // Styles
 import Fonts from "dan-styles/Fonts.scss";
+import "../../styles/custom.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -97,11 +100,21 @@ const IncidentDetailsSummary = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  // const [fkid, setFkid] = useState(3);
-
-  // useEffect(() => {
-  //     setFkid(localStorage.getItem("fkincidentId"))
-  //   });
+  
+  
+  const download = (image_link) => {
+    let onlyImage_url = image_link.replace("https://", "")
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url
+    let imageArray = image_url.split("/")
+    let image_name = imageArray[imageArray.length - 1]
+    saveAs(image_url, image_name)
+    handleClose()
+  };
+  const handelFileName = (value) => {
+    const fileNameArray = value.split('/')
+    const fileName = fileNameArray[fileNameArray.length - 1]
+    return fileName
+  }
 
   const fkid = localStorage.getItem("fkincidentId");
 
@@ -263,7 +276,7 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
       {/* People Affected */}
-      {peopleData.length > 0 ? (
+
         <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel1"}
@@ -361,13 +374,25 @@ const IncidentDetailsSummary = () => {
                       </Grid>
                     </Grid>
                   ))
-                : null}
+                : <Grid item md={12}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  className={Fonts.labelName}
+                >
+                  Do you have details of individual affected?
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  {incidents.isPersonDetailsAvailable}
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  Details of people affected:- {incidents.personAffectedComments}
+                </Typography>
+              </Grid>}
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null}
       {/* Property affect */}
-      {propertyData.length > 0 ? (
         <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel2"}
@@ -429,13 +454,26 @@ const IncidentDetailsSummary = () => {
                       </Grid>
                     </Grid>
                   ))
-                : null}
+                : <Grid item md={12}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  className={Fonts.labelName}
+                >
+                  Do you have details to share about the properties affected?
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  {incidents.isPropertyDamagedAvailable}
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  Details of property affected:- {incidents.propertyDamagedComments}
+                </Typography>
+              </Grid>}
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null}
       {/* Equipment Affected */}
-      {equipmentData.length > 0 ? (
+     
         <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel3"}
@@ -505,11 +543,25 @@ const IncidentDetailsSummary = () => {
                       </Grid>
                     </Grid>
                   ))
-                : null}
+                : <Grid item md={12}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  className={Fonts.labelName}
+                >
+                  Do you have details to share about the equipment affected?
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  {incidents.isEquipmentDamagedAvailable}
+                </Typography>
+                <Typography className={Fonts.labelValue}>
+                  Details of equipment affected:- {incidents.equipmentDamagedComments}
+                </Typography>
+              </Grid>}
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null}
+     
       {/* Environment Affected */}
       {enviornmentData.length ? (
         <Grid item xs={12}>
@@ -587,26 +639,29 @@ const IncidentDetailsSummary = () => {
                   gutterBottom
                   className={Fonts.labelName}
                 >
-                  Report description
+                  Additional Details
                 </Typography>
-                {reportsData.length !== 0
-                  ? reportsData.map((report, key) => (
-                      <Typography className={Fonts.labelValue}>
-                        {report.reportingNote}
-                      </Typography>
-                    ))
-                  : null}
+
+                <Typography className={Fonts.labelValue}>
+                  {incidents.notificationComments}
+                </Typography>
               </Grid>
             </Grid>
 
-            <Grid container item xs={12} spacing={3}>
+            <>
               {evidence.length !== 0
                 ? evidence
                     .filter(
                       (item) => item.evidenceCategory === "Initial Evidence"
                     )
                     .map((value, index) => (
-                      <>
+                      <Grid
+                        container
+                        className="repeatedGrid"
+                        item
+                        xs={12}
+                        spacing={3}
+                      >
                         <Grid item md={6}>
                           <Typography
                             variant="h6"
@@ -680,7 +735,7 @@ const IncidentDetailsSummary = () => {
                               variant="body"
                               className={Fonts.labelValue}
                             >
-                              <Tooltip title="File Name">
+                              <Tooltip title={handelFileName(value.evidenceDocument)}>
                                 <IconButton
                                   onClick={() =>
                                     handleOpen(value.evidenceDocument)
@@ -693,10 +748,10 @@ const IncidentDetailsSummary = () => {
                             </Typography>
                           </Grid>
                         ) : null}
-                      </>
+                      </Grid>
                     ))
                 : null}
-            </Grid>
+            </>
           </AccordionDetails>
         </Accordion>
 
@@ -724,12 +779,25 @@ const IncidentDetailsSummary = () => {
                   <Button
                     startIcon={<VisibilityIcon />}
                     variant="contained"
-                    disableElevation
+                    color="primary"
                     className={classes.modalButton}
                     href={`${documentUrl}`}
+                    disableElevation
                     target="_blank"
                   >
                     View Attachment
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Button
+                    startIcon={<GetAppIcon />}
+                    variant="contained"
+                    color="primary"
+                    className={classes.modalButton}
+                    disableElevation
+                    onClick={()=>download(documentUrl)}
+                  >
+                    Download
                   </Button>
                 </Grid>
               </Grid>

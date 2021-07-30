@@ -33,6 +33,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import styles from "./header-jss";
 
 import { connect } from "react-redux";
+import { useParams } from "react-router";
 
 import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
 import Axios from "axios";
@@ -49,6 +50,8 @@ function HeaderBreakdown(props) {
   const [showTitle, setShowTitle] = useState(false);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const {fkid}  = useParams();
+
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
@@ -139,13 +142,17 @@ function HeaderBreakdown(props) {
     return classes.left;
   };
 
-// check and store in localstorage 
+  // check and store in localstorage 
   if (Object.keys(props.initialValues.projectName).length > 0) {
-    
+
     localStorage.setItem("projectName", JSON.stringify(props.initialValues));
   }
 
-  
+  if(props.initialValues.breakDown.length>0){
+    localStorage.setItem('selectBreakDown',JSON.stringify(props.initialValues.breakDown))
+  }
+
+
   const projectData = JSON.parse(localStorage.getItem("projectName"));
   const breakDownData = JSON.parse(localStorage.getItem("selectBreakDown"))
 
@@ -165,70 +172,69 @@ function HeaderBreakdown(props) {
   const handleBreakdown = async (e, index) => {
     const value = e.target.value;
     let temp = [...breakdown1ListData]
-    temp[index-1][`selectValue`]=value;
+    temp[index - 1][`selectValue`] = value;
     setBreakdown1ListData(temp)
-      if(selectBreakDown.filter(filterItem=>filterItem.depth === `${index}L`).length>0){
-        const removeSelectBreakDown = selectBreakDown.slice(0,index-1)
-        const removeBreakDownList = breakdown1ListData.slice(0,index +1)
-        removeBreakDownList[index][`selectValue`]="";
-      
-        await setBreakdown1ListData(removeBreakDownList)
+    if (selectBreakDown.filter(filterItem => filterItem.depth === `${index}L`).length > 0) {
+      const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
+      const removeBreakDownList = breakdown1ListData.slice(0, index + 1)
+      removeBreakDownList[index][`selectValue`] = "";
 
-        let name = breakdown1ListData[index - 1].breakdownValue.map(
-          async (item) => {
-            if (item.id === value) {
-              setSelectBreakDown([
+      await setBreakdown1ListData(removeBreakDownList)
+
+      let name = breakdown1ListData[index - 1].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            setSelectBreakDown([
+              ...removeSelectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name },
+            ]);
+            localStorage.setItem(
+              "selectBreakDown",
+              JSON.stringify([
                 ...removeSelectBreakDown,
                 { depth: item.depth, id: item.id, name: item.name },
-              ]);
-              localStorage.setItem(
-                "selectBreakDown",
-                JSON.stringify([
-                  ...removeSelectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
-                ])
-              );
-              return;
-            }
-          
+              ])
+            );
+            return;
           }
-        );
-      }else{
-        let name = breakdown1ListData[index - 1].breakdownValue.map(
-          async (item) => {
-            if (item.id === value) {
-              await setSelectBreakDown([
+
+        }
+      );
+    } else {
+      let name = breakdown1ListData[index - 1].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            await setSelectBreakDown([
+              ...selectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name },
+            ]);
+            localStorage.setItem(
+              "selectBreakDown",
+              JSON.stringify([
                 ...selectBreakDown,
                 { depth: item.depth, id: item.id, name: item.name },
-              ]);
-              localStorage.setItem(
-                "selectBreakDown",
-                JSON.stringify([
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
-                ])
-              );
-              return;
-            }
-          
+              ])
+            );
+            return;
           }
-        );
-      }
 
-      
+        }
+      );
+    }
+
+
     for (var key in projectData.projectName.breakdown) {
       if (key == index) {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[key].structure[0].url
-          }${value}`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${value}`,
           headers: HEADER_AUTH,
         };
         await Axios(config)
-          .then(function(response) {
+          .then(function (response) {
             if (response.status === 200) {
-              
+
               if (
                 breakdown1ListData.filter(
                   (item) =>
@@ -245,14 +251,14 @@ function HeaderBreakdown(props) {
                       projectData.projectName.breakdown[index].structure[0]
                         .name,
                     breakdownValue: response.data.data.results,
-                    selectValue:""
+                    selectValue: ""
                   },
                 ]);
               }
             }
           })
-          .catch(function(error) {
-            
+          .catch(function (error) {
+
           });
       }
     }
@@ -260,40 +266,48 @@ function HeaderBreakdown(props) {
 
   const fetchCallBack = async () => {
     for (var key in projectData.projectName.breakdown) {
-      
+
       if (key == 0) {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[0].structure[0].url
-          }`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
           headers: HEADER_AUTH,
         };
-        console.log(config)
         await Axios(config)
           .then(async(response)=> {
-              console.log('fetchcallback',response.data.data.results)
+              
             await setBreakdown1ListData([
               {
                 breakdownLabel:
                   projectData.projectName.breakdown[0].structure[0].name,
                 breakdownValue: response.data.data.results,
-                selectValue:""
+                selectValue: ""
               },
             ]);
-          
+
             setIsLoading(true);
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       }
     }
   };
+
+  const fetchIncidentData = async()=>{
+    alert(fkid)
+    const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
+        const result = res.data.data.results;
+        console.log(result)
+  }
   useEffect(() => {
       fetchCallBack();
-      console.log(props.initialValues.projectName)
-  }, [props.initialValues.projectName]);
+      if(fkid){
+        fetchIncidentData();
+      }
+      
+  }, [props.initialValues.projectName,fkid]);
 
   return (
     <>
@@ -331,43 +345,43 @@ function HeaderBreakdown(props) {
                 <Grid item xs={12}>
                   {breakdown1ListData.length > 0
                     ? breakdown1ListData.map((item, index) => (
-                        <FormControl
-                          key={index}
-                          variant="outlined"
-                          size="small"
-                          fullWidth={true}
-                          className={classes.filterSelect}
+                      <FormControl
+                        key={index}
+                        variant="outlined"
+                        size="small"
+                        fullWidth={true}
+                        className={classes.filterSelect}
+                      >
+
+                        <InputLabel id="filter3-label">
+                          {item.breakdownLabel}
+                        </InputLabel>
+                        <Select
+                          labelId="filter3-label"
+                          id="filter3"
+                          value={item.selectValue}
+                          onChange={(e) => {
+                            handleBreakdown(e, index + 1);
+
+                          }}
+                          label="Phases"
+                          style={{ width: "100%" }}
                         >
-                         
-                          <InputLabel id="filter3-label">
-                            {item.breakdownLabel}
-                          </InputLabel>
-                          <Select
-                            labelId="filter3-label"
-                            id="filter3"
-                            value={item.selectValue}
-                            onChange={(e) => {
-                              handleBreakdown(e, index + 1);
-                              
-                            }}
-                            label="Phases"
-                            style={{ width: "100%" }}
-                          >
-                            {item.breakdownValue.length
-                              ? item.breakdownValue.map(
-                                  (selectValue, selectKey) => (
-                                    <MenuItem
-                                      key={selectKey}
-                                      value={selectValue.id}
-                                    >
-                                      {selectValue.name}
-                                    </MenuItem>
-                                  )
-                                )
-                              : null}
-                          </Select>
-                        </FormControl>
-                      ))
+                          {item.breakdownValue.length
+                            ? item.breakdownValue.map(
+                              (selectValue, selectKey) => (
+                                <MenuItem
+                                  key={selectKey}
+                                  value={selectValue.id}
+                                >
+                                  {selectValue.name}
+                                </MenuItem>
+                              )
+                            )
+                            : null}
+                        </Select>
+                      </FormControl>
+                    ))
                     : null}
                 </Grid>
               </Grid>
@@ -379,13 +393,13 @@ function HeaderBreakdown(props) {
         className={classes.projectBreadcrumbs}
         separator={<NavigateNextIcon fontSize="small" />}
       >
-        
+
         {breakDownData !== null
           ? breakDownData.map(
-              (item, index) => (
-                <Chip size="small" label={item.name} key={index} />
-              )
+            (item, index) => (
+              <Chip size="small" label={item.name} key={index} />
             )
+          )
           : null}
       </Breadcrumbs>
     </>
