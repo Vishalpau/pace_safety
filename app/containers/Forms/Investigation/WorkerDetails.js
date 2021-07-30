@@ -259,7 +259,6 @@ const WorkerDetails = () => {
           data.append("attachments", form.attachments);
         }
       } else if (form.attachments == null) {
-        console.log("here2")
         delete form["attachments"]
       }
       data.append("eventLeadingToInjury", form.eventLeadingToInjury);
