@@ -1,0 +1,10 @@
+.repeatedGrid + .repeatedGrid {
+  padding-top: 1.5rem !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.25);
+  margin-top: 1.5rem;
+}
+
+.smallIcon {
+  height: 0.5em;
+  width: 0.5em;
+}

@@ -12,12 +12,13 @@ import LeftSidebarBigLayout from './layouts/LeftSidebarBigLayout';
 import DropMenuLayout from './layouts/DropMenuLayout';
 import MegaMenuLayout from './layouts/MegaMenuLayout';
 import styles from './appStyles-jss';
-
 function Dashboard(props) {
   // Initial header style
   const [openGuide, setOpenGuide] = useState(false);
   const [appHeight, setAppHeight] = useState(0);
 
+   
+  
   useEffect(() => {
     const { history, loadTransition } = props;
 
@@ -35,11 +36,13 @@ function Dashboard(props) {
       window.scrollTo(0, 0);
       setTimeout(() => {
         loadTransition(true);
+        
       }, 500);
     });
 
     return () => {
       if (unlisten != null) {
+
         unlisten();
       }
     };
@@ -71,6 +74,7 @@ function Dashboard(props) {
   const titleException = ['/app', '/app/crm-dashboard', '/app/crypto-dashboard'];
   const parts = history.location.pathname.split('/');
   const place = parts[parts.length - 1].replace('-', ' ');
+
   return (
     <div
       style={{ minHeight: appHeight }}
@@ -167,6 +171,7 @@ function Dashboard(props) {
           </DropMenuLayout>
         )
       }
+      
       { /* Top Bar with Mega Menu */
         layout === 'mega-menu' && (
           <MegaMenuLayout

@@ -1,12 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { PropTypes } from 'prop-types';
-import { connect } from 'react-redux';
-import Loading from '@material-ui/core/LinearProgress';
-import { create } from 'jss';
-import rtl from 'jss-rtl';
-import { StylesProvider, jssPreset } from '@material-ui/styles';
-import { bindActionCreators } from 'redux';
-import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import React, { useState, useEffect, useCallback } from "react";
+import { PropTypes } from "prop-types";
+import { connect } from "react-redux";
+import Loading from "@material-ui/core/LinearProgress";
+import { create } from "jss";
+import rtl from "jss-rtl";
+import { StylesProvider, jssPreset } from "@material-ui/styles";
+import { bindActionCreators } from "redux";
+import {
+  withStyles,
+  createMuiTheme,
+  MuiThemeProvider,
+} from "@material-ui/core/styles";
 import {
   changeThemeAction,
   changeModeAction,
@@ -14,36 +18,36 @@ import {
   changeDecoAction,
   changeBgPositionAction,
   changeLayoutAction,
-  changeDirectionAction
-} from 'dan-redux/actions/uiActions';
-import { TemplateSettings } from 'dan-components';
-import applicationTheme from '../../styles/theme/applicationTheme';
+  changeDirectionAction,
+} from "dan-redux/actions/uiActions";
+import { TemplateSettings } from "dan-components";
+import applicationTheme from "../../styles/theme/applicationTheme";
 
 const styles = {
   root: {
-    width: '100%',
-    minHeight: '100%',
+    width: "100%",
+    minHeight: "100%",
     marginTop: 0,
     zIndex: 1,
   },
   loading: {
     zIndex: 10,
-    position: 'fixed',
+    position: "fixed",
     top: 0,
     left: 0,
-    width: '100%',
+    width: "100%",
     opacity: 1,
-    transition: 'opacity .5s ease'
+    transition: "opacity .5s ease",
   },
   loadingWrap: {
-    background: 'none'
+    background: "none",
   },
   bar: {
-    background: 'rgba(255, 255, 255, 0.7)'
+    background: "rgba(255, 255, 255, 0.7)",
   },
   hide: {
-    opacity: 0
-  }
+    opacity: 0,
+  },
 };
 
 // Configure JSS
@@ -69,7 +73,7 @@ function ThemeWrapper(props) {
     decoration,
     bgPosition,
     layout,
-    direction
+    direction,
   } = props;
 
   useEffect(() => {
@@ -89,12 +93,10 @@ function ThemeWrapper(props) {
     };
   }, []);
 
-  const handleChangeTheme = event => {
+  const handleChangeTheme = (event) => {
     const { changeTheme } = props;
     setTheme(
-      createMuiTheme(
-        applicationTheme(event.target.value, mode, direction)
-      )
+      createMuiTheme(applicationTheme(event.target.value, mode, direction))
     );
     changeTheme(event.target.value);
   };
@@ -102,7 +104,8 @@ function ThemeWrapper(props) {
   const handleChangeRandomTheme = useCallback(() => {
     const { changeTheme } = props;
     const paletteArray = palette.toJS();
-    const randomTheme = paletteArray[Math.floor(Math.random() * paletteArray.length)];
+    const randomTheme =
+      paletteArray[Math.floor(Math.random() * paletteArray.length)];
 
     setTimeout(() => {
       setTheme(
@@ -114,42 +117,36 @@ function ThemeWrapper(props) {
     changeTheme(randomTheme.value);
   }, [theme]);
 
-  const handleChangeMode = modeParam => {
+  const handleChangeMode = (modeParam) => {
     const { changeMode } = props;
-    setTheme(
-      createMuiTheme(
-        applicationTheme(color, modeParam, direction)
-      )
-    );
+    setTheme(createMuiTheme(applicationTheme(color, modeParam, direction)));
     changeMode(modeParam);
   };
 
-  const handleChangeGradient = value => {
+  const handleChangeGradient = (value) => {
     const { changeGradient } = props;
     changeGradient(value);
   };
 
-  const handleChangeDecoration = value => {
+  const handleChangeDecoration = (value) => {
     const { changeDecoration } = props;
     changeDecoration(value);
   };
 
-  const handleChangeBgPosition = value => {
+  const handleChangeBgPosition = (value) => {
     const { changeBgPosition } = props;
     changeBgPosition(value);
   };
 
-  const handleChangeLayout = value => {
+  const handleChangeLayout = (value) => {
     const { changeLayout } = props;
     changeLayout(value);
   };
 
-  const handleChangeDirection = dirVal => {
+  const handleChangeDirection = (dirVal) => {
     // Set reducer state direction
     const { changeDirection } = props;
-    setTheme(
-      createMuiTheme(applicationTheme(color, mode, dirVal))
-    );
+    setTheme(createMuiTheme(applicationTheme(color, mode, dirVal)));
     changeDirection(dirVal);
 
     // Set HTML root direction attribute
@@ -163,14 +160,14 @@ function ThemeWrapper(props) {
           <Loading
             variant="determinate"
             value={progress}
-            className={progress >= 100 ? classes.hide : ''}
+            className={progress >= 100 ? classes.hide : ""}
             classes={{
               root: classes.loading,
               colorPrimary: classes.loadingWrap,
-              barColorPrimary: classes.bar
+              barColorPrimary: classes.bar,
             }}
           />
-          <TemplateSettings
+          {/* <TemplateSettings
             palette={paletteState}
             selectedValue={color}
             mode={mode}
@@ -187,7 +184,7 @@ function ThemeWrapper(props) {
             changeBgPosition={handleChangeBgPosition}
             changeLayout={handleChangeLayout}
             changeDirection={handleChangeDirection}
-          />
+          /> */}
           <ThemeContext.Provider value={handleChangeMode}>
             {children}
           </ThemeContext.Provider>
@@ -217,20 +214,20 @@ ThemeWrapper.propTypes = {
   changeDirection: PropTypes.func.isRequired,
 };
 
-const reducer = 'ui';
-const mapStateToProps = state => ({
+const reducer = "ui";
+const mapStateToProps = (state) => ({
   force: state, // force state from reducer
-  color: state.getIn([reducer, 'theme']),
-  palette: state.getIn([reducer, 'palette']),
-  mode: state.getIn([reducer, 'type']),
-  gradient: state.getIn([reducer, 'gradient']),
-  decoration: state.getIn([reducer, 'decoration']),
-  bgPosition: state.getIn([reducer, 'bgPosition']),
-  layout: state.getIn([reducer, 'layout']),
-  direction: state.getIn([reducer, 'direction']),
+  color: state.getIn([reducer, "theme"]),
+  palette: state.getIn([reducer, "palette"]),
+  mode: state.getIn([reducer, "type"]),
+  gradient: state.getIn([reducer, "gradient"]),
+  decoration: state.getIn([reducer, "decoration"]),
+  bgPosition: state.getIn([reducer, "bgPosition"]),
+  layout: state.getIn([reducer, "layout"]),
+  direction: state.getIn([reducer, "direction"]),
 });
 
-const dispatchToProps = dispatch => ({
+const dispatchToProps = (dispatch) => ({
   changeTheme: bindActionCreators(changeThemeAction, dispatch),
   changeMode: bindActionCreators(changeModeAction, dispatch),
   changeGradient: bindActionCreators(changeGradientAction, dispatch),

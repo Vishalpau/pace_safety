@@ -1,0 +1,8 @@
+.details-wrapper {
+  display: block !important;
+}
+.details-wrapper .MuiGrid-container + .MuiGrid-container {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.13);
+}

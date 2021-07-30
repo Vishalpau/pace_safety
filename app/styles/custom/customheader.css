@@ -1,0 +1,19 @@
+.headerAppsGrid {
+  opacity: 1;
+}
+
+.headerAppsGrid .MuiMenu-list {
+  display: grid;
+  grid-template-columns: repeat(2, 120px);
+  gap: 1rem;
+}
+
+.headerAppsGrid .MuiMenu-list .MuiTypography-root {
+  word-wrap: normal;
+  text-align: center;
+}
+
+.headerAppsGrid .MuiMenu-list .MuiListItem-root {
+  flex-direction: column !important;
+  font-size: 13px;
+}
