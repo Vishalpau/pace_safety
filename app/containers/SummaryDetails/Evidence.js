@@ -146,6 +146,15 @@ const EvidenceSummary = () => {
     window.location.href = `${documentUrl}`;
   };
 
+  const download = (image_link) => {
+    let onlyImage_url = image_link.replace("https://", "")
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url
+    let imageArray = image_url.split("/")
+    let image_name = imageArray[imageArray.length - 1]
+    saveAs(image_url, image_name)
+    handleClose()
+  };
+
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -371,17 +380,14 @@ const EvidenceSummary = () => {
               </Grid>
               <Grid item xs={12} md={6}>
               <Button
-                  startIcon={<GetAppIcon />}
-                  variant="contained"
-                  color="primary"
-                  className={classes.modalButton}
-                  href={`${documentUrl}`}
-                  disableElevation
-                  target="_blank"
-                  download
-                >
-                  Download Attachment
-                </Button>
+                    startIcon={<GetAppIcon />}
+                    variant="contained"
+                    disableElevation
+                    className={classes.modalButton}
+                    onClick={(e) => download(documentUrl)}
+                  >
+                    Download Attachment
+                  </Button>
               </Grid>
             </Grid>
           </DialogContentText>
