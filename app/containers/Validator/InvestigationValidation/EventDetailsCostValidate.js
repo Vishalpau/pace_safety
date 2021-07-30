@@ -8,7 +8,9 @@ function EventDetailsCostValidate(data) {
             errorCost[`costType${[i]}`] = `Please select cost type ${i + 1}`;
         }
         if (validator.isEmpty(data[i].costAmount.toString())) {
-            errorCost[`costAmount${[i]}`] = `Please select cost amount ${i + 1}`;
+            errorCost[`costAmount${[i]}`] = `Please fill cost amount ${i + 1}`;
+        } else if (isNaN(parseInt(data[i].costAmount))) {
+            errorCost[`costAmount${[i]}`] = `Please fill numeric values in cost amount ${i + 1}`;
         }
         if (validator.isEmpty(data[i].casualFactor.toString())) {
             errorCost[`casualFactor${[i]}`] = `Please select casual factor ${i + 1}`;

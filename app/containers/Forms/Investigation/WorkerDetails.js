@@ -41,6 +41,8 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import { object } from "prop-types";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -183,6 +185,10 @@ const WorkerDetails = () => {
 
   const radioDecide = ["Yes", "No", "N/A"];
   const radioYesNo = ["Yes", "No"];
+  const ref = useRef()
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const handelTestTaken = async (e) => {
     if (e.target.value == "Yes") {
@@ -199,12 +205,33 @@ const WorkerDetails = () => {
   };
 
   const handleFile = async (e) => {
-    const temp = { ...form };
-    temp.attachments = e.target.files[0];
-    if (e.target.files[0].size > 1500) {
-      console.log("File too large")
+
+    let file = e.target.files[0].name.split(".");
+    if (
+      file[1].toLowerCase() === "jpg" ||
+      file[1].toLowerCase() === "jpeg" ||
+      file[1].toLowerCase() === "png"
+    ) {
+      const temp = { ...form };
+      temp.attachments = e.target.files[0];
+      await setForm(temp);
+    } else {
+      ref.current.value = "";
+      await setMessage("Only JPG & PNG File is allowed!");
+      await setMessageType("error");
+      await setOpen(true);
     }
-    await setForm(temp);
+
+  };
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenError(false)
+      return;
+    }
+    setOpen(false);
   };
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
@@ -1326,6 +1353,7 @@ const WorkerDetails = () => {
               <input
                 id="selectFile"
                 type="file"
+                ref={ref}
                 className={classes.fullWidth}
                 name="file"
                 accept=".png, .jpg , .jpeg"
@@ -1420,6 +1448,15 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
           </Grid>
+          <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+          >
+            <Alert onClose={handleClose} severity={messageType}>
+              {message}
+            </Alert>
+          </Snackbar>
         </Grid>
       ) : (
         <h1>Loading...</h1>
