@@ -111,6 +111,7 @@ const IncidentDetails = () => {
   const selectBreakdown = JSON.parse(localStorage.getItem('selectBreakDown'))!==null?JSON.parse(localStorage.getItem('selectBreakDown')):null;
   var struct=""
   for(var i in selectBreakdown){
+
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`
   }
   const fkProjectStructureIds = struct.slice(0, -1)
@@ -244,7 +245,9 @@ const IncidentDetails = () => {
         const formData = {
           fkCompanyId: parseInt(fkCompanyId),
           fkProjectId: parseInt(project.projectId),
+
           fkProjectStructureIds: fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+
           incidentNumber: "",
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -546,10 +549,12 @@ const IncidentDetails = () => {
           <Grid container item xs={12} md={9} spacing={3}>
             {/* Project Name */}
             <Grid item xs={12} md={12}>
+
              
                 <Typography variant="h6" className={Type.labelName} gutterBottom id="project-name-label">Project name</Typography>
                <Typography className={Type.labelValue}>{project?project.projectName:null}</Typography>
              
+
             </Grid>
             {/* Unit Name */}
 
