@@ -141,7 +141,7 @@ const WorkerDetails = () => {
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
     dateOfAlcoholDrugTest: null,
-    isWorkerClearedTest: "N/A",
+    isWorkerClearedTest: "Yes",
     reasonForTestNotDone: "",
     status: "Active",
     createdBy: 0,
@@ -198,7 +198,6 @@ const WorkerDetails = () => {
       setForm({
         ...form,
         isAlcoholDrugTestTaken: e.target.value,
-        dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z",
       });
       seTesttaken(false);
     }
@@ -884,7 +883,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Number of Days Away/On Restriction"
+                label="Number of days away/on restriction"
                 value={form.NoOfDaysAway}
                 className={classes.formControl}
                 onChange={(e) => {
