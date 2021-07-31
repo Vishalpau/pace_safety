@@ -102,6 +102,8 @@ const Details = () => {
         evidenceNotSupport: allApiData.evidenceNotSupport,
         rcaRecommended: allApiData.rcaRecommended,
       });
+      await handelRcaRecommended("a", allApiData.rcaRecommended)
+      console.log(allApiData.rcaRecommended)
       putId.current = incidentId;
       checkPost.current = false
     }

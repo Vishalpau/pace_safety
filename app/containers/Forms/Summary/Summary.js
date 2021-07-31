@@ -95,7 +95,7 @@ const Summary = () => {
   const [lessionlearnData, setLessionLearnData] = useState({});
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialNoticeficationStatus,setInitialNotificationStatus] = useState(false)
+  const [initialNoticeficationStatus, setInitialNotificationStatus] = useState(false)
   const rootCauseStatus = useRef(false);
 
   const { id } = useParams();
@@ -111,11 +111,11 @@ const Summary = () => {
   };
   const fetchReportData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
-    if(allIncidents.data.data.results.length > 0){
+    if (allIncidents.data.data.results.length > 0) {
       await setInitialNotificationStatus(true);
     }
-    
-    
+
+
   };
 
   const fetchInvestigationData = async () => {
@@ -364,16 +364,16 @@ const Summary = () => {
                         rootcauseanalysis === false &&
                         lessionlearn === false)
                     ) {
-                      return(<IncidentDetailsSummary />);
+                      return (<IncidentDetailsSummary />);
                     }
                     if (investigation == true) {
-                      return(<InvestigationSummary />) ;
+                      return (<InvestigationSummary />);
                     }
                     if (evidence == true) {
                       return (<EvidenceSummary />);
                     }
                     if (rootcauseanalysis == true) {
-                      return(<RootCauseAnalysisSummary />) ;
+                      return (<RootCauseAnalysisSummary />);
                     }
                     if (lessionlearn == true) {
                       return (<LessionLearnSummary />);

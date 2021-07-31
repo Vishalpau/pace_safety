@@ -22,7 +22,7 @@ function InvestigationOverviewValidate(data) {
     }
 
     if (validator.isEmpty(data.hseSpecialistName.toString())) {
-        error.hseSpecialistName = "Please fill hse specialist contact number";
+        error.hseSpecialistName = "Please fill hse specialist name";
         isValid = false;
     } else if (data.hseSpecialistName.length > 46) {
         error.hseSpecialistName = "Less than 45 character allowed in hse specialist name";
@@ -31,7 +31,10 @@ function InvestigationOverviewValidate(data) {
     if (validator.isEmpty(data.hseSpecialistContactNo.toString())) {
         error.hseSpecialistContactNo = "Please fill hse specialist contact number";
         isValid = false;
-    } else if (data.hseSpecialistContactNo.length > 21) {
+    } else if (isNaN(data.hseSpecialistContactNo)) {
+        error.hseSpecialistContactNo = "Only numbers allowed in hse specialist contact number";
+    }
+    else if (data.hseSpecialistContactNo.length > 21) {
         error.hseSpecialistContactNo = "Less than 20 character allowed in hse specialist contact number";
     }
     console.log(error)
