@@ -59,20 +59,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EqiptmentAffected = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-
-  const notificationSent = ["Manage", "SuperVisor"];
-
-  const selectValues = [1, 2, 3, 4];
-
-  const radioDecide = ["Yes", "No"];
+  // define props
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
@@ -91,6 +78,7 @@ const EqiptmentAffected = () => {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
 
+  // define props for form
   const [form, setForm] = useState([
     {
       equipmentType: "",
@@ -102,7 +90,6 @@ const EqiptmentAffected = () => {
   ]);
 
   // hablde Remove preivous data
-
   const handleRemove = async (key) => {
     if (equipmentListdata.length > 1) {
       const temp = equipmentListdata;
@@ -143,6 +130,56 @@ const EqiptmentAffected = () => {
     //  cheack condition equipment is already filled or new creation
     if (detailsOfEquipmentAffect === "Yes") {
       if (equipmentListdata.length > 0) {
+        // remove existing data
+        for (let i = 0; i < equipmentListdata.length; i++) {
+          const res = await api.delete(
+            `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`
+          );
+        }
+      }
+      const { error, isValid } = EquipmentValidate(form);
+      setError(error);
+      const status = 0;
+      if (isValid) {
+        for (let i = 0; i < form.length; i++) {
+          const res = await api.post(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/equipments/`,
+            {
+              equipmentType: form[i].equipmentType,
+              equipmentOtherType: form[i].equipmentOtherType,
+              equipmentDeatils: form[i].equipmentDeatils,
+              createdBy: parseInt(userId),
+              fkIncidentId: localStorage.getItem("fkincidentId"),
+            }
+          );
+        }
+        const temp = incidentsListData;
+        temp.equipmentDamagedComments =
+          equipmentDamagedComments ||
+          incidentsListData.equipmentDamagedComments;
+        temp.isEquipmentDamagedAvailable =
+          detailsOfEquipmentAffect ||
+          incidentsListData.isEquipmentDamagedAvailable;
+        temp.updatedAt = moment(new Date()).toISOString();
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+          if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+      }
+    } else {
+      // if user select No or N/A remove all existing data
+      if (equipmentListdata.length > 0) {
         // send request for update
 
         for (let i = 0; i < equipmentListdata.length; i++) {
@@ -150,34 +187,6 @@ const EqiptmentAffected = () => {
             `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`
           );
         }
-        // decide for next path
-        if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
-        } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
-        }
-      }
-      const { error, isValid } = EquipmentValidate(form);
-      setError(error);
-      const status = 0;
-
-      for (let i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `/api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/equipments/`,
-          {
-            equipmentType: form[i].equipmentType,
-            equipmentOtherType: form[i].equipmentOtherType,
-            equipmentDeatils: form[i].equipmentDeatils,
-            createdBy: parseInt(userId),
-            fkIncidentId: localStorage.getItem("fkincidentId"),
-          }
-        );
       }
       const temp = incidentsListData;
       temp.equipmentDamagedComments =
@@ -190,8 +199,6 @@ const EqiptmentAffected = () => {
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-      // decide path for next
-      if (id) {
         if (nextPath.environmentAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/environment-affected/${id}`
@@ -201,46 +208,6 @@ const EqiptmentAffected = () => {
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
         }
-      } else if (nextPath.environmentAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/environment-affected/"
-        );
-      } else {
-        history.push(
-          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-        );
-      }
-    } else {
-      const temp = incidentsListData;
-      temp.equipmentDamagedComments =
-        equipmentDamagedComments || incidentsListData.equipmentDamagedComments;
-      temp.isEquipmentDamagedAvailable =
-        detailsOfEquipmentAffect ||
-        incidentsListData.isEquipmentDamagedAvailable;
-      temp.updatedAt = moment(new Date()).toISOString();
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      if (id !== undefined) {
-        if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
-        } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
-        }
-      } else if (nextPath.environmentAffect === "Yes") {
-        history.push(
-          "/app/incident-management/registration/initial-notification/environment-affected/"
-        );
-      } else {
-        history.push(
-          "/app/incident-management/registration/initial-notification/reporting-and-notification/"
-        );
-      }
     }
   };
 
@@ -290,6 +257,7 @@ const EqiptmentAffected = () => {
     await setequipmentAffected(result);
   };
 
+  // handle go back
   const handleBack = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     if (nextPath.propertyAffect === "Yes") {

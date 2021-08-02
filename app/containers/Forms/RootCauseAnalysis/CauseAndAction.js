@@ -70,7 +70,8 @@ const BasicCauseAndAction = () => {
 
   const putId = useRef("");
   let id = useRef();
-  const [action, setAction] = useState({});
+  // const [action, setAction] = useState({});
+  const [actionData, setActionData] = useState({})
 
   const handelShowData = async () => {
     let tempApiData = {};
@@ -107,10 +108,12 @@ const BasicCauseAndAction = () => {
     });
     id.current = tempid.reverse();
     await setData(tempApiData);
-    handelActionTracker();
+    await handelActionTracker()
   };
 
   const handelActionTracker = async () => {
+
+    let allPaceID = id.current
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
@@ -118,20 +121,17 @@ const BasicCauseAndAction = () => {
     let ActionToCause = {}
     const allActionTrackerData = await api_action.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
-    let allPaceID = id.current
-    allPaceID.map((paceId) => {
-      let tempActionID = []
-      allActionTracker.map((actionTracker) => {
-        let causeId = actionTracker.enitityReferenceId.split(":")[1]
-        console.log(causeId == paceId)
-        if (causeId == paceId) {
-          tempActionID.push(actionTracker.id)
+    allActionTracker.map((value) => {
+      let actionPaceId = value.split(":")[1]
+      let actionPaceSubId = value.split(":")[2]
+      let actionTemp = []
+      if (allPaceID.includes(actionPaceId)) {
+        if (`${actionPaceId}:${actionPaceSubId}` in ActionToCause) {
+          ActionToCause[`${actionPaceId}:${actionPaceSubId}`].push(value.id)
         }
-      })
-      ActionToCause[paceId] = tempActionID
+        ActionToCause[`${actionPaceId}:${actionPaceSubId}`] = [value.id]
+      }
     })
-
-    console.log(ActionToCause)
   }
 
   function ListItemLink(props) {
@@ -243,7 +243,7 @@ const BasicCauseAndAction = () => {
                     .reverse()
                     .map(([key, value], index) => (
                       <>
-                        {value.map((value) => (
+                        {value.map((value, valueIndex) => (
                           <TableRow>
                             <TableCell
                               align="left"
@@ -263,8 +263,7 @@ const BasicCauseAndAction = () => {
                             >
                               <ActionTracker
                                 actionContext="incidents:Pacacuase"
-                                enitityReferenceId={`${putId.current}:${id.current[index]
-                                  }`}
+                                enitityReferenceId={`${putId.current}:${id.current[index]}:${valueIndex}`}
                               />
                             </TableCell>
                           </TableRow>

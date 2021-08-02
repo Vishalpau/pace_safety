@@ -112,10 +112,37 @@ const LessionLearned = () => {
       file[1].toLowerCase() === "png"
     ) {
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        setAttachment({ ...attachment, evidenceDocument: e.target.files[0] });
-        await setMessage("File uploaded successfully!");
-        await setMessageType("success");
-        await setOpen(true);
+        const formData = new FormData();
+        formData.append("evidenceDocument", e.target.files[0]);
+        formData.append("evidenceCheck", "Yes");
+        formData.append("evidenceNumber", "string");
+        formData.append("evidenceCategory", "Lessons Learned");
+        formData.append("createdBy", parseInt(userId));
+        formData.append("status", "Active");
+        formData.append("fkIncidentId", id);
+        if (evidence.length > 0) {
+          for (let key in evidence) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
+            );
+          }
+        }
+        try {
+          const res = await api.post(
+            `api/v1/incidents/${id}/evidences/`,
+            formData
+          );
+          if (res.status === 201) {
+            await setMessage("File uploaded successfully!");
+            await setMessageType("success");
+            await setOpen(true);
+          }
+        } catch (error) {
+          await setMessage("File uploaded failed!");
+          await setMessageType("error");
+          await setOpen(true);
+          ref.current.value = "";
+        }
       } else {
         ref.current.value = "";
         await setMessage("File uploading failed! Select file less than 25MB!");
@@ -140,18 +167,7 @@ const LessionLearned = () => {
   };
   const handleNext = async () => {
     // attachment
-
-    if (!attachment.evidenceDocument || !attachment.length) {
-      const formData = new FormData();
-      formData.append("evidenceDocument", attachment.evidenceDocument);
-      formData.append("evidenceCheck", "Yes");
-      formData.append("evidenceNumber", "string");
-      formData.append("evidenceCategory", "Lessons Learned");
-      formData.append("createdBy", parseInt(userId));
-      formData.append("status", "Active");
-      formData.append("fkIncidentId", id);
-
-      const res = await api.post(`api/v1/incidents/${id}/evidences/`, formData);
+    if (attachment.evidenceDocument !== "") {
     }
     // sent put request
     let status = 0;
@@ -240,8 +256,13 @@ const LessionLearned = () => {
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
+
     if (allEvidence.status === 200) {
-      await setEvidence(allEvidence.data.data.results);
+      const newData = allEvidence.data.data.results.filter(
+        (item) => item.evidenceCategory === "Lessons Learned"
+      );
+      await setEvidence(newData);
+      console.log("lesson learned", newData);
     }
   };
 
@@ -252,6 +273,13 @@ const LessionLearned = () => {
     const temp = form;
     const newData = temp.filter((item, index) => index !== key);
     await setForm(newData);
+  };
+
+  // handle file name
+  const handelFileName = (value) => {
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    return fileName;
   };
 
   // handle remove initial evidance from databse
@@ -269,6 +297,7 @@ const LessionLearned = () => {
     fetchDepartment();
     if (id) {
       fetchLessonLerned();
+      fetchEvidanceData();
     }
     fetchIncidentsData();
   }, []);
@@ -464,7 +493,15 @@ const LessionLearned = () => {
                 ref={ref}
                 accept=".png, jpg, jpeg"
                 onChange={(e) => handleAttchment(e)}
+                placeholder={
+                  evidence.length > 0 ? evidence[0].evidenceDocument : ""
+                }
               />
+              {evidence.length > 0 ? (
+                <a href={`${evidence[0].evidenceDocument}`} target="_blank">
+                  {handelFileName(evidence[0].evidenceDocument)}
+                </a>
+              ) : null}
             </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>

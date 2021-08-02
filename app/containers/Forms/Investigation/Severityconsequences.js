@@ -91,7 +91,7 @@ const InvestigationOverview = () => {
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
     dateOfAlcoholDrugTest: null,
-    isWorkerClearedTest: "N/A",
+    isWorkerClearedTest: "Yes",
     reasonForTestNotDone: "",
     status: "Active",
     createdBy: 0,

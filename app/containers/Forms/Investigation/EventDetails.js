@@ -70,7 +70,7 @@ const EventDetails = () => {
   const history = useHistory();
   const CheckPost = useRef();
   const radioYesNo = ["Yes", "No"];
-  const [overAllCostShow, SetOverAllCostShow] = useState("");
+  const [overAllCostShow, setOverAllCostShow] = useState("");
 
   const [weather, setWeather] = useState([
     {
@@ -149,7 +149,6 @@ const EventDetails = () => {
         setOverAllCost(costData);
         costData.map((value) => {
           overAllCostId.current.push(value.id);
-          SetOverAllCostShow("Yes");
         });
       }
     }
@@ -177,6 +176,15 @@ const EventDetails = () => {
 
   const handelRemove = async (e, index) => {
     if (weather.length > 1) {
+      if (weather[index].id !== undefined) {
+        console.log("here");
+        const res = await api.delete(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/events/${eventId.current}/weatherconditions/${weather[index].id}/`
+        );
+      }
+
       let newData = weather.filter((item, key) => key !== index);
       await setWeather(newData);
     }
@@ -200,6 +208,13 @@ const EventDetails = () => {
 
   const handelOverallCostRemove = async (e, index) => {
     if (overAllCost.length > 1) {
+      if (overAllCost[index].id !== undefined) {
+        const res = await api.delete(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/events/${eventId.current}/cost/${overAllCost[index].id}/`
+        );
+      }
       let newData = overAllCost.filter((item, key) => key !== index);
       await setOverAllCost(newData);
     }
@@ -208,7 +223,10 @@ const EventDetails = () => {
   const handelNext = async (e) => {
     const { error, isValid } = EventDetailsValidate(form);
     const { errorWeather } = EventDetailsWeatherValidate(weather);
-    const { errorCost } = EventDetailsCostValidate(overAllCost);
+    if (form.isCostIncurred == "Yes") {
+      const { errorCost } = EventDetailsCostValidate(overAllCost);
+    }
+
     setError(error);
     setErrorWeather(errorWeather);
     setErrorCost(errorCost);
@@ -243,8 +261,8 @@ const EventDetails = () => {
             }
           }
           // cost api call
-          let costObject = overAllCost;
-          if (overAllCostShow == "Yes") {
+          if (form.isCostIncurred == "Yes") {
+            let costObject = overAllCost;
             for (let keys in costObject) {
               costObject[keys]["fkEventDetailsId"] = eventID;
               const resWeather = await api.post(
@@ -272,35 +290,65 @@ const EventDetails = () => {
         );
 
         // weather api call put
-        if (weather.length > 0 && !isNaN(weatherId.current[0])) {
+        if (weather.length > 0) {
           let weatherObject = weather;
           for (let key in weatherObject) {
-            const resWeather = await api.put(
-              `api/v1/incidents/${putId.current}/investigations/${
-                investigationId.current
-              }/events/${eventId.current}/weatherconditions/${
-                weatherId.current[key]
-              }/`,
-              weatherObject[key]
-            );
-            if (resWeather == 200) {
-              console.log("request done");
+            if (weatherObject[key].id !== undefined) {
+              const resWeather = await api.put(
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
+                }/events/${eventId.current}/weatherconditions/${
+                  weatherObject[key].id
+                }/`,
+                weatherObject[key]
+              );
+              if (resWeather == 200) {
+                console.log("request done");
+              }
+            } else {
+              weatherObject[key]["fkEventDetailsId"] = eventId.current;
+              const resWeather = await api.post(
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
+                }/events/${eventId.current}/weatherconditions/`,
+                weatherObject[key]
+              );
+              if (resWeather == 201) {
+                console.log("request done");
+              }
             }
           }
         }
 
         // cost api call put
-        if (overAllCost.length > 0 && !isNaN(overAllCostId.current[0])) {
-          let costObject = overAllCost;
-          for (let keys in costObject) {
-            const resWeather = await api.put(
-              `api/v1/incidents/${putId.current}/investigations/${
-                investigationId.current
-              }/events/${eventId.current}/cost/${overAllCostId.current[keys]}/`,
-              costObject[keys]
-            );
-            if (resWeather == 200) {
-              console.log("request done");
+        if (form.isCostIncurred == "Yes") {
+          if (overAllCost.length > 0 && !isNaN(overAllCostId.current[0])) {
+            let costObject = overAllCost;
+            for (let keys in costObject) {
+              if (costObject[keys].id !== undefined) {
+                const resWeather = await api.put(
+                  `api/v1/incidents/${putId.current}/investigations/${
+                    investigationId.current
+                  }/events/${eventId.current}/cost/${
+                    overAllCostId.current[keys]
+                  }/`,
+                  costObject[keys]
+                );
+                if (resWeather == 200) {
+                  console.log("request done");
+                }
+              } else {
+                costObject[keys]["fkEventDetailsId"] = eventId.current;
+                const resWeather = await api.post(
+                  `api/v1/incidents/${putId.current}/investigations/${
+                    investigationId.current
+                  }/events/${eventId.current}/cost/`,
+                  costObject[keys]
+                );
+                if (resWeather == 201) {
+                  console.log("request done");
+                }
+              }
             }
           }
         }
@@ -451,7 +499,7 @@ const EventDetails = () => {
                 )}
               </Grid>
 
-              {weather.length > 1 && CheckPost.current !== false ? (
+              {weather.length > 1 ? (
                 <Grid item md={1}>
                   <IconButton onClick={(e) => handelRemove(e, index)}>
                     <RemoveCircleOutlineIcon />
@@ -461,7 +509,7 @@ const EventDetails = () => {
             </>
           ))}
 
-          {weather.length < 3 && CheckPost.current !== false ? (
+          {weather.length < 3 ? (
             <Grid item md={1}>
               <IconButton onClick={(e) => handelAdd(e)}>
                 <AddIcon />
@@ -654,7 +702,7 @@ const EventDetails = () => {
             <TextField
               id="title"
               variant="outlined"
-              label="Impact Information"
+              label="Impact information"
               value={form.propertyImpactInformation}
               error={error && error.propertyImpactInformation}
               helperText={error && error.propertyImpactInformation}
@@ -689,17 +737,15 @@ const EventDetails = () => {
           <Grid item md={12}>
             <Typography variant="h6">Overall cost*</Typography>
             <FormControl component="fieldset" required>
-              <RadioGroup
-                className={classes.inlineRadioGroup}
-                value={overAllCostShow}
-                onChange={(e) =>
-                  setForm({ ...form, isCostIncurred: e.target.value })
-                }
-              >
+              <RadioGroup className={classes.inlineRadioGroup}>
                 {radioYesNo.map((value) => (
                   <FormControlLabel
-                    disabled={CheckPost.current == false}
-                    value={form.isCostIncurred}
+                    // disabled={CheckPost.current == false}
+                    value={value}
+                    checked={form.isCostIncurred == value}
+                    onChange={(e) =>
+                      setForm({ ...form, isCostIncurred: value })
+                    }
                     control={<Radio />}
                     label={value}
                   />
@@ -709,11 +755,11 @@ const EventDetails = () => {
           </Grid>
 
           {/* cost incurred  */}
-          <Grid item md={11}>
-            {overAllCostShow == "Yes" ? (
+          <Grid container item md={12} spacing={2}>
+            {form.isCostIncurred == "Yes" ? (
               <>
                 {overAllCost.map((value, index) => (
-                  <Grid container item md={12} spacing={2} alignItems="center">
+                  <>
                     {/* cost type */}
                     <Grid item md={4}>
                       <FormControl
@@ -753,7 +799,7 @@ const EventDetails = () => {
                     </Grid>
 
                     {/* cost amount */}
-                    <Grid item md={4}>
+                    <Grid item md={2}>
                       <TextField
                         id="title"
                         error={errorCost && errorCost[`costAmount${[index]}`]}
@@ -776,7 +822,7 @@ const EventDetails = () => {
                     </Grid>
 
                     {/* cost factor */}
-                    <Grid item md={3}>
+                    <Grid item md={4}>
                       <FormControl
                         error={errorCost && errorCost[`casualFactor${[index]}`]}
                         required
@@ -814,7 +860,7 @@ const EventDetails = () => {
                         </FormHelperText>
                       )}
                     </Grid>
-                    {overAllCost.length > 1 && CheckPost.current !== false ? (
+                    {overAllCost.length > 1 ? (
                       <Grid item md={1}>
                         <IconButton
                           onClick={(e) => handelOverallCostRemove(e, index)}
@@ -823,10 +869,10 @@ const EventDetails = () => {
                         </IconButton>
                       </Grid>
                     ) : null}
-                  </Grid>
+                  </>
                 ))}
 
-                {overAllCost.length < 4 && CheckPost.current !== false ? (
+                {overAllCost.length < 4 ? (
                   <Grid item md={1}>
                     <IconButton onClick={(e) => handelOveallCostAdd(e)}>
                       <AddIcon />

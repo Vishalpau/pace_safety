@@ -38,6 +38,8 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import { object } from "prop-types";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -101,7 +103,7 @@ const WorkerDetails = () => {
   const history = useHistory();
   const [workerid, setWorkerId] = useState();
   let [localWorkerData, setLocalWorkerData] = useState([]);
-
+  const [files] = useState([]);
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
@@ -138,7 +140,7 @@ const WorkerDetails = () => {
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
     dateOfAlcoholDrugTest: null,
-    isWorkerClearedTest: "N/A",
+    isWorkerClearedTest: "Yes",
     reasonForTestNotDone: "",
     status: "Active",
     createdBy: 0,
@@ -155,6 +157,7 @@ const WorkerDetails = () => {
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
     setError({});
+
     // getting person affected data
     const url = window.location.pathname.split("/");
     const workerNum = url[url.length - 2];
@@ -184,6 +187,10 @@ const WorkerDetails = () => {
 
   const radioDecide = ["Yes", "No", "N/A"];
   const radioYesNo = ["Yes", "No"];
+  const ref = useRef();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const handelTestTaken = async (e) => {
     if (e.target.value == "Yes") {
@@ -193,16 +200,37 @@ const WorkerDetails = () => {
       setForm({
         ...form,
         isAlcoholDrugTestTaken: e.target.value,
-        dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z",
       });
       seTesttaken(false);
     }
   };
 
   const handleFile = async (e) => {
-    const temp = { ...form };
-    temp.attachments = e.target.files[0];
-    await setForm(temp);
+    let file = e.target.files[0].name.split(".");
+    if (
+      file[1].toLowerCase() === "jpg" ||
+      file[1].toLowerCase() === "jpeg" ||
+      file[1].toLowerCase() === "png"
+    ) {
+      const temp = { ...form };
+      temp.attachments = e.target.files[0];
+      await setForm(temp);
+    } else {
+      ref.current.value = "";
+      await setMessage("Only JPG & PNG File is allowed!");
+      await setMessageType("error");
+      await setOpen(true);
+    }
+  };
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenError(false)
+      return;
+    }
+    setOpen(false);
   };
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
@@ -233,7 +261,6 @@ const WorkerDetails = () => {
           data.append("attachments", form.attachments);
         }
       } else if (form.attachments == null) {
-        console.log("here2");
         delete form["attachments"];
       }
       data.append("eventLeadingToInjury", form.eventLeadingToInjury);
@@ -425,6 +452,12 @@ const WorkerDetails = () => {
     setSupervisorTimeOnProject(await PickListData(55));
     setSupervisorTimeInCompany(await PickListData(56));
     await setIsLoading(true);
+  };
+
+  const imageNameFromUrl = (url) => {
+    let imageArray = url.split("/");
+    let image_name = imageArray[imageArray.length - 1];
+    return image_name;
   };
 
   useEffect(() => {
@@ -863,7 +896,7 @@ const WorkerDetails = () => {
               <TextField
                 id="title"
                 variant="outlined"
-                label="Number of Days Away/On Restriction"
+                label="Number of days away/on restriction"
                 value={form.NoOfDaysAway}
                 className={classes.formControl}
                 onChange={(e) => {
@@ -1338,33 +1371,31 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
-            {typeof form.attachments == "string" ? (
-              <>
-                <Grid item md={6}>
-                  {form.attachments != "" &&
-                  typeof form.attachments == "string" ? (
-                    <a target="_blank" href={form.attachments}>
-                      Image
-                      <ImageIcon />
-                    </a>
-                  ) : (
-                    <p />
-                  )}
-                </Grid>
-              </>
-            ) : (
-              <Grid item md={4}>
-                <input
-                  type="file"
-                  className={classes.fullWidth}
-                  name="file"
-                  accept=".png, .jpg "
-                  onChange={(e) => {
-                    handleFile(e);
-                  }}
-                />
-              </Grid>
-            )}
+            <Grid item md={4}>
+              <input
+                id="selectFile"
+                type="file"
+                ref={ref}
+                className={classes.fullWidth}
+                name="file"
+                accept=".png, .jpg , .jpeg"
+                onChange={(e) => {
+                  handleFile(e);
+                }}
+              />
+            </Grid>
+
+            <Grid item md={6}>
+              {form.attachments != "" && typeof form.attachments == "string" ? (
+                <a target="_blank" href={form.attachments}>
+                  <p>{imageNameFromUrl(form.attachments)}</p>
+                  {/* <ImageIcon /> */}
+                </a>
+              ) : (
+                <p />
+              )}
+            </Grid>
+
             {localWorkerData.length > 1 ? (
               <Grid item md={12}>
                 <Button onClick={(e) => handelRemove()}>
@@ -1439,6 +1470,11 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
           </Grid>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={messageType}>
+              {message}
+            </Alert>
+          </Snackbar>
         </Grid>
       ) : (
         <h1>Loading...</h1>

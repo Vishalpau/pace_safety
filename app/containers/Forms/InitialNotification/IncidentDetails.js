@@ -33,6 +33,12 @@ import AlertMessage from "./Alert";
 import { Typography } from "@material-ui/core";
 import Type from "../../../styles/components/Fonts.scss";
 
+// redux
+
+import { useDispatch } from "react-redux";
+
+import { breakDownDetails } from "../../../redux/actions/initialDetails";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -73,6 +79,7 @@ const IncidentDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const { id } = useParams();
+  const dispatch = useDispatch();
   const [hideAffect, setHideAffect] = useState([]);
 
   const [nextPath, setNextPath] = useState({
@@ -252,8 +259,10 @@ const IncidentDetails = () => {
         const formData = {
           fkCompanyId: parseInt(fkCompanyId),
           fkProjectId: parseInt(project.projectId),
+
           fkProjectStructureIds:
             fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+
           incidentNumber: "",
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -516,6 +525,7 @@ const IncidentDetails = () => {
           .catch(function(error) {});
       }
     }
+    dispatch(breakDownDetails(selectBreakDown));
     localStorage.setItem("selectBreakDown", JSON.stringify(selectBreakDown));
   };
 

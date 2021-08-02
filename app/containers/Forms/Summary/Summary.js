@@ -206,6 +206,11 @@ const Summary = () => {
                       <AccessTime />
                     )
                   }
+                  // style={{backgroundColor:initialNotification == true ||
+                  //   (investigation === false &&
+                  //     evidence === false &&
+                  //     rootcauseanalysis === false &&
+                  //     lessionlearn === false)?"green":"blue"}}
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(true);
@@ -231,6 +236,7 @@ const Summary = () => {
                   endIcon={
                     investigationOverview ? <CheckCircle /> : <AccessTime />
                   }
+                  // style={{backgroundColor:investigation?"green":"blue"}}
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(false);
@@ -252,6 +258,7 @@ const Summary = () => {
                   color="primary"
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
+                  // style={{backgroundColor:evidence?"green":"blue"}}
                   className={classes.statusButton}
                   endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
@@ -278,6 +285,7 @@ const Summary = () => {
                   }
                   size="large"
                   className={classes.statusButton}
+                  // style={{backgroundColor:rootcauseanalysis?"green":"blue"}}
                   endIcon={
                     paceCauseData || rootCausesData || whyData ? (
                       <CheckCircle />
@@ -306,6 +314,7 @@ const Summary = () => {
                   color="primary"
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
+                  // style={{backgroundColor:lessionlearn?"green":"blue"}}
                   className={classes.statusButton}
                   endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
@@ -339,41 +348,19 @@ const Summary = () => {
                         rootcauseanalysis === false &&
                         lessionlearn === false)
                     ) {
-                      return (
-                        <>
-                          <p>initial noticefication</p>{" "}
-                          <IncidentDetailsSummary />
-                        </>
-                      );
+                      return <IncidentDetailsSummary />;
                     }
                     if (investigation == true) {
-                      return (
-                        <>
-                          <p> Investigation</p> <InvestigationSummary />
-                        </>
-                      );
+                      return <InvestigationSummary />;
                     }
                     if (evidence == true) {
-                      return (
-                        <>
-                          <p>Evidence</p> <EvidenceSummary />
-                        </>
-                      );
+                      return <EvidenceSummary />;
                     }
                     if (rootcauseanalysis == true) {
-                      return (
-                        <>
-                          <p>Root Cause Analysis</p>{" "}
-                          <RootCauseAnalysisSummary />
-                        </>
-                      );
+                      return <RootCauseAnalysisSummary />;
                     }
                     if (lessionlearn == true) {
-                      return (
-                        <>
-                          <p>Lession Learn</p> <LessionLearnSummary />
-                        </>
-                      );
+                      return <LessionLearnSummary />;
                     }
                   })()}
                 </>

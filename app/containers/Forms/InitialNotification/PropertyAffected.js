@@ -189,37 +189,6 @@ const PropertyAffected = () => {
       );
       // If api success
       if (status === 201) {
-        if (id) {
-          if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-            );
-          } else {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-            );
-          }
-        }
-      }
-      // If no is selected on form.
-    } else {
-      const temp = incidentsListData;
-      temp["propertyDamagedComments"] =
-        propertyDamagedComments || incidentsListData.propertyDamagedComments;
-      temp["isPropertyDamagedAvailable"] =
-        detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
-      temp["updatedAt"] = moment(new Date()).toISOString();
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-
-      // Update case
-      if (id) {
         if (nextPath.equipmentAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
@@ -233,7 +202,45 @@ const PropertyAffected = () => {
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
         }
-        // New entry case.
+      }
+      // If no is selected on form.
+    } else {
+      // if user select no or N/A remove all existing data
+      if (propertyListData.length > 0) {
+        // Remove previous data
+        for (var i = 0; i < propertyListData.length; i++) {
+          const res = await api.delete(
+            `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`
+          );
+        }
+
+        // If that is not the case as if,
+      }
+      const temp = incidentsListData;
+      temp["propertyDamagedComments"] =
+        propertyDamagedComments || incidentsListData.propertyDamagedComments;
+      temp["isPropertyDamagedAvailable"] =
+        detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
+      temp["updatedAt"] = moment(new Date()).toISOString();
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
+
+      // Update case
+
+      if (nextPath.equipmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+        );
+      } else if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        );
+      } else {
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
       }
     }
   };
@@ -304,7 +311,7 @@ const PropertyAffected = () => {
   }, []);
 
   return (
-    <PapperBlock title="Details of Properties Affected?" icon="ion-md-list-box">
+    <PapperBlock title="Details of Properties Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>

@@ -78,6 +78,7 @@ export default function ActionTracker(props) {
     vendor: "string",
     vendorReferenceId: "string",
   });
+
   let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
   const api = axios.create({
     baseURL: API_URL_ACTION_TRACKER,
