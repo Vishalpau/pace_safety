@@ -18,16 +18,17 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
-import { FormHelperText, FormLabel } from "@material-ui/core";
+import FormSideBar from "../FormSideBar";
 
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
-import FormSideBar from "../FormSideBar";
+import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
 import api from "../../../utils/axios";
 import "../../../styles/custom.css";
+import { FormHelperText, FormLabel } from "@material-ui/core";
 import AlertMessage from "./Alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -164,9 +165,7 @@ const PeoplesAffected = () => {
             );
           }
         }
-      }
-      }
-      catch(error){
+      } catch (error) {
         setMessage("Network error!");
         setMessageType("error");
         setOpen(true);
@@ -218,45 +217,43 @@ const PeoplesAffected = () => {
           setOpen(true);
         }
         // check condition id
-        
-          if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/${id}`
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-            );
-          } else {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-            );
-          }
+
+        if (nextPath.propertyAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/property-affected/${id}`
+          );
+        } else if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+          );
+        } else {
+          history.push(
+            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+          );
+        }
       }
 
       // Case when form has No option selected.
     } else {
-
       // delete existing data if user select NO or N/A
-      try{
+      try {
         if (peopleData.length > 0) {
-          const temp = peopleData
+          const temp = peopleData;
           for (var i = 0; i < peopleData.length; i++) {
             const res = await api.delete(
-              `api/v1/incidents/${id}/people/${temp[i].id}/`,
+              `api/v1/incidents/${id}/people/${temp[i].id}/`
             );
           }
         }
-        }
-        catch(error){
-          setMessage("Network error!");
-          setMessageType("error");
-          setOpen(true);
-        }
+      } catch (error) {
+        setMessage("Network error!");
+        setMessageType("error");
+        setOpen(true);
+      }
 
       // When no is selected we just have to send the comment and yes/no flag to API via put request.
       const temp = incidentsListData;
@@ -279,24 +276,24 @@ const PeoplesAffected = () => {
       // Case when id is available. Update case. Redirect user to specific page.
       // Here if we see, we are redirecting user to urls with /id/ in the end.
       // Therefore, next page will get the input from the id and pre-fill the details.
-      
-        if (nextPath.propertyAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/property-affected/${id}`
-          );
-        } else if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
-        } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
-        }
+
+      if (nextPath.propertyAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/property-affected/${id}`
+        );
+      } else if (nextPath.equipmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+        );
+      } else if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        );
+      } else {
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
+      }
     }
   };
 
