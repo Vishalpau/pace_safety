@@ -2,25 +2,15 @@ import React, { useEffect, useState, useRef } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Button, Grid, FormHelperText } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Paper from "@material-ui/core/Paper";
-import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {
-  DatePicker,
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
@@ -29,7 +19,7 @@ import moment from "moment";
 import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import FlashOnIcon from '@material-ui/icons/FlashOn';
+import FlashOnIcon from "@material-ui/icons/FlashOn";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -102,7 +92,7 @@ export default function ActionTracker(props) {
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null })
+    await setForm({ ...form, plannedEndDate: null });
     await setOpen(false);
   };
   const handelSubmit = async () => {
@@ -112,9 +102,8 @@ export default function ActionTracker(props) {
       let res = await api.post("api/v1/actions/", form);
       if (res.status == 201) {
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null })
+        await setForm({ ...form, plannedEndDate: null });
         await setOpen(false);
-
       }
     }
   };

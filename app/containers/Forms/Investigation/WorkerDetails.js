@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Select, Container } from "@material-ui/core";
+import { Button, Grid, Select } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
 import {
-  // TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
   KeyboardTimePicker,
@@ -27,7 +26,6 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import CheckIcon from "@material-ui/icons/Check";
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
@@ -36,7 +34,6 @@ import { spacing } from "@material-ui/system";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
@@ -88,7 +85,9 @@ const WorkerDetails = () => {
   const [timeOnProject, setTimeOnProject] = useState([]);
   const [timeInIndustry, setTimeInIndustry] = useState([]);
   const [primaryBodyPartWithSide, setPrimaryBodyPartWithSide] = useState([]);
-  const [secondaryBodyPartWithSide, setSecondaryBodyPartWithSide] = useState([]);
+  const [secondaryBodyPartWithSide, setSecondaryBodyPartWithSide] = useState(
+    []
+  );
   const [typeOfInjury, setTypeOfInjury] = useState([]);
   const [higherMedicalResponder, setHigherMedicalResponder] = useState([]);
   const [treatmentType, setTreatmentType] = useState([]);
@@ -157,7 +156,7 @@ const WorkerDetails = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-    setError({})
+    setError({});
 
     // getting person affected data
     const url = window.location.pathname.split("/");
@@ -168,7 +167,10 @@ const WorkerDetails = () => {
     if (typeof particularEffected !== "undefined") {
       setForm(particularEffected);
     }
-    if (typeof particularEffected.id !== "undefined" || particularEffected.id != "") {
+    if (
+      typeof particularEffected.id !== "undefined" ||
+      particularEffected.id != ""
+    ) {
       setWorkerId(particularEffected.id);
     }
     // getting person affected data end
@@ -185,7 +187,7 @@ const WorkerDetails = () => {
 
   const radioDecide = ["Yes", "No", "N/A"];
   const radioYesNo = ["Yes", "No"];
-  const ref = useRef()
+  const ref = useRef();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -204,7 +206,6 @@ const WorkerDetails = () => {
   };
 
   const handleFile = async (e) => {
-
     let file = e.target.files[0].name.split(".");
     if (
       file[1].toLowerCase() === "jpg" ||
@@ -220,7 +221,6 @@ const WorkerDetails = () => {
       await setMessageType("error");
       await setOpen(true);
     }
-
   };
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -244,7 +244,7 @@ const WorkerDetails = () => {
       if (form.shiftTimeStart != null) {
         data.append("shiftTimeStart", form.shiftTimeStart);
       } else if (form.shiftTimeStart == null) {
-        delete form["shiftTimeStart"]
+        delete form["shiftTimeStart"];
       }
       data.append("shiftType", form.shiftType);
       data.append("occupation", form.occupation);
@@ -253,12 +253,15 @@ const WorkerDetails = () => {
       data.append("timeInCompany", form.timeInCompany);
       data.append("timeOnProject", form.timeOnProject);
       data.append("timeInIndustry", form.timeInIndustry);
-      if (form.attachments !== null && typeof form.attachments !== "undefined") {
+      if (
+        form.attachments !== null &&
+        typeof form.attachments !== "undefined"
+      ) {
         if (typeof form.attachments !== "string") {
           data.append("attachments", form.attachments);
         }
       } else if (form.attachments == null) {
-        delete form["attachments"]
+        delete form["attachments"];
       }
       data.append("eventLeadingToInjury", form.eventLeadingToInjury);
       data.append("injuryObject", form.injuryObject);
@@ -271,7 +274,7 @@ const WorkerDetails = () => {
       if (form.treatmentDate != null) {
         data.append("treatmentDate", form.treatmentDate);
       } else if (form.shiftTimeStart == null) {
-        delete form["treatmentDate"]
+        delete form["treatmentDate"];
       }
       data.append("higherMedicalResponder", form.higherMedicalResponder);
       data.append("injuryStatus", form.injuryStatus);
@@ -289,7 +292,7 @@ const WorkerDetails = () => {
       if (form.dateOfAlcoholDrugTest != null) {
         data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
       } else if (form.shiftTimeStart == null) {
-        delete form["treatmentDate"]
+        delete form["treatmentDate"];
       }
       data.append("isWorkerClearedTest", form.isWorkerClearedTest);
       data.append("reasonForTestNotDone", form.reasonForTestNotDone);
@@ -300,11 +303,21 @@ const WorkerDetails = () => {
       let res = [];
       if (!isNaN(form.id)) {
         form["fkInvestigationId"] = investigationId.current;
-        const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
+        const ress = await api.put(
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/workers/${workerid}/`,
+          data
+        );
         res.push(ress);
       } else {
         form["fkInvestigationId"] = investigationId.current;
-        const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
+        const ress = await api.post(
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/workers/`,
+          data
+        );
         res.push(ress);
       }
 
@@ -370,7 +383,8 @@ const WorkerDetails = () => {
     if (!isNaN(worker_removed[workerNumber].id)) {
       let deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${
+          deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
@@ -385,19 +399,21 @@ const WorkerDetails = () => {
           workerNumber - 1
         )}/${localStorage.getItem("fkincidentId")}`
       );
-    } else if (typeof worker_removed[parseInt(workerNumber + 1)] !== "undefined") {
+    } else if (
+      typeof worker_removed[parseInt(workerNumber + 1)] !== "undefined"
+    ) {
       await history.push(
         `/app/incident-management/registration/investigation/worker-details/${parseInt(
           workerNumber + 1
         )}/${localStorage.getItem("fkincidentId")}`
       );
-    }
-    else if (typeof worker_removed[parseInt(0)] !== "undefined") {
+    } else if (typeof worker_removed[parseInt(0)] !== "undefined") {
       await history.push(
-        `/app/incident-management/registration/investigation/worker-details/${parseInt(0)}/${localStorage.getItem("fkincidentId")}`
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(
+          0
+        )}/${localStorage.getItem("fkincidentId")}`
       );
-    }
-    else {
+    } else {
       await history.push(
         `/app/incident-management/registration/investigation/event-details/`
       );
@@ -439,10 +455,10 @@ const WorkerDetails = () => {
   };
 
   const imageNameFromUrl = (url) => {
-    let imageArray = url.split("/")
-    let image_name = imageArray[imageArray.length - 1]
-    return image_name
-  }
+    let imageArray = url.split("/");
+    let image_name = imageArray[imageArray.length - 1];
+    return image_name;
+  };
 
   useEffect(() => {
     PickList();
@@ -542,10 +558,7 @@ const WorkerDetails = () => {
 
             {/* scheduled workign hours */}
             <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Number of Scheduled Work Hours
                 </InputLabel>
@@ -1040,7 +1053,9 @@ const WorkerDetails = () => {
             {/* medical issues */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" required>Medical issued?</FormLabel>
+                <FormLabel component="legend" required>
+                  Medical issued?
+                </FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isMedicationIssued}
@@ -1065,7 +1080,9 @@ const WorkerDetails = () => {
             {/* prescription issue */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" required>Prescription issues ?</FormLabel>
+                <FormLabel component="legend" required>
+                  Prescription issues ?
+                </FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isPrescriptionIssued}
@@ -1090,7 +1107,9 @@ const WorkerDetails = () => {
             {/* non prescription */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" required>Non-prescription ?</FormLabel>
+                <FormLabel component="legend" required>
+                  Non-prescription ?
+                </FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isNonPrescription}
@@ -1115,7 +1134,9 @@ const WorkerDetails = () => {
             {/* any limitation */}
             <Grid item md={6}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" required>Any limitation ?</FormLabel>
+                <FormLabel component="legend" required>
+                  Any limitation ?
+                </FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={form.isAnyLimitation}
@@ -1146,7 +1167,7 @@ const WorkerDetails = () => {
             {/* test taken */}
             <Grid item md={12}>
               <FormControl component="fieldset" required>
-                <FormLabel component="legend" >Was the test taken?</FormLabel>
+                <FormLabel component="legend">Was the test taken?</FormLabel>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
                   value={
@@ -1175,7 +1196,11 @@ const WorkerDetails = () => {
                   >
                     <KeyboardDatePicker
                       className={classes.formControl}
-                      value={form.dateOfAlcoholDrugTest != null ? form.dateOfAlcoholDrugTest : null}
+                      value={
+                        form.dateOfAlcoholDrugTest != null
+                          ? form.dateOfAlcoholDrugTest
+                          : null
+                      }
                       label="Date of Test"
                       onChange={(e) => {
                         setForm({
@@ -1346,7 +1371,6 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
 
-
             <Grid item md={4}>
               <input
                 id="selectFile"
@@ -1446,11 +1470,7 @@ const WorkerDetails = () => {
               </Box>
             </Grid>
           </Grid>
-          <Snackbar
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-          >
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={messageType}>
               {message}
             </Alert>

@@ -1,31 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import { PapperBlock } from "dan-components";
 import { FormHelperText, FormLabel } from "@material-ui/core";
-
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
+
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
-
 import FormSideBar from "../FormSideBar";
-import FormHeader from "../FormHeader";
-
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -89,7 +82,10 @@ const EnvironmentAffected = () => {
   const [envComments, setEnvComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const nextPath = localStorage.getItem("nextPath");
 
@@ -383,7 +379,6 @@ const EnvironmentAffected = () => {
                     required
                     error={error && error[`envQuestionOption${[0]}`]}
                   >
-                   
                     <FormLabel component="legend">
                       Were there any spills?
                     </FormLabel>

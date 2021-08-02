@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import RemoveCircleOutlineSharpIcon from "@material-ui/icons/RemoveCircleOutlineSharp";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -67,15 +60,21 @@ const WhyAnalysis = () => {
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/fivewhy/`
+    );
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 0) {
       form.length = 0;
       putId.current = incidentId;
-      console.log(putId.current, 'Putid')
+      console.log(putId.current, "Putid");
       allApiData.map((value) => {
         form.push({
           why: value.why,
@@ -141,7 +140,10 @@ const WhyAnalysis = () => {
           let dataID = callObjects[key].whyId;
           let postObject = { ...whyData, ...callObjects[key] };
           if (typeof postObject != "undefined") {
-            const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
+            const res = await api.put(
+              `/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`,
+              postObject
+            );
             if (res.status == 200) {
               console.log("request done");
               nextPageLink = res.status;
@@ -169,7 +171,8 @@ const WhyAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -177,8 +180,7 @@ const WhyAnalysis = () => {
         `/app/incident-management/registration/root-cause-analysis/details/`
       );
     }
-
-  }
+  };
 
   useEffect(() => {
     handelUpdateCheck();
@@ -238,7 +240,6 @@ const WhyAnalysis = () => {
           {form.map((item, index) => (
             <Grid item md={12}>
               <Grid container spacing={2}>
-
                 <Grid item sm={11}>
                   <TextField
                     id="filled-basic"
@@ -267,7 +268,7 @@ const WhyAnalysis = () => {
             </Grid>
           ))}
 
-          {form.length <= 4 ?
+          {form.length <= 4 ? (
             <Grid item md={1}>
               {/* This button will add another entry of why input  */}
               {putId.current == "" ? (
@@ -279,8 +280,7 @@ const WhyAnalysis = () => {
                 </button>
               ) : null}
             </Grid>
-            : null
-          }
+          ) : null}
 
           <Grid item md={12}>
             <Button

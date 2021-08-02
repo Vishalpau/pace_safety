@@ -7,20 +7,21 @@ import {
   Select,
   FormHelperText,
 } from "@material-ui/core";
-
-
 import FormControl from "@material-ui/core/FormControl";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM, HIGHESTPOTENTIALIMPACTOR, RCAOPTION } from "../../../utils/constants";
+import {
+  INVESTIGATION_FORM,
+  HIGHESTPOTENTIALIMPACTOR,
+  RCAOPTION,
+} from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
@@ -32,26 +33,25 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   button: {
-    margin: theme.spacing(1)
-  }
+    margin: theme.spacing(1),
+  },
 }));
 
 const InvestigationOverview = () => {
   const notificationSent = ["Manage", "SuperVisor"];
   const [error, setError] = useState({});
   const putId = useRef("");
-  const investigationId = useRef("")
+  const investigationId = useRef("");
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
 
   const selectValues = [1, 2, 3, 4];
-  const healthAndSafetyValues = useRef([])
-  const environmentValues = useRef([])
-  const regulationValues = useRef([])
-  const reputaionValues = useRef([])
-  const financialValues = useRef([])
-  const classificationValues = useRef([])
-
+  const healthAndSafetyValues = useRef([]);
+  const environmentValues = useRef([]);
+  const regulationValues = useRef([]);
+  const reputaionValues = useRef([]);
+  const financialValues = useRef([]);
+  const classificationValues = useRef([]);
 
   const [form, setForm] = useState({});
 
@@ -96,82 +96,109 @@ const InvestigationOverview = () => {
     status: "Active",
     createdBy: 0,
     fkInvestigationId: investigationId.current,
-  })
+  });
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
     let allApiData = previousData.data.data.results[0];
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
-      investigationId.current = allApiData.id
+      investigationId.current = allApiData.id;
     }
-    let workerApiDataFetch = await api.get(`api/v1/incidents/${incidentId}/investigations/${investigationId.current}/workers/`);
+    let workerApiDataFetch = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/${
+        investigationId.current
+      }/workers/`
+    );
     if (workerApiDataFetch.data.data.results.length !== 0) {
-      let worker_temp = []
-      let workerApiData = workerApiDataFetch.data.data.results
+      let worker_temp = [];
+      let workerApiData = workerApiDataFetch.data.data.results;
       workerApiData.map((value) => {
-        worker_temp.push(value)
-      })
-      localStorage.setItem("personEffected", JSON.stringify(worker_temp))
+        worker_temp.push(value);
+      });
+      localStorage.setItem("personEffected", JSON.stringify(worker_temp));
     } else {
       if (localStorage.getItem("WorkerDataFetched") !== "Yes") {
-        let PeopleAffected = await api.get(`/api/v1/incidents/${incidentId}/people/`);
-        let PeopleAffectedData = PeopleAffected.data.data.results
-        let temp = []
+        let PeopleAffected = await api.get(
+          `/api/v1/incidents/${incidentId}/people/`
+        );
+        let PeopleAffectedData = PeopleAffected.data.data.results;
+        let temp = [];
         PeopleAffectedData.map((value, i) => {
           temp.push({
-            ...workerForm.current, ...{
-              "name": value.personName,
-              "department": value.personDepartment,
-              "workerType": value.personType
-            }
-          })
-        })
-        localStorage.setItem("personEffected", JSON.stringify(temp))
+            ...workerForm.current,
+            ...{
+              name: value.personName,
+              department: value.personDepartment,
+              workerType: value.personType,
+            },
+          });
+        });
+        localStorage.setItem("personEffected", JSON.stringify(temp));
       }
     }
     // people affected data in local storage
   };
 
   const handleNext = async (e) => {
-    const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
+    const res = await api.put(
+      `api/v1/incidents/${putId.current}/investigations/${
+        investigationId.current
+      }/`,
+      form
+    );
     if (putId.current) {
       if (JSON.parse(localStorage.getItem("personEffected")).length > 0) {
-        history.push(`/app/incident-management/registration/investigation/worker-details/0/${putId.current}`)
+        history.push(
+          `/app/incident-management/registration/investigation/worker-details/0/${
+            putId.current
+          }`
+        );
       } else {
-
-        localStorage.setItem("personEffected", JSON.stringify([workerForm.current]))
-        history.push(`/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`)
+        localStorage.setItem(
+          "personEffected",
+          JSON.stringify([workerForm.current])
+        );
+        history.push(
+          `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem(
+            "fkincidentId"
+          )}`
+        );
       }
     }
-    localStorage.setItem("WorkerDataFetched", "Yes")
-    localStorage.removeItem("WorkerPost")
+    localStorage.setItem("WorkerDataFetched", "Yes");
+    localStorage.removeItem("WorkerPost");
   };
 
   const handelDeaultValue = (value) => {
-    return typeof value !== "undefined" ? value : ""
-  }
+    return typeof value !== "undefined" ? value : "";
+  };
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const handelCall = async () => {
     await handelUpdateCheck();
-    classificationValues.current = await PickListData(40)
-    healthAndSafetyValues.current = await PickListData(42)
-    environmentValues.current = await PickListData(43)
-    regulationValues.current = await PickListData(44)
-    reputaionValues.current = await PickListData(45)
-    financialValues.current = await PickListData(46)
+    classificationValues.current = await PickListData(40);
+    healthAndSafetyValues.current = await PickListData(42);
+    environmentValues.current = await PickListData(43);
+    regulationValues.current = await PickListData(44);
+    reputaionValues.current = await PickListData(45);
+    financialValues.current = await PickListData(46);
     await setIsLoading(true);
-  }
-
+  };
 
   useEffect(() => {
-    handelCall()
+    handelCall();
   }, []);
 
   return (
@@ -566,7 +593,7 @@ const InvestigationOverview = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-              // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
+                // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
               >
                 Next
               </Button>
@@ -579,7 +606,10 @@ const InvestigationOverview = () => {
               selectedItem="Severity consequences"
             />
           </Grid>
-        </Grid>) : (<h1>Loading...</h1>)}
+        </Grid>
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </PapperBlock>
   );
 };

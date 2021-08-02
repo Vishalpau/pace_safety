@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Grid, Container, Input, Select } from "@material-ui/core";
-import { FormHelperText, FormLabel } from "@material-ui/core";
+import { Button, Grid, Select } from "@material-ui/core";
+import { FormHelperText } from "@material-ui/core";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,14 +15,10 @@ import { PapperBlock } from "dan-components";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { useHistory } from "react-router";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
-import { useSelector } from "react-redux";
-import { ContactlessOutlined } from "@material-ui/icons";
 import api from "../../../utils/axios";
 import EventDetailsValidate from "../../Validator/InvestigationValidation/EventDetailsValdiate";
 import EventDetailsWeatherValidate from "../../Validator/InvestigationValidation/EventDetailsWeatherValidate";
@@ -37,11 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(1),
-  }
+  },
 }));
 
 const EventDetails = () => {
-
   const [form, setForm] = useState({
     activity: "",
     jobTask: "",
@@ -59,32 +52,32 @@ const EventDetails = () => {
     isCostIncurred: "Yes",
     status: "Active",
     createdBy: 0,
-    fkInvestigationId: 0
-  })
+    fkInvestigationId: 0,
+  });
 
-  const investigationId = useRef("")
-  const activityListValues = useRef([])
-  const jobTaskValues = useRef([])
-  const weatherValues = useRef([])
-  const lightningValues = useRef([])
-  const fluidTypeValues = useRef([])
-  const costTypeValues = useRef([])
-  const casualFactorTypeValues = useRef([])
-  const putId = useRef("")
-  const eventId = useRef("")
-  const weatherId = useRef([])
-  const overAllCostId = useRef([])
+  const investigationId = useRef("");
+  const activityListValues = useRef([]);
+  const jobTaskValues = useRef([]);
+  const weatherValues = useRef([]);
+  const lightningValues = useRef([]);
+  const fluidTypeValues = useRef([]);
+  const costTypeValues = useRef([]);
+  const casualFactorTypeValues = useRef([]);
+  const putId = useRef("");
+  const eventId = useRef("");
+  const weatherId = useRef([]);
+  const overAllCostId = useRef([]);
   const history = useHistory();
-  const CheckPost = useRef()
+  const CheckPost = useRef();
   const radioYesNo = ["Yes", "No"];
-  const [overAllCostShow, setOverAllCostShow] = useState("")
+  const [overAllCostShow, setOverAllCostShow] = useState("");
 
   const [weather, setWeather] = useState([
     {
       weatherCondition: "",
       status: "Active",
       createdBy: 0,
-    }
+    },
   ]);
   const [overAllCost, setOverAllCost] = useState([
     {
@@ -97,52 +90,69 @@ const EventDetails = () => {
     },
   ]);
 
-
   const [error, setError] = useState({});
-  const [errorWeather, setErrorWeather] = useState({})
-  const [errorCost, setErrorCost] = useState({})
+  const [errorWeather, setErrorWeather] = useState({});
+  const [errorCost, setErrorCost] = useState({});
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
     let allApiData = previousData.data.data.results[0];
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
-      investigationId.current = allApiData.id
-      setForm({ ...form, fkInvestigationId: allApiData.id })
-      const event = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/`)
-      const eventData = event.data.data.results[0]
+      investigationId.current = allApiData.id;
+      setForm({ ...form, fkInvestigationId: allApiData.id });
+      const event = await api.get(
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
+        }/events/`
+      );
+      const eventData = event.data.data.results[0];
       if (typeof eventData !== "undefined") {
-        CheckPost.current = false
-        setForm(eventData)
-        eventId.current = eventData.id
+        CheckPost.current = false;
+        setForm(eventData);
+        eventId.current = eventData.id;
       }
 
       // Weather data
-      const weather = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/`)
-      const weatherData = weather.data.data.results
+      const weather = await api.get(
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
+        }/events/${eventId.current}/weatherconditions/`
+      );
+      const weatherData = weather.data.data.results;
       if (typeof weatherData !== "undefined") {
-        setWeather(weatherData)
+        setWeather(weatherData);
         weatherData.map((value) => {
-          weatherId.current.push(value.id)
-        })
+          weatherId.current.push(value.id);
+        });
       }
 
       // event data
-      const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
-      const costData = cost.data.data.results
+      const cost = await api.get(
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
+        }/events/${eventId.current}/cost/`
+      );
+      const costData = cost.data.data.results;
       if (typeof costData !== "undefined") {
-        setOverAllCost(costData)
+        setOverAllCost(costData);
         costData.map((value) => {
-          overAllCostId.current.push(value.id)
-        })
+          overAllCostId.current.push(value.id);
+        });
       }
     }
-    localStorage.setItem("WorkerPost", "done")
+    localStorage.setItem("WorkerPost", "done");
   };
 
   const handelWeather = async (e, key, value) => {
@@ -153,20 +163,26 @@ const EventDetails = () => {
 
   const handelAdd = async (e) => {
     if (weather.length < 3) {
-      await setWeather([...weather, {
-        weatherCondition: "",
-        status: "Active",
-        createdBy: 0,
-      }]);
+      await setWeather([
+        ...weather,
+        {
+          weatherCondition: "",
+          status: "Active",
+          createdBy: 0,
+        },
+      ]);
     }
   };
 
   const handelRemove = async (e, index) => {
     if (weather.length > 1) {
       if (weather[index].id !== undefined) {
-        console.log("here")
-        const res = await
-          api.delete(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/${weather[index].id}/`)
+        console.log("here");
+        const res = await api.delete(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/events/${eventId.current}/weatherconditions/${weather[index].id}/`
+        );
       }
 
       let newData = weather.filter((item, key) => key !== index);
@@ -193,8 +209,11 @@ const EventDetails = () => {
   const handelOverallCostRemove = async (e, index) => {
     if (overAllCost.length > 1) {
       if (overAllCost[index].id !== undefined) {
-        const res = await
-          api.delete(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/${overAllCost[index].id}/`)
+        const res = await api.delete(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/events/${eventId.current}/cost/${overAllCost[index].id}/`
+        );
       }
       let newData = overAllCost.filter((item, key) => key !== index);
       await setOverAllCost(newData);
@@ -203,61 +222,99 @@ const EventDetails = () => {
 
   const handelNext = async (e) => {
     const { error, isValid } = EventDetailsValidate(form);
-    const { errorWeather } = EventDetailsWeatherValidate(weather)
+    const { errorWeather } = EventDetailsWeatherValidate(weather);
     if (form.isCostIncurred == "Yes") {
-      const { errorCost } = EventDetailsCostValidate(overAllCost)
+      const { errorCost } = EventDetailsCostValidate(overAllCost);
     }
 
     setError(error);
-    setErrorWeather(errorWeather)
-    setErrorCost(errorCost)
+    setErrorWeather(errorWeather);
+    setErrorCost(errorCost);
     // event api call
-    if (Object.keys(error).length == 0 && Object.keys(errorWeather).length == 0 && Object.keys(errorCost).length == 0) {
+    if (
+      Object.keys(error).length == 0 &&
+      Object.keys(errorWeather).length == 0 &&
+      Object.keys(errorCost).length == 0
+    ) {
       if (eventId.current === "") {
-        const res = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/`, form);
+        const res = await api.post(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/events/`,
+          form
+        );
         if (res.status === 201) {
-          let eventID = res.data.data.results.id
+          let eventID = res.data.data.results.id;
           let weatherObject = weather;
 
           // weather api call
           for (let key in weatherObject) {
-            weatherObject[key]["fkEventDetailsId"] = eventID
-            const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/weatherconditions/`, weatherObject[key])
+            weatherObject[key]["fkEventDetailsId"] = eventID;
+            const resWeather = await api.post(
+              `api/v1/incidents/${putId.current}/investigations/${
+                investigationId.current
+              }/events/${eventID}/weatherconditions/`,
+              weatherObject[key]
+            );
             if (resWeather == 201) {
-              console.log("request done")
+              console.log("request done");
             }
           }
           // cost api call
           if (form.isCostIncurred == "Yes") {
             let costObject = overAllCost;
             for (let keys in costObject) {
-              costObject[keys]["fkEventDetailsId"] = eventID
-              const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventID}/cost/`, costObject[keys])
+              costObject[keys]["fkEventDetailsId"] = eventID;
+              const resWeather = await api.post(
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
+                }/events/${eventID}/cost/`,
+                costObject[keys]
+              );
               if (resWeather == 201) {
-                console.log("request done")
+                console.log("request done");
               }
             }
           }
-          history.push(`/app/incident-management/registration/investigation/action-taken/`)
+          history.push(
+            `/app/incident-management/registration/investigation/action-taken/`
+          );
         }
         // put
       } else if (eventId.current !== "") {
-        const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/`, form);
+        const res = await api.put(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/events/${eventId.current}/`,
+          form
+        );
 
-        // weather api call put 
+        // weather api call put
         if (weather.length > 0) {
           let weatherObject = weather;
           for (let key in weatherObject) {
             if (weatherObject[key].id !== undefined) {
-              const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/${weatherObject[key].id}/`, weatherObject[key])
+              const resWeather = await api.put(
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
+                }/events/${eventId.current}/weatherconditions/${
+                  weatherObject[key].id
+                }/`,
+                weatherObject[key]
+              );
               if (resWeather == 200) {
-                console.log("request done")
+                console.log("request done");
               }
             } else {
-              weatherObject[key]["fkEventDetailsId"] = eventId.current
-              const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/`, weatherObject[key])
+              weatherObject[key]["fkEventDetailsId"] = eventId.current;
+              const resWeather = await api.post(
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
+                }/events/${eventId.current}/weatherconditions/`,
+                weatherObject[key]
+              );
               if (resWeather == 201) {
-                console.log("request done")
+                console.log("request done");
               }
             }
           }
@@ -269,38 +326,54 @@ const EventDetails = () => {
             let costObject = overAllCost;
             for (let keys in costObject) {
               if (costObject[keys].id !== undefined) {
-                const resWeather = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/${overAllCostId.current[keys]}/`, costObject[keys])
+                const resWeather = await api.put(
+                  `api/v1/incidents/${putId.current}/investigations/${
+                    investigationId.current
+                  }/events/${eventId.current}/cost/${
+                    overAllCostId.current[keys]
+                  }/`,
+                  costObject[keys]
+                );
                 if (resWeather == 200) {
-                  console.log("request done")
+                  console.log("request done");
                 }
               } else {
-                costObject[keys]["fkEventDetailsId"] = eventId.current
-                const resWeather = await api.post(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`, costObject[keys])
+                costObject[keys]["fkEventDetailsId"] = eventId.current;
+                const resWeather = await api.post(
+                  `api/v1/incidents/${putId.current}/investigations/${
+                    investigationId.current
+                  }/events/${eventId.current}/cost/`,
+                  costObject[keys]
+                );
                 if (resWeather == 201) {
-                  console.log("request done")
+                  console.log("request done");
                 }
               }
             }
           }
         }
-        history.push(`/app/incident-management/registration/investigation/action-taken/${putId.current}`)
+        history.push(
+          `/app/incident-management/registration/investigation/action-taken/${
+            putId.current
+          }`
+        );
       }
     }
   };
 
   const PickListCall = async () => {
-    activityListValues.current = await PickListData(63)
-    jobTaskValues.current = await PickListData(64)
-    weatherValues.current = await PickListData(65)
-    lightningValues.current = await PickListData(66)
-    fluidTypeValues.current = await PickListData(67)
-    costTypeValues.current = await PickListData(68)
-    casualFactorTypeValues.current = await PickListData(69)
-    await handelUpdateCheck()
-  }
+    activityListValues.current = await PickListData(63);
+    jobTaskValues.current = await PickListData(64);
+    weatherValues.current = await PickListData(65);
+    lightningValues.current = await PickListData(66);
+    fluidTypeValues.current = await PickListData(67);
+    costTypeValues.current = await PickListData(68);
+    casualFactorTypeValues.current = await PickListData(69);
+    await handelUpdateCheck();
+  };
 
   useEffect(() => {
-    PickListCall()
+    PickListCall();
   }, []);
 
   const classes = useStyles();
@@ -308,7 +381,6 @@ const EventDetails = () => {
     <PapperBlock title="Events Details" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-
           {/* activity */}
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
@@ -335,7 +407,9 @@ const EventDetails = () => {
               </Select>
             </FormControl>
             {error && error.activity && (
-              <FormHelperText style={{ color: "red" }}>{error.activity}</FormHelperText>
+              <FormHelperText style={{ color: "red" }}>
+                {error.activity}
+              </FormHelperText>
             )}
           </Grid>
 
@@ -365,7 +439,9 @@ const EventDetails = () => {
               </Select>
             </FormControl>
             {error && error.jobTask && (
-              <FormHelperText style={{ color: "red" }}>{error.jobTask}</FormHelperText>
+              <FormHelperText style={{ color: "red" }}>
+                {error.jobTask}
+              </FormHelperText>
             )}
           </Grid>
 
@@ -392,10 +468,13 @@ const EventDetails = () => {
             <>
               <Grid item md={10}>
                 <FormControl
-                  error={errorWeather && errorWeather[`weatherCondition${[index]}`]}
+                  error={
+                    errorWeather && errorWeather[`weatherCondition${[index]}`]
+                  }
                   variant="outlined"
                   required
-                  className={classes.formControl}>
+                  className={classes.formControl}
+                >
                   <InputLabel id="project-name-label">Weather</InputLabel>
                   <Select
                     id="project-name"
@@ -438,7 +517,6 @@ const EventDetails = () => {
             </Grid>
           ) : null}
 
-
           <Grid item md={6}>
             <TextField
               id="title"
@@ -456,7 +534,6 @@ const EventDetails = () => {
               className={classes.formControl}
             />
           </Grid>
-
 
           {/* lightning */}
           <Grid item md={6}>
@@ -477,7 +554,8 @@ const EventDetails = () => {
                         lighting: selectValues,
                       });
                     }}
-                  >{selectValues}
+                  >
+                    {selectValues}
                   </MenuItem>
                 ))}
               </Select>
@@ -555,7 +633,9 @@ const EventDetails = () => {
               </Select>
             </FormControl>
             {error && error.spillsFluidType && (
-              <FormHelperText style={{ color: "red" }}>{error.spillsFluidType}</FormHelperText>
+              <FormHelperText style={{ color: "red" }}>
+                {error.spillsFluidType}
+              </FormHelperText>
             )}
           </Grid>
 
@@ -657,15 +737,15 @@ const EventDetails = () => {
           <Grid item md={12}>
             <Typography variant="h6">Overall cost*</Typography>
             <FormControl component="fieldset" required>
-              <RadioGroup
-                className={classes.inlineRadioGroup}
-              >
+              <RadioGroup className={classes.inlineRadioGroup}>
                 {radioYesNo.map((value) => (
                   <FormControlLabel
                     // disabled={CheckPost.current == false}
                     value={value}
                     checked={form.isCostIncurred == value}
-                    onChange={(e) => setForm({ ...form, isCostIncurred: value })}
+                    onChange={(e) =>
+                      setForm({ ...form, isCostIncurred: value })
+                    }
                     control={<Radio />}
                     label={value}
                   />
@@ -676,7 +756,7 @@ const EventDetails = () => {
 
           {/* cost incurred  */}
           <Grid container item md={12} spacing={2}>
-            {form.isCostIncurred == "Yes" ?
+            {form.isCostIncurred == "Yes" ? (
               <>
                 {overAllCost.map((value, index) => (
                   <>
@@ -686,8 +766,11 @@ const EventDetails = () => {
                         variant="outlined"
                         error={errorCost && errorCost[`costType${[index]}`]}
                         required
-                        className={classes.formControl}>
-                        <InputLabel id="project-name-label">Cost type</InputLabel>
+                        className={classes.formControl}
+                      >
+                        <InputLabel id="project-name-label">
+                          Cost type
+                        </InputLabel>
                         <Select
                           id="project-name"
                           labelId="project-name-label"
@@ -725,12 +808,11 @@ const EventDetails = () => {
                         label="Cost amount"
                         value={overAllCost[index].costAmount}
                         className={classes.formControl}
-                        onChange={
-                          async (e) => {
-                            const temp = [...overAllCost];
-                            temp[index]["costAmount"] = e.target.value;
-                            await setOverAllCost(temp);
-                          }}
+                        onChange={async (e) => {
+                          const temp = [...overAllCost];
+                          temp[index]["costAmount"] = e.target.value;
+                          await setOverAllCost(temp);
+                        }}
                       />
                       {errorCost && errorCost[`costAmount${[index]}`] && (
                         <FormHelperText style={{ color: "red" }}>
@@ -745,26 +827,31 @@ const EventDetails = () => {
                         error={errorCost && errorCost[`casualFactor${[index]}`]}
                         required
                         variant="outlined"
-                        className={classes.formControl}>
-                        <InputLabel id="project-name-label">Casual factor</InputLabel>
+                        className={classes.formControl}
+                      >
+                        <InputLabel id="project-name-label">
+                          Casual factor
+                        </InputLabel>
                         <Select
                           id="project-name"
                           labelId="project-name-label"
                           label="Casual factor"
                           value={overAllCost[index].casualFactor}
                         >
-                          {casualFactorTypeValues.current.map((selectValues) => (
-                            <MenuItem
-                              value={selectValues}
-                              onClick={async (e) => {
-                                const temp = [...overAllCost];
-                                temp[index]["casualFactor"] = selectValues;
-                                await setOverAllCost(temp);
-                              }}
-                            >
-                              {selectValues}
-                            </MenuItem>
-                          ))}
+                          {casualFactorTypeValues.current.map(
+                            (selectValues) => (
+                              <MenuItem
+                                value={selectValues}
+                                onClick={async (e) => {
+                                  const temp = [...overAllCost];
+                                  temp[index]["casualFactor"] = selectValues;
+                                  await setOverAllCost(temp);
+                                }}
+                              >
+                                {selectValues}
+                              </MenuItem>
+                            )
+                          )}
                         </Select>
                       </FormControl>
                       {errorCost && errorCost[`casualFactor${[index]}`] && (
@@ -785,17 +872,15 @@ const EventDetails = () => {
                   </>
                 ))}
 
-                {overAllCost.length < 4 ?
+                {overAllCost.length < 4 ? (
                   <Grid item md={1}>
                     <IconButton onClick={(e) => handelOveallCostAdd(e)}>
                       <AddIcon />
                     </IconButton>
                   </Grid>
-                  :
-                  null
-                }
+                ) : null}
               </>
-              : null}
+            ) : null}
           </Grid>
 
           <Grid item md={12}>
@@ -825,8 +910,7 @@ const EventDetails = () => {
           />
         </Grid>
       </Grid>
-    </PapperBlock >
-
+    </PapperBlock>
   );
 };
 
