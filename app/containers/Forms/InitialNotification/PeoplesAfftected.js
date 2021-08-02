@@ -89,7 +89,7 @@ const PeoplesAffected = () => {
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('')
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null ? JSON.parse(localStorage.getItem('userDetails')).id : null;
 
   // Forms definations.
   const [form, setForm] = useState([
@@ -130,20 +130,20 @@ const PeoplesAffected = () => {
     and field name we will modify the values.
   */
   const handleForm = (e, key, fieldname) => {
-    try{
-    const temp = [...form];
-    const { value } = e.target;
-    if (e.target.value === "Don't Know") {
-      temp[key][fieldname] = "N/A";
-    } else {
-      temp[key][fieldname] = value;
+    try {
+      const temp = [...form];
+      const { value } = e.target;
+      if (e.target.value === "Don't Know") {
+        temp[key][fieldname] = "N/A";
+      } else {
+        temp[key][fieldname] = value;
+      }
+      setForm(temp);
     }
-    setForm(temp);
-  }
-  catch(error){
-    setMessage("Something went worng!");
-    setMessageType("error");
-    setOpen(true);
+    catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
@@ -155,17 +155,17 @@ const PeoplesAffected = () => {
 
     // This is the condition when Yes is clicked on the form.
     if (personAffect === "Yes") {
-      try{
-      if (peopleData.length > 0) {
-        const temp = peopleData
-        for (var i = 0; i < peopleData.length; i++) {
-          const res = await api.delete(
-            `api/v1/incidents/${id}/people/${temp[i].id}/`,
-          );
+      try {
+        if (peopleData.length > 0) {
+          const temp = peopleData
+          for (var i = 0; i < peopleData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/people/${temp[i].id}/`,
+            );
+          }
         }
       }
-      }
-      catch(error){
+      catch (error) {
         setMessage("Network error!");
         setMessageType("error");
         setOpen(true);
@@ -180,104 +180,43 @@ const PeoplesAffected = () => {
       // We don't have single API.
 
       if (isValid) {
-        try{
-        for (var i = 0; i < form.length; i++) {
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
-            {
-              personType: form[i].personType,
-              personDepartment: form[i].personDepartment,
-              personName: form[i].personName,
-              personIdentification: form[i].personIdentification,
-              personMedicalCare: form[i].personMedicalCare,
-              workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-              locationAssessmentCenter: form[i].locationAssessmentCenter,
-              createdBy: parseInt(userId),
-              fkIncidentId: localStorage.getItem("fkincidentId"),
-            }
+        try {
+          for (var i = 0; i < form.length; i++) {
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
+              {
+                personType: form[i].personType,
+                personDepartment: form[i].personDepartment,
+                personName: form[i].personName,
+                personIdentification: form[i].personIdentification,
+                personMedicalCare: form[i].personMedicalCare,
+                workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                locationAssessmentCenter: form[i].locationAssessmentCenter,
+                createdBy: parseInt(userId),
+                fkIncidentId: localStorage.getItem("fkincidentId"),
+              }
+            );
+          }
+
+          // We have hit the API to create person Affected.
+          // Now we are hitting the put api to send is person available is true in other API.
+          const temp = incidentsListData;
+          temp.isPersonDetailsAvailable =
+            personAffect || incidentsListData.isPersonDetailsAvailable;
+          temp.updatedAt = moment(new Date()).toISOString();
+
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
           );
         }
-      
-        // We have hit the API to create person Affected.
-        // Now we are hitting the put api to send is person available is true in other API.
-        const temp = incidentsListData;
-        temp.isPersonDetailsAvailable =
-          personAffect || incidentsListData.isPersonDetailsAvailable;
-        temp.updatedAt = moment(new Date()).toISOString();
-
-        const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-        }
-        catch(error){
+        catch (error) {
           setMessage("Something went worng!");
           setMessageType("error");
           setOpen(true);
         }
         // check condition id
-        
-          if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/${id}`
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-            );
-          } else {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-            );
-          }
-      }
 
-      // Case when form has No option selected.
-    } else {
-
-      // delete existing data if user select NO or N/A
-      try{
-        if (peopleData.length > 0) {
-          const temp = peopleData
-          for (var i = 0; i < peopleData.length; i++) {
-            const res = await api.delete(
-              `api/v1/incidents/${id}/people/${temp[i].id}/`,
-            );
-          }
-        }
-        }
-        catch(error){
-          setMessage("Network error!");
-          setMessageType("error");
-          setOpen(true);
-        }
-
-      // When no is selected we just have to send the comment and yes/no flag to API via put request.
-      const temp = incidentsListData;
-      temp.isPersonDetailsAvailable =
-        personAffect || incidentsListData.isPersonDetailsAvailable;
-      temp.updatedAt = moment(new Date()).toISOString();
-      temp.personAffectedComments =
-        personAffectedComments || incidentsListData.personAffectedComments;
-      try{
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      }catch(error){
-        setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-      }
-
-      // Case when id is available. Update case. Redirect user to specific page.
-      // Here if we see, we are redirecting user to urls with /id/ in the end.
-      // Therefore, next page will get the input from the id and pre-fill the details.
-      
         if (nextPath.propertyAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/property-affected/${id}`
@@ -295,6 +234,67 @@ const PeoplesAffected = () => {
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
         }
+      }
+
+      // Case when form has No option selected.
+    } else {
+
+      // delete existing data if user select NO or N/A
+      try {
+        if (peopleData.length > 0) {
+          const temp = peopleData
+          for (var i = 0; i < peopleData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/people/${temp[i].id}/`,
+            );
+          }
+        }
+      }
+      catch (error) {
+        setMessage("Network error!");
+        setMessageType("error");
+        setOpen(true);
+      }
+
+      // When no is selected we just have to send the comment and yes/no flag to API via put request.
+      const temp = incidentsListData;
+      temp.isPersonDetailsAvailable =
+        personAffect || incidentsListData.isPersonDetailsAvailable;
+      temp.updatedAt = moment(new Date()).toISOString();
+      temp.personAffectedComments =
+        personAffectedComments || incidentsListData.personAffectedComments;
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+      }
+
+      // Case when id is available. Update case. Redirect user to specific page.
+      // Here if we see, we are redirecting user to urls with /id/ in the end.
+      // Therefore, next page will get the input from the id and pre-fill the details.
+
+      if (nextPath.propertyAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/property-affected/${id}`
+        );
+      } else if (nextPath.equipmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+        );
+      } else if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        );
+      } else {
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
+      }
     }
   };
 
@@ -312,102 +312,102 @@ const PeoplesAffected = () => {
 
   // Fetch the radio button values for Do-you-have-details-to-share-about-the-individuals-Affected.
   const fetchIndividualAffectValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/8/value");
-    const result = res.data.data.results;
-    setIndividualAffecctValue(result);
+    try {
+      const res = await api.get("api/v1/lists/8/value");
+      const result = res.data.data.results;
+      setIndividualAffecctValue(result);
     }
-    catch(error){
+    catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the dropdown values for the Person-Type.
   const fetchPersonTypeValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/71/value");
-    const result = res.data.data.results;
-    setPersonTypeValue(result);
+    try {
+      const res = await api.get("api/v1/lists/71/value");
+      const result = res.data.data.results;
+      setPersonTypeValue(result);
     }
-    catch(error){
+    catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // fetch the values for the Departments.
   const fetchDepartmentValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/10/value");
-    const result = res.data.data.results;
-    setDepartmentValue(result);
+    try {
+      const res = await api.get("api/v1/lists/10/value");
+      const result = res.data.data.results;
+      setDepartmentValue(result);
     }
-    catch(error){
+    catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the radio buttons for the "Was that person taken to medical care?".
   const fetchPersonTakenMedicalCare = async () => {
-    try{
-    const res = await api.get("api/v1/lists/11/value");
-    const result = res.data.data.results;
-    setMedicalCareValue(result);
-    }catch(error){
+    try {
+      const res = await api.get("api/v1/lists/11/value");
+      const result = res.data.data.results;
+      setMedicalCareValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the incident details. We are fetching it to pre-populate the data in case of the going
   // previous page.
   const fetchIncidentsData = async () => {
-    try{
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
+    try {
+      const res = await api.get(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      );
 
-    if (res.status === 200) {
-      const result = res.data.data.results;
-      const isavailable = result.isPersonDetailsAvailable;
-      setPersonAffect(isavailable);
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        const isavailable = result.isPersonDetailsAvailable;
+        setPersonAffect(isavailable);
 
-      setIncidentsListdata(result);
-      if (!id) {
-        await setIsLoading(true);
+        setIncidentsListdata(result);
+        if (!id) {
+          await setIsLoading(true);
+        }
       }
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
     }
-  }catch(error){
-    setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-  }
   };
 
   // Fetch the individual page data in case of the update.
   const fetchPersonListData = async () => {
-    try{
-    const res = await api.get(`api/v1/incidents/${id}/people/`);
-    const result = res.data.data.results;
-    await setPeopleData(result);
-    if (result.length > 0) {
-      let temp = [...form]
-      temp = result
-      await setForm(temp)
-    }
+    try {
+      const res = await api.get(`api/v1/incidents/${id}/people/`);
+      const result = res.data.data.results;
+      await setPeopleData(result);
+      if (result.length > 0) {
+        let temp = [...form]
+        temp = result
+        await setForm(temp)
+      }
 
-    await setIsLoading(true);
-  }catch(error){
-    setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-  }
+      await setIsLoading(true);
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -703,11 +703,11 @@ const PeoplesAffected = () => {
               )}
             </Grid>
             <AlertMessage
-                message={message}
-                type={messageType}
-                open={open}
-                setOpen={setOpen}
-              />
+              message={message}
+              type={messageType}
+              open={open}
+              setOpen={setOpen}
+            />
             <Grid item md={6}>
               <Button
                 onClick={() =>
