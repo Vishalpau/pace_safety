@@ -230,9 +230,10 @@ const EvidenceSummary = () => {
                             <TableCell>{value.evidenceNumber}</TableCell>
                             <TableCell>{value.evidenceCheck}</TableCell>
                             <TableCell>{value.evidenceCategory}</TableCell>
-                            <TableCell>{value.evidenceRemark}</TableCell>
-                            {value.evidenceDocument ? (
+                            <TableCell>{value.evidenceRemark ? value.evidenceRemark : '-'}</TableCell>
+                            
                               <TableCell>
+                              {value.evidenceDocument ? (
                                 <Tooltip title={handelFileName(value.evidenceDocument)}>
                                   <IconButton
                                     onClick={() =>
@@ -241,11 +242,13 @@ const EvidenceSummary = () => {
                                     className={classes.fileIcon}
                                   >
                                     {value.evidenceDocument.endsWith(
-                                      ".png"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
+                                       ".PNG"
+                                    ) || value.evidenceDocument.endsWith(
+                                       ".png"
+                                    ) 
+                                      ||value.evidenceDocument.endsWith(
                                         ".jpg"
-                                      ) ? (
+                                    ) ? (
                                       <ImageIcon />
                                     ) : null}
                                     {value.evidenceDocument.endsWith(
@@ -294,8 +297,9 @@ const EvidenceSummary = () => {
                                     ) : null}
                                   </IconButton>
                                 </Tooltip>
+                                ) : '-'}
                               </TableCell>
-                            ) : null}
+                            
                           </TableRow>
                         ))
                         : null}
@@ -353,11 +357,11 @@ const EvidenceSummary = () => {
                           variant="body"
                           className={Fonts.labelValue}
                         >
-                          {ad.answer}
+                          {ad.answer ? ad.answer : "-"}
                         </Typography>
                       </Grid>
                     ))
-                    : null}
+                    : "-"}
                 </Grid>
               </AccordionDetails>
             </Accordion>
