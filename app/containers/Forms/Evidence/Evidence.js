@@ -228,7 +228,6 @@ const Evidence = () => {
       )
 
     let tempData = [];
-    console.log(newData)
     if (newData.length) {
       for (let i = 0; i < newData.length; i++) {
         tempData.push({
@@ -272,21 +271,16 @@ const Evidence = () => {
     }
 
     for (let i = 0; i < form.length; i++) {
-      console.log("0")
       let data = new FormData();
       data.append("evidenceCheck", form[i].evidenceCheck);
       data.append("evidenceCategory", form[i].evidenceCategory);
       data.append("evidenceRemark", form[i].evidenceRemark);
-      console.log("1")
       if(form[i].evidenceDocument !== null && typeof form[i].evidenceDocument !== "string" ){
-        console.log("2")
         data.append("evidenceDocument", form[i].evidenceDocument);
-        console.log("3")
       }
       if(form[i].evidenceDocument == ""){
         data.append("evidenceDocument", form[i].evidenceDocument);
       }
-      console.log("4")
       data.append("status", "Active");
       data.append("updatedBy", "");
 
@@ -395,7 +389,6 @@ const Evidence = () => {
     
   };
 
-  console.log(form)
   const handleFile = async (e, index) => {
     
     const file = e.target.files[0].name.toLowerCase().split(".")
@@ -410,10 +403,12 @@ const Evidence = () => {
       await setForm(TempPpeData);
       
     } else {
+      document.getElementById(`evidenceDocument${index}`).value = ''
       await setOpen(true);
     }
 
     }else{
+      document.getElementById(`evidenceDocument${index}`).value = ''
       await setFiles(true)
     }
   };
@@ -425,10 +420,8 @@ const Evidence = () => {
   };
 
   const handelFileName = (value) => {
-    console.log(value)
     const fileNameArray = value.split('/')
     const fileName = fileNameArray[fileNameArray.length - 1]
-    console.log(fileName)
     return fileName
 
   }
