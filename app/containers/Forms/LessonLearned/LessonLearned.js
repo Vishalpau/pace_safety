@@ -1,35 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { PapperBlock } from "dan-components";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
+import axios from "axios";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -41,8 +30,6 @@ import {
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-
-import axios from "axios";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -80,7 +67,7 @@ const LessionLearned = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const history = useHistory();
-  const ref = useRef()
+  const ref = useRef();
   const { id } = useParams();
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
@@ -89,8 +76,11 @@ const LessionLearned = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
-  const [evidence,setEvidence] = useState([])
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const [evidence, setEvidence] = useState([]);
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -114,31 +104,32 @@ const LessionLearned = () => {
   // handleAttchment
 
   const handleAttchment = async (e) => {
+    let file = e.target.files[0].name.split(".");
 
-    let file = e.target.files[0].name.split(".")
-
-    if (file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png") {
-
+    if (
+      file[1].toLowerCase() === "jpg" ||
+      file[1].toLowerCase() === "jpeg" ||
+      file[1].toLowerCase() === "png"
+    ) {
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        setAttachment({ ...attachment, evidenceDocument: e.target.files[0] })
+        setAttachment({ ...attachment, evidenceDocument: e.target.files[0] });
         await setMessage("File uploaded successfully!");
         await setMessageType("success");
         await setOpen(true);
       } else {
-        ref.current.value = ""
+        ref.current.value = "";
         await setMessage("File uploading failed! Select file less than 25MB!");
         await setMessageType("error");
         await setOpen(true);
       }
       await setEvidanceForm(temp);
     } else {
-      ref.current.value = ""
+      ref.current.value = "";
       await setMessage("Only JPG & PNG File is allowed!");
       await setMessageType("error");
       await setOpen(true);
     }
-
-  }
+  };
   // handle close snackbar
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -148,22 +139,19 @@ const LessionLearned = () => {
     setOpen(false);
   };
   const handleNext = async () => {
-
-    // attachment 
+    // attachment
 
     if (!attachment.evidenceDocument || !attachment.length) {
+      const formData = new FormData();
+      formData.append("evidenceDocument", attachment.evidenceDocument);
+      formData.append("evidenceCheck", "Yes");
+      formData.append("evidenceNumber", "string");
+      formData.append("evidenceCategory", "Lessons Learned");
+      formData.append("createdBy", parseInt(userId));
+      formData.append("status", "Active");
+      formData.append("fkIncidentId", id);
 
-      const formData = new FormData()
-      formData.append('evidenceDocument', attachment.evidenceDocument)
-      formData.append('evidenceCheck', 'Yes')
-      formData.append('evidenceNumber', 'string')
-      formData.append('evidenceCategory', 'Lessons Learned')
-      formData.append('createdBy', parseInt(userId))
-      formData.append('status', 'Active')
-      formData.append('fkIncidentId', id)
-
-      const res = await api.post(`api/v1/incidents/${id}/evidences/`, formData)
-
+      const res = await api.post(`api/v1/incidents/${id}/evidences/`, formData);
     }
     // sent put request
     let status = 0;
@@ -236,7 +224,7 @@ const LessionLearned = () => {
       },
     };
     axios(config)
-      .then(function (response) {
+      .then(function(response) {
         if (response.status === 200) {
           const result = response.data.data.results;
           setDepartment(result);
@@ -244,7 +232,7 @@ const LessionLearned = () => {
           // window.location.href = {LOGIN_URL}
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         // window.location.href = {LOGIN_URL}
       });
   };
@@ -471,10 +459,12 @@ const LessionLearned = () => {
               </Snackbar>
               <Typography variant="h6"> Add attachment</Typography>
 
-              <input type="file" ref={ref} accept=".png, jpg, jpeg" onChange={(e) => handleAttchment(e)} />
-
-
-
+              <input
+                type="file"
+                ref={ref}
+                accept=".png, jpg, jpeg"
+                onChange={(e) => handleAttchment(e)}
+              />
             </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>

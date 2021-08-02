@@ -2,23 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import { PapperBlock } from "dan-components";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import AccessTime from "@material-ui/icons/AccessTime";
 import Divider from "@material-ui/core/Divider";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import { useHistory, useParams } from "react-router";
 
 // List
 import List from "@material-ui/core/List";
@@ -40,11 +31,7 @@ import Add from "@material-ui/icons/Add";
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
-import moment from "moment";
 import api from "../../../utils/axios";
-
-// Router
-import { useHistory, useParams } from "react-router";
 
 import IncidentDetails from "../InitialNotification/IncidentDetails";
 import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
@@ -52,9 +39,6 @@ import InvestigationSummary from "../../SummaryDetails/Investigation";
 import EvidenceSummary from "../../SummaryDetails/Evidence";
 import RootCauseAnalysisSummary from "../../SummaryDetails/RootCauseAndAnalysis";
 import LessionLearnSummary from "../../SummaryDetails/LessionLearn";
-
-
-// import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -95,7 +79,9 @@ const Summary = () => {
   const [lessionlearnData, setLessionLearnData] = useState({});
   const [lessionlearn, setLessionlearn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialNoticeficationStatus,setInitialNotificationStatus] = useState(false)
+  const [initialNoticeficationStatus, setInitialNotificationStatus] = useState(
+    false
+  );
   const rootCauseStatus = useRef(false);
 
   const { id } = useParams();
@@ -111,11 +97,9 @@ const Summary = () => {
   };
   const fetchReportData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
-    if(allIncidents.data.data.results.length > 0){
+    if (allIncidents.data.data.results.length > 0) {
       await setInitialNotificationStatus(true);
     }
-    
-    
   };
 
   const fetchInvestigationData = async () => {
@@ -355,19 +339,41 @@ const Summary = () => {
                         rootcauseanalysis === false &&
                         lessionlearn === false)
                     ) {
-                      return(<><p>initial noticefication</p> <IncidentDetailsSummary /></>);
+                      return (
+                        <>
+                          <p>initial noticefication</p>{" "}
+                          <IncidentDetailsSummary />
+                        </>
+                      );
                     }
                     if (investigation == true) {
-                      return(<><p> Investigation</p> <InvestigationSummary /></>) ;
+                      return (
+                        <>
+                          <p> Investigation</p> <InvestigationSummary />
+                        </>
+                      );
                     }
                     if (evidence == true) {
-                      return (<><p>Evidence</p> <EvidenceSummary /></>);
+                      return (
+                        <>
+                          <p>Evidence</p> <EvidenceSummary />
+                        </>
+                      );
                     }
                     if (rootcauseanalysis == true) {
-                      return(<><p>Root Cause Analysis</p> <RootCauseAnalysisSummary /></>) ;
+                      return (
+                        <>
+                          <p>Root Cause Analysis</p>{" "}
+                          <RootCauseAnalysisSummary />
+                        </>
+                      );
                     }
                     if (lessionlearn == true) {
-                      return (<><p>Lession Learn</p> <LessionLearnSummary /></>);
+                      return (
+                        <>
+                          <p>Lession Learn</p> <LessionLearnSummary />
+                        </>
+                      );
                     }
                   })()}
                 </>

@@ -1,33 +1,21 @@
 import React, { useEffect, useState } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { PapperBlock } from "dan-components";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
-
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-
 import { useHistory, useParams } from "react-router";
+import axios from "axios";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -37,8 +25,6 @@ import {
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
-
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -50,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
   fullWidth: {
     width: "100%",
   },
-  spacer: {},
 }));
 
 const LessionLearned = () => {
@@ -85,8 +70,8 @@ const LessionLearned = () => {
 
   const handleNext = async () => {
     // sent put request
-    let status =0
-    if (learningList.length>0) {
+    let status = 0;
+    if (learningList.length > 0) {
       for (var i = 0; i < learningList.length; i++) {
         const res = await api.put(
           `api/v1/incidents/${id}/learnings/${learningList[i].id}/`,
@@ -94,10 +79,10 @@ const LessionLearned = () => {
             teamOrDepartment: learningList[i].teamOrDepartment,
             learnings: learningList[i].learnings,
             status: "Active",
-            updatedBy: 0
+            updatedBy: 0,
           }
         );
-        status = res.status
+        status = res.status;
       }
       if (status === 200) {
         history.push(
@@ -134,7 +119,6 @@ const LessionLearned = () => {
         }
       }
     }
-    
   };
 
   //  Fetch Lession learn data
@@ -403,13 +387,13 @@ const LessionLearned = () => {
               )}
             </Grid>
             <Grid item md={12}>
-                    <button
-                      className={classes.textButton}
-                      onClick={() => addNewPeopleDetails()}
-                    >
-                      <PersonAddIcon />  Add learnings from another team/department
-                    </button>
-                  </Grid>
+              <button
+                className={classes.textButton}
+                onClick={() => addNewPeopleDetails()}
+              >
+                <PersonAddIcon /> Add learnings from another team/department
+              </button>
+            </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>
                 <Button

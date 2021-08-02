@@ -1,23 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -29,7 +17,6 @@ import { PapperBlock } from "dan-components";
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import BasicCauseValidation from "../../Validator/RCAValidation/BasicCauseValidation";
 import {
   BASIC_CAUSE_SUB_TYPES,
@@ -48,15 +35,35 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-const BasicCause = () => {
 
+const BasicCause = () => {
   const [form, setForm] = useState({
     personal: { remarkType: "options", rcaSubType: "personal", rcaRemark: [] },
-    wellnessFactors: { remarkType: "options", rcaSubType: "wellnessFactors", rcaRemark: [] },
-    otherHumanFactor: { remarkType: "remark", rcaSubType: "othersHumanFactors", rcaRemark: "" },
-    leadership: { remarkType: "options", rcaSubType: "leadership", rcaRemark: [] },
-    processes: { remarkType: "options", rcaSubType: "processes", rcaRemark: [] },
-    otherJobFactors: { remarkType: "remark", rcaSubType: "othersJobFactors", rcaRemark: "" },
+    wellnessFactors: {
+      remarkType: "options",
+      rcaSubType: "wellnessFactors",
+      rcaRemark: [],
+    },
+    otherHumanFactor: {
+      remarkType: "remark",
+      rcaSubType: "othersHumanFactors",
+      rcaRemark: "",
+    },
+    leadership: {
+      remarkType: "options",
+      rcaSubType: "leadership",
+      rcaRemark: [],
+    },
+    processes: {
+      remarkType: "options",
+      rcaSubType: "processes",
+      rcaRemark: [],
+    },
+    otherJobFactors: {
+      remarkType: "remark",
+      rcaSubType: "othersJobFactors",
+      rcaRemark: "",
+    },
   });
   const putId = useRef("");
   const [fetchApiData, setFetchApiData] = useState({});
@@ -65,16 +72,16 @@ const BasicCause = () => {
   const updateIds = useRef();
   const [error, setError] = useState({});
   const [incidentDetail, setIncidentDetail] = useState({});
-  const checkPost = useRef()
+  const checkPost = useRef();
 
   const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value]
+    let remark = value.includes(",") ? value.split(",") : [value];
     if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected")
-      remark.splice(removeItemIndex, 1)
+      let removeItemIndex = remark.indexOf("No option selected");
+      remark.splice(removeItemIndex, 1);
     }
-    return remark
-  }
+    return remark;
+  };
   // get data and set to states
 
   const handelUpdateCheck = async () => {
@@ -84,8 +91,12 @@ const BasicCause = () => {
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/pacecauses/`
+    );
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 14) {
@@ -100,7 +111,7 @@ const BasicCause = () => {
       });
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
-      checkPost.current = false
+      checkPost.current = false;
 
       // set fetched spervised data
       setForm({
@@ -142,7 +153,8 @@ const BasicCause = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -150,8 +162,7 @@ const BasicCause = () => {
         `/app/incident-management/registration/root-cause-analysis/cause-and-action/`
       );
     }
-
-  }
+  };
 
   const handelPersonal = (e, value) => {
     if (e.target.checked == false) {
@@ -275,7 +286,10 @@ const BasicCause = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
+          rcaRemark:
+            api_data["rcaRemark"].toString() !== ""
+              ? api_data["rcaRemark"].toString()
+              : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -287,7 +301,10 @@ const BasicCause = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
+          rcaRemark:
+            api_data["rcaRemark"].toString() !== ""
+              ? api_data["rcaRemark"].toString()
+              : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -304,7 +321,9 @@ const BasicCause = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
+            `/api/v1/incidents/${putId.current}/pacecauses/${
+              callObjects[key].pk
+            }/`,
             callObjects[key]
           );
           if (res.status == 200) {
@@ -329,12 +348,12 @@ const BasicCause = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${
+          putId.current
         }`
       );
     }
     // api call //
-
   };
 
   const fetchIncidentDetails = async () => {
@@ -398,10 +417,7 @@ const BasicCause = () => {
           </Grid>
           {/* wellness factors */}
           <Grid item md={12}>
-            <FormControl
-              component="fieldset"
-              error={error.wellnessFactors}
-            >
+            <FormControl component="fieldset" error={error.wellnessFactors}>
               <FormLabel component="legend">Wellness factors</FormLabel>
               <FormGroup>
                 {PERSONALWELNESSFACTORS.map((value) => (
@@ -428,7 +444,11 @@ const BasicCause = () => {
               rows={4}
               label="Other human factors*"
               error={error.otherHumanFactor}
-              value={form.otherHumanFactor.rcaRemark !== "No option selected" ? form.otherHumanFactor.rcaRemark : ""}
+              value={
+                form.otherHumanFactor.rcaRemark !== "No option selected"
+                  ? form.otherHumanFactor.rcaRemark
+                  : ""
+              }
               helperText={error ? error.otherHumanFactor : ""}
               className={classes.formControl}
               onChange={async (e) => handelOtherHumanFactors(e)}
@@ -462,7 +482,6 @@ const BasicCause = () => {
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
-          {/* processes */}
           <Grid item md={12}>
             <FormControl component="fieldset" error={error.processes}>
               <FormLabel component="legend">Processes</FormLabel>
@@ -489,10 +508,14 @@ const BasicCause = () => {
               variant="outlined"
               multiline
               error={error.otherJobFactors}
-              value={form.otherJobFactors.rcaRemark !== "No option selected" ? form.otherJobFactors.rcaRemark : ""}
+              value={
+                form.otherJobFactors.rcaRemark !== "No option selected"
+                  ? form.otherJobFactors.rcaRemark
+                  : ""
+              }
               helperText={error ? error.otherJobFactors : ""}
               rows={3}
-              label="Other job factors*"
+              label="Other job factors"
               className={classes.formControl}
               onChange={async (e) => handelOtherJobFactors(e)}
             />

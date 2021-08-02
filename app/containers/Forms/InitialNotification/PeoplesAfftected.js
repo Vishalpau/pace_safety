@@ -18,17 +18,16 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
-import FormSideBar from "../FormSideBar";
+import { FormHelperText, FormLabel } from "@material-ui/core";
 
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
+import FormSideBar from "../FormSideBar";
 import PeopleValidate from "../../Validator/PeopleValidation";
 import api from "../../../utils/axios";
 import "../../../styles/custom.css";
-import { FormHelperText, FormLabel } from "@material-ui/core";
 import AlertMessage from "./Alert";
 
 const useStyles = makeStyles((theme) => ({
@@ -87,9 +86,12 @@ const PeoplesAffected = () => {
   const [peopleData, setPeopleData] = useState([]);
 
   const [open, setOpen] = useState(false);
-  const [messageType, setMessageType] = useState('');
-  const [message, setMessage] = useState('')
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const [messageType, setMessageType] = useState("");
+  const [message, setMessage] = useState("");
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   // Forms definations.
   const [form, setForm] = useState([
@@ -130,20 +132,19 @@ const PeoplesAffected = () => {
     and field name we will modify the values.
   */
   const handleForm = (e, key, fieldname) => {
-    try{
-    const temp = [...form];
-    const { value } = e.target;
-    if (e.target.value === "Don't Know") {
-      temp[key][fieldname] = "N/A";
-    } else {
-      temp[key][fieldname] = value;
-    }
-    setForm(temp);
-  }
-  catch(error){
-    setMessage("Something went worng!");
-    setMessageType("error");
-    setOpen(true);
+    try {
+      const temp = [...form];
+      const { value } = e.target;
+      if (e.target.value === "Don't Know") {
+        temp[key][fieldname] = "N/A";
+      } else {
+        temp[key][fieldname] = value;
+      }
+      setForm(temp);
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
@@ -152,20 +153,18 @@ const PeoplesAffected = () => {
     // Next path handlings.
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-
     // This is the condition when Yes is clicked on the form.
     if (personAffect === "Yes") {
-      try{
-      if (peopleData.length > 0) {
-        const temp = peopleData
-        for (var i = 0; i < peopleData.length; i++) {
-          const res = await api.delete(
-            `api/v1/incidents/${id}/people/${temp[i].id}/`,
-          );
+      try {
+        if (peopleData.length > 0) {
+          const temp = peopleData;
+          for (var i = 0; i < peopleData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/people/${temp[i].id}/`
+            );
+          }
         }
-      }
-      }
-      catch(error){
+      } catch (error) {
         setMessage("Something went worng!");
         setMessageType("error");
         setOpen(true);
@@ -180,37 +179,38 @@ const PeoplesAffected = () => {
       // We don't have single API.
 
       if (isValid) {
-        try{
-        for (var i = 0; i < form.length; i++) {
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
-            {
-              personType: form[i].personType,
-              personDepartment: form[i].personDepartment,
-              personName: form[i].personName,
-              personIdentification: form[i].personIdentification,
-              personMedicalCare: form[i].personMedicalCare,
-              workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-              locationAssessmentCenter: form[i].locationAssessmentCenter,
-              createdBy: parseInt(userId),
-              fkIncidentId: localStorage.getItem("fkincidentId"),
-            }
-          );
-        }
-      
-        // We have hit the API to create person Affected.
-        // Now we are hitting the put api to send is person available is true in other API.
-        const temp = incidentsListData;
-        temp.isPersonDetailsAvailable =
-          personAffect || incidentsListData.isPersonDetailsAvailable;
-        temp.updatedAt = moment(new Date()).toISOString();
+        try {
+          for (var i = 0; i < form.length; i++) {
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem(
+                "fkincidentId"
+              )}/people/`,
+              {
+                personType: form[i].personType,
+                personDepartment: form[i].personDepartment,
+                personName: form[i].personName,
+                personIdentification: form[i].personIdentification,
+                personMedicalCare: form[i].personMedicalCare,
+                workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                locationAssessmentCenter: form[i].locationAssessmentCenter,
+                createdBy: parseInt(userId),
+                fkIncidentId: localStorage.getItem("fkincidentId"),
+              }
+            );
+          }
 
-        const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-        }
-        catch(error){
+          // We have hit the API to create person Affected.
+          // Now we are hitting the put api to send is person available is true in other API.
+          const temp = incidentsListData;
+          temp.isPersonDetailsAvailable =
+            personAffect || incidentsListData.isPersonDetailsAvailable;
+          temp.updatedAt = moment(new Date()).toISOString();
+
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
           setMessage("Something went worng!");
           setMessageType("error");
           setOpen(true);
@@ -235,8 +235,7 @@ const PeoplesAffected = () => {
             );
           }
           // Here it is the new entry create case. We will redirect to next pages without ids.
-        } 
-       
+        }
       }
 
       // Case when form has No option selected.
@@ -248,12 +247,12 @@ const PeoplesAffected = () => {
       temp.updatedAt = moment(new Date()).toISOString();
       temp.personAffectedComments =
         personAffectedComments || incidentsListData.personAffectedComments;
-      try{
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      }catch(error){
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
         setMessage("Something went worng!");
         setMessageType("error");
         setOpen(true);
@@ -315,102 +314,99 @@ const PeoplesAffected = () => {
 
   // Fetch the radio button values for Do-you-have-details-to-share-about-the-individuals-Affected.
   const fetchIndividualAffectValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/8/value");
-    const result = res.data.data.results;
-    setIndividualAffecctValue(result);
-    }
-    catch(error){
+    try {
+      const res = await api.get("api/v1/lists/8/value");
+      const result = res.data.data.results;
+      setIndividualAffecctValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the dropdown values for the Person-Type.
   const fetchPersonTypeValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/71/value");
-    const result = res.data.data.results;
-    setPersonTypeValue(result);
-    }
-    catch(error){
+    try {
+      const res = await api.get("api/v1/lists/71/value");
+      const result = res.data.data.results;
+      setPersonTypeValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // fetch the values for the Departments.
   const fetchDepartmentValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/10/value");
-    const result = res.data.data.results;
-    setDepartmentValue(result);
-    }
-    catch(error){
+    try {
+      const res = await api.get("api/v1/lists/10/value");
+      const result = res.data.data.results;
+      setDepartmentValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the radio buttons for the "Was that person taken to medical care?".
   const fetchPersonTakenMedicalCare = async () => {
-    try{
-    const res = await api.get("api/v1/lists/11/value");
-    const result = res.data.data.results;
-    setMedicalCareValue(result);
-    }catch(error){
+    try {
+      const res = await api.get("api/v1/lists/11/value");
+      const result = res.data.data.results;
+      setMedicalCareValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the incident details. We are fetching it to pre-populate the data in case of the going
   // previous page.
   const fetchIncidentsData = async () => {
-    try{
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
+    try {
+      const res = await api.get(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      );
 
-    if (res.status === 200) {
-      const result = res.data.data.results;
-      const isavailable = result.isPersonDetailsAvailable;
-      setPersonAffect(isavailable);
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        const isavailable = result.isPersonDetailsAvailable;
+        setPersonAffect(isavailable);
 
-      setIncidentsListdata(result);
-      if (!id) {
-        await setIsLoading(true);
+        setIncidentsListdata(result);
+        if (!id) {
+          await setIsLoading(true);
+        }
       }
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
     }
-  }catch(error){
-    setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-  }
   };
 
   // Fetch the individual page data in case of the update.
   const fetchPersonListData = async () => {
-    try{
-    const res = await api.get(`api/v1/incidents/${id}/people/`);
-    const result = res.data.data.results;
-    await setPeopleData(result);
-    if (result.length > 0) {
-      let temp = [...form]
-      temp = result
-      await setForm(temp)
-    }
+    try {
+      const res = await api.get(`api/v1/incidents/${id}/people/`);
+      const result = res.data.data.results;
+      await setPeopleData(result);
+      if (result.length > 0) {
+        let temp = [...form];
+        temp = result;
+        await setForm(temp);
+      }
 
-    await setIsLoading(true);
-  }catch(error){
-    setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-  }
+      await setIsLoading(true);
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -492,13 +488,13 @@ const PeoplesAffected = () => {
                         >
                           {personTypeValue.length !== 0
                             ? personTypeValue.map((selectValues, key) => (
-                              <MenuItem
-                                key={key}
-                                value={selectValues.inputValue}
-                              >
-                                {selectValues.inputLabel}
-                              </MenuItem>
-                            ))
+                                <MenuItem
+                                  key={key}
+                                  value={selectValues.inputValue}
+                                >
+                                  {selectValues.inputLabel}
+                                </MenuItem>
+                              ))
                             : null}
                         </Select>
                         {error && error[`personType${[key]}`] && (
@@ -527,13 +523,13 @@ const PeoplesAffected = () => {
                         >
                           {departmentValue.length !== 0
                             ? departmentValue.map((selectValues, index) => (
-                              <MenuItem
-                                key={index}
-                                value={selectValues.inputValue}
-                              >
-                                {selectValues.inputLabel}
-                              </MenuItem>
-                            ))
+                                <MenuItem
+                                  key={index}
+                                  value={selectValues.inputValue}
+                                >
+                                  {selectValues.inputLabel}
+                                </MenuItem>
+                              ))
                             : null}
                         </Select>
                         {error && error[`personDepartment${[key]}`] && (
@@ -564,9 +560,7 @@ const PeoplesAffected = () => {
                       <TextField
                         id={`id-num${key}`}
                         variant="outlined"
-                        error={
-                          error && error[`personIdentification${[key]}`]
-                        }
+                        error={error && error[`personIdentification${[key]}`]}
                         helperText={
                           error && error[`personIdentification${[key]}`]
                             ? error[`personIdentification${[key]}`]
@@ -609,13 +603,13 @@ const PeoplesAffected = () => {
                         >
                           {medicalCareValue.length !== 0
                             ? medicalCareValue.map((value, index) => (
-                              <FormControlLabel
-                                key={index}
-                                value={value.inputValue}
-                                control={<Radio />}
-                                label={value.inputLabel}
-                              />
-                            ))
+                                <FormControlLabel
+                                  key={index}
+                                  value={value.inputValue}
+                                  control={<Radio />}
+                                  label={value.inputLabel}
+                                />
+                              ))
                             : null}
                         </RadioGroup>
                         {error && error[`personMedicalCare${[key]}`] && (
@@ -706,11 +700,11 @@ const PeoplesAffected = () => {
               )}
             </Grid>
             <AlertMessage
-                message={message}
-                type={messageType}
-                open={open}
-                setOpen={setOpen}
-              />
+              message={message}
+              type={messageType}
+              open={open}
+              setOpen={setOpen}
+            />
             <Grid item md={6}>
               <Button
                 onClick={() =>

@@ -18,21 +18,17 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
-
-// import { DropzoneArea, DropzoneDialogBase } from 'material-ui-dropzone';
-
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
-
 import axios from "axios";
+
 import FormSideBar from "../FormSideBar";
 import {
   access_token,
@@ -40,14 +36,8 @@ import {
   INITIAL_NOTIFICATION_FORM,
   LOGIN_URL,
 } from "../../../utils/constants";
-// import FormHeader from '../FormHeader';
-
 import ReportingValidation from "../../Validator/ReportingValidation";
-// import InitialEvidenceValidate from '../../Validator/InitialEvidance';
-
 import api from "../../../utils/axios";
-
-// import UploadInputAll from '../demos/UploadInputAll';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -89,12 +79,15 @@ const ReportingAndNotification = () => {
   const [reportedToObj, setReportedToObj] = useState([]);
   const [superVisorName, setSuperVisorName] = useState([]);
   const [reportedByName, setReportedByName] = useState([]);
-  const [evidence, setEvidence] = useState([])
+  const [evidence, setEvidence] = useState([]);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-  const [isChecked, setIsChecked] = useState(true)
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const [isChecked, setIsChecked] = useState(true);
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [evidanceForm, setEvidanceForm] = useState([
     {
@@ -260,70 +253,70 @@ const ReportingAndNotification = () => {
 
   // handleSubmit incident details
   const handelNext = async (e) => {
-    if(isChecked){
-      setIsChecked(false)
-    // handle remove existing report
-    await handleRemoveExitingReport();
+    if (isChecked) {
+      setIsChecked(false);
+      // handle remove existing report
+      await handleRemoveExitingReport();
 
-    // update incident details
-    await handleUpdateIncidentDetails();
+      // update incident details
+      await handleUpdateIncidentDetails();
 
-    // handle Initail evidance
-    await handleInitialEvidance();
+      // handle Initail evidance
+      await handleInitialEvidance();
 
-    // check initial evidance
-    if (evidanceCkecked === true) {
-      let status = 0;
+      // check initial evidance
+      if (evidanceCkecked === true) {
+        let status = 0;
 
-      // Create new entries.
-      const { error, isValid } = ReportingValidation(form, reportOtherData);
-      setError(error);
+        // Create new entries.
+        const { error, isValid } = ReportingValidation(form, reportOtherData);
+        setError(error);
 
-      if (isValid === true) {
-        var newData = [];
-        reportedToFilterData = [];
-        for (var key in reportedTo) {
-          reportedToFilterData.push(reportedTo[key].inputValue);
-        }
-        for (var i = 0; i < 8; i++) {
-          if (reportedToFilterData.includes(form.reportedto[i])) {
-            if (form.reportedto[i] !== undefined) {
-              newData.push(form.reportedto[i]);
+        if (isValid === true) {
+          var newData = [];
+          reportedToFilterData = [];
+          for (var key in reportedTo) {
+            reportedToFilterData.push(reportedTo[key].inputValue);
+          }
+          for (var i = 0; i < 8; i++) {
+            if (reportedToFilterData.includes(form.reportedto[i])) {
+              if (form.reportedto[i] !== undefined) {
+                newData.push(form.reportedto[i]);
+              }
             }
           }
-        }
-        let unique = [...new Set(newData)];
-        for (const key in unique) {
-          const name = unique[key];
+          let unique = [...new Set(newData)];
+          for (const key in unique) {
+            const name = unique[key];
 
-          try {
-            const res = await api.post(
-              `/api/v1/incidents/${localStorage.getItem(
+            try {
+              const res = await api.post(
+                `/api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/reports/`,
+                {
+                  reportTo: name,
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId") || id,
+                }
+              );
+              status = res.status;
+            } catch (err) {}
+          }
+
+          // set in reportTo otherData
+          await setOtherDataReportTo();
+
+          if (status === 201) {
+            history.push(
+              `/app/incident-management/registration/summary/summary/${localStorage.getItem(
                 "fkincidentId"
-              )}/reports/`,
-              {
-                reportTo: name,
-                createdBy: parseInt(userId),
-                fkIncidentId: localStorage.getItem("fkincidentId") || id,
-              }
+              )}`
             );
-            status = res.status;
-          } catch (err) {}
-        }
-
-        // set in reportTo otherData
-        await setOtherDataReportTo();
-
-        if (status === 201) {
-          history.push(
-            `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-              "fkincidentId"
-            )}`
-          );
+          }
         }
       }
     }
-  }
   };
   // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
@@ -376,35 +369,37 @@ const ReportingAndNotification = () => {
   const handleEvidanceForm = async (e, key, fieldname) => {
     const temp = [...evidanceForm];
     const { value } = e.target;
-    
-    
+
     if (fieldname === "evidenceDocument") {
-      let file = e.target.files[0].name.split(".")
-    
-    if(file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png"){
-      
-      if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        temp[key][fieldname] = e.target.files[0];
-        await setMessage("File uploaded successfully!");
-        await setMessageType("success");
-        await setOpen(true);
+      let file = e.target.files[0].name.split(".");
+
+      if (
+        file[1].toLowerCase() === "jpg" ||
+        file[1].toLowerCase() === "jpeg" ||
+        file[1].toLowerCase() === "png"
+      ) {
+        if (e.target.files[0].size <= 1024 * 1024 * 25) {
+          temp[key][fieldname] = e.target.files[0];
+          await setMessage("File uploaded successfully!");
+          await setMessageType("success");
+          await setOpen(true);
+        } else {
+          await setMessage(
+            "File uploading failed! Select file less than 25MB!"
+          );
+          await setMessageType("error");
+          await setOpen(true);
+        }
       } else {
-        await setMessage("File uploading failed! Select file less than 25MB!");
+        await setMessage("Only PDF, JPG & PNG File is allowed!");
         await setMessageType("error");
         await setOpen(true);
       }
-    }else{
-      await setMessage("Only PDF, JPG & PNG File is allowed!");
-        await setMessageType("error");
-        await setOpen(true);
-    }
     } else {
       temp[key][fieldname] = value;
     }
 
     await setEvidanceForm(temp);
-  
-
   };
 
   // handle remove evidance
@@ -416,13 +411,14 @@ const ReportingAndNotification = () => {
 
   // handle remove initial evidance from databse
 
-  const removeInitialEvidance = async (evidenceId)=>{
-    const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
-    if(res.status === 200){
+  const removeInitialEvidance = async (evidenceId) => {
+    const res = await api.delete(
+      `api/v1/incidents/${id}/evidences/${evidenceId}/`
+    );
+    if (res.status === 200) {
       await fetchEvidanceData();
     }
-
-  }
+  };
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
@@ -467,7 +463,7 @@ const ReportingAndNotification = () => {
       const result = res.data.data.results;
       const incidentOccuredOn = result.incidentOccuredOn;
       const start_time = new Date(incidentOccuredOn);
-      const incidentReportedOn = result.incidentReportedOn
+      const incidentReportedOn = result.incidentReportedOn;
       const end_time = new Date(incidentReportedOn);
       const diff = end_time - start_time;
       const hours = Math.floor(diff / 1000 / 60 / 60);
@@ -478,12 +474,12 @@ const ReportingAndNotification = () => {
         await SetLateReport(false);
       }
       await setIncidentsListdata(result);
-      if(filterSuperVisorName.filter(
-        (item) =>
-          item.name === result.supervisorByName
-      ).length > 0){
-        
-        await setForm({...form,supervisorname:"other"})
+      if (
+        filterSuperVisorName.filter(
+          (item) => item.name === result.supervisorByName
+        ).length > 0
+      ) {
+        await setForm({ ...form, supervisorname: "other" });
       }
       if (!id) {
         await setIsLoading(true);
@@ -544,10 +540,12 @@ const ReportingAndNotification = () => {
   };
 
   // Fetch Evidance data
-  const fetchEvidanceData = async () => {  
+  const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    if(allEvidence.status === 200){
-      const data = allEvidence.data.data.results.filter(item=>item.evidenceCategory === "Initial Evidence")
+    if (allEvidence.status === 200) {
+      const data = allEvidence.data.data.results.filter(
+        (item) => item.evidenceCategory === "Initial Evidence"
+      );
       await setEvidence(data);
     }
   };
@@ -675,14 +673,13 @@ const ReportingAndNotification = () => {
                   Initial evidences
                 </Typography>
               </Box>
-              
 
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
                   <Grid item md={5}>
                     <input
                       type="file"
-                      accept= ".pdf, .jpg, jpeg, .png"
+                      accept=".pdf, .jpg, jpeg, .png"
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceDocument")
                       }
@@ -790,9 +787,7 @@ const ReportingAndNotification = () => {
                     ? ""
                     : incidentsListData.supervisorByName
                 }
-                disabled={
-                  form.supervisorname !== "other"
-                }
+                disabled={form.supervisorname !== "other"}
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -862,9 +857,7 @@ const ReportingAndNotification = () => {
                     : incidentsListData.incidentReportedByName
                 }
                 className={classes.formControl}
-                disabled={
-                  form.reportedby !== "other" 
-                }
+                disabled={form.reportedby !== "other"}
                 onChange={(e) => {
                   setForm({
                     ...form,
