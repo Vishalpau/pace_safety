@@ -46,13 +46,12 @@ import MessageIcon from "@material-ui/icons/Message";
 import BuildIcon from "@material-ui/icons/Build";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import Tooltip from "@material-ui/core/Tooltip";
-
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useHistory, useParams } from "react-router";
 
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
-import { useHistory, useParams } from "react-router";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -267,8 +266,7 @@ function BlankPage() {
 
   const classes = useStyles();
 
-
- const isDesktop = useMediaQuery('(min-width:992px)');
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
@@ -320,9 +318,11 @@ function BlankPage() {
               </Grid>
               <Grid item xs={7} md={5}>
                 <Box display="flex" justifyContent="flex-end">
+               
                   {isDesktop ? (
                     <Tooltip title="New Incident">
                       <Button
+                        aria-label="New Incident"
                         onClick={() => handlePush()}
                         variant="contained"
                         color="primary"
