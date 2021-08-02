@@ -16,6 +16,7 @@ function EventDetailsCostValidate(data) {
             errorCost[`casualFactor${[i]}`] = `Please select casual factor ${i + 1}`;
         }
     }
+    console.log(errorCost)
 
     return { errorCost };
 }

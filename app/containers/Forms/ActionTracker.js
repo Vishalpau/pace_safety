@@ -144,8 +144,7 @@ export default function ActionTracker(props) {
         <IconButton
           className={classes.dialogCloseButton}
           onClick={(e) => {
-            setOpen(false);
-            setError({ actionTitle: "" });
+            handleClose()
           }}
         >
           <CloseIcon />
@@ -194,7 +193,7 @@ export default function ActionTracker(props) {
             <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
               <KeyboardDatePicker
                 className={classes.formControl}
-                label="due date"
+                label="Due date"
                 format="dd/MM/yyyy"
                 inputVariant="outlined"
                 value={form.plannedEndDate}

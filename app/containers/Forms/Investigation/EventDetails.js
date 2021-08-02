@@ -135,12 +135,23 @@ const EventDetails = () => {
       // event data
       const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
       const costData = cost.data.data.results
-      if (typeof costData !== "undefined") {
+      if (costData.length !== 0) {
         setOverAllCost(costData)
         costData.map((value) => {
           overAllCostId.current.push(value.id)
         })
+      } else if (costData.length == 0) {
+        let tempCostData = [{
+          costType: "",
+          costAmount: "",
+          casualFactor: "",
+          currency: "INR",
+          status: "Active",
+          createdBy: 0,
+        }]
+        setOverAllCost(tempCostData)
       }
+
     }
     localStorage.setItem("WorkerPost", "done")
   };
@@ -204,13 +215,9 @@ const EventDetails = () => {
   const handelNext = async (e) => {
     const { error, isValid } = EventDetailsValidate(form);
     const { errorWeather } = EventDetailsWeatherValidate(weather)
-    if (form.isCostIncurred == "Yes") {
-      const { errorCost } = EventDetailsCostValidate(overAllCost)
-    }
+    await setError(error);
+    await setErrorWeather(errorWeather)
 
-    setError(error);
-    setErrorWeather(errorWeather)
-    setErrorCost(errorCost)
     // event api call
     if (Object.keys(error).length == 0 && Object.keys(errorWeather).length == 0 && Object.keys(errorCost).length == 0) {
       if (eventId.current === "") {
@@ -228,7 +235,7 @@ const EventDetails = () => {
             }
           }
           // cost api call
-          if (form.isCostIncurred == "Yes") {
+          if (form.isCostIncurred == "Yes" && overAllCost[0].costType !== "") {
             let costObject = overAllCost;
             for (let keys in costObject) {
               costObject[keys]["fkEventDetailsId"] = eventID
@@ -685,7 +692,6 @@ const EventDetails = () => {
                       <FormControl
                         variant="outlined"
                         error={errorCost && errorCost[`costType${[index]}`]}
-                        required
                         className={classes.formControl}>
                         <InputLabel id="project-name-label">Cost type</InputLabel>
                         <Select
@@ -720,7 +726,6 @@ const EventDetails = () => {
                       <TextField
                         id="title"
                         error={errorCost && errorCost[`costAmount${[index]}`]}
-                        required
                         variant="outlined"
                         label="Cost amount"
                         value={overAllCost[index].costAmount}
@@ -743,7 +748,6 @@ const EventDetails = () => {
                     <Grid item md={4}>
                       <FormControl
                         error={errorCost && errorCost[`casualFactor${[index]}`]}
-                        required
                         variant="outlined"
                         className={classes.formControl}>
                         <InputLabel id="project-name-label">Casual factor</InputLabel>
