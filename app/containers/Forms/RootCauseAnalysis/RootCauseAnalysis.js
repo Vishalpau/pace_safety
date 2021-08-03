@@ -20,6 +20,7 @@ import Select from "@material-ui/core/Select";
 import FormLabel from "@material-ui/core/FormLabel";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -171,12 +172,13 @@ const RootCauseAnalysis = () => {
     setTimeout(fetchIncidentData(), 1000);
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Root Cause Analysis" icon="ion-md-list-box">
-      {console.log(incidents.incidentOccuredOn)}
       <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
+        <Grid container item xs={12} md={9} spacing={3}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -185,7 +187,7 @@ const RootCauseAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident description
             </Typography>
@@ -194,7 +196,7 @@ const RootCauseAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item lg={6} md={12} sm={12}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 label="Investigation start date"
@@ -209,7 +211,7 @@ const RootCauseAnalysis = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 label="Investigation end date"
@@ -225,7 +227,7 @@ const RootCauseAnalysis = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">RCA recommended</InputLabel>
               <Select
@@ -242,7 +244,7 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">
                 Level of investigation
@@ -260,7 +262,7 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          <Grid item lg={6} md={12} sm={12}>
+          <Grid item xs={12}>
             <TextField
               variant="outlined"
               label="Incident date and time"
@@ -273,7 +275,7 @@ const RootCauseAnalysis = () => {
             />
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 label="Analysis conduted by"
@@ -287,7 +289,7 @@ const RootCauseAnalysis = () => {
               />
             </MuiPickersUtilsProvider>
           </Grid>
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <TextField
               className={classes.formControl}
               id="filled-basic"
@@ -305,7 +307,7 @@ const RootCauseAnalysis = () => {
             />
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <TextField
               id="filled-basic"
               className={classes.formControl}
@@ -323,7 +325,7 @@ const RootCauseAnalysis = () => {
             />
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">
                 Would corrective actions prevent simailar incidents in future?*
@@ -349,7 +351,7 @@ const RootCauseAnalysis = () => {
           </Grid>
 
           {form.wouldItPreventIncident === "No" ? (
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 className={classes.formControl}
                 id="filled-basic"
@@ -367,7 +369,7 @@ const RootCauseAnalysis = () => {
             </Grid>
           ) : null}
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -386,12 +388,14 @@ const RootCauseAnalysis = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem="Root cause analysis"
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem="Root cause analysis"
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );

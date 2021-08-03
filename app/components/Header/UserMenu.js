@@ -262,12 +262,7 @@ function UserMenu(props) {
         </IconButton>
       </Tooltip>
 
-      <Drawer
-        anchor="right"
-        anchorEl={menuAnchorEl}
-        open={appsOpen}
-        onClose={handleAppsClose}
-      >
+      <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
         <div className={classnames.list}>
           <List dense className={classnames.menulist}>
             <ListItemLink href="#simple-list">

@@ -28,6 +28,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
 import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -626,12 +627,14 @@ const ReportingAndNotification = () => {
     }
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   const classes = useStyles();
   return (
     <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
+          <Grid container item xs={12} md={9} spacing={3}>
             <Grid item md={12}>
               <FormControl
                 component="fieldset"
@@ -662,7 +665,7 @@ const ReportingAndNotification = () => {
             </Grid>
 
             {form.reportedto.includes("Others") ? (
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <TextField
                   id="Other"
                   variant="outlined"
@@ -680,12 +683,8 @@ const ReportingAndNotification = () => {
               </Grid>
             ) : null}
 
-            <Grid item lg={12} md={6} sm={6}>
-              <FormControl
-                component="fieldset"
-                // required
-                // error={error && error.isnotificationsent}
-              >
+            <Grid item xs={12} md={6}>
+              <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Notification to be sent?
                 </FormLabel>
@@ -706,28 +705,22 @@ const ReportingAndNotification = () => {
               </FormControl>
             </Grid>
 
-            <Grid item lg={12} justify="flex-start">
-              <Box marginTop={3} marginBottom={4}>
-                <Typography variant="h6" gutterBottom>
-                  Initial evidences
-                </Typography>
-              </Box>
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                Initial evidences
+              </Typography>
+            </Grid>
 
+            <>
               {evidence.length > 0
                 ? evidence.map((item, index) => (
-                    <Grid
-                      container
-                      item
-                      md={12}
-                      spacing={3}
-                      alignItems="center"
-                    >
-                      <Grid item md={5}>
+                    <>
+                      <Grid item xs={12} md={5}>
                         <a href={`${item.evidenceDocument}`} target="_blank">
                           {handelFileName(item.evidenceDocument)}
                         </a>
                       </Grid>
-                      <Grid item md={6}>
+                      <Grid item xs={10} md={6}>
                         <TextField
                           id="evidanceRemark"
                           size="small"
@@ -738,7 +731,7 @@ const ReportingAndNotification = () => {
                           value={item.evidenceRemark}
                         />
                       </Grid>
-                      <Grid item md={1}>
+                      <Grid item xs={2}>
                         <IconButton
                           variant="contained"
                           color="primary"
@@ -747,11 +740,11 @@ const ReportingAndNotification = () => {
                           <DeleteForeverIcon />
                         </IconButton>
                       </Grid>
-                    </Grid>
+                    </>
                   ))
                 : null}
               {evidanceForm.map((item, index) => (
-                <Grid container item md={12} spacing={3} alignItems="center">
+                <Grid container item xs={12} spacing={3} alignItems="center">
                   <Grid item md={5}>
                     <input
                       type="file"
@@ -762,7 +755,7 @@ const ReportingAndNotification = () => {
                       showPreviews
                     />
                   </Grid>
-                  <Grid item md={6}>
+                  <Grid item xs={10} md={6}>
                     <TextField
                       id="evidanceRemark"
                       size="small"
@@ -774,7 +767,7 @@ const ReportingAndNotification = () => {
                       }
                     />
                   </Grid>
-                  <Grid item md={1}>
+                  <Grid item xs={2} md={1}>
                     <IconButton
                       variant="contained"
                       color="primary"
@@ -786,7 +779,7 @@ const ReportingAndNotification = () => {
                 </Grid>
               ))}
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -806,15 +799,10 @@ const ReportingAndNotification = () => {
                   {message}
                 </Alert>
               </Snackbar>
-            </Grid>
+            </>
 
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                // required
-                className={classes.formControl}
-                // error={error && error.reportedby}
-              >
+            <Grid item xs={12} md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="supervisorname-label">
                   Supervisor name
                 </InputLabel>
@@ -846,12 +834,9 @@ const ReportingAndNotification = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* {error && error.reportedby ? (
-                  <FormHelperText>{error.reportedby}</FormHelperText>
-                ) : null} */}
               </FormControl>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="others"
                 variant="outlined"
@@ -876,13 +861,8 @@ const ReportingAndNotification = () => {
               {error && error.othername ? <p>{error.othername}</p> : null}
             </Grid>
 
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                // required
-                className={classes.formControl}
-                // error={error && error.reportedby}
-              >
+            <Grid item xs={12} md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
                   labelId="reportedBy-label"
@@ -912,12 +892,9 @@ const ReportingAndNotification = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* {error && error.reportedby ? (
-                  <FormHelperText>{error.reportedby}</FormHelperText>
-                ) : null} */}
               </FormControl>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="others"
                 variant="outlined"
@@ -942,17 +919,12 @@ const ReportingAndNotification = () => {
                 }}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   className={classes.formControl}
                   id="date-picker-dialog"
-                  // error={error && error.reportingdate}
-                  // helperText={
-                  //   error && error.reportingdate ? error.reportingdate : null
-                  // }
                   format="yyyy/MM/dd HH:mm"
-                  // required
                   inputVariant="outlined"
                   label="Reporting date"
                   value={incidentsListData.incidentReportedOn}
@@ -965,7 +937,7 @@ const ReportingAndNotification = () => {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 id="reason"
                 variant="outlined"
@@ -973,10 +945,6 @@ const ReportingAndNotification = () => {
                 multiline
                 error={error && error.latereporting}
                 disabled={!lateReport}
-                // required
-                // helperText={
-                //   error && error.latereporting ? error.latereporting : null
-                // }
                 rows="4"
                 defaultValue={incidentsListData.reasonLateReporting}
                 className={classes.fullWidth}
@@ -989,7 +957,7 @@ const ReportingAndNotification = () => {
               />
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 id="additionalDetails"
                 variant="outlined"
@@ -1007,7 +975,7 @@ const ReportingAndNotification = () => {
               />
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -1027,13 +995,15 @@ const ReportingAndNotification = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={localStorage.getItem("deleteForm")}
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Reporting and notification"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={localStorage.getItem("deleteForm")}
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Reporting and notification"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

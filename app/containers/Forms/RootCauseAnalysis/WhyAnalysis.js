@@ -9,6 +9,7 @@ import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
@@ -188,11 +189,12 @@ const WhyAnalysis = () => {
   }, []);
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Five why analysis" icon="ion-md-list-box">
       <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
+        <Grid container item xs={12} md={9} spacing={3}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -201,7 +203,7 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
@@ -210,7 +212,7 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident Description
             </Typography>
@@ -219,14 +221,14 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Level of Investigation
             </Typography>
             <Typography className={Type.labelValue}>Level 5</Typography>
           </Grid>
 
-          <Grid item md={11}>
+          <Grid item xs={12} md={11}>
             <TextField
               variant="outlined"
               id="filled-basic"
@@ -238,9 +240,9 @@ const WhyAnalysis = () => {
           </Grid>
 
           {form.map((item, index) => (
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item sm={11}>
+                <Grid item xs={12} md={11}>
                   <TextField
                     id="filled-basic"
                     label={`Why ${index + 1}`}
@@ -257,7 +259,7 @@ const WhyAnalysis = () => {
                 </Grid>
                 {form.length > 1 ? (
                   putId.current == "" ? (
-                    <Grid item sm={1} justify="center">
+                    <Grid item xs={12} md={1} justify="center">
                       <IconButton onClick={(e) => handelRemove(e, index)}>
                         <RemoveCircleOutlineIcon />
                       </IconButton>
@@ -269,7 +271,7 @@ const WhyAnalysis = () => {
           ))}
 
           {form.length <= 4 ? (
-            <Grid item md={1}>
+            <Grid item xs={12} md={1}>
               {/* This button will add another entry of why input  */}
               {putId.current == "" ? (
                 <button
@@ -282,7 +284,7 @@ const WhyAnalysis = () => {
             </Grid>
           ) : null}
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -302,12 +304,14 @@ const WhyAnalysis = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Five Why analysis"}
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Five Why analysis"}
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );
