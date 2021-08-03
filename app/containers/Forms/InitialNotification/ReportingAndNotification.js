@@ -18,21 +18,17 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
-
-// import { DropzoneArea, DropzoneDialogBase } from 'material-ui-dropzone';
-
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
-
 import axios from "axios";
+
 import FormSideBar from "../FormSideBar";
 import {
   access_token,
@@ -42,14 +38,8 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
-// import FormHeader from '../FormHeader';
-
 import ReportingValidation from "../../Validator/ReportingValidation";
-// import InitialEvidenceValidate from '../../Validator/InitialEvidance';
-
 import api from "../../../utils/axios";
-
-// import UploadInputAll from '../demos/UploadInputAll';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -91,13 +81,16 @@ const ReportingAndNotification = () => {
   const [reportedToObj, setReportedToObj] = useState([]);
   const [superVisorName, setSuperVisorName] = useState([]);
   const [reportedByName, setReportedByName] = useState([]);
-  const [evidence, setEvidence] = useState([])
-  const [notificationSentValue, setNotificationSentValue] = useState([])
+  const [evidence, setEvidence] = useState([]);
+  const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-  const [isNext, setIsnext] = useState(true)
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null ? JSON.parse(localStorage.getItem('userDetails')).id : null;
+  const [isNext, setIsnext] = useState(true);
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [evidanceForm, setEvidanceForm] = useState([
     {
@@ -196,7 +189,7 @@ const ReportingAndNotification = () => {
           const res = await api.delete(
             `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-        } catch (err) { }
+        } catch (err) {}
       }
     }
   };
@@ -256,7 +249,7 @@ const ReportingAndNotification = () => {
             createdBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           });
-        } catch (err) { }
+        } catch (err) {}
       }
     }
   };
@@ -264,7 +257,7 @@ const ReportingAndNotification = () => {
   // handleSubmit incident details
   const handelNext = async (e) => {
     if (isNext) {
-      setIsnext(false)
+      setIsnext(false);
       // handle remove existing report
       await handleRemoveExitingReport();
 
@@ -311,7 +304,7 @@ const ReportingAndNotification = () => {
                 }
               );
               status = res.status;
-            } catch (err) { }
+            } catch (err) {}
           }
 
           // set in reportTo otherData
@@ -325,7 +318,7 @@ const ReportingAndNotification = () => {
             );
           }
         } else {
-          setIsnext(true)
+          setIsnext(true);
         }
       }
     }
@@ -382,19 +375,23 @@ const ReportingAndNotification = () => {
     const temp = [...evidanceForm];
     const { value } = e.target;
 
-
     if (fieldname === "evidenceDocument") {
-      let file = e.target.files[0].name.split(".")
+      let file = e.target.files[0].name.split(".");
 
-      if (file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png") {
-
+      if (
+        file[1].toLowerCase() === "jpg" ||
+        file[1].toLowerCase() === "jpeg" ||
+        file[1].toLowerCase() === "png"
+      ) {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
           await setMessage("File uploaded successfully!");
           await setMessageType("success");
           await setOpen(true);
         } else {
-          await setMessage("File uploading failed! Select file less than 25MB!");
+          await setMessage(
+            "File uploading failed! Select file less than 25MB!"
+          );
           await setMessageType("error");
           await setOpen(true);
         }
@@ -408,8 +405,6 @@ const ReportingAndNotification = () => {
     }
 
     await setEvidanceForm(temp);
-
-
   };
 
   // handle remove evidance
@@ -422,15 +417,16 @@ const ReportingAndNotification = () => {
   // handle remove initial evidance from databse
 
   const removeInitialEvidance = async (evidenceId) => {
-    const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
+    const res = await api.delete(
+      `api/v1/incidents/${id}/evidences/${evidenceId}/`
+    );
     if (res.status === 200) {
       await fetchEvidanceData();
       await setMessage("File removed successfully!");
       await setMessageType("success");
       await setOpen(true);
     }
-
-  }
+  };
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
@@ -475,7 +471,7 @@ const ReportingAndNotification = () => {
       const result = res.data.data.results;
       const incidentOccuredOn = result.incidentOccuredOn;
       const start_time = new Date(incidentOccuredOn);
-      const incidentReportedOn = result.incidentReportedOn
+      const incidentReportedOn = result.incidentReportedOn;
       const end_time = new Date(incidentReportedOn);
       const diff = end_time - start_time;
       const hours = Math.floor(diff / 1000 / 60 / 60);
@@ -486,12 +482,12 @@ const ReportingAndNotification = () => {
         await SetLateReport(false);
       }
       await setIncidentsListdata(result);
-      if (filterSuperVisorName.filter(
-        (item) =>
-          item.name === result.supervisorByName
-      ).length > 0) {
-
-        await setForm({ ...form, supervisorname: "other" })
+      if (
+        filterSuperVisorName.filter(
+          (item) => item.name === result.supervisorByName
+        ).length > 0
+      ) {
+        await setForm({ ...form, supervisorname: "other" });
       }
       if (!id) {
         await setIsLoading(true);
@@ -518,7 +514,7 @@ const ReportingAndNotification = () => {
           setSuperVisorName([...result, { name: "other" }]);
         }
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const fetchReportedBy = () => {
@@ -555,7 +551,9 @@ const ReportingAndNotification = () => {
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     if (allEvidence.status === 200) {
-      const data = allEvidence.data.data.results.filter(item => item.evidenceCategory === "Initial Evidence")
+      const data = allEvidence.data.data.results.filter(
+        (item) => item.evidenceCategory === "Initial Evidence"
+      );
       await setEvidence(data);
     }
   };
@@ -563,24 +561,25 @@ const ReportingAndNotification = () => {
   // fetch value noticefication sent
   const fetchNotificationSent = async () => {
     try {
-      let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-      let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+      let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+      let projectId = JSON.parse(localStorage.getItem("projectName"))
+        .projectName.projectId;
       var config = {
-        method: 'get',
+        method: "get",
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
-        headers: HEADER_AUTH
+        headers: HEADER_AUTH,
       };
-      console.log(config)
-      const res = await api(config)
+      console.log(config);
+      const res = await api(config);
       if (res.status === 200) {
-        const result = res.data.data.results
-        setNotificationSentValue(result)
+        const result = res.data.data.results;
+        setNotificationSentValue(result);
       }
-      console.log(res.data.data.results)
+      console.log(res.data.data.results);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   // handle go back
   const handleGoBack = () => {
@@ -609,16 +608,16 @@ const ReportingAndNotification = () => {
   };
   // handle file name
   const handelFileName = (value) => {
-    const fileNameArray = value.split('/')
-    const fileName = fileNameArray[fileNameArray.length - 1]
-    return fileName
-  }
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    return fileName;
+  };
 
   useEffect(() => {
     fetchSuperVisorName();
     fetchReportedBy();
     fetchIncidentsData();
-    fetchNotificationSent()
+    fetchNotificationSent();
     if (id) {
       fetchReportsDataList();
       fetchEvidanceData();
@@ -684,8 +683,8 @@ const ReportingAndNotification = () => {
             <Grid item lg={12} md={6} sm={6}>
               <FormControl
                 component="fieldset"
-              // required
-              // error={error && error.isnotificationsent}
+                // required
+                // error={error && error.isnotificationsent}
               >
                 <FormLabel component="legend">
                   Notification to be sent?
@@ -714,33 +713,43 @@ const ReportingAndNotification = () => {
                 </Typography>
               </Box>
 
-              {evidence.length > 0 ? evidence.map((item, index) => (
-                <Grid container item md={12} spacing={3} alignItems="center">
-                  <Grid item md={5}>
-                    <a href={`${item.evidenceDocument}`} target='_blank'>{handelFileName(item.evidenceDocument)}</a>
-                  </Grid>
-                  <Grid item md={6}>
-                    <TextField
-                      id="evidanceRemark"
-                      size="small"
-                      variant="outlined"
-                      label="Evidences remark"
-                      className={classes.formControl}
-                      disabled={true}
-                      value={item.evidenceRemark}
-                    />
-                  </Grid>
-                  <Grid item md={1}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={() => removeInitialEvidance(item.id)}
+              {evidence.length > 0
+                ? evidence.map((item, index) => (
+                    <Grid
+                      container
+                      item
+                      md={12}
+                      spacing={3}
+                      alignItems="center"
                     >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              )) : null}
+                      <Grid item md={5}>
+                        <a href={`${item.evidenceDocument}`} target="_blank">
+                          {handelFileName(item.evidenceDocument)}
+                        </a>
+                      </Grid>
+                      <Grid item md={6}>
+                        <TextField
+                          id="evidanceRemark"
+                          size="small"
+                          variant="outlined"
+                          label="Evidences remark"
+                          className={classes.formControl}
+                          disabled={true}
+                          value={item.evidenceRemark}
+                        />
+                      </Grid>
+                      <Grid item md={1}>
+                        <IconButton
+                          variant="contained"
+                          color="primary"
+                          onClick={() => removeInitialEvidance(item.id)}
+                        >
+                          <DeleteForeverIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  ))
+                : null}
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
                   <Grid item md={5}>
@@ -804,7 +813,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-              // error={error && error.reportedby}
+                // error={error && error.reportedby}
               >
                 <InputLabel id="supervisorname-label">
                   Supervisor name
@@ -818,11 +827,11 @@ const ReportingAndNotification = () => {
                     incidentsListData.supervisorByName === ""
                       ? ""
                       : superVisorName.filter(
-                        (item) =>
-                          item.name === incidentsListData.supervisorByName
-                      ).length > 0
-                        ? incidentsListData.supervisorByName
-                        : ""
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
+                      ? incidentsListData.supervisorByName
+                      : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -854,9 +863,7 @@ const ReportingAndNotification = () => {
                     ? ""
                     : incidentsListData.supervisorByName
                 }
-                disabled={
-                  form.supervisorname !== "other"
-                }
+                disabled={form.supervisorname !== "other"}
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -874,7 +881,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-              // error={error && error.reportedby}
+                // error={error && error.reportedby}
               >
                 <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
@@ -885,12 +892,12 @@ const ReportingAndNotification = () => {
                     incidentsListData.incidentReportedByName === ""
                       ? ""
                       : reportedByName.filter(
-                        (item) =>
-                          item.name ===
-                          incidentsListData.incidentReportedByName
-                      ).length > 0
-                        ? incidentsListData.incidentReportedByName
-                        : ""
+                          (item) =>
+                            item.name ===
+                            incidentsListData.incidentReportedByName
+                        ).length > 0
+                      ? incidentsListData.incidentReportedByName
+                      : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -919,16 +926,14 @@ const ReportingAndNotification = () => {
                   incidentsListData.incidentReportedByName === ""
                     ? ""
                     : reportedByName.filter(
-                      (item) =>
-                        item.name === incidentsListData.incidentReportedByName
-                    ).length > 0
-                      ? ""
-                      : incidentsListData.incidentReportedByName
+                        (item) =>
+                          item.name === incidentsListData.incidentReportedByName
+                      ).length > 0
+                    ? ""
+                    : incidentsListData.incidentReportedByName
                 }
                 className={classes.formControl}
-                disabled={
-                  form.reportedby !== "other"
-                }
+                disabled={form.reportedby !== "other"}
                 onChange={(e) => {
                   setForm({
                     ...form,

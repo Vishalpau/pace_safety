@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -8,12 +8,10 @@ import FormControl from "@material-ui/core/FormControl";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import {
-  DateTimePicker,
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
 } from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
+
 import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -55,7 +53,8 @@ const RootCauseAnalysis = () => {
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: putId.current || parseInt(localStorage.getItem("fkincidentId")),
+    fkIncidentId:
+      putId.current || parseInt(localStorage.getItem("fkincidentId")),
   });
 
   const [error, setError] = useState({});
@@ -64,14 +63,20 @@ const RootCauseAnalysis = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-  const checkPost = useRef()
+  const checkPost = useRef();
   const pkValue = useRef("");
 
   const handelUpdateCheck = async () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/rootcauses/`
+    );
     let allApiData = previousData.data.data.results[0];
 
     if (!isNaN(allApiData.id)) {
@@ -84,13 +89,17 @@ const RootCauseAnalysis = () => {
         recommendSolution: allApiData.recommendSolution,
       });
       putId.current = incidentId;
-      checkPost.current = false
+      checkPost.current = false;
     }
   };
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${putId.current !== "" ? putId.current : localStorage.getItem("fkincidentId")}/`
+      `api/v1/incidents/${
+        putId.current !== ""
+          ? putId.current
+          : localStorage.getItem("fkincidentId")
+      }/`
     );
     await setIncidents(allIncidents.data.data.results);
   };
@@ -134,7 +143,8 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${putId.current
+          `/app/incident-management/registration/summary/summary/${
+            putId.current
           }`
         );
       }
@@ -145,7 +155,8 @@ const RootCauseAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -153,8 +164,7 @@ const RootCauseAnalysis = () => {
         `/app/incident-management/registration/root-cause-analysis/details/`
       );
     }
-
-  }
+  };
 
   useEffect(() => {
     handelUpdateCheck();
@@ -246,7 +256,6 @@ const RootCauseAnalysis = () => {
                 {selectValues.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
-
               </Select>
             </FormControl>
           </Grid>
@@ -257,7 +266,9 @@ const RootCauseAnalysis = () => {
               label="Incident date and time"
               className={classes.formControl}
               id="filled-basic"
-              value={moment(incidents.incidentOccuredOn).format('MM/DD/YYYY , h:mm:ss a')}
+              value={moment(incidents.incidentOccuredOn).format(
+                "MM/DD/YYYY , h:mm:ss a"
+              )}
               disabled
             />
           </Grid>
@@ -337,7 +348,7 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          {form.wouldItPreventIncident === "No" ?
+          {form.wouldItPreventIncident === "No" ? (
             <Grid item md={12}>
               <TextField
                 className={classes.formControl}
@@ -354,8 +365,7 @@ const RootCauseAnalysis = () => {
                 }
               />
             </Grid>
-            : null}
-
+          ) : null}
 
           <Grid item md={12}>
             <Button

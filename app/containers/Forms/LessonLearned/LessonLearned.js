@@ -1,35 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { PapperBlock } from "dan-components";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import moment from "moment";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
+import axios from "axios";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -41,8 +30,6 @@ import {
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-
-import axios from "axios";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -118,14 +105,13 @@ const LessionLearned = () => {
 
   const handleAttchment = async (e) => {
     let file = e.target.files[0].name.split(".");
-    
+
     if (
       file[1].toLowerCase() === "jpg" ||
       file[1].toLowerCase() === "jpeg" ||
       file[1].toLowerCase() === "png"
     ) {
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
-       
         const formData = new FormData();
         formData.append("evidenceDocument", e.target.files[0]);
         formData.append("evidenceCheck", "Yes");
@@ -140,7 +126,7 @@ const LessionLearned = () => {
               `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
             );
           }
-        }   
+        }
         try {
           const res = await api.post(
             `api/v1/incidents/${id}/evidences/`,
@@ -270,14 +256,13 @@ const LessionLearned = () => {
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    
+
     if (allEvidence.status === 200) {
-      
       const newData = allEvidence.data.data.results.filter(
         (item) => item.evidenceCategory === "Lessons Learned"
       );
       await setEvidence(newData);
-      console.log('lesson learned',newData)
+      console.log("lesson learned", newData);
     }
   };
 
@@ -292,10 +277,10 @@ const LessionLearned = () => {
 
   // handle file name
   const handelFileName = (value) => {
-    const fileNameArray = value.split('/')
-    const fileName = fileNameArray[fileNameArray.length - 1]
-    return fileName
-  }
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    return fileName;
+  };
 
   // handle remove initial evidance from databse
 
@@ -313,7 +298,6 @@ const LessionLearned = () => {
     if (id) {
       fetchLessonLerned();
       fetchEvidanceData();
-
     }
     fetchIncidentsData();
   }, []);
@@ -509,11 +493,15 @@ const LessionLearned = () => {
                 ref={ref}
                 accept=".png, jpg, jpeg"
                 onChange={(e) => handleAttchment(e)}
-              
-                placeholder={evidence.length>0?evidence[0].evidenceDocument:""}
+                placeholder={
+                  evidence.length > 0 ? evidence[0].evidenceDocument : ""
+                }
               />
-              {evidence.length>0?
-              <a href={`${evidence[0].evidenceDocument}`} target='_blank'>{handelFileName(evidence[0].evidenceDocument)}</a>:null}
+              {evidence.length > 0 ? (
+                <a href={`${evidence[0].evidenceDocument}`} target="_blank">
+                  {handelFileName(evidence[0].evidenceDocument)}
+                </a>
+              ) : null}
             </Grid>
             <Grid item md={12}>
               <Box marginTop={4}>

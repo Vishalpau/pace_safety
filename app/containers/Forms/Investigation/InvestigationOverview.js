@@ -1,14 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Grid,
-  Container,
-  Input,
-  Select,
-  FormHelperText,
-} from "@material-ui/core";
-
-import Paper from "@material-ui/core/Paper";
+import { Button, Grid, Select } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
 import { spacing } from "@material-ui/system";
@@ -23,7 +14,6 @@ import { useHistory, useParams } from "react-router";
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
@@ -41,19 +31,25 @@ const InvestigationOverview = () => {
   const [isLoading, setIsLoading] = useState(false);
   const putId = useRef("");
   const history = useHistory();
-  const investigationId = useRef("")
-  const severityValues = useRef([])
+  const investigationId = useRef("");
+  const severityValues = useRef([]);
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
     let allApiData = previousData.data.data.results[0];
-    console.log(incidentId)
+    console.log(incidentId);
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
-      investigationId.current = allApiData.id
+      investigationId.current = allApiData.id;
       putId.current = incidentId;
     }
   };
@@ -72,33 +68,50 @@ const InvestigationOverview = () => {
   });
 
   const handleNext = async () => {
-    console.log(putId.current)
+    console.log(putId.current);
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
 
     if (Object.keys(error).length == 0) {
       if (putId.current == "") {
-        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`)
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/investigations/`,
+          form
+        );
+        await history.push(
+          `/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem(
+            "fkincidentId"
+          )}`
+        );
       } else if (putId.current !== "") {
-        console.log(putId.current)
-        form["updatedBy"] = "0"
-        const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
+        console.log(putId.current);
+        form["updatedBy"] = "0";
+        const res = await api.put(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/`,
+          form
+        );
+        await history.push(
+          `/app/incident-management/registration/investigation/severity-consequences/${
+            putId.current
+          }`
+        );
       }
 
-      localStorage.setItem("WorkerDataFetched", "")
+      localStorage.setItem("WorkerDataFetched", "");
     }
-
   };
 
   const classes = useStyles();
   const callback = async () => {
-    await handelUpdateCheck()
-    severityValues.current = await PickListData(41)
-    setIsLoading(true)
+    await handelUpdateCheck();
+    severityValues.current = await PickListData(41);
+    setIsLoading(true);
     localStorage.removeItem("WorkerDataFetched");
-  }
+  };
 
   useEffect(() => {
     handelUpdateCheck();

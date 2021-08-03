@@ -1097,6 +1097,11 @@
     "prop-types" "^15.7.2"
     "react-is" "^16.8.0 || ^17.0.0"
 
+"@mdi/js@^5.9.55":
+  "integrity" "sha512-BbeHMgeK2/vjdJIRnx12wvQ6s8xAYfvMmEAVsUx9b+7GiQGQ9Za8jpwp17dMKr9CgKRvemlAM4S7S3QOtEbp4A=="
+  "resolved" "https://registry.npmjs.org/@mdi/js/-/js-5.9.55.tgz"
+  "version" "5.9.55"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   "integrity" "sha512-bPHp6Ji8b41szTOcaP63VlnbbO5Ny6dwAATtY6JTjh5N2OLrb5Qk/Th5cRkRQhkWCt+EJsYrNB0MiL+Gpn6e3g=="
   "resolved" "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz"
@@ -5565,6 +5570,11 @@
     "loader-utils" "^1.0.2"
     "schema-utils" "^1.0.0"
 
+"file-saver@^2.0.5":
+  "integrity" "sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA=="
+  "resolved" "https://registry.npmjs.org/file-saver/-/file-saver-2.0.5.tgz"
+  "version" "2.0.5"
+
 "file-selector@^0.1.12":
   "integrity" "sha512-T2efCBY6Ps+jLIWdNQsmzt/UnAjKOEAlsZVdnQztg/BtAZGNL4uX1Jet9cMM8gify/x4CSudreji2HssGBNVIQ=="
   "resolved" "https://registry.npmjs.org/file-selector/-/file-selector-0.1.13.tgz"
@@ -6554,7 +6564,7 @@
   dependencies:
     "invariant" "^2.2.0"
 
-"immutable@^3.8.1 || ^4.0.0-rc.1", "immutable@^3.8.2 || ^4.0.0", "immutable@3.8.2", "immutable@3.x.x || 4.x.x":
+"immutable@^3.8.1 || ^4.0.0-rc.1", "immutable@^3.8.2 || ^4.0.0", "immutable@>= 3", "immutable@3.8.2", "immutable@3.x.x || 4.x.x":
   "integrity" "sha1-wkOZUUVbs5kT2vKBN28VMOEErfM="
   "resolved" "https://registry.npmjs.org/immutable/-/immutable-3.8.2.tgz"
   "version" "3.8.2"
@@ -7290,6 +7300,11 @@
   dependencies:
     "argparse" "^1.0.7"
     "esprima" "^4.0.0"
+
+"jsan@^3.1.13":
+  "integrity" "sha512-9kGpCsGHifmw6oJet+y8HaCl14y7qgAsxVdV3pCHDySNR3BfDC30zgkssd7x5LRVAT22dnpbe9JdzzmXZnq9/g=="
+  "resolved" "https://registry.npmjs.org/jsan/-/jsan-3.1.13.tgz"
+  "version" "3.1.13"
 
 "jsbn@~0.1.0":
   "integrity" "sha1-peZUwuWi3rXyAdls77yoDA7y9RM="
@@ -11062,7 +11077,14 @@
   dependencies:
     "deep-diff" "^0.3.5"
 
-"redux-persist@^6.0.0":
+"redux-persist-transform-immutable@^5.0.0":
+  "integrity" "sha512-Gf7pNqHIVrCM459BzyqT25A8+8/PP6ce57kXY+PEgYnWn8jQRCAZaSNxw7T1eqKGXrJfICnMQ39RwehvMqlJMg=="
+  "resolved" "https://registry.npmjs.org/redux-persist-transform-immutable/-/redux-persist-transform-immutable-5.0.0.tgz"
+  "version" "5.0.0"
+  dependencies:
+    "remotedev-serialize" "^0.1.0"
+
+"redux-persist@^4.0.0", "redux-persist@^6.0.0":
   "integrity" "sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ=="
   "resolved" "https://registry.npmjs.org/redux-persist/-/redux-persist-6.0.0.tgz"
   "version" "6.0.0"
@@ -11290,6 +11312,13 @@
     "remark-parse" "^6.0.0"
     "remark-stringify" "^6.0.0"
     "unified" "^7.0.0"
+
+"remotedev-serialize@^0.1.0":
+  "integrity" "sha512-5tFdZg9mSaAWTv6xmQ7HtHjKMLSFQFExEZOtJe10PLsv1wb7cy7kYHtBvTYRro27/3fRGEcQBRNKSaixOpb69w=="
+  "resolved" "https://registry.npmjs.org/remotedev-serialize/-/remotedev-serialize-0.1.9.tgz"
+  "version" "0.1.9"
+  dependencies:
+    "jsan" "^3.1.13"
 
 "remove-trailing-separator@^1.0.1":
   "integrity" "sha1-wkvOKig62tW8P1jg1IJJuSN52O8="

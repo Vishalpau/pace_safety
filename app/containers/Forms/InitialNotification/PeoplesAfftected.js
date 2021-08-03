@@ -87,9 +87,12 @@ const PeoplesAffected = () => {
   const [peopleData, setPeopleData] = useState([]);
 
   const [open, setOpen] = useState(false);
-  const [messageType, setMessageType] = useState('');
-  const [message, setMessage] = useState('')
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null ? JSON.parse(localStorage.getItem('userDetails')).id : null;
+  const [messageType, setMessageType] = useState("");
+  const [message, setMessage] = useState("");
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   // Forms definations.
   const [form, setForm] = useState([
@@ -139,8 +142,7 @@ const PeoplesAffected = () => {
         temp[key][fieldname] = value;
       }
       setForm(temp);
-    }
-    catch (error) {
+    } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -152,20 +154,18 @@ const PeoplesAffected = () => {
     // Next path handlings.
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-
     // This is the condition when Yes is clicked on the form.
     if (personAffect === "Yes") {
       try {
         if (peopleData.length > 0) {
-          const temp = peopleData
+          const temp = peopleData;
           for (var i = 0; i < peopleData.length; i++) {
             const res = await api.delete(
-              `api/v1/incidents/${id}/people/${temp[i].id}/`,
+              `api/v1/incidents/${id}/people/${temp[i].id}/`
             );
           }
         }
-      }
-      catch (error) {
+      } catch (error) {
         setMessage("Network error!");
         setMessageType("error");
         setOpen(true);
@@ -183,7 +183,9 @@ const PeoplesAffected = () => {
         try {
           for (var i = 0; i < form.length; i++) {
             const res = await api.post(
-              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
+              `api/v1/incidents/${localStorage.getItem(
+                "fkincidentId"
+              )}/people/`,
               {
                 personType: form[i].personType,
                 personDepartment: form[i].personDepartment,
@@ -209,8 +211,7 @@ const PeoplesAffected = () => {
             `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
             temp
           );
-        }
-        catch (error) {
+        } catch (error) {
           setMessage("Something went worng!");
           setMessageType("error");
           setOpen(true);
@@ -238,19 +239,17 @@ const PeoplesAffected = () => {
 
       // Case when form has No option selected.
     } else {
-
       // delete existing data if user select NO or N/A
       try {
         if (peopleData.length > 0) {
-          const temp = peopleData
+          const temp = peopleData;
           for (var i = 0; i < peopleData.length; i++) {
             const res = await api.delete(
-              `api/v1/incidents/${id}/people/${temp[i].id}/`,
+              `api/v1/incidents/${id}/people/${temp[i].id}/`
             );
           }
         }
-      }
-      catch (error) {
+      } catch (error) {
         setMessage("Network error!");
         setMessageType("error");
         setOpen(true);
@@ -316,8 +315,7 @@ const PeoplesAffected = () => {
       const res = await api.get("api/v1/lists/8/value");
       const result = res.data.data.results;
       setIndividualAffecctValue(result);
-    }
-    catch (error) {
+    } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -330,8 +328,7 @@ const PeoplesAffected = () => {
       const res = await api.get("api/v1/lists/71/value");
       const result = res.data.data.results;
       setPersonTypeValue(result);
-    }
-    catch (error) {
+    } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -344,8 +341,7 @@ const PeoplesAffected = () => {
       const res = await api.get("api/v1/lists/10/value");
       const result = res.data.data.results;
       setDepartmentValue(result);
-    }
-    catch (error) {
+    } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -397,9 +393,9 @@ const PeoplesAffected = () => {
       const result = res.data.data.results;
       await setPeopleData(result);
       if (result.length > 0) {
-        let temp = [...form]
-        temp = result
-        await setForm(temp)
+        let temp = [...form];
+        temp = result;
+        await setForm(temp);
       }
 
       await setIsLoading(true);
@@ -561,9 +557,7 @@ const PeoplesAffected = () => {
                       <TextField
                         id={`id-num${key}`}
                         variant="outlined"
-                        error={
-                          error && error[`personIdentification${[key]}`]
-                        }
+                        error={error && error[`personIdentification${[key]}`]}
                         helperText={
                           error && error[`personIdentification${[key]}`]
                             ? error[`personIdentification${[key]}`]
