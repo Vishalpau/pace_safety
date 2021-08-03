@@ -6,22 +6,22 @@ function RootCauseValidation(data) {
   const error = {};
 
   if (validator.isEmpty(data.causeOfIncident)) {
-    error.causeOfIncident = " Please fill cause of incident";
+    error.causeOfIncident = " please enter cause of incident";
     isValid = false;
   }
 
   if (validator.isEmpty(data.correctiveAction)) {
-    error.correctiveAction = "Please fill corrective action";
+    error.correctiveAction = "please enter corrective action";
     isValid = false;
   }
 
   if (validator.isEmpty(data.wouldItPreventIncident)) {
-    error.wouldItPreventIncident = "Please fill, field is empty";
+    error.wouldItPreventIncident = "please enter, field is empty";
     isValid = false;
   }
 
   if (data.wouldItPreventIncident === "No" && validator.isEmpty(data.recommendSolution)) {
-    error.recommendSolution = "Please fill recommended solution";
+    error.recommendSolution = "please enter recommended solution";
     isValid = false;
   }
 

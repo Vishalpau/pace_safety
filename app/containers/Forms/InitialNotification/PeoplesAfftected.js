@@ -486,13 +486,13 @@ const PeoplesAffected = () => {
                         >
                           {personTypeValue.length !== 0
                             ? personTypeValue.map((selectValues, key) => (
-                                <MenuItem
-                                  key={key}
-                                  value={selectValues.inputValue}
-                                >
-                                  {selectValues.inputLabel}
-                                </MenuItem>
-                              ))
+                              <MenuItem
+                                key={key}
+                                value={selectValues.inputValue}
+                              >
+                                {selectValues.inputLabel}
+                              </MenuItem>
+                            ))
                             : null}
                         </Select>
                         {error && error[`personType${[key]}`] && (
@@ -521,13 +521,13 @@ const PeoplesAffected = () => {
                         >
                           {departmentValue.length !== 0
                             ? departmentValue.map((selectValues, index) => (
-                                <MenuItem
-                                  key={index}
-                                  value={selectValues.inputValue}
-                                >
-                                  {selectValues.inputLabel}
-                                </MenuItem>
-                              ))
+                              <MenuItem
+                                key={index}
+                                value={selectValues.inputValue}
+                              >
+                                {selectValues.inputLabel}
+                              </MenuItem>
+                            ))
                             : null}
                         </Select>
                         {error && error[`personDepartment${[key]}`] && (
@@ -601,13 +601,13 @@ const PeoplesAffected = () => {
                         >
                           {medicalCareValue.length !== 0
                             ? medicalCareValue.map((value, index) => (
-                                <FormControlLabel
-                                  key={index}
-                                  value={value.inputValue}
-                                  control={<Radio />}
-                                  label={value.inputLabel}
-                                />
-                              ))
+                              <FormControlLabel
+                                key={index}
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                              />
+                            ))
                             : null}
                         </RadioGroup>
                         {error && error[`personMedicalCare${[key]}`] && (
