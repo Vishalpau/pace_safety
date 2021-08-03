@@ -113,8 +113,7 @@ const EventDetails = () => {
       investigationId.current = allApiData.id;
       setForm({ ...form, fkInvestigationId: allApiData.id });
       const event = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/`
       );
       const eventData = event.data.data.results[0];
@@ -126,8 +125,7 @@ const EventDetails = () => {
 
       // Weather data
       const weather = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/${eventId.current}/weatherconditions/`
       );
       const weatherData = weather.data.data.results;
@@ -139,18 +137,25 @@ const EventDetails = () => {
       }
 
       // event data
-      const cost = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
-        }/events/${eventId.current}/cost/`
-      );
-      const costData = cost.data.data.results;
-      if (typeof costData !== "undefined") {
-        setOverAllCost(costData);
+      const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
+      const costData = cost.data.data.results
+      if (costData.length !== 0) {
+        setOverAllCost(costData)
         costData.map((value) => {
-          overAllCostId.current.push(value.id);
-        });
+          overAllCostId.current.push(value.id)
+        })
+      } else if (costData.length == 0) {
+        let tempCostData = [{
+          costType: "",
+          costAmount: "",
+          casualFactor: "",
+          currency: "INR",
+          status: "Active",
+          createdBy: 0,
+        }]
+        setOverAllCost(tempCostData)
       }
+
     }
     localStorage.setItem("WorkerPost", "done");
   };
@@ -179,8 +184,7 @@ const EventDetails = () => {
       if (weather[index].id !== undefined) {
         console.log("here");
         const res = await api.delete(
-          `api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/events/${eventId.current}/weatherconditions/${weather[index].id}/`
         );
       }
@@ -210,8 +214,7 @@ const EventDetails = () => {
     if (overAllCost.length > 1) {
       if (overAllCost[index].id !== undefined) {
         const res = await api.delete(
-          `api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/events/${eventId.current}/cost/${overAllCost[index].id}/`
         );
       }
@@ -222,14 +225,10 @@ const EventDetails = () => {
 
   const handelNext = async (e) => {
     const { error, isValid } = EventDetailsValidate(form);
-    const { errorWeather } = EventDetailsWeatherValidate(weather);
-    if (form.isCostIncurred == "Yes") {
-      const { errorCost } = EventDetailsCostValidate(overAllCost);
-    }
+    const { errorWeather } = EventDetailsWeatherValidate(weather)
+    await setError(error);
+    await setErrorWeather(errorWeather)
 
-    setError(error);
-    setErrorWeather(errorWeather);
-    setErrorCost(errorCost);
     // event api call
     if (
       Object.keys(error).length == 0 &&
@@ -238,8 +237,7 @@ const EventDetails = () => {
     ) {
       if (eventId.current === "") {
         const res = await api.post(
-          `api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/events/`,
           form
         );
@@ -251,8 +249,7 @@ const EventDetails = () => {
           for (let key in weatherObject) {
             weatherObject[key]["fkEventDetailsId"] = eventID;
             const resWeather = await api.post(
-              `api/v1/incidents/${putId.current}/investigations/${
-                investigationId.current
+              `api/v1/incidents/${putId.current}/investigations/${investigationId.current
               }/events/${eventID}/weatherconditions/`,
               weatherObject[key]
             );
@@ -261,13 +258,12 @@ const EventDetails = () => {
             }
           }
           // cost api call
-          if (form.isCostIncurred == "Yes") {
+          if (form.isCostIncurred == "Yes" && overAllCost[0].costType !== "") {
             let costObject = overAllCost;
             for (let keys in costObject) {
               costObject[keys]["fkEventDetailsId"] = eventID;
               const resWeather = await api.post(
-                `api/v1/incidents/${putId.current}/investigations/${
-                  investigationId.current
+                `api/v1/incidents/${putId.current}/investigations/${investigationId.current
                 }/events/${eventID}/cost/`,
                 costObject[keys]
               );
@@ -283,8 +279,7 @@ const EventDetails = () => {
         // put
       } else if (eventId.current !== "") {
         const res = await api.put(
-          `api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/events/${eventId.current}/`,
           form
         );
@@ -295,10 +290,8 @@ const EventDetails = () => {
           for (let key in weatherObject) {
             if (weatherObject[key].id !== undefined) {
               const resWeather = await api.put(
-                `api/v1/incidents/${putId.current}/investigations/${
-                  investigationId.current
-                }/events/${eventId.current}/weatherconditions/${
-                  weatherObject[key].id
+                `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+                }/events/${eventId.current}/weatherconditions/${weatherObject[key].id
                 }/`,
                 weatherObject[key]
               );
@@ -308,8 +301,7 @@ const EventDetails = () => {
             } else {
               weatherObject[key]["fkEventDetailsId"] = eventId.current;
               const resWeather = await api.post(
-                `api/v1/incidents/${putId.current}/investigations/${
-                  investigationId.current
+                `api/v1/incidents/${putId.current}/investigations/${investigationId.current
                 }/events/${eventId.current}/weatherconditions/`,
                 weatherObject[key]
               );
@@ -327,10 +319,8 @@ const EventDetails = () => {
             for (let keys in costObject) {
               if (costObject[keys].id !== undefined) {
                 const resWeather = await api.put(
-                  `api/v1/incidents/${putId.current}/investigations/${
-                    investigationId.current
-                  }/events/${eventId.current}/cost/${
-                    overAllCostId.current[keys]
+                  `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+                  }/events/${eventId.current}/cost/${overAllCostId.current[keys]
                   }/`,
                   costObject[keys]
                 );
@@ -340,8 +330,7 @@ const EventDetails = () => {
               } else {
                 costObject[keys]["fkEventDetailsId"] = eventId.current;
                 const resWeather = await api.post(
-                  `api/v1/incidents/${putId.current}/investigations/${
-                    investigationId.current
+                  `api/v1/incidents/${putId.current}/investigations/${investigationId.current
                   }/events/${eventId.current}/cost/`,
                   costObject[keys]
                 );
@@ -353,8 +342,7 @@ const EventDetails = () => {
           }
         }
         history.push(
-          `/app/incident-management/registration/investigation/action-taken/${
-            putId.current
+          `/app/incident-management/registration/investigation/action-taken/${putId.current
           }`
         );
       }
@@ -765,12 +753,8 @@ const EventDetails = () => {
                       <FormControl
                         variant="outlined"
                         error={errorCost && errorCost[`costType${[index]}`]}
-                        required
-                        className={classes.formControl}
-                      >
-                        <InputLabel id="project-name-label">
-                          Cost type
-                        </InputLabel>
+                        className={classes.formControl}>
+                        <InputLabel id="project-name-label">Cost type</InputLabel>
                         <Select
                           id="project-name"
                           labelId="project-name-label"
@@ -803,7 +787,6 @@ const EventDetails = () => {
                       <TextField
                         id="title"
                         error={errorCost && errorCost[`costAmount${[index]}`]}
-                        required
                         variant="outlined"
                         label="Cost amount"
                         value={overAllCost[index].costAmount}
@@ -825,7 +808,6 @@ const EventDetails = () => {
                     <Grid item md={4}>
                       <FormControl
                         error={errorCost && errorCost[`casualFactor${[index]}`]}
-                        required
                         variant="outlined"
                         className={classes.formControl}
                       >
