@@ -1,3 +1,4 @@
+import { ErrorOutline } from "@material-ui/icons";
 import validator from "validator";
 
 function validate(data) {
@@ -15,12 +16,19 @@ function validate(data) {
     error.incidentTitle = "Please enter incident title";
     isValid = false;
   }
+  if (data.incidentTitle.length > 255) {
+    error.incidentTitle = "Please enter less than 255 charecter";
+    isValid = false;
+  }
   if (data.incidentOccuredOn === null) {
     error.incidentOccuredOn = "Please select date and time";
     isValid = false;
   }
  
-
+ if (data.incidentLocation.length > 45) {
+  error.incidentLocation = "Please enter less than 45 charecter";
+  isValid = false;
+  }
   if (validator.isEmpty(data.contractor)) {
     error.contractor = "Please select contractor name";
     isValid = false;
@@ -47,6 +55,7 @@ function validate(data) {
     error.isEnviromentalImpacted = "Please choose enviornment affected";
     isValid = false;
   }
+  console.log(error)
   return { error, isValid };
 }
 

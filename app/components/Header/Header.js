@@ -35,25 +35,31 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 
 import styles from "./header-jss";
 import logos from "dan-api/images/logos";
-import ImageIcon from '@material-ui/icons/Image';
+import ImageIcon from "@material-ui/icons/Image";
 
-import ProjectImg from 'dan-images/projectImages/projectimg.jpg';
-import ProjectImgOne from 'dan-images/projectImages/projectimgone.jpg';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import SettingsRemoteIcon from '@material-ui/icons/SettingsRemote';
-import CardActions from '@material-ui/core/CardActions';
-import Divider from '@material-ui/core/Divider';
-import EditIcon from '@material-ui/icons/Edit';
+import ProjectImg from "dan-images/projectImages/projectimg.jpg";
+import ProjectImgOne from "dan-images/projectImages/projectimgone.jpg";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
+import CardActions from "@material-ui/core/CardActions";
+import Divider from "@material-ui/core/Divider";
+import EditIcon from "@material-ui/icons/Edit";
 
-import Headerbox from './headerbox'
+import Headerbox from "./headerbox";
 
+import { connect } from "react-redux";
+
+// redux
+
+import { useDispatch } from "react-redux";
+import { projectName} from '../../redux/actions/initialDetails'
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -62,71 +68,69 @@ const elem = document.documentElement;
 const useStyles = makeStyles(() => ({
   //Project selections
   cardContentBox: {
-    minWidth: '260px',
+    minWidth: "260px",
   },
   cardActionAreaBox: {
-    '&:hover .MuiCardMedia-root': {
-      webkitTransform: 'scale(1.2)',
-      mozTransform: 'scale(1.2)',
-      mozTransform: 'scale(1.2)',
-      transform: 'scale(1.2)',
-      webkitFilter: 'grayscale(0%)',
-      filter: 'grayscale(0%)',
+    "&:hover .MuiCardMedia-root": {
+      webkitTransform: "scale(1.2)",
+      mozTransform: "scale(1.2)",
+      mozTransform: "scale(1.2)",
+      transform: "scale(1.2)",
+      webkitFilter: "grayscale(0%)",
+      filter: "grayscale(0%)",
     },
   },
   cardMediaBox: {
-    overflow: 'hidden',
-    height: '300px',
+    overflow: "hidden",
+    height: "300px",
   },
   media: {
-    height: '300px',
-    webkitTransition: 'all 1.5s ease',
-    mozTransition: 'all 1.5s ease',
-    msTransition: 'all 1.5s ease',
-    oTransition: 'all 1.5s ease',
-    transition: 'all 1.5s ease',
-    webkitFilter: 'grayscale(100%)',
-    filter: 'grayscale(100%)',
+    height: "300px",
+    webkitTransition: "all 1.5s ease",
+    mozTransition: "all 1.5s ease",
+    msTransition: "all 1.5s ease",
+    oTransition: "all 1.5s ease",
+    transition: "all 1.5s ease",
+    webkitFilter: "grayscale(100%)",
+    filter: "grayscale(100%)",
   },
   projectSelectionTitle: {
-    fontSize: '14px',
-    color: '#06425c',
-    fontWeight: '600',
-    whiteSpace: 'normal',
-    lineHeight: '22px',
+    fontSize: "14px",
+    color: "#06425c",
+    fontWeight: "600",
+    whiteSpace: "normal",
+    lineHeight: "22px",
   },
   projectSelectionCode: {
-    fontSize: '13px',
+    fontSize: "13px",
   },
   actionBttmArea: {
-    float: 'right',
+    float: "right",
   },
   projectName: {
-    fontSize: '13px',
-    paddingLeft: '0px',
-    paddingRight: '0px',
-    color: '#ffffff',
-    '& .MuiSvgIcon-root': {
-      marginLeft: '4px',
-      fontSize: '15px',
+    fontSize: "13px",
+    paddingLeft: "0px",
+    paddingRight: "0px",
+    color: "#ffffff",
+    "& .MuiSvgIcon-root": {
+      marginLeft: "4px",
+      fontSize: "15px",
     },
   },
-  
 
   //company selections
   companyNameList: {
-    '& .MuiListItemText-primary': {
-        fontSize: '14px',
-        fontFamily: 'Montserrat-Medium',
-        color: '#054D69',
+    "& .MuiListItemText-primary": {
+      fontSize: "14px",
+      fontFamily: "Montserrat-Medium",
+      color: "#054D69",
     },
-    '& .MuiListItemText-secondary': {
-        fontSize: '12px',
-        fontFamily: 'Montserrat-Regular',
-        color: '#054D69',
+    "& .MuiListItemText-secondary": {
+      fontSize: "12px",
+      fontFamily: "Montserrat-Regular",
+      color: "#054D69",
     },
   },
-
 }));
 
 function Header(props) {
@@ -134,6 +138,9 @@ function Header(props) {
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [projectOpen, setProjectOpen] = React.useState(false);
+  const [projectListData, setProjectListData] = useState([])
+  const [projectDisable, setProjectDisable] = useState(false);
+  const dispatch = useDispatch();
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
 
@@ -211,8 +218,16 @@ function Header(props) {
     title,
     openGuide,
     history,
+    initialValues
   } = props;
 
+  // check and store in localstorage 
+  if (Object.keys(props.initialValues.projectName).length > 0) {
+
+    localStorage.setItem("projectName", JSON.stringify(props.initialValues));
+    
+  }
+  const projectData = JSON.parse(localStorage.getItem("projectName"));
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -244,10 +259,47 @@ function Header(props) {
   };
 
   const handleProjectClose = () => {
+    setCompanyOpen(false);
     setProjectOpen(false);
+    
   };
+
+  // handle project Name
+  const handleProjectName = async (key) => {    
+    console.log(key)
+    let data = projectListData[key];
+    console.log(data)
+    await dispatch(projectName(data));
+    localStorage.setItem("projectName", JSON.stringify(data));
+    setProjectOpen(false);
+    setCompanyOpen(false);
+  };
+
+  const handleProjectList=()=>{
+    try{
+      const company = JSON.parse(localStorage.getItem('company'))
+      const userDetails = JSON.parse(localStorage.getItem('userDetails'))
+      
+      const data = userDetails.companies.map(item=> {
+        if(item.companyId === parseInt(company.fkCompanyId)){
+         
+          setProjectDisable(item.projects.length>1)
+          return  setProjectListData(item.projects)
+        }
+      })
+      const filterData = userDetails.companies.filter(item=>item.companyId === parseInt(company.fkCompanyId))
+      let projectLength = filterData[0].projects.length<=1
+      console.log(projectLength)
+      setProjectDisable(projectLength)
+
+      
+     
+      }catch(error){}
+  }
+
   //company selections
   const handleCompanyOpen = () => {
+
     setCompanyOpen(true);
   };
 
@@ -281,6 +333,10 @@ function Header(props) {
   const id = filterOpen ? "simple-popover" : undefined;
   const classesm = useStyles();
 
+  useEffect(()=>{
+    handleProjectList();
+  },[initialValues.projectName])
+
   return (
     <AppBar
       className={classNames(
@@ -304,7 +360,7 @@ function Header(props) {
 
         <div className={classes.headerProperties}>
           <div className={classes.projectSwitcher}>
-          {/* project selections */}
+            {/* project selections */}
             <Typography display="inline">Project:</Typography>
             <IconButton
               aria-label="control tower"
@@ -312,21 +368,15 @@ function Header(props) {
               clickable
               size="small"
               className={classesm.projectName}
+              disabled = {projectDisable}
               //label=""
-              onClick={handleProjectOpen}
-             >
-              NTPC Project <EditIcon />
+              onClick={handleCompanyOpen  }
+            >
+              {projectData !==null?projectData.projectName.projectName:null} <EditIcon />
             </IconButton>
 
             {/* company selections */}
-            <Chip
-              variant="outlined"
-              clickable
-              size="small"
-              className={classes.projectName}
-              label="Select Company"
-              onClick={handleCompanyOpen}
-            />
+
             {/*company selections */}
             <Dialog
               className={classes.projectDialog}
@@ -340,30 +390,41 @@ function Header(props) {
               }}
             >
               <DialogTitle onClose={handleCompanyClose}>
-                Select Company
+                Confirmation
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
-                    <List >
-                        <ListItem button>
-                            <ListItemAvatar>
-                            <Avatar variant="rounded">
-                                <ImageIcon />
-                            </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText className={classes.companyNameList} primary="NTPC" secondary="Thermal power plant"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemAvatar>
-                            <Avatar variant="rounded">
-                                <ImageIcon />
-                            </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText className={classes.companyNameList} primary="NTPC" secondary="Thermal power plant"/>
-                        </ListItem>
-                      </List>
+                      <Card>
+                        <CardActionArea className={classesm.cardActionAreaBox}>
+                          
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              className={classesm.projectSelectionTitle}
+                            >
+                              Are you sure to switch another project?
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                        <Divider />
+                        <CardActions className={classesm.actionBttmArea}>
+                          
+                          <Tooltip title="Cancel">
+                            <Button variant="contained" color="secondary" onClick={(e)=>handleCompanyClose()}>
+                              No
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Ok">
+                              <Button variant="contained" color="primary" onClick={(e)=>handleProjectOpen()}>
+                                Yes
+                              </Button>
+                          </Tooltip>
+                        </CardActions>
+                      </Card>
                     </Grid>
                   </Grid>
                 </DialogContentText>
@@ -373,7 +434,7 @@ function Header(props) {
             <Dialog
               className={classes.projectDialog}
               fullScreen
-              scroll='paper'
+              scroll="paper"
               open={projectOpen}
               onClose={handleProjectClose}
             >
@@ -382,23 +443,43 @@ function Header(props) {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
+                  
                   <Grid container spacing={4}>
-                    <Grid item md={4} sm={6} xs={12} className={classesm.cardContentBox}>  
+                  {projectListData.length>0?projectListData.map((value,index)=>
+                    <Grid
+                      item
+                      md={4}
+                      sm={6}
+                      xs={12}
+                      className={classesm.cardContentBox}
+                      key={index}
+                    >
                       <Card>
                         <CardActionArea className={classesm.cardActionAreaBox}>
                           <div className={classesm.cardMediaBox}>
                             <CardMedia
                               className={classesm.media}
                               image={ProjectImg}
+                              onClick={() => handleProjectName(index)}
                               //title=""
                             />
                           </div>
                           <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" className={classesm.projectSelectionTitle}>
-                              NTPC Project NTPC Project NTPC Project Project
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              className={classesm.projectSelectionTitle}
+                            >
+                              {value.projectName}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classesm.projectSelectionCode}>
-                              Code: 235E-WE1298
+                            <Typography
+                              variant="body2"
+                              color="textSecondary"
+                              component="p"
+                              className={classesm.projectSelectionCode}
+                            >
+                              Code: {value.projectCode}
                             </Typography>
                           </CardContent>
                         </CardActionArea>
@@ -417,152 +498,16 @@ function Header(props) {
                         </CardActions>
                       </Card>
                     </Grid>
-                    <Grid item md={4} sm={6} xs={12} className={classesm.cardContentBox}>  
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImgOne}
-                              //title=""
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" className={classesm.projectSelectionTitle}>
-                              NTPC Project
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classesm.projectSelectionCode}>
-                            Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                    <Grid item md={4} sm={6} xs={12} className={classesm.cardContentBox}>  
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImg}
-                              //title=""
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" className={classesm.projectSelectionTitle}>
-                              NTPC Project NTPC Project NTPC Project Project
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classesm.projectSelectionCode}>
-                              Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                    <Grid item md={4} sm={6} xs={12} className={classesm.cardContentBox}>  
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImgOne}
-                              //title=""
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" className={classesm.projectSelectionTitle}>
-                              NTPC Project
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classesm.projectSelectionCode}>
-                            Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                    <Grid item md={4} sm={6} xs={12} className={classesm.cardContentBox}>  
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImgOne}
-                              //title=""
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" className={classesm.projectSelectionTitle}>
-                              NTPC Project
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classesm.projectSelectionCode}>
-                            Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-
-                  </Grid>
-                </DialogContentText>
+                    ):null}
+                 </Grid>
+                 
+               </DialogContentText>
               </DialogContent>
             </Dialog>
           </div>
           <Hidden smDown>
-            <Headerbox/>
+            <Headerbox />
           </Hidden>
-        
         </div>
 
         {/* <Tooltip title="Turn Dark/Light" placement="bottom">
@@ -590,4 +535,8 @@ Header.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+const HeaderInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(Header);
+
+export default withStyles(styles)(HeaderInit);

@@ -18,10 +18,10 @@ function EquipmentValidate(data) {
       isValid = false;
     }
 
-    // if (validator.isEmpty(data[i].equipmentOtherType.toString())) {
-    //   error[`equipmentOtherType${[i]}`] = "This field is empty";
-    //   isValid = false;
-    // }
+    if (data[i].equipmentOtherType.length>55) {
+      error[`equipmentOtherType${[i]}`] = "Please enter less than  55 character";
+      isValid = false;
+    }
 
     if (validator.isEmpty(data[i].equipmentDeatils.toString())) {
 

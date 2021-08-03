@@ -151,9 +151,9 @@ function HeaderBreakdown(props) {
   if(props.initialValues.breakDown.length>0){
     localStorage.setItem('selectBreakDown',JSON.stringify(props.initialValues.breakDown))
   }
-
-
   const projectData = JSON.parse(localStorage.getItem("projectName"));
+  
+  
   const breakDownData = JSON.parse(localStorage.getItem("selectBreakDown"))
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -307,7 +307,7 @@ function HeaderBreakdown(props) {
         fetchIncidentData();
       }
       
-  }, [props.initialValues.projectName,fkid]);
+  }, [props.initialValues.projectName]);
 
   return (
     <>

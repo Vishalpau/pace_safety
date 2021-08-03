@@ -137,7 +137,7 @@ function BlankPage() {
     
     const newData = res.data.data.results.results.filter(item=>item.fkCompanyId === fkCompanyId && item.fkProjectId ===fkProjectId)
     await setIncidents(newData);
-    console.log(newData)
+    
   };
 
   const handlePush = async () => {
@@ -151,18 +151,18 @@ function BlankPage() {
   }, []);
 
   const handelSearchIncident = async (e) => {
-    console.log(e.target.value);
+  
     let allSeacrh = [];
-    // console.log(e.target.value.length);
+    
     if (e.target.value.length === 0) {
       await setShowIncident([]);
     } else {
-      console.log(searchIncident);
+      
       await setSeacrhIncident(e.target.value.toLowerCase());
-      // console.log(searchIncident);
+
       Object.entries(incidents).map((item) => {
         if (item[1]["incidentNumber"].toLowerCase().includes(searchIncident)) {
-          console.log(item[1]["incidentNumber"]);
+          
           allSeacrh.push([
             item[1]["incidentNumber"],
             item[1]["incidentReportedByName"],
@@ -177,7 +177,7 @@ function BlankPage() {
       await setShowIncident(allSeacrh);
     }
 
-    // console.log(showIncident);
+    
   };
 
   const columns = [
@@ -210,12 +210,12 @@ function BlankPage() {
 
   const options = {
     data: incidents,
-    // onRowsDelete:(rows)=>{console.log(rows)},
+    
     onRowsDelete: (rowsDeleted) => {
       const idsToDelete = rowsDeleted.data.map(
         (d) => incidents[d.dataIndex].id
       );
-      console.log(idsToDelete);
+      
       for (var i = 0; i < idsToDelete.length; i++) {
         const res = api.delete(`api/v1/incidents/${idsToDelete[i]}/`);
       }
@@ -540,7 +540,7 @@ function BlankPage() {
                   >
                     {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
                     <CardContent>
-                      {/* {console.log(item[index].incidentTitle)} */}
+                      
                       <Grid container spacing={3}>
                         <Grid item xs={12}>
                           <Grid container spacing={3} alignItems="flex-start">

@@ -455,10 +455,6 @@ export const IncidentDetails = loadable(() =>
   fallback: <Loading />,
 });
 
-export const UpdateIncidentDetails = loadable(() =>
-  import('./Forms/InitialNotification/UpdateIncidentDetails'), {
-  fallback: <Loading />,
-});
 
 export const PeoplesAfftected = loadable(() =>
   import('./Forms/InitialNotification/PeoplesAfftected'), {

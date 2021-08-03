@@ -18,10 +18,10 @@ function PropertyValidate(data) {
       isValid = false;
     }
 
-    // if (validator.isEmpty(data[i].propertyOtherType.toString())) {
-    //   error[`propertyOtherType${[i]}`] = "This field is empty";
-    //   isValid = false;
-    // }
+    if (data[i].propertyOtherType.length>55) {
+      error[`propertyOtherType${[i]}`] = "Please enter less than 55 character";
+      isValid = false;
+    }
 
     if (validator.isEmpty(data[i].damageDetails.toString())) {
       error[`damageDetails${[i]}`] = "Please enter damage details";

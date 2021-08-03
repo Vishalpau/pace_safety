@@ -60,6 +60,7 @@ import Modal from "@material-ui/core/Modal";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import Attachment from "../Attachment/Attacment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -230,7 +231,7 @@ const LessionLearnSummary = () => {
                                     }
                                     className={classes.fileIcon}
                                   >
-                                    <PhotoSizeSelectActualIcon />
+                                    <Attachment value={value.evidenceDocument}/>
                                   </IconButton>
                                 </Tooltip>
                               </Typography>
