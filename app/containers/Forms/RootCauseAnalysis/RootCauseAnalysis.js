@@ -27,6 +27,7 @@ import api from "../../../utils/axios";
 import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
 import { RCAOPTION } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -65,6 +66,8 @@ const RootCauseAnalysis = () => {
   );
   const checkPost = useRef();
   const pkValue = useRef("");
+  let investigationData = useRef({});
+  const classificationValues = useRef([]);
 
   const handelUpdateCheck = async () => {
     let page_url = window.location.href;
@@ -79,6 +82,23 @@ const RootCauseAnalysis = () => {
     );
     let allApiData = previousData.data.data.results[0];
 
+    let investigationpreviousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
+    let investigationApiData = investigationpreviousData.data.data.results[0];
+    if (investigationApiData != null) {
+      if (investigationApiData.rcaRecommended != "") {
+        setForm({ ...form, rcaRecommended: investigationApiData.rcaRecommended });
+      }
+      console.log(investigationData.classification)
+
+      investigationData.current = {
+        startData: investigationApiData.srartDate,
+        endDate: investigationApiData.endDate,
+        classification: investigationApiData.classification
+      }
+    }
+
     if (!isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
       setForm({
@@ -91,14 +111,14 @@ const RootCauseAnalysis = () => {
       putId.current = incidentId;
       checkPost.current = false;
     }
+    classificationValues.current = await PickListData(40); 2
   };
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${
-        putId.current !== ""
-          ? putId.current
-          : localStorage.getItem("fkincidentId")
+      `api/v1/incidents/${putId.current !== ""
+        ? putId.current
+        : localStorage.getItem("fkincidentId")
       }/`
     );
     await setIncidents(allIncidents.data.data.results);
@@ -143,8 +163,7 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -155,8 +174,7 @@ const RootCauseAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -172,7 +190,7 @@ const RootCauseAnalysis = () => {
   }, []);
 
   return (
-    <PapperBlock title="Root Cause Analysis" icon="ion-md-list-box">
+    <PapperBlock title="Cause Analysis" icon="ion-md-list-box">
       {console.log(incidents.incidentOccuredOn)}
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
@@ -233,7 +251,7 @@ const RootCauseAnalysis = () => {
                 labelId="project-name-label"
                 label="RCA recommended"
                 disabled
-                value="Root cause analysis"
+                value="Cause analysis"
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -245,15 +263,16 @@ const RootCauseAnalysis = () => {
           <Grid item md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">
-                Level of investigation
+                Level of classification
               </InputLabel>
               <Select
                 id="project-name"
                 labelId="project-name-label"
                 label="Level of investigation"
                 disabled
+                value={typeof investigationData.current["classification"] !== "undefined" ? investigationData.current["classification"] : null}
               >
-                {selectValues.map((selectValues) => (
+                {classificationValues.current.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
               </Select>
@@ -389,7 +408,7 @@ const RootCauseAnalysis = () => {
         <Grid item={3}>
           <FormSideBar
             listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem="Root cause analysis"
+            selectedItem="Cause analysis"
           />
         </Grid>
       </Grid>

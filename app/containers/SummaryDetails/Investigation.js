@@ -26,6 +26,7 @@ import moment from "moment";
 
 import api from "../../utils/axios";
 import checkValue from "../../utils/CheckerValue";
+import Attachment from "../Attachment/Attachment";
 
 // Styles
 import Fonts from "dan-styles/Fonts.scss";
@@ -1052,7 +1053,7 @@ const InvestigationSummary = () => {
                             }
                             className={classes.fileIcon}
                           >
-                            <PhotoSizeSelectActualIcon />
+                            <Attachment value={value.attachments} />
                           </IconButton>
                         </Tooltip>
                       </Grid>
