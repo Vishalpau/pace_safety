@@ -10,6 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
@@ -118,17 +119,18 @@ const InvestigationOverview = () => {
     callback();
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
-      {/* {console.log(form)} */}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6">Unit constructor manager</Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -151,7 +153,7 @@ const InvestigationOverview = () => {
               />
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -173,12 +175,12 @@ const InvestigationOverview = () => {
                 }}
               />
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                 <Typography variant="h6">Unit HSE specialist</Typography>
               </Box>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -200,7 +202,7 @@ const InvestigationOverview = () => {
                 }}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -222,7 +224,7 @@ const InvestigationOverview = () => {
                 }}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Actual severity & consequences
@@ -250,7 +252,7 @@ const InvestigationOverview = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Potential severity & consequences
@@ -278,7 +280,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -288,13 +290,15 @@ const InvestigationOverview = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem="Investigation overview"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={INVESTIGATION_FORM}
+                selectedItem="Investigation overview"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

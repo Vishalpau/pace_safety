@@ -10,6 +10,7 @@ import CheckCircle from "@material-ui/icons/CheckCircle";
 import AccessTime from "@material-ui/icons/AccessTime";
 import Divider from "@material-ui/core/Divider";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // List
 import List from "@material-ui/core/List";
@@ -118,12 +119,6 @@ const Summary = () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`);
     const result = res.data.data.results[0];
     await setLessionLearnData(result);
-    //   if(result.length > 0 ){
-    //     localStorage.setItem("LessionLearnt", "Done")
-    //   }
-    //   else{
-    //     localStorage.setItem("LessionLearnt", "Pending")
-    //   }
   };
 
   const rootCauseAnalysisCheck = async () => {
@@ -152,13 +147,6 @@ const Summary = () => {
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
     let whyAnalysisData = whyAnalysis.data.data.results[0];
     await setWhyData(whyAnalysisData);
-
-    // if (paceCauseData.length > 0 && typeof paceCauseData !== "undefined" ||
-    //   rootCauseData.length > 0 && typeof rootCauseData !== "undefined" ||
-    //   whyAnalysisData.length > 0 && typeof whyAnalysisData !== "undefined"
-    // ) {
-    //   rootCauseStatus.current = true
-    // }
   };
 
   const [selectedDate, setSelectedDate] = React.useState(
@@ -181,6 +169,8 @@ const Summary = () => {
     rootCauseAnalysisCheck();
     fetchReportData();
   }, []);
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <>
@@ -206,11 +196,6 @@ const Summary = () => {
                       <AccessTime />
                     )
                   }
-                  // style={{backgroundColor:initialNotification == true ||
-                  //   (investigation === false &&
-                  //     evidence === false &&
-                  //     rootcauseanalysis === false &&
-                  //     lessionlearn === false)?"green":"blue"}}
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(true);
@@ -236,7 +221,6 @@ const Summary = () => {
                   endIcon={
                     investigationOverview ? <CheckCircle /> : <AccessTime />
                   }
-                  // style={{backgroundColor:investigation?"green":"blue"}}
                   className={classes.statusButton}
                   onClick={(e) => {
                     setInitialNotification(false);
@@ -258,7 +242,6 @@ const Summary = () => {
                   color="primary"
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
-                  // style={{backgroundColor:evidence?"green":"blue"}}
                   className={classes.statusButton}
                   endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
@@ -285,7 +268,6 @@ const Summary = () => {
                   }
                   size="large"
                   className={classes.statusButton}
-                  // style={{backgroundColor:rootcauseanalysis?"green":"blue"}}
                   endIcon={
                     paceCauseData || rootCausesData || whyData ? (
                       <CheckCircle />
@@ -314,7 +296,6 @@ const Summary = () => {
                   color="primary"
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
-                  // style={{backgroundColor:lessionlearn?"green":"blue"}}
                   className={classes.statusButton}
                   endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => {
@@ -365,141 +346,144 @@ const Summary = () => {
                   })()}
                 </>
               </Grid>
-              <Grid item xs={12} md={3}>
-                <Paper>
-                  <List
-                    dense
-                    subheader={
-                      <ListSubheader component="div">Actions</ListSubheader>
-                    }
-                  >
-                    <ListItemLink
-                      href={`/app/incident-management/registration/initial-notification/incident-details/${id}`}
+
+              {isDesktop && (
+                <Grid item xs={12} md={3}>
+                  <Paper>
+                    <List
+                      dense
+                      subheader={
+                        <ListSubheader component="div">Actions</ListSubheader>
+                      }
                     >
-                      <ListItemIcon>
-                        <Edit />
-                      </ListItemIcon>
-                      <ListItemText primary="Modify Notification" />
-                    </ListItemLink>
-
-                    {investigationOverview ? (
                       <ListItemLink
-                        href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}
+                        href={`/app/incident-management/registration/initial-notification/incident-details/${id}`}
                       >
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
-                        <ListItemText primary="Modify Investigation" />
+                        <ListItemText primary="Modify Notification" />
                       </ListItemLink>
-                    ) : (
-                      <ListItemLink href="/app/incident-management/registration/investigation/investigation-overview/">
-                        <ListItemIcon>
-                          <Add />
-                        </ListItemIcon>
 
-                        <ListItemText primary="Add Investigation" />
-                      </ListItemLink>
-                    )}
+                      {investigationOverview ? (
+                        <ListItemLink
+                          href={`/app/incident-management/registration/investigation/investigation-overview/${id}`}
+                        >
+                          <ListItemIcon>
+                            <Edit />
+                          </ListItemIcon>
+                          <ListItemText primary="Modify Investigation" />
+                        </ListItemLink>
+                      ) : (
+                        <ListItemLink href="/app/incident-management/registration/investigation/investigation-overview/">
+                          <ListItemIcon>
+                            <Add />
+                          </ListItemIcon>
 
-                    {evidencesData ? (
-                      <ListItemLink
-                        href={`/app/incident-management/registration/evidence/evidence/${id}`}
-                      >
-                        <ListItemIcon>
-                          <Edit />
-                        </ListItemIcon>
-                        <ListItemText primary="Modify Evidence" />
-                      </ListItemLink>
-                    ) : (
-                      <ListItemLink href="/app/incident-management/registration/evidence/evidence/">
-                        <ListItemIcon>
-                          <Add />
-                        </ListItemIcon>
+                          <ListItemText primary="Add Investigation" />
+                        </ListItemLink>
+                      )}
 
-                        <ListItemText primary="Add Evidence" />
-                      </ListItemLink>
-                    )}
-                    {paceCauseData || rootCausesData || whyData ? (
-                      <ListItemLink
-                        href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
-                      >
-                        <ListItemIcon>
-                          <Edit />
-                        </ListItemIcon>
-                        <ListItemText primary="Modify RCA" />
-                      </ListItemLink>
-                    ) : (
-                      <ListItemLink
-                        href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
-                      >
-                        <ListItemIcon>
-                          <Add />
-                        </ListItemIcon>
-                        <ListItemText primary="Perform RCA" />
-                      </ListItemLink>
-                    )}
-                    {lessionlearnData ? (
-                      <ListItemLink
-                        href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}
-                      >
-                        <ListItemIcon>
-                          <Edit />
-                        </ListItemIcon>
-                        <ListItemText primary="Modify Lessons Learnt" />
-                      </ListItemLink>
-                    ) : (
-                      <ListItemLink
-                        onClick={() =>
-                          history.push(
-                            `/app/incident-management/registration/lession-learned/lession-learned/${id}`
-                          )
-                        }
-                      >
-                        <ListItemIcon>
-                          <Add />
-                        </ListItemIcon>
-                        <ListItemText primary="Add Lessons Learnt" />
-                      </ListItemLink>
-                    )}
+                      {evidencesData ? (
+                        <ListItemLink
+                          href={`/app/incident-management/registration/evidence/evidence/${id}`}
+                        >
+                          <ListItemIcon>
+                            <Edit />
+                          </ListItemIcon>
+                          <ListItemText primary="Modify Evidence" />
+                        </ListItemLink>
+                      ) : (
+                        <ListItemLink href="/app/incident-management/registration/evidence/evidence/">
+                          <ListItemIcon>
+                            <Add />
+                          </ListItemIcon>
 
-                    <ListItem button divider>
-                      <ListItemIcon>
-                        <Close />
-                      </ListItemIcon>
-                      <ListItemText primary="Close Out" />
-                    </ListItem>
+                          <ListItemText primary="Add Evidence" />
+                        </ListItemLink>
+                      )}
+                      {paceCauseData || rootCausesData || whyData ? (
+                        <ListItemLink
+                          href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
+                        >
+                          <ListItemIcon>
+                            <Edit />
+                          </ListItemIcon>
+                          <ListItemText primary="Modify RCA" />
+                        </ListItemLink>
+                      ) : (
+                        <ListItemLink
+                          href={`/app/incident-management/registration/root-cause-analysis/details/${id}`}
+                        >
+                          <ListItemIcon>
+                            <Add />
+                          </ListItemIcon>
+                          <ListItemText primary="Perform RCA" />
+                        </ListItemLink>
+                      )}
+                      {lessionlearnData ? (
+                        <ListItemLink
+                          href={`/app/incident-management/registration/lession-learned/lession-learned/${id}`}
+                        >
+                          <ListItemIcon>
+                            <Edit />
+                          </ListItemIcon>
+                          <ListItemText primary="Modify Lessons Learnt" />
+                        </ListItemLink>
+                      ) : (
+                        <ListItemLink
+                          onClick={() =>
+                            history.push(
+                              `/app/incident-management/registration/lession-learned/lession-learned/${id}`
+                            )
+                          }
+                        >
+                          <ListItemIcon>
+                            <Add />
+                          </ListItemIcon>
+                          <ListItemText primary="Add Lessons Learnt" />
+                        </ListItemLink>
+                      )}
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Comment />
-                      </ListItemIcon>
-                      <ListItemText primary="Comments" />
-                    </ListItem>
+                      <ListItem button divider>
+                        <ListItemIcon>
+                          <Close />
+                        </ListItemIcon>
+                        <ListItemText primary="Close Out" />
+                      </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <History />
-                      </ListItemIcon>
-                      <ListItemText primary="Activity History" />
-                    </ListItem>
-                  </List>
-                  <Divider />
-                  <List dense>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Print />
-                      </ListItemIcon>
-                      <ListItemText primary="Print" />
-                    </ListItem>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Share />
-                      </ListItemIcon>
-                      <ListItemText primary="Share" />
-                    </ListItem>
-                  </List>
-                </Paper>
-              </Grid>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Comment />
+                        </ListItemIcon>
+                        <ListItemText primary="Comments" />
+                      </ListItem>
+
+                      <ListItem button>
+                        <ListItemIcon>
+                          <History />
+                        </ListItemIcon>
+                        <ListItemText primary="Activity History" />
+                      </ListItem>
+                    </List>
+                    <Divider />
+                    <List dense>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Print />
+                        </ListItemIcon>
+                        <ListItemText primary="Print" />
+                      </ListItem>
+                      <ListItem button>
+                        <ListItemIcon>
+                          <Share />
+                        </ListItemIcon>
+                        <ListItemText primary="Share" />
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Grid>
+              )}
             </Grid>
           </Box>
         </PapperBlock>

@@ -20,6 +20,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -552,6 +553,8 @@ const IncidentDetails = () => {
     fetchIncidentsData();
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock icon="ion-md-list-box" title="Initial Notification">
       {isLoading ? (
@@ -1004,13 +1007,15 @@ const IncidentDetails = () => {
           </Grid>
 
           {/* Right Sidebar */}
-          <Grid item xs={12} md={3}>
-            <FormSideBar
-              deleteForm={hideAffect}
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident details"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={hideAffect}
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Incident details"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <div> Loading...</div>

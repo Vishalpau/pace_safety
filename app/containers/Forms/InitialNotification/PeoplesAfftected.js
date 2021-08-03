@@ -18,8 +18,9 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
-import FormSideBar from "../FormSideBar";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
+import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
@@ -416,12 +417,13 @@ const PeoplesAffected = () => {
       fetchPersonListData();
     }
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Details of People Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item lg={12} md={6} sm={6}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12} md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Do you have details of individual affected?
@@ -448,25 +450,24 @@ const PeoplesAffected = () => {
             </Grid>
             {personAffect === "Yes" ? (
               <>
-                <Grid item md={12}>
-                  <Box marginTop={2} marginBottom={2}>
-                    <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                      <Typography variant="h6">
-                        Details of people affected
-                      </Typography>
-                    </Box>
+                <Grid item xs={12}>
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                    <Typography variant="h6">
+                      Details of people affected
+                    </Typography>
                   </Box>
                 </Grid>
+
                 {form.map((value, key) => (
                   <Grid
                     container
                     item
-                    md={12}
+                    xs={12}
                     key={key}
                     spacing={3}
                     className="repeatedGrid"
                   >
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         variant="outlined"
                         required
@@ -501,7 +502,7 @@ const PeoplesAffected = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         variant="outlined"
                         required
@@ -536,7 +537,7 @@ const PeoplesAffected = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         id={`name-Affected${key}`}
                         variant="outlined"
@@ -553,7 +554,7 @@ const PeoplesAffected = () => {
                         onChange={(e) => handleForm(e, key, "personName")}
                       />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         id={`id-num${key}`}
                         variant="outlined"
@@ -571,7 +572,7 @@ const PeoplesAffected = () => {
                         }
                       />
                     </Grid>
-                    <Grid item md={12}>
+                    <Grid item xs={12} md={12}>
                       <FormControl
                         component="fieldset"
                         required
@@ -616,7 +617,7 @@ const PeoplesAffected = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         id={`worker-taken${key}`}
                         error={
@@ -636,7 +637,7 @@ const PeoplesAffected = () => {
                         }
                       />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         variant="outlined"
                         id={`location-details${key}`}
@@ -672,7 +673,7 @@ const PeoplesAffected = () => {
                   </Grid>
                 ))}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <button
                     className={classes.textButton}
                     onClick={() => addNewPeopleDetails()}
@@ -682,8 +683,9 @@ const PeoplesAffected = () => {
                 </Grid>
               </>
             ) : null}
-            <Grid item md={12}>
-              {personAffect === "Yes" ? null : (
+
+            {personAffect === "Yes" ? null : (
+              <Grid item xs={12}>
                 <TextField
                   id="details-of-people-affected"
                   multiline
@@ -694,15 +696,17 @@ const PeoplesAffected = () => {
                   onChange={(e) => setPersonAffectedComments(e.target.value)}
                   defaultValue={incidentsListData.personAffectedComments}
                 />
-              )}
-            </Grid>
+              </Grid>
+            )}
+
             <AlertMessage
               message={message}
               type={messageType}
               open={open}
               setOpen={setOpen}
             />
-            <Grid item md={6}>
+
+            <Grid item xs={12} md={6}>
               <Button
                 onClick={() =>
                   history.push(
@@ -727,12 +731,14 @@ const PeoplesAffected = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="People affected"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="People affected"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <div>Loading...</div>

@@ -51,14 +51,11 @@ import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 import CardActions from "@material-ui/core/CardActions";
 import Divider from "@material-ui/core/Divider";
 import EditIcon from "@material-ui/icons/Edit";
-
 import Headerbox from "./headerbox";
-
-// import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
 const elem = document.documentElement;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   //Project selections
   cardContentBox: {
     minWidth: "260px",
@@ -123,6 +120,11 @@ const useStyles = makeStyles(() => ({
       fontFamily: "Montserrat-Regular",
       color: "#054D69",
     },
+  },
+  projectCloseButton: {
+    position: "absolute",
+    right: theme.spacing(2),
+    top: theme.spacing(2),
   },
 }));
 
@@ -264,7 +266,7 @@ function Header(props) {
         {onClose ? (
           <IconButton
             aria-label="close"
-            className={classes.projectCloseButton}
+            className={classesm.projectCloseButton}
             onClick={onClose}
           >
             <CloseIcon />
@@ -325,7 +327,7 @@ function Header(props) {
                 Switch to a Different Project
               </DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText>
                   <Grid container spacing={4}>
                     <Grid
                       item
@@ -340,7 +342,6 @@ function Header(props) {
                             <CardMedia
                               className={classesm.media}
                               image={ProjectImg}
-                              //title=""
                             />
                           </div>
                           <CardContent>
@@ -390,7 +391,6 @@ function Header(props) {
                             <CardMedia
                               className={classesm.media}
                               image={ProjectImgOne}
-                              //title=""
                             />
                           </div>
                           <CardContent>

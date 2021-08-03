@@ -7,11 +7,9 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { useParams } from "react-router";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import IconButton from '@material-ui/core/IconButton';
-import ImageIcon from '@material-ui/icons/Image';
-import Paper from "@material-ui/core/Paper";
+import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import Divider from '@material-ui/core/Divider'
+import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import Dialog from "@material-ui/core/Dialog";
@@ -21,7 +19,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
-import { saveAs } from 'file-saver'
+import { saveAs } from "file-saver";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
 
 import api from "../../utils/axios";
 
@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     width: 650,
     backgroundColor: theme.palette.background.paper,
-    // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
   },
   closeButton: {
@@ -69,7 +68,7 @@ const InvestigationSummary = () => {
   const [weather, setWeather] = useState([]);
   const [overAllCost, setOverAllCost] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
-  const [workerData, setWorkerData] = useState([])
+  const [workerData, setWorkerData] = useState([]);
   const putId = useRef("");
   const eventId = useRef("");
   const investigationId = useRef("");
@@ -97,7 +96,8 @@ const InvestigationSummary = () => {
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
       const event = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
         }/events/`
       );
       const result = event.data.data.results;
@@ -109,7 +109,8 @@ const InvestigationSummary = () => {
 
       // Weather data
       const weather = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
         }/events/${eventId.current}/weatherconditions/`
       );
       const weatherData = weather.data.data.results;
@@ -117,7 +118,8 @@ const InvestigationSummary = () => {
 
       // event data
       const cost = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
         }/events/${eventId.current}/cost/`
       );
       const costData = cost.data.data.results;
@@ -126,7 +128,11 @@ const InvestigationSummary = () => {
   };
 
   const fecthWorkerData = async () => {
-    let res = await api.get(`api/v1/incidents/${id}/investigations/${investigationId.current}/workers/`);
+    let res = await api.get(
+      `api/v1/incidents/${id}/investigations/${
+        investigationId.current
+      }/workers/`
+    );
     let result = res.data.data.results;
     await setWorkerData(result);
   };
@@ -135,8 +141,7 @@ const InvestigationSummary = () => {
     await fetchInvestigationData();
     await fetchEventData();
     await fecthWorkerData();
-
-  }
+  };
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -154,27 +159,32 @@ const InvestigationSummary = () => {
   };
 
   const download = (image_link) => {
-    let onlyImage_url = image_link.replace("https://", "")
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url
-    let imageArray = image_url.split("/")
-    let image_name = imageArray[imageArray.length - 1]
-    saveAs(image_url, image_name)
-    handleClose()
+    let onlyImage_url = image_link.replace("https://", "");
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    let imageArray = image_url.split("/");
+    let image_name = imageArray[imageArray.length - 1];
+    saveAs(image_url, image_name);
+    handleClose();
   };
 
   useEffect(() => {
     if (id) {
-      handelCallBack()
+      handelCallBack();
     }
   }, []);
   const classes = useStyles();
-
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <Grid container spacing={3}>
-
       {/* investigation overview */}
+      {!isDesktop && (
+        <Grid item xs={12}>
+          <Button variant="outlined" startIcon={<EditIcon />}>
+            Modify Investigation
+          </Button>
+        </Grid>
+      )}
       <Grid item xs={12}>
-        {/* panel will open and close accordion accoring to click on accordion expand */}
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleExpand("panel1")}
@@ -188,12 +198,12 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {investigationOverview.map((value, index) => (
                 <>
-                  <Grid item lg={12} md={12}>
+                  <Grid item xs={12}>
                     <Typography className={classes.heading}>
                       Construction manager
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -205,7 +215,7 @@ const InvestigationSummary = () => {
                       {value.constructionManagerName}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -216,13 +226,13 @@ const InvestigationSummary = () => {
                     <Typography variant="body" className={Fonts.labelValue}>
                       {value.constructionManagerContactNo}
                     </Typography>
-                  </Grid>{" "}
-                  <Grid item lg={12} md={12}>
+                  </Grid>
+                  <Grid item xs={12} md={12}>
                     <Typography className={classes.heading}>
                       Hse specialist
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -234,7 +244,7 @@ const InvestigationSummary = () => {
                       {value.hseSpecialistName}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -243,10 +253,12 @@ const InvestigationSummary = () => {
                       Contact no
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.hseSpecialistContactNo != "" ? value.hseSpecialistContactNo : "--"}
+                      {value.hseSpecialistContactNo != ""
+                        ? value.hseSpecialistContactNo
+                        : "--"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -258,7 +270,7 @@ const InvestigationSummary = () => {
                       {value.actualSeverityLevel}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -267,7 +279,9 @@ const InvestigationSummary = () => {
                       Potential serverity level
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.potentialSeverityLevel != "" ? value.potentialSeverityLevel : "-"}
+                      {value.potentialSeverityLevel != ""
+                        ? value.potentialSeverityLevel
+                        : "-"}
                     </Typography>
                   </Grid>
                 </>
@@ -292,7 +306,7 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {investigationOverview.map((value, index) => (
                 <>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -304,7 +318,7 @@ const InvestigationSummary = () => {
                       {value.healthSafetyActual}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -313,10 +327,12 @@ const InvestigationSummary = () => {
                       Health & Safety potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.healthSafetyPotential != null ? value.healthSafetyPotential : "-"}
+                      {value.healthSafetyPotential != null
+                        ? value.healthSafetyPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -325,10 +341,12 @@ const InvestigationSummary = () => {
                       Environment-actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.environmentActual != null ? value.environmentActual : "-"}
+                      {value.environmentActual != null
+                        ? value.environmentActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -337,10 +355,12 @@ const InvestigationSummary = () => {
                       Environment-potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.environmentPotential != null ? value.environmentPotential : "-"}
+                      {value.environmentPotential != null
+                        ? value.environmentPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -349,10 +369,12 @@ const InvestigationSummary = () => {
                       Regulatory actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.regulatoryActual != null ? value.regulatoryActual : "-"}
+                      {value.regulatoryActual != null
+                        ? value.regulatoryActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -361,10 +383,12 @@ const InvestigationSummary = () => {
                       Regulatory potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.regulatoryPotential != null ? value.regulatoryPotential : "-"}
+                      {value.regulatoryPotential != null
+                        ? value.regulatoryPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -373,10 +397,12 @@ const InvestigationSummary = () => {
                       Reputation actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.reputationActual != null ? value.reputationActual : "-"}
+                      {value.reputationActual != null
+                        ? value.reputationActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -385,10 +411,12 @@ const InvestigationSummary = () => {
                       Reputation potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.reputationPotential != null ? value.reputationPotential : "-"}
+                      {value.reputationPotential != null
+                        ? value.reputationPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -397,10 +425,12 @@ const InvestigationSummary = () => {
                       Financial actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.financialActual != null ? value.financialActual : "-"}
+                      {value.financialActual != null
+                        ? value.financialActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -409,10 +439,12 @@ const InvestigationSummary = () => {
                       Financial potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.financialPotential != null ? value.financialPotential : "-"}
+                      {value.financialPotential != null
+                        ? value.financialPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -421,10 +453,12 @@ const InvestigationSummary = () => {
                       Highest potential impact receptor
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.highestPotentialImpactReceptor != null ? value.highestPotentialImpactReceptor : "-"}
+                      {value.highestPotentialImpactReceptor != null
+                        ? value.highestPotentialImpactReceptor
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -433,10 +467,12 @@ const InvestigationSummary = () => {
                       Classification
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.classification != null ? value.classification : "-"}
+                      {value.classification != null
+                        ? value.classification
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -445,7 +481,9 @@ const InvestigationSummary = () => {
                       Rca recommended
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.rcaRecommended != null ? value.rcaRecommended : "-"}
+                      {value.rcaRecommended != null
+                        ? value.rcaRecommended
+                        : "-"}
                     </Typography>
                   </Grid>
                 </>
@@ -462,9 +500,7 @@ const InvestigationSummary = () => {
           onChange={handleExpand("panel3")}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>
-              Worker details
-            </Typography>
+            <Typography className={classes.heading}>Worker details</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <paper>
@@ -473,20 +509,18 @@ const InvestigationSummary = () => {
                   <>
                     {/* worker number */}
                     <Grid item lg={12}>
-                      <Typography variant="h5">
+                      <Typography variant="h6">
                         {`Worker ${index + 1}`}
                       </Typography>
                     </Grid>
 
                     {/* worker details */}
-                    <Grid item lg={12}>
-                      <Typography variant="h6">
-                        worker details
-                      </Typography>
+                    <Grid item xs={12}>
+                      <Typography>Worker details</Typography>
                     </Grid>
 
                     {/* name */}
-                    <Grid item lg={6} md={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -500,7 +534,7 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* worker type */}
-                    <Grid item lg={6} md={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -514,7 +548,7 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* department */}
-                    <Grid item lg={6} md={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -528,8 +562,8 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* working hours */}
-                    {value.workHours !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.workHours !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -541,11 +575,11 @@ const InvestigationSummary = () => {
                           {value.workHours}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* shift time start */}
-                    {value.shiftTimeStart !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.shiftTimeStart !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -557,11 +591,11 @@ const InvestigationSummary = () => {
                           {value.shiftTimeStart}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* shift type */}
-                    {value.shiftType !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.shiftType !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -573,11 +607,11 @@ const InvestigationSummary = () => {
                           {value.shiftType}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* occupatione */}
-                    {value.occupation !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.occupation !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -589,11 +623,11 @@ const InvestigationSummary = () => {
                           {value.occupation}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* shift cycle */}
-                    {value.shiftCycle !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.shiftCycle !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -605,11 +639,11 @@ const InvestigationSummary = () => {
                           {value.shiftCycle}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* shift cycle */}
-                    {value.shiftCycle !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.shiftCycle !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -621,11 +655,11 @@ const InvestigationSummary = () => {
                           {value.shiftCycle}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* No of days into shift */}
-                    {value.noOfDaysIntoShift !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.noOfDaysIntoShift !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -637,11 +671,11 @@ const InvestigationSummary = () => {
                           {value.noOfDaysIntoShift}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* time in company */}
-                    {value.timeInCompany !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.timeInCompany !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -653,11 +687,11 @@ const InvestigationSummary = () => {
                           {value.timeInCompany}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* time on project */}
-                    {value.timeOnProject !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.timeOnProject !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -669,11 +703,11 @@ const InvestigationSummary = () => {
                           {value.timeOnProject}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* time in industry*/}
-                    {value.timeInIndustry !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.timeInIndustry !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -685,19 +719,17 @@ const InvestigationSummary = () => {
                           {value.timeInIndustry}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* injurty details */}
                     <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Injurty details
-                      </Typography>
+                      <Typography variant="h6">Injurty details</Typography>
                     </Grid>
 
                     {/* event injury */}
 
-                    {value.eventLeadingToInjury !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.eventLeadingToInjury !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -709,11 +741,11 @@ const InvestigationSummary = () => {
                           {value.eventLeadingToInjury}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* injury object */}
-                    {value.injuryObject !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.injuryObject !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -725,11 +757,11 @@ const InvestigationSummary = () => {
                           {value.injuryObject}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* Primary body part with side */}
-                    {value.primaryBodyPartWithSide !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.primaryBodyPartWithSide !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -741,11 +773,11 @@ const InvestigationSummary = () => {
                           {value.primaryBodyPartWithSide}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* Secondary body part with side */}
-                    {value.secondaryBodyPartWithSide !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.secondaryBodyPartWithSide !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -757,11 +789,11 @@ const InvestigationSummary = () => {
                           {value.secondaryBodyPartWithSide}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* Secondary body part with side */}
-                    {value.secondaryBodyPartWithSide !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.secondaryBodyPartWithSide !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -773,11 +805,11 @@ const InvestigationSummary = () => {
                           {value.secondaryBodyPartWithSide}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* type of injury */}
-                    {value.typeOfInjury !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.typeOfInjury !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -789,11 +821,11 @@ const InvestigationSummary = () => {
                           {value.typeOfInjury}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* Number of days away */}
-                    {value.NoOfDaysAway !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.NoOfDaysAway !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -805,11 +837,11 @@ const InvestigationSummary = () => {
                           {value.NoOfDaysAway}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* Medical response taken */}
-                    {value.medicalResponseTaken !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.medicalResponseTaken !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -821,11 +853,11 @@ const InvestigationSummary = () => {
                           {value.medicalResponseTaken}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* treatment date */}
-                    {value.treatmentDate !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.treatmentDate !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -837,11 +869,11 @@ const InvestigationSummary = () => {
                           {value.treatmentDate.substring(0, 10)}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* injury status */}
-                    {value.injuryStatus !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.injuryStatus !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -853,11 +885,11 @@ const InvestigationSummary = () => {
                           {value.injuryStatus}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* first aid treatment */}
-                    {value.firstAidTreatment !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.firstAidTreatment !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -869,11 +901,11 @@ const InvestigationSummary = () => {
                           {value.firstAidTreatment}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* mechanismOfInjury */}
-                    {value.mechanismOfInjury !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.mechanismOfInjury !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -885,19 +917,17 @@ const InvestigationSummary = () => {
                           {value.mechanismOfInjury}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* Worker care */}
 
                     <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Worker care
-                      </Typography>
+                      <Typography variant="h6">Worker care</Typography>
                     </Grid>
 
                     {/* medical issue */}
-                    {value.isMedicationIssued !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.isMedicationIssued !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -909,11 +939,11 @@ const InvestigationSummary = () => {
                           {value.isMedicationIssued}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* prescription issues */}
-                    {value.isPrescriptionIssued !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.isPrescriptionIssued !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -925,11 +955,11 @@ const InvestigationSummary = () => {
                           {value.isPrescriptionIssued}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* non-prescription */}
-                    {value.isNonPrescription !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.isNonPrescription !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -941,11 +971,11 @@ const InvestigationSummary = () => {
                           {value.isNonPrescription}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* any limitation */}
-                    {value.isAnyLimitation !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.isAnyLimitation !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -957,7 +987,7 @@ const InvestigationSummary = () => {
                           {value.isAnyLimitation}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* alcohal and drug test */}
 
@@ -968,8 +998,8 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* test taken */}
-                    {value.isAlcoholDrugTestTaken !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.isAlcoholDrugTestTaken !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -981,12 +1011,13 @@ const InvestigationSummary = () => {
                           {value.isAlcoholDrugTestTaken}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
-                    {value.isAlcoholDrugTestTaken == "Yes" && value.isWorkerClearedTest !== null ?
+                    {value.isAlcoholDrugTestTaken == "Yes" &&
+                    value.isWorkerClearedTest !== null ? (
                       <>
-                        {value.dateOfAlcoholDrugTest !== null ?
-                          <Grid item lg={6} md={6}>
+                        {value.dateOfAlcoholDrugTest !== null ? (
+                          <Grid item xs={12} md={6}>
                             <Typography
                               variant="h6"
                               gutterBottom
@@ -995,12 +1026,15 @@ const InvestigationSummary = () => {
                               Date of the test
                             </Typography>
 
-                            <Typography variant="body" className={Fonts.labelValue}>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
                               {value.dateOfAlcoholDrugTest.substring(0, 10)}
                             </Typography>
                           </Grid>
-                          : null}
-                        <Grid item lg={6} md={6}>
+                        ) : null}
+                        <Grid item xs={12} md={6}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -1009,23 +1043,24 @@ const InvestigationSummary = () => {
                             Was worker cleared to work following a&d testing ?
                           </Typography>
 
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {value.isWorkerClearedTest}
                           </Typography>
                         </Grid>
                       </>
-                      : null}
+                    ) : null}
 
                     {/* supervisor details */}
                     <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Supervisor details
-                      </Typography>
+                      <Typography variant="h6">Supervisor details</Typography>
                     </Grid>
 
                     {/* supervisor name */}
-                    {value.supervisorName !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.supervisorName !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1037,11 +1072,11 @@ const InvestigationSummary = () => {
                           {value.supervisorName}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* supervisor time industry */}
-                    {value.supervisorTimeInIndustry !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.supervisorTimeInIndustry !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1053,11 +1088,11 @@ const InvestigationSummary = () => {
                           {value.supervisorTimeInIndustry}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* supervisor time company */}
-                    {value.supervisorTimeInCompany !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.supervisorTimeInCompany !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1069,11 +1104,11 @@ const InvestigationSummary = () => {
                           {value.supervisorTimeInCompany}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* supervisor time project */}
-                    {value.supervisorTimeOnProject !== null ?
-                      <Grid item lg={6} md={6}>
+                    {value.supervisorTimeOnProject !== null ? (
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1085,31 +1120,26 @@ const InvestigationSummary = () => {
                           {value.supervisorTimeOnProject}
                         </Typography>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     {/* attachment */}
 
                     <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Attachment
-                      </Typography>
+                      <Typography variant="h6">Attachment</Typography>
                     </Grid>
-                    {value.attachments != "" && typeof value.attachments == "string" ?
-
-
-                      <Grid item lg={6} md={6}>
+                    {value.attachments != "" &&
+                    typeof value.attachments == "string" ? (
+                      <Grid item xs={12} md={6}>
                         <Tooltip title="File Name">
                           <IconButton
-                            onClick={() =>
-                              handleOpen(value.attachments)
-                            }
+                            onClick={() => handleOpen(value.attachments)}
                             className={classes.fileIcon}
                           >
                             <PhotoSizeSelectActualIcon />
                           </IconButton>
                         </Tooltip>
                       </Grid>
-                      : null}
+                    ) : null}
 
                     <Grid item lg={12} md={12}>
                       <Divider />
@@ -1167,7 +1197,6 @@ const InvestigationSummary = () => {
             </DialogContentText>
           </DialogContent>
         </Dialog>
-
       </Grid>
 
       {/* event details */}
@@ -1183,7 +1212,7 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {eventData.map((value, index) => (
                 <>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1195,7 +1224,7 @@ const InvestigationSummary = () => {
                       {value.activity}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1207,7 +1236,7 @@ const InvestigationSummary = () => {
                       {value.jobTask}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1231,7 +1260,7 @@ const InvestigationSummary = () => {
 
                   {weather.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1246,7 +1275,7 @@ const InvestigationSummary = () => {
                     </>
                   ))}
 
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1258,7 +1287,7 @@ const InvestigationSummary = () => {
                       {value.temperature}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1270,7 +1299,7 @@ const InvestigationSummary = () => {
                       {value.lighting}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1282,7 +1311,7 @@ const InvestigationSummary = () => {
                       {value.windSpeed}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1294,7 +1323,7 @@ const InvestigationSummary = () => {
                       {value.windDirection}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1306,7 +1335,7 @@ const InvestigationSummary = () => {
                       {value.spillsFluidType}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1318,7 +1347,7 @@ const InvestigationSummary = () => {
                       {value.spillsFluidAmount}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1330,7 +1359,7 @@ const InvestigationSummary = () => {
                       {value.acceptableExplosiveLimit}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1342,7 +1371,7 @@ const InvestigationSummary = () => {
                       {value.permissableExplosiveLimit}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1354,7 +1383,7 @@ const InvestigationSummary = () => {
                       {value.propertyImpactInformation}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1369,7 +1398,7 @@ const InvestigationSummary = () => {
 
                   {overAllCost.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1385,7 +1414,7 @@ const InvestigationSummary = () => {
                   ))}
                   {overAllCost.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1401,7 +1430,7 @@ const InvestigationSummary = () => {
                   ))}
                   {overAllCost.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1435,7 +1464,7 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {investigationOverview.map((value, index) => (
                 <>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1444,10 +1473,12 @@ const InvestigationSummary = () => {
                       Pre-event mitigations
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.preEventMitigations != null ? value.preEventMitigations : "-"}
+                      {value.preEventMitigations != null
+                        ? value.preEventMitigations
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1456,7 +1487,9 @@ const InvestigationSummary = () => {
                       Correction action date completed
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.correctionActionClosedAt != null ? value.correctionActionClosedAt.substring(0, 10) : "-"}
+                      {value.correctionActionClosedAt != null
+                        ? value.correctionActionClosedAt.substring(0, 10)
+                        : "-"}
                     </Typography>
                   </Grid>
                 </>

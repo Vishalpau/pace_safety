@@ -12,13 +12,13 @@ import { PapperBlock } from "dan-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
-import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
-import api from "../../../utils/axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -88,7 +88,7 @@ const AdditionalDetails = () => {
   ]);
 
   const fetchActivityList = async () => {
-    let lastId = id ? id : localStorage.getItem("fkincidentId")
+    let lastId = id ? id : localStorage.getItem("fkincidentId");
     const res = await api.get(`/api/v1/incidents/${lastId}/activities/`);
     const result = res.data.data.results;
     if (result.length) {
@@ -98,8 +98,6 @@ const AdditionalDetails = () => {
   };
 
   const handleNext = async () => {
-    
-
     if (id && additionalDetailList.length > 24) {
       const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
       await setError(error);
@@ -115,29 +113,33 @@ const AdditionalDetails = () => {
           `/app/incident-management/registration/summary/summary/${id}`
         );
       }
-    } else if(additionalDetailList.length  == 25){
+    } else if (additionalDetailList.length == 25) {
       {
         const { error, isValid } = AdditionalDetailValidate(additionalList);
         await setError(error);
         if (!isValid) {
-        return;
+          return;
         }
         const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          `api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/activities/`,
           additionalDetailList
         );
         if (res.status === 200) {
           history.push(
-            `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`
+            `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+              "fkincidentId"
+            )}`
           );
         }
       }
-    }else {
+    } else {
       const { error, isValid } = AdditionalDetailValidate(additionalList);
       await setError(error);
       if (!isValid) {
-      return;
-    }
+        return;
+      }
 
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
@@ -187,7 +189,7 @@ const AdditionalDetails = () => {
   };
   useEffect(() => {
     fetchIncidentDetails();
-    
+
     if (id) {
       fetchActivityList();
     } else {
@@ -195,12 +197,13 @@ const AdditionalDetails = () => {
       fetchActivityList();
     }
   }, [id]);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Additional Details" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number
               </Typography>
@@ -213,7 +216,7 @@ const AdditionalDetails = () => {
                 {Object.entries(additionalDetailList)
                   .slice(21, 25)
                   .map(([key, value]) => (
-                    <Grid item md={12}>
+                    <Grid item xs={12}>
                       <FormControl className={classes.formControl}>
                         <TextField
                           id="filled-basic"
@@ -236,7 +239,7 @@ const AdditionalDetails = () => {
             ) : (
               <>
                 {Object.entries(additionalList).map(([key, value]) => (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <FormControl
                       className={classes.formControl}
                       error={value.error}
@@ -246,7 +249,6 @@ const AdditionalDetails = () => {
                         variant="outlined"
                         label={value.question}
                         error={value.error}
-                        
                         required
                         helperText={value.error ? value.error : null}
                         multiline
@@ -261,7 +263,7 @@ const AdditionalDetails = () => {
               </>
             )}
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -281,13 +283,15 @@ const AdditionalDetails = () => {
             </Grid>
           </Grid>
 
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={EVIDENCE_FORM}
-              selectedItem="Additional details"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={EVIDENCE_FORM}
+                selectedItem="Additional details"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

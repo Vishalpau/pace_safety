@@ -15,6 +15,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -201,19 +202,21 @@ const InvestigationOverview = () => {
     handelCall();
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Severity Consequences" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6">
                 Potential severity level scenario
               </Typography>
             </Grid>
 
             {/* health and safety  */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Health & safety - actual consequences
@@ -241,7 +244,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Health & safety - potential consequences
@@ -270,7 +273,7 @@ const InvestigationOverview = () => {
             </Grid>
 
             {/* Environment */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Environment - actual consequences
@@ -298,7 +301,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Environment - potential consequences
@@ -327,7 +330,7 @@ const InvestigationOverview = () => {
             </Grid>
 
             {/* Regulatory */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Regulatory - actual consequences
@@ -355,7 +358,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Regulatory - potential consequences
@@ -384,7 +387,7 @@ const InvestigationOverview = () => {
             </Grid>
 
             {/* reuptation */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Reputation - actual consequences
@@ -412,7 +415,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Reputation - potential consequences
@@ -441,7 +444,7 @@ const InvestigationOverview = () => {
             </Grid>
 
             {/* financial */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Financial - actual consequences
@@ -469,7 +472,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Financial potential consequences
@@ -498,7 +501,7 @@ const InvestigationOverview = () => {
             </Grid>
 
             {/* highest potentsial impact receptor */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Highest potential impact receptor
@@ -527,7 +530,7 @@ const InvestigationOverview = () => {
             </Grid>
 
             {/* Classification */}
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">Classification</InputLabel>
                 <Select
@@ -553,7 +556,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">RCA recommended</InputLabel>
                 <Select
@@ -579,7 +582,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -593,19 +596,20 @@ const InvestigationOverview = () => {
                 color="primary"
                 className={classes.button}
                 onClick={() => handleNext()}
-                // href="http://localhost:3000/app/incident-management/registration/investigation/investigation-overview/"
               >
                 Next
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem="Severity consequences"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={INVESTIGATION_FORM}
+                selectedItem="Severity consequences"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

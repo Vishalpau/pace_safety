@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import DateFnsUtils from "@date-io/date-fns";
 import moment from "moment";
@@ -76,11 +77,12 @@ const ActionTaken = () => {
 
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Action Taken" icon="ion-md-list-box">
       <Grid container spacing={3} alignItems="flex-start">
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
+        <Grid container item xs={12} md={9} spacing={3}>
+          <Grid item xs={12} md={6}>
             <TextField
               variant="outlined"
               id="filled-basic"
@@ -100,7 +102,7 @@ const ActionTaken = () => {
             />
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 className={classes.formControl}
@@ -139,13 +141,15 @@ const ActionTaken = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            deleteForm={[1, 2, 3]}
-            listOfItems={INVESTIGATION_FORM}
-            selectedItem="Action taken"
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={[1, 2, 3]}
+              listOfItems={INVESTIGATION_FORM}
+              selectedItem="Action taken"
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );
