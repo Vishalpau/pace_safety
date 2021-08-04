@@ -13,6 +13,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -149,8 +150,7 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -170,8 +170,7 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -186,7 +185,7 @@ const BasicCauseAndAction = () => {
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
         return c.toUpperCase();
       });
     return newString;
@@ -196,6 +195,8 @@ const BasicCauseAndAction = () => {
     fetchIncidentDetails();
     handelShowData();
   }, []);
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock
@@ -256,9 +257,8 @@ const BasicCauseAndAction = () => {
                           <TableCell align="right">
                             <ActionTracker
                               actionContext="incidents:Pacacuase"
-                              enitityReferenceId={`${putId.current}:${
-                                id.current[index]
-                              }:${valueIndex}`}
+                              enitityReferenceId={`${putId.current}:${id.current[index]
+                                }:${valueIndex}`}
                             />
                           </TableCell>
                         </TableRow>
@@ -288,12 +288,16 @@ const BasicCauseAndAction = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Cause and action"}
-          />
-        </Grid>
+        {
+          isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Cause and action"}
+              />
+            </Grid>
+          )}
+
       </Grid>
     </PapperBlock>
   );

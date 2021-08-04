@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import { useParams } from "react-router";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
@@ -23,6 +22,7 @@ import { saveAs } from "file-saver";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import EditIcon from "@material-ui/icons/Edit";
 import moment from "moment";
+import { useHistory, useParams } from "react-router";
 
 import api from "../../utils/axios";
 import checkValue from "../../utils/CheckerValue";
@@ -99,8 +99,7 @@ const InvestigationSummary = () => {
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
       const event = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/`
       );
       const result = event.data.data.results;
@@ -112,8 +111,7 @@ const InvestigationSummary = () => {
 
       // Weather data
       const weather = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/${eventId.current}/weatherconditions/`
       );
       const weatherData = weather.data.data.results;
@@ -121,8 +119,7 @@ const InvestigationSummary = () => {
 
       // event data
       const cost = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${
-          investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
         }/events/${eventId.current}/cost/`
       );
       const costData = cost.data.data.results;
@@ -132,8 +129,7 @@ const InvestigationSummary = () => {
 
   const fecthWorkerData = async () => {
     let res = await api.get(
-      `api/v1/incidents/${id}/investigations/${
-        investigationId.current
+      `api/v1/incidents/${id}/investigations/${investigationId.current
       }/workers/`
     );
     let result = res.data.data.results;
@@ -151,7 +147,10 @@ const InvestigationSummary = () => {
   };
   const [documentUrl, setDocumentUrl] = useState("");
   const [open, setOpen] = React.useState(false);
-
+  const history = useHistory();
+  if (id) {
+    localStorage.setItem("fkincidentId", id);
+  }
   const handleOpen = (document) => {
     setDocumentUrl(document);
     setOpen(true);
@@ -160,6 +159,7 @@ const InvestigationSummary = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
 
   const download = (image_link) => {
     let onlyImage_url = image_link.replace("https://", "");
@@ -170,6 +170,16 @@ const InvestigationSummary = () => {
     handleClose();
   };
 
+  const handelInvestigation = (e, value) => {
+    if (value = "modify") {
+      history.push(`/app/incident-management/registration/investigation/investigation-overview/${id}`)
+    }
+    else if (value = "add") {
+      history.push(`/app/incident-management/registration/investigation/investigation-overview/`)
+    }
+
+  }
+
   useEffect(() => {
     if (id) {
       handelCallBack();
@@ -179,12 +189,20 @@ const InvestigationSummary = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <Grid container spacing={3}>
+      {console.log(investigationOverview)}
       {/* investigation overview */}
       {!isDesktop && (
+
         <Grid item xs={12}>
-          <Button variant="outlined" startIcon={<EditIcon />}>
-            Modify Investigation
-          </Button>
+          {investigationOverview.length > 0 ?
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelInvestigation(e, "modify")}>
+              Modify Investigation
+            </Button>
+            :
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelInvestigation(e, "add")}>
+              Add Investigation
+            </Button>
+          }
         </Grid>
       )}
       <Grid item xs={12}>
@@ -813,7 +831,7 @@ const InvestigationSummary = () => {
                       </Typography>
                       <Typography variant="body" className={Fonts.labelValue}>
                         {value.treatmentDate !== null &&
-                        value.treatmentDate !== undefined ? (
+                          value.treatmentDate !== undefined ? (
                           value.treatmentDate.substring(0, 10)
                         ) : (
                           <p>-</p>
@@ -947,7 +965,7 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {value.isAlcoholDrugTestTaken == "Yes" &&
-                    value.isWorkerClearedTest !== null ? (
+                      value.isWorkerClearedTest !== null ? (
                       <>
                         {value.dateOfAlcoholDrugTest !== null ? (
                           <Grid item xs={12} md={6}>
@@ -1052,7 +1070,7 @@ const InvestigationSummary = () => {
                       <Typography variant="h6">Attachment</Typography>
                     </Grid>
                     {value.attachments != "" &&
-                    typeof value.attachments == "string" ? (
+                      typeof value.attachments == "string" ? (
                       <Grid item xs={12} md={6}>
                         <Tooltip title="File Name">
                           <IconButton

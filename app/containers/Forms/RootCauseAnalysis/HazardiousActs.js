@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -402,8 +403,7 @@ const HazardiousActs = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${
-              callObjects[key].pk
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
             }/`,
             callObjects[key]
           );
@@ -429,8 +429,7 @@ const HazardiousActs = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
         }`
       );
     }
@@ -439,8 +438,7 @@ const HazardiousActs = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -462,6 +460,8 @@ const HazardiousActs = () => {
     fetchIncidentDetails();
     handelUpdateCheck();
   }, []);
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock
@@ -669,12 +669,14 @@ const HazardiousActs = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Hazardous acts"}
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Hazardous acts"}
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );
