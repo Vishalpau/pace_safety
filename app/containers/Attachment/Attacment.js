@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const Attachment = ({ value }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const fileNameArray = value.split("/");
   const fileName = fileNameArray[fileNameArray.length - 1];
@@ -44,8 +44,8 @@ export const Attachment = ({ value }) => {
   if (extension[1].toLowerCase() === "pdf") {
     return (
       <IconButton>
-        <Icon path={mdiFilePdf} size={2} />
-        <AlertMessage open={open} setOpen={setOpen}/>
+        <Icon path={mdiFilePdf} size={1} />
+        <AlertMessage open={open} setOpen={setOpen} />
       </IconButton>
     );
   } else if (
@@ -54,7 +54,7 @@ export const Attachment = ({ value }) => {
   ) {
     return (
       <IconButton>
-        <Icon path={mdiMicrosoftExcel} size={2} />
+        <Icon path={mdiMicrosoftExcel} size={1} />
       </IconButton>
     );
   } else if (
@@ -63,27 +63,29 @@ export const Attachment = ({ value }) => {
   ) {
     return (
       <IconButton>
-        <Icon path={mdiFileWord} size={2} />
-        <AlertMessage open={open} setOpen={setOpen}/>
+        <Icon path={mdiFileWord} size={1} />
+        <AlertMessage open={open} setOpen={setOpen} />
       </IconButton>
     );
   } else if (extension[1].toLowerCase() === "ppt") {
     return (
       <IconButton>
-        <Icon path={mdiFilePowerpoint} size={2} />
+        <Icon path={mdiFilePowerpoint} size={1} />
       </IconButton>
     );
   } else {
-    return (<>
-      <Avatar
-        alt="image"
-        src={value}
-        variant="square"
-        className={classes.square}
-        onClick={()=>setOpen(true)}
-        
-      />
-      <AlertMessage  open={open} setOpen={setOpen} documentUrl={value}/>
+    return (
+      <>
+        <IconButton onClick={() => setOpen(true)}>
+          <Avatar
+            alt="image"
+            src={value}
+            variant="square"
+            size="small"
+            className={classes.square}
+          />
+        </IconButton>
+        <AlertMessage open={open} setOpen={setOpen} documentUrl={value} />
       </>
     );
   }

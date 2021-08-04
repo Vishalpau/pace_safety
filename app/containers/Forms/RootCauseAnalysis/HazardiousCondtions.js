@@ -300,7 +300,8 @@ const HazardiousCondition = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
+            `/api/v1/incidents/${putId.current}/pacecauses/${
+              callObjects[key].pk
             }/`,
             callObjects[key]
           );
@@ -326,7 +327,8 @@ const HazardiousCondition = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
+          putId.current
         }`
       );
     }
@@ -348,7 +350,8 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -505,16 +508,14 @@ const HazardiousCondition = () => {
             </Box>
           </Grid>
         </Grid>
-        {
-          isDesktop && (
-            <Grid item md={3}>
-              <FormSideBar
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem="Hazardous conditions"
-              />
-            </Grid>
-          )}
-
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem="Hazardous conditions"
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );
