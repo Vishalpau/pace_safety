@@ -364,6 +364,7 @@ const WorkerDetails = () => {
 
       await handelUpdateCheck();
     }
+    document.getElementById("workerForm").reset()
   };
 
   const handelAddNew = async () => {
@@ -494,7 +495,7 @@ const WorkerDetails = () => {
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
       {isLoading ? (
-        <form>
+        <form id="workerForm">
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
               <Grid item xs={12}>
