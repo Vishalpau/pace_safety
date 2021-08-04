@@ -454,13 +454,13 @@ function Header(props) {
                       className={classesm.cardContentBox}
                       key={index}
                     >
-                      <Card>
+                      <Card onClick={() => handleProjectName(index)}>
                         <CardActionArea className={classesm.cardActionAreaBox}>
                           <div className={classesm.cardMediaBox}>
                             <CardMedia
                               className={classesm.media}
                               image={ProjectImg}
-                              onClick={() => handleProjectName(index)}
+                              
                               //title=""
                             />
                           </div>

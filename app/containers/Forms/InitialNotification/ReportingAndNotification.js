@@ -51,7 +51,7 @@ import ReportingValidation from "../../Validator/ReportingValidation";
 import InitialEvidenceValidate from "../../Validator/InitialEvidance";
 
 import api from "../../../utils/axios";
-import Attachment from "../../Attachment/Attacment";
+import Attachment from "../../Attachment/Attachment";
 
 // import UploadInputAll from '../demos/UploadInputAll';
 

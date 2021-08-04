@@ -37,7 +37,7 @@ import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 
 
-import Attachment from "../../Attachment/Attacment";
+import Attachment from "../../Attachment/Attachment";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
