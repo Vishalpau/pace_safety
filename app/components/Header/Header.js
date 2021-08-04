@@ -34,7 +34,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-
+import MuiDialogActions from "@material-ui/core/DialogActions";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
@@ -59,7 +59,7 @@ import { connect } from "react-redux";
 // redux
 
 import { useDispatch } from "react-redux";
-import { projectName} from '../../redux/actions/initialDetails'
+import { projectName } from "../../redux/actions/initialDetails";
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -131,6 +131,11 @@ const useStyles = makeStyles((theme) => ({
       color: "#054D69",
     },
   },
+  projectCloseButton: {
+    position: "absolute",
+    right: theme.spacing(2),
+    top: theme.spacing(2),
+  },
 }));
 
 function Header(props) {
@@ -138,7 +143,7 @@ function Header(props) {
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [projectOpen, setProjectOpen] = React.useState(false);
-  const [projectListData, setProjectListData] = useState([])
+  const [projectListData, setProjectListData] = useState([]);
   const [projectDisable, setProjectDisable] = useState(false);
   const dispatch = useDispatch();
 
@@ -218,14 +223,12 @@ function Header(props) {
     title,
     openGuide,
     history,
-    initialValues
+    initialValues,
   } = props;
 
-  // check and store in localstorage 
+  // check and store in localstorage
   if (Object.keys(props.initialValues.projectName).length > 0) {
-
     localStorage.setItem("projectName", JSON.stringify(props.initialValues));
-    
   }
   const projectData = JSON.parse(localStorage.getItem("projectName"));
   const setMargin = (sidebarPosition) => {
@@ -261,45 +264,41 @@ function Header(props) {
   const handleProjectClose = () => {
     setCompanyOpen(false);
     setProjectOpen(false);
-    
   };
 
   // handle project Name
-  const handleProjectName = async (key) => {    
-    console.log(key)
+  const handleProjectName = async (key) => {
+    console.log(key);
     let data = projectListData[key];
-    console.log(data)
+    console.log(data);
     await dispatch(projectName(data));
     localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
     setCompanyOpen(false);
   };
 
-  const handleProjectList=()=>{
-    try{
-      const company = JSON.parse(localStorage.getItem('company'))
-      const userDetails = JSON.parse(localStorage.getItem('userDetails'))
-      
-      const data = userDetails.companies.map(item=> {
-        if(item.companyId === parseInt(company.fkCompanyId)){
-         
-          setProjectDisable(item.projects.length>1)
-          return  setProjectListData(item.projects)
-        }
-      })
-      const filterData = userDetails.companies.filter(item=>item.companyId === parseInt(company.fkCompanyId))
-      let projectLength = filterData[0].projects.length<=1
-      console.log(projectLength)
-      setProjectDisable(projectLength)
+  const handleProjectList = () => {
+    try {
+      const company = JSON.parse(localStorage.getItem("company"));
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 
-      
-     
-      }catch(error){}
-  }
+      const data = userDetails.companies.map((item) => {
+        if (item.companyId === parseInt(company.fkCompanyId)) {
+          setProjectDisable(item.projects.length > 1);
+          return setProjectListData(item.projects);
+        }
+      });
+      const filterData = userDetails.companies.filter(
+        (item) => item.companyId === parseInt(company.fkCompanyId)
+      );
+      let projectLength = filterData[0].projects.length <= 1;
+      console.log(projectLength);
+      setProjectDisable(projectLength);
+    } catch (error) {}
+  };
 
   //company selections
   const handleCompanyOpen = () => {
-
     setCompanyOpen(true);
   };
 
@@ -329,13 +328,20 @@ function Header(props) {
     );
   });
 
+  const DialogActions = withStyles((theme) => ({
+    root: {
+      margin: 0,
+      padding: theme.spacing(1),
+    },
+  }))(MuiDialogActions);
+
   const filterOpen = Boolean(anchorEl);
   const id = filterOpen ? "simple-popover" : undefined;
   const classesm = useStyles();
 
-  useEffect(()=>{
+  useEffect(() => {
     handleProjectList();
-  },[initialValues.projectName])
+  }, [initialValues.projectName]);
 
   return (
     <AppBar
@@ -368,11 +374,14 @@ function Header(props) {
               clickable
               size="small"
               className={classesm.projectName}
-              disabled = {projectDisable}
+              disabled={projectDisable}
               //label=""
-              onClick={handleCompanyOpen  }
+              onClick={handleCompanyOpen}
             >
-              {projectData !==null?projectData.projectName.projectName:null} <EditIcon />
+              {projectData !== null
+                ? projectData.projectName.projectName
+                : null}{" "}
+              <EditIcon />
             </IconButton>
 
             {/* company selections */}
@@ -393,42 +402,37 @@ function Header(props) {
                 Confirmation
               </DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              className={classesm.projectSelectionTitle}
-                            >
-                              Are you sure to switch another project?
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          
-                          <Tooltip title="Cancel">
-                            <Button variant="contained" color="secondary" onClick={(e)=>handleCompanyClose()}>
-                              No
-                            </Button>
-                          </Tooltip>
-                          <Tooltip title="Ok">
-                              <Button variant="contained" color="primary" onClick={(e)=>handleProjectOpen()}>
-                                Yes
-                              </Button>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  </Grid>
+                <DialogContentText>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    className={classesm.projectSelectionTitle}
+                  >
+                    Are you sure to switch another project?
+                  </Typography>
                 </DialogContentText>
               </DialogContent>
+              <DialogActions>
+                <Tooltip title="Cancel">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={(e) => handleCompanyClose()}
+                  >
+                    No
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Ok">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={(e) => handleProjectOpen()}
+                  >
+                    Yes
+                  </Button>
+                </Tooltip>
+              </DialogActions>
             </Dialog>
             {/* Project selections */}
             <Dialog
@@ -443,65 +447,67 @@ function Header(props) {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  
                   <Grid container spacing={4}>
-                  {projectListData.length>0?projectListData.map((value,index)=>
-                    <Grid
-                      item
-                      md={4}
-                      sm={6}
-                      xs={12}
-                      className={classesm.cardContentBox}
-                      key={index}
-                    >
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImg}
-                              onClick={() => handleProjectName(index)}
-                              //title=""
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              className={classesm.projectSelectionTitle}
-                            >
-                              {value.projectName}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                              className={classesm.projectSelectionCode}
-                            >
-                              Code: {value.projectCode}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                    ):null}
-                 </Grid>
-                 
-               </DialogContentText>
+                    {projectListData.length > 0
+                      ? projectListData.map((value, index) => (
+                          <Grid
+                            item
+                            md={4}
+                            sm={6}
+                            xs={12}
+                            className={classesm.cardContentBox}
+                            key={index}
+                          >
+                            <Card onClick={() => handleProjectName(index)}>
+                              <CardActionArea
+                                className={classesm.cardActionAreaBox}
+                              >
+                                <div className={classesm.cardMediaBox}>
+                                  <CardMedia
+                                    className={classesm.media}
+                                    image={ProjectImg}
+
+                                    //title=""
+                                  />
+                                </div>
+                                <CardContent>
+                                  <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="h2"
+                                    className={classesm.projectSelectionTitle}
+                                  >
+                                    {value.projectName}
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                    component="p"
+                                    className={classesm.projectSelectionCode}
+                                  >
+                                    Code: {value.projectCode}
+                                  </Typography>
+                                </CardContent>
+                              </CardActionArea>
+                              <Divider />
+                              <CardActions className={classesm.actionBttmArea}>
+                                <Tooltip title="Control Tower">
+                                  <IconButton aria-label="control tower">
+                                    <SettingsRemoteIcon />
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="GIS Location">
+                                  <IconButton aria-label="GIS location">
+                                    <LocationOnIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </CardActions>
+                            </Card>
+                          </Grid>
+                        ))
+                      : null}
+                  </Grid>
+                </DialogContentText>
               </DialogContent>
             </Dialog>
           </div>

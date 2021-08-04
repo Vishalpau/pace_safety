@@ -45,7 +45,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
 import "../../styles/custom.css";
 
-import Attachment from "../Attachment/Attacment";
+import Attachment from "../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {

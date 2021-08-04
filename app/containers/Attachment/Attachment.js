@@ -71,7 +71,7 @@ export const Attachment = ({ value }) => {
     } else if (extension[1].toLowerCase() === "ppt") {
         return (
             <IconButton>
-                <Icon path={mdiFilePowerpoint} size={2} />
+                <Icon path={mdiFilePowerpoint} size={2} onClick={() => setOpen(true)}/>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
