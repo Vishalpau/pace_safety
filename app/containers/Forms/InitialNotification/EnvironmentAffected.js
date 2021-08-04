@@ -1,29 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import { PapperBlock } from "dan-components";
 import { FormHelperText, FormLabel } from "@material-ui/core";
-
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import {
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
-
 import FormSideBar from "../FormSideBar";
-
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -236,6 +231,7 @@ const EnvironmentAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
+    await setEnvComments(result.enviromentalImpactComments)
     if (!id) {
       setIsLoading(true);
     }
@@ -274,15 +270,17 @@ const EnvironmentAffected = () => {
     }
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Environment Impact" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
+          <>
             {environmentListData.length !== 0 ? (
               environmentListData.map((env, key) => (
-                <Grid container item spacing={3} md={12} key={key}>
-                  <Grid item md={6}>
+                <Grid container item spacing={3} xs={12} key={key}>
+                  <Grid item xs={12} md={6}>
                     <FormControl
                       component="fieldset"
                       required
@@ -321,7 +319,8 @@ const EnvironmentAffected = () => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-                  <Grid item md={12}>
+
+                  <Grid item xs={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
                         id={`waterbody-details-update-${key + 1}`}
@@ -353,13 +352,12 @@ const EnvironmentAffected = () => {
               ))
             ) : (
               <>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
                     error={error && error[`envQuestionOption${[0]}`]}
                   >
-                   
                     <FormLabel component="legend">
                       Were there any spills?
                     </FormLabel>
@@ -393,7 +391,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isspills == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="spills-details"
                       variant="outlined"
@@ -415,7 +413,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -454,7 +452,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isrelase == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="release-details"
                       multiline
@@ -476,7 +474,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -516,7 +514,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isWildlife == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="details-of-Wildlife-Affected"
                       multiline
@@ -538,7 +536,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -578,7 +576,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {iswaterbody == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="waterbody-details"
                       multiline
@@ -602,7 +600,7 @@ const EnvironmentAffected = () => {
               </>
             )}
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 id="comment-if-any-environment"
                 multiline
@@ -610,19 +608,17 @@ const EnvironmentAffected = () => {
                 rows="3"
                 label="Comment if any"
                 className={classes.fullWidth}
-                defaultValue={incidentsListData.enviromentalImpactComments}
+                value={envComments ||""}
                 onChange={(e) => setEnvComments(e.target.value)}
               />
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={() => handleBack()}
-                // onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
               >
                 Previous
               </Button>
@@ -635,13 +631,15 @@ const EnvironmentAffected = () => {
                 Next
               </Button>
             </Grid>
-          </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Environment affected"
-            />
-          </Grid>
+          </>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Environment affected"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

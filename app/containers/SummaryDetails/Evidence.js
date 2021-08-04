@@ -2,40 +2,16 @@ import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import Box from "@material-ui/core/Box";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useParams } from "react-router";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import { PapperBlock } from "dan-components";
-import CheckCircle from "@material-ui/icons/CheckCircle";
-import AccessTime from "@material-ui/icons/AccessTime";
-import Divider from "@material-ui/core/Divider";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import Modal from "@material-ui/core/Modal";
-import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-
-// List
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
 
 // Table
 import Table from "@material-ui/core/Table";
@@ -46,13 +22,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
 // Icons
-import Print from "@material-ui/icons/Print";
-import Share from "@material-ui/icons/Share";
 import Close from "@material-ui/icons/Close";
-import Comment from "@material-ui/icons/Comment";
-import History from "@material-ui/icons/History";
-import Edit from "@material-ui/icons/Edit";
-import Add from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
@@ -61,7 +31,6 @@ import VideoCallIcon from "@material-ui/icons/VideoCall";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import DescriptionIcon from "@material-ui/icons/Description";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -75,9 +44,8 @@ import moment from "moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
 import "../../styles/custom.css";
-import axios from "axios";
-import Link from "@material-ui/core/Link";
-import { mdiFilePdf } from '@mdi/js';
+
+import Attachment from "../Attachment/Attacment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,7 +67,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     width: 650,
     backgroundColor: theme.palette.background.paper,
-    // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
   },
   closeButton: {
@@ -110,19 +77,12 @@ const useStyles = makeStyles((theme) => ({
   modalButton: {
     width: "100%",
   },
+  table: { minWidth: 900 },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
-function getModalStyle() {
-  return {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-  };
-}
 
 const EvidenceSummary = () => {
   const [evidence, setEvidence] = useState([]);
@@ -147,12 +107,12 @@ const EvidenceSummary = () => {
   };
 
   const download = (image_link) => {
-    let onlyImage_url = image_link.replace("https://", "")
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url
-    let imageArray = image_url.split("/")
-    let image_name = imageArray[imageArray.length - 1]
-    saveAs(image_url, image_name)
-    handleClose()
+    let onlyImage_url = image_link.replace("https://", "");
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    let imageArray = image_url.split("/");
+    let image_name = imageArray[imageArray.length - 1];
+    saveAs(image_url, image_name);
+    handleClose();
   };
 
   const handleExpand = (panel) => (event, isExpanded) => {
@@ -161,10 +121,12 @@ const EvidenceSummary = () => {
 
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    const result = allEvidence.data.data.results
+    const result = allEvidence.data.data.results;
     const newData = result.filter(
-                      (item) => item.evidenceCategory !== "Lessons Learned" && item.evidenceCategory !== "Initial Evidence"
-                      )
+      (item) =>
+        item.evidenceCategory !== "Lessons Learned" &&
+        item.evidenceCategory !== "Initial Evidence"
+    );
     await setEvidence(newData);
     await setIsLoding(true);
   };
@@ -175,10 +137,10 @@ const EvidenceSummary = () => {
   };
 
   const handelFileName = (value) => {
-    const fileNameArray = value.split('/')
-    const fileName = fileNameArray[fileNameArray.length - 1]
-    return fileName
-  }
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    return fileName;
+  };
 
   useEffect(() => {
     if (id) {
@@ -189,10 +151,18 @@ const EvidenceSummary = () => {
   }, []);
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <>
       {isLoading ? (
         <Grid container spacing={3}>
+          {!isDesktop && (
+            <Grid item xs={12}>
+              <Button variant="outlined" startIcon={<EditIcon />}>
+                Modify Evidence
+              </Button>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Accordion
               expanded={expanded === "panel1"}
@@ -203,10 +173,10 @@ const EvidenceSummary = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <TableContainer component={Paper}>
-                  <Table style={{ minWidth: 900 }} size="small">
+                  <Table className={classes.table} size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell style={{ width: 200 }}>
+                        <TableCell style={{ width: 270 }}>
                           Evidence No
                         </TableCell>
                         <TableCell style={{ width: 300 }}>
@@ -226,78 +196,31 @@ const EvidenceSummary = () => {
                     <TableBody>
                       {evidence.length !== 0
                         ? evidence.map((value, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{value.evidenceNumber}</TableCell>
-                            <TableCell>{value.evidenceCheck}</TableCell>
-                            <TableCell>{value.evidenceCategory}</TableCell>
-                            <TableCell>{value.evidenceRemark}</TableCell>
-                            {value.evidenceDocument ? (
+                            <TableRow key={index}>
+                              <TableCell>{value.evidenceNumber}</TableCell>
+                              <TableCell>{value.evidenceCheck}</TableCell>
+                              <TableCell>{value.evidenceCategory}</TableCell>
                               <TableCell>
-                                <Tooltip title={handelFileName(value.evidenceDocument)}>
-                                  <IconButton
-                                    onClick={() =>
-                                      handleOpen(value.evidenceDocument)
-                                    }
-                                    className={classes.fileIcon}
-                                  >
-                                    {value.evidenceDocument.endsWith(
-                                      ".png"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
-                                        ".jpg"
-                                      ) ? (
-                                      <ImageIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".pdf"
-                                    ) ? (
-                                      <PictureAsPdfIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".mp4"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(".mov") ||
-                                      value.evidenceDocument.endsWith(".flv") ||
-                                      value.evidenceDocument.endsWith(
-                                        ".avi"
-                                      ) ? (
-                                      <VideoCallIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".xls"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
-                                        ".xlsx"
-                                      ) ? (
-                                      <DescriptionIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".ppt"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
-                                        ".pptx"
-                                      ) ? (
-                                      <DescriptionIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".text"
-                                    ) ? (
-                                      <TextFieldsIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".docx"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
-                                        ".doc"
-                                      ) ? (
-                                      <TextFieldsIcon />
-                                    ) : null}
-                                  </IconButton>
-                                </Tooltip>
+                                {value.evidenceRemark
+                                  ? value.evidenceRemark
+                                  : "-"}
                               </TableCell>
-                            ) : null}
-                          </TableRow>
-                        ))
+
+                              <TableCell>
+                                {value.evidenceDocument ? (
+                                  <Tooltip
+                                    title={handelFileName(
+                                      value.evidenceDocument
+                                    )}
+                                  >
+                                    <Attachment value={value.evidenceDocument}/>
+                                   </Tooltip>
+                                ) : (
+                                  "-"
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))
                         : null}
                     </TableBody>
                   </Table>
@@ -305,6 +228,7 @@ const EvidenceSummary = () => {
               </AccordionDetails>
             </Accordion>
           </Grid>
+
           <Grid item xs={12}>
             <Accordion
               expanded={expanded === "panel2"}
@@ -318,24 +242,45 @@ const EvidenceSummary = () => {
               <AccordionDetails>
                 <Grid container spacing={3}>
                   {activity.length !== 0
-                    ? activity.map((ad, key) => (
-                      <Grid item md={6} key={key}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {ad.question}
-                        </Typography>
-                        <Typography
-                          variant="body"
-                          className={Fonts.labelValue}
-                        >
-                          {ad.answer}
-                        </Typography>
-                      </Grid>
-                    ))
+                    ? activity.slice(0, 21).map((ad, key) => (
+                        <Grid item xs={12} md={6} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer}
+                          </Typography>
+                        </Grid>
+                      ))
                     : null}
+                </Grid>
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(21, 25).map((ad, key) => (
+                        <Grid item xs={12} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer ? ad.answer : "-"}
+                          </Typography>
+                        </Grid>
+                      ))
+                    : "-"}
                 </Grid>
               </AccordionDetails>
             </Accordion>
@@ -379,15 +324,15 @@ const EvidenceSummary = () => {
                 </Button>
               </Grid>
               <Grid item xs={12} md={6}>
-              <Button
-                    startIcon={<GetAppIcon />}
-                    variant="contained"
-                    disableElevation
-                    className={classes.modalButton}
-                    onClick={(e) => download(documentUrl)}
-                  >
-                    Download Attachment
-                  </Button>
+                <Button
+                  startIcon={<GetAppIcon />}
+                  variant="contained"
+                  disableElevation
+                  className={classes.modalButton}
+                  onClick={(e) => download(documentUrl)}
+                >
+                  Download Attachment
+                </Button>
               </Grid>
             </Grid>
           </DialogContentText>

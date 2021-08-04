@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -11,7 +9,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -21,13 +18,13 @@ import moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import EquipmentValidate from "../../Validator/EquipmentValidation";
 import "../../../styles/custom.css";
@@ -49,9 +46,11 @@ const useStyles = makeStyles((theme) => ({
     color: "#3498db",
     padding: 0,
     textDecoration: "underline",
-    display: "inlineBlock",
+    display: "inline-block",
     marginBlock: "1.5rem",
     backgroundColor: "transparent",
+    whiteSpace: "pre-wrap",
+    textAlign: "left",
   },
   button: {
     margin: theme.spacing(1),
@@ -171,15 +170,15 @@ const EqiptmentAffected = () => {
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-          if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-            );
-          } else {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-            );
-          }
+        if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+          );
+        } else {
+          history.push(
+            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+          );
+        }
       }
     } else {
       // if user select No or N/A remove all existing data
@@ -203,15 +202,15 @@ const EqiptmentAffected = () => {
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-        if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
-        } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
-        }
+      if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        );
+      } else {
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
+      }
     }
   };
 
@@ -287,13 +286,14 @@ const EqiptmentAffected = () => {
       fetchEquipmentListData();
     }
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Details of Equipment Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
-              <Typography variant="body" component="p" gutterBottom>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12}>
+              <Typography gutterBottom>
                 Do you have details to share about the equipment affected?
               </Typography>
               <RadioGroup
@@ -322,14 +322,8 @@ const EqiptmentAffected = () => {
             {detailsOfEquipmentAffect === "Yes" ? (
               <>
                 {form.map((value, key) => (
-                  <Grid
-                    container
-                    item
-                    md={12}
-                    spacing={3}
-                    className="repeatedGrid"
-                  >
-                    <Grid item md={6}>
+                  <>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         variant="outlined"
                         className={classes.formControl}
@@ -365,7 +359,7 @@ const EqiptmentAffected = () => {
                       </FormControl>
                     </Grid>
 
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         variant="outlined"
                         id={`other-equipment${key + 1}`}
@@ -379,7 +373,7 @@ const EqiptmentAffected = () => {
                       />
                     </Grid>
 
-                    <Grid item md={12}>
+                    <Grid item xs={12} md={12}>
                       <TextField
                         id={`damage-describe${key + 1}`}
                         multiline
@@ -399,7 +393,7 @@ const EqiptmentAffected = () => {
                       />
                     </Grid>
                     {form.length > 1 ? (
-                      <Grid item md={3}>
+                      <Grid item xs={3}>
                         <Button
                           onClick={() => handleRemove(key)}
                           variant="contained"
@@ -411,9 +405,9 @@ const EqiptmentAffected = () => {
                         </Button>
                       </Grid>
                     ) : null}
-                  </Grid>
+                  </>
                 ))}
-                <Grid item lg={12} md={6} sm={6}>
+                <Grid item xs={12}>
                   <button
                     className={classes.textButton}
                     onClick={() => addNewEquipmentDetails()}
@@ -424,7 +418,7 @@ const EqiptmentAffected = () => {
               </>
             ) : null}
             {detailsOfEquipmentAffect === "Yes" ? null : (
-              <Grid item lg={12} md={6} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   id="describe-any-equipment-affect"
                   multiline
@@ -437,7 +431,7 @@ const EqiptmentAffected = () => {
                 />
               </Grid>
             )}
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -456,12 +450,14 @@ const EqiptmentAffected = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Equipment affected"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Equipment affected"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

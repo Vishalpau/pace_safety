@@ -65,7 +65,7 @@ import { projectName} from '../../redux/actions/initialDetails'
 
 const elem = document.documentElement;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   //Project selections
   cardContentBox: {
     minWidth: "260px",
@@ -319,7 +319,7 @@ function Header(props) {
         {onClose ? (
           <IconButton
             aria-label="close"
-            className={classes.projectCloseButton}
+            className={classesm.projectCloseButton}
             onClick={onClose}
           >
             <CloseIcon />

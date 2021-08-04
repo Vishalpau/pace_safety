@@ -1,14 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Grid,
-  Container,
-  Input,
-  Select,
-  FormHelperText,
-} from "@material-ui/core";
-
-import Paper from "@material-ui/core/Paper";
+import { Button, Grid, Select } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
 import { spacing } from "@material-ui/system";
@@ -19,11 +10,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 
@@ -41,19 +32,25 @@ const InvestigationOverview = () => {
   const [isLoading, setIsLoading] = useState(false);
   const putId = useRef("");
   const history = useHistory();
-  const investigationId = useRef("")
-  const severityValues = useRef([])
+  const investigationId = useRef("");
+  const severityValues = useRef([]);
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
     let allApiData = previousData.data.data.results[0];
-    console.log(incidentId)
+    console.log(incidentId);
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
-      investigationId.current = allApiData.id
+      investigationId.current = allApiData.id;
       putId.current = incidentId;
     }
   };
@@ -72,50 +69,68 @@ const InvestigationOverview = () => {
   });
 
   const handleNext = async () => {
-    console.log(putId.current)
+    console.log(putId.current);
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
 
     if (Object.keys(error).length == 0) {
       if (putId.current == "") {
-        const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`)
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/investigations/`,
+          form
+        );
+        await history.push(
+          `/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem(
+            "fkincidentId"
+          )}`
+        );
       } else if (putId.current !== "") {
-        console.log(putId.current)
-        form["updatedBy"] = "0"
-        const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`)
+        console.log(putId.current);
+        form["updatedBy"] = "0";
+        const res = await api.put(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/`,
+          form
+        );
+        await history.push(
+          `/app/incident-management/registration/investigation/severity-consequences/${
+            putId.current
+          }`
+        );
       }
 
-      localStorage.setItem("WorkerDataFetched", "")
+      localStorage.setItem("WorkerDataFetched", "");
     }
-
   };
 
   const classes = useStyles();
   const callback = async () => {
-    await handelUpdateCheck()
-    severityValues.current = await PickListData(41)
-    setIsLoading(true)
+    await handelUpdateCheck();
+    severityValues.current = await PickListData(41);
+    setIsLoading(true);
     localStorage.removeItem("WorkerDataFetched");
-  }
+  };
 
   useEffect(() => {
     handelUpdateCheck();
     callback();
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
-      {/* {console.log(form)} */}
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6">Unit constructor manager</Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -138,7 +153,7 @@ const InvestigationOverview = () => {
               />
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -160,12 +175,12 @@ const InvestigationOverview = () => {
                 }}
               />
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12} md={12}>
               <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                 <Typography variant="h6">Unit HSE specialist</Typography>
               </Box>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -187,7 +202,7 @@ const InvestigationOverview = () => {
                 }}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="title"
                 variant="outlined"
@@ -209,7 +224,7 @@ const InvestigationOverview = () => {
                 }}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Actual severity & consequences
@@ -237,7 +252,7 @@ const InvestigationOverview = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="unit-name-label">
                   Potential severity & consequences
@@ -265,7 +280,7 @@ const InvestigationOverview = () => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -275,13 +290,15 @@ const InvestigationOverview = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem="Investigation overview"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={INVESTIGATION_FORM}
+                selectedItem="Investigation overview"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

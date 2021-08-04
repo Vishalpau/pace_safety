@@ -579,7 +579,6 @@ const styles = (theme) => ({
   userControls: {
     display: "inline-flex",
     alignItems: "center",
-    minWidth: 100,
   },
   filterSelect: {
     minWidth: 100,

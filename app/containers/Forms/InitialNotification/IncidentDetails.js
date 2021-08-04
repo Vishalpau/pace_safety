@@ -20,6 +20,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -71,6 +72,7 @@ const IncidentDetails = () => {
   const [propertiesAffectValue, setPropertiesAffectValue] = useState([]);
   const [eqiptmentAffectValue, setEquipmentAffectValue] = useState([]);
   const [environmentAffectValue, setEnvironmentAffectValue] = useState([]);
+  const [isNext, setIsNext] = useState(true)
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -134,6 +136,8 @@ const IncidentDetails = () => {
   // Function called on next button click.
   const handelNext = async (e) => {
     // Create case if id is not null and means it is an update case.
+    if(isNext){
+      setIsNext(false)
     if (id) {
       // Set next path.
       const tempNextPath = nextPath;
@@ -245,11 +249,12 @@ const IncidentDetails = () => {
             }
           }
         } catch (error) {
+          setIsNext(true)
           setMessage("Something went worng!");
           setMessageType("error");
           setOpen(true);
         }
-      }
+      }else{setIsNext(true)}
     } else {
       // Create case if id is not null and means it is an add new registration case.
       const { error, isValid } = validate(form);
@@ -335,12 +340,14 @@ const IncidentDetails = () => {
             }
           }
         } catch (error) {
+          setIsNext(true)
           setMessage("Something went worng!");
           setMessageType("error");
           setOpen(true);
         }
-      }
+      }else{setIsNext(true)}
     }
+  }
   };
 
   // get data incident type dropdown value
@@ -350,6 +357,7 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setIncidentTypeValue(result);
     } catch (error) {
+      setIsNext(true)
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -363,6 +371,7 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setContractorValue(result);
     } catch (error) {
+      setIsNext(true)
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -376,6 +385,7 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setSubContractorValue(result);
     } catch (error) {
+      setIsNext(true)
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -389,6 +399,7 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setPersonAffectedValue(result);
     } catch (error) {
+      setIsNext(true)
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -415,6 +426,7 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setEquipmentAffectValue(result);
     } catch (error) {
+      setIsNext(true)
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -428,6 +440,7 @@ const IncidentDetails = () => {
       const result = res.data.data.results;
       await setEnvironmentAffectValue(result);
     } catch (error) {
+      setIsNext(true)
       setMessage("Something went worng!");
       setMessageType("error");
       setOpen(true);
@@ -466,6 +479,7 @@ const IncidentDetails = () => {
         await setIsLoading(true);
         await fetchBreakDownData(result.fkProjectStructureIds);
       } catch (error) {
+        setIsNext(true)
         setMessage("Something went worng!");
         setMessageType("error");
         setOpen(true);
@@ -500,7 +514,7 @@ const IncidentDetails = () => {
               }
             });
           })
-          .catch(function(error) {});
+          .catch(function(error) {setIsNext(true)});
       } else {
         var config = {
           method: "get",
@@ -522,7 +536,7 @@ const IncidentDetails = () => {
               }
             });
           })
-          .catch(function(error) {});
+          .catch(function(error) {setIsNext(true)});
       }
     }
     dispatch(breakDownDetails(selectBreakDown));
@@ -551,6 +565,8 @@ const IncidentDetails = () => {
     fetchEnviornmentAffectValue();
     fetchIncidentsData();
   }, []);
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock icon="ion-md-list-box" title="Initial Notification">
@@ -699,6 +715,7 @@ const IncidentDetails = () => {
                 id="initial-detail-location"
                 variant="outlined"
                 label="Location"
+                error={error.incidentLocation}
                 helperText={
                   error.incidentLocation ? error.incidentLocation : ""
                 }
@@ -1004,13 +1021,15 @@ const IncidentDetails = () => {
           </Grid>
 
           {/* Right Sidebar */}
-          <Grid item xs={12} md={3}>
-            <FormSideBar
-              deleteForm={hideAffect}
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Incident details"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={hideAffect}
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Incident details"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <div> Loading...</div>

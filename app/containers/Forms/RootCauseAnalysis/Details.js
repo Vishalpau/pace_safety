@@ -1,19 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Container, Grid, Button } from "@material-ui/core";
+import { Grid, Button } from "@material-ui/core";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-import {
-  DateTimePicker,
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -23,9 +16,10 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
 import moment from "moment";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import api from "../../../utils/axios";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import { RCAOPTION } from "../../../utils/constants";
@@ -60,37 +54,46 @@ const Details = () => {
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: putId.current || parseInt(localStorage.getItem("fkincidentId")),
+    fkIncidentId:
+      putId.current || parseInt(localStorage.getItem("fkincidentId")),
   });
 
   const [error, setError] = useState({});
   const pkValue = useRef("");
   const history = useHistory();
-  const checkPost = useRef()
+  const checkPost = useRef();
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
   let [hideArray, setHideArray] = useState([]);
-  let investigationData = useRef({})
+  let investigationData = useRef({});
 
   // get data for put
   const handelUpdateCheck = async () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
 
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/causeanalysis/`
+    );
     let allApiData = previousData.data.data.results[0];
-    let investigationpreviousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    let investigationpreviousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
     let investigationData = investigationpreviousData.data.data.results[0];
     if (investigationData != null) {
       if (investigationData.rcaRecommended != "") {
-        setForm({ ...form, rcaRecommended: investigationData.rcaRecommended })
+        setForm({ ...form, rcaRecommended: investigationData.rcaRecommended });
       }
       investigationData.current = {
-        "startData": investigationData.srartDate,
-        "endDate": investigationData.endDate
-      }
+        startData: investigationData.srartDate,
+        endDate: investigationData.endDate,
+      };
     }
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
@@ -102,8 +105,10 @@ const Details = () => {
         evidenceNotSupport: allApiData.evidenceNotSupport,
         rcaRecommended: allApiData.rcaRecommended,
       });
+      await handelRcaRecommended("a", allApiData.rcaRecommended);
+      console.log(allApiData.rcaRecommended);
       putId.current = incidentId;
-      checkPost.current = false
+      checkPost.current = false;
     }
   };
 
@@ -154,13 +159,23 @@ const Details = () => {
     setError(error);
     if (Object.keys(error).length == 0) {
       if (checkPost.current !== false) {
-        const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/causeanalysis/`, form);
+        const res = await api.post(
+          `/api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/causeanalysis/`,
+          form
+        );
         if (res.status == 201) {
           nextPageLink = res.status;
         }
       } else {
         form["pk"] = pkValue.current;
-        const res = await api.put(`/api/v1/incidents/${putId.current}/causeanalysis/${pkValue.current}/`, form);
+        const res = await api.put(
+          `/api/v1/incidents/${putId.current}/causeanalysis/${
+            pkValue.current
+          }/`,
+          form
+        );
         if (res.status == 200) {
           nextPageLink = res.status;
         }
@@ -189,12 +204,14 @@ const Details = () => {
         );
       } else if (form.rcaRecommended == "PACE cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+            putId.current
           }`
         );
       } else if (form.rcaRecommended == "Root cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
+            putId.current
           }`
         );
       }
@@ -210,12 +227,13 @@ const Details = () => {
     setHideArray(localStorage.getItem("deleteForm"));
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {/* {console.log(hideArray)} */}
       <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
+        <Grid container item xs={12} md={9} spacing={3}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -224,7 +242,7 @@ const Details = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident description
             </Typography>
@@ -233,14 +251,16 @@ const Details = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <DateTimePicker
                 autoOk
                 inputVariant="outlined"
                 className={classes.formControl}
                 ampm={false}
-                value={moment(investigationData.current["startData"]).toISOString()}
+                value={moment(
+                  investigationData.current["startData"]
+                ).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation start date"
                 disabled
@@ -248,14 +268,16 @@ const Details = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <DateTimePicker
                 autoOk
                 inputVariant="outlined"
                 className={classes.formControl}
                 ampm={false}
-                value={moment(investigationData.current["endData"]).toISOString()}
+                value={moment(
+                  investigationData.current["endData"]
+                ).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation end date"
                 disabled
@@ -263,7 +285,7 @@ const Details = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Level of investigation
             </Typography>
@@ -272,7 +294,7 @@ const Details = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl
               variant="outlined"
               required
@@ -302,7 +324,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl
               component="fieldset"
               required
@@ -330,7 +352,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl
               component="fieldset"
               required
@@ -364,7 +386,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl
               component="fieldset"
               required
@@ -395,7 +417,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -405,13 +427,15 @@ const Details = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            deleteForm={hideArray}
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"RCA Details"}
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={hideArray}
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"RCA Details"}
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );

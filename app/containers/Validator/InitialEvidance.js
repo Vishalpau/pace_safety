@@ -3,7 +3,6 @@ import validator from "validator";
 function InitialEvidenceValidate(data) {
   let isValid = true;
   const error = {};
-  console.log('initial evidance',data)
   for (let i = 0; i < data.length; i++) {
   
     if (data[i].evidenceDocument !== null) {

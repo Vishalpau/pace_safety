@@ -7,7 +7,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from "@material-ui/core/styles";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import Grid from "@material-ui/core/Grid";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
@@ -47,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
-export default function AlertDialog({open, setOpen}) {
+export default function AlertDialog({open, setOpen,documentUrl}) {
 //   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
@@ -58,7 +62,15 @@ export default function AlertDialog({open, setOpen}) {
   const handleClose = () => {
     setOpen(false);
   };
-console.log(open)
+  const download = (image_link) => {
+    let onlyImage_url = image_link.replace("https://", "");
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    let imageArray = image_url.split("/");
+    let image_name = imageArray[imageArray.length - 1];
+    saveAs(image_url, image_name);
+    handleClose();
+  };
+
   return (
     <div>
      
@@ -77,18 +89,18 @@ console.log(open)
             {" Please choose what do you want to?"}
           </DialogTitle>
           <IconButton onClick={handleClose} className={classes.closeButton}>
-            {/* <Close /> */}
+            <Close />
           </IconButton>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <Button
-                    // startIcon={<VisibilityIcon />}
+                    startIcon={<VisibilityIcon />}
                     variant="contained"
                     color="primary"
                     className={classes.modalButton}
-                    // href={`${documentUrl}`}
+                    href={`${documentUrl}`}
                     disableElevation
                     target="_blank"
                   >
@@ -97,12 +109,12 @@ console.log(open)
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Button
-                    // startIcon={<GetAppIcon />}
+                    startIcon={<GetAppIcon />}
                     variant="contained"
                     color="primary"
                     className={classes.modalButton}
                     disableElevation
-                    // onClick={() => download(documentUrl)}
+                    onClick={() => download(documentUrl)}
                   >
                     Download
                   </Button>

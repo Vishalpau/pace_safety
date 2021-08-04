@@ -48,7 +48,7 @@ import {
 // import FormHeader from '../FormHeader';
 
 import ReportingValidation from "../../Validator/ReportingValidation";
-import InitialEvidenceValidate from '../../Validator/InitialEvidance';
+import InitialEvidenceValidate from "../../Validator/InitialEvidance";
 
 import api from "../../../utils/axios";
 import Attachment from "../../Attachment/Attacment";
@@ -274,74 +274,68 @@ const ReportingAndNotification = () => {
   const handelNext = async (e) => {
     if (isNext) {
       setIsnext(false);
-      // handle remove existing report
-      await handleRemoveExitingReport();
-
-      // update incident details
-      await handleUpdateIncidentDetails();
 
       // handle Initail evidance
       // await handleInitialEvidance();
-      const {error,isValid} = InitialEvidenceValidate(evidanceForm)
-      setEvidenceError(error)
-      let evidanceChecked = isValid
-      
-      if(evidanceChecked === true){
-      if(evidence.length>0){
-        for(var key in evidence){
-          const res = await api.delete(
-            `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
-          );
-        }
-      }
-      for(var key in evidanceForm){
+      const { error, isValid } = InitialEvidenceValidate(evidanceForm);
+      setEvidenceError(error);
+      let evidanceChecked = isValid;
 
-        if(typeof(evidanceForm[key].evidenceDocument) === "string"){
-          try{
-          await api.post(
-            `api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/evidences/`,
-            {
-              evidenceCategory:'Initial Evidence',
-              evidenceDocument:evidanceForm[key].evidenceDocument,
-              evidenceCheck: 'Yes',
-              evidenceNumber: 'string',
-              evidenceRemark: evidanceForm[key].evidenceRemark,
-              status: 'Active',
-              createdBy: parseInt(userId),
-              fkIncidentId: localStorage.getItem("fkincidentId")
+      if (evidanceChecked === true) {
+        for (var key in evidanceForm) {
+          if (typeof evidanceForm[key].evidenceDocument === "string") {
+            try {
+              await api.put(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/evidences/${evidanceForm[key].id}`,
+                {
+                  evidenceCategory: "Initial Evidence",
+                  evidenceDocument: evidanceForm[key].evidenceDocument,
+                  evidenceCheck: "Yes",
+                  evidenceNumber: "string",
+                  evidenceRemark: evidanceForm[key].evidenceRemark,
+                  status: "Active",
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                  id:evidanceForm[key].id
+                }
+              );
+            } catch (error) {
+              setIsnext(true);
             }
-          )
-          }
-          catch(error){
-            setIsnext(true);
-          }
-        }else{
-          try{
-          const formData = new FormData()
-          formData.append("evidenceDocument", evidanceForm[key].evidenceDocument);
-          formData.append("evidenceRemark", evidanceForm[key].evidenceRemark);
-          formData.append("evidenceCheck", "Yes");
-          formData.append("evidenceCategory", "Initial Evidence");
-          formData.append("createdBy", parseInt(userId));
-          formData.append("status", 'Active');
-          formData.append("fkIncidentId", localStorage.getItem(
-            "fkincidentId"
-          ));
-          const evidanceResponse = await api.post(
-            `api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/evidences/`,
-            formData
-          );
-            }catch(error){
-              setIsnext(true)
+          } else {
+            try {
+              const formData = new FormData();
+              formData.append(
+                "evidenceDocument",
+                evidanceForm[key].evidenceDocument
+              );
+              formData.append(
+                "evidenceRemark",
+                evidanceForm[key].evidenceRemark
+              );
+              formData.append("evidenceCheck", "Yes");
+              formData.append("evidenceCategory", "Initial Evidence");
+              formData.append("createdBy", parseInt(userId));
+              formData.append("status", "Active");
+              formData.append(
+                "fkIncidentId",
+                localStorage.getItem("fkincidentId")
+              );
+              const evidanceResponse = await api.post(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/evidences/`,
+                formData
+              );
+            } catch (error) {
+              setIsnext(true);
             }
+          }
         }
-      }
-      }else{
-        setIsnext(true)
+      } else {
+        setIsnext(true);
       }
       // check initial evidance
       if (evidanceCkecked === true) {
@@ -351,7 +345,13 @@ const ReportingAndNotification = () => {
         const { error, isValid } = ReportingValidation(form, reportOtherData);
         setError(error);
 
-        if (isValid === true) {
+        if (isValid === true && evidanceChecked === true) {
+          // handle remove existing report
+          await handleRemoveExitingReport();
+
+          // update incident details
+          await handleUpdateIncidentDetails();
+
           var newData = [];
           reportedToFilterData = [];
           for (var key in reportedTo) {
@@ -381,7 +381,7 @@ const ReportingAndNotification = () => {
               );
               status = res.status;
             } catch (err) {
-              setIsnext(true)
+              setIsnext(true);
             }
           }
 
@@ -456,28 +456,38 @@ const ReportingAndNotification = () => {
     if (fieldname === "evidenceDocument") {
       let file = e.target.files[0].name.split(".");
 
-      if(file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png"
-      || file[1].toLowerCase() === 'xls' || file[1].toLowerCase() === 'xlsx' || file[1].toLowerCase() === "pdf"
-      || file[1].toLowerCase() === 'doc' || file[1].toLowerCase() === 'word' || file[1].toLowerCase() === "ppt"
-      ){
-      if (e.target.files[0].size <= 1024 * 1024 * 25) {
-        temp[key][fieldname] = e.target.files[0];
-        await setMessage("File uploaded successfully!");
-        await setMessageType("success");
-        await setOpen(true);
+      if (
+        file[1].toLowerCase() === "jpg" ||
+        file[1].toLowerCase() === "jpeg" ||
+        file[1].toLowerCase() === "png" ||
+        file[1].toLowerCase() === "xls" ||
+        file[1].toLowerCase() === "xlsx" ||
+        file[1].toLowerCase() === "pdf" ||
+        file[1].toLowerCase() === "doc" ||
+        file[1].toLowerCase() === "word" ||
+        file[1].toLowerCase() === "ppt"
+      ) {
+        if (e.target.files[0].size <= 1024 * 1024 * 25) {
+          temp[key][fieldname] = e.target.files[0];
+          await setMessage("File uploaded successfully!");
+          await setMessageType("success");
+          await setOpen(true);
+        } else {
+          ref.current.value = "";
+          await setMessage(
+            "File uploading failed! Select file less than 25MB!"
+          );
+          await setMessageType("error");
+          await setOpen(true);
+        }
       } else {
-        ref.current.value = ""
-        await setMessage("File uploading failed! Select file less than 25MB!");
+        ref.current.value = "";
+        await setMessage(
+          "Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!"
+        );
         await setMessageType("error");
         await setOpen(true);
       }
-    }
-    else{
-      ref.current.value = ""
-        await setMessage("Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!");
-        await setMessageType("error");
-        await setOpen(true);
-    }
     } else {
       temp[key][fieldname] = value;
     }
@@ -749,9 +759,7 @@ const ReportingAndNotification = () => {
             ) : null}
 
             <Grid item lg={12} md={6} sm={6}>
-              <FormControl
-                component="fieldset"
-              >
+              <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Notification to be sent?
                 </FormLabel>
@@ -785,23 +793,32 @@ const ReportingAndNotification = () => {
 
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
-                  <Grid item md={typeof(item.evidenceDocument) === "string" ? 2:6}>
+                  <Grid
+                    item
+                    md={typeof item.evidenceDocument === "string" ? 2 : 6}
+                  >
                     <input
-                    ref={ref}
+                      ref={ref}
                       id="file"
                       type="file"
                       accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                      style={{ color: typeof(item.evidenceDocument) === "string" && "transparent" }}
+                      style={{
+                        color:
+                          typeof item.evidenceDocument === "string" &&
+                          "transparent",
+                      }}
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceDocument")
                       }
                     />
                   </Grid>
-                  {typeof(item.evidenceDocument) === "string"?<Grid item md={4}>
-                  <Tooltip title={"fileName"}>
-                    <Attachment  value={item.evidenceDocument}/>
-                  </Tooltip>
-                  </Grid>:null}
+                  {typeof item.evidenceDocument === "string" ? (
+                    <Grid item md={4}>
+                      <Tooltip title={"fileName"}>
+                        <Attachment value={item.evidenceDocument} />
+                      </Tooltip>
+                    </Grid>
+                  ) : null}
                   <Grid item md={4}>
                     <TextField
                       id="evidanceRemark"
@@ -809,15 +826,17 @@ const ReportingAndNotification = () => {
                       variant="outlined"
                       label="Evidences remark"
                       error={
-                        evidenceError && evidenceError[`evidenceRemark${[index]}`]
+                        evidenceError &&
+                        evidenceError[`evidenceRemark${[index]}`]
                       }
                       helperText={
-                        evidenceError && evidenceError[`evidenceRemark${[index]}`]
+                        evidenceError &&
+                        evidenceError[`evidenceRemark${[index]}`]
                           ? evidenceError[`evidenceRemark${[index]}`]
                           : null
                       }
                       className={classes.formControl}
-                      value = {item.evidenceRemark}
+                      value={item.evidenceRemark}
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceRemark")
                       }
@@ -833,18 +852,18 @@ const ReportingAndNotification = () => {
                       <AddCircleIcon />
                     </IconButton>
                   </Grid>
-                
-                    <Grid item md={1}>
-                      {evidanceForm.length>1?
+
+                  <Grid item md={1}>
+                    {evidanceForm.length > 1 ? (
                       <IconButton
                         variant="contained"
                         color="primary"
                         onClick={() => handleRemoveEvidance(index)}
                       >
                         <DeleteForeverIcon />
-                      </IconButton>:null}
-                    </Grid>
-        
+                      </IconButton>
+                    ) : null}
+                  </Grid>
                 </Grid>
               ))}
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
@@ -1086,7 +1105,6 @@ const ReportingAndNotification = () => {
               selectedItem="Reporting and notification"
             />
           </Grid>
-          
         </Grid>
       ) : (
         <h1>Loading...</h1>

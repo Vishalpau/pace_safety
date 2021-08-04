@@ -55,7 +55,6 @@ function validate(data) {
     error.isEnviromentalImpacted = "Please choose enviornment affected";
     isValid = false;
   }
-  console.log(error)
   return { error, isValid };
 }
 

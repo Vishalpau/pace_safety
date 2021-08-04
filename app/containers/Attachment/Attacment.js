@@ -83,7 +83,7 @@ export const Attachment = ({ value }) => {
         onClick={()=>setOpen(true)}
         
       />
-      <AlertMessage  open={open} setOpen={setOpen}/>
+      <AlertMessage  open={open} setOpen={setOpen} documentUrl={value}/>
       </>
     );
   }

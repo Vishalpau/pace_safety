@@ -24,6 +24,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
 import AddIcon from "@material-ui/icons/Add";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
 
 import api from "../../utils/axios";
 import { Link } from "react-router-dom";
@@ -174,8 +176,16 @@ const IncidentDetailsSummary = () => {
   };
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <Grid container spacing={3}>
+      {!isDesktop && (
+        <Grid item xs={12}>
+          <Button variant="outlined" startIcon={<EditIcon />}>
+            Modify Initial Notification
+          </Button>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident overview
@@ -187,7 +197,7 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
 
-      <Grid item md={6}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident on
         </Typography>
@@ -198,7 +208,7 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
 
-      <Grid item md={6}>
+      <Grid item mxs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Reported on
         </Typography>
@@ -210,7 +220,7 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
 
-      <Grid item md={6}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Reported by
         </Typography>
@@ -220,7 +230,7 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
 
-      <Grid item md={6}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident type
         </Typography>
@@ -230,17 +240,16 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
 
-      <Grid item md={12}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident description
         </Typography>
 
-        {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
         <Typography className={Fonts.labelValue}>
           {incidents["incidentDetails"]}
         </Typography>
       </Grid>
-      <Grid item md={12}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Immediate action taken
         </Typography>
@@ -250,17 +259,17 @@ const IncidentDetailsSummary = () => {
         </Typography>
       </Grid>
 
-      <Grid item md={12}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Incident location
         </Typography>
 
         <Typography className={Fonts.labelValue}>
-          {incidents["incidentLocation"]}
+          {incidents["incidentLocation"] ? incidents["incidentLocation"] : "-"}
         </Typography>
       </Grid>
 
-      <Grid item md={6}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Contractor
         </Typography>
@@ -269,7 +278,7 @@ const IncidentDetailsSummary = () => {
           {incidents["contractor"]}
         </Typography>
       </Grid>
-      <Grid item md={6}>
+      <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Sub-contractor
         </Typography>
@@ -624,29 +633,36 @@ const IncidentDetailsSummary = () => {
               {enviornmentData.length !== 0
                 ? enviornmentData.map((envData, key) => (
                     <Grid container item xs={12} spacing={3} key={key}>
-                      <Grid item md={6}>
+                      <Grid item xs={12}>
                         <Typography
                           variant="h6"
                           gutterBottom
                           className={Fonts.labelName}
                         >
-                          {key + 1}: {envData.envQuestion}
+                          {envData.envQuestion}
                         </Typography>
 
                         <Typography className={Fonts.labelValue}>
                           {envData.envQuestionOption}
                         </Typography>
                       </Grid>
-                      <Grid item md={12}>
+                      <Grid item xs={12}>
+                      <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                         Details of {envData.envQuestion.slice(14,-1)}
+                        </Typography>
                         <Typography className={Fonts.labelValue}>
-                          {"Answer Details:"} {envData.envAnswerDetails}
+                        {envData.envAnswerDetails}
                         </Typography>
                       </Grid>
                     </Grid>
                   ))
                 : null}
               {incidents["enviromentalImpactComments"] !== "" ? (
-                <Grid item md={6}>
+                <Grid item md={12} xs={12}>
                   <Typography
                     variant="h6"
                     gutterBottom
@@ -677,7 +693,7 @@ const IncidentDetailsSummary = () => {
           </AccordionSummary>
           <AccordionDetails>
             <Grid container item xs={12} spacing={3}>
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <Typography
                   variant="h6"
                   gutterBottom
@@ -694,7 +710,7 @@ const IncidentDetailsSummary = () => {
                   : null}
               </Grid>
 
-              <Grid item md={6}>
+              <Grid item xs={12} md={12}>
                 <Typography
                   variant="h6"
                   gutterBottom
@@ -723,7 +739,7 @@ const IncidentDetailsSummary = () => {
                         xs={12}
                         spacing={3}
                       >
-                        <Grid item md={6}>
+                        <Grid item xs={12} md={6}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -738,7 +754,7 @@ const IncidentDetailsSummary = () => {
                             {value.evidenceNumber}
                           </Typography>
                         </Grid>
-                        <Grid item lg={6} md={6}>
+                        <Grid item xs={12} md={6}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -753,7 +769,7 @@ const IncidentDetailsSummary = () => {
                             {value.evidenceCheck}
                           </Typography>
                         </Grid>
-                        <Grid item lg={6} md={6}>
+                        <Grid item xs={12} md={6}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -768,7 +784,7 @@ const IncidentDetailsSummary = () => {
                             {value.evidenceCategory}
                           </Typography>
                         </Grid>
-                        <Grid item lg={6} md={6}>
+                        <Grid item xs={12} md={6}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -784,7 +800,7 @@ const IncidentDetailsSummary = () => {
                           </Typography>
                         </Grid>
                         {value.evidenceDocument ? (
-                          <Grid item lg={6} md={6}>
+                          <Grid item xs={12} md={6}>
                             <Typography
                               variant="h6"
                               gutterBottom
@@ -818,55 +834,6 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
 
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Transition}
-          keepMounted
-          PaperProps={{
-            style: {
-              width: 700,
-            },
-          }}
-        >
-          <DialogTitle id="alert-dialog-slide-title">
-            {" Please choose what do you want to?"}
-          </DialogTitle>
-          <IconButton onClick={handleClose} className={classes.closeButton}>
-            <Close />
-          </IconButton>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <Button
-                    startIcon={<VisibilityIcon />}
-                    variant="contained"
-                    color="primary"
-                    className={classes.modalButton}
-                    href={`${documentUrl}`}
-                    disableElevation
-                    target="_blank"
-                  >
-                    View Attachment
-                  </Button>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Button
-                    startIcon={<GetAppIcon />}
-                    variant="contained"
-                    color="primary"
-                    className={classes.modalButton}
-                    disableElevation
-                    onClick={() => download(documentUrl)}
-                  >
-                    Download
-                  </Button>
-                </Grid>
-              </Grid>
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
      
       </Grid>
     </Grid>

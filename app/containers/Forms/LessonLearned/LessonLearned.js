@@ -1,26 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { PapperBlock } from "dan-components";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import IconButton from "@material-ui/core/IconButton";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
@@ -30,9 +20,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
+import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -45,7 +36,7 @@ import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 
-import axios from "axios";
+
 import Attachment from "../../Attachment/Attacment";
 
 function Alert(props) {
@@ -122,9 +113,9 @@ const LessionLearned = () => {
 
   const handleAttchment = async (e) => {
     const inputValue = e.target.files[0].name
-    console.log(e.target.files[0])
+
     let file = inputValue.split(".");
-    console.log(file)
+   
     if (
       file[1].toLowerCase() === "jpg" ||
       file[1].toLowerCase() === "jpeg" ||
@@ -166,31 +157,32 @@ const LessionLearned = () => {
 
     if (isValid === true) {
       if(attachment[0].evidenceDocument !== null){
-        if (evidence.length > 0) {
-          for (let key in evidence) {
-            const res = await api.delete(
-              `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
+        if(typeof(attachment[0].evidenceDocument)!=="string"){
+          if (evidence.length > 0) {
+            for (let key in evidence) {
+              const res = await api.delete(
+                `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
+              );
+            }
+          }
+          const formData = new FormData();
+          formData.append("evidenceDocument", attachment[0].evidenceDocument);
+          formData.append("evidenceCheck", "Yes");
+          formData.append("evidenceNumber", "string");
+          formData.append("evidenceCategory", "Lessons Learned");
+          formData.append("createdBy", parseInt(userId));
+          formData.append("status", "Active");
+          formData.append("fkIncidentId", id);
+          try {
+            const res = await api.post(
+              `api/v1/incidents/${id}/evidences/`,
+              formData
             );
+          } catch (error) {
+          
           }
         }
-        const formData = new FormData();
-        formData.append("evidenceDocument", attachment[0].evidenceDocument);
-        formData.append("evidenceCheck", "Yes");
-        formData.append("evidenceNumber", "string");
-        formData.append("evidenceCategory", "Lessons Learned");
-        formData.append("createdBy", parseInt(userId));
-        formData.append("status", "Active");
-        formData.append("fkIncidentId", id);
-        console.log(formData)
-        try {
-          const res = await api.post(
-            `api/v1/incidents/${id}/evidences/`,
-            formData
-          );
-         console.log(res)
-        } catch (error) {
-        
-        }
+       
 
       }
       
@@ -285,7 +277,6 @@ const LessionLearned = () => {
       if(newData.length>0){
         setAttachment(newData)
       }
-      console.log("lesson learned", newData);
     }
   };
 
@@ -324,12 +315,13 @@ const LessionLearned = () => {
     }
     fetchIncidentsData();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Lessons Learnt" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} justify="flex-start" spacing={3}>
-            <Grid item md={6}>
+          <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number
               </Typography>
@@ -339,7 +331,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident occured on
               </Typography>
@@ -350,7 +342,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident reported on
               </Typography>
@@ -361,7 +353,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Reported by
               </Typography>
@@ -370,7 +362,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident type
               </Typography>
@@ -379,7 +371,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident title
               </Typography>
@@ -388,7 +380,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident description
               </Typography>
@@ -397,7 +389,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident location
               </Typography>
@@ -406,23 +398,23 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 Key learnings
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               {form.map((value, key) => (
                 <Grid
                   container
                   spacing={3}
                   item
-                  md={12}
+                  xs={12}
                   className="repeatedGrid"
                   key={key}
                 >
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <FormControl
                       variant="outlined"
                       required
@@ -456,7 +448,7 @@ const LessionLearned = () => {
                       )}
                     </FormControl>
                   </Grid>
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="outlined-search"
                       required
@@ -476,7 +468,7 @@ const LessionLearned = () => {
                     />
                   </Grid>
                   {form.length > 1 ? (
-                    <Grid item md={3}>
+                    <Grid item xs={12} md={3}>
                       <Button
                         onClick={() => handleRemove(key)}
                         variant="contained"
@@ -491,7 +483,7 @@ const LessionLearned = () => {
                 </Grid>
               ))}
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <button
                 className={classes.textButton}
                 onClick={() => addNewTeamOrDeparment()}
@@ -499,7 +491,7 @@ const LessionLearned = () => {
                 <AddIcon /> Add learnings from another team/department
               </button>
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Snackbar
                 open={open}
                 autoHideDuration={6000}
@@ -530,26 +522,25 @@ const LessionLearned = () => {
                 </Grid>
               ):null} 
             </Grid>
-            <Grid item md={12}>
-              <Box marginTop={4}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  // href="#contained-buttons"
-                  onClick={() => handleNext()}
-                >
-                  Submit
-                </Button>
-              </Box>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleNext()}
+              >
+                Submit
+              </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lessons learnt"}
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={LESSION_LEARNED_FORM}
+                selectedItem={"Lessons learnt"}
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>
