@@ -446,13 +446,7 @@ const WorkerDetails = () => {
     await handelUpdateCheck();
   };
 
-  const handelFileName = () => {
-    setTimeout(function () {
-      document.getElementById("selectFile").defaultValue
-      // document.getElementById("selectFile").style.color = "transparent"
-      // fileRef.current.value !== undefined ? fileRef.current.value = "" : null
-    }, 1000)
-  }
+
 
   const PickList = async () => {
     await handelUpdateCheck();
@@ -1417,8 +1411,6 @@ const WorkerDetails = () => {
                   type="file"
                   className={classes.fullWidth}
                   name="file"
-                  // ref={fileRef}
-                  loaded={(e) => handelFileName(e)}
                   accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
                   style={{ color: typeof (form.attachments) === "string" && "transparent" }}
                   onChange={(e) => {
