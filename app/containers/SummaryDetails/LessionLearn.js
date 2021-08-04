@@ -18,6 +18,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import EditIcon from "@material-ui/icons/Edit";
+import { useHistory, useParams } from "react-router";
 
 // Styles
 import "../../styles/custom.css";
@@ -72,6 +73,7 @@ function getModalStyle() {
 }
 
 const LessionLearnSummary = () => {
+  const { id } = useParams();
   const [lessionlearn, setLessionLearn] = useState([]);
   const fkid = localStorage.getItem("fkincidentId");
   const [evidence, setEvidence] = useState([]);
@@ -79,6 +81,7 @@ const LessionLearnSummary = () => {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
   const [documentUrl, setDocumentUrl] = useState("");
+  const history = useHistory();
 
   const handleOpen = (document) => {
     setDocumentUrl(document);
@@ -113,6 +116,17 @@ const LessionLearnSummary = () => {
     const fileName = fileNameArray[fileNameArray.length - 1];
     return fileName;
   };
+  if (id) {
+    localStorage.setItem("fkincidentId", id);
+  }
+
+  const handelLessionLearnt = (e, value) => {
+    if (value == "modify") {
+      history.push(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+    } else if (value == "add") {
+      history.push(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+    }
+  }
 
   useEffect(() => {
     fetchLessionLearnData();
@@ -125,9 +139,16 @@ const LessionLearnSummary = () => {
     <Grid container spacing={3}>
       {!isDesktop && (
         <Grid item xs={12}>
-          <Button variant="outlined" startIcon={<EditIcon />}>
-            Modify Lessons Learnt
-          </Button>
+          {lessionlearn.length > 0 ?
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelLessionLearnt(e, "modify")}>
+              Modify Lessons Learnt
+            </Button>
+            :
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelLessionLearnt(e, "add")}>
+              Add Lessons Learnt
+            </Button>
+          }
+
         </Grid>
       )}
       <Grid item xs={12}>
@@ -138,71 +159,71 @@ const LessionLearnSummary = () => {
           <AccordionDetails>
             {lessionlearn.length !== 0
               ? lessionlearn.map((lession, key) => (
-                  <Grid
-                    container
-                    spacing={3}
-                    key={key}
-                    className="repeatedGrid"
-                  >
-                    <Grid item xs={12}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Team Or Department
-                      </Typography>
-                      <Typography className={Fonts.labelValue}>
-                        {lession.teamOrDepartment}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography
-                        variant="h6"
-                        gutterBottom
-                        className={Fonts.labelName}
-                      >
-                        Learnings
-                      </Typography>
-                      <Typography className={Fonts.labelValue}>
-                        {lession.learnings}
-                      </Typography>
-                    </Grid>
+                <Grid
+                  container
+                  spacing={3}
+                  key={key}
+                  className="repeatedGrid"
+                >
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={Fonts.labelName}
+                    >
+                      Team Or Department
+                    </Typography>
+                    <Typography className={Fonts.labelValue}>
+                      {lession.teamOrDepartment}
+                    </Typography>
                   </Grid>
-                ))
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      className={Fonts.labelName}
+                    >
+                      Learnings
+                    </Typography>
+                    <Typography className={Fonts.labelValue}>
+                      {lession.learnings}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              ))
               : null}
             <Grid item md={12}>
               {evidence.length !== 0
                 ? evidence
-                    .filter(
-                      (item) => item.evidenceCategory === "Lessons Learned"
-                    )
-                    .map((value, index) => (
-                      <Grid
-                        key={index}
-                        className="repeatedGrid"
-                        container
-                        item
-                        md={12}
-                        spacing={3}
-                      >
-                        <Grid container item xs={12} spacing={3}>
-                          {value.evidenceDocument ? (
-                            <Grid item lg={6} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
+                  .filter(
+                    (item) => item.evidenceCategory === "Lessons Learned"
+                  )
+                  .map((value, index) => (
+                    <Grid
+                      key={index}
+                      className="repeatedGrid"
+                      container
+                      item
+                      md={12}
+                      spacing={3}
+                    >
+                      <Grid container item xs={12} spacing={3}>
+                        {value.evidenceDocument ? (
+                          <Grid item lg={6} md={6}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              Document
+                            </Typography>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              <Tooltip
+                                title={handelFileName(value.evidenceDocument)}
                               >
-                                Document
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                <Tooltip
-                                  title={handelFileName(value.evidenceDocument)}
-                                >
                                   <IconButton
                                     onClick={() =>
                                       handleOpen(value.evidenceDocument)
@@ -217,7 +238,8 @@ const LessionLearnSummary = () => {
                           ) : null}
                         </Grid>
                       </Grid>
-                    ))
+                    // </Grid>
+                  ))
                 : null}
             </Grid>
          </AccordionDetails>

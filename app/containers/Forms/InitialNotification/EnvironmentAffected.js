@@ -106,8 +106,8 @@ const EnvironmentAffected = () => {
     const temp = form;
     const { value } = e.target;
     temp[key][fieldname] = value;
-    if (temp[key]["envQuestionOption"] !== "Yes") {
-      temp[key]["envAnswerDetails"] = temp[key]["envQuestionOption"];
+    if (temp[key].envQuestionOption !== "Yes") {
+      temp[key].envAnswerDetails = temp[key].envQuestionOption;
     }
     setForm(temp);
   };
@@ -117,8 +117,8 @@ const EnvironmentAffected = () => {
     const temp = [...environmentListData];
     const { value } = e.target;
     temp[key][fieldname] = value;
-    if (temp[key]["envQuestionOption"] !== "Yes") {
-      temp[key]["envAnswerDetails"] = temp[key]["envQuestionOption"];
+    if (temp[key].envQuestionOption !== "Yes") {
+      temp[key].envAnswerDetails = temp[key].envQuestionOption;
     }
     temp[key].updatedBy = parseInt(userId);
     temp[key].updatedAt = moment(new Date()).toISOString();
@@ -132,7 +132,7 @@ const EnvironmentAffected = () => {
       setError(error);
       if (isValid) {
         try {
-          for (var i = 0; i < environmentListData.length; i++) {
+          for (let i = 0; i < environmentListData.length; i++) {
             const res = await api.put(
               `api/v1/incidents/${id}/environment/${
                 environmentListData[i].id
@@ -142,8 +142,8 @@ const EnvironmentAffected = () => {
           }
         } catch (error) {}
         const temp = incidentsListData;
-        temp["updatedAt"] = moment(new Date()).toISOString();
-        temp["enviromentalImpactComments"] =
+        temp.updatedAt = moment(new Date()).toISOString();
+        temp.enviromentalImpactComments =
           envComments || incidentsListData.enviromentalImpactComments;
         try {
           await api.put(
@@ -169,8 +169,8 @@ const EnvironmentAffected = () => {
             );
           }
           const temp = incidentsListData;
-          temp["updatedAt"] = moment(new Date()).toISOString();
-          temp["enviromentalImpactComments"] =
+          temp.updatedAt = moment(new Date()).toISOString();
+          temp.enviromentalImpactComments =
             envComments || incidentsListData.enviromentalImpactComments;
 
           const res = await api.put(
@@ -276,7 +276,7 @@ const EnvironmentAffected = () => {
     <PapperBlock title="Environment Impact" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <>
+          <Grid container item xs={12} md={9} spacing={3}>
             {environmentListData.length !== 0 ? (
               environmentListData.map((env, key) => (
                 <Grid container item spacing={3} xs={12} key={key}>
@@ -631,7 +631,7 @@ const EnvironmentAffected = () => {
                 Next
               </Button>
             </Grid>
-          </>
+          </Grid>
           {isDesktop && (
             <Grid item md={3}>
               <FormSideBar

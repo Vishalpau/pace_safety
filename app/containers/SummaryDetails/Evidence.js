@@ -92,6 +92,8 @@ const EvidenceSummary = () => {
   const [expanded, setExpanded] = React.useState(false);
 
   const { id } = useParams();
+  const history = useHistory();
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = (document) => {
@@ -119,7 +121,7 @@ const EvidenceSummary = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const fetchEvidanceData = async () => {
+  const fetchEvidenceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     const result = allEvidence.data.data.results;
     const newData = result.filter(
@@ -142,9 +144,21 @@ const EvidenceSummary = () => {
     return fileName;
   };
 
+  if (id) {
+    localStorage.setItem("fkincidentId", id);
+  }
+
+  const handelEvidence = (e, value) => {
+    if (value == "modify") {
+      history.push(`/app/incident-management/registration/evidence/evidence/${id}`)
+    } else if (value == "add") {
+      history.push(`/app/incident-management/registration/evidence/evidence/`)
+    }
+  }
+
   useEffect(() => {
     if (id) {
-      fetchEvidanceData();
+      fetchEvidenceData();
       fetchActivityData();
     }
     setIsLoding(true);
@@ -158,9 +172,15 @@ const EvidenceSummary = () => {
         <Grid container spacing={3}>
           {!isDesktop && (
             <Grid item xs={12}>
-              <Button variant="outlined" startIcon={<EditIcon />}>
-                Modify Evidence
-              </Button>
+              {evidence.length > 0 ?
+                <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelEvidence(e, "modify")}>
+                  Modify Evidence
+                </Button>
+                :
+                <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelEvidence(e, "add")}>
+                  Add Evidence
+                </Button>
+              }
             </Grid>
           )}
           <Grid item xs={12}>
@@ -196,31 +216,31 @@ const EvidenceSummary = () => {
                     <TableBody>
                       {evidence.length !== 0
                         ? evidence.map((value, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{value.evidenceNumber}</TableCell>
-                              <TableCell>{value.evidenceCheck}</TableCell>
-                              <TableCell>{value.evidenceCategory}</TableCell>
-                              <TableCell>
-                                {value.evidenceRemark
-                                  ? value.evidenceRemark
-                                  : "-"}
-                              </TableCell>
+                          <TableRow key={index}>
+                            <TableCell>{value.evidenceNumber}</TableCell>
+                            <TableCell>{value.evidenceCheck}</TableCell>
+                            <TableCell>{value.evidenceCategory}</TableCell>
+                            <TableCell>
+                              {value.evidenceRemark
+                                ? value.evidenceRemark
+                                : "-"}
+                            </TableCell>
 
-                              <TableCell>
-                                {value.evidenceDocument ? (
-                                  <Tooltip
-                                    title={handelFileName(
-                                      value.evidenceDocument
-                                    )}
-                                  >
-                                    <Attachment value={value.evidenceDocument}/>
-                                   </Tooltip>
-                                ) : (
-                                  "-"
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ))
+                            <TableCell>
+                              {value.evidenceDocument ? (
+                                <Tooltip
+                                  title={handelFileName(
+                                    value.evidenceDocument
+                                  )}
+                                >
+                                  <Attachment value={value.evidenceDocument}/>
+                               </Tooltip>
+                              ) : (
+                                "-"
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))
                         : null}
                     </TableBody>
                   </Table>
@@ -243,43 +263,43 @@ const EvidenceSummary = () => {
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(0, 21).map((ad, key) => (
-                        <Grid item xs={12} md={6} key={key}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            {ad.question}
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {ad.answer}
-                          </Typography>
-                        </Grid>
-                      ))
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
                     : null}
                 </Grid>
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(21, 25).map((ad, key) => (
-                        <Grid item xs={12} key={key}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            {ad.question}
-                          </Typography>
-                          <Typography
-                            variant="body"
-                            className={Fonts.labelValue}
-                          >
-                            {ad.answer ? ad.answer : "-"}
-                          </Typography>
-                        </Grid>
-                      ))
+                      <Grid item xs={12} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer ? ad.answer : "-"}
+                        </Typography>
+                      </Grid>
+                    ))
                     : "-"}
                 </Grid>
               </AccordionDetails>

@@ -26,7 +26,7 @@ export const access_token = localStorage.getItem("access_token");
 export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/"
 
 // Header authenticatuon 
-export const HEADER_AUTH = {'Authorization': `Bearer ${access_token}`  }
+export const HEADER_AUTH = { 'Authorization': `Bearer ${access_token}` }
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details": `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
@@ -95,7 +95,7 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",
   "Corrective actions":
     "/app/incident-management/registration/root-cause-analysis/management-control/",
-  "Root cause analysis":
+  "Cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
   "Five Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
@@ -117,7 +117,7 @@ export const FORM_HEADER = {
     "/app/incident-management/registration/investigation/initial-details/",
   "Evidence Collection":
     "/app/incident-management/registration/evidence/evidence/",
-  "Root cause analysis":
+  "Cause analysis":
     "/app/incident-management/registration/root-cause-analysis/details/",
   Summary: "/app/incident-management/registration/summary/summary/",
   "Lession Learned":
@@ -297,7 +297,7 @@ export const MANAGEMENTCONTROL = [
 export const RCAOPTION = [
   "Five why analysis",
   "PACE cause analysis",
-  "Root cause analysis",
+  "Cause analysis",
 ];
 
 export const HIGHESTPOTENTIALIMPACTOR = [

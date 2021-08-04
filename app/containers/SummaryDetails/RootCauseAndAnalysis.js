@@ -23,6 +23,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import { useHistory, useParams } from "react-router";
 
 // Styles
 import api from "../../utils/axios";
@@ -54,30 +55,6 @@ const RootCauseAnalysisSummary = () => {
   };
 
   const fkid = localStorage.getItem("fkincidentId");
-
-  const subValues = [
-    "Supervision",
-    "Workpackage",
-    "Equipment machinery",
-    "Behaviour issue",
-    "Safety issues",
-    "Ergonimics",
-    "Procedures",
-    "Other acts",
-    "Warning system",
-    "Energy types",
-    "Tools",
-    "Safety items",
-    "Others conditions",
-    "personal",
-    "wellnessFactors",
-    "Others human factors",
-    "Leadership",
-    "processes",
-    "Others job factors",
-    "Management control",
-    "Region support above",
-  ];
 
   const fetchRootCauseData = async () => {
     const allRootCause = await api.get(`/api/v1/incidents/${fkid}/rootcauses/`);
@@ -116,7 +93,7 @@ const RootCauseAnalysisSummary = () => {
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
         return c.toUpperCase();
       });
     return newString;
@@ -126,6 +103,18 @@ const RootCauseAnalysisSummary = () => {
     let valueArray = value.replace(",", ",  ");
     return valueArray;
   };
+  const history = useHistory();
+  // if (id) {
+  //   localStorage.setItem("fkincidentId", id);
+  // }
+
+  const handelRootCauseAnalysis = (e, value) => {
+    if (value == "modify") {
+      history.push(`/app/incident-management/registration/root-cause-analysis/details/${id}`)
+    } else if (value = "add") {
+      history.push(`/app/incident-management/registration/root-cause-analysis/details/`)
+    }
+  }
 
   useEffect(() => {
     fetchRootCauseData();
@@ -140,9 +129,16 @@ const RootCauseAnalysisSummary = () => {
     <Grid container spacing={3}>
       {!isDesktop && (
         <Grid item xs={12}>
-          <Button variant="outlined" startIcon={<EditIcon />}>
-            Modify RCA
-          </Button>
+          {fiveWhy.length > 0 || rootCause.length > 0 || pacecauses.length > 0 ?
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelRootCauseAnalysis(e, "modify")}>
+              Modify RCA
+            </Button>
+            :
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelRootCauseAnalysis(e, "add")}>
+              Add RCA
+            </Button>
+          }
+
         </Grid>
       )}
       {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (

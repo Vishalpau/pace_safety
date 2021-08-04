@@ -85,15 +85,19 @@ const Details = () => {
     let investigationpreviousData = await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
     );
-    let investigationData = investigationpreviousData.data.data.results[0];
-    if (investigationData != null) {
-      if (investigationData.rcaRecommended != "") {
-        setForm({ ...form, rcaRecommended: investigationData.rcaRecommended });
+    let investigationApiData = investigationpreviousData.data.data.results[0];
+    if (investigationApiData != null) {
+      if (investigationApiData.rcaRecommended != "") {
+        setForm({ ...form, rcaRecommended: investigationApiData.rcaRecommended });
       }
+      console.log(investigationData.classification)
+
       investigationData.current = {
-        startData: investigationData.srartDate,
-        endDate: investigationData.endDate,
-      };
+        startData: investigationApiData.srartDate,
+        endDate: investigationApiData.endDate,
+        classification: investigationApiData.classification
+      }
+
     }
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
@@ -135,11 +139,11 @@ const Details = () => {
         "Basic cause",
         "Basic cause and action",
         "Corrective actions",
-        "Root cause analysis",
+        "Cause analysis",
       ]);
     } else if (value == "PACE cause analysis") {
-      setHideArray(["Root cause analysis", "Five Why analysis"]);
-    } else if (value == "Root cause analysis") {
+      setHideArray(["Cause analysis", "Five Why analysis"]);
+    } else if (value == "Cause analysis") {
       setHideArray([
         "Hazardous acts",
         "Hazardous conditions",
@@ -171,8 +175,7 @@ const Details = () => {
       } else {
         form["pk"] = pkValue.current;
         const res = await api.put(
-          `/api/v1/incidents/${putId.current}/causeanalysis/${
-            pkValue.current
+          `/api/v1/incidents/${putId.current}/causeanalysis/${pkValue.current
           }/`,
           form
         );
@@ -191,7 +194,7 @@ const Details = () => {
         history.push(
           "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
         );
-      } else if (form.rcaRecommended == "Root cause analysis") {
+      } else if (form.rcaRecommended == "Cause analysis") {
         console.log("here");
         history.push(
           "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
@@ -204,14 +207,12 @@ const Details = () => {
         );
       } else if (form.rcaRecommended == "PACE cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
           }`
         );
-      } else if (form.rcaRecommended == "Root cause analysis") {
+      } else if (form.rcaRecommended == "Cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
           }`
         );
       }
@@ -287,10 +288,10 @@ const Details = () => {
 
           <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Level of investigation
+              Level of classification
             </Typography>
             <Typography className={Type.labelValue}>
-              Level to be displayed here.
+              {investigationData.current["classification"]}
             </Typography>
           </Grid>
 
