@@ -35,7 +35,6 @@ import { Link } from "react-router-dom";
 import Fonts from "dan-styles/Fonts.scss";
 import "../../styles/custom.css";
 
-import { FileIcon } from "react-file-icon";
 import Attachment from "../Attachment/Attacment";
 
 const useStyles = makeStyles((theme) => ({
@@ -603,8 +602,8 @@ const IncidentDetailsSummary = () => {
                     Do you have details to share about the equipment affected?
                   </Typography>
                   <Typography className={Fonts.labelValue}>
-                        {incidents['isEquipmentDamagedAvailable']}
-                      </Typography>
+                    {incidents['isEquipmentDamagedAvailable']}
+                  </Typography>
                   {incidents.equipmentDamagedComments !== "" ? (
                     <>
                       <Typography
@@ -614,7 +613,7 @@ const IncidentDetailsSummary = () => {
                       >
                         Details of equipment affected:-
                       </Typography>
-                      
+
                       <Typography className={Fonts.labelValue}>
                         {incidents.equipmentDamagedComments}
                       </Typography>
@@ -656,15 +655,15 @@ const IncidentDetailsSummary = () => {
                       </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                    <Typography
+                      <Typography
                         variant="h6"
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        {"Details of"}{envData.envQuestion.slice(14,-1)}
+                        {"Details of"}{envData.envQuestion.slice(14, -1)}
                       </Typography>
                       <Typography className={Fonts.labelValue}>
-                      {envData.envAnswerDetails}
+                        {envData.envAnswerDetails}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -824,7 +823,7 @@ const IncidentDetailsSummary = () => {
                             <Tooltip
                               title={handelFileName(value.evidenceDocument)}
                             >
-                              <Attachment value={value.evidenceDocument}/>
+                              <Attachment value={value.evidenceDocument} />
                             </Tooltip>
                           </Typography>
                         </Grid>
@@ -836,7 +835,7 @@ const IncidentDetailsSummary = () => {
           </AccordionDetails>
         </Accordion>
 
-     
+
       </Grid>
     </Grid>
   );

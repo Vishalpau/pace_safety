@@ -364,6 +364,7 @@ const WorkerDetails = () => {
 
       await handelUpdateCheck();
     }
+    document.getElementById("workerForm").reset()
   };
 
   const handelAddNew = async () => {
@@ -445,13 +446,7 @@ const WorkerDetails = () => {
     await handelUpdateCheck();
   };
 
-  const handelFileName = () => {
-    setTimeout(function () {
-      document.getElementById("selectFile").defaultValue
-      // document.getElementById("selectFile").style.color = "transparent"
-      // fileRef.current.value !== undefined ? fileRef.current.value = "" : null
-    }, 1000)
-  }
+
 
   const PickList = async () => {
     await handelUpdateCheck();
@@ -494,7 +489,7 @@ const WorkerDetails = () => {
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
       {isLoading ? (
-        <form>
+        <form id="workerForm">
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
               <Grid item xs={12}>
@@ -1416,8 +1411,6 @@ const WorkerDetails = () => {
                   type="file"
                   className={classes.fullWidth}
                   name="file"
-                  // ref={fileRef}
-                  loaded={(e) => handelFileName(e)}
                   accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
                   style={{ color: typeof (form.attachments) === "string" && "transparent" }}
                   onChange={(e) => {
