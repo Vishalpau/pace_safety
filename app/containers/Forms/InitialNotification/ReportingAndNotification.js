@@ -102,6 +102,7 @@ const ReportingAndNotification = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isNext, setIsnext] = useState(true);
+  const [evidanceId, setEvidanceId] = useState([])
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -209,7 +210,7 @@ const ReportingAndNotification = () => {
       }
     }
   };
-
+console.log(evidanceId)
   // handleInitailEvidance
   const handleInitialEvidance = async () => {
     // Create new Evidance
@@ -284,14 +285,22 @@ const ReportingAndNotification = () => {
       if (evidanceChecked === true) {
         for (var key in evidanceForm) {
           if (typeof evidanceForm[key].evidenceDocument === "string") {
+            if(evidanceId.length>0){
+              for(let i in evidanceId){
+                await api.delete(
+                  `api/v1/incidents/${localStorage.getItem(
+                    "fkincidentId"
+                  )}/evidences/${evidanceId[i]}/`)
+              }
+              
+            }
             try {
               await api.put(
                 `api/v1/incidents/${localStorage.getItem(
                   "fkincidentId"
-                )}/evidences/${evidanceForm[key].id}`,
+                )}/evidences/${evidanceForm[key].id}/`,
                 {
                   evidenceCategory: "Initial Evidence",
-                  evidenceDocument: evidanceForm[key].evidenceDocument,
                   evidenceCheck: "Yes",
                   evidenceNumber: "string",
                   evidenceRemark: evidanceForm[key].evidenceRemark,
@@ -469,6 +478,13 @@ const ReportingAndNotification = () => {
       ) {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
+          let evdId = temp[key]["id"]
+          
+          if(evdId){
+            setEvidanceId([...evidanceId,evdId])
+          }
+         
+          
           await setMessage("File uploaded successfully!");
           await setMessageType("success");
           await setOpen(true);
