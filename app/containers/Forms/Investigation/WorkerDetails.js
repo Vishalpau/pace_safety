@@ -41,6 +41,7 @@ import WorkerDetailValidator from "../../Validator/InvestigationValidation/Worke
 import { object } from "prop-types";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import Attachment from "../../../containers/Attachment/Attachment"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
   notActiveList: {
     borderLeft: `5px solid ${theme.palette.primary.main}`,
-  },
+  }
 }));
 
 const WorkerDetails = () => {
@@ -104,6 +105,14 @@ const WorkerDetails = () => {
   const [workerid, setWorkerId] = useState();
   let [localWorkerData, setLocalWorkerData] = useState([]);
   const [files] = useState([]);
+  const radioDecide = ["Yes", "No", "N/A"];
+  const radioYesNo = ["Yes", "No"];
+  const ref = useRef();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const fileRef = useRef("")
+
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
@@ -185,13 +194,6 @@ const WorkerDetails = () => {
     await setIsLoading(true);
   };
 
-  const radioDecide = ["Yes", "No", "N/A"];
-  const radioYesNo = ["Yes", "No"];
-  const ref = useRef();
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
-
   const handelTestTaken = async (e) => {
     if (e.target.value == "Yes") {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
@@ -238,6 +240,7 @@ const WorkerDetails = () => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       // setOpenError(false)
@@ -245,6 +248,7 @@ const WorkerDetails = () => {
     }
     setOpen(false);
   };
+
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
@@ -317,8 +321,7 @@ const WorkerDetails = () => {
       if (!isNaN(form.id)) {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.put(
-          `/api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/workers/${workerid}/`,
           data
         );
@@ -326,8 +329,7 @@ const WorkerDetails = () => {
       } else {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.post(
-          `/api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/workers/`,
           data
         );
@@ -373,6 +375,7 @@ const WorkerDetails = () => {
       await localStorage.setItem("personEffected", JSON.stringify(worker));
       await handleNext();
     }
+    fileRef.current.value !== undefined ? fileRef.current.value = "" : null
   };
 
   const handelPrevious = async () => {
@@ -396,8 +399,7 @@ const WorkerDetails = () => {
     if (!isNaN(worker_removed[workerNumber].id)) {
       let deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${
-          deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
@@ -444,9 +446,12 @@ const WorkerDetails = () => {
   };
 
   const handelFileName = () => {
-    console.log(document.getElementById("selectFile").name);
-    document.getElementById("selectFile").value = "Choose a file";
-  };
+    setTimeout(function () {
+      document.getElementById("selectFile").defaultValue
+      // document.getElementById("selectFile").style.color = "transparent"
+      // fileRef.current.value !== undefined ? fileRef.current.value = "" : null
+    }, 1000)
+  }
 
   const PickList = async () => {
     await handelUpdateCheck();
@@ -1409,26 +1414,24 @@ const WorkerDetails = () => {
                 <input
                   id="selectFile"
                   type="file"
-                  ref={ref}
-                  key={""}
                   className={classes.fullWidth}
-                  onLoad={(e) => handelFileName(e)}
                   name="file"
+                  // ref={fileRef}
+                  loaded={(e) => handelFileName(e)}
                   accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                  style={{ color: typeof (form.attachments) === "string" && "transparent" }}
                   onChange={(e) => {
                     handleFile(e);
                   }}
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
-                {form.attachments != "" &&
-                typeof form.attachments == "string" ? (
-                  <a target="_blank" href={form.attachments}>
-                    <p>{imageNameFromUrl(form.attachments)}</p>
-                    {/* <ImageIcon /> */}
-                  </a>
-                ) : null}
+              <Grid item md={6}>
+                {form.attachments != "" && typeof form.attachments == "string" ? (
+                  <Attachment value={form.attachments} />
+                ) : (
+                  <p />
+                )}
               </Grid>
 
               {localWorkerData.length > 1 ? (

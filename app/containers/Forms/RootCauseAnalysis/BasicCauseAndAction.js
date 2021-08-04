@@ -11,6 +11,7 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -123,8 +124,7 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -147,7 +147,7 @@ const BasicCauseAndAction = () => {
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
         return c.toUpperCase();
       });
     return newString;
@@ -157,6 +157,7 @@ const BasicCauseAndAction = () => {
     fetchIncidentDetails();
     handelShowData();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   const classes = useStyles();
   return (
     <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
@@ -217,9 +218,8 @@ const BasicCauseAndAction = () => {
                         <TableCell align="right" className={classes.tableCell}>
                           <ActionTracker
                             actionContext="incidents:Pacacuase"
-                            enitityReferenceId={`${putId.current}:${
-                              id.current[index]
-                            }`}
+                            enitityReferenceId={`${putId.current}:${id.current[index]
+                              }`}
                           />
                         </TableCell>
                       </TableRow>
@@ -248,12 +248,15 @@ const BasicCauseAndAction = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Basic cause and action"}
-          />
-        </Grid>
+        {
+          isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Basic cause and action"}
+              />
+            </Grid>
+          )}
       </Grid>
     </PapperBlock>
   );

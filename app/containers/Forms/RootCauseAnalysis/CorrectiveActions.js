@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import FormLabel from "@material-ui/core/FormLabel";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -212,8 +213,7 @@ const CorrectiveAction = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${
-              callObjects[key].pk
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
             }/`,
             callObjects[key]
           );
@@ -242,8 +242,7 @@ const CorrectiveAction = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -255,8 +254,7 @@ const CorrectiveAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -280,6 +278,7 @@ const CorrectiveAction = () => {
     fetchIncidentDetails();
     handelUpdateCheck();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
@@ -359,12 +358,16 @@ const CorrectiveAction = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Corrective actions"}
-          />
-        </Grid>
+        {
+          isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Corrective actions"}
+              />
+            </Grid>
+          )}
+
       </Grid>
     </PapperBlock>
   );
