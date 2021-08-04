@@ -16,6 +16,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
 import moment from "moment";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -108,8 +109,8 @@ const Details = () => {
         evidenceNotSupport: allApiData.evidenceNotSupport,
         rcaRecommended: allApiData.rcaRecommended,
       });
-      await handelRcaRecommended("a", allApiData.rcaRecommended)
-      console.log(allApiData.rcaRecommended)
+      await handelRcaRecommended("a", allApiData.rcaRecommended);
+      console.log(allApiData.rcaRecommended);
       putId.current = incidentId;
       checkPost.current = false;
     }
@@ -227,11 +228,13 @@ const Details = () => {
     setHideArray(localStorage.getItem("deleteForm"));
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
       <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
+        <Grid container item xs={12} md={9} spacing={3}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -240,7 +243,7 @@ const Details = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident description
             </Typography>
@@ -249,7 +252,7 @@ const Details = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <DateTimePicker
                 autoOk
@@ -266,7 +269,7 @@ const Details = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <DateTimePicker
                 autoOk
@@ -283,7 +286,7 @@ const Details = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Level of classification
             </Typography>
@@ -292,7 +295,7 @@ const Details = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl
               variant="outlined"
               required
@@ -322,7 +325,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl
               component="fieldset"
               required
@@ -350,7 +353,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl
               component="fieldset"
               required
@@ -384,7 +387,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl
               component="fieldset"
               required
@@ -415,7 +418,7 @@ const Details = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -425,13 +428,15 @@ const Details = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            deleteForm={hideArray}
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"RCA Details"}
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={hideArray}
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"RCA Details"}
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );

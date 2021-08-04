@@ -18,6 +18,7 @@ import { PapperBlock } from "dan-components";
 import moment from "moment";
 import { FormHelperText } from "@material-ui/core";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -309,13 +310,13 @@ const PropertyAffected = () => {
       setIsLoading(true);
     }
   }, []);
-
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Details of Properties Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12}>
               <Typography variant="body2">
                 Do you have details to share about the properties affected?
               </Typography>
@@ -341,7 +342,7 @@ const PropertyAffected = () => {
             </Grid>
             {detailsOfPropertyAffect === "Yes" ? (
               <>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">
                       Details of properties affected
@@ -357,7 +358,7 @@ const PropertyAffected = () => {
                     className="repeatedGrid"
                   >
                     {/* Property type  */}
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         variant="outlined"
                         required
@@ -396,7 +397,7 @@ const PropertyAffected = () => {
                       </FormControl>
                     </Grid>
                     {/*Property other type  */}
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         id={`other-property${index + 1}`}
                         variant="outlined"
@@ -416,7 +417,7 @@ const PropertyAffected = () => {
                       />
                     </Grid>
                     {/* Property damage details */}
-                    <Grid item md={12}>
+                    <Grid item xs={12}>
                       <TextField
                         id={`describe-damage${index + 1}`}
                         variant="outlined"
@@ -436,7 +437,7 @@ const PropertyAffected = () => {
                       />
                     </Grid>
                     {form.length > 1 ? (
-                      <Grid item md={3}>
+                      <Grid item xs={3}>
                         {/* Remove previous data */}
                         <Button
                           onClick={() => handleRemove(index)}
@@ -451,7 +452,7 @@ const PropertyAffected = () => {
                     ) : null}
                   </Grid>
                 ))}
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   {/* Add new property details */}
                   <button
                     className={classes.textButton}
@@ -463,7 +464,7 @@ const PropertyAffected = () => {
               </>
             ) : null}
             {/* text comment for property damage */}
-            <Grid item md={12}>
+            <Grid item xs={12}>
               {detailsOfPropertyAffect === "Yes" ? null : (
                 <TextField
                   id="describe-any-actions-taken"
@@ -479,7 +480,7 @@ const PropertyAffected = () => {
                 />
               )}
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               {/* go back previous page */}
               <Button
                 variant="contained"
@@ -501,12 +502,14 @@ const PropertyAffected = () => {
             </Grid>
           </Grid>
           {/* Right sidebar */}
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem={"Property affected"}
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem={"Property affected"}
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

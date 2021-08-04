@@ -12,6 +12,7 @@ import { PapperBlock } from "dan-components";
 import { FormHelperText, FormLabel } from "@material-ui/core";
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import {
   INITIAL_NOTIFICATION,
@@ -296,15 +297,17 @@ const EnvironmentAffected = () => {
     }
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Environment Impact" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
+          <>
             {environmentListData.length !== 0 ? (
               environmentListData.map((env, key) => (
-                <Grid container item spacing={3} md={12} key={key}>
-                  <Grid item md={6}>
+                <Grid container item spacing={3} xs={12} key={key}>
+                  <Grid item xs={12} md={6}>
                     <FormControl
                       component="fieldset"
                       error={error && error[`envAnswerDetails${[key]}`]}
@@ -342,7 +345,8 @@ const EnvironmentAffected = () => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-                  <Grid item md={12}>
+
+                  <Grid item xs={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
                         id={`waterbody-details-update-${key + 1}`}
@@ -373,7 +377,7 @@ const EnvironmentAffected = () => {
               ))
             ) : (
               <>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -412,7 +416,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isspills == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="spills-details"
                       variant="outlined"
@@ -433,7 +437,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -472,7 +476,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isrelase == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="release-details"
                       multiline
@@ -493,7 +497,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -533,7 +537,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isWildlife == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="details-of-Wildlife-Affected"
                       multiline
@@ -554,7 +558,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -594,7 +598,7 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {iswaterbody == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="waterbody-details"
                       multiline
@@ -617,7 +621,7 @@ const EnvironmentAffected = () => {
               </>
             )}
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 id="comment-if-any-environment"
                 multiline
@@ -630,14 +634,12 @@ const EnvironmentAffected = () => {
               />
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={() => handleBack()}
-                // onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
               >
                 Previous
               </Button>
@@ -650,13 +652,15 @@ const EnvironmentAffected = () => {
                 Next
               </Button>
             </Grid>
-          </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Environment affected"
-            />
-          </Grid>
+          </>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Environment affected"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

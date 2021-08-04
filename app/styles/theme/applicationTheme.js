@@ -428,6 +428,14 @@ const applicationTheme = (color, mode, direction) => ({
             : themePalette(color, mode).palette.primary.main,
       },
     },
+    MuiTooltip: {
+      popper: {
+        pointerEvents: "none",
+        "&$open": {
+          pointerEvents: "none",
+        },
+      },
+    },
     MuiTabs: {
       root: {
         borderRadius: 10,

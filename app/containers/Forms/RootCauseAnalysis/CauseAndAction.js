@@ -71,7 +71,7 @@ const BasicCauseAndAction = () => {
   const putId = useRef("");
   let id = useRef();
   // const [action, setAction] = useState({});
-  const [actionData, setActionData] = useState({})
+  const [actionData, setActionData] = useState({});
 
   const handelShowData = async () => {
     let tempApiData = {};
@@ -108,31 +108,30 @@ const BasicCauseAndAction = () => {
     });
     id.current = tempid.reverse();
     await setData(tempApiData);
-    await handelActionTracker()
+    await handelActionTracker();
   };
 
   const handelActionTracker = async () => {
-
-    let allPaceID = id.current
+    let allPaceID = id.current;
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
-    const allActionTracker = allActionTrackerData.data.data.results.results
+    let ActionToCause = {};
+    const allActionTrackerData = await api_action.get("/api/v1/actions/");
+    const allActionTracker = allActionTrackerData.data.data.results.results;
     allActionTracker.map((value) => {
-      let actionPaceId = value.split(":")[1]
-      let actionPaceSubId = value.split(":")[2]
-      let actionTemp = []
+      let actionPaceId = value.split(":")[1];
+      let actionPaceSubId = value.split(":")[2];
+      let actionTemp = [];
       if (allPaceID.includes(actionPaceId)) {
         if (`${actionPaceId}:${actionPaceSubId}` in ActionToCause) {
-          ActionToCause[`${actionPaceId}:${actionPaceSubId}`].push(value.id)
+          ActionToCause[`${actionPaceId}:${actionPaceSubId}`].push(value.id);
         }
-        ActionToCause[`${actionPaceId}:${actionPaceSubId}`] = [value.id]
+        ActionToCause[`${actionPaceId}:${actionPaceSubId}`] = [value.id];
       }
-    })
-  }
+    });
+  };
 
   function ListItemLink(props) {
     return (
@@ -150,7 +149,8 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -170,7 +170,8 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -185,7 +186,7 @@ const BasicCauseAndAction = () => {
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
         return c.toUpperCase();
       });
     return newString;
@@ -236,43 +237,36 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Box>
 
-            <div>
-              <Table border={1}>
-                <TableBody>
-                  {Object.entries(data)
-                    .reverse()
-                    .map(([key, value], index) => (
-                      <>
-                        {value.map((value, valueIndex) => (
-                          <TableRow>
-                            <TableCell
-                              align="left"
-                            >
-                              {handelConvert(key)}
-                            </TableCell>
-                            <TableCell
-                              align="left"
-                            >
-                              <li key={value}>
-                                <span>{value}</span>
-                              </li>
-
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                            >
-                              <ActionTracker
-                                actionContext="incidents:Pacacuase"
-                                enitityReferenceId={`${putId.current}:${id.current[index]}:${valueIndex}`}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </>
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
+            <Table className={classes.table}>
+              <TableBody>
+                {Object.entries(data)
+                  .reverse()
+                  .map(([key, value], index) => (
+                    <>
+                      {value.map((value, valueIndex) => (
+                        <TableRow>
+                          <TableCell align="left" style={{ width: 160 }}>
+                            {handelConvert(key)}
+                          </TableCell>
+                          <TableCell align="left">
+                            <li key={value}>
+                              <span>{value}</span>
+                            </li>
+                          </TableCell>
+                          <TableCell align="right">
+                            <ActionTracker
+                              actionContext="incidents:Pacacuase"
+                              enitityReferenceId={`${putId.current}:${
+                                id.current[index]
+                              }:${valueIndex}`}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </>
+                  ))}
+              </TableBody>
+            </Table>
           </Grid>
 
           <Grid item md={12}>

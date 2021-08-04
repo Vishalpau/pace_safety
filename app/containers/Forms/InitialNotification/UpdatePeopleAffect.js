@@ -170,8 +170,8 @@ const LessionLearned = () => {
     <PapperBlock title="Lessions Learned" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} justify="flex-start" spacing={3}>
-            <Grid item md={6}>
+          <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number
               </Typography>
@@ -181,7 +181,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident occured on
               </Typography>
@@ -192,7 +192,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident reported on
               </Typography>
@@ -203,7 +203,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Reported by
               </Typography>
@@ -212,17 +212,16 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident type
               </Typography>
               <Typography className={Type.labelValue}>
-                {" "}
                 {incidentsListData.incidentType}{" "}
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident title
               </Typography>
@@ -231,7 +230,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident description
               </Typography>
@@ -240,7 +239,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident location
               </Typography>
@@ -249,15 +248,15 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 Key learnings
               </Typography>
 
               {learningList.length !== 0 ? (
                 learningList.map((item, index) => (
-                  <Grid container item spacing={3} md={12}>
-                    <Grid item md={12}>
+                  <Grid container item spacing={3} xs={12}>
+                    <Grid item xs={12}>
                       <FormControl
                         variant="outlined"
                         className={classes.formControl}
@@ -294,7 +293,7 @@ const LessionLearned = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item md={12}>
+                    <Grid item xs={12}>
                       <FormControl
                         variant="outlined"
                         className={classes.formControl}
@@ -317,15 +316,12 @@ const LessionLearned = () => {
                             )
                           }
                         />
-                        {/* {error && error.teamLearning && (
-                            <p>{error.teamLearning}</p>
-                          )} */}
                       </FormControl>
                     </Grid>
                   </Grid>
                 ))
               ) : (
-                <Grid container spacing={3} item md={12}>
+                <Grid container spacing={3} item xs={12}>
                   <Grid item md={12}>
                     <FormControl
                       variant="outlined"
@@ -360,8 +356,7 @@ const LessionLearned = () => {
                       )}
                     </FormControl>
                   </Grid>
-                  <Grid item md={12}>
-                    {/*<Typography varint="p">Team/Department Learnings</Typography>*/}
+                  <Grid item xs={12}>
                     <FormControl
                       variant="outlined"
                       className={classes.formControl}
@@ -378,15 +373,12 @@ const LessionLearned = () => {
                           setForm({ ...form, teamLearning: e.target.value })
                         }
                       />
-                      {/* {error && error.teamLearning && (
-                          <p>{error.teamLearning}</p>
-                        )} */}
                     </FormControl>
                   </Grid>
                 </Grid>
               )}
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <button
                 className={classes.textButton}
                 onClick={() => addNewPeopleDetails()}
@@ -394,17 +386,14 @@ const LessionLearned = () => {
                 <PersonAddIcon /> Add learnings from another team/department
               </button>
             </Grid>
-            <Grid item md={12}>
-              <Box marginTop={4}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  // href="#contained-buttons"
-                  onClick={() => handleNext()}
-                >
-                  Submit
-                </Button>
-              </Box>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleNext()}
+              >
+                Submit
+              </Button>
             </Grid>
           </Grid>
           <Grid item md={3}>

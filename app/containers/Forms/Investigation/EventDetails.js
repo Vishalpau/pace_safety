@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Grid, Select } from "@material-ui/core";
+import { Button, FormLabel, Grid, Select } from "@material-ui/core";
 import { FormHelperText } from "@material-ui/core";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -16,6 +16,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import { useHistory } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -365,12 +366,13 @@ const EventDetails = () => {
   }, []);
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
       <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
+        <Grid container item xs={12} md={9} spacing={3}>
           {/* activity */}
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Activity*</InputLabel>
               <Select
@@ -402,7 +404,7 @@ const EventDetails = () => {
           </Grid>
 
           {/* job task */}
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Job task*</InputLabel>
               <Select
@@ -434,8 +436,7 @@ const EventDetails = () => {
           </Grid>
 
           {/* equiment involved */}
-          <Grid item md={6}>
-            {/* <p>Eqipment Invoked</p> */}
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -454,7 +455,7 @@ const EventDetails = () => {
           {/* weather */}
           {weather.map((value, index) => (
             <>
-              <Grid item md={10}>
+              <Grid item xs={10}>
                 <FormControl
                   error={
                     errorWeather && errorWeather[`weatherCondition${[index]}`]
@@ -488,7 +489,7 @@ const EventDetails = () => {
               </Grid>
 
               {weather.length > 1 ? (
-                <Grid item md={1}>
+                <Grid item xs={1}>
                   <IconButton onClick={(e) => handelRemove(e, index)}>
                     <RemoveCircleOutlineIcon />
                   </IconButton>
@@ -498,14 +499,14 @@ const EventDetails = () => {
           ))}
 
           {weather.length < 3 ? (
-            <Grid item md={1}>
+            <Grid item xs={1}>
               <IconButton onClick={(e) => handelAdd(e)}>
                 <AddIcon />
               </IconButton>
             </Grid>
           ) : null}
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -524,7 +525,7 @@ const EventDetails = () => {
           </Grid>
 
           {/* lightning */}
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Lighting</InputLabel>
               <Select
@@ -551,11 +552,11 @@ const EventDetails = () => {
           </Grid>
 
           {/* wind         */}
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6">Wind</Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -573,7 +574,7 @@ const EventDetails = () => {
             />
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -592,11 +593,11 @@ const EventDetails = () => {
           </Grid>
 
           {/* spills */}
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6">Spills</Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">Fluid type*</InputLabel>
               <Select
@@ -627,7 +628,7 @@ const EventDetails = () => {
             )}
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -645,7 +646,7 @@ const EventDetails = () => {
             />
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -663,7 +664,7 @@ const EventDetails = () => {
             />
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -682,11 +683,11 @@ const EventDetails = () => {
           </Grid>
 
           {/* property details */}
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6">Property details</Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -704,7 +705,7 @@ const EventDetails = () => {
             />
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               id="title"
               variant="outlined"
@@ -722,13 +723,12 @@ const EventDetails = () => {
             />
           </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6">Overall cost*</Typography>
+          <Grid item xs={12}>
             <FormControl component="fieldset" required>
+              <FormLabel>Overall cost</FormLabel>
               <RadioGroup className={classes.inlineRadioGroup}>
                 {radioYesNo.map((value) => (
                   <FormControlLabel
-                    // disabled={CheckPost.current == false}
                     value={value}
                     checked={form.isCostIncurred == value}
                     onChange={(e) =>
@@ -743,13 +743,13 @@ const EventDetails = () => {
           </Grid>
 
           {/* cost incurred  */}
-          <Grid container item md={12} spacing={2}>
+          <Grid container item xs={12} spacing={2}>
             {form.isCostIncurred == "Yes" ? (
               <>
                 {overAllCost.map((value, index) => (
                   <>
                     {/* cost type */}
-                    <Grid item md={4}>
+                    <Grid item xs={6} md={4}>
                       <FormControl
                         variant="outlined"
                         error={errorCost && errorCost[`costType${[index]}`]}
@@ -783,7 +783,7 @@ const EventDetails = () => {
                     </Grid>
 
                     {/* cost amount */}
-                    <Grid item md={2}>
+                    <Grid item xs={6} md={2}>
                       <TextField
                         id="title"
                         error={errorCost && errorCost[`costAmount${[index]}`]}
@@ -805,7 +805,7 @@ const EventDetails = () => {
                     </Grid>
 
                     {/* cost factor */}
-                    <Grid item md={4}>
+                    <Grid item xs={10} md={4}>
                       <FormControl
                         error={errorCost && errorCost[`casualFactor${[index]}`]}
                         variant="outlined"
@@ -843,7 +843,7 @@ const EventDetails = () => {
                       )}
                     </Grid>
                     {overAllCost.length > 1 ? (
-                      <Grid item md={1}>
+                      <Grid item xs={1}>
                         <IconButton
                           onClick={(e) => handelOverallCostRemove(e, index)}
                         >
@@ -855,7 +855,7 @@ const EventDetails = () => {
                 ))}
 
                 {overAllCost.length < 4 ? (
-                  <Grid item md={1}>
+                  <Grid item xs={1}>
                     <IconButton onClick={(e) => handelOveallCostAdd(e)}>
                       <AddIcon />
                     </IconButton>
@@ -865,7 +865,7 @@ const EventDetails = () => {
             ) : null}
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -884,13 +884,15 @@ const EventDetails = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            deleteForm={[1, 2, 3]}
-            listOfItems={INVESTIGATION_FORM}
-            selectedItem="Event details"
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={[1, 2, 3]}
+              listOfItems={INVESTIGATION_FORM}
+              selectedItem="Event details"
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );

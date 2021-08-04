@@ -19,6 +19,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
 import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -301,12 +302,13 @@ const LessionLearned = () => {
     }
     fetchIncidentsData();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Lessons Learnt" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} justify="flex-start" spacing={3}>
-            <Grid item md={6}>
+          <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number
               </Typography>
@@ -316,7 +318,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident occured on
               </Typography>
@@ -327,7 +329,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident reported on
               </Typography>
@@ -338,7 +340,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Reported by
               </Typography>
@@ -347,7 +349,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident type
               </Typography>
@@ -356,7 +358,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident title
               </Typography>
@@ -365,7 +367,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident description
               </Typography>
@@ -374,7 +376,7 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident location
               </Typography>
@@ -383,23 +385,23 @@ const LessionLearned = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
                 Key learnings
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               {form.map((value, key) => (
                 <Grid
                   container
                   spacing={3}
                   item
-                  md={12}
+                  xs={12}
                   className="repeatedGrid"
                   key={key}
                 >
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <FormControl
                       variant="outlined"
                       required
@@ -433,7 +435,7 @@ const LessionLearned = () => {
                       )}
                     </FormControl>
                   </Grid>
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="outlined-search"
                       required
@@ -453,7 +455,7 @@ const LessionLearned = () => {
                     />
                   </Grid>
                   {form.length > 1 ? (
-                    <Grid item md={3}>
+                    <Grid item xs={12} md={3}>
                       <Button
                         onClick={() => handleRemove(key)}
                         variant="contained"
@@ -468,7 +470,7 @@ const LessionLearned = () => {
                 </Grid>
               ))}
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <button
                 className={classes.textButton}
                 onClick={() => addNewTeamOrDeparment()}
@@ -476,7 +478,7 @@ const LessionLearned = () => {
                 <AddIcon /> Add learnings from another team/department
               </button>
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Snackbar
                 open={open}
                 autoHideDuration={6000}
@@ -503,26 +505,25 @@ const LessionLearned = () => {
                 </a>
               ) : null}
             </Grid>
-            <Grid item md={12}>
-              <Box marginTop={4}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  // href="#contained-buttons"
-                  onClick={() => handleNext()}
-                >
-                  Submit
-                </Button>
-              </Box>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleNext()}
+              >
+                Submit
+              </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lessons learnt"}
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={LESSION_LEARNED_FORM}
+                selectedItem={"Lessons learnt"}
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

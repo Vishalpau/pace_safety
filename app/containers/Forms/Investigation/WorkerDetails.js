@@ -31,6 +31,7 @@ import List from "@material-ui/core/List";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { spacing } from "@material-ui/system";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
@@ -41,7 +42,6 @@ import { object } from "prop-types";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Attachment from "../../../containers/Attachment/Attachment"
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -78,7 +78,6 @@ const WorkerDetails = () => {
   const workerType = useRef([]);
   const [departmentName, setDepartmentName] = useState([]);
   const [workHours, setworkHours] = useState([]);
-  /////////
   const [shiftType, setShiftType] = useState([]);
   const [occupation, setOccupation] = useState([]);
   const [shiftCycle, setShiftCycle] = useState([]);
@@ -209,15 +208,30 @@ const WorkerDetails = () => {
   };
 
   const handleFile = async (e) => {
-    let acceptFileTypes = ["pdf", "png", "jpeg", "jpg", "xls", "xlsx", "doc", "word", "ppt"]
+    let acceptFileTypes = [
+      "pdf",
+      "png",
+      "jpeg",
+      "jpg",
+      "xls",
+      "xlsx",
+      "doc",
+      "word",
+      "ppt",
+    ];
     let file = e.target.files[0].name.split(".");
-    if (acceptFileTypes.includes(file[1]) && e.target.files[0].size < 25670647) {
+    if (
+      acceptFileTypes.includes(file[1]) &&
+      e.target.files[0].size < 25670647
+    ) {
       const temp = { ...form };
       temp.attachments = e.target.files[0];
       await setForm(temp);
     } else {
       ref.current.value = "";
-      await setMessage("Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!");
+      await setMessage(
+        "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!"
+      );
       await setMessageType("error");
       await setOpen(true);
     }
@@ -461,7 +475,7 @@ const WorkerDetails = () => {
     setSupervisorTimeOnProject(await PickListData(55));
     setSupervisorTimeInCompany(await PickListData(56));
     await setIsLoading(true);
-    await handelFileName()
+    await handelFileName();
   };
 
   const imageNameFromUrl = (url) => {
@@ -475,18 +489,20 @@ const WorkerDetails = () => {
   }, []);
 
   const classes = useStyles();
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
       {isLoading ? (
         <form>
           <Grid container spacing={3}>
-            <Grid container item md={9} spacing={3}>
-              <Grid item md={12}>
+            <Grid container item xs={12} md={9} spacing={3}>
+              <Grid item xs={12}>
                 <Typography variant="h6">Worker details</Typography>
               </Grid>
 
               {/* {workerData.map((value, index)=>(<> */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
@@ -505,7 +521,7 @@ const WorkerDetails = () => {
                 />
               </Grid>
               {/* worker type */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl
                   variant="outlined"
                   required
@@ -537,7 +553,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* department */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl
                   variant="outlined"
                   required
@@ -568,11 +584,8 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* scheduled workign hours */}
-              <Grid item md={6}>
-                <FormControl
-                  variant="outlined"
-                  className={classes.formControl}
-                >
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Number of Scheduled Work Hours
                   </InputLabel>
@@ -596,8 +609,11 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* start of shift */}
-              <Grid item md={6}>
-                <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
+              <Grid item xs={12} md={6}>
+                <MuiPickersUtilsProvider
+                  variant="outlined"
+                  utils={DateFnsUtils}
+                >
                   <KeyboardTimePicker
                     className={classes.formControl}
                     helperText={""}
@@ -618,7 +634,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* type of shift */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">Type of shift</InputLabel>
                   <Select
@@ -641,7 +657,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* Occupation */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">Occupation</InputLabel>
                   <Select
@@ -664,7 +680,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* Shift cycle */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">Shift cycle</InputLabel>
                   <Select
@@ -687,7 +703,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* number of days */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Number of days into shift
@@ -712,7 +728,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* time in comapany */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">Time in company</InputLabel>
                   <Select
@@ -735,7 +751,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* time on project */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">Time on project</InputLabel>
                   <Select
@@ -758,7 +774,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* time in industry */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">Time in industry</InputLabel>
                   <Select
@@ -781,14 +797,14 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* injury     */}
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                   <Typography variant="h6">Injury details</Typography>
                 </Box>
               </Grid>
 
               {/* event leading to injury */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
@@ -805,7 +821,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* injury object */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
@@ -824,7 +840,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* primary body part included */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Primary body part side included
@@ -849,7 +865,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* secondary body part */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Secondary body part included
@@ -874,7 +890,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* type of injury */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl
                   variant="outlined"
                   error={error && error.actualSeverityLevel}
@@ -906,7 +922,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* day away/restriction */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
@@ -923,7 +939,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* medical response */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
@@ -941,8 +957,11 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* treatment date  */}
-              <Grid item md={6}>
-                <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
+              <Grid item xs={12} md={6}>
+                <MuiPickersUtilsProvider
+                  variant="outlined"
+                  utils={DateFnsUtils}
+                >
                   <KeyboardDatePicker
                     className={classes.formControl}
                     label="Treatment Date"
@@ -961,7 +980,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* highest medical responder */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Highest medical responder
@@ -986,7 +1005,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* status update    */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
@@ -1005,7 +1024,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* first aid */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl
                   variant="outlined"
                   error={error && error.actualSeverityLevel}
@@ -1034,7 +1053,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* mechanish of injury */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Mechanism of injury
@@ -1058,16 +1077,18 @@ const WorkerDetails = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                   <Typography variant="h6">Worker care</Typography>
                 </Box>
               </Grid>
 
               {/* medical issues */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" required>Medical issued?</FormLabel>
+                  <FormLabel component="legend" required>
+                    Medical issued?
+                  </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
                     value={form.isMedicationIssued}
@@ -1090,9 +1111,11 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* prescription issue */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" required>Prescription issues ?</FormLabel>
+                  <FormLabel component="legend" required>
+                    Prescription issues ?
+                  </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
                     value={form.isPrescriptionIssued}
@@ -1115,9 +1138,11 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* non prescription */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" required>Non-prescription ?</FormLabel>
+                  <FormLabel component="legend" required>
+                    Non-prescription ?
+                  </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
                     value={form.isNonPrescription}
@@ -1140,9 +1165,11 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* any limitation */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" required>Any limitation ?</FormLabel>
+                  <FormLabel component="legend" required>
+                    Any limitation ?
+                  </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
                     value={form.isAnyLimitation}
@@ -1164,16 +1191,16 @@ const WorkerDetails = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                   <Typography variant="h6">Alcohol and drug test</Typography>
                 </Box>
               </Grid>
 
               {/* test taken */}
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <FormControl component="fieldset" required>
-                  <FormLabel component="legend" >Was the test taken?</FormLabel>
+                  <FormLabel component="legend">Was the test taken?</FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
                     value={
@@ -1195,14 +1222,18 @@ const WorkerDetails = () => {
               </Grid>
               {form.isAlcoholDrugTestTaken == "Yes" ? (
                 <>
-                  <Grid item md={6}>
+                  <Grid item xs={12} md={6}>
                     <MuiPickersUtilsProvider
                       variant="outlined"
                       utils={DateFnsUtils}
                     >
                       <KeyboardDatePicker
                         className={classes.formControl}
-                        value={form.dateOfAlcoholDrugTest != null ? form.dateOfAlcoholDrugTest : null}
+                        value={
+                          form.dateOfAlcoholDrugTest != null
+                            ? form.dateOfAlcoholDrugTest
+                            : null
+                        }
                         label="Date of Test"
                         onChange={(e) => {
                           setForm({
@@ -1217,8 +1248,7 @@ const WorkerDetails = () => {
                     </MuiPickersUtilsProvider>
                   </Grid>
 
-                  <Grid item md={6}>
-                    {/* <p>Was worker cleared to work following A&D testing?</p> */}
+                  <Grid item xs={12} md={6}>
                     <FormControl component="fieldset">
                       <FormLabel component="legend" required>
                         Was worker cleared to work following a&d testing?
@@ -1246,7 +1276,7 @@ const WorkerDetails = () => {
                   </Grid>
                 </>
               ) : (
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <TextField
                     id="title"
                     variant="outlined"
@@ -1265,7 +1295,7 @@ const WorkerDetails = () => {
                 </Grid>
               )}
 
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                   <Typography variant="h6">
                     Supervisor details for worker
@@ -1274,7 +1304,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* supervisor name */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
@@ -1293,7 +1323,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* supervisor time */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Supervisor time in Industry
@@ -1318,7 +1348,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* supervisor time */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Supervisor time in company
@@ -1343,7 +1373,7 @@ const WorkerDetails = () => {
               </Grid>
 
               {/* supervisor time in industry */}
-              <Grid item md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="unit-name-label">
                     Supervisor time on project
@@ -1367,17 +1397,20 @@ const WorkerDetails = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                   <Typography variant="h6">Attachment</Typography>
                 </Box>
+                <Typography display="block" variant="caption">
+                  Allowed file types pdf, png, jpeg, jpg, xls, xlsx, doc, word,
+                  ppt
+                </Typography>
+                <Typography display="block" variant="caption">
+                  Maximum allowed file size is 25 MB only.
+                </Typography>
               </Grid>
 
-
-              <Grid item md={4}>
-                <small>Allowed file types pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt</small>
-                <br></br>
-                <small>Files less than 25 Mb file only allowed</small>
+              <Grid item xs={12} md={4}>
                 <input
                   id="selectFile"
                   type="file"
@@ -1391,7 +1424,6 @@ const WorkerDetails = () => {
                     handleFile(e);
                   }}
                 />
-
               </Grid>
 
               <Grid item md={6}>
@@ -1403,20 +1435,20 @@ const WorkerDetails = () => {
               </Grid>
 
               {localWorkerData.length > 1 ? (
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <Button onClick={(e) => handelRemove()}>
                     Delete <DeleteForeverIcon />
                   </Button>
                 </Grid>
               ) : null}
 
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Button onClick={(e) => handelAddNew()}>
                   Add new worker <AddIcon />
                 </Button>
               </Grid>
 
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -1435,52 +1467,55 @@ const WorkerDetails = () => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid item md={3}>
-              <Grid item md={12}>
-                <FormSideBar
-                  deleteForm={[1, 2, 3]}
-                  listOfItems={INVESTIGATION_FORM}
-                  selectedItem="Worker details"
-                />
-              </Grid>
-              <Grid item md={12}>
-                <Box mt={4}>
-                  <Paper elevation={1}>
-                    <List dense>
-                      {localWorkerData.map((value, index) => (
-                        <ListItem
-                          className={
-                            workerNumber == index
-                              ? classes.activeList
-                              : classes.notActiveList
-                          }
-                        >
-                          <ListItemIcon className={classes.icon}>
-                            {workerNumber == index ? (
-                              <DoubleArrowIcon fontSize="small" />
-                            ) : (
-                              <RemoveCircleOutlineIcon />
-                            )}
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <a onClick={(e) => handelWorkerNavigate(e, index)}>
-                                {`Worker ${index + 1}`}
-                              </a>
+
+            {isDesktop && (
+              <Grid item md={3}>
+                <Grid item md={12}>
+                  <FormSideBar
+                    deleteForm={[1, 2, 3]}
+                    listOfItems={INVESTIGATION_FORM}
+                    selectedItem="Worker details"
+                  />
+                </Grid>
+                <Grid item md={12}>
+                  <Box mt={4}>
+                    <Paper elevation={1}>
+                      <List dense>
+                        {localWorkerData.map((value, index) => (
+                          <ListItem
+                            className={
+                              workerNumber == index
+                                ? classes.activeList
+                                : classes.notActiveList
                             }
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Paper>
-                </Box>
+                          >
+                            <ListItemIcon className={classes.icon}>
+                              {workerNumber == index ? (
+                                <DoubleArrowIcon fontSize="small" />
+                              ) : (
+                                <RemoveCircleOutlineIcon />
+                              )}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={
+                                <a
+                                  onClick={(e) =>
+                                    handelWorkerNavigate(e, index)
+                                  }
+                                >
+                                  {`Worker ${index + 1}`}
+                                </a>
+                              }
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Paper>
+                  </Box>
+                </Grid>
               </Grid>
-            </Grid>
-            <Snackbar
-              open={open}
-              autoHideDuration={6000}
-              onClose={handleClose}
-            >
+            )}
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity={messageType}>
                 {message}
               </Alert>
