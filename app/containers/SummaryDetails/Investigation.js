@@ -189,7 +189,7 @@ const InvestigationSummary = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <Grid container spacing={3}>
-      {console.log(investigationOverview)}
+      {/* {console.log(investigationOverview)} */}
       {/* investigation overview */}
       {!isDesktop && (
 
@@ -519,7 +519,12 @@ const InvestigationSummary = () => {
           onChange={handleExpand("panel3")}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Worker details</Typography>
+            {expanded !== "panel3" ?
+              <Typography className={classes.heading}>Worker details</Typography>
+              :
+              <Typography className={classes.heading}></Typography>
+            }
+
           </AccordionSummary>
           <AccordionDetails>
             <paper>
@@ -534,9 +539,13 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* worker details */}
+
                     <Grid item xs={12}>
                       <Typography>Worker details</Typography>
                     </Grid>
+
+
+
 
                     {/* name */}
                     <Grid item xs={12} md={6}>
@@ -719,7 +728,7 @@ const InvestigationSummary = () => {
 
                     {/* injurty details */}
                     <Grid item xs={12}>
-                      <Typography variant="h6">Injurty details</Typography>
+                      <Typography variant="h6">Injury details</Typography>
                     </Grid>
 
                     {/* event injury */}
@@ -729,7 +738,7 @@ const InvestigationSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Event leading to injurty.
+                        Event leading to injury.
                       </Typography>
                       <Typography variant="body" className={Fonts.labelValue}>
                         {checkValue(value.eventLeadingToInjury)}
@@ -1002,7 +1011,25 @@ const InvestigationSummary = () => {
                           </Typography>
                         </Grid>
                       </>
-                    ) : null}
+                    ) :
+                      // 
+                      <Grid item xs={12} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Reason test not done ?
+                        </Typography>
+
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {value.reasonForTestNotDone}
+                        </Typography>
+                      </Grid>
+                    }
 
                     {/* supervisor details */}
                     <Grid item xs={12}>
@@ -1069,19 +1096,24 @@ const InvestigationSummary = () => {
                     <Grid item xs={12}>
                       <Typography variant="h6">Attachment</Typography>
                     </Grid>
-                    {value.attachments != "" &&
-                      typeof value.attachments == "string" ? (
-                      <Grid item xs={12} md={6}>
-                        <Tooltip title="File Name">
-                          <IconButton
-                            onClick={() => handleOpen(value.attachments)}
-                            className={classes.fileIcon}
-                          >
-                            <Attachment value={value.attachments} />
-                          </IconButton>
-                        </Tooltip>
-                      </Grid>
-                    ) : null}
+
+                    <Grid item xs={12} md={6}>
+                      {/* <Tooltip title="File Name"> */}
+                      {value.attachments != "" &&
+                        typeof value.attachments == "string" ? (
+                        <IconButton
+                          onClick={() => handleOpen(value.attachments)}
+                          className={classes.fileIcon}
+                        >
+
+                          <Attachment value={value.attachments} />
+                        </IconButton>
+                      ) :
+                        "-"
+                      }
+                      {/* </Tooltip> */}
+                    </Grid>
+
                   </>
                 ))}
               </Grid>

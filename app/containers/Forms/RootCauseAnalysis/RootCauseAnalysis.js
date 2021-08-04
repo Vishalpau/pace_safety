@@ -356,7 +356,7 @@ const RootCauseAnalysis = () => {
                     onChange={(e) => setForm({
                       ...form,
                       wouldItPreventIncident:
-                          e.target.value === 'Yes' ? 'Yes' : 'No',
+                        e.target.value === 'Yes' ? 'Yes' : 'No',
                     })
                     }
                   />
@@ -403,7 +403,7 @@ const RootCauseAnalysis = () => {
           </Grid>
         </Grid>
         {isDesktop && (
-          <Grid item={3}>
+          <Grid item md={3}>
             <FormSideBar
               listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
               selectedItem="Cause analysis"
