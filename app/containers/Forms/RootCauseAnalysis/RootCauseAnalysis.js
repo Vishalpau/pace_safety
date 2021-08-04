@@ -1,83 +1,83 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Button, Grid } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import React, { useEffect, useState, useRef } from "react";
+import { Button, Grid } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+} from "@material-ui/pickers";
 
-import moment from 'moment';
-import DateFnsUtils from '@date-io/date-fns';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import FormLabel from '@material-ui/core/FormLabel';
-import { useHistory, useParams } from 'react-router';
-import { PapperBlock } from 'dan-components';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import moment from "moment";
+import DateFnsUtils from "@date-io/date-fns";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import FormLabel from "@material-ui/core/FormLabel";
+import { useHistory, useParams } from "react-router";
+import { PapperBlock } from "dan-components";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import FormSideBar from '../FormSideBar';
-import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION } from '../../../utils/constants';
-import api from '../../../utils/axios';
-import RootCauseValidation from '../../Validator/RCAValidation/RootCauseAnalysisValidation';
+import FormSideBar from "../FormSideBar";
+import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION } from "../../../utils/constants";
+import api from "../../../utils/axios";
+import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
 
-import Type from '../../../styles/components/Fonts.scss';
-import PickListData from '../../../utils/Picklist/InvestigationPicklist';
+import Type from "../../../styles/components/Fonts.scss";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: '100%',
+    width: "100%",
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
-    flexDirection: 'row',
-    gap: '1.5rem',
+    flexDirection: "row",
+    gap: "1.5rem",
   },
 }));
 
 const RootCauseAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
-  const putId = useRef('');
+  const putId = useRef("");
 
   const [form, setForm] = useState({
-    causeOfIncident: '',
-    correctiveAction: '',
-    wouldItPreventIncident: 'Yes',
-    recommendSolution: '',
-    status: 'Active',
+    causeOfIncident: "",
+    correctiveAction: "",
+    wouldItPreventIncident: "Yes",
+    recommendSolution: "",
+    status: "Active",
     createdBy: 0,
     updatedBy: 0,
     fkIncidentId:
-      putId.current || parseInt(localStorage.getItem('fkincidentId')),
+      putId.current || parseInt(localStorage.getItem("fkincidentId")),
   });
 
   const [error, setError] = useState({});
   const history = useHistory();
   const selectValues = [1, 2, 3, 4];
   const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
+    new Date("2014-08-18T21:11:54")
   );
   const checkPost = useRef();
-  const pkValue = useRef('');
+  const pkValue = useRef("");
   const investigationData = useRef({});
   const classificationValues = useRef([]);
 
   const handelUpdateCheck = async () => {
     const page_url = window.location.href;
     const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf('/') + 1)
+      page_url.substring(page_url.lastIndexOf("/") + 1)
     );
     const incidentId = !isNaN(lastItem)
       ? lastItem
-      : localStorage.getItem('fkincidentId');
+      : localStorage.getItem("fkincidentId");
     const previousData = await api.get(
       `/api/v1/incidents/${incidentId}/rootcauses/`
     );
@@ -88,14 +88,17 @@ const RootCauseAnalysis = () => {
     );
     const investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      if (investigationApiData.rcaRecommended != '') {
-        setForm({ ...form, rcaRecommended: investigationApiData.rcaRecommended });
+      if (investigationApiData.rcaRecommended != "") {
+        setForm({
+          ...form,
+          rcaRecommended: investigationApiData.rcaRecommended,
+        });
       }
 
       investigationData.current = {
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
-        classification: investigationApiData.classification
+        classification: investigationApiData.classification,
       };
     }
 
@@ -111,14 +114,16 @@ const RootCauseAnalysis = () => {
       putId.current = incidentId;
       checkPost.current = false;
     }
-    classificationValues.current = await PickListData(40); 2;
+    classificationValues.current = await PickListData(40);
+    2;
   };
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${putId.current !== ''
-        ? putId.current
-        : localStorage.getItem('fkincidentId')
+      `api/v1/incidents/${
+        putId.current !== ""
+          ? putId.current
+          : localStorage.getItem("fkincidentId")
       }/`
     );
     await setIncidents(allIncidents.data.data.results);
@@ -127,7 +132,7 @@ const RootCauseAnalysis = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  const radioDecide = ['Yes', 'No'];
+  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
   const handelNext = async (e) => {
@@ -138,7 +143,7 @@ const RootCauseAnalysis = () => {
       if (checkPost.current !== false) {
         const res = await api.post(
           `/api/v1/incidents/${localStorage.getItem(
-            'fkincidentId'
+            "fkincidentId"
           )}/rootcauses/`,
           form
         );
@@ -158,28 +163,30 @@ const RootCauseAnalysis = () => {
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-            'fkincidentId'
+            "fkincidentId"
           )}`
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${putId.current
+          `/app/incident-management/registration/summary/summary/${
+            putId.current
           }`
         );
       }
     }
-    localStorage.setItem('RootCause', 'Done');
+    localStorage.setItem("RootCause", "Done");
   };
 
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
       history.push(
-        '/app/incident-management/registration/root-cause-analysis/details/'
+        "/app/incident-management/registration/root-cause-analysis/details/"
       );
     }
   };
@@ -189,7 +196,7 @@ const RootCauseAnalysis = () => {
     setTimeout(fetchIncidentData(), 1000);
   }, []);
 
-  const isDesktop = useMediaQuery('(min-width:992px)');
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="Cause Analysis" icon="ion-md-list-box">
@@ -271,7 +278,12 @@ const RootCauseAnalysis = () => {
                 labelId="project-name-label"
                 label="Level of investigation"
                 disabled
-                value={typeof investigationData.current.classification !== 'undefined' ? investigationData.current.classification : ''}
+                value={
+                  typeof investigationData.current.classification !==
+                  "undefined"
+                    ? investigationData.current.classification
+                    : ""
+                }
               >
                 {classificationValues.current.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -287,7 +299,7 @@ const RootCauseAnalysis = () => {
               className={classes.formControl}
               id="filled-basic"
               value={moment(incidents.incidentOccuredOn).format(
-                'MM/DD/YYYY , h:mm:ss a'
+                "MM/DD/YYYY , h:mm:ss a"
               )}
               disabled
             />
@@ -318,8 +330,9 @@ const RootCauseAnalysis = () => {
               label="What caused the incident?"
               error={error.causeOfIncident}
               value={form.causeOfIncident}
-              helperText={error ? error.causeOfIncident : ''}
-              onChange={(e) => setForm({ ...form, causeOfIncident: e.target.value })
+              helperText={error ? error.causeOfIncident : ""}
+              onChange={(e) =>
+                setForm({ ...form, causeOfIncident: e.target.value })
               }
             />
           </Grid>
@@ -335,8 +348,9 @@ const RootCauseAnalysis = () => {
               required
               error={error.correctiveAction}
               value={form.correctiveAction}
-              helperText={error ? error.correctiveAction : ''}
-              onChange={(e) => setForm({ ...form, correctiveAction: e.target.value })
+              helperText={error ? error.correctiveAction : ""}
+              onChange={(e) =>
+                setForm({ ...form, correctiveAction: e.target.value })
               }
             />
           </Grid>
@@ -353,11 +367,12 @@ const RootCauseAnalysis = () => {
                     control={<Radio />}
                     label={value}
                     checked={form.wouldItPreventIncident == value}
-                    onChange={(e) => setForm({
-                      ...form,
-                      wouldItPreventIncident:
-                        e.target.value === 'Yes' ? 'Yes' : 'No',
-                    })
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        wouldItPreventIncident:
+                          e.target.value === "Yes" ? "Yes" : "No",
+                      })
                     }
                   />
                 ))}
@@ -365,7 +380,7 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          {form.wouldItPreventIncident === 'No' ? (
+          {form.wouldItPreventIncident === "No" ? (
             <Grid item xs={12}>
               <TextField
                 className={classes.formControl}
@@ -373,11 +388,12 @@ const RootCauseAnalysis = () => {
                 variant="outlined"
                 multiline
                 error={error.recommendSolution}
-                helperText={error ? error.recommendSolution : ''}
+                helperText={error ? error.recommendSolution : ""}
                 label="If no, please recommended correct solution?"
                 rows="3"
                 value={form.recommendSolution}
-                onChange={(e) => setForm({ ...form, recommendSolution: e.target.value })
+                onChange={(e) =>
+                  setForm({ ...form, recommendSolution: e.target.value })
                 }
               />
             </Grid>
