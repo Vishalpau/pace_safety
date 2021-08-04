@@ -40,7 +40,7 @@ function App() {
       };
       axios(config)
         .then(function(response) {
-         console.log('index',response.data.data)
+        
          localStorage.setItem('userDetails',JSON.stringify(response.data.data.results.data))
          setStatus(response.status)
          if(response.status !== 200){

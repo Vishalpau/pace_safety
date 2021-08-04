@@ -374,7 +374,7 @@ const PeoplesAffected = () => {
         const result = res.data.data.results;
         const isavailable = result.isPersonDetailsAvailable;
         setPersonAffect(isavailable);
-
+        setPersonAffectedComments(result.personAffectedComments)
         setIncidentsListdata(result);
         if (!id) {
           await setIsLoading(true);
@@ -694,7 +694,7 @@ const PeoplesAffected = () => {
                   label="Details of people affected"
                   className={classes.fullWidth}
                   onChange={(e) => setPersonAffectedComments(e.target.value)}
-                  defaultValue={incidentsListData.personAffectedComments}
+                  value={personAffectedComments||""}
                 />
               </Grid>
             )}

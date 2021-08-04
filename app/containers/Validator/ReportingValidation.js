@@ -20,56 +20,6 @@ function ReportingValidation(data, otherData) {
     }
   }
 
-  // if (validator.isEmpty(data.isnotificationsent)) {
-  //   error.isnotificationsent = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (validator.isEmpty(data.supervisorname)) {
-  //   error.supervisorname = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (validator.isEmpty(data.othername)){
-  //     error.othername = "This field is empty"
-  //     isValid = false
-  // }
-
-  // if (data.fileupload.length == 0) {
-  //   error.fileupload = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (validator.isEmpty(data.reportingdate || "")) {
-  //   error.reportingdate = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (validator.isEmpty(data.reportingtime || "")) {
-  //   error.reportingtime = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (validator.isEmpty(data.reportedby)) {
-  //   error.reportedby = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (data.reportedby == "Others" && validator.isEmpty(data.others)) {
-  //   error.others = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (validator.isEmpty(data.latereporting)) {
-  //   error.latereporting = "This Field is Empty";
-  //   isValid = false;
-  // }
-
-  // if (validator.isEmpty(data.additionaldetails)){
-  //     error.additionaldetails = "This field is empty"
-  //     isValid = false
-  // }
-
   return { error, isValid };
 }
 

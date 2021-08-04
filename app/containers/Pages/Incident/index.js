@@ -174,7 +174,6 @@ function BlankPage() {
         item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
     );
     await setIncidents(newData);
-    console.log(newData);
   };
 
   const handlePush = async () => {
@@ -188,16 +187,13 @@ function BlankPage() {
   }, []);
 
   const handelSearchIncident = async (e) => {
-    console.log(e.target.value);
     let allSeacrh = [];
     if (e.target.value.length === 0) {
       await setShowIncident([]);
     } else {
-      console.log(searchIncident);
       await setSeacrhIncident(e.target.value.toLowerCase());
       Object.entries(incidents).map((item) => {
         if (item[1]["incidentNumber"].toLowerCase().includes(searchIncident)) {
-          console.log(item[1]["incidentNumber"]);
           allSeacrh.push([
             item[1]["incidentNumber"],
             item[1]["incidentReportedByName"],

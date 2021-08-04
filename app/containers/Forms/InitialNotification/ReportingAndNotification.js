@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -18,18 +18,24 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
+import Paper from "@material-ui/core/Paper";
+import AddIcon from "@material-ui/icons/Add";
+import Tooltip from "@material-ui/core/Tooltip";
+
+// import { DropzoneArea, DropzoneDialogBase } from 'material-ui-dropzone';
+
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
-import axios from "axios";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 
+import axios from "axios";
 import FormSideBar from "../FormSideBar";
 import {
   access_token,
@@ -39,8 +45,15 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+// import FormHeader from '../FormHeader';
+
 import ReportingValidation from "../../Validator/ReportingValidation";
+import InitialEvidenceValidate from "../../Validator/InitialEvidance";
+
 import api from "../../../utils/axios";
+import Attachment from "../../Attachment/Attacment";
+
+// import UploadInputAll from '../demos/UploadInputAll';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -74,6 +87,7 @@ function Alert(props) {
 
 const ReportingAndNotification = () => {
   const [error, setError] = useState({});
+  const [evidenceError, setEvidenceError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(false);
@@ -99,7 +113,7 @@ const ReportingAndNotification = () => {
       evidenceNumber: "string",
       evidenceCategory: "Initial Evidence",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: parseInt(userId),
       updatedBy: parseInt(userId),
@@ -109,6 +123,7 @@ const ReportingAndNotification = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  const ref = useRef();
   let reportedToFilterData = [];
   let filterSuperVisorName = [];
   let filterReportedByName = [];
@@ -259,15 +274,69 @@ const ReportingAndNotification = () => {
   const handelNext = async (e) => {
     if (isNext) {
       setIsnext(false);
-      // handle remove existing report
-      await handleRemoveExitingReport();
-
-      // update incident details
-      await handleUpdateIncidentDetails();
 
       // handle Initail evidance
-      await handleInitialEvidance();
+      // await handleInitialEvidance();
+      const { error, isValid } = InitialEvidenceValidate(evidanceForm);
+      setEvidenceError(error);
+      let evidanceChecked = isValid;
 
+      if (evidanceChecked === true) {
+        for (var key in evidanceForm) {
+          if (typeof evidanceForm[key].evidenceDocument === "string") {
+            try {
+              await api.put(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/evidences/${evidanceForm[key].id}`,
+                {
+                  evidenceCategory: "Initial Evidence",
+                  evidenceDocument: evidanceForm[key].evidenceDocument,
+                  evidenceCheck: "Yes",
+                  evidenceNumber: "string",
+                  evidenceRemark: evidanceForm[key].evidenceRemark,
+                  status: "Active",
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                  id:evidanceForm[key].id
+                }
+              );
+            } catch (error) {
+              setIsnext(true);
+            }
+          } else {
+            try {
+              const formData = new FormData();
+              formData.append(
+                "evidenceDocument",
+                evidanceForm[key].evidenceDocument
+              );
+              formData.append(
+                "evidenceRemark",
+                evidanceForm[key].evidenceRemark
+              );
+              formData.append("evidenceCheck", "Yes");
+              formData.append("evidenceCategory", "Initial Evidence");
+              formData.append("createdBy", parseInt(userId));
+              formData.append("status", "Active");
+              formData.append(
+                "fkIncidentId",
+                localStorage.getItem("fkincidentId")
+              );
+              const evidanceResponse = await api.post(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/evidences/`,
+                formData
+              );
+            } catch (error) {
+              setIsnext(true);
+            }
+          }
+        }
+      } else {
+        setIsnext(true);
+      }
       // check initial evidance
       if (evidanceCkecked === true) {
         let status = 0;
@@ -276,7 +345,13 @@ const ReportingAndNotification = () => {
         const { error, isValid } = ReportingValidation(form, reportOtherData);
         setError(error);
 
-        if (isValid === true) {
+        if (isValid === true && evidanceChecked === true) {
+          // handle remove existing report
+          await handleRemoveExitingReport();
+
+          // update incident details
+          await handleUpdateIncidentDetails();
+
           var newData = [];
           reportedToFilterData = [];
           for (var key in reportedTo) {
@@ -305,7 +380,9 @@ const ReportingAndNotification = () => {
                 }
               );
               status = res.status;
-            } catch (err) {}
+            } catch (err) {
+              setIsnext(true);
+            }
           }
 
           // set in reportTo otherData
@@ -355,7 +432,7 @@ const ReportingAndNotification = () => {
         evidenceNumber: "string",
         evidenceCategory: "Initial Evidence",
         evidenceRemark: "",
-        evidenceDocument: "",
+        evidenceDocument: null,
         status: "Active",
         createdBy: parseInt(userId),
         updatedBy: parseInt(userId),
@@ -382,7 +459,13 @@ const ReportingAndNotification = () => {
       if (
         file[1].toLowerCase() === "jpg" ||
         file[1].toLowerCase() === "jpeg" ||
-        file[1].toLowerCase() === "png"
+        file[1].toLowerCase() === "png" ||
+        file[1].toLowerCase() === "xls" ||
+        file[1].toLowerCase() === "xlsx" ||
+        file[1].toLowerCase() === "pdf" ||
+        file[1].toLowerCase() === "doc" ||
+        file[1].toLowerCase() === "word" ||
+        file[1].toLowerCase() === "ppt"
       ) {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
@@ -390,6 +473,7 @@ const ReportingAndNotification = () => {
           await setMessageType("success");
           await setOpen(true);
         } else {
+          ref.current.value = "";
           await setMessage(
             "File uploading failed! Select file less than 25MB!"
           );
@@ -397,7 +481,10 @@ const ReportingAndNotification = () => {
           await setOpen(true);
         }
       } else {
-        await setMessage("Only JPG & PNG File is allowed!");
+        ref.current.value = "";
+        await setMessage(
+          "Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!"
+        );
         await setMessageType("error");
         await setOpen(true);
       }
@@ -417,17 +504,6 @@ const ReportingAndNotification = () => {
 
   // handle remove initial evidance from databse
 
-  const removeInitialEvidance = async (evidenceId) => {
-    const res = await api.delete(
-      `api/v1/incidents/${id}/evidences/${evidenceId}/`
-    );
-    if (res.status === 200) {
-      await fetchEvidanceData();
-      await setMessage("File removed successfully!");
-      await setMessageType("success");
-      await setOpen(true);
-    }
-  };
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
@@ -555,6 +631,11 @@ const ReportingAndNotification = () => {
       const data = allEvidence.data.data.results.filter(
         (item) => item.evidenceCategory === "Initial Evidence"
       );
+      if (data.length > 0) {
+        let temp = [...evidanceForm];
+        temp = data;
+        setEvidanceForm(temp);
+      }
       await setEvidence(data);
     }
   };
@@ -570,16 +651,12 @@ const ReportingAndNotification = () => {
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
         headers: HEADER_AUTH,
       };
-      console.log(config);
       const res = await api(config);
       if (res.status === 200) {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-      console.log(res.data.data.results);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   // handle go back
@@ -627,14 +704,12 @@ const ReportingAndNotification = () => {
     }
   }, []);
 
-  const isDesktop = useMediaQuery("(min-width:992px)");
-
   const classes = useStyles();
   return (
     <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item xs={12} md={9} spacing={3}>
+          <Grid container item md={9} spacing={3}>
             <Grid item md={12}>
               <FormControl
                 component="fieldset"
@@ -650,7 +725,7 @@ const ReportingAndNotification = () => {
                       key={key}
                       value={value.inputValue}
                       control={<Checkbox />}
-                      label={value.inputValue}
+                      label={value.inputLabel}
                       checked={!!form.reportedto.includes(value.inputValue)}
                       onChange={(e) => {
                         handelReportedTo(e, value.inputValue, "option");
@@ -665,7 +740,7 @@ const ReportingAndNotification = () => {
             </Grid>
 
             {form.reportedto.includes("Others") ? (
-              <Grid item xs={12}>
+              <Grid item md={12}>
                 <TextField
                   id="Other"
                   variant="outlined"
@@ -683,7 +758,7 @@ const ReportingAndNotification = () => {
               </Grid>
             ) : null}
 
-            <Grid item xs={12} md={6}>
+            <Grid item lg={12} md={6} sm={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Notification to be sent?
@@ -705,91 +780,94 @@ const ReportingAndNotification = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Initial evidences
-              </Typography>
-            </Grid>
+            <Grid item lg={12} justify="flex-start">
+              <Box marginTop={3} marginBottom={4}>
+                <Typography variant="h6" gutterBottom>
+                  Initial evidences
+                </Typography>
+                <Typography variant="caption">
+                  Only PDF,PNG,JPEG,JPG,Excel,Xls,Doc,Word & PPT files are
+                  supported
+                </Typography>
+              </Box>
 
-            <>
-              {evidence.length > 0
-                ? evidence.map((item, index) => (
-                    <>
-                      <Grid item xs={12} md={5}>
-                        <a href={`${item.evidenceDocument}`} target="_blank">
-                          {handelFileName(item.evidenceDocument)}
-                        </a>
-                      </Grid>
-                      <Grid item xs={10} md={6}>
-                        <TextField
-                          id="evidanceRemark"
-                          size="small"
-                          variant="outlined"
-                          label="Evidences remark"
-                          className={classes.formControl}
-                          disabled={true}
-                          value={item.evidenceRemark}
-                        />
-                      </Grid>
-                      <Grid item xs={2}>
-                        <IconButton
-                          variant="contained"
-                          color="primary"
-                          onClick={() => removeInitialEvidance(item.id)}
-                        >
-                          <DeleteForeverIcon />
-                        </IconButton>
-                      </Grid>
-                    </>
-                  ))
-                : null}
               {evidanceForm.map((item, index) => (
-                <Grid container item xs={12} spacing={3} alignItems="center">
-                  <Grid item md={5}>
+                <Grid container item md={12} spacing={3} alignItems="center">
+                  <Grid
+                    item
+                    md={typeof item.evidenceDocument === "string" ? 2 : 6}
+                  >
                     <input
+                      ref={ref}
+                      id="file"
                       type="file"
-                      accept=".jpg, .jpeg, .png"
+                      accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                      style={{
+                        color:
+                          typeof item.evidenceDocument === "string" &&
+                          "transparent",
+                      }}
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceDocument")
                       }
-                      showPreviews
                     />
                   </Grid>
-                  <Grid item xs={10} md={6}>
+                  {typeof item.evidenceDocument === "string" ? (
+                    <Grid item md={4}>
+                      <Tooltip title={"fileName"}>
+                        <Attachment value={item.evidenceDocument} />
+                      </Tooltip>
+                    </Grid>
+                  ) : null}
+                  <Grid item md={4}>
                     <TextField
                       id="evidanceRemark"
                       size="small"
                       variant="outlined"
                       label="Evidences remark"
+                      error={
+                        evidenceError &&
+                        evidenceError[`evidenceRemark${[index]}`]
+                      }
+                      helperText={
+                        evidenceError &&
+                        evidenceError[`evidenceRemark${[index]}`]
+                          ? evidenceError[`evidenceRemark${[index]}`]
+                          : null
+                      }
                       className={classes.formControl}
+                      value={item.evidenceRemark}
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceRemark")
                       }
                     />
                   </Grid>
-                  <Grid item xs={2} md={1}>
+                  <Grid item md={1}>
                     <IconButton
                       variant="contained"
                       color="primary"
-                      onClick={() => handleRemoveEvidance(index)}
+                      className={classes.button}
+                      onClick={(e) => handleNewEvidance(e)}
                     >
-                      <DeleteForeverIcon />
+                      <AddCircleIcon />
                     </IconButton>
+                  </Grid>
+
+                  <Grid item md={1}>
+                    {evidanceForm.length > 1 ? (
+                      <IconButton
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleRemoveEvidance(index)}
+                      >
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    ) : null}
                   </Grid>
                 </Grid>
               ))}
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddCircleIcon />}
-                  className={classes.button}
-                  onClick={(e) => handleNewEvidance(e)}
-                >
-                  Add
-                </Button>
-              </Grid>
+
               <Snackbar
                 open={open}
                 autoHideDuration={6000}
@@ -799,10 +877,15 @@ const ReportingAndNotification = () => {
                   {message}
                 </Alert>
               </Snackbar>
-            </>
+            </Grid>
 
-            <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
+            <Grid item md={6}>
+              <FormControl
+                variant="outlined"
+                // required
+                className={classes.formControl}
+                // error={error && error.reportedby}
+              >
                 <InputLabel id="supervisorname-label">
                   Supervisor name
                 </InputLabel>
@@ -834,9 +917,12 @@ const ReportingAndNotification = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                {/* {error && error.reportedby ? (
+                  <FormHelperText>{error.reportedby}</FormHelperText>
+                ) : null} */}
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item md={6}>
               <TextField
                 id="others"
                 variant="outlined"
@@ -861,8 +947,13 @@ const ReportingAndNotification = () => {
               {error && error.othername ? <p>{error.othername}</p> : null}
             </Grid>
 
-            <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
+            <Grid item md={6}>
+              <FormControl
+                variant="outlined"
+                // required
+                className={classes.formControl}
+                // error={error && error.reportedby}
+              >
                 <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
                   labelId="reportedBy-label"
@@ -892,9 +983,12 @@ const ReportingAndNotification = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                {/* {error && error.reportedby ? (
+                  <FormHelperText>{error.reportedby}</FormHelperText>
+                ) : null} */}
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item md={6}>
               <TextField
                 id="others"
                 variant="outlined"
@@ -919,12 +1013,17 @@ const ReportingAndNotification = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item md={6}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   className={classes.formControl}
                   id="date-picker-dialog"
+                  // error={error && error.reportingdate}
+                  // helperText={
+                  //   error && error.reportingdate ? error.reportingdate : null
+                  // }
                   format="yyyy/MM/dd HH:mm"
+                  // required
                   inputVariant="outlined"
                   label="Reporting date"
                   value={incidentsListData.incidentReportedOn}
@@ -937,7 +1036,7 @@ const ReportingAndNotification = () => {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item md={12}>
               <TextField
                 id="reason"
                 variant="outlined"
@@ -945,6 +1044,10 @@ const ReportingAndNotification = () => {
                 multiline
                 error={error && error.latereporting}
                 disabled={!lateReport}
+                // required
+                // helperText={
+                //   error && error.latereporting ? error.latereporting : null
+                // }
                 rows="4"
                 defaultValue={incidentsListData.reasonLateReporting}
                 className={classes.fullWidth}
@@ -957,7 +1060,7 @@ const ReportingAndNotification = () => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item md={12}>
               <TextField
                 id="additionalDetails"
                 variant="outlined"
@@ -975,7 +1078,7 @@ const ReportingAndNotification = () => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item md={6}>
               <Button
                 variant="contained"
                 color="primary"
@@ -995,15 +1098,13 @@ const ReportingAndNotification = () => {
               </Button>
             </Grid>
           </Grid>
-          {isDesktop && (
-            <Grid item md={3}>
-              <FormSideBar
-                deleteForm={localStorage.getItem("deleteForm")}
-                listOfItems={INITIAL_NOTIFICATION_FORM}
-                selectedItem="Reporting and notification"
-              />
-            </Grid>
-          )}
+          <Grid item md={3}>
+            <FormSideBar
+              deleteForm={localStorage.getItem("deleteForm")}
+              listOfItems={INITIAL_NOTIFICATION_FORM}
+              selectedItem="Reporting and notification"
+            />
+          </Grid>
         </Grid>
       ) : (
         <h1>Loading...</h1>

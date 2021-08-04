@@ -135,7 +135,7 @@ const Summary = () => {
       `/api/v1/incidents/${incidentId}/pacecauses/`
     );
     let paceCauseData = paceCause.data.data.results[0];
-    console.log(paceCauseData);
+    
     await setPaceCauseData(paceCauseData);
 
     let rootCause = await api.get(
@@ -183,7 +183,11 @@ const Summary = () => {
             <div className={Styles.incidents}>
               <div className={Styles.item}>
                 <Button
-                  color="primary"
+                  color= {initialNotification == true ||
+                    (investigation === false &&
+                      evidence === false &&
+                      rootcauseanalysis === false &&
+                      lessionlearn === false) ?"secondary": "primary"}
                   variant="contained"
                   size="large"
                   variant={
@@ -214,7 +218,7 @@ const Summary = () => {
 
               <div className={Styles.item}>
                 <Button
-                  color="primary"
+                  color= {investigation == true?"secondary":"primary"}
                   variant="outlined"
                   size="large"
                   variant={investigationOverview ? "contained" : "outlined"}
@@ -239,7 +243,7 @@ const Summary = () => {
 
               <div className={Styles.item}>
                 <Button
-                  color="primary"
+                  color= {evidence == true?"secondary":"primary"}
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -260,7 +264,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color="primary"
+                  color= {rootcauseanalysis == true?"secondary":"primary"}
                   variant={
                     paceCauseData || rootCausesData || whyData
                       ? "contained"
@@ -293,7 +297,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color="primary"
+                  color= {lessionlearn == true?"secondary":"primary"}
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
