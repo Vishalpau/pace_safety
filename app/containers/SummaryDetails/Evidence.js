@@ -45,6 +45,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
 import "../../styles/custom.css";
 
+import Attachment from "../Attachment/Attacment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -232,67 +233,8 @@ const EvidenceSummary = () => {
                                     value.evidenceDocument
                                   )}
                                 >
-                                  <IconButton
-                                    onClick={() =>
-                                      handleOpen(value.evidenceDocument)
-                                    }
-                                    className={classes.fileIcon}
-                                  >
-                                    {value.evidenceDocument.endsWith(
-                                      ".PNG"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(".png") ||
-                                      value.evidenceDocument.endsWith(
-                                        ".jpg"
-                                      ) ? (
-                                      <ImageIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".pdf"
-                                    ) ? (
-                                      <PictureAsPdfIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".mp4"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(".mov") ||
-                                      value.evidenceDocument.endsWith(".flv") ||
-                                      value.evidenceDocument.endsWith(
-                                        ".avi"
-                                      ) ? (
-                                      <VideoCallIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".xls"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
-                                        ".xlsx"
-                                      ) ? (
-                                      <DescriptionIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".ppt"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
-                                        ".pptx"
-                                      ) ? (
-                                      <DescriptionIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".text"
-                                    ) ? (
-                                      <TextFieldsIcon />
-                                    ) : null}
-                                    {value.evidenceDocument.endsWith(
-                                      ".docx"
-                                    ) ||
-                                      value.evidenceDocument.endsWith(
-                                        ".doc"
-                                      ) ? (
-                                      <TextFieldsIcon />
-                                    ) : null}
-                                  </IconButton>
-                                </Tooltip>
+                                  <Attachment value={value.evidenceDocument}/>
+                               </Tooltip>
                               ) : (
                                 "-"
                               )}

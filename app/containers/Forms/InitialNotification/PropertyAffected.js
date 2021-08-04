@@ -268,7 +268,7 @@ const PropertyAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-
+    await setPropertyDamagedComments(result.propertyDamagedComments)
     const isAvailable = result.isPropertyDamagedAvailable;
     await setDetailsOfPropertyAffect(isAvailable);
   };
@@ -473,7 +473,7 @@ const PropertyAffected = () => {
                   variant="outlined"
                   label="Describe property affected"
                   className={classes.fullWidth}
-                  defaultValue={incidentsListData.propertyDamagedComments}
+                  value={propertyDamagedComments ||""}
                   onChange={(e) => {
                     setPropertyDamagedComments(e.target.value);
                   }}

@@ -19,26 +19,30 @@ function PeopleValidate(data) {
       error[`personName${[i]}`] = "Please enter person name";
       isValid = false;
     }
+    if (data[i].personName.length > 45) {
+      error[`personName${[i]}`] = "Please enter less than 45 character";
+      isValid = false;
+    }
 
-    // if (validator.isEmpty(data[i].personIdentification.toString())) {
-    //   error[`personIdentification${[i]}`] = "This field is empty";
-    //   isValid = false;
-    // }
+    if (data[i].personIdentification.length > 45) {
+      error[`personIdentification${[i]}`] = "Please enter less than 45 character";
+      isValid = false;
+    }
 
     if (validator.isEmpty(data[i].personMedicalCare.toString())) {
       error[`personMedicalCare${[i]}`] = "Please choose medical care";
       isValid = false;
     }
 
-    // if (validator.isEmpty(data[i].workerOffsiteAssessment.toString())) {
-    //   error[`workerOffsiteAssessment${[i]}`] = "This field is empty";
-    //   isValid = false;
-    // }
+    if (data[i].workerOffsiteAssessment.length>255) {
+      error[`workerOffsiteAssessment${[i]}`] = "Please enter less than 255 character";
+      isValid = false;
+    }
 
-    // if (validator.isEmpty(data[i].locationAssessmentCenter.toString())) {
-    //   error[`locationAssessmentCenter${[i]}`] = "This field is empty";
-    //   isValid = false;
-    // }
+    if (data[i].locationAssessmentCenter.length>255) {
+      error[`locationAssessmentCenter${[i]}`] ="Please enter less than 255 character";
+      isValid = false;
+    }
   }
 
   return { error, isValid };

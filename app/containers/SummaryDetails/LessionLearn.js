@@ -15,7 +15,6 @@ import Slide from "@material-ui/core/Slide";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import EditIcon from "@material-ui/icons/Edit";
@@ -28,6 +27,9 @@ import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
+
+
+import Attachment from "../Attachment/Attacment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -222,74 +224,25 @@ const LessionLearnSummary = () => {
                               <Tooltip
                                 title={handelFileName(value.evidenceDocument)}
                               >
-                                <IconButton
-                                  onClick={() =>
-                                    handleOpen(value.evidenceDocument)
-                                  }
-                                  className={classes.fileIcon}
-                                >
-                                  <PhotoSizeSelectActualIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </Typography>
-                          </Grid>
-                        ) : null}
+                                  <IconButton
+                                    onClick={() =>
+                                      handleOpen(value.evidenceDocument)
+                                    }
+                                    className={classes.fileIcon}
+                                  >
+                                    <Attachment value={value.evidenceDocument}/>
+                                  </IconButton>
+                                </Tooltip>
+                              </Typography>
+                            </Grid>
+                          ) : null}
+                        </Grid>
                       </Grid>
-                    </Grid>
+                    // </Grid>
                   ))
                 : null}
             </Grid>
-            {/* Modal */}
-
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              TransitionComponent={Transition}
-              keepMounted
-              PaperProps={{
-                style: {
-                  width: 700,
-                },
-              }}
-            >
-              <DialogTitle id="alert-dialog-slide-title">
-                {"Please choose what do you want to?"}
-              </DialogTitle>
-              <IconButton onClick={handleClose} className={classes.closeButton}>
-                <Close />
-              </IconButton>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
-                      <Button
-                        startIcon={<VisibilityIcon />}
-                        variant="contained"
-                        color="primary"
-                        className={classes.modalButton}
-                        disableElevation
-                        href={`${documentUrl}`}
-                        target="_blank"
-                      >
-                        View Attachment
-                      </Button>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Button
-                        startIcon={<GetAppIcon />}
-                        variant="contained"
-                        disableElevation
-                        className={classes.modalButton}
-                        onClick={(e) => download(documentUrl)}
-                      >
-                        Download Attachment
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </DialogContentText>
-              </DialogContent>
-            </Dialog>
-          </AccordionDetails>
+         </AccordionDetails>
         </Accordion>
       </Grid>
     </Grid>

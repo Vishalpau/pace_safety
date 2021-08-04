@@ -51,7 +51,17 @@ import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 import CardActions from "@material-ui/core/CardActions";
 import Divider from "@material-ui/core/Divider";
 import EditIcon from "@material-ui/icons/Edit";
+
 import Headerbox from "./headerbox";
+
+import { connect } from "react-redux";
+
+// redux
+
+import { useDispatch } from "react-redux";
+import { projectName} from '../../redux/actions/initialDetails'
+
+// import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
 const elem = document.documentElement;
 
@@ -121,11 +131,6 @@ const useStyles = makeStyles((theme) => ({
       color: "#054D69",
     },
   },
-  projectCloseButton: {
-    position: "absolute",
-    right: theme.spacing(2),
-    top: theme.spacing(2),
-  },
 }));
 
 function Header(props) {
@@ -133,6 +138,9 @@ function Header(props) {
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [projectOpen, setProjectOpen] = React.useState(false);
+  const [projectListData, setProjectListData] = useState([])
+  const [projectDisable, setProjectDisable] = useState(false);
+  const dispatch = useDispatch();
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
 
@@ -210,8 +218,16 @@ function Header(props) {
     title,
     openGuide,
     history,
+    initialValues
   } = props;
 
+  // check and store in localstorage 
+  if (Object.keys(props.initialValues.projectName).length > 0) {
+
+    localStorage.setItem("projectName", JSON.stringify(props.initialValues));
+    
+  }
+  const projectData = JSON.parse(localStorage.getItem("projectName"));
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -243,10 +259,47 @@ function Header(props) {
   };
 
   const handleProjectClose = () => {
+    setCompanyOpen(false);
     setProjectOpen(false);
+    
   };
+
+  // handle project Name
+  const handleProjectName = async (key) => {    
+    console.log(key)
+    let data = projectListData[key];
+    console.log(data)
+    await dispatch(projectName(data));
+    localStorage.setItem("projectName", JSON.stringify(data));
+    setProjectOpen(false);
+    setCompanyOpen(false);
+  };
+
+  const handleProjectList=()=>{
+    try{
+      const company = JSON.parse(localStorage.getItem('company'))
+      const userDetails = JSON.parse(localStorage.getItem('userDetails'))
+      
+      const data = userDetails.companies.map(item=> {
+        if(item.companyId === parseInt(company.fkCompanyId)){
+         
+          setProjectDisable(item.projects.length>1)
+          return  setProjectListData(item.projects)
+        }
+      })
+      const filterData = userDetails.companies.filter(item=>item.companyId === parseInt(company.fkCompanyId))
+      let projectLength = filterData[0].projects.length<=1
+      console.log(projectLength)
+      setProjectDisable(projectLength)
+
+      
+     
+      }catch(error){}
+  }
+
   //company selections
   const handleCompanyOpen = () => {
+
     setCompanyOpen(true);
   };
 
@@ -280,6 +333,10 @@ function Header(props) {
   const id = filterOpen ? "simple-popover" : undefined;
   const classesm = useStyles();
 
+  useEffect(()=>{
+    handleProjectList();
+  },[initialValues.projectName])
+
   return (
     <AppBar
       className={classNames(
@@ -311,11 +368,69 @@ function Header(props) {
               clickable
               size="small"
               className={classesm.projectName}
-              onClick={handleProjectOpen}
+              disabled = {projectDisable}
+              //label=""
+              onClick={handleCompanyOpen  }
             >
-              NTPC Project <EditIcon />
+              {projectData !==null?projectData.projectName.projectName:null} <EditIcon />
             </IconButton>
 
+            {/* company selections */}
+
+            {/*company selections */}
+            <Dialog
+              className={classes.projectDialog}
+              open={companyOpen}
+              onClose={handleCompanyClose}
+              PaperProps={{
+                style: {
+                  width: "100%",
+                  maxWidth: 400,
+                },
+              }}
+            >
+              <DialogTitle onClose={handleCompanyClose}>
+                Confirmation
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Card>
+                        <CardActionArea className={classesm.cardActionAreaBox}>
+                          
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              className={classesm.projectSelectionTitle}
+                            >
+                              Are you sure to switch another project?
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                        <Divider />
+                        <CardActions className={classesm.actionBttmArea}>
+                          
+                          <Tooltip title="Cancel">
+                            <Button variant="contained" color="secondary" onClick={(e)=>handleCompanyClose()}>
+                              No
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Ok">
+                              <Button variant="contained" color="primary" onClick={(e)=>handleProjectOpen()}>
+                                Yes
+                              </Button>
+                          </Tooltip>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </DialogContentText>
+              </DialogContent>
+            </Dialog>
+            {/* Project selections */}
             <Dialog
               className={classes.projectDialog}
               fullScreen
@@ -327,14 +442,17 @@ function Header(props) {
                 Switch to a Different Project
               </DialogTitle>
               <DialogContent>
-                <DialogContentText>
+                <DialogContentText id="alert-dialog-description">
+                  
                   <Grid container spacing={4}>
+                  {projectListData.length>0?projectListData.map((value,index)=>
                     <Grid
                       item
                       md={4}
                       sm={6}
                       xs={12}
                       className={classesm.cardContentBox}
+                      key={index}
                     >
                       <Card>
                         <CardActionArea className={classesm.cardActionAreaBox}>
@@ -342,104 +460,7 @@ function Header(props) {
                             <CardMedia
                               className={classesm.media}
                               image={ProjectImg}
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              className={classesm.projectSelectionTitle}
-                            >
-                              NTPC Project NTPC Project NTPC Project Project
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                              className={classesm.projectSelectionCode}
-                            >
-                              Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                    <Grid
-                      item
-                      md={4}
-                      sm={6}
-                      xs={12}
-                      className={classesm.cardContentBox}
-                    >
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImgOne}
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              className={classesm.projectSelectionTitle}
-                            >
-                              NTPC Project
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                              className={classesm.projectSelectionCode}
-                            >
-                              Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                    <Grid
-                      item
-                      md={4}
-                      sm={6}
-                      xs={12}
-                      className={classesm.cardContentBox}
-                    >
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImg}
+                              onClick={() => handleProjectName(index)}
                               //title=""
                             />
                           </div>
@@ -450,7 +471,7 @@ function Header(props) {
                               component="h2"
                               className={classesm.projectSelectionTitle}
                             >
-                              NTPC Project NTPC Project NTPC Project Project
+                              {value.projectName}
                             </Typography>
                             <Typography
                               variant="body2"
@@ -458,7 +479,7 @@ function Header(props) {
                               component="p"
                               className={classesm.projectSelectionCode}
                             >
-                              Code: 235E-WE1298
+                              Code: {value.projectCode}
                             </Typography>
                           </CardContent>
                         </CardActionArea>
@@ -477,108 +498,10 @@ function Header(props) {
                         </CardActions>
                       </Card>
                     </Grid>
-                    <Grid
-                      item
-                      md={4}
-                      sm={6}
-                      xs={12}
-                      className={classesm.cardContentBox}
-                    >
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImgOne}
-                              //title=""
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              className={classesm.projectSelectionTitle}
-                            >
-                              NTPC Project
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                              className={classesm.projectSelectionCode}
-                            >
-                              Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                    <Grid
-                      item
-                      md={4}
-                      sm={6}
-                      xs={12}
-                      className={classesm.cardContentBox}
-                    >
-                      <Card>
-                        <CardActionArea className={classesm.cardActionAreaBox}>
-                          <div className={classesm.cardMediaBox}>
-                            <CardMedia
-                              className={classesm.media}
-                              image={ProjectImgOne}
-                              //title=""
-                            />
-                          </div>
-                          <CardContent>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              className={classesm.projectSelectionTitle}
-                            >
-                              NTPC Project
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                              className={classesm.projectSelectionCode}
-                            >
-                              Code: 235E-WE1298
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                        <Divider />
-                        <CardActions className={classesm.actionBttmArea}>
-                          <Tooltip title="Control Tower">
-                            <IconButton aria-label="control tower">
-                              <SettingsRemoteIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="GIS Location">
-                            <IconButton aria-label="GIS location">
-                              <LocationOnIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                </DialogContentText>
+                    ):null}
+                 </Grid>
+                 
+               </DialogContentText>
               </DialogContent>
             </Dialog>
           </div>
@@ -612,4 +535,8 @@ Header.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+const HeaderInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(Header);
+
+export default withStyles(styles)(HeaderInit);
