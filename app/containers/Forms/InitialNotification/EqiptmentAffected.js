@@ -393,7 +393,7 @@ const EqiptmentAffected = () => {
                       />
                     </Grid>
                     {form.length > 1 ? (
-                      <Grid item xs={3}>
+                      <Grid item xs={3} md={12}>
                         <Button
                           onClick={() => handleRemove(key)}
                           variant="contained"
