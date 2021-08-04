@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Select, Container } from "@material-ui/core";
+import { Button, Grid, Select } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
 import {
-  // TimePicker,
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
   KeyboardTimePicker,
@@ -27,20 +26,22 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import CheckIcon from "@material-ui/icons/Check";
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { spacing } from "@material-ui/system";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import { object } from "prop-types";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import Attachment from "../../../containers/Attachment/Attachment"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
   notActiveList: {
     borderLeft: `5px solid ${theme.palette.primary.main}`,
-  },
+  }
 }));
 
 const WorkerDetails = () => {
@@ -77,7 +78,6 @@ const WorkerDetails = () => {
   const workerType = useRef([]);
   const [departmentName, setDepartmentName] = useState([]);
   const [workHours, setworkHours] = useState([]);
-  /////////
   const [shiftType, setShiftType] = useState([]);
   const [occupation, setOccupation] = useState([]);
   const [shiftCycle, setShiftCycle] = useState([]);
@@ -86,7 +86,9 @@ const WorkerDetails = () => {
   const [timeOnProject, setTimeOnProject] = useState([]);
   const [timeInIndustry, setTimeInIndustry] = useState([]);
   const [primaryBodyPartWithSide, setPrimaryBodyPartWithSide] = useState([]);
-  const [secondaryBodyPartWithSide, setSecondaryBodyPartWithSide] = useState([]);
+  const [secondaryBodyPartWithSide, setSecondaryBodyPartWithSide] = useState(
+    []
+  );
   const [typeOfInjury, setTypeOfInjury] = useState([]);
   const [higherMedicalResponder, setHigherMedicalResponder] = useState([]);
   const [treatmentType, setTreatmentType] = useState([]);
@@ -103,6 +105,14 @@ const WorkerDetails = () => {
   const [workerid, setWorkerId] = useState();
   let [localWorkerData, setLocalWorkerData] = useState([]);
   const [files] = useState([]);
+  const radioDecide = ["Yes", "No", "N/A"];
+  const radioYesNo = ["Yes", "No"];
+  const ref = useRef();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const fileRef = useRef("")
+
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
@@ -139,7 +149,7 @@ const WorkerDetails = () => {
     supervisorTimeOnProject: "",
     isAlcoholDrugTestTaken: "No",
     dateOfAlcoholDrugTest: null,
-    isWorkerClearedTest: "N/A",
+    isWorkerClearedTest: "Yes",
     reasonForTestNotDone: "",
     status: "Active",
     createdBy: 0,
@@ -155,7 +165,7 @@ const WorkerDetails = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-    setError({})
+    setError({});
 
     // getting person affected data
     const url = window.location.pathname.split("/");
@@ -166,7 +176,10 @@ const WorkerDetails = () => {
     if (typeof particularEffected !== "undefined") {
       setForm(particularEffected);
     }
-    if (typeof particularEffected.id !== "undefined" || particularEffected.id != "") {
+    if (
+      typeof particularEffected.id !== "undefined" ||
+      particularEffected.id != ""
+    ) {
       setWorkerId(particularEffected.id);
     }
     // getting person affected data end
@@ -181,31 +194,61 @@ const WorkerDetails = () => {
     await setIsLoading(true);
   };
 
-  const radioDecide = ["Yes", "No", "N/A"];
-  const radioYesNo = ["Yes", "No"];
-
   const handelTestTaken = async (e) => {
     if (e.target.value == "Yes") {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
-      seTesttaken(true);
+      setTesttaken(true);
     } else if (e.target.value == "No") {
       setForm({
         ...form,
         isAlcoholDrugTestTaken: e.target.value,
-        dateOfAlcoholDrugTest: "2000-07-15T10:48:00.000Z",
       });
-      seTesttaken(false);
+      setTesttaken(false);
     }
   };
 
   const handleFile = async (e) => {
-    const temp = { ...form };
-    temp.attachments = e.target.files[0];
-    if (e.target.files[0].size > 1500) {
-      console.log("File too large")
+    let acceptFileTypes = [
+      "pdf",
+      "png",
+      "jpeg",
+      "jpg",
+      "xls",
+      "xlsx",
+      "doc",
+      "word",
+      "ppt",
+    ];
+    let file = e.target.files[0].name.split(".");
+    if (
+      acceptFileTypes.includes(file[1]) &&
+      e.target.files[0].size < 25670647
+    ) {
+      const temp = { ...form };
+      temp.attachments = e.target.files[0];
+      await setForm(temp);
+    } else {
+      ref.current.value = "";
+      await setMessage(
+        "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!"
+      );
+      await setMessageType("error");
+      await setOpen(true);
     }
-    await setForm(temp);
   };
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenError(false)
+      return;
+    }
+    setOpen(false);
+  };
+
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
@@ -218,7 +261,7 @@ const WorkerDetails = () => {
       if (form.shiftTimeStart != null) {
         data.append("shiftTimeStart", form.shiftTimeStart);
       } else if (form.shiftTimeStart == null) {
-        delete form["shiftTimeStart"]
+        delete form["shiftTimeStart"];
       }
       data.append("shiftType", form.shiftType);
       data.append("occupation", form.occupation);
@@ -227,13 +270,15 @@ const WorkerDetails = () => {
       data.append("timeInCompany", form.timeInCompany);
       data.append("timeOnProject", form.timeOnProject);
       data.append("timeInIndustry", form.timeInIndustry);
-      if (form.attachments !== null && typeof form.attachments !== "undefined") {
+      if (
+        form.attachments !== null &&
+        typeof form.attachments !== "undefined"
+      ) {
         if (typeof form.attachments !== "string") {
           data.append("attachments", form.attachments);
         }
       } else if (form.attachments == null) {
-        console.log("here2")
-        delete form["attachments"]
+        delete form["attachments"];
       }
       data.append("eventLeadingToInjury", form.eventLeadingToInjury);
       data.append("injuryObject", form.injuryObject);
@@ -246,7 +291,7 @@ const WorkerDetails = () => {
       if (form.treatmentDate != null) {
         data.append("treatmentDate", form.treatmentDate);
       } else if (form.shiftTimeStart == null) {
-        delete form["treatmentDate"]
+        delete form["treatmentDate"];
       }
       data.append("higherMedicalResponder", form.higherMedicalResponder);
       data.append("injuryStatus", form.injuryStatus);
@@ -264,7 +309,7 @@ const WorkerDetails = () => {
       if (form.dateOfAlcoholDrugTest != null) {
         data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
       } else if (form.shiftTimeStart == null) {
-        delete form["treatmentDate"]
+        delete form["treatmentDate"];
       }
       data.append("isWorkerClearedTest", form.isWorkerClearedTest);
       data.append("reasonForTestNotDone", form.reasonForTestNotDone);
@@ -275,11 +320,19 @@ const WorkerDetails = () => {
       let res = [];
       if (!isNaN(form.id)) {
         form["fkInvestigationId"] = investigationId.current;
-        const ress = await api.put(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/${workerid}/`, data);
+        const ress = await api.put(
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          }/workers/${workerid}/`,
+          data
+        );
         res.push(ress);
       } else {
         form["fkInvestigationId"] = investigationId.current;
-        const ress = await api.post(`/api/v1/incidents/${putId.current}/investigations/${investigationId.current}/workers/`, data);
+        const ress = await api.post(
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          }/workers/`,
+          data
+        );
         res.push(ress);
       }
 
@@ -311,6 +364,7 @@ const WorkerDetails = () => {
 
       await handelUpdateCheck();
     }
+    document.getElementById("workerForm").reset()
   };
 
   const handelAddNew = async () => {
@@ -322,6 +376,7 @@ const WorkerDetails = () => {
       await localStorage.setItem("personEffected", JSON.stringify(worker));
       await handleNext();
     }
+    fileRef.current.value !== undefined ? fileRef.current.value = "" : null
   };
 
   const handelPrevious = async () => {
@@ -360,19 +415,21 @@ const WorkerDetails = () => {
           workerNumber - 1
         )}/${localStorage.getItem("fkincidentId")}`
       );
-    } else if (typeof worker_removed[parseInt(workerNumber + 1)] !== "undefined") {
+    } else if (
+      typeof worker_removed[parseInt(workerNumber + 1)] !== "undefined"
+    ) {
       await history.push(
         `/app/incident-management/registration/investigation/worker-details/${parseInt(
           workerNumber + 1
         )}/${localStorage.getItem("fkincidentId")}`
       );
-    }
-    else if (typeof worker_removed[parseInt(0)] !== "undefined") {
+    } else if (typeof worker_removed[parseInt(0)] !== "undefined") {
       await history.push(
-        `/app/incident-management/registration/investigation/worker-details/${parseInt(0)}/${localStorage.getItem("fkincidentId")}`
+        `/app/incident-management/registration/investigation/worker-details/${parseInt(
+          0
+        )}/${localStorage.getItem("fkincidentId")}`
       );
-    }
-    else {
+    } else {
       await history.push(
         `/app/incident-management/registration/investigation/event-details/`
       );
@@ -388,6 +445,8 @@ const WorkerDetails = () => {
     );
     await handelUpdateCheck();
   };
+
+
 
   const PickList = async () => {
     await handelUpdateCheck();
@@ -414,1013 +473,1047 @@ const WorkerDetails = () => {
   };
 
   const imageNameFromUrl = (url) => {
-    let imageArray = url.split("/")
-    let image_name = imageArray[imageArray.length - 1]
-    return image_name
-  }
+    let imageArray = url.split("/");
+    let image_name = imageArray[imageArray.length - 1];
+    return image_name;
+  };
 
   useEffect(() => {
     PickList();
   }, []);
 
   const classes = useStyles();
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
-              <Typography variant="h6">Worker details</Typography>
-            </Grid>
+        <form id="workerForm">
+          <Grid container spacing={3}>
+            <Grid container item xs={12} md={9} spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h6">Worker details</Typography>
+              </Grid>
 
-            {/* {workerData.map((value, index)=>(<> */}
-            <Grid item md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Name"
-                required
-                value={form.name}
-                error={error && error.name}
-                helperText={error && error.name ? error.name : null}
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    name: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            {/* worker type */}
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.workerType}
-                className={classes.formControl}
-              >
-                <InputLabel id="unit-name-label">Type</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Type"
-                  // value={incidentsListData.fkUnitId}
-                  value={form.workerType}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      workerType: e.target.value,
-                    });
-                  }}
-                >
-                  {workerType.current.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-                {error && error.workerType && (
-                  <FormHelperText>{error.workerType}</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-
-            {/* department */}
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                required
-                error={error && error.department}
-                className={classes.formControl}
-              >
-                <InputLabel id="unit-name-label">Department</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Department"
-                  value={form.department}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      department: e.target.value,
-                    });
-                  }}
-                >
-                  {departmentName.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-                {error && error.department && (
-                  <FormHelperText>{error.department}</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-
-            {/* scheduled workign hours */}
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                className={classes.formControl}
-              >
-                <InputLabel id="unit-name-label">
-                  Number of Scheduled Work Hours
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Number of Scheduled Work Hours"
-                  value={form.workHours}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      workHours: e.target.value,
-                    });
-                  }}
-                >
-                  {workHours.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* start of shift */}
-            <Grid item md={6}>
-              <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-                <KeyboardTimePicker
-                  className={classes.formControl}
-                  helperText={""}
-                  value={form.shiftTimeStart}
-                  label="Start of shift time"
-                  value={form.shiftTimeStart}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      shiftTimeStart: moment(e).toISOString(),
-                    });
-                  }}
-                  format="HH:mm"
-                  inputVariant="outlined"
-                  disableFuture="true"
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-
-            {/* type of shift */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Type of shift</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Type of Shift"
-                  value={form.shiftType}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      shiftType: e.target.value,
-                    });
-                  }}
-                >
-                  {shiftType.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Occupation */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Occupation</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Occupation"
-                  value={form.occupation}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      occupation: e.target.value,
-                    });
-                  }}
-                >
-                  {occupation.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Shift cycle */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Shift cycle</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Shift Cycle"
-                  value={form.shiftCycle}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      shiftCycle: e.target.value,
-                    });
-                  }}
-                >
-                  {shiftCycle.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* number of days */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Number of days into shift
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Number of Days into Shift"
-                  value={form.noOfDaysIntoShift}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      noOfDaysIntoShift: e.target.value,
-                    });
-                  }}
-                >
-                  {noOfDaysIntoShift.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* time in comapany */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Time in company</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Time in company"
-                  value={form.timeInCompany}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      timeInCompany: e.target.value,
-                    });
-                  }}
-                >
-                  {timeInCompany.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* time on project */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Time on project</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Time on project"
-                  value={form.timeOnProject}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      timeOnProject: e.target.value,
-                    });
-                  }}
-                >
-                  {timeOnProject.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* time in industry */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">Time in industry</InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Time in Industry"
-                  value={form.timeInIndustry}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      timeInIndustry: e.target.value,
-                    });
-                  }}
-                >
-                  {timeInIndustry.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* injury     */}
-            <Grid item md={12}>
-              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6">Injury details</Typography>
-              </Box>
-            </Grid>
-
-            {/* event leading to injury */}
-            <Grid item md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Event leading to injury"
-                className={classes.formControl}
-                value={form.eventLeadingToInjury}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    eventLeadingToInjury: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-
-            {/* injury object */}
-            <Grid item md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Injury object"
-                error={error && error.injuryObject}
-                helperText={error && error.injuryObject}
-                className={classes.formControl}
-                value={form.injuryObject}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    injuryObject: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-
-            {/* primary body part included */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Primary body part side included
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Primary Body Part Side Included"
-                  value={form.primaryBodyPartWithSide}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      primaryBodyPartWithSide: e.target.value,
-                    });
-                  }}
-                >
-                  {primaryBodyPartWithSide.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* secondary body part */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Secondary body part included
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Secondary Body Part Included"
-                  value={form.secondaryBodyPartWithSide}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      secondaryBodyPartWithSide: e.target.value,
-                    });
-                  }}
-                >
-                  {secondaryBodyPartWithSide.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* type of injury */}
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
-                <InputLabel id="unit-name-label">
-                  Type of injury illness
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Type of injury illness"
-                  value={form.typeOfInjury}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      typeOfInjury: e.target.value,
-                    });
-                  }}
-                >
-                  {typeOfInjury.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-                {error && error.typeOfInjury && (
-                  <FormHelperText>{error.typeOfInjury}</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-
-            {/* day away/restriction */}
-            <Grid item md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Number of Days Away/On Restriction"
-                value={form.NoOfDaysAway}
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    NoOfDaysAway: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-
-            {/* medical response */}
-            <Grid item md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Medical response taken"
-                value={form.medicalResponseTaken}
-                error={error && error.medicalResponseTaken}
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    medicalResponseTaken: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-
-            {/* treatment date  */}
-            <Grid item md={6}>
-              <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  className={classes.formControl}
-                  label="Treatment Date"
-                  value={!form.treatmentDate ? null : form.treatmentDate}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      treatmentDate: moment(e).toISOString(),
-                    });
-                  }}
-                  format="yyyy/MM/dd"
-                  inputVariant="outlined"
-                  disableFuture="true"
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-
-            {/* highest medical responder */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Highest medical responder
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Highest Medical Responder"
-                  value={form.higherMedicalResponder}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      higherMedicalResponder: e.target.value,
-                    });
-                  }}
-                >
-                  {higherMedicalResponder.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* status update    */}
-            <Grid item md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Status update"
-                value={form.injuryStatus}
-                error={error && error.injuryStatus}
-                helperText={error && error.injuryStatus}
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    injuryStatus: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-
-            {/* first aid */}
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                error={error && error.actualSeverityLevel}
-                className={classes.formControl}
-              >
-                <InputLabel id="unit-name-label">
-                  First aid treatment
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="First Aid Treatment"
-                  value={form.firstAidTreatment}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      firstAidTreatment: e.target.value,
-                    });
-                  }}
-                >
-                  {treatmentType.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* mechanish of injury */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Mechanism of injury
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Mechanism of Injury"
-                  value={form.mechanismOfInjury}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      mechanismOfInjury: e.target.value,
-                    });
-                  }}
-                >
-                  {mechanismOfInjury.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item md={12}>
-              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6">Worker care</Typography>
-              </Box>
-            </Grid>
-
-            {/* medical issues */}
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" required>Medical issued?</FormLabel>
-                <RadioGroup
-                  className={classes.inlineRadioGroup}
-                  value={form.isMedicationIssued}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      isMedicationIssued: e.target.value,
-                    });
-                  }}
-                >
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-
-            {/* prescription issue */}
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" required>Prescription issues ?</FormLabel>
-                <RadioGroup
-                  className={classes.inlineRadioGroup}
-                  value={form.isPrescriptionIssued}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      isPrescriptionIssued: e.target.value,
-                    });
-                  }}
-                >
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-
-            {/* non prescription */}
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" required>Non-prescription ?</FormLabel>
-                <RadioGroup
-                  className={classes.inlineRadioGroup}
-                  value={form.isNonPrescription}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      isNonPrescription: e.target.value,
-                    });
-                  }}
-                >
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-
-            {/* any limitation */}
-            <Grid item md={6}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" required>Any limitation ?</FormLabel>
-                <RadioGroup
-                  className={classes.inlineRadioGroup}
-                  value={form.isAnyLimitation}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      isAnyLimitation: e.target.value,
-                    });
-                  }}
-                >
-                  {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-
-            <Grid item md={12}>
-              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6">Alcohol and drug test</Typography>
-              </Box>
-            </Grid>
-
-            {/* test taken */}
-            <Grid item md={12}>
-              <FormControl component="fieldset" required>
-                <FormLabel component="legend" >Was the test taken?</FormLabel>
-                <RadioGroup
-                  className={classes.inlineRadioGroup}
-                  value={
-                    form.isAlcoholDrugTestTaken
-                      ? form.isAlcoholDrugTestTaken
-                      : "No"
-                  }
-                  onChange={(e) => handelTestTaken(e)}
-                >
-                  {radioYesNo.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            {form.isAlcoholDrugTestTaken == "Yes" ? (
-              <>
-                <Grid item md={6}>
-                  <MuiPickersUtilsProvider
-                    variant="outlined"
-                    utils={DateFnsUtils}
-                  >
-                    <KeyboardDatePicker
-                      className={classes.formControl}
-                      value={form.dateOfAlcoholDrugTest != null ? form.dateOfAlcoholDrugTest : null}
-                      label="Date of Test"
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          dateOfAlcoholDrugTest: moment(e).toISOString(),
-                        });
-                      }}
-                      format="yyyy/MM/dd"
-                      inputVariant="outlined"
-                      disableFuture="true"
-                    />
-                  </MuiPickersUtilsProvider>
-                </Grid>
-
-                <Grid item md={6}>
-                  {/* <p>Was worker cleared to work following A&D testing?</p> */}
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" required>
-                      Was worker cleared to work following a&d testing?
-                    </FormLabel>
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      value={form.isWorkerClearedTest}
-                      required
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          isWorkerClearedTest: e.target.value,
-                        });
-                      }}
-                    >
-                      {radioYesNo.map((value) => (
-                        <FormControlLabel
-                          value={value}
-                          control={<Radio />}
-                          label={value}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-              </>
-            ) : (
-              <Grid item md={6}>
+              {/* {workerData.map((value, index)=>(<> */}
+              <Grid item xs={12} md={6}>
                 <TextField
                   id="title"
                   variant="outlined"
-                  label="Why was the test not conducted?"
+                  label="Name"
+                  required
+                  value={form.name}
+                  error={error && error.name}
+                  helperText={error && error.name ? error.name : null}
                   className={classes.formControl}
-                  error={error && error.reasonForTestNotDone}
-                  helperText={error && error.reasonForTestNotDone}
-                  value={form.reasonForTestNotDone}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      reasonForTestNotDone: e.target.value,
+                      name: e.target.value,
                     });
                   }}
                 />
               </Grid>
-            )}
+              {/* worker type */}
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  variant="outlined"
+                  required
+                  error={error && error.workerType}
+                  className={classes.formControl}
+                >
+                  <InputLabel id="unit-name-label">Type</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Type"
+                    // value={incidentsListData.fkUnitId}
+                    value={form.workerType}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        workerType: e.target.value,
+                      });
+                    }}
+                  >
+                    {workerType.current.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                  {error && error.workerType && (
+                    <FormHelperText>{error.workerType}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-            <Grid item md={12}>
-              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6">
-                  Supervisor details for worker
-                </Typography>
-              </Box>
-            </Grid>
+              {/* department */}
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  variant="outlined"
+                  required
+                  error={error && error.department}
+                  className={classes.formControl}
+                >
+                  <InputLabel id="unit-name-label">Department</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Department"
+                    value={form.department}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        department: e.target.value,
+                      });
+                    }}
+                  >
+                    {departmentName.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                  {error && error.department && (
+                    <FormHelperText>{error.department}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-            {/* supervisor name */}
-            <Grid item md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Supervisor name"
-                error={error && error.supervisorName}
-                helperText={error && error.supervisorName}
-                value={form.supervisorName}
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    supervisorName: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
+              {/* scheduled workign hours */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Number of Scheduled Work Hours
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Number of Scheduled Work Hours"
+                    value={form.workHours}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        workHours: e.target.value,
+                      });
+                    }}
+                  >
+                    {workHours.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            {/* supervisor time */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Supervisor time in Industry
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Supervisor time in industry"
-                  value={form.supervisorTimeInIndustry}
+              {/* start of shift */}
+              <Grid item xs={12} md={6}>
+                <MuiPickersUtilsProvider
+                  variant="outlined"
+                  utils={DateFnsUtils}
+                >
+                  <KeyboardTimePicker
+                    className={classes.formControl}
+                    helperText={""}
+                    value={form.shiftTimeStart}
+                    label="Start of shift time"
+                    value={form.shiftTimeStart}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        shiftTimeStart: moment(e).toISOString(),
+                      });
+                    }}
+                    format="HH:mm"
+                    inputVariant="outlined"
+                    disableFuture="true"
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+
+              {/* type of shift */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">Type of shift</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Type of Shift"
+                    value={form.shiftType}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        shiftType: e.target.value,
+                      });
+                    }}
+                  >
+                    {shiftType.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Occupation */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">Occupation</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Occupation"
+                    value={form.occupation}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        occupation: e.target.value,
+                      });
+                    }}
+                  >
+                    {occupation.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Shift cycle */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">Shift cycle</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Shift Cycle"
+                    value={form.shiftCycle}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        shiftCycle: e.target.value,
+                      });
+                    }}
+                  >
+                    {shiftCycle.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* number of days */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Number of days into shift
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Number of Days into Shift"
+                    value={form.noOfDaysIntoShift}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        noOfDaysIntoShift: e.target.value,
+                      });
+                    }}
+                  >
+                    {noOfDaysIntoShift.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* time in comapany */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">Time in company</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Time in company"
+                    value={form.timeInCompany}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        timeInCompany: e.target.value,
+                      });
+                    }}
+                  >
+                    {timeInCompany.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* time on project */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">Time on project</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Time on project"
+                    value={form.timeOnProject}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        timeOnProject: e.target.value,
+                      });
+                    }}
+                  >
+                    {timeOnProject.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* time in industry */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">Time in industry</InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Time in Industry"
+                    value={form.timeInIndustry}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        timeInIndustry: e.target.value,
+                      });
+                    }}
+                  >
+                    {timeInIndustry.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* injury     */}
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Injury details</Typography>
+                </Box>
+              </Grid>
+
+              {/* event leading to injury */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Event leading to injury"
+                  className={classes.formControl}
+                  value={form.eventLeadingToInjury}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      supervisorTimeInIndustry: e.target.value,
+                      eventLeadingToInjury: e.target.value,
                     });
                   }}
-                >
-                  {supervisorTimeInIndustry.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                />
+              </Grid>
 
-            {/* supervisor time */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Supervisor time in company
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Supervisor time in company"
+              {/* injury object */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Injury object"
+                  error={error && error.injuryObject}
+                  helperText={error && error.injuryObject}
+                  className={classes.formControl}
+                  value={form.injuryObject}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      supervisorTimeInCompany: e.target.value,
+                      injuryObject: e.target.value,
                     });
                   }}
-                  value={form.supervisorTimeInCompany}
-                >
-                  {supervisorTimeInCompany.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                />
+              </Grid>
 
-            {/* supervisor time in industry */}
-            <Grid item md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Supervisor time on project
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Supervisor time on project"
+              {/* primary body part included */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Primary body part side included
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Primary Body Part Side Included"
+                    value={form.primaryBodyPartWithSide}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        primaryBodyPartWithSide: e.target.value,
+                      });
+                    }}
+                  >
+                    {primaryBodyPartWithSide.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* secondary body part */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Secondary body part included
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Secondary Body Part Included"
+                    value={form.secondaryBodyPartWithSide}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        secondaryBodyPartWithSide: e.target.value,
+                      });
+                    }}
+                  >
+                    {secondaryBodyPartWithSide.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* type of injury */}
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  variant="outlined"
+                  error={error && error.actualSeverityLevel}
+                  className={classes.formControl}
+                >
+                  <InputLabel id="unit-name-label">
+                    Type of injury illness
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Type of injury illness"
+                    value={form.typeOfInjury}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        typeOfInjury: e.target.value,
+                      });
+                    }}
+                  >
+                    {typeOfInjury.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                  {error && error.typeOfInjury && (
+                    <FormHelperText>{error.typeOfInjury}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+
+              {/* day away/restriction */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Number of days away/on restriction"
+                  value={form.NoOfDaysAway}
+                  className={classes.formControl}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      supervisorTimeOnProject: e.target.value,
+                      NoOfDaysAway: e.target.value,
                     });
                   }}
-                  value={form.supervisorTimeOnProject}
+                />
+              </Grid>
+
+              {/* medical response */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Medical response taken"
+                  value={form.medicalResponseTaken}
+                  error={error && error.medicalResponseTaken}
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      medicalResponseTaken: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+
+              {/* treatment date  */}
+              <Grid item xs={12} md={6}>
+                <MuiPickersUtilsProvider
+                  variant="outlined"
+                  utils={DateFnsUtils}
                 >
-                  {supervisorTimeOnProject.map((value) => (
-                    <MenuItem value={value}>{value}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  <KeyboardDatePicker
+                    className={classes.formControl}
+                    label="Treatment Date"
+                    value={!form.treatmentDate ? null : form.treatmentDate}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        treatmentDate: moment(e).toISOString(),
+                      });
+                    }}
+                    format="yyyy/MM/dd"
+                    inputVariant="outlined"
+                    disableFuture="true"
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
 
-            <Grid item md={12}>
-              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6">Attachment</Typography>
-              </Box>
-            </Grid>
+              {/* highest medical responder */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Highest medical responder
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Highest Medical Responder"
+                    value={form.higherMedicalResponder}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        higherMedicalResponder: e.target.value,
+                      });
+                    }}
+                  >
+                    {higherMedicalResponder.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
+              {/* status update    */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Status update"
+                  value={form.injuryStatus}
+                  error={error && error.injuryStatus}
+                  helperText={error && error.injuryStatus}
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      injuryStatus: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
 
-            <Grid item md={4}>
-              <input
-                id="selectFile"
-                type="file"
-                className={classes.fullWidth}
-                name="file"
-                accept=".png, .jpg , .jpeg"
-                onChange={(e) => {
-                  handleFile(e);
-                }}
-              />
-            </Grid>
+              {/* first aid */}
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  variant="outlined"
+                  error={error && error.actualSeverityLevel}
+                  className={classes.formControl}
+                >
+                  <InputLabel id="unit-name-label">
+                    First aid treatment
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="First Aid Treatment"
+                    value={form.firstAidTreatment}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        firstAidTreatment: e.target.value,
+                      });
+                    }}
+                  >
+                    {treatmentType.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <Grid item md={6}>
-              {form.attachments != "" && typeof form.attachments == "string" ? (
-                <a target="_blank" href={form.attachments}>
-                  <p>{imageNameFromUrl(form.attachments)}</p>
-                  {/* <ImageIcon /> */}
-                </a>
+              {/* mechanish of injury */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Mechanism of injury
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Mechanism of Injury"
+                    value={form.mechanismOfInjury}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        mechanismOfInjury: e.target.value,
+                      });
+                    }}
+                  >
+                    {mechanismOfInjury.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Worker care</Typography>
+                </Box>
+              </Grid>
+
+              {/* medical issues */}
+              <Grid item xs={12} md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" required>
+                    Medical issued?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.inlineRadioGroup}
+                    value={form.isMedicationIssued}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        isMedicationIssued: e.target.value,
+                      });
+                    }}
+                  >
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              {/* prescription issue */}
+              <Grid item xs={12} md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" required>
+                    Prescription issues ?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.inlineRadioGroup}
+                    value={form.isPrescriptionIssued}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        isPrescriptionIssued: e.target.value,
+                      });
+                    }}
+                  >
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              {/* non prescription */}
+              <Grid item xs={12} md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" required>
+                    Non-prescription ?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.inlineRadioGroup}
+                    value={form.isNonPrescription}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        isNonPrescription: e.target.value,
+                      });
+                    }}
+                  >
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              {/* any limitation */}
+              <Grid item xs={12} md={6}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" required>
+                    Any limitation ?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.inlineRadioGroup}
+                    value={form.isAnyLimitation}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        isAnyLimitation: e.target.value,
+                      });
+                    }}
+                  >
+                    {radioDecide.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Alcohol and drug test</Typography>
+                </Box>
+              </Grid>
+
+              {/* test taken */}
+              <Grid item xs={12}>
+                <FormControl component="fieldset" required>
+                  <FormLabel component="legend">Was the test taken?</FormLabel>
+                  <RadioGroup
+                    className={classes.inlineRadioGroup}
+                    value={
+                      form.isAlcoholDrugTestTaken
+                        ? form.isAlcoholDrugTestTaken
+                        : "No"
+                    }
+                    onChange={(e) => handelTestTaken(e)}
+                  >
+                    {radioYesNo.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              {form.isAlcoholDrugTestTaken == "Yes" ? (
+                <>
+                  <Grid item xs={12} md={6}>
+                    <MuiPickersUtilsProvider
+                      variant="outlined"
+                      utils={DateFnsUtils}
+                    >
+                      <KeyboardDatePicker
+                        className={classes.formControl}
+                        value={
+                          form.dateOfAlcoholDrugTest != null
+                            ? form.dateOfAlcoholDrugTest
+                            : null
+                        }
+                        label="Date of Test"
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            dateOfAlcoholDrugTest: moment(e).toISOString(),
+                          });
+                        }}
+                        format="yyyy/MM/dd"
+                        inputVariant="outlined"
+                        disableFuture="true"
+                      />
+                    </MuiPickersUtilsProvider>
+                  </Grid>
+
+                  <Grid item xs={12} md={6}>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend" required>
+                        Was worker cleared to work following a&d testing?
+                      </FormLabel>
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        value={form.isWorkerClearedTest}
+                        required
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            isWorkerClearedTest: e.target.value,
+                          });
+                        }}
+                      >
+                        {radioYesNo.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            control={<Radio />}
+                            label={value}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                </>
               ) : (
-                <p />
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    id="title"
+                    variant="outlined"
+                    label="Why was the test not conducted?"
+                    className={classes.formControl}
+                    error={error && error.reasonForTestNotDone}
+                    helperText={error && error.reasonForTestNotDone}
+                    value={form.reasonForTestNotDone}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        reasonForTestNotDone: e.target.value,
+                      });
+                    }}
+                  />
+                </Grid>
               )}
-            </Grid>
 
-            {localWorkerData.length > 1 ? (
-              <Grid item md={12}>
-                <Button onClick={(e) => handelRemove()}>
-                  Delete <DeleteForeverIcon />
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">
+                    Supervisor details for worker
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* supervisor name */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Supervisor name"
+                  error={error && error.supervisorName}
+                  helperText={error && error.supervisorName}
+                  value={form.supervisorName}
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      supervisorName: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+
+              {/* supervisor time */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Supervisor time in Industry
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Supervisor time in industry"
+                    value={form.supervisorTimeInIndustry}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        supervisorTimeInIndustry: e.target.value,
+                      });
+                    }}
+                  >
+                    {supervisorTimeInIndustry.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* supervisor time */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Supervisor time in company
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Supervisor time in company"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        supervisorTimeInCompany: e.target.value,
+                      });
+                    }}
+                    value={form.supervisorTimeInCompany}
+                  >
+                    {supervisorTimeInCompany.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* supervisor time in industry */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Supervisor time on project
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Supervisor time on project"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        supervisorTimeOnProject: e.target.value,
+                      });
+                    }}
+                    value={form.supervisorTimeOnProject}
+                  >
+                    {supervisorTimeOnProject.map((value) => (
+                      <MenuItem value={value}>{value}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Attachment</Typography>
+                </Box>
+                <Typography display="block" variant="caption">
+                  Allowed file types pdf, png, jpeg, jpg, xls, xlsx, doc, word,
+                  ppt
+                </Typography>
+                <Typography display="block" variant="caption">
+                  Maximum allowed file size is 25 MB only.
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <input
+                  id="selectFile"
+                  type="file"
+                  className={classes.fullWidth}
+                  name="file"
+                  accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                  style={{ color: typeof (form.attachments) === "string" && "transparent" }}
+                  onChange={(e) => {
+                    handleFile(e);
+                  }}
+                />
+              </Grid>
+
+              <Grid item md={6}>
+                {form.attachments != "" && typeof form.attachments == "string" ? (
+                  <Attachment value={form.attachments} />
+                ) : (
+                  <p />
+                )}
+              </Grid>
+
+              {localWorkerData.length > 1 ? (
+                <Grid item xs={12}>
+                  <Button onClick={(e) => handelRemove()}>
+                    Delete <DeleteForeverIcon />
+                  </Button>
+                </Grid>
+              ) : null}
+
+              <Grid item xs={12}>
+                <Button onClick={(e) => handelAddNew()}>
+                  Add new worker <AddIcon />
                 </Button>
               </Grid>
-            ) : null}
 
-            <Grid item md={12}>
-              <Button onClick={(e) => handelAddNew()}>
-                Add new worker <AddIcon />
-              </Button>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => handelPrevious()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => handleNext()}
+                >
+                  Next
+                </Button>
+              </Grid>
             </Grid>
 
-            <Grid item md={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => handelPrevious()}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => handleNext()}
-              >
-                Next
-              </Button>
-            </Grid>
+            {isDesktop && (
+              <Grid item md={3}>
+                <Grid item md={12}>
+                  <FormSideBar
+                    deleteForm={[1, 2, 3]}
+                    listOfItems={INVESTIGATION_FORM}
+                    selectedItem="Worker details"
+                  />
+                </Grid>
+                <Grid item md={12}>
+                  <Box mt={4}>
+                    <Paper elevation={1}>
+                      <List dense>
+                        {localWorkerData.map((value, index) => (
+                          <ListItem
+                            className={
+                              workerNumber == index
+                                ? classes.activeList
+                                : classes.notActiveList
+                            }
+                          >
+                            <ListItemIcon className={classes.icon}>
+                              {workerNumber == index ? (
+                                <DoubleArrowIcon fontSize="small" />
+                              ) : (
+                                <RemoveCircleOutlineIcon />
+                              )}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={
+                                <a
+                                  onClick={(e) =>
+                                    handelWorkerNavigate(e, index)
+                                  }
+                                >
+                                  {`Worker ${index + 1}`}
+                                </a>
+                              }
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Paper>
+                  </Box>
+                </Grid>
+              </Grid>
+            )}
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity={messageType}>
+                {message}
+              </Alert>
+            </Snackbar>
           </Grid>
-          <Grid item md={3}>
-            <Grid item md={12}>
-              <FormSideBar
-                deleteForm={[1, 2, 3]}
-                listOfItems={INVESTIGATION_FORM}
-                selectedItem="Worker details"
-              />
-            </Grid>
-            <Grid item md={12}>
-              <Box mt={4}>
-                <Paper elevation={1}>
-                  <List dense>
-                    {localWorkerData.map((value, index) => (
-                      <ListItem
-                        className={
-                          workerNumber == index
-                            ? classes.activeList
-                            : classes.notActiveList
-                        }
-                      >
-                        <ListItemIcon className={classes.icon}>
-                          {workerNumber == index ? (
-                            <DoubleArrowIcon fontSize="small" />
-                          ) : (
-                            <RemoveCircleOutlineIcon />
-                          )}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <a onClick={(e) => handelWorkerNavigate(e, index)}>
-                              {`Worker ${index + 1}`}
-                            </a>
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Paper>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
+        </form>
       ) : (
         <h1>Loading...</h1>
       )}

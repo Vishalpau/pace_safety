@@ -20,10 +20,6 @@ function AdditionalDetailValidate(data) {
           dataObj.error = "Please enter evidence summary";
         error.push(dataObj);
         isValid = false;
-        }else if (dataObj.question == "Additional notes if any"){
-          dataObj.error = "Please enter additional notes";
-        error.push(dataObj);
-        isValid = false;
         }
         
       } else {

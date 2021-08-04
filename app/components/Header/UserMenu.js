@@ -30,6 +30,7 @@ import companyLogo from "dan-api/images/logos";
 import link from "dan-api/ui/link";
 import styles from "./header-jss";
 import { useHistory } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import "../../styles/custom/customheader.css";
 import {
@@ -38,7 +39,7 @@ import {
   LOGIN_URL,
   LOGOUT_URL,
   SSO_CLIENT_ID,
-  SSO_URL
+  SSO_URL,
 } from "../../utils/constants";
 import axios from "axios";
 
@@ -52,7 +53,7 @@ const useStyles = makeStyles({
 });
 
 function UserMenu(props) {
-  const history = useHistory()
+  const history = useHistory();
   const [menuState, setMenuState] = useState({
     anchorEl: null,
     openMenu: null,
@@ -87,30 +88,31 @@ function UserMenu(props) {
   };
 
   const handleLogout = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     console.log(access_token);
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/user/logout/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        'Cookie': 'csrftoken=Z4uAv7EMxWG5KCWNNzqdravi8eoUZcIB8OoGeJ4W1abx4i3zqhLwIzloVMcsFrr5'
+        Cookie:
+          "csrftoken=Z4uAv7EMxWG5KCWNNzqdravi8eoUZcIB8OoGeJ4W1abx4i3zqhLwIzloVMcsFrr5",
       },
     };
     console.log(config);
     axios(config)
       .then((response) => {
-        if(response.status === 201) {
-          console.log(response)
-          localStorage.removeItem('access_token')
+        if (response.status === 201) {
+          console.log(response);
+          localStorage.removeItem("access_token");
           localStorage.clear();
-            window.location.href =`${LOGOUT_URL}`          
+          window.location.href = `${LOGOUT_URL}`;
         }
       })
       .catch((error) => {
-        localStorage.removeItem('access_token');
+        localStorage.removeItem("access_token");
         localStorage.clear();
-        window.location.href =`${LOGOUT_URL}`
+        window.location.href = `${LOGOUT_URL}`;
       });
   };
 
@@ -119,6 +121,8 @@ function UserMenu(props) {
   }
 
   const classnames = useStyles();
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <div>
@@ -133,111 +137,116 @@ function UserMenu(props) {
         </IconButton>
       </Tooltip>
 
-      <IconButton
-        aria-haspopup="true"
-        onClick={handleMenu("notification")}
-        color="inherit"
-        className={classNames(
-          classes.notifIcon,
-          dark ? classes.dark : classes.light
-        )}
-      >
-        <Badge className={classes.badge} badgeContent={4} color="secondary">
-          <i className="ion-ios-notifications-outline" />
-        </Badge>
-      </IconButton>
-      <Menu
-        id="menu-notification"
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        className={classes.notifMenu}
-        PaperProps={{
-          style: {
-            width: 350,
-          },
-        }}
-        open={openMenu === "notification"}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageInfo}>
-            <ListItemAvatar>
-              <Avatar alt="User Name" src={avatarApi[0]} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.subtitle}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageInfo}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Info />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.sentences}
-              className={classes.textNotif}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageSuccess}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Check />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.subtitle}
-              className={classes.textNotif}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageWarning}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Warning />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.subtitle}
-              className={classes.textNotif}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageError}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Error />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary="Suspendisse pharetra pulvinar sollicitudin. Aenean ut orci eu odio cursus lobortis eget tempus velit. "
-              className={classes.textNotif}
-              secondary="Jan 9, 2016"
-            />
-          </div>
-        </MenuItem>
-      </Menu>
+      {isDesktop && (
+        <>
+          {" "}
+          <IconButton
+            aria-haspopup="true"
+            onClick={handleMenu("notification")}
+            color="inherit"
+            className={classNames(
+              classes.notifIcon,
+              dark ? classes.dark : classes.light
+            )}
+          >
+            <Badge className={classes.badge} badgeContent={4} color="secondary">
+              <i className="ion-ios-notifications-outline" />
+            </Badge>
+          </IconButton>
+          <Menu
+            id="menu-notification"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            className={classes.notifMenu}
+            PaperProps={{
+              style: {
+                width: 350,
+              },
+            }}
+            open={openMenu === "notification"}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageInfo}>
+                <ListItemAvatar>
+                  <Avatar alt="User Name" src={avatarApi[0]} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.subtitle}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageInfo}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Info />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.sentences}
+                  className={classes.textNotif}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageSuccess}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Check />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.subtitle}
+                  className={classes.textNotif}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageWarning}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Warning />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.subtitle}
+                  className={classes.textNotif}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageError}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Error />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Suspendisse pharetra pulvinar sollicitudin. Aenean ut orci eu odio cursus lobortis eget tempus velit. "
+                  className={classes.textNotif}
+                  secondary="Jan 9, 2016"
+                />
+              </div>
+            </MenuItem>
+          </Menu>{" "}
+        </>
+      )}
 
       <Tooltip title="Apps" placement="bottom">
         <IconButton
@@ -253,12 +262,7 @@ function UserMenu(props) {
         </IconButton>
       </Tooltip>
 
-      <Drawer
-        anchor="right"
-        anchorEl={menuAnchorEl}
-        open={appsOpen}
-        onClose={handleAppsClose}
-      >
+      <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
         <div className={classnames.list}>
           <List dense className={classnames.menulist}>
             <ListItemLink href="#simple-list">
@@ -289,66 +293,11 @@ function UserMenu(props) {
         </div>
       </Drawer>
 
-      {/* <Menu
-        id="apps-menu"
-        anchorEl={menuAnchorEl}
-        keepMounted
-        PaperProps={{
-          style: {
-            width: 250,
-          },
-        }}
-        open={appsOpen}
-        onClose={handleAppsClose}
-        className="headerAppsGrid"
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Project Information Hub</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-      </Menu> */}
-
       <Button
         className={classes.userControls}
         onClick={handleMenu("user-setting")}
       >
-        <img className={classes.userLogo} src={companyLogo[0]} />
+        {isDesktop && <img className={classes.userLogo} src={companyLogo[0]} />}
         <Avatar
           alt={dummy.user.name}
           variant="circle"

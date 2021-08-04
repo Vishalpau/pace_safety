@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -15,6 +13,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -26,7 +25,6 @@ import {
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 import ActionTracker from "../ActionTracker";
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -73,7 +71,8 @@ const BasicCauseAndAction = () => {
 
   const putId = useRef("");
   let id = useRef();
-  const [action, setAction] = useState({});
+  // const [action, setAction] = useState({});
+  const [actionData, setActionData] = useState({});
 
   const handelShowData = async () => {
     let tempApiData = {};
@@ -110,32 +109,30 @@ const BasicCauseAndAction = () => {
     });
     id.current = tempid.reverse();
     await setData(tempApiData);
-    handelActionTracker();
+    await handelActionTracker();
   };
 
   const handelActionTracker = async () => {
+    let allPaceID = id.current;
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
-    const allActionTracker = allActionTrackerData.data.data.results.results
-    let allPaceID = id.current
-    allPaceID.map((paceId) => {
-      let tempActionID = []
-      allActionTracker.map((actionTracker) => {
-        let causeId = actionTracker.enitityReferenceId.split(":")[1]
-        if (causeId == paceId) {
-          let causeSubId = actionTracker.enitityReferenceId.split(":")[2]
-          tempActionID.push([actionTracker.id, causeSubId])
+    let ActionToCause = {};
+    const allActionTrackerData = await api_action.get("/api/v1/actions/");
+    const allActionTracker = allActionTrackerData.data.data.results.results;
+    allActionTracker.map((value) => {
+      let actionPaceId = value.split(":")[1];
+      let actionPaceSubId = value.split(":")[2];
+      let actionTemp = [];
+      if (allPaceID.includes(actionPaceId)) {
+        if (`${actionPaceId}:${actionPaceSubId}` in ActionToCause) {
+          ActionToCause[`${actionPaceId}:${actionPaceSubId}`].push(value.id);
         }
-      })
-      ActionToCause[paceId] = tempActionID
-    })
-
-    console.log(ActionToCause)
-  }
+        ActionToCause[`${actionPaceId}:${actionPaceSubId}`] = [value.id];
+      }
+    });
+  };
 
   function ListItemLink(props) {
     return (
@@ -199,6 +196,8 @@ const BasicCauseAndAction = () => {
     handelShowData();
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock
       title="Actions against Immediate Causes"
@@ -239,43 +238,35 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Box>
 
-            <div>
-              <Table border={1}>
-                <TableBody>
-                  {Object.entries(data)
-                    .reverse()
-                    .map(([key, value], index) => (
-                      <>
-                        {value.map((value) => (
-                          <TableRow>
-                            <TableCell
-                              align="left"
-                            >
-                              {handelConvert(key)}
-                            </TableCell>
-                            <TableCell
-                              align="left"
-                            >
-                              <li key={value}>
-                                <span>{value}</span>
-                              </li>
-
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                            >
-                              <ActionTracker
-                                actionContext="incidents:Pacacuase"
-                                enitityReferenceId={`${putId.current}:${id.current[index]}:${index}`}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </>
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
+            <Table className={classes.table}>
+              <TableBody>
+                {Object.entries(data)
+                  .reverse()
+                  .map(([key, value], index) => (
+                    <>
+                      {value.map((value, valueIndex) => (
+                        <TableRow>
+                          <TableCell align="left" style={{ width: 160 }}>
+                            {handelConvert(key)}
+                          </TableCell>
+                          <TableCell align="left">
+                            <li key={value}>
+                              <span>{value}</span>
+                            </li>
+                          </TableCell>
+                          <TableCell align="right">
+                            <ActionTracker
+                              actionContext="incidents:Pacacuase"
+                              enitityReferenceId={`${putId.current}:${id.current[index]
+                                }:${valueIndex}`}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </>
+                  ))}
+              </TableBody>
+            </Table>
           </Grid>
 
           <Grid item md={12}>
@@ -297,12 +288,16 @@ const BasicCauseAndAction = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Cause and action"}
-          />
-        </Grid>
+        {
+          isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Cause and action"}
+              />
+            </Grid>
+          )}
+
       </Grid>
     </PapperBlock>
   );

@@ -1,32 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import FormLabel from "@material-ui/core/FormLabel";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -68,8 +54,16 @@ const CorrectiveAction = () => {
   const [data, setData] = useState([]);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = useState({
-    managementControl: { remarkType: "options", rcaSubType: "managementControl", rcaRemark: [] },
-    regionSupport: { remarkType: "remark", rcaSubType: "regionSupportAbove", rcaRemark: "" },
+    managementControl: {
+      remarkType: "options",
+      rcaSubType: "managementControl",
+      rcaRemark: [],
+    },
+    regionSupport: {
+      remarkType: "remark",
+      rcaSubType: "regionSupportAbove",
+      rcaRemark: "",
+    },
   });
 
   const putId = useRef("");
@@ -80,13 +74,13 @@ const CorrectiveAction = () => {
   const checkPost = useRef();
 
   const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value]
+    let remark = value.includes(",") ? value.split(",") : [value];
     if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected")
-      remark.splice(removeItemIndex, 1)
+      let removeItemIndex = remark.indexOf("No option selected");
+      remark.splice(removeItemIndex, 1);
     }
-    return remark
-  }
+    return remark;
+  };
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -183,7 +177,10 @@ const CorrectiveAction = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
+          rcaRemark:
+            api_data["rcaRemark"].toString() !== ""
+              ? api_data["rcaRemark"].toString()
+              : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -195,7 +192,10 @@ const CorrectiveAction = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
+          rcaRemark:
+            api_data["rcaRemark"].toString() !== ""
+              ? api_data["rcaRemark"].toString()
+              : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Basic",
           remarkType: api_data["remarkType"],
@@ -262,7 +262,7 @@ const CorrectiveAction = () => {
         `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/`
       );
     }
-  }
+  };
 
   const classes = useStyles();
 
@@ -278,6 +278,7 @@ const CorrectiveAction = () => {
     fetchIncidentDetails();
     handelUpdateCheck();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
@@ -302,10 +303,7 @@ const CorrectiveAction = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl
-              component="fieldset"
-              error={error.managementControl}
-            >
+            <FormControl component="fieldset" error={error.managementControl}>
               <FormLabel component="legend">Management control</FormLabel>
               {MANAGEMENTCONTROL.map((value) => (
                 <FormControlLabel
@@ -329,7 +327,11 @@ const CorrectiveAction = () => {
               variant="outlined"
               multiline
               error={error.regionSupport}
-              value={form.regionSupport.rcaRemark !== "No option selected" ? form.regionSupport.rcaRemark : ""}
+              value={
+                form.regionSupport.rcaRemark !== "No option selected"
+                  ? form.regionSupport.rcaRemark
+                  : ""
+              }
               helperText={error ? error.regionSupport : ""}
               rows={3}
               label="Details of the reasons to support above"
@@ -356,12 +358,16 @@ const CorrectiveAction = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Corrective actions"}
-          />
-        </Grid>
+        {
+          isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Corrective actions"}
+              />
+            </Grid>
+          )}
+
       </Grid>
     </PapperBlock>
   );

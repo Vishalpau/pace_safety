@@ -23,6 +23,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -49,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
   },
   evidenceCard: {
     padding: "1rem",
+  },
+  table: {
+    minWidth: 800,
   },
 }));
 
@@ -223,12 +227,12 @@ const Evidence = () => {
     const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
     const result = res.data.data.results;
     const newData = result.filter(
-      (item) => item.evidenceCategory !== "Lessons Learned" && item.evidenceCategory !== "Initial Evidence"
-      
-      )
+      (item) =>
+        item.evidenceCategory !== "Lessons Learned" &&
+        item.evidenceCategory !== "Initial Evidence"
+    );
 
     let tempData = [];
-    console.log(newData)
     if (newData.length) {
       for (let i = 0; i < newData.length; i++) {
         tempData.push({
@@ -245,10 +249,9 @@ const Evidence = () => {
       }
     }
 
-    
-      await setForm(tempData);
-      await setEvideceData(tempData);
-    
+    await setForm(tempData);
+    await setEvideceData(tempData);
+
     await setIsLoading(true);
   };
 
@@ -272,21 +275,19 @@ const Evidence = () => {
     }
 
     for (let i = 0; i < form.length; i++) {
-      console.log("0")
       let data = new FormData();
       data.append("evidenceCheck", form[i].evidenceCheck);
       data.append("evidenceCategory", form[i].evidenceCategory);
       data.append("evidenceRemark", form[i].evidenceRemark);
-      console.log("1")
-      if(form[i].evidenceDocument !== null && typeof form[i].evidenceDocument !== "string" ){
-        console.log("2")
-        data.append("evidenceDocument", form[i].evidenceDocument);
-        console.log("3")
-      }
-      if(form[i].evidenceDocument == ""){
+      if (
+        form[i].evidenceDocument !== null &&
+        typeof form[i].evidenceDocument !== "string"
+      ) {
         data.append("evidenceDocument", form[i].evidenceDocument);
       }
-      console.log("4")
+      if (form[i].evidenceDocument == "") {
+        data.append("evidenceDocument", form[i].evidenceDocument);
+      }
       data.append("status", "Active");
       data.append("updatedBy", "");
 
@@ -328,13 +329,11 @@ const Evidence = () => {
           )}/evidences/${evideceData[i].pk}/`,
           data
         );
-        if(res.status === 200){
+        if (res.status === 200) {
           history.push(
             `/app/incident-management/registration/evidence/activity-detail/`
           );
         }
-
-        
       } else {
         data.append("createdAt", form[i].createdAt);
         data.append("createdBy", form[i].createdBy);
@@ -366,7 +365,7 @@ const Evidence = () => {
 
     setOpen(false);
   };
-  
+
   const handleFileClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -378,43 +377,55 @@ const Evidence = () => {
   const handleChange = async (e, index) => {
     let TempPpeData = [...form];
     TempPpeData[index].evidenceCheck = e.target.value;
-    if (e.target.value == "Yes"){
+    if (e.target.value == "Yes") {
       TempPpeData[index].evidenceCheck = e.target.value;
-      if(TempPpeData[index].evidenceDocument == null){
-        TempPpeData[index].evidenceDocument = ""
-        
+      if (TempPpeData[index].evidenceDocument == null) {
+        TempPpeData[index].evidenceDocument = "";
       }
       await setForm(TempPpeData);
-    }else {
-      document.getElementById(`evidenceDocument${index}`).value = ''
-      TempPpeData[index].evidenceDocument = ""
+    } else {
+      document.getElementById(`evidenceDocument${index}`).value = "";
+      TempPpeData[index].evidenceDocument = "";
       TempPpeData[index].evidenceCheck = e.target.value;
- 
+
       await setForm(TempPpeData);
     }
-    
   };
 
-  console.log(form)
   const handleFile = async (e, index) => {
-    
-    const file = e.target.files[0].name.toLowerCase().split(".")
-    if(file[1] == "jpg" ||file[1] == "png" || file[1] == "pdf" || file[1] == "xlsx" || file[1] == "xls" || file[1] == "ppt" || file[1] == "pptx" || file[1] == "doc" || file[1] == "docx" || file[1] == "text" || file[1] == "mp4" || file[1] == "mov" || file[1] == "flv" || file[1] == "avi" || file[1] == "mkv") {
-      let TempPpeData = [...form];
-    
+    const file = e.target.files[0].name.toLowerCase().split(".");
     if (
-      (TempPpeData[index].evidenceDocument =
-        e.target.files[0].size <= 1024 * 1024 * 25)
+      file[1] == "jpg" ||
+      file[1] == "png" ||
+      file[1] == "pdf" ||
+      file[1] == "xlsx" ||
+      file[1] == "xls" ||
+      file[1] == "ppt" ||
+      file[1] == "pptx" ||
+      file[1] == "doc" ||
+      file[1] == "docx" ||
+      file[1] == "text" ||
+      file[1] == "mp4" ||
+      file[1] == "mov" ||
+      file[1] == "flv" ||
+      file[1] == "avi" ||
+      file[1] == "mkv"
     ) {
-      TempPpeData[index].evidenceDocument = e.target.files[0];
-      await setForm(TempPpeData);
-      
-    } else {
-      await setOpen(true);
-    }
+      let TempPpeData = [...form];
 
-    }else{
-      await setFiles(true)
+      if (
+        (TempPpeData[index].evidenceDocument =
+          e.target.files[0].size <= 1024 * 1024 * 25)
+      ) {
+        TempPpeData[index].evidenceDocument = e.target.files[0];
+        await setForm(TempPpeData);
+      } else {
+        document.getElementById(`evidenceDocument${index}`).value = "";
+        await setOpen(true);
+      }
+    } else {
+      document.getElementById(`evidenceDocument${index}`).value = "";
+      await setFiles(true);
     }
   };
 
@@ -425,13 +436,10 @@ const Evidence = () => {
   };
 
   const handelFileName = (value) => {
-    console.log(value)
-    const fileNameArray = value.split('/')
-    const fileName = fileNameArray[fileNameArray.length - 1]
-    console.log(fileName)
-    return fileName
-
-  }
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    return fileName;
+  };
 
   const radioDecide = ["Yes", "No", "N/A"];
 
@@ -444,12 +452,14 @@ const Evidence = () => {
     }
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Evidences" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number
               </Typography>
@@ -457,7 +467,7 @@ const Evidence = () => {
                 {incidentDetail.incidentNumber}
               </Typography>
             </Grid>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident description
               </Typography>
@@ -466,8 +476,8 @@ const Evidence = () => {
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
-              <TableContainer>
+            <Grid item xs={12}>
+              <TableContainer component={Paper}>
                 <Table className={classes.table}>
                   <TableHead>
                     <TableRow>
@@ -484,82 +494,79 @@ const Evidence = () => {
                   <TableBody>
                     {form[0].pk ? (
                       <>
-                        {Object.entries(form)
-                          .map(([index, value]) => (
-                            <>
-                              <TableRow>
-                                <TableCell component="th" scope="row">
-                                  <Typography variant="body2">
-                                    {value.evidenceCategory ||
-                                      value.evidenceCategory}
-                                  </Typography>
-                                </TableCell>
-                                <TableCell>
-                                  <FormControl
-                                    component="fieldset"
-                                    required
-                                    size="small"
-                                    className={classes.fullWidth}
-                                    error={
-                                      error && error[`evidenceCheck${[index]}`]
-                                    }
-                                  >
-                                    <RadioGroup
-                                      className={classes.inlineRadioGroup}
-                                      defaultValue={form[index].evidenceCheck}
-                                      onChange={(e) => {
-                                        handleChange(e, index);
-                                      }}
-                                    >
-                                      {radioDecide.map((value) => (
-                                        <FormControlLabel
-                                          value={value}
-                                          control={<Radio />}
-                                          label={value}
-                                        />
-                                      ))}
-                                    </RadioGroup>
-                                    {error &&
-                                      error[`evidenceCheck${[index]}`] && (
-                                        <FormHelperText>
-                                          {error[`evidenceCheck${[index]}`]}
-                                        </FormHelperText>
-                                      )}
-                                  </FormControl>
-                                </TableCell>
-                                <TableCell>
-                                  <TextField
-                                    size="small"
-                                    variant="outlined"
-                                    defaultValue={form[index].evidenceRemark}
+                        {Object.entries(form).map(([index, value]) => (
+                          <>
+                            <TableRow>
+                              <TableCell component="th" scope="row">
+                                <Typography variant="body2">
+                                  {value.evidenceCategory ||
+                                    value.evidenceCategory}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <FormControl
+                                  component="fieldset"
+                                  required
+                                  size="small"
+                                  className={classes.fullWidth}
+                                  error={
+                                    error && error[`evidenceCheck${[index]}`]
+                                  }
+                                >
+                                  <RadioGroup
+                                    className={classes.inlineRadioGroup}
+                                    defaultValue={form[index].evidenceCheck}
                                     onChange={(e) => {
-                                      handleComment(e, index);
+                                      handleChange(e, index);
                                     }}
-                                  />
-                                </TableCell>
-                                <TableCell style={{ width: "220px" }}>
+                                  >
+                                    {radioDecide.map((value) => (
+                                      <FormControlLabel
+                                        value={value}
+                                        control={<Radio />}
+                                        label={value}
+                                      />
+                                    ))}
+                                  </RadioGroup>
+                                  {error &&
+                                    error[`evidenceCheck${[index]}`] && (
+                                      <FormHelperText>
+                                        {error[`evidenceCheck${[index]}`]}
+                                      </FormHelperText>
+                                    )}
+                                </FormControl>
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  size="small"
+                                  variant="outlined"
+                                  defaultValue={form[index].evidenceRemark}
+                                  onChange={(e) => {
+                                    handleComment(e, index);
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell style={{ width: "220px" }}>
                                 {/* {form[index].evidenceDocument  ? "File Uploded" :  */}
                                 <input
-                                    type="file"
-                                    id = {`evidenceDocument${index}`}
-                                    className={classes.fullWidth}
-                                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                                    disabled={
-                                      value.evidenceCheck !== "Yes"
-                                        ? true
-                                        : false
-                                    }
-                                    name="file"
-                                    onChange={(e) => {
-                                      handleFile(e, index);
-                                    }}
-                                  />
-                                  
+                                  type="file"
+                                  id={`evidenceDocument${index}`}
+                                  className={classes.fullWidth}
+                                  accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                                  disabled={
+                                    value.evidenceCheck !== "Yes" ? true : false
+                                  }
+                                  name="file"
+                                  onChange={(e) => {
+                                    handleFile(e, index);
+                                  }}
+                                />
+
                                 {/* } */}
-                                </TableCell>
-                              </TableRow>
-                            </>
-                          ))}
+                              </TableCell>
+                            </TableRow>
+                          </>
+                        ))}
                       </>
                     ) : (
                       <>
@@ -618,7 +625,7 @@ const Evidence = () => {
                               <TableCell style={{ width: "220px" }}>
                                 <input
                                   type="file"
-                                  id = {`evidenceDocument${index}`}
+                                  id={`evidenceDocument${index}`}
                                   className={classes.fullWidth}
                                   accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                                   disabled={
@@ -653,7 +660,9 @@ const Evidence = () => {
                 onClose={handleFileClose}
               >
                 <Alert onClose={handleFileClose} severity="error">
-                  This file format is not allow , only (png/jpg/xls/xlsx/ppt/pptx/doc/docx/text/pdf/mp4/mov/flv/avi/mkv) file format is allow here.
+                  This file format is not allow , only
+                  (png/jpg/xls/xlsx/ppt/pptx/doc/docx/text/pdf/mp4/mov/flv/avi/mkv)
+                  file format is allow here.
                 </Alert>
               </Snackbar>
             </Grid>
@@ -668,13 +677,15 @@ const Evidence = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={EVIDENCE_FORM}
-              selectedItem="Evidences"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={EVIDENCE_FORM}
+                selectedItem="Evidences"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

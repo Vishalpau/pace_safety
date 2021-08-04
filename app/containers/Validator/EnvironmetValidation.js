@@ -1,7 +1,6 @@
 import validator from "validator";
 
 function EnvironmentValidate(data) {
-  console.log(data)
   let isValid = true;
   const error = {};
 

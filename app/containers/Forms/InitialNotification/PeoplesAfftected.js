@@ -18,8 +18,9 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import moment from "moment";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
-import FormSideBar from "../FormSideBar";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
+import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
@@ -87,9 +88,12 @@ const PeoplesAffected = () => {
   const [peopleData, setPeopleData] = useState([]);
 
   const [open, setOpen] = useState(false);
-  const [messageType, setMessageType] = useState('');
-  const [message, setMessage] = useState('')
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const [messageType, setMessageType] = useState("");
+  const [message, setMessage] = useState("");
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   // Forms definations.
   const [form, setForm] = useState([
@@ -130,20 +134,19 @@ const PeoplesAffected = () => {
     and field name we will modify the values.
   */
   const handleForm = (e, key, fieldname) => {
-    try{
-    const temp = [...form];
-    const { value } = e.target;
-    if (e.target.value === "Don't Know") {
-      temp[key][fieldname] = "N/A";
-    } else {
-      temp[key][fieldname] = value;
-    }
-    setForm(temp);
-  }
-  catch(error){
-    setMessage("Something went worng!");
-    setMessageType("error");
-    setOpen(true);
+    try {
+      const temp = [...form];
+      const { value } = e.target;
+      if (e.target.value === "Don't Know") {
+        temp[key][fieldname] = "N/A";
+      } else {
+        temp[key][fieldname] = value;
+      }
+      setForm(temp);
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
@@ -152,20 +155,18 @@ const PeoplesAffected = () => {
     // Next path handlings.
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-
     // This is the condition when Yes is clicked on the form.
     if (personAffect === "Yes") {
-      try{
-      if (peopleData.length > 0) {
-        const temp = peopleData
-        for (var i = 0; i < peopleData.length; i++) {
-          const res = await api.delete(
-            `api/v1/incidents/${id}/people/${temp[i].id}/`,
-          );
+      try {
+        if (peopleData.length > 0) {
+          const temp = peopleData;
+          for (var i = 0; i < peopleData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/people/${temp[i].id}/`
+            );
+          }
         }
-      }
-      }
-      catch(error){
+      } catch (error) {
         setMessage("Network error!");
         setMessageType("error");
         setOpen(true);
@@ -180,104 +181,44 @@ const PeoplesAffected = () => {
       // We don't have single API.
 
       if (isValid) {
-        try{
-        for (var i = 0; i < form.length; i++) {
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/people/`,
-            {
-              personType: form[i].personType,
-              personDepartment: form[i].personDepartment,
-              personName: form[i].personName,
-              personIdentification: form[i].personIdentification,
-              personMedicalCare: form[i].personMedicalCare,
-              workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-              locationAssessmentCenter: form[i].locationAssessmentCenter,
-              createdBy: parseInt(userId),
-              fkIncidentId: localStorage.getItem("fkincidentId"),
-            }
-          );
-        }
-      
-        // We have hit the API to create person Affected.
-        // Now we are hitting the put api to send is person available is true in other API.
-        const temp = incidentsListData;
-        temp.isPersonDetailsAvailable =
-          personAffect || incidentsListData.isPersonDetailsAvailable;
-        temp.updatedAt = moment(new Date()).toISOString();
+        try {
+          for (var i = 0; i < form.length; i++) {
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem(
+                "fkincidentId"
+              )}/people/`,
+              {
+                personType: form[i].personType,
+                personDepartment: form[i].personDepartment,
+                personName: form[i].personName,
+                personIdentification: form[i].personIdentification,
+                personMedicalCare: form[i].personMedicalCare,
+                workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                locationAssessmentCenter: form[i].locationAssessmentCenter,
+                createdBy: parseInt(userId),
+                fkIncidentId: localStorage.getItem("fkincidentId"),
+              }
+            );
+          }
 
-        const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-        }
-        catch(error){
+          // We have hit the API to create person Affected.
+          // Now we are hitting the put api to send is person available is true in other API.
+          const temp = incidentsListData;
+          temp.isPersonDetailsAvailable =
+            personAffect || incidentsListData.isPersonDetailsAvailable;
+          temp.updatedAt = moment(new Date()).toISOString();
+
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
           setMessage("Something went worng!");
           setMessageType("error");
           setOpen(true);
         }
         // check condition id
-        
-          if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/${id}`
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-            );
-          } else {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-            );
-          }
-      }
 
-      // Case when form has No option selected.
-    } else {
-
-      // delete existing data if user select NO or N/A
-      try{
-        if (peopleData.length > 0) {
-          const temp = peopleData
-          for (var i = 0; i < peopleData.length; i++) {
-            const res = await api.delete(
-              `api/v1/incidents/${id}/people/${temp[i].id}/`,
-            );
-          }
-        }
-        }
-        catch(error){
-          setMessage("Network error!");
-          setMessageType("error");
-          setOpen(true);
-        }
-
-      // When no is selected we just have to send the comment and yes/no flag to API via put request.
-      const temp = incidentsListData;
-      temp.isPersonDetailsAvailable =
-        personAffect || incidentsListData.isPersonDetailsAvailable;
-      temp.updatedAt = moment(new Date()).toISOString();
-      temp.personAffectedComments =
-        personAffectedComments || incidentsListData.personAffectedComments;
-      try{
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      }catch(error){
-        setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-      }
-
-      // Case when id is available. Update case. Redirect user to specific page.
-      // Here if we see, we are redirecting user to urls with /id/ in the end.
-      // Therefore, next page will get the input from the id and pre-fill the details.
-      
         if (nextPath.propertyAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/property-affected/${id}`
@@ -295,6 +236,65 @@ const PeoplesAffected = () => {
             `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
           );
         }
+      }
+
+      // Case when form has No option selected.
+    } else {
+      // delete existing data if user select NO or N/A
+      try {
+        if (peopleData.length > 0) {
+          const temp = peopleData;
+          for (var i = 0; i < peopleData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/people/${temp[i].id}/`
+            );
+          }
+        }
+      } catch (error) {
+        setMessage("Network error!");
+        setMessageType("error");
+        setOpen(true);
+      }
+
+      // When no is selected we just have to send the comment and yes/no flag to API via put request.
+      const temp = incidentsListData;
+      temp.isPersonDetailsAvailable =
+        personAffect || incidentsListData.isPersonDetailsAvailable;
+      temp.updatedAt = moment(new Date()).toISOString();
+      temp.personAffectedComments =
+        personAffectedComments || incidentsListData.personAffectedComments;
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        setMessage("Something went worng!");
+        setMessageType("error");
+        setOpen(true);
+      }
+
+      // Case when id is available. Update case. Redirect user to specific page.
+      // Here if we see, we are redirecting user to urls with /id/ in the end.
+      // Therefore, next page will get the input from the id and pre-fill the details.
+
+      if (nextPath.propertyAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/property-affected/${id}`
+        );
+      } else if (nextPath.equipmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+        );
+      } else if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        );
+      } else {
+        history.push(
+          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+        );
+      }
     }
   };
 
@@ -312,102 +312,99 @@ const PeoplesAffected = () => {
 
   // Fetch the radio button values for Do-you-have-details-to-share-about-the-individuals-Affected.
   const fetchIndividualAffectValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/8/value");
-    const result = res.data.data.results;
-    setIndividualAffecctValue(result);
-    }
-    catch(error){
+    try {
+      const res = await api.get("api/v1/lists/8/value");
+      const result = res.data.data.results;
+      setIndividualAffecctValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the dropdown values for the Person-Type.
   const fetchPersonTypeValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/71/value");
-    const result = res.data.data.results;
-    setPersonTypeValue(result);
-    }
-    catch(error){
+    try {
+      const res = await api.get("api/v1/lists/71/value");
+      const result = res.data.data.results;
+      setPersonTypeValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // fetch the values for the Departments.
   const fetchDepartmentValue = async () => {
-    try{
-    const res = await api.get("api/v1/lists/10/value");
-    const result = res.data.data.results;
-    setDepartmentValue(result);
-    }
-    catch(error){
+    try {
+      const res = await api.get("api/v1/lists/10/value");
+      const result = res.data.data.results;
+      setDepartmentValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the radio buttons for the "Was that person taken to medical care?".
   const fetchPersonTakenMedicalCare = async () => {
-    try{
-    const res = await api.get("api/v1/lists/11/value");
-    const result = res.data.data.results;
-    setMedicalCareValue(result);
-    }catch(error){
+    try {
+      const res = await api.get("api/v1/lists/11/value");
+      const result = res.data.data.results;
+      setMedicalCareValue(result);
+    } catch (error) {
       setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
   // Fetch the incident details. We are fetching it to pre-populate the data in case of the going
   // previous page.
   const fetchIncidentsData = async () => {
-    try{
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
+    try {
+      const res = await api.get(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      );
 
-    if (res.status === 200) {
-      const result = res.data.data.results;
-      const isavailable = result.isPersonDetailsAvailable;
-      setPersonAffect(isavailable);
-
-      setIncidentsListdata(result);
-      if (!id) {
-        await setIsLoading(true);
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        const isavailable = result.isPersonDetailsAvailable;
+        setPersonAffect(isavailable);
+        setPersonAffectedComments(result.personAffectedComments)
+        setIncidentsListdata(result);
+        if (!id) {
+          await setIsLoading(true);
+        }
       }
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
     }
-  }catch(error){
-    setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-  }
   };
 
   // Fetch the individual page data in case of the update.
   const fetchPersonListData = async () => {
-    try{
-    const res = await api.get(`api/v1/incidents/${id}/people/`);
-    const result = res.data.data.results;
-    await setPeopleData(result);
-    if (result.length > 0) {
-      let temp = [...form]
-      temp = result
-      await setForm(temp)
-    }
+    try {
+      const res = await api.get(`api/v1/incidents/${id}/people/`);
+      const result = res.data.data.results;
+      await setPeopleData(result);
+      if (result.length > 0) {
+        let temp = [...form];
+        temp = result;
+        await setForm(temp);
+      }
 
-    await setIsLoading(true);
-  }catch(error){
-    setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-  }
+      await setIsLoading(true);
+    } catch (error) {
+      setMessage("Something went worng!");
+      setMessageType("error");
+      setOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -420,12 +417,13 @@ const PeoplesAffected = () => {
       fetchPersonListData();
     }
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Details of People Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item lg={12} md={6} sm={6}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12} md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Do you have details of individual affected?
@@ -452,25 +450,24 @@ const PeoplesAffected = () => {
             </Grid>
             {personAffect === "Yes" ? (
               <>
-                <Grid item md={12}>
-                  <Box marginTop={2} marginBottom={2}>
-                    <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                      <Typography variant="h6">
-                        Details of people affected
-                      </Typography>
-                    </Box>
+                <Grid item xs={12}>
+                  <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                    <Typography variant="h6">
+                      Details of people affected
+                    </Typography>
                   </Box>
                 </Grid>
+
                 {form.map((value, key) => (
                   <Grid
                     container
                     item
-                    md={12}
+                    xs={12}
                     key={key}
                     spacing={3}
                     className="repeatedGrid"
                   >
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         variant="outlined"
                         required
@@ -505,7 +502,7 @@ const PeoplesAffected = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         variant="outlined"
                         required
@@ -540,7 +537,7 @@ const PeoplesAffected = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         id={`name-Affected${key}`}
                         variant="outlined"
@@ -557,13 +554,11 @@ const PeoplesAffected = () => {
                         onChange={(e) => handleForm(e, key, "personName")}
                       />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         id={`id-num${key}`}
                         variant="outlined"
-                        error={
-                          error && error[`personIdentification${[key]}`]
-                        }
+                        error={error && error[`personIdentification${[key]}`]}
                         helperText={
                           error && error[`personIdentification${[key]}`]
                             ? error[`personIdentification${[key]}`]
@@ -577,7 +572,7 @@ const PeoplesAffected = () => {
                         }
                       />
                     </Grid>
-                    <Grid item md={12}>
+                    <Grid item xs={12} md={12}>
                       <FormControl
                         component="fieldset"
                         required
@@ -622,7 +617,7 @@ const PeoplesAffected = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         id={`worker-taken${key}`}
                         error={
@@ -642,7 +637,7 @@ const PeoplesAffected = () => {
                         }
                       />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         variant="outlined"
                         id={`location-details${key}`}
@@ -678,7 +673,7 @@ const PeoplesAffected = () => {
                   </Grid>
                 ))}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <button
                     className={classes.textButton}
                     onClick={() => addNewPeopleDetails()}
@@ -688,8 +683,9 @@ const PeoplesAffected = () => {
                 </Grid>
               </>
             ) : null}
-            <Grid item md={12}>
-              {personAffect === "Yes" ? null : (
+
+            {personAffect === "Yes" ? null : (
+              <Grid item xs={12}>
                 <TextField
                   id="details-of-people-affected"
                   multiline
@@ -698,17 +694,19 @@ const PeoplesAffected = () => {
                   label="Details of people affected"
                   className={classes.fullWidth}
                   onChange={(e) => setPersonAffectedComments(e.target.value)}
-                  defaultValue={incidentsListData.personAffectedComments}
+                  value={personAffectedComments||""}
                 />
-              )}
-            </Grid>
+              </Grid>
+            )}
+
             <AlertMessage
-                message={message}
-                type={messageType}
-                open={open}
-                setOpen={setOpen}
-              />
-            <Grid item md={6}>
+              message={message}
+              type={messageType}
+              open={open}
+              setOpen={setOpen}
+            />
+
+            <Grid item xs={12} md={6}>
               <Button
                 onClick={() =>
                   history.push(
@@ -733,12 +731,14 @@ const PeoplesAffected = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="People affected"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="People affected"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <div>Loading...</div>

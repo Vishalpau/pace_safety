@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import RemoveCircleOutlineSharpIcon from "@material-ui/icons/RemoveCircleOutlineSharp";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -16,6 +9,7 @@ import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
@@ -67,15 +61,21 @@ const WhyAnalysis = () => {
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/fivewhy/`
+    );
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 0) {
       form.length = 0;
       putId.current = incidentId;
-      console.log(putId.current, 'Putid')
+      console.log(putId.current, "Putid");
       allApiData.map((value) => {
         form.push({
           why: value.why,
@@ -141,7 +141,10 @@ const WhyAnalysis = () => {
           let dataID = callObjects[key].whyId;
           let postObject = { ...whyData, ...callObjects[key] };
           if (typeof postObject != "undefined") {
-            const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
+            const res = await api.put(
+              `/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`,
+              postObject
+            );
             if (res.status == 200) {
               console.log("request done");
               nextPageLink = res.status;
@@ -169,7 +172,8 @@ const WhyAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -177,8 +181,7 @@ const WhyAnalysis = () => {
         `/app/incident-management/registration/root-cause-analysis/details/`
       );
     }
-
-  }
+  };
 
   useEffect(() => {
     handelUpdateCheck();
@@ -186,11 +189,12 @@ const WhyAnalysis = () => {
   }, []);
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Five why analysis" icon="ion-md-list-box">
       <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
+        <Grid container item xs={12} md={9} spacing={3}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -199,7 +203,7 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
@@ -208,7 +212,7 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident Description
             </Typography>
@@ -217,14 +221,14 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Level of Investigation
             </Typography>
             <Typography className={Type.labelValue}>Level 5</Typography>
           </Grid>
 
-          <Grid item md={11}>
+          <Grid item xs={12} md={11}>
             <TextField
               variant="outlined"
               id="filled-basic"
@@ -236,10 +240,9 @@ const WhyAnalysis = () => {
           </Grid>
 
           {form.map((item, index) => (
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Grid container spacing={2}>
-
-                <Grid item sm={11}>
+                <Grid item xs={12} md={11}>
                   <TextField
                     id="filled-basic"
                     label={`Why ${index + 1}`}
@@ -256,7 +259,7 @@ const WhyAnalysis = () => {
                 </Grid>
                 {form.length > 1 ? (
                   putId.current == "" ? (
-                    <Grid item sm={1} justify="center">
+                    <Grid item xs={12} md={1} justify="center">
                       <IconButton onClick={(e) => handelRemove(e, index)}>
                         <RemoveCircleOutlineIcon />
                       </IconButton>
@@ -267,8 +270,8 @@ const WhyAnalysis = () => {
             </Grid>
           ))}
 
-          {form.length <= 4 ?
-            <Grid item md={1}>
+          {form.length <= 4 ? (
+            <Grid item xs={12} md={1}>
               {/* This button will add another entry of why input  */}
               {putId.current == "" ? (
                 <button
@@ -279,10 +282,9 @@ const WhyAnalysis = () => {
                 </button>
               ) : null}
             </Grid>
-            : null
-          }
+          ) : null}
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -302,12 +304,14 @@ const WhyAnalysis = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Five Why analysis"}
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Five Why analysis"}
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );
