@@ -40,6 +40,7 @@ export const Attachment = ({ value }) => {
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
     let extension = fileName.split(".");
+    console.log(extension)
 
     if (extension[1].toLowerCase() === "pdf") {
         return (
