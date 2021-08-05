@@ -198,7 +198,6 @@ const BasicCauseAndAction = () => {
               <Table className={classes.table} aria-label="simple table">
                 <TableBody>
                   {Object.entries(data)
-                    .reverse()
                     .map(([key, value], index) => (
                       <TableRow key={key}>
                         <TableCell

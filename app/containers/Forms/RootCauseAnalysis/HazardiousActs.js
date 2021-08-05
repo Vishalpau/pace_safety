@@ -108,20 +108,17 @@ const HazardiousActs = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(
-      `/api/v1/incidents/${incidentId}/pacecauses/`
-    );
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
     let allApiData = previousData.data.data.results;
     if (allApiData.length !== 0) {
       putId.current = incidentId;
       allApiData.map((value) => {
         if (HAZARDIOUS_ACTS_SUB_TYPES.includes(value.rcaSubType)) {
+          let valueId = value.id
           let valueQuestion = value.rcaSubType;
           let valueAnser = value.rcaRemark;
-          tempApiData[valueQuestion] = valueAnser;
+          tempApiData[valueQuestion] = [valueAnser, valueId];
           tempApiDataId.push(value.id);
         }
       });
@@ -131,42 +128,49 @@ const HazardiousActs = () => {
       setForm({
         ...form,
         supervision: {
+          // id: tempApiData.Supervision[1],
           remarkType: "options",
           rcaSubType: "Supervision",
-          rcaRemark: setRemark(tempApiData.Supervision),
+          rcaRemark: setRemark(tempApiData.Supervision[0]),
         },
         workpackage: {
+          // id: tempApiData.workPackage[1],
           remarkType: "options",
           rcaSubType: "workPackage",
-
-          rcaRemark: setRemark(tempApiData.workPackage),
+          rcaRemark: setRemark(tempApiData.workPackage[0]),
         },
         equipmentMachinery: {
+          // id: tempApiData.workPackage[1],
           remarkType: "options",
           rcaSubType: "equipmentMachinery",
-          rcaRemark: setRemark(tempApiData.equipmentMachinery),
+          rcaRemark: setRemark(tempApiData.workPackage[0]),
         },
         behaviourIssue: {
+          // id: tempApiData.behaviourIssue[1],
           remarkType: "options",
           rcaSubType: "behaviourIssue",
-          rcaRemark: setRemark(tempApiData.behaviourIssue),
+          rcaRemark: setRemark(tempApiData.behaviourIssue[0]),
         },
         safetyIssues: {
+          // id: tempApiData.safetyIssues[1],
           remarkType: "options",
           rcaSubType: "safetyIssues",
-          rcaRemark: setRemark(tempApiData.safetyIssues),
+          rcaRemark: setRemark(tempApiData.safetyIssues[0]),
         },
         ergonimics: {
+          // id: tempApiData.ergonimics[1],
           remarkType: "options",
           rcaSubType: "ergonimics",
-          rcaRemark: setRemark(tempApiData.ergonimics),
+          rcaRemark: setRemark(tempApiData.ergonimics[0]),
         },
         procedures: {
+          // id: tempApiData.procedures[1],
           remarkType: "options",
           rcaSubType: "procedures",
-          rcaRemark: setRemark(tempApiData.procedures),
+          rcaRemark: setRemark(tempApiData.procedures[0]),
         },
         others: {
+          // id: tempApiData.otherActs[1],
           remarkType: "remark",
           rcaSubType: "otherActs",
           rcaRemark: tempApiData.otherActs,
@@ -362,15 +366,13 @@ const HazardiousActs = () => {
 
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
+
       // post request object
       if (checkPost.current !== false) {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark:
-            api_data["rcaRemark"].toString() !== ""
-              ? api_data["rcaRemark"].toString()
-              : "No option selected",
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Immediate",
           remarkType: api_data["remarkType"],
@@ -380,12 +382,10 @@ const HazardiousActs = () => {
         // put request object
       } else {
         let temp = {
+          // id: api_data["id"],
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark:
-            api_data["rcaRemark"].toString() !== ""
-              ? api_data["rcaRemark"].toString()
-              : "No option selected",
+          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Immediate",
           remarkType: api_data["remarkType"],
@@ -400,23 +400,15 @@ const HazardiousActs = () => {
     let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
+      console.log(callObjects[key].pk)
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
-          const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
-            }/`,
-            callObjects[key]
-          );
+          const res = await api.put(`/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
           if (res.status == 200) {
             nextPageLink = res.status;
           }
         } else {
-          const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/`,
-            callObjects[key]
-          );
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
           if (res.status == 201) {
             nextPageLink = res.status;
           }
@@ -469,6 +461,7 @@ const HazardiousActs = () => {
       icon="ion-md-list-box"
     >
       <Grid container spacing={3}>
+        {/* {console.log(form)} */}
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>

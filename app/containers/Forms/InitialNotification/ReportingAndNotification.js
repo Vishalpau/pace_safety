@@ -51,7 +51,7 @@ import ReportingValidation from "../../Validator/ReportingValidation";
 import InitialEvidenceValidate from "../../Validator/InitialEvidance";
 
 import api from "../../../utils/axios";
-import Attachment from "../../Attachment/Attacment";
+import Attachment from "../../Attachment/Attachment";
 
 // import UploadInputAll from '../demos/UploadInputAll';
 
@@ -102,6 +102,7 @@ const ReportingAndNotification = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isNext, setIsnext] = useState(true);
+  const [evidanceId, setEvidanceId] = useState([])
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -189,10 +190,14 @@ const ReportingAndNotification = () => {
     temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
-    const res = await api.put(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-      temp
-    );
+    try {
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
+    } catch (error) {
+      setIsnext(true)
+    }
   };
 
   const handleRemoveExitingReport = async () => {
@@ -202,55 +207,11 @@ const ReportingAndNotification = () => {
         const reportId = reportedToObj[key].id;
 
         try {
+          setIsnext(false)
           const res = await api.delete(
             `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-        } catch (err) {}
-      }
-    }
-  };
-
-  // handleInitailEvidance
-  const handleInitialEvidance = async () => {
-    // Create new Evidance
-    let status = 0;
-    // check condition initial evidance is or not
-    if (
-      evidanceForm[0].evidenceDocument === "" &&
-      evidanceForm[0].evidenceRemark === ""
-    ) {
-      evidanceCkecked = true;
-    } else {
-      for (let i = 0; i < evidanceForm.length; i++) {
-        // check condition both filled is required
-        const formData = new FormData();
-        if (
-          evidanceForm[i].evidenceDocument !== "" &&
-          evidanceForm[i].evidenceRemark !== ""
-        ) {
-          formData.append("evidenceDocument", evidanceForm[i].evidenceDocument);
-          formData.append("evidenceRemark", evidanceForm[i].evidenceRemark);
-          formData.append("evidenceCheck", "Yes");
-          formData.append("evidenceCategory", "Initial Evidence ");
-          formData.append("createdBy", parseInt(userId));
-          formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
-          const evidanceResponse = await api.post(
-            `api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/evidences/`,
-            formData
-          );
-
-          status = evidanceResponse.status;
-        }
-      }
-      if (status === 201) {
-        evidanceCkecked = true;
-      } else {
-        evidanceCkecked = false;
-        await setMessage("File uploading failed! invalid document/remark");
-        await setMessageType("error");
-        await setOpen(true);
+        } catch (err) { setIsnext(true) }
       }
     }
   };
@@ -260,12 +221,15 @@ const ReportingAndNotification = () => {
     if (reportOtherData !== "") {
       if (form.reportedto.includes("Others")) {
         try {
+          await setIsnext(false)
           const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
             createdBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           });
-        } catch (err) {}
+        } catch (err) {
+          await setIsnext(true)
+        }
       }
     }
   };
@@ -284,21 +248,29 @@ const ReportingAndNotification = () => {
       if (evidanceChecked === true) {
         for (var key in evidanceForm) {
           if (typeof evidanceForm[key].evidenceDocument === "string") {
+            if (evidanceId.length > 0) {
+              for (let i in evidanceId) {
+                await api.delete(
+                  `api/v1/incidents/${localStorage.getItem(
+                    "fkincidentId"
+                  )}/evidences/${evidanceId[i]}/`)
+              }
+
+            }
             try {
               await api.put(
                 `api/v1/incidents/${localStorage.getItem(
                   "fkincidentId"
-                )}/evidences/${evidanceForm[key].id}`,
+                )}/evidences/${evidanceForm[key].id}/`,
                 {
                   evidenceCategory: "Initial Evidence",
-                  evidenceDocument: evidanceForm[key].evidenceDocument,
                   evidenceCheck: "Yes",
                   evidenceNumber: "string",
                   evidenceRemark: evidanceForm[key].evidenceRemark,
                   status: "Active",
                   createdBy: parseInt(userId),
                   fkIncidentId: localStorage.getItem("fkincidentId"),
-                  id:evidanceForm[key].id
+                  id: evidanceForm[key].id
                 }
               );
             } catch (error) {
@@ -355,7 +327,7 @@ const ReportingAndNotification = () => {
           var newData = [];
           reportedToFilterData = [];
           for (var key in reportedTo) {
-            reportedToFilterData.push(reportedTo[key].inputValue);
+            reportedToFilterData.push(reportedTo[key].inputLabel);
           }
           for (var i = 0; i < 8; i++) {
             if (reportedToFilterData.includes(form.reportedto[i])) {
@@ -469,6 +441,13 @@ const ReportingAndNotification = () => {
       ) {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
+          let evdId = temp[key]["id"]
+
+          if (evdId) {
+            setEvidanceId([...evidanceId, evdId])
+          }
+
+
           await setMessage("File uploaded successfully!");
           await setMessageType("success");
           await setOpen(true);
@@ -508,8 +487,9 @@ const ReportingAndNotification = () => {
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
+    console.log(result)
     for (var key in result) {
-      reportedToFilterData.push(result[key].inputValue);
+      reportedToFilterData.push(result[key].inputLabel);
     }
     await setReportableTo(result);
   };
@@ -591,7 +571,7 @@ const ReportingAndNotification = () => {
           setSuperVisorName([...result, { name: "other" }]);
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchReportedBy = () => {
@@ -656,7 +636,7 @@ const ReportingAndNotification = () => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // handle go back
@@ -723,12 +703,12 @@ const ReportingAndNotification = () => {
                     <FormControlLabel
                       id={key}
                       key={key}
-                      value={value.inputValue}
+                      value={value.inputLabel}
                       control={<Checkbox />}
                       label={value.inputLabel}
-                      checked={!!form.reportedto.includes(value.inputValue)}
+                      checked={!!form.reportedto.includes(value.inputLabel)}
                       onChange={(e) => {
-                        handelReportedTo(e, value.inputValue, "option");
+                        handelReportedTo(e, value.inputLabel, "option");
                       }}
                     />
                   ))}
@@ -831,7 +811,7 @@ const ReportingAndNotification = () => {
                       }
                       helperText={
                         evidenceError &&
-                        evidenceError[`evidenceRemark${[index]}`]
+                          evidenceError[`evidenceRemark${[index]}`]
                           ? evidenceError[`evidenceRemark${[index]}`]
                           : null
                       }
@@ -884,7 +864,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-                // error={error && error.reportedby}
+              // error={error && error.reportedby}
               >
                 <InputLabel id="supervisorname-label">
                   Supervisor name
@@ -898,11 +878,11 @@ const ReportingAndNotification = () => {
                     incidentsListData.supervisorByName === ""
                       ? ""
                       : superVisorName.filter(
-                          (item) =>
-                            item.name === incidentsListData.supervisorByName
-                        ).length > 0
-                      ? incidentsListData.supervisorByName
-                      : ""
+                        (item) =>
+                          item.name === incidentsListData.supervisorByName
+                      ).length > 0
+                        ? incidentsListData.supervisorByName
+                        : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -952,7 +932,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-                // error={error && error.reportedby}
+              // error={error && error.reportedby}
               >
                 <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
@@ -963,12 +943,12 @@ const ReportingAndNotification = () => {
                     incidentsListData.incidentReportedByName === ""
                       ? ""
                       : reportedByName.filter(
-                          (item) =>
-                            item.name ===
-                            incidentsListData.incidentReportedByName
-                        ).length > 0
-                      ? incidentsListData.incidentReportedByName
-                      : ""
+                        (item) =>
+                          item.name ===
+                          incidentsListData.incidentReportedByName
+                      ).length > 0
+                        ? incidentsListData.incidentReportedByName
+                        : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -997,11 +977,11 @@ const ReportingAndNotification = () => {
                   incidentsListData.incidentReportedByName === ""
                     ? ""
                     : reportedByName.filter(
-                        (item) =>
-                          item.name === incidentsListData.incidentReportedByName
-                      ).length > 0
-                    ? ""
-                    : incidentsListData.incidentReportedByName
+                      (item) =>
+                        item.name === incidentsListData.incidentReportedByName
+                    ).length > 0
+                      ? ""
+                      : incidentsListData.incidentReportedByName
                 }
                 className={classes.formControl}
                 disabled={form.reportedby !== "other"}

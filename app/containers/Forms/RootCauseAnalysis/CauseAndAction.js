@@ -241,7 +241,6 @@ const BasicCauseAndAction = () => {
             <Table className={classes.table}>
               <TableBody>
                 {Object.entries(data)
-                  .reverse()
                   .map(([key, value], index) => (
                     <>
                       {value.map((value, valueIndex) => (
