@@ -197,13 +197,13 @@ const WorkerDetails = () => {
   const handelTestTaken = async (e) => {
     if (e.target.value == "Yes") {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
-      seTesttaken(true);
+      setTesttaken(true);
     } else if (e.target.value == "No") {
       setForm({
         ...form,
         isAlcoholDrugTestTaken: e.target.value,
       });
-      seTesttaken(false);
+      setTesttaken(false);
     }
   };
 
@@ -470,7 +470,6 @@ const WorkerDetails = () => {
     setSupervisorTimeOnProject(await PickListData(55));
     setSupervisorTimeInCompany(await PickListData(56));
     await setIsLoading(true);
-    await handelFileName();
   };
 
   const imageNameFromUrl = (url) => {

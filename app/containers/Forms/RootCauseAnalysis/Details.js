@@ -67,6 +67,7 @@ const Details = () => {
   );
   let [hideArray, setHideArray] = useState([]);
   let investigationData = useRef({});
+  let [rcaDisable, setRcaDisable] = useState("")
 
   // get data for put
   const handelUpdateCheck = async () => {
@@ -82,6 +83,7 @@ const Details = () => {
       `/api/v1/incidents/${incidentId}/causeanalysis/`
     );
     let allApiData = previousData.data.data.results[0];
+
     let investigationpreviousData = await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
     );
@@ -89,15 +91,13 @@ const Details = () => {
     if (investigationApiData != null) {
       if (investigationApiData.rcaRecommended != "") {
         setForm({ ...form, rcaRecommended: investigationApiData.rcaRecommended });
+        await handelRcaRecommended("a", investigationApiData.rcaRecommended);
       }
-      console.log(investigationData.classification)
-
       investigationData.current = {
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
         classification: investigationApiData.classification
       }
-
     }
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
@@ -109,8 +109,8 @@ const Details = () => {
         evidenceNotSupport: allApiData.evidenceNotSupport,
         rcaRecommended: allApiData.rcaRecommended,
       });
+      setRcaDisable(allApiData.rcaRecommended)
       await handelRcaRecommended("a", allApiData.rcaRecommended);
-      console.log(allApiData.rcaRecommended);
       putId.current = incidentId;
       checkPost.current = false;
     }
@@ -308,7 +308,7 @@ const Details = () => {
                 labelId="project-name-label"
                 label="RCA recommended"
                 value={form.rcaRecommended}
-                disabled={checkPost.current == false ? true : false}
+                disabled={rcaDisable != "" ? true : false}
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem
