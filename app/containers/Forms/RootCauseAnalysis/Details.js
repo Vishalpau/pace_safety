@@ -75,7 +75,7 @@ const Details = () => {
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-
+    // getting incidident id form url
     let incidentId = !isNaN(lastItem)
       ? lastItem
       : localStorage.getItem("fkincidentId");
@@ -84,6 +84,7 @@ const Details = () => {
     );
     let allApiData = previousData.data.data.results[0];
 
+    // fetching data from 
     let investigationpreviousData = await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
     );

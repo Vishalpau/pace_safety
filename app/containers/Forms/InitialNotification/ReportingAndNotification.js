@@ -255,7 +255,6 @@ const ReportingAndNotification = () => {
                     "fkincidentId"
                   )}/evidences/${evidanceId[i]}/`)
               }
-
             }
             try {
               await api.put(

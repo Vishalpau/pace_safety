@@ -1101,13 +1101,7 @@ const InvestigationSummary = () => {
                       {/* <Tooltip title="File Name"> */}
                       {value.attachments != "" &&
                         typeof value.attachments == "string" ? (
-                        <IconButton
-                          onClick={() => handleOpen(value.attachments)}
-                          className={classes.fileIcon}
-                        >
-
-                          <Attachment value={value.attachments} />
-                        </IconButton>
+                        <Attachment value={value.attachments} />
                       ) :
                         "-"
                       }

@@ -35,7 +35,7 @@ import { Link } from "react-router-dom";
 import Fonts from "dan-styles/Fonts.scss";
 import "../../styles/custom.css";
 
-import Attachment from "../Attachment/Attacment";
+import Attachment from "../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -717,7 +717,20 @@ const IncidentDetailsSummary = () => {
                   ))
                   : null}
               </Grid>
+              {incidents.reasonLateReporting?
+              <Grid item xs={12} md={12}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  className={Fonts.labelName}
+                >
+                  Reason for late reporting
+                </Typography>
 
+                <Typography className={Fonts.labelValue}>
+                  {incidents.reasonLateReporting}
+                </Typography>
+              </Grid>:null}
               <Grid item xs={12} md={12}>
                 <Typography
                   variant="h6"
