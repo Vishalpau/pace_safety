@@ -190,10 +190,14 @@ const ReportingAndNotification = () => {
     temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
+    try{
     const res = await api.put(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
       temp
     );
+    }catch(error){
+      setIsnext(true)
+    }
   };
 
   const handleRemoveExitingReport = async () => {
@@ -203,55 +207,11 @@ const ReportingAndNotification = () => {
         const reportId = reportedToObj[key].id;
 
         try {
+          setIsnext(false)
           const res = await api.delete(
             `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-        } catch (err) {}
-      }
-    }
-  };
-console.log(evidanceId)
-  // handleInitailEvidance
-  const handleInitialEvidance = async () => {
-    // Create new Evidance
-    let status = 0;
-    // check condition initial evidance is or not
-    if (
-      evidanceForm[0].evidenceDocument === "" &&
-      evidanceForm[0].evidenceRemark === ""
-    ) {
-      evidanceCkecked = true;
-    } else {
-      for (let i = 0; i < evidanceForm.length; i++) {
-        // check condition both filled is required
-        const formData = new FormData();
-        if (
-          evidanceForm[i].evidenceDocument !== "" &&
-          evidanceForm[i].evidenceRemark !== ""
-        ) {
-          formData.append("evidenceDocument", evidanceForm[i].evidenceDocument);
-          formData.append("evidenceRemark", evidanceForm[i].evidenceRemark);
-          formData.append("evidenceCheck", "Yes");
-          formData.append("evidenceCategory", "Initial Evidence ");
-          formData.append("createdBy", parseInt(userId));
-          formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
-          const evidanceResponse = await api.post(
-            `api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/evidences/`,
-            formData
-          );
-
-          status = evidanceResponse.status;
-        }
-      }
-      if (status === 201) {
-        evidanceCkecked = true;
-      } else {
-        evidanceCkecked = false;
-        await setMessage("File uploading failed! invalid document/remark");
-        await setMessageType("error");
-        await setOpen(true);
+        } catch (err) {setIsnext(true)}
       }
     }
   };
@@ -261,12 +221,15 @@ console.log(evidanceId)
     if (reportOtherData !== "") {
       if (form.reportedto.includes("Others")) {
         try {
+          await setIsnext(false)
           const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
             createdBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           });
-        } catch (err) {}
+        } catch (err) {
+          await setIsnext(true)
+        }
       }
     }
   };
@@ -364,7 +327,7 @@ console.log(evidanceId)
           var newData = [];
           reportedToFilterData = [];
           for (var key in reportedTo) {
-            reportedToFilterData.push(reportedTo[key].inputValue);
+            reportedToFilterData.push(reportedTo[key].inputLabel);
           }
           for (var i = 0; i < 8; i++) {
             if (reportedToFilterData.includes(form.reportedto[i])) {
@@ -524,8 +487,9 @@ console.log(evidanceId)
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
+    console.log(result)
     for (var key in result) {
-      reportedToFilterData.push(result[key].inputValue);
+      reportedToFilterData.push(result[key].inputLabel);
     }
     await setReportableTo(result);
   };
@@ -739,12 +703,12 @@ console.log(evidanceId)
                     <FormControlLabel
                       id={key}
                       key={key}
-                      value={value.inputValue}
+                      value={value.inputLabel}
                       control={<Checkbox />}
                       label={value.inputLabel}
-                      checked={!!form.reportedto.includes(value.inputValue)}
+                      checked={!!form.reportedto.includes(value.inputLabel)}
                       onChange={(e) => {
-                        handelReportedTo(e, value.inputValue, "option");
+                        handelReportedTo(e, value.inputLabel, "option");
                       }}
                     />
                   ))}
