@@ -19,11 +19,14 @@ import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import {
+	PACE_MANAGEMENT_CONTROL_SUB_TYPES,
 	PROACTIVEMANAGEMENT,
 	ASSESSMENTS,
 	COMPILANCE,
-	ENGAGEMENT
+	ENGAGEMENT,
+	BASIC_CAUSE_SUB_TYPES
 } from "../../../utils/constants"
+import { checkValue, handelApiValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
 	formControl: {
@@ -59,17 +62,104 @@ const PaceManagementControl = () => {
 		},
 	})
 	const [incidentDetail, setIncidentDetail] = useState({});
-	const [apiCallObject, setApiCallObject] = useState([])
+	const [nextButton, setNextButton] = useState(false)
+	const paceCauseDelete = useRef()
+	const history = useHistory();
+	const putId = useRef("")
+	const [optionBasicCause, setOptionBasicCause] = useState([])
+
 
 	const handelUpdateCheck = async () => {
+		let tempData = {}
+		let paceCauseid = []
+		let page_url = window.location.href;
+		const lastItem = parseInt(
+			page_url.substring(page_url.lastIndexOf("/") + 1)
+		);
+		let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+		putId.current = incidentId
+		let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+		let allApiData = previousData.data.data.results
+		if (allApiData.length > 0) {
+			allApiData.map((value) => {
+				if (PACE_MANAGEMENT_CONTROL_SUB_TYPES.includes(value.rcaSubType)) {
+					if (Object.keys(tempData).includes(value.rcaSubType)) {
+						tempData[value.rcaSubType].push(value.rcaRemark)
+					} else {
+						tempData[value.rcaSubType] = [value.rcaRemark]
+					}
+					paceCauseid.push(value.id)
+				}
+			})
+			setForm({
+				...form,
+				ProActiveManagement: {
+					remarkType: "options",
+					rcaSubType: "ProActiveManagement",
+					rcaRemark: handelApiValue(tempData["ProActiveManagement"]),
+				},
+				Assessments: {
+					remarkType: "options",
+					rcaSubType: "Assessments",
+					rcaRemark: handelApiValue(tempData["Assessments"]),
+				},
+				Compilance: {
+					remarkType: "options",
+					rcaSubType: "Compilance",
+					rcaRemark: handelApiValue(tempData["Compilance"]),
+				},
+				Engagement: {
+					remarkType: "options",
+					rcaSubType: "Engagement",
+					rcaRemark: handelApiValue(tempData["Engagement"]),
+				},
+			})
+			paceCauseDelete.current = paceCauseid
+		}
+	}
+
+	const handelOptionDispay = (type, subType, option) => {
+		let temp = []
+		if (option !== "-") {
+			option.map((value) => {
+				temp.push(`${type} - ${subType} - ${value}`)
+			})
+		}
+		return temp
+	}
+
+	const handelShowData = async () => {
+		let tempApiData = {};
+		let subTypes = BASIC_CAUSE_SUB_TYPES;
 		let page_url = window.location.href;
 		const lastItem = parseInt(
 			page_url.substring(page_url.lastIndexOf("/") + 1)
 		);
 
 		let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-		let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
-	}
+		putId.current = incidentId;
+		let previousData = await api.get(`/api/v1/incidents/${putId.current}/pacecauses/`);
+		let tempid = [];
+		let allApiData = previousData.data.data.results;
+		allApiData.map((value, index) => {
+			if (subTypes.includes(value.rcaSubType) && value.rcaRemark !== "No option selected"
+			) {
+				tempid.push(value.id);
+				let valueQuestion = value.rcaSubType;
+				let valueAnser = value.rcaRemark;
+				tempApiData[valueQuestion] = valueAnser.includes(",")
+					? valueAnser.split(",")
+					: [valueAnser];
+			}
+		});
+
+		let OptionWithSubType =
+			handelOptionDispay("Human factors", "personal", checkValue(tempApiData["personal"])).concat
+				(handelOptionDispay("Human factors", "wellnessFactors", checkValue(tempApiData["wellnessFactors"]))).concat
+				(handelOptionDispay("Jobfactors", "leadership", checkValue(tempApiData["leadership"]))).concat
+				(handelOptionDispay("Jobfactors", "processes", checkValue(tempApiData["processes"])))
+		setOptionBasicCause(OptionWithSubType)
+	};
 
 	const handelProactiveManagement = (e, value) => {
 		if (e.target.checked == false) {
@@ -163,40 +253,83 @@ const PaceManagementControl = () => {
 		}
 	};
 
-	const handelNext = async () => {
+	const handelDelete = async () => {
+		if (paceCauseDelete.current.length > 0) {
+			paceCauseDelete.current.map(async (value) => {
+				let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${value}/`)
+				if (delPaceCause.status == 200) {
+					console.log("deleted")
+				}
+			})
+		}
+	}
+
+	const handelNavigate = (nextPageLink, navigateType) => {
+		if (navigateType == "next") {
+			if (nextPageLink == 201) {
+				history.push(
+					"/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/");
+			} else if (nextPageLink == 200) {
+				history.push(
+					`/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current}`);
+			}
+		} else if (navigateType == "previous") {
+			if (!isNaN(putId.current)) {
+				history.push(
+					`/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+					}`
+				);
+			} else if (isNaN(putId.current)) {
+				history.push(
+					`/app/incident-management/registration/root-cause-analysis/basic-cause/`
+				);
+			}
+		}
+	}
+
+	const handelApiCall = async () => {
+		let nextPageLink = 0;
 		let tempData = []
 		Object.entries(form).map(async (item, index) => {
 			let api_data = item[1];
 			api_data.rcaRemark.map((value) => {
 				let temp = {
 					createdBy: "0",
-					fkIncidentId: localStorage.getItem("fkincidentId"),
+					fkIncidentId: putId.current,
 					rcaRemark: value,
 					rcaSubType: api_data["rcaSubType"],
-					rcaType: "Immediate",
+					rcaType: "Basic",
 					remarkType: api_data["remarkType"],
 					status: "Active",
 				};
 				tempData.push(temp);
 			})
 		})
-		await setApiCallObject(tempData)
-		const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/bulkpacecauses/`, tempData);
+		const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
+		if (res.status == 200) {
+			nextPageLink = res.status;
+			handelNavigate(nextPageLink, "next")
+		}
 	}
 
 
+	const handelNext = async () => {
+		await setNextButton(true)
+		await handelDelete()
+		await handelApiCall()
+		await setNextButton(false)
+	}
+
 	const fetchIncidentDetails = async () => {
-		const res = await api.get(
-			`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-		);
+		const res = await api.get(`/api/v1/incidents/${putId.current}/`);
 		const result = res.data.data.results;
 		await setIncidentDetail(result);
 	};
 
-
 	useEffect(() => {
-		fetchIncidentDetails();
 		handelUpdateCheck();
+		fetchIncidentDetails();
+		handelShowData();
 	}, []);
 
 	const isDesktop = useMediaQuery("(min-width:992px)");
@@ -208,8 +341,9 @@ const PaceManagementControl = () => {
 			icon="ion-md-list-box"
 		>
 			<Grid container spacing={3}>
-				{/* {console.log(apiCallObject)} */}
+				{/* {console.log(form)} */}
 				<Grid container item md={9} spacing={3}>
+
 					<Grid item md={6}>
 						<Typography variant="h6" className={Type.labelName} gutterBottom>
 							Incident number
@@ -228,6 +362,16 @@ const PaceManagementControl = () => {
 						</Typography>
 					</Grid>
 
+					<Grid item md={12} >
+						<Typography variant="h6">
+							Basic cause selected
+						</Typography>
+						{optionBasicCause.map((value) => (
+							<p><small>{value}</small></p>
+						))}
+						<Box borderTop={1} marginTop={2} borderColor="grey.300" />
+					</Grid>
+
 					<Grid item md={12}>
 						<FormControl component="fieldset">
 							<FormLabel component="legend">Proactive management</FormLabel>
@@ -236,7 +380,7 @@ const PaceManagementControl = () => {
 									<FormControlLabel
 										control={<Checkbox name={value} />}
 										label={value}
-										// checked={form.supervision.rcaRemark.includes(value)}
+										checked={form.ProActiveManagement.rcaRemark.includes(value)}
 										onChange={async (e) => await handelProactiveManagement(e, value)}
 									/>
 								))}
@@ -253,7 +397,7 @@ const PaceManagementControl = () => {
 									<FormControlLabel
 										control={<Checkbox name={value} />}
 										label={value}
-										// checked={form.supervision.rcaRemark.includes(value)}
+										checked={form.Assessments.rcaRemark.includes(value)}
 										onChange={async (e) => await handelAssessmet(e, value)}
 									/>
 								))}
@@ -270,7 +414,7 @@ const PaceManagementControl = () => {
 									<FormControlLabel
 										control={<Checkbox name={value} />}
 										label={value}
-										// checked={form.supervision.rcaRemark.includes(value)}
+										checked={form.Compilance.rcaRemark.includes(value)}
 										onChange={async (e) => await handelCompilance(e, value)}
 									/>
 								))}
@@ -287,7 +431,7 @@ const PaceManagementControl = () => {
 									<FormControlLabel
 										control={<Checkbox name={value} />}
 										label={value}
-										// checked={form.supervision.rcaRemark.includes(value)}
+										checked={form.Engagement.rcaRemark.includes(value)}
 										onChange={async (e) => await handelEngagement(e, value)}
 									/>
 								))}
@@ -301,7 +445,7 @@ const PaceManagementControl = () => {
 							variant="contained"
 							color="primary"
 							className={classes.button}
-							onClick={(e) => handelPrevious(e)}
+							onClick={(e) => handelNavigate("nextPageLink", "previous")}
 						>
 							Previous
 						</Button>
@@ -309,6 +453,7 @@ const PaceManagementControl = () => {
 							variant="contained"
 							color="primary"
 							className={classes.button}
+							disabled={nextButton == true}
 							onClick={(e) => handelNext(e)}
 						>
 							Next

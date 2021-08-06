@@ -343,11 +343,11 @@ const BasicCause = () => {
     }
     if (nextPageLink == 201 && Object.keys(error).length === 0) {
       history.push(
-        "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
+        "/app/incident-management/registration/root-cause-analysis/pace-management/"
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/pace-management/${putId.current
         }`
       );
     }

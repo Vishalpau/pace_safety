@@ -87,15 +87,15 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
   "Hazardous conditions":
     "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/",
-  "Cause and action":
+  "Corrective actions":
     "/app/incident-management/registration/root-cause-analysis/cause-and-action/",
   "Basic cause":
     "/app/incident-management/registration/root-cause-analysis/basic-cause/",
   "PACE Management control":
     "/app/incident-management/registration/root-cause-analysis/pace-management/",
-  "Basic cause and action":
+  "Preventive actions":
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",
-  "Corrective actions":
+  "Additional information":
     "/app/incident-management/registration/root-cause-analysis/management-control/",
   "Cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
@@ -154,6 +154,13 @@ export const BASIC_CAUSE_SUB_TYPES = [
   "processes",
   "othersJobFactors",
 ];
+
+export const PACE_MANAGEMENT_CONTROL_SUB_TYPES = [
+  "ProActiveManagement",
+  "Assessments",
+  "Compilance",
+  "Engagement",
+]
 
 // option in root cause and anlysis
 

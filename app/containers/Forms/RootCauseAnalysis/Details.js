@@ -26,6 +26,7 @@ import { RCAOPTION } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import { FormHelperText } from "@material-ui/core";
 import { PassThrough } from "stream";
+import { checkValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -136,10 +137,11 @@ const Details = () => {
       setHideArray([
         "Hazardous acts",
         "Hazardous conditions",
-        "Cause and action",
-        "Basic cause",
-        "Basic cause and action",
         "Corrective actions",
+        "Basic cause",
+        "PACE Management control",
+        "Preventive Actions",
+        "Additional information",
         "Cause analysis",
       ]);
     } else if (value == "PACE cause analysis") {
@@ -148,10 +150,11 @@ const Details = () => {
       setHideArray([
         "Hazardous acts",
         "Hazardous conditions",
-        "Cause and action",
-        "Basic cause",
-        "Basic cause and action",
         "Corrective actions",
+        "Basic cause",
+        "PACE Management control",
+        "Preventive Actions",
+        "Additional information",
         "Five Why analysis",
       ]);
     }
@@ -292,7 +295,7 @@ const Details = () => {
               Level of classification
             </Typography>
             <Typography className={Type.labelValue}>
-              {investigationData.current["classification"]}
+              {checkValue(investigationData.current["classification"])}
             </Typography>
           </Grid>
 

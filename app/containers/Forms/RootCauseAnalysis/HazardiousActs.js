@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid, FormHelperText } from "@material-ui/core";
+
 import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Paper from "@material-ui/core/Paper";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -12,13 +16,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Divider from "@material-ui/core/Divider";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation";
 import { call } from "file-loader";
+
 import {
   HAZARDIOUS_ACTS_SUB_TYPES,
   SUPERVISON,
@@ -42,41 +47,13 @@ const useStyles = makeStyles((theme) => ({
 
 const HazardiousActs = () => {
   const [form, setForm] = useState({
-    supervision: {
-      remarkType: "options",
-      rcaSubType: "Supervision",
-      rcaRemark: [],
-    },
-    workpackage: {
-      remarkType: "options",
-      rcaSubType: "workPackage",
-      rcaRemark: [],
-    },
-    equipmentMachinery: {
-      remarkType: "options",
-      rcaSubType: "equipmentMachinery",
-      rcaRemark: [],
-    },
-    behaviourIssue: {
-      remarkType: "options",
-      rcaSubType: "behaviourIssue",
-      rcaRemark: [],
-    },
-    safetyIssues: {
-      remarkType: "options",
-      rcaSubType: "safetyIssues",
-      rcaRemark: [],
-    },
-    ergonimics: {
-      remarkType: "options",
-      rcaSubType: "ergonimics",
-      rcaRemark: [],
-    },
-    procedures: {
-      remarkType: "options",
-      rcaSubType: "procedures",
-      rcaRemark: [],
-    },
+    supervision: { remarkType: "options", rcaSubType: "Supervision", rcaRemark: [] },
+    workpackage: { remarkType: "options", rcaSubType: "workPackage", rcaRemark: [] },
+    equipmentMachinery: { remarkType: "options", rcaSubType: "equipmentMachinery", rcaRemark: [] },
+    behaviourIssue: { remarkType: "options", rcaSubType: "behaviourIssue", rcaRemark: [] },
+    safetyIssues: { remarkType: "options", rcaSubType: "safetyIssues", rcaRemark: [] },
+    ergonimics: { remarkType: "options", rcaSubType: "ergonimics", rcaRemark: [] },
+    procedures: { remarkType: "options", rcaSubType: "procedures", rcaRemark: [] },
     others: { remarkType: "remark", rcaSubType: "otherActs", rcaRemark: "" },
   });
 
@@ -88,19 +65,20 @@ const HazardiousActs = () => {
   const history = useHistory();
   const [incidentDetail, setIncidentDetail] = useState({});
   const updateIds = useRef();
-  const checkPost = useRef();
+  const checkPost = useRef()
 
   const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value];
+    let remark = value.includes(",") ? value.split(",") : [value]
     if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected");
-      remark.splice(removeItemIndex, 1);
+      let removeItemIndex = remark.indexOf("No option selected")
+      remark.splice(removeItemIndex, 1)
     }
-    return remark;
-  };
+    return remark
+  }
 
   // get data and set to states
   const handelUpdateCheck = async () => {
+
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
@@ -115,62 +93,54 @@ const HazardiousActs = () => {
       putId.current = incidentId;
       allApiData.map((value) => {
         if (HAZARDIOUS_ACTS_SUB_TYPES.includes(value.rcaSubType)) {
-          let valueId = value.id
           let valueQuestion = value.rcaSubType;
           let valueAnser = value.rcaRemark;
-          tempApiData[valueQuestion] = [valueAnser, valueId];
+          tempApiData[valueQuestion] = valueAnser;
           tempApiDataId.push(value.id);
         }
       });
       updateIds.current = tempApiDataId.reverse();
       await setFetchApiData(tempApiData);
-      checkPost.current = false;
+      checkPost.current = false
       setForm({
         ...form,
         supervision: {
-          // id: tempApiData.Supervision[1],
           remarkType: "options",
           rcaSubType: "Supervision",
-          rcaRemark: setRemark(tempApiData.Supervision[0]),
+          rcaRemark: setRemark(tempApiData.Supervision),
         },
         workpackage: {
-          // id: tempApiData.workPackage[1],
           remarkType: "options",
           rcaSubType: "workPackage",
-          rcaRemark: setRemark(tempApiData.workPackage[0]),
+
+          rcaRemark: setRemark(tempApiData.workPackage),
         },
         equipmentMachinery: {
-          // id: tempApiData.workPackage[1],
           remarkType: "options",
           rcaSubType: "equipmentMachinery",
-          rcaRemark: setRemark(tempApiData.workPackage[0]),
+          rcaRemark: setRemark(tempApiData.equipmentMachinery),
         },
         behaviourIssue: {
-          // id: tempApiData.behaviourIssue[1],
           remarkType: "options",
           rcaSubType: "behaviourIssue",
-          rcaRemark: setRemark(tempApiData.behaviourIssue[0]),
+          rcaRemark: setRemark(tempApiData.behaviourIssue),
         },
         safetyIssues: {
-          // id: tempApiData.safetyIssues[1],
           remarkType: "options",
           rcaSubType: "safetyIssues",
-          rcaRemark: setRemark(tempApiData.safetyIssues[0]),
+          rcaRemark: setRemark(tempApiData.safetyIssues),
         },
         ergonimics: {
-          // id: tempApiData.ergonimics[1],
           remarkType: "options",
           rcaSubType: "ergonimics",
-          rcaRemark: setRemark(tempApiData.ergonimics[0]),
+          rcaRemark: setRemark(tempApiData.ergonimics),
         },
         procedures: {
-          // id: tempApiData.procedures[1],
           remarkType: "options",
           rcaSubType: "procedures",
-          rcaRemark: setRemark(tempApiData.procedures[0]),
+          rcaRemark: setRemark(tempApiData.procedures),
         },
         others: {
-          // id: tempApiData.otherActs[1],
           remarkType: "remark",
           rcaSubType: "otherActs",
           rcaRemark: tempApiData.otherActs,
@@ -366,7 +336,6 @@ const HazardiousActs = () => {
 
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
-
       // post request object
       if (checkPost.current !== false) {
         let temp = {
@@ -382,7 +351,6 @@ const HazardiousActs = () => {
         // put request object
       } else {
         let temp = {
-          // id: api_data["id"],
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
           rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
@@ -400,15 +368,22 @@ const HazardiousActs = () => {
     let nextPageLink = 0;
     let callObjects = tempData;
     for (let key in callObjects) {
-      console.log(callObjects[key].pk)
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
-          const res = await api.put(`/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`, callObjects[key]);
+          const res = await api.put(
+            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
+            callObjects[key]
+          );
           if (res.status == 200) {
             nextPageLink = res.status;
           }
         } else {
-          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`, callObjects[key]);
+          const res = await api.post(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/pacecauses/`,
+            callObjects[key]
+          );
           if (res.status == 201) {
             nextPageLink = res.status;
           }
@@ -438,7 +413,8 @@ const HazardiousActs = () => {
         `/app/incident-management/registration/root-cause-analysis/details/`
       );
     }
-  };
+
+  }
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
@@ -453,15 +429,12 @@ const HazardiousActs = () => {
     handelUpdateCheck();
   }, []);
 
-  const isDesktop = useMediaQuery("(min-width:992px)");
-
   return (
     <PapperBlock
       title="Immediate Causes - Hazardous Acts"
       icon="ion-md-list-box"
     >
       <Grid container spacing={3}>
-        {/* {console.log(form)} */}
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
@@ -481,7 +454,10 @@ const HazardiousActs = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.supervision}>
+            <FormControl
+              component="fieldset"
+              error={error.supervision}
+            >
               <FormLabel component="legend">Supervision</FormLabel>
               <FormGroup>
                 {SUPERVISON.map((value) => (
@@ -502,7 +478,10 @@ const HazardiousActs = () => {
 
           {/* workpackage */}
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.workpackage}>
+            <FormControl
+              component="fieldset"
+              error={error.workpackage}
+            >
               <FormLabel component="legend">Work package</FormLabel>
               <FormGroup>
                 {WORKPACKAGE.map((value) => (
@@ -523,7 +502,10 @@ const HazardiousActs = () => {
 
           {/* equiment machinary     */}
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.equipmentMachinery}>
+            <FormControl
+              component="fieldset"
+              error={error.equipmentMachinery}
+            >
               <FormLabel component="legend">Equipment & machinery</FormLabel>
               <FormGroup>
                 {EQUIMENTMACHINARY.map((value) => (
@@ -543,7 +525,10 @@ const HazardiousActs = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.behaviourIssue}>
+            <FormControl
+              component="fieldset"
+              error={error.behaviourIssue}
+            >
               <FormLabel component="legend">Behaviour issue</FormLabel>
               <FormGroup>
                 {BEHAVIOURISSUES.map((value) => (
@@ -564,7 +549,10 @@ const HazardiousActs = () => {
 
           {/* safety issues    */}
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.safetyIssues}>
+            <FormControl
+              component="fieldset"
+              error={error.safetyIssues}
+            >
               <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
                 {SAFETYITEMS.map((value) => (
@@ -632,11 +620,7 @@ const HazardiousActs = () => {
               variant="outlined"
               multiline
               error={error.others}
-              value={
-                form.others.rcaRemark !== "No option selected"
-                  ? form.others.rcaRemark
-                  : ""
-              }
+              value={form.others.rcaRemark !== "No option selected" ? form.others.rcaRemark : ""}
               helperText={error ? error.others : ""}
               rows={3}
               onChange={async (e) => handelOthers(e)}
@@ -662,14 +646,12 @@ const HazardiousActs = () => {
             </Button>
           </Grid>
         </Grid>
-        {isDesktop && (
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"Hazardous acts"}
-            />
-          </Grid>
-        )}
+        <Grid item md={3}>
+          <FormSideBar
+            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+            selectedItem={"Hazardous acts"}
+          />
+        </Grid>
       </Grid>
     </PapperBlock>
   );

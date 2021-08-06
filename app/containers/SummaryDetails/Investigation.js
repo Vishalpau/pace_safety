@@ -25,7 +25,7 @@ import moment from "moment";
 import { useHistory, useParams } from "react-router";
 
 import api from "../../utils/axios";
-import checkValue from "../../utils/CheckerValue";
+import { checkValue } from "../../utils/CheckerValue";
 import Attachment from "../Attachment/Attachment";
 
 // Styles
@@ -522,13 +522,16 @@ const InvestigationSummary = () => {
             {expanded !== "panel3" ?
               <Typography className={classes.heading}>Worker details</Typography>
               :
-              <Typography className={classes.heading}></Typography>
+              null
             }
 
           </AccordionSummary>
           <AccordionDetails>
             <paper>
               <Grid container item xs={12} spacing={3}>
+                <Grid item xs={12}>
+
+                </Grid>
                 {workerData.map((value, index) => (
                   <>
                     {/* worker number */}
@@ -1019,7 +1022,7 @@ const InvestigationSummary = () => {
                           gutterBottom
                           className={Fonts.labelName}
                         >
-                          Reason test not done ?
+                          Why was the test not conducted ?
                         </Typography>
 
                         <Typography
@@ -1107,7 +1110,9 @@ const InvestigationSummary = () => {
                       }
                       {/* </Tooltip> */}
                     </Grid>
-
+                    <Grid item md={12}>
+                      <Divider />
+                    </Grid>
                   </>
                 ))}
               </Grid>
@@ -1452,7 +1457,7 @@ const InvestigationSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-    </Grid>
+    </Grid >
   );
 };
 export default InvestigationSummary;
