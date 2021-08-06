@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -18,6 +18,9 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { PapperBlock } from "dan-components";
+import Paper from "@material-ui/core/Paper";
+import AddIcon from "@material-ui/icons/Add";
+import Tooltip from "@material-ui/core/Tooltip";
 
 // import { DropzoneArea, DropzoneDialogBase } from 'material-ui-dropzone';
 
@@ -45,9 +48,10 @@ import {
 // import FormHeader from '../FormHeader';
 
 import ReportingValidation from "../../Validator/ReportingValidation";
-// import InitialEvidenceValidate from '../../Validator/InitialEvidance';
+import InitialEvidenceValidate from "../../Validator/InitialEvidance";
 
 import api from "../../../utils/axios";
+import Attachment from "../../Attachment/Attachment";
 
 // import UploadInputAll from '../demos/UploadInputAll';
 
@@ -83,6 +87,7 @@ function Alert(props) {
 
 const ReportingAndNotification = () => {
   const [error, setError] = useState({});
+  const [evidenceError, setEvidenceError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(false);
@@ -91,13 +96,17 @@ const ReportingAndNotification = () => {
   const [reportedToObj, setReportedToObj] = useState([]);
   const [superVisorName, setSuperVisorName] = useState([]);
   const [reportedByName, setReportedByName] = useState([]);
-  const [evidence, setEvidence] = useState([])
-  const [notificationSentValue, setNotificationSentValue] = useState([])
+  const [evidence, setEvidence] = useState([]);
+  const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-  const [isNext, setIsnext] = useState(true)
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null ? JSON.parse(localStorage.getItem('userDetails')).id : null;
+  const [isNext, setIsnext] = useState(true);
+  const [evidanceId, setEvidanceId] = useState([])
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [evidanceForm, setEvidanceForm] = useState([
     {
@@ -105,7 +114,7 @@ const ReportingAndNotification = () => {
       evidenceNumber: "string",
       evidenceCategory: "Initial Evidence",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: parseInt(userId),
       updatedBy: parseInt(userId),
@@ -115,6 +124,7 @@ const ReportingAndNotification = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  const ref = useRef();
   let reportedToFilterData = [];
   let filterSuperVisorName = [];
   let filterReportedByName = [];
@@ -180,10 +190,14 @@ const ReportingAndNotification = () => {
     temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
+    try{
     const res = await api.put(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
       temp
     );
+    }catch(error){
+      setIsnext(true)
+    }
   };
 
   const handleRemoveExitingReport = async () => {
@@ -193,55 +207,11 @@ const ReportingAndNotification = () => {
         const reportId = reportedToObj[key].id;
 
         try {
+          setIsnext(false)
           const res = await api.delete(
             `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-        } catch (err) { }
-      }
-    }
-  };
-
-  // handleInitailEvidance
-  const handleInitialEvidance = async () => {
-    // Create new Evidance
-    let status = 0;
-    // check condition initial evidance is or not
-    if (
-      evidanceForm[0].evidenceDocument === "" &&
-      evidanceForm[0].evidenceRemark === ""
-    ) {
-      evidanceCkecked = true;
-    } else {
-      for (let i = 0; i < evidanceForm.length; i++) {
-        // check condition both filled is required
-        const formData = new FormData();
-        if (
-          evidanceForm[i].evidenceDocument !== "" &&
-          evidanceForm[i].evidenceRemark !== ""
-        ) {
-          formData.append("evidenceDocument", evidanceForm[i].evidenceDocument);
-          formData.append("evidenceRemark", evidanceForm[i].evidenceRemark);
-          formData.append("evidenceCheck", "Yes");
-          formData.append("evidenceCategory", "Initial Evidence ");
-          formData.append("createdBy", parseInt(userId));
-          formData.append("fkIncidentId", localStorage.getItem("fkincidentId"));
-          const evidanceResponse = await api.post(
-            `api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/evidences/`,
-            formData
-          );
-
-          status = evidanceResponse.status;
-        }
-      }
-      if (status === 201) {
-        evidanceCkecked = true;
-      } else {
-        evidanceCkecked = false;
-        await setMessage("File uploading failed! invalid document/remark");
-        await setMessageType("error");
-        await setOpen(true);
+        } catch (err) {setIsnext(true)}
       }
     }
   };
@@ -251,12 +221,15 @@ const ReportingAndNotification = () => {
     if (reportOtherData !== "") {
       if (form.reportedto.includes("Others")) {
         try {
+          await setIsnext(false)
           const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
             createdBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           });
-        } catch (err) { }
+        } catch (err) {
+          await setIsnext(true)
+        }
       }
     }
   };
@@ -264,16 +237,78 @@ const ReportingAndNotification = () => {
   // handleSubmit incident details
   const handelNext = async (e) => {
     if (isNext) {
-      setIsnext(false)
-      // handle remove existing report
-      await handleRemoveExitingReport();
-
-      // update incident details
-      await handleUpdateIncidentDetails();
+      setIsnext(false);
 
       // handle Initail evidance
-      await handleInitialEvidance();
+      // await handleInitialEvidance();
+      const { error, isValid } = InitialEvidenceValidate(evidanceForm);
+      setEvidenceError(error);
+      let evidanceChecked = isValid;
 
+      if (evidanceChecked === true) {
+        for (var key in evidanceForm) {
+          if (typeof evidanceForm[key].evidenceDocument === "string") {
+            if(evidanceId.length>0){
+              for(let i in evidanceId){
+                await api.delete(
+                  `api/v1/incidents/${localStorage.getItem(
+                    "fkincidentId"
+                  )}/evidences/${evidanceId[i]}/`)
+              }
+              
+            }
+            try {
+              await api.put(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/evidences/${evidanceForm[key].id}/`,
+                {
+                  evidenceCategory: "Initial Evidence",
+                  evidenceCheck: "Yes",
+                  evidenceNumber: "string",
+                  evidenceRemark: evidanceForm[key].evidenceRemark,
+                  status: "Active",
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                  id:evidanceForm[key].id
+                }
+              );
+            } catch (error) {
+              setIsnext(true);
+            }
+          } else {
+            try {
+              const formData = new FormData();
+              formData.append(
+                "evidenceDocument",
+                evidanceForm[key].evidenceDocument
+              );
+              formData.append(
+                "evidenceRemark",
+                evidanceForm[key].evidenceRemark
+              );
+              formData.append("evidenceCheck", "Yes");
+              formData.append("evidenceCategory", "Initial Evidence");
+              formData.append("createdBy", parseInt(userId));
+              formData.append("status", "Active");
+              formData.append(
+                "fkIncidentId",
+                localStorage.getItem("fkincidentId")
+              );
+              const evidanceResponse = await api.post(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/evidences/`,
+                formData
+              );
+            } catch (error) {
+              setIsnext(true);
+            }
+          }
+        }
+      } else {
+        setIsnext(true);
+      }
       // check initial evidance
       if (evidanceCkecked === true) {
         let status = 0;
@@ -282,11 +317,17 @@ const ReportingAndNotification = () => {
         const { error, isValid } = ReportingValidation(form, reportOtherData);
         setError(error);
 
-        if (isValid === true) {
+        if (isValid === true && evidanceChecked === true) {
+          // handle remove existing report
+          await handleRemoveExitingReport();
+
+          // update incident details
+          await handleUpdateIncidentDetails();
+
           var newData = [];
           reportedToFilterData = [];
           for (var key in reportedTo) {
-            reportedToFilterData.push(reportedTo[key].inputValue);
+            reportedToFilterData.push(reportedTo[key].inputLabel);
           }
           for (var i = 0; i < 8; i++) {
             if (reportedToFilterData.includes(form.reportedto[i])) {
@@ -311,7 +352,9 @@ const ReportingAndNotification = () => {
                 }
               );
               status = res.status;
-            } catch (err) { }
+            } catch (err) {
+              setIsnext(true);
+            }
           }
 
           // set in reportTo otherData
@@ -325,7 +368,7 @@ const ReportingAndNotification = () => {
             );
           }
         } else {
-          setIsnext(true)
+          setIsnext(true);
         }
       }
     }
@@ -361,7 +404,7 @@ const ReportingAndNotification = () => {
         evidenceNumber: "string",
         evidenceCategory: "Initial Evidence",
         evidenceRemark: "",
-        evidenceDocument: "",
+        evidenceDocument: null,
         status: "Active",
         createdBy: parseInt(userId),
         updatedBy: parseInt(userId),
@@ -382,24 +425,45 @@ const ReportingAndNotification = () => {
     const temp = [...evidanceForm];
     const { value } = e.target;
 
-
     if (fieldname === "evidenceDocument") {
-      let file = e.target.files[0].name.split(".")
+      let file = e.target.files[0].name.split(".");
 
-      if (file[1].toLowerCase() === 'jpg' || file[1].toLowerCase() === 'jpeg' || file[1].toLowerCase() === "png") {
-
+      if (
+        file[1].toLowerCase() === "jpg" ||
+        file[1].toLowerCase() === "jpeg" ||
+        file[1].toLowerCase() === "png" ||
+        file[1].toLowerCase() === "xls" ||
+        file[1].toLowerCase() === "xlsx" ||
+        file[1].toLowerCase() === "pdf" ||
+        file[1].toLowerCase() === "doc" ||
+        file[1].toLowerCase() === "word" ||
+        file[1].toLowerCase() === "ppt"
+      ) {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
+          let evdId = temp[key]["id"]
+          
+          if(evdId){
+            setEvidanceId([...evidanceId,evdId])
+          }
+         
+          
           await setMessage("File uploaded successfully!");
           await setMessageType("success");
           await setOpen(true);
         } else {
-          await setMessage("File uploading failed! Select file less than 25MB!");
+          ref.current.value = "";
+          await setMessage(
+            "File uploading failed! Select file less than 25MB!"
+          );
           await setMessageType("error");
           await setOpen(true);
         }
       } else {
-        await setMessage("Only JPG & PNG File is allowed!");
+        ref.current.value = "";
+        await setMessage(
+          "Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!"
+        );
         await setMessageType("error");
         await setOpen(true);
       }
@@ -408,8 +472,6 @@ const ReportingAndNotification = () => {
     }
 
     await setEvidanceForm(temp);
-
-
   };
 
   // handle remove evidance
@@ -421,22 +483,13 @@ const ReportingAndNotification = () => {
 
   // handle remove initial evidance from databse
 
-  const removeInitialEvidance = async (evidenceId) => {
-    const res = await api.delete(`api/v1/incidents/${id}/evidences/${evidenceId}/`)
-    if (res.status === 200) {
-      await fetchEvidanceData();
-      await setMessage("File removed successfully!");
-      await setMessageType("success");
-      await setOpen(true);
-    }
-
-  }
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
+    console.log(result)
     for (var key in result) {
-      reportedToFilterData.push(result[key].inputValue);
+      reportedToFilterData.push(result[key].inputLabel);
     }
     await setReportableTo(result);
   };
@@ -475,7 +528,7 @@ const ReportingAndNotification = () => {
       const result = res.data.data.results;
       const incidentOccuredOn = result.incidentOccuredOn;
       const start_time = new Date(incidentOccuredOn);
-      const incidentReportedOn = result.incidentReportedOn
+      const incidentReportedOn = result.incidentReportedOn;
       const end_time = new Date(incidentReportedOn);
       const diff = end_time - start_time;
       const hours = Math.floor(diff / 1000 / 60 / 60);
@@ -486,12 +539,12 @@ const ReportingAndNotification = () => {
         await SetLateReport(false);
       }
       await setIncidentsListdata(result);
-      if (filterSuperVisorName.filter(
-        (item) =>
-          item.name === result.supervisorByName
-      ).length > 0) {
-
-        await setForm({ ...form, supervisorname: "other" })
+      if (
+        filterSuperVisorName.filter(
+          (item) => item.name === result.supervisorByName
+        ).length > 0
+      ) {
+        await setForm({ ...form, supervisorname: "other" });
       }
       if (!id) {
         await setIsLoading(true);
@@ -518,7 +571,7 @@ const ReportingAndNotification = () => {
           setSuperVisorName([...result, { name: "other" }]);
         }
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const fetchReportedBy = () => {
@@ -555,7 +608,14 @@ const ReportingAndNotification = () => {
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     if (allEvidence.status === 200) {
-      const data = allEvidence.data.data.results.filter(item => item.evidenceCategory === "Initial Evidence")
+      const data = allEvidence.data.data.results.filter(
+        (item) => item.evidenceCategory === "Initial Evidence"
+      );
+      if (data.length > 0) {
+        let temp = [...evidanceForm];
+        temp = data;
+        setEvidanceForm(temp);
+      }
       await setEvidence(data);
     }
   };
@@ -563,24 +623,21 @@ const ReportingAndNotification = () => {
   // fetch value noticefication sent
   const fetchNotificationSent = async () => {
     try {
-      let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-      let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+      let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+      let projectId = JSON.parse(localStorage.getItem("projectName"))
+        .projectName.projectId;
       var config = {
-        method: 'get',
+        method: "get",
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
-        headers: HEADER_AUTH
+        headers: HEADER_AUTH,
       };
-      console.log(config)
-      const res = await api(config)
+      const res = await api(config);
       if (res.status === 200) {
-        const result = res.data.data.results
-        setNotificationSentValue(result)
+        const result = res.data.data.results;
+        setNotificationSentValue(result);
       }
-      console.log(res.data.data.results)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+    } catch (error) {}
+  };
 
   // handle go back
   const handleGoBack = () => {
@@ -609,16 +666,16 @@ const ReportingAndNotification = () => {
   };
   // handle file name
   const handelFileName = (value) => {
-    const fileNameArray = value.split('/')
-    const fileName = fileNameArray[fileNameArray.length - 1]
-    return fileName
-  }
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    return fileName;
+  };
 
   useEffect(() => {
     fetchSuperVisorName();
     fetchReportedBy();
     fetchIncidentsData();
-    fetchNotificationSent()
+    fetchNotificationSent();
     if (id) {
       fetchReportsDataList();
       fetchEvidanceData();
@@ -646,12 +703,12 @@ const ReportingAndNotification = () => {
                     <FormControlLabel
                       id={key}
                       key={key}
-                      value={value.inputValue}
+                      value={value.inputLabel}
                       control={<Checkbox />}
-                      label={value.inputValue}
-                      checked={!!form.reportedto.includes(value.inputValue)}
+                      label={value.inputLabel}
+                      checked={!!form.reportedto.includes(value.inputLabel)}
                       onChange={(e) => {
-                        handelReportedTo(e, value.inputValue, "option");
+                        handelReportedTo(e, value.inputLabel, "option");
                       }}
                     />
                   ))}
@@ -682,11 +739,7 @@ const ReportingAndNotification = () => {
             ) : null}
 
             <Grid item lg={12} md={6} sm={6}>
-              <FormControl
-                component="fieldset"
-              // required
-              // error={error && error.isnotificationsent}
-              >
+              <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Notification to be sent?
                 </FormLabel>
@@ -712,54 +765,58 @@ const ReportingAndNotification = () => {
                 <Typography variant="h6" gutterBottom>
                   Initial evidences
                 </Typography>
+                <Typography variant="caption">
+                  Only PDF,PNG,JPEG,JPG,Excel,Xls,Doc,Word & PPT files are
+                  supported
+                </Typography>
               </Box>
 
-              {evidence.length > 0 ? evidence.map((item, index) => (
-                <Grid container item md={12} spacing={3} alignItems="center">
-                  <Grid item md={5}>
-                    <a href={`${item.evidenceDocument}`} target='_blank'>{handelFileName(item.evidenceDocument)}</a>
-                  </Grid>
-                  <Grid item md={6}>
-                    <TextField
-                      id="evidanceRemark"
-                      size="small"
-                      variant="outlined"
-                      label="Evidences remark"
-                      className={classes.formControl}
-                      disabled={true}
-                      value={item.evidenceRemark}
-                    />
-                  </Grid>
-                  <Grid item md={1}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={() => removeInitialEvidance(item.id)}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              )) : null}
               {evidanceForm.map((item, index) => (
                 <Grid container item md={12} spacing={3} alignItems="center">
-                  <Grid item md={5}>
+                  <Grid
+                    item
+                    md={typeof item.evidenceDocument === "string" ? 2 : 6}
+                  >
                     <input
+                      ref={ref}
+                      id="file"
                       type="file"
-                      accept=".jpg, .jpeg, .png"
+                      accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                      style={{
+                        color:
+                          typeof item.evidenceDocument === "string" &&
+                          "transparent",
+                      }}
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceDocument")
                       }
-                      showPreviews
                     />
                   </Grid>
-                  <Grid item md={6}>
+                  {typeof item.evidenceDocument === "string" ? (
+                    <Grid item md={4}>
+                      <Tooltip title={"fileName"}>
+                        <Attachment value={item.evidenceDocument} />
+                      </Tooltip>
+                    </Grid>
+                  ) : null}
+                  <Grid item md={4}>
                     <TextField
                       id="evidanceRemark"
                       size="small"
                       variant="outlined"
                       label="Evidences remark"
+                      error={
+                        evidenceError &&
+                        evidenceError[`evidenceRemark${[index]}`]
+                      }
+                      helperText={
+                        evidenceError &&
+                        evidenceError[`evidenceRemark${[index]}`]
+                          ? evidenceError[`evidenceRemark${[index]}`]
+                          : null
+                      }
                       className={classes.formControl}
+                      value={item.evidenceRemark}
                       onChange={(e) =>
                         handleEvidanceForm(e, index, "evidenceRemark")
                       }
@@ -769,25 +826,28 @@ const ReportingAndNotification = () => {
                     <IconButton
                       variant="contained"
                       color="primary"
-                      onClick={() => handleRemoveEvidance(index)}
+                      className={classes.button}
+                      onClick={(e) => handleNewEvidance(e)}
                     >
-                      <DeleteForeverIcon />
+                      <AddCircleIcon />
                     </IconButton>
+                  </Grid>
+
+                  <Grid item md={1}>
+                    {evidanceForm.length > 1 ? (
+                      <IconButton
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleRemoveEvidance(index)}
+                      >
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    ) : null}
                   </Grid>
                 </Grid>
               ))}
               {error && error.fileupload ? <p>{error.fileupload}</p> : null}
-              <Grid item md={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddCircleIcon />}
-                  className={classes.button}
-                  onClick={(e) => handleNewEvidance(e)}
-                >
-                  Add
-                </Button>
-              </Grid>
+
               <Snackbar
                 open={open}
                 autoHideDuration={6000}
@@ -804,7 +864,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-              // error={error && error.reportedby}
+                // error={error && error.reportedby}
               >
                 <InputLabel id="supervisorname-label">
                   Supervisor name
@@ -818,11 +878,11 @@ const ReportingAndNotification = () => {
                     incidentsListData.supervisorByName === ""
                       ? ""
                       : superVisorName.filter(
-                        (item) =>
-                          item.name === incidentsListData.supervisorByName
-                      ).length > 0
-                        ? incidentsListData.supervisorByName
-                        : ""
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
+                      ? incidentsListData.supervisorByName
+                      : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -854,9 +914,7 @@ const ReportingAndNotification = () => {
                     ? ""
                     : incidentsListData.supervisorByName
                 }
-                disabled={
-                  form.supervisorname !== "other"
-                }
+                disabled={form.supervisorname !== "other"}
                 className={classes.formControl}
                 onChange={(e) => {
                   setForm({
@@ -874,7 +932,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-              // error={error && error.reportedby}
+                // error={error && error.reportedby}
               >
                 <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
@@ -885,12 +943,12 @@ const ReportingAndNotification = () => {
                     incidentsListData.incidentReportedByName === ""
                       ? ""
                       : reportedByName.filter(
-                        (item) =>
-                          item.name ===
-                          incidentsListData.incidentReportedByName
-                      ).length > 0
-                        ? incidentsListData.incidentReportedByName
-                        : ""
+                          (item) =>
+                            item.name ===
+                            incidentsListData.incidentReportedByName
+                        ).length > 0
+                      ? incidentsListData.incidentReportedByName
+                      : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -919,16 +977,14 @@ const ReportingAndNotification = () => {
                   incidentsListData.incidentReportedByName === ""
                     ? ""
                     : reportedByName.filter(
-                      (item) =>
-                        item.name === incidentsListData.incidentReportedByName
-                    ).length > 0
-                      ? ""
-                      : incidentsListData.incidentReportedByName
+                        (item) =>
+                          item.name === incidentsListData.incidentReportedByName
+                      ).length > 0
+                    ? ""
+                    : incidentsListData.incidentReportedByName
                 }
                 className={classes.formControl}
-                disabled={
-                  form.reportedby !== "other"
-                }
+                disabled={form.reportedby !== "other"}
                 onChange={(e) => {
                   setForm({
                     ...form,

@@ -1,9 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Paper from "@material-ui/core/Paper";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -15,10 +12,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
-import FormHeader from "../FormHeader";
 import FormSideBar from "../FormSideBar";
 import {
   ROOT_CAUSE_ANALYSIS_FORM,
@@ -44,13 +40,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HazardiousCondition = () => {
-
   const [form, setForm] = useState({
-    warningSystem: { remarkType: "options", rcaSubType: "warningSystem", rcaRemark: [] },
-    energyTypes: { remarkType: "options", rcaSubType: "energyTypes", rcaRemark: [] },
+    warningSystem: {
+      remarkType: "options",
+      rcaSubType: "warningSystem",
+      rcaRemark: [],
+    },
+    energyTypes: {
+      remarkType: "options",
+      rcaSubType: "energyTypes",
+      rcaRemark: [],
+    },
     tools: { remarkType: "options", rcaSubType: "tools", rcaRemark: [] },
-    safetyitems: { remarkType: "options", rcaSubType: "safetyItems", rcaRemark: [] },
-    others: { remarkType: "remark", rcaSubType: "othersConditions", rcaRemark: "" },
+    safetyitems: {
+      remarkType: "options",
+      rcaSubType: "safetyItems",
+      rcaRemark: [],
+    },
+    others: {
+      remarkType: "remark",
+      rcaSubType: "othersConditions",
+      rcaRemark: "",
+    },
   });
 
   const putId = useRef("");
@@ -63,13 +74,13 @@ const HazardiousCondition = () => {
   const checkPost = useRef();
 
   const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value]
+    let remark = value.includes(",") ? value.split(",") : [value];
     if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected")
-      remark.splice(removeItemIndex, 1)
+      let removeItemIndex = remark.indexOf("No option selected");
+      remark.splice(removeItemIndex, 1);
     }
-    return remark
-  }
+    return remark;
+  };
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -253,7 +264,10 @@ const HazardiousCondition = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
+          rcaRemark:
+            api_data["rcaRemark"].toString() !== ""
+              ? api_data["rcaRemark"].toString()
+              : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Immediate",
           remarkType: api_data["remarkType"],
@@ -265,7 +279,10 @@ const HazardiousCondition = () => {
         let temp = {
           createdBy: "0",
           fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
+          rcaRemark:
+            api_data["rcaRemark"].toString() !== ""
+              ? api_data["rcaRemark"].toString()
+              : "No option selected",
           rcaSubType: api_data["rcaSubType"],
           rcaType: "Immediate",
           remarkType: api_data["remarkType"],
@@ -283,7 +300,9 @@ const HazardiousCondition = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
+            `/api/v1/incidents/${putId.current}/pacecauses/${
+              callObjects[key].pk
+            }/`,
             callObjects[key]
           );
           if (res.status == 200) {
@@ -308,7 +327,9 @@ const HazardiousCondition = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current}`
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
+          putId.current
+        }`
       );
     }
     // api call //
@@ -329,7 +350,9 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current}`
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+          putId.current
+        }`
       );
     } else if (isNaN(putId.current)) {
       history.push(
@@ -346,6 +369,8 @@ const HazardiousCondition = () => {
   useEffect(() => {
     habelCallback();
   }, []);
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock
@@ -373,9 +398,7 @@ const HazardiousCondition = () => {
           </Grid>
 
           <Grid item md={12}>
-            <FormControl
-              component="fieldset"
-            >
+            <FormControl component="fieldset">
               <FormLabel component="legend">Warning system</FormLabel>
               <FormGroup>
                 {WARNINGSYSTEM.map((value) => (
@@ -387,17 +410,13 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* energy types */}
           <Grid item md={12}>
-            <FormControl
-              component="fieldset"
-
-            >
+            <FormControl component="fieldset">
               <FormLabel component="legend">Energy types</FormLabel>
               <FormGroup>
                 {ENERGIES.map((value) => (
@@ -409,16 +428,13 @@ const HazardiousCondition = () => {
                   />
                 ))}
               </FormGroup>
-
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           {/* tools */}
           <Grid item md={12}>
-            <FormControl
-              component="fieldset"
-            >
+            <FormControl component="fieldset">
               <FormLabel component="legend">Tools</FormLabel>
               <FormGroup>
                 {TOOLS.map((value) => (
@@ -436,9 +452,7 @@ const HazardiousCondition = () => {
 
           {/* safety items */}
           <Grid item md={12}>
-            <FormControl
-              component="fieldset"
-            >
+            <FormControl component="fieldset">
               <FormLabel component="legend">Saftey items</FormLabel>
               <FormGroup>
                 {CONDITIONSAFETYITEMS.map((value) => (
@@ -461,7 +475,11 @@ const HazardiousCondition = () => {
               label="Others"
               multiline
               error={error.others}
-              value={form.others.rcaRemark !== "No option selected" ? form.others.rcaRemark : ""}
+              value={
+                form.others.rcaRemark !== "No option selected"
+                  ? form.others.rcaRemark
+                  : ""
+              }
               helperText={error ? error.others : null}
               rows={3}
               className={classes.formControl}
@@ -490,12 +508,14 @@ const HazardiousCondition = () => {
             </Box>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem="Hazardous conditions"
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem="Hazardous conditions"
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );

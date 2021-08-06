@@ -14,6 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import FormLabel from "@material-ui/core/FormLabel";
 import { PapperBlock } from "dan-components";
 import { FormHelperText } from "@material-ui/core";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
@@ -294,13 +295,13 @@ const PersonalAndPpeDetails = () => {
       setIsLoading(true);
     }
   }, []);
-
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Personal and PPE Details" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number
               </Typography>
@@ -312,7 +313,7 @@ const PersonalAndPpeDetails = () => {
               <>
                 {ppeData.slice(0, 4).map((value, index) => (
                   <>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
@@ -344,14 +345,14 @@ const PersonalAndPpeDetails = () => {
                     </Grid>
                   </>
                 ))}
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">Supervisor</Typography>
                   </Box>
                 </Grid>
                 {ppeData.slice(4, 9).map((value, index) => (
                   <>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         component="fieldset"
                         required
@@ -382,14 +383,14 @@ const PersonalAndPpeDetails = () => {
                     </Grid>
                   </>
                 ))}
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">Flag Person</Typography>
                   </Box>
                 </Grid>
                 {ppeData.slice(9, 12).map((value, index) => (
                   <>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         component="fieldset"
                         className={classes.formControl}
@@ -422,14 +423,14 @@ const PersonalAndPpeDetails = () => {
                   </>
                 ))}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">Other</Typography>
                   </Box>
                 </Grid>
                 {ppeData.slice(12, 14).map((value, index) => (
                   <>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         component="fieldset"
                         required
@@ -464,7 +465,7 @@ const PersonalAndPpeDetails = () => {
               </>
             ) : (
               <>
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -489,10 +490,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>PPE in good shape</p> */}
-
-                  {/* <InputLabel id="demo-simple-select-label">Age</InputLabel> */}
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -517,8 +515,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>PPE Proper fit</p> */}
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -543,9 +540,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>PPE appropriate for task</p> */}
-
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -576,7 +571,7 @@ const PersonalAndPpeDetails = () => {
                   <Typography variant="h6">Supervision</Typography>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -603,7 +598,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -630,7 +625,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -657,7 +652,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     required
                     component="fieldset"
@@ -684,7 +679,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -710,13 +705,13 @@ const PersonalAndPpeDetails = () => {
                     </RadioGroup>
                   </FormControl>
                 </Grid>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">Flag person</Typography>
                   </Box>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -743,7 +738,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -772,7 +767,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -800,13 +795,13 @@ const PersonalAndPpeDetails = () => {
                     </RadioGroup>
                   </FormControl>
                 </Grid>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                     <Typography variant="h6">Other</Typography>
                   </Box>
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     required
@@ -833,9 +828,7 @@ const PersonalAndPpeDetails = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6}>
-                  {/* <p>Was person in the line of fire</p> */}
-
+                <Grid item xs={12} md={6}>
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
@@ -863,7 +856,7 @@ const PersonalAndPpeDetails = () => {
                 </Grid>
               </>
             )}
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -882,13 +875,15 @@ const PersonalAndPpeDetails = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={EVIDENCE_FORM}
-              selectedItem="Personal and PPE details"
-              deleteForm={[1, 2, 3]}
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={EVIDENCE_FORM}
+                selectedItem="Personal and PPE details"
+                deleteForm={[1, 2, 3]}
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

@@ -1,47 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { AccessAlarm, ThreeDRotation } from "@material-ui/icons";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
-import Link from "@material-ui/core/Link";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
@@ -183,6 +157,7 @@ const BasicCauseAndAction = () => {
     fetchIncidentDetails();
     handelShowData();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   const classes = useStyles();
   return (
     <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
@@ -273,12 +248,15 @@ const BasicCauseAndAction = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Basic cause and action"}
-          />
-        </Grid>
+        {
+          isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Basic cause and action"}
+              />
+            </Grid>
+          )}
       </Grid>
     </PapperBlock>
   );

@@ -1,31 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import { PapperBlock } from "dan-components";
 import { FormHelperText, FormLabel } from "@material-ui/core";
-
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import {
-  INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
 } from "../../../utils/constants";
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
-
 import FormSideBar from "../FormSideBar";
-import FormHeader from "../FormHeader";
-
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,26 +44,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EnvironmentAffected = () => {
-  const reportedTo = [
-    "Internal Leadership",
-    "Police",
-    "Environment Officer",
-    "OHS",
-    "Mital Aid",
-    "Other",
-  ];
-
-  const notificationSent = ["Manage", "SuperVisor"];
-  const selectValues = [1, 2, 3, 4];
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const radioDecide = ["Yes", "No", "N/A"];
 
   const classes = useStyles();
   const history = useHistory();
@@ -89,16 +62,11 @@ const EnvironmentAffected = () => {
   const [envComments, setEnvComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isNext, setIsNext] = useState(true)
   const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
 
   const nextPath = localStorage.getItem("nextPath");
-
-  const questionMap = useRef({
-    "Were there any spills?": "Details of spills affected",
-    "Were there any release?": "Details of release affected",
-    "Were there any impact on wildlife?": "Details of wildlife affected",
-    "Were there any waterbody affected?": "Details of waterbody affected",
-  });
+  
   const [form, setForm] = useState([
     {
       envQuestion: "Were there any spills?",
@@ -138,8 +106,8 @@ const EnvironmentAffected = () => {
     const temp = form;
     const { value } = e.target;
     temp[key][fieldname] = value;
-    if (temp[key]["envQuestionOption"] !== "Yes") {
-      temp[key]["envAnswerDetails"] = temp[key]["envQuestionOption"];
+    if (temp[key].envQuestionOption !== "Yes") {
+      temp[key].envAnswerDetails = temp[key].envQuestionOption;
     }
     setForm(temp);
   };
@@ -149,8 +117,8 @@ const EnvironmentAffected = () => {
     const temp = [...environmentListData];
     const { value } = e.target;
     temp[key][fieldname] = value;
-    if (temp[key]["envQuestionOption"] !== "Yes") {
-      temp[key]["envAnswerDetails"] = temp[key]["envQuestionOption"];
+    if (temp[key].envQuestionOption !== "Yes") {
+      temp[key].envAnswerDetails = temp[key].envQuestionOption;
     }
     temp[key].updatedBy = parseInt(userId);
     temp[key].updatedAt = moment(new Date()).toISOString();
@@ -164,7 +132,7 @@ const EnvironmentAffected = () => {
       setError(error);
       if (isValid) {
         try {
-          for (var i = 0; i < environmentListData.length; i++) {
+          for (let i = 0; i < environmentListData.length; i++) {
             const res = await api.put(
               `api/v1/incidents/${id}/environment/${
                 environmentListData[i].id
@@ -174,8 +142,8 @@ const EnvironmentAffected = () => {
           }
         } catch (error) {}
         const temp = incidentsListData;
-        temp["updatedAt"] = moment(new Date()).toISOString();
-        temp["enviromentalImpactComments"] =
+        temp.updatedAt = moment(new Date()).toISOString();
+        temp.enviromentalImpactComments =
           envComments || incidentsListData.enviromentalImpactComments;
         try {
           await api.put(
@@ -201,8 +169,8 @@ const EnvironmentAffected = () => {
             );
           }
           const temp = incidentsListData;
-          temp["updatedAt"] = moment(new Date()).toISOString();
-          temp["enviromentalImpactComments"] =
+          temp.updatedAt = moment(new Date()).toISOString();
+          temp.enviromentalImpactComments =
             envComments || incidentsListData.enviromentalImpactComments;
 
           const res = await api.put(
@@ -256,12 +224,14 @@ const EnvironmentAffected = () => {
       await setIsLoading(true);
     }
   };
+
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
+    await setEnvComments(result.enviromentalImpactComments)
     if (!id) {
       setIsLoading(true);
     }
@@ -300,17 +270,20 @@ const EnvironmentAffected = () => {
     }
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
     <PapperBlock title="Environment Impact" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
+          <Grid container item xs={12} md={9} spacing={3}>
             {environmentListData.length !== 0 ? (
               environmentListData.map((env, key) => (
-                <Grid container item spacing={3} md={12} key={key}>
-                  <Grid item md={6}>
+                <Grid container item spacing={3} xs={12} key={key}>
+                  <Grid item xs={12} md={6}>
                     <FormControl
                       component="fieldset"
+                      required
                       error={error && error[`envAnswerDetails${[key]}`]}
                       helperText={
                         error && error[`envAnswerDetails${[key]}`]
@@ -346,7 +319,8 @@ const EnvironmentAffected = () => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-                  <Grid item md={12}>
+
+                  <Grid item xs={12}>
                     {env.envQuestionOption === "Yes" ? (
                       <TextField
                         id={`waterbody-details-update-${key + 1}`}
@@ -354,6 +328,7 @@ const EnvironmentAffected = () => {
                         rows="3"
                         variant="outlined"
                         label={`Details of ${env.envQuestion.slice(14, -1)}`}
+                        required
                         error={error && error[`envAnswerDetails${[key]}`]}
                         helperText={
                           error && error[`envAnswerDetails${[key]}`]
@@ -377,13 +352,12 @@ const EnvironmentAffected = () => {
               ))
             ) : (
               <>
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
                     error={error && error[`envQuestionOption${[0]}`]}
                   >
-                   
                     <FormLabel component="legend">
                       Were there any spills?
                     </FormLabel>
@@ -417,11 +391,12 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isspills == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="spills-details"
                       variant="outlined"
                       label="Details of spills"
+                      required
                       error={error && error[`envAnswerDetails${[0]}`]}
                       helperText={
                         error && error[`envAnswerDetails${[0]}`]
@@ -438,7 +413,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -477,12 +452,13 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isrelase == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="release-details"
                       multiline
                       variant="outlined"
                       error={error && error[`envAnswerDetails${[1]}`]}
+                      required
                       helperText={
                         error && error[`envAnswerDetails${[1]}`]
                           ? error[`envAnswerDetails${[1]}`]
@@ -498,7 +474,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -538,12 +514,13 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {isWildlife == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="details-of-Wildlife-Affected"
                       multiline
                       rows="3"
                       variant="outlined"
+                      required
                       error={error && error[`envAnswerDetails${[2]}`]}
                       helperText={
                         error && error[`envAnswerDetails${[2]}`]
@@ -559,7 +536,7 @@ const EnvironmentAffected = () => {
                   </Grid>
                 ) : null}
 
-                <Grid item md={12}>
+                <Grid item xs={12}>
                   <FormControl
                     component="fieldset"
                     required
@@ -599,13 +576,14 @@ const EnvironmentAffected = () => {
                 </Grid>
 
                 {iswaterbody == "Yes" ? (
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="waterbody-details"
                       multiline
                       rows="3"
                       variant="outlined"
                       error={error && error[`envAnswerDetails${[3]}`]}
+                      required
                       helperText={
                         error && error[`envAnswerDetails${[3]}`]
                           ? error[`envAnswerDetails${[3]}`]
@@ -622,7 +600,7 @@ const EnvironmentAffected = () => {
               </>
             )}
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 id="comment-if-any-environment"
                 multiline
@@ -630,19 +608,17 @@ const EnvironmentAffected = () => {
                 rows="3"
                 label="Comment if any"
                 className={classes.fullWidth}
-                defaultValue={incidentsListData.enviromentalImpactComments}
+                value={envComments ||""}
                 onChange={(e) => setEnvComments(e.target.value)}
               />
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={() => handleBack()}
-                // onClick={() => history.goBack()}
-                // href="/app/incident-management/registration/initial-notification/peoples-afftected/"
               >
                 Previous
               </Button>
@@ -656,12 +632,14 @@ const EnvironmentAffected = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Environment affected"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Environment affected"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

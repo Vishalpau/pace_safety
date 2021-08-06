@@ -18,10 +18,13 @@ import { useHistory, useParams } from "react-router-dom";
 import api from "../../../utils/axios";
 import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
 import { FormHelperText } from "@material-ui/core";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
@@ -127,16 +130,15 @@ const ActivityDetails = () => {
       error: "",
     },
   ]);
-  
+
   const fetchActivityList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
     if (result.length) {
       await setActvityList(result);
     }
-      await setIsLoading(true);
+    await setIsLoading(true);
   };
-
 
   const fetchActivityData = async () => {
     const res = await api.get(
@@ -144,14 +146,13 @@ const ActivityDetails = () => {
     );
     const result = res.data.data.results;
     if (result.length) {
-      let temp = [...activtyList]
-      temp = result
-      await setActvityList(temp);    
+      let temp = [...activtyList];
+      temp = result;
+      await setActvityList(temp);
     }
-    if(!id){
-      setIsLoading(true)
+    if (!id) {
+      setIsLoading(true);
     }
-    
   };
 
   const handleNext = async () => {
@@ -160,7 +161,7 @@ const ActivityDetails = () => {
     if (!isValid) {
       return;
     }
-    if (id && activtyList.length > 0  &&  activtyList[0].id) {
+    if (id && activtyList.length > 0 && activtyList[0].id) {
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
         activtyList
@@ -220,16 +221,16 @@ const ActivityDetails = () => {
     fetchIncidentDetails();
     if (id) {
       fetchActivityList();
-    } 
+    }
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
       {isLoading ? (
-        
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number
               </Typography>
@@ -242,7 +243,7 @@ const ActivityDetails = () => {
                 {Object.entries(activtyList)
                   .slice(0, 7)
                   .map(([key, value]) => (
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <FormControl
                         component="fieldset"
                         required
@@ -268,7 +269,7 @@ const ActivityDetails = () => {
                             />
                           ))}
                         </RadioGroup>
-​
+                        ​
                         {value.error ? (
                           <FormHelperText>{value.error}</FormHelperText>
                         ) : null}
@@ -282,10 +283,7 @@ const ActivityDetails = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-
-                onClick={() => {if(id){history.push(`/app/incident-management/registration/evidence/evidence/${id}`)
-
-                }else{ history.push(`/app/incident-management/registration/evidence/evidence/`)}}}
+                onClick={() => {history.push(`/app/incident-management/registration/evidence/evidence/${localStorage.getItem('fkincidentId')}`)}}
                 // href="/app/incident-management/registration/evidence/evidence/"
               >
                 Previous
@@ -301,13 +299,15 @@ const ActivityDetails = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={EVIDENCE_FORM}
-              selectedItem="Activity details"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={EVIDENCE_FORM}
+                selectedItem="Activity details"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

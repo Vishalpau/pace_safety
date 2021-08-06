@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -8,12 +8,10 @@ import FormControl from "@material-ui/core/FormControl";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import {
-  DateTimePicker,
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
 } from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
+
 import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -22,13 +20,15 @@ import Select from "@material-ui/core/Select";
 import FormLabel from "@material-ui/core/FormLabel";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
-import { RCAOPTION } from "../../../utils/constants";
+
 import Type from "../../../styles/components/Fonts.scss";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -55,7 +55,8 @@ const RootCauseAnalysis = () => {
     status: "Active",
     createdBy: 0,
     updatedBy: 0,
-    fkIncidentId: putId.current || parseInt(localStorage.getItem("fkincidentId")),
+    fkIncidentId:
+      putId.current || parseInt(localStorage.getItem("fkincidentId")),
   });
 
   const [error, setError] = useState({});
@@ -64,17 +65,44 @@ const RootCauseAnalysis = () => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
-  const checkPost = useRef()
+  const checkPost = useRef();
   const pkValue = useRef("");
+  const investigationData = useRef({});
+  const classificationValues = useRef([]);
 
   const handelUpdateCheck = async () => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
-    let allApiData = previousData.data.data.results[0];
+    const page_url = window.location.href;
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    const incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+    const previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/rootcauses/`
+    );
+    const allApiData = previousData.data.data.results[0];
 
-    if (!isNaN(allApiData.id)) {
+    const investigationpreviousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
+    const investigationApiData = investigationpreviousData.data.data.results[0];
+    if (investigationApiData != null) {
+      if (investigationApiData.rcaRecommended != "") {
+        setForm({
+          ...form,
+          rcaRecommended: investigationApiData.rcaRecommended,
+        });
+      }
+
+      investigationData.current = {
+        startData: investigationApiData.srartDate,
+        endDate: investigationApiData.endDate,
+        classification: investigationApiData.classification,
+      };
+    }
+
+    if (allApiData !== undefined && !isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
       setForm({
         ...form,
@@ -84,13 +112,19 @@ const RootCauseAnalysis = () => {
         recommendSolution: allApiData.recommendSolution,
       });
       putId.current = incidentId;
-      checkPost.current = false
+      checkPost.current = false;
     }
+    classificationValues.current = await PickListData(40);
+    2;
   };
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${putId.current !== "" ? putId.current : localStorage.getItem("fkincidentId")}/`
+      `api/v1/incidents/${
+        putId.current !== ""
+          ? putId.current
+          : localStorage.getItem("fkincidentId")
+      }/`
     );
     await setIncidents(allIncidents.data.data.results);
   };
@@ -117,7 +151,7 @@ const RootCauseAnalysis = () => {
           nextPageLink = res.status;
         }
       } else {
-        form["pk"] = pkValue.current;
+        form.pk = pkValue.current;
         const res = await api.put(
           `/api/v1/incidents/${putId.current}/rootcauses/${pkValue.current}/`,
           form
@@ -134,7 +168,8 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${putId.current
+          `/app/incident-management/registration/summary/summary/${
+            putId.current
           }`
         );
       }
@@ -145,28 +180,29 @@ const RootCauseAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/`
+        "/app/incident-management/registration/root-cause-analysis/details/"
       );
     }
-
-  }
+  };
 
   useEffect(() => {
     handelUpdateCheck();
     setTimeout(fetchIncidentData(), 1000);
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
+
   return (
-    <PapperBlock title="Root Cause Analysis" icon="ion-md-list-box">
-      {console.log(incidents.incidentOccuredOn)}
+    <PapperBlock title="Cause Analysis" icon="ion-md-list-box">
       <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={12}>
+        <Grid container item xs={12} md={9} spacing={3}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -175,7 +211,7 @@ const RootCauseAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident description
             </Typography>
@@ -184,7 +220,7 @@ const RootCauseAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item lg={6} md={12} sm={12}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 label="Investigation start date"
@@ -199,7 +235,7 @@ const RootCauseAnalysis = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 label="Investigation end date"
@@ -215,7 +251,7 @@ const RootCauseAnalysis = () => {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">RCA recommended</InputLabel>
               <Select
@@ -223,7 +259,7 @@ const RootCauseAnalysis = () => {
                 labelId="project-name-label"
                 label="RCA recommended"
                 disabled
-                value="Root cause analysis"
+                value="Cause analysis"
               >
                 {RCAOPTION.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
@@ -232,37 +268,44 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="project-name-label">
-                Level of investigation
+                Level of classification
               </InputLabel>
               <Select
                 id="project-name"
                 labelId="project-name-label"
                 label="Level of investigation"
                 disabled
+                value={
+                  typeof investigationData.current.classification !==
+                  "undefined"
+                    ? investigationData.current.classification
+                    : ""
+                }
               >
-                {selectValues.map((selectValues) => (
+                {classificationValues.current.map((selectValues) => (
                   <MenuItem value={selectValues}>{selectValues}</MenuItem>
                 ))}
-
               </Select>
             </FormControl>
           </Grid>
 
-          <Grid item lg={6} md={12} sm={12}>
+          <Grid item xs={12}>
             <TextField
               variant="outlined"
               label="Incident date and time"
               className={classes.formControl}
               id="filled-basic"
-              value={moment(incidents.incidentOccuredOn).format('MM/DD/YYYY , h:mm:ss a')}
+              value={moment(incidents.incidentOccuredOn).format(
+                "MM/DD/YYYY , h:mm:ss a"
+              )}
               disabled
             />
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 label="Analysis conduted by"
@@ -276,7 +319,7 @@ const RootCauseAnalysis = () => {
               />
             </MuiPickersUtilsProvider>
           </Grid>
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <TextField
               className={classes.formControl}
               id="filled-basic"
@@ -294,7 +337,7 @@ const RootCauseAnalysis = () => {
             />
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <TextField
               id="filled-basic"
               className={classes.formControl}
@@ -312,7 +355,7 @@ const RootCauseAnalysis = () => {
             />
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">
                 Would corrective actions prevent simailar incidents in future?*
@@ -337,8 +380,8 @@ const RootCauseAnalysis = () => {
             </FormControl>
           </Grid>
 
-          {form.wouldItPreventIncident === "No" ?
-            <Grid item md={12}>
+          {form.wouldItPreventIncident === "No" ? (
+            <Grid item xs={12}>
               <TextField
                 className={classes.formControl}
                 id="filled-basic"
@@ -354,10 +397,9 @@ const RootCauseAnalysis = () => {
                 }
               />
             </Grid>
-            : null}
+          ) : null}
 
-
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -376,12 +418,14 @@ const RootCauseAnalysis = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem="Root cause analysis"
-          />
-        </Grid>
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem="Cause analysis"
+            />
+          </Grid>
+        )}
       </Grid>
     </PapperBlock>
   );
