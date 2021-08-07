@@ -465,7 +465,7 @@ const IncidentDetails = () => {
         // const user = localStorage.getItem({})
         // set right sidebar value
         if (result.isEnviromentalImpacted !== "Yes") {
-          hideAffect.push("Environment affected");
+          hideAffect.push("Enviroment Impact");
         }
         if (result.isEquipmentDamaged !== "Yes") {
           hideAffect.push("Equipment affected");
@@ -978,7 +978,7 @@ const IncidentDetails = () => {
                     });
                     handleHideAffect(
                       e.target.value,
-                      "Environment affected",
+                      "Enviroment Impact",
                       "environmentAffect"
                     );
                     setNextPath({

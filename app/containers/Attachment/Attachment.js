@@ -35,12 +35,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const Attachment = ({ value }) => {
-  const [open, setOpen] = useState(false);
-  const classes = useStyles();
-  const fileNameArray = value.split("/");
-  const fileName = fileNameArray[fileNameArray.length - 1];
-  let extension = fileName.split(".");
-  console.log(extension);
+    const [open, setOpen] = useState(false)
+    const classes = useStyles();
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    let extension = fileName.split(".");
+    
 
   if (extension[1].toLowerCase() === "pdf") {
     return (

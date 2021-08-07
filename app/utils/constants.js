@@ -41,7 +41,7 @@ export const INITIAL_NOTIFICATION_FORM = {
   "Equipment affected": `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem(
     "fkincidentId"
   )}`,
-  "Environment impact": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
+  "Enviroment Impact": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
     "fkincidentId"
   )}`,
   "Reporting and notification": `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem(
