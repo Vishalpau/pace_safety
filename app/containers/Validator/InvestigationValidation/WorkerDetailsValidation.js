@@ -12,11 +12,11 @@ function WorkerDetailValidator(data) {
   }
 
   if (validator.isEmpty(data.workerType.toString())) {
-    error.workerType = "please enter worker type";
+    error.workerType = "please select worker type";
     isValid = false;
   }
   if (validator.isEmpty(data.department.toString())) {
-    error.department = "please enter department";
+    error.department = "please select department";
     isValid = false;
   }
 

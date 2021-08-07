@@ -29,6 +29,8 @@ import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysis
 
 import Type from "../../../styles/components/Fonts.scss";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import { checkValue } from "../../../utils/CheckerValue"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -120,10 +122,9 @@ const RootCauseAnalysis = () => {
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${
-        putId.current !== ""
-          ? putId.current
-          : localStorage.getItem("fkincidentId")
+      `api/v1/incidents/${putId.current !== ""
+        ? putId.current
+        : localStorage.getItem("fkincidentId")
       }/`
     );
     await setIncidents(allIncidents.data.data.results);
@@ -168,8 +169,7 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -180,8 +180,7 @@ const RootCauseAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -269,27 +268,12 @@ const RootCauseAnalysis = () => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">
-                Level of classification
-              </InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Level of investigation"
-                disabled
-                value={
-                  typeof investigationData.current.classification !==
-                  "undefined"
-                    ? investigationData.current.classification
-                    : ""
-                }
-              >
-                {classificationValues.current.map((selectValues) => (
-                  <MenuItem value={selectValues}>{selectValues}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Typography variant="h6" className={Type.labelName} gutterBottom>
+              Level of classification
+            </Typography>
+            <Typography className={Type.labelValue}>
+              {checkValue(investigationData.current["classification"])}
+            </Typography>
           </Grid>
 
           <Grid item xs={12}>

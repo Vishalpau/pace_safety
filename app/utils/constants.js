@@ -87,13 +87,15 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
   "Hazardous conditions":
     "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/",
-  "Cause and action":
+  "Corrective actions":
     "/app/incident-management/registration/root-cause-analysis/cause-and-action/",
   "Basic cause":
     "/app/incident-management/registration/root-cause-analysis/basic-cause/",
-  "Basic cause and action":
+  "PACE Management control":
+    "/app/incident-management/registration/root-cause-analysis/pace-management/",
+  "Preventive actions":
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",
-  "Corrective actions":
+  "Additional information":
     "/app/incident-management/registration/root-cause-analysis/management-control/",
   "Cause analysis":
     "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/",
@@ -152,6 +154,13 @@ export const BASIC_CAUSE_SUB_TYPES = [
   "processes",
   "othersJobFactors",
 ];
+
+export const PACE_MANAGEMENT_CONTROL_SUB_TYPES = [
+  "ProActiveManagement",
+  "Assessments",
+  "Compilance",
+  "Engagement",
+]
 
 // option in root cause and anlysis
 
@@ -307,3 +316,34 @@ export const HIGHESTPOTENTIALIMPACTOR = [
   "Reputaion",
   "Financial",
 ];
+
+export const PROACTIVEMANAGEMENT = [
+  "Poor understanding of company Values, Mission and Vision",
+  "Improvement required in Company policies, Standards, procedures & guidance",
+  "Improvement required in organizational readiness(Lack of Competent People & Processes)",
+  "Inadequate technology and processes",
+  "Lack of timely and factual data based decisions",
+  "Improvement required in communication processes",
+  "Improvement required in work management system - Work permits, work direction",
+]
+
+export const ASSESSMENTS = [
+  "Lack of  Quality control and HSE  audits, inspections",
+  "Lack of knowledge and competency assessments",
+  "Lack of management system audits",
+  "Corrective actions reverse analysis – effectiveness assessment",
+  "Lack of Risk Assessment processes",
+]
+
+export const COMPILANCE = [
+  "Not following company policies and standards",
+  "Not meeting regulatory requirements",
+  "Not following the manufacturer recommendations",
+  "Lack of Operational Discipline – non compliance with procedures, polices etc.",
+]
+
+export const ENGAGEMENT = [
+  "Leadership engagement needs improvement",
+  "Poor reward and recognition",
+  "Delay / withholding information",
+]

@@ -190,12 +190,12 @@ const ReportingAndNotification = () => {
     temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
-    try{
-    const res = await api.put(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-      temp
-    );
-    }catch(error){
+    try {
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
+    } catch (error) {
       setIsnext(true)
     }
   };
@@ -211,7 +211,7 @@ const ReportingAndNotification = () => {
           const res = await api.delete(
             `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-        } catch (err) {setIsnext(true)}
+        } catch (err) { setIsnext(true) }
       }
     }
   };
@@ -248,14 +248,13 @@ const ReportingAndNotification = () => {
       if (evidanceChecked === true) {
         for (var key in evidanceForm) {
           if (typeof evidanceForm[key].evidenceDocument === "string") {
-            if(evidanceId.length>0){
-              for(let i in evidanceId){
+            if (evidanceId.length > 0) {
+              for (let i in evidanceId) {
                 await api.delete(
                   `api/v1/incidents/${localStorage.getItem(
                     "fkincidentId"
                   )}/evidences/${evidanceId[i]}/`)
               }
-              
             }
             try {
               await api.put(
@@ -270,7 +269,7 @@ const ReportingAndNotification = () => {
                   status: "Active",
                   createdBy: parseInt(userId),
                   fkIncidentId: localStorage.getItem("fkincidentId"),
-                  id:evidanceForm[key].id
+                  id: evidanceForm[key].id
                 }
               );
             } catch (error) {
@@ -442,12 +441,12 @@ const ReportingAndNotification = () => {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
           let evdId = temp[key]["id"]
-          
-          if(evdId){
-            setEvidanceId([...evidanceId,evdId])
+
+          if (evdId) {
+            setEvidanceId([...evidanceId, evdId])
           }
-         
-          
+
+
           await setMessage("File uploaded successfully!");
           await setMessageType("success");
           await setOpen(true);
@@ -571,7 +570,7 @@ const ReportingAndNotification = () => {
           setSuperVisorName([...result, { name: "other" }]);
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchReportedBy = () => {
@@ -636,7 +635,7 @@ const ReportingAndNotification = () => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // handle go back
@@ -811,7 +810,7 @@ const ReportingAndNotification = () => {
                       }
                       helperText={
                         evidenceError &&
-                        evidenceError[`evidenceRemark${[index]}`]
+                          evidenceError[`evidenceRemark${[index]}`]
                           ? evidenceError[`evidenceRemark${[index]}`]
                           : null
                       }
@@ -864,7 +863,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-                // error={error && error.reportedby}
+              // error={error && error.reportedby}
               >
                 <InputLabel id="supervisorname-label">
                   Supervisor name
@@ -878,11 +877,11 @@ const ReportingAndNotification = () => {
                     incidentsListData.supervisorByName === ""
                       ? ""
                       : superVisorName.filter(
-                          (item) =>
-                            item.name === incidentsListData.supervisorByName
-                        ).length > 0
-                      ? incidentsListData.supervisorByName
-                      : ""
+                        (item) =>
+                          item.name === incidentsListData.supervisorByName
+                      ).length > 0
+                        ? incidentsListData.supervisorByName
+                        : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -932,7 +931,7 @@ const ReportingAndNotification = () => {
                 variant="outlined"
                 // required
                 className={classes.formControl}
-                // error={error && error.reportedby}
+              // error={error && error.reportedby}
               >
                 <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
@@ -943,12 +942,12 @@ const ReportingAndNotification = () => {
                     incidentsListData.incidentReportedByName === ""
                       ? ""
                       : reportedByName.filter(
-                          (item) =>
-                            item.name ===
-                            incidentsListData.incidentReportedByName
-                        ).length > 0
-                      ? incidentsListData.incidentReportedByName
-                      : ""
+                        (item) =>
+                          item.name ===
+                          incidentsListData.incidentReportedByName
+                      ).length > 0
+                        ? incidentsListData.incidentReportedByName
+                        : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -977,11 +976,11 @@ const ReportingAndNotification = () => {
                   incidentsListData.incidentReportedByName === ""
                     ? ""
                     : reportedByName.filter(
-                        (item) =>
-                          item.name === incidentsListData.incidentReportedByName
-                      ).length > 0
-                    ? ""
-                    : incidentsListData.incidentReportedByName
+                      (item) =>
+                        item.name === incidentsListData.incidentReportedByName
+                    ).length > 0
+                      ? ""
+                      : incidentsListData.incidentReportedByName
                 }
                 className={classes.formControl}
                 disabled={form.reportedby !== "other"}
