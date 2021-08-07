@@ -634,7 +634,7 @@ const IncidentDetailsSummary = () => {
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>
-                Environment affected
+              Enviroment Impact
               </Typography>
             </AccordionSummary>
             <AccordionDetails>

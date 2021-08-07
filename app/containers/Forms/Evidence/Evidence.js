@@ -35,6 +35,7 @@ import Type from "../../../styles/components/Fonts.scss";
 // import FormData from "form-data";
 
 import { result } from "lodash";
+import Attachment from "../../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -74,12 +75,13 @@ const Evidence = () => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
+  const [isNext, setIsNext] = useState(true)
   const [form, setForm] = React.useState([
     {
       evidenceCategory: "Worker statement",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -90,7 +92,7 @@ const Evidence = () => {
       evidenceCategory: "Witness statements",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -101,7 +103,7 @@ const Evidence = () => {
       evidenceCategory: "Supervisor statements",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -112,7 +114,7 @@ const Evidence = () => {
       evidenceCategory: "Pictures",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -123,7 +125,7 @@ const Evidence = () => {
       evidenceCategory: "Applicable policies and procedures",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -134,7 +136,7 @@ const Evidence = () => {
       evidenceCategory: "Time line of incident",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -145,7 +147,7 @@ const Evidence = () => {
       evidenceCategory: "Scope of work, JHA/ FLHA",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -156,7 +158,7 @@ const Evidence = () => {
       evidenceCategory: "SME opinions",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -167,7 +169,7 @@ const Evidence = () => {
       evidenceCategory: "Manufacturer recommendations",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -178,7 +180,7 @@ const Evidence = () => {
       evidenceCategory: "Historical similar incidents",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -189,7 +191,7 @@ const Evidence = () => {
       evidenceCategory: "Electronic communication evidence",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -200,7 +202,7 @@ const Evidence = () => {
       evidenceCategory: "Regulatory requirements",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -211,7 +213,7 @@ const Evidence = () => {
       evidenceCategory: "Compentency level",
       evidenceCheck: "",
       evidenceRemark: "",
-      evidenceDocument: "",
+      evidenceDocument: null,
       status: "Active",
       createdBy: 0,
       updatedBy: 0,
@@ -233,7 +235,7 @@ const Evidence = () => {
     );
 
     let tempData = [];
-    if (newData.length) {
+    if (newData.length > 0) {
       for (let i = 0; i < newData.length; i++) {
         tempData.push({
           evidenceCategory: newData[i].evidenceCategory,
@@ -247,11 +249,9 @@ const Evidence = () => {
           pk: newData[i].id,
         });
       }
+      await setForm(tempData);
+      await setEvideceData(tempData);
     }
-
-    await setForm(tempData);
-    await setEvideceData(tempData);
-
     await setIsLoading(true);
   };
 
@@ -358,6 +358,59 @@ const Evidence = () => {
     }
   };
 
+  const handleSubmit = async () => {
+    if(isNext === true){
+      setIsNext(false)
+    if (evideceData.length > 0) {
+      let status = 0
+      for (let i = 0; i < form.length; i++) {
+        try {
+            const res = await api.delete(
+              `/api/v1/incidents/${form[i].fkIncidentId}/evidences/${evideceData[i].pk}/`
+            );
+        } catch (error) {
+          setIsNext(true)
+        }
+      }
+      for (let i = 0; i < form.length; i++) {
+        try {
+          let data = new FormData();
+          data.append("evidenceCheck", form[i].evidenceCheck);
+          data.append("evidenceNumber", form[i].evidenceNumber);
+          data.append("evidenceCategory", form[i].evidenceCategory);
+          data.append("evidenceRemark", form[i].evidenceRemark);
+          if (typeof form[i].evidenceDocument !== "string") {
+            if (form[i].evidenceDocument !== null) {
+              data.append("evidenceDocument", form[i].evidenceDocument);
+            }
+          }
+          data.append("status", "Active");
+          data.append("updatedAt", new Date().toISOString());
+          data.append("updatedBy", form[i].updatedBy);
+          data.append("fkIncidentId", form[i].fkIncidentId);
+          data.append("createdAt", new Date().toISOString());
+          data.append("createdBy", form[i].createdBy);
+          const res = await api.post(
+            `/api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/evidences/`,
+            data
+          );
+          status = res.status
+
+        } catch (error) {
+          setIsNext(true)
+        }
+      }
+      if (status === 201) {
+        history.push(
+          "/app/incident-management/registration/evidence/activity-detail/"
+        );
+      }
+    }
+  }
+  }
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -377,17 +430,19 @@ const Evidence = () => {
   const handleChange = async (e, index) => {
     let TempPpeData = [...form];
     TempPpeData[index].evidenceCheck = e.target.value;
-    if (e.target.value == "Yes") {
-      TempPpeData[index].evidenceCheck = e.target.value;
-      if (TempPpeData[index].evidenceDocument == null) {
-        TempPpeData[index].evidenceDocument = "";
-      }
-      await setForm(TempPpeData);
-    } else {
+    if (e.target.value !== "Yes") {
       document.getElementById(`evidenceDocument${index}`).value = "";
-      TempPpeData[index].evidenceDocument = "";
-      TempPpeData[index].evidenceCheck = e.target.value;
+      TempPpeData[index].evidenceDocument= null;
+      // TempPpeData[index]['evidenceCheck'] = e.target.value;
 
+      await setForm(TempPpeData);
+      // TempPpeData[index].evidenceCheck = e.target.value;
+      // if (TempPpeData[index].evidenceDocument == null) {
+      //   TempPpeData[index].evidenceDocument = null;
+      // }
+      // await setForm(TempPpeData);
+    }
+    else{
       await setForm(TempPpeData);
     }
   };
@@ -431,7 +486,7 @@ const Evidence = () => {
 
   const handleComment = async (e, index) => {
     let TempPpeData = [...form];
-    TempPpeData[index].evidenceRemark = e.target.value;
+    TempPpeData[index]['evidenceRemark'] = e.target.value;
     await setForm(TempPpeData);
   };
 
@@ -492,156 +547,77 @@ const Evidence = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {form[0].pk ? (
+                    {Object.entries(form).map(([index, value]) => (
                       <>
-                        {Object.entries(form).map(([index, value]) => (
-                          <>
-                            <TableRow>
-                              <TableCell component="th" scope="row">
-                                <Typography variant="body2">
-                                  {value.evidenceCategory ||
-                                    value.evidenceCategory}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <FormControl
-                                  component="fieldset"
-                                  required
-                                  size="small"
-                                  className={classes.fullWidth}
-                                  error={
-                                    error && error[`evidenceCheck${[index]}`]
-                                  }
-                                >
-                                  <RadioGroup
-                                    className={classes.inlineRadioGroup}
-                                    defaultValue={form[index].evidenceCheck}
-                                    onChange={(e) => {
-                                      handleChange(e, index);
-                                    }}
-                                  >
-                                    {radioDecide.map((value) => (
-                                      <FormControlLabel
-                                        value={value}
-                                        control={<Radio />}
-                                        label={value}
-                                      />
-                                    ))}
-                                  </RadioGroup>
-                                  {error &&
-                                    error[`evidenceCheck${[index]}`] && (
-                                      <FormHelperText>
-                                        {error[`evidenceCheck${[index]}`]}
-                                      </FormHelperText>
-                                    )}
-                                </FormControl>
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  size="small"
-                                  variant="outlined"
-                                  defaultValue={form[index].evidenceRemark}
-                                  onChange={(e) => {
-                                    handleComment(e, index);
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell style={{ width: "220px" }}>
-                                {/* {form[index].evidenceDocument  ? "File Uploded" :  */}
-                                <input
-                                  type="file"
-                                  id={`evidenceDocument${index}`}
-                                  className={classes.fullWidth}
-                                  accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                                  disabled={
-                                    value.evidenceCheck !== "Yes" ? true : false
-                                  }
-                                  name="file"
-                                  onChange={(e) => {
-                                    handleFile(e, index);
-                                  }}
-                                />
-
-                                {/* } */}
-                              </TableCell>
-                            </TableRow>
-                          </>
-                        ))}
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Typography variant="body2">
+                              {value.evidenceCategory ||
+                                value.evidenceCategory}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <FormControl
+                              component="fieldset"
+                              required
+                              size="small"
+                              className={classes.fullWidth}
+                              error={
+                                error && error[`evidenceCheck${[index]}`]
+                              }
+                            >
+                              <RadioGroup
+                                className={classes.inlineRadioGroup}
+                                defaultValue={form[index].evidenceCheck}
+                                onChange={(e) => {
+                                  handleChange(e, index);
+                                }}
+                              >
+                                {radioDecide.map((value) => (
+                                  <FormControlLabel
+                                    value={value}
+                                    control={<Radio />}
+                                    label={value}
+                                  />
+                                ))}
+                              </RadioGroup>
+                              {error &&
+                                error[`evidenceCheck${[index]}`] && (
+                                  <FormHelperText>
+                                    {error[`evidenceCheck${[index]}`]}
+                                  </FormHelperText>
+                                )}
+                            </FormControl>
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              size="small"
+                              variant="outlined"
+                              value={form[index].evidenceRemark === null ? "" : form[index].evidenceRemark}
+                              onChange={(e) => {
+                                handleComment(e, index);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell style={{ width: "220px" }}>
+                            <input
+                              type="file"
+                              id={`evidenceDocument${index}`}
+                              className={classes.fullWidth}
+                              accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                              disabled={
+                                value.evidenceCheck !== "Yes" ? true : false
+                              }
+                              name="file"
+                              onChange={(e) => {
+                                handleFile(e, index);
+                              }}
+                            />{console.log(value.evidenceCheck)}
+                            {value.evidenceDocument === null ? null : typeof (value.evidenceDocument) === "string" ? <Attachment value={value.evidenceDocument} /> : null}
+                          </TableCell>
+                        </TableRow>
                       </>
-                    ) : (
-                      <>
-                        {Object.entries(form).map(([index, value]) => (
-                          <>
-                            <TableRow>
-                              <TableCell component="th" scope="row">
-                                <Typography variant="body2">
-                                  {value.evidenceCategory ||
-                                    value.evidenceCategory}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <FormControl
-                                  component="fieldset"
-                                  required
-                                  size="small"
-                                  className={classes.fullWidth}
-                                  error={
-                                    error && error[`evidenceCheck${[index]}`]
-                                  }
-                                >
-                                  <RadioGroup
-                                    className={classes.inlineRadioGroup}
-                                    defaultValue={form[index].evidenceCheck}
-                                    onChange={(e) => {
-                                      handleChange(e, index);
-                                    }}
-                                  >
-                                    {radioDecide.map((value) => (
-                                      <FormControlLabel
-                                        value={value}
-                                        control={<Radio />}
-                                        label={value}
-                                      />
-                                    ))}
-                                  </RadioGroup>
-                                  {error &&
-                                    error[`evidenceCheck${[index]}`] && (
-                                      <FormHelperText>
-                                        {error[`evidenceCheck${[index]}`]}
-                                      </FormHelperText>
-                                    )}
-                                </FormControl>
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  size="small"
-                                  variant="outlined"
-                                  defaultValue={form[index].evidenceRemark}
-                                  onChange={(e) => {
-                                    handleComment(e, index);
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell style={{ width: "220px" }}>
-                                <input
-                                  type="file"
-                                  id={`evidenceDocument${index}`}
-                                  className={classes.fullWidth}
-                                  accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                                  disabled={
-                                    value.evidenceCheck !== "Yes" ? true : false
-                                  }
-                                  name="file"
-                                  onChange={(e) => {
-                                    handleFile(e, index);
-                                  }}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          </>
-                        ))}
-                      </>
-                    )}
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -671,7 +647,7 @@ const Evidence = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleNext()}
+                onClick={() => handleSubmit()}
               >
                 Next
               </Button>
