@@ -106,11 +106,9 @@ const CorrectiveAction = () => {
         putChecker.push(true)
       }
     })
-    console.log(putChecker)
-    const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
 
-    if ((countOccurrences(putChecker), true) == 1) {
-      console.log("here")
+    var numOfTrue = putChecker.filter(x => x === true).length;
+    if (numOfTrue > 0) {
       putId.current = lastItem;
       allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {

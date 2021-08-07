@@ -1029,7 +1029,7 @@ const InvestigationSummary = () => {
                           variant="body"
                           className={Fonts.labelValue}
                         >
-                          {value.reasonForTestNotDone}
+                          {checkValue(value.reasonForTestNotDone)}
                         </Typography>
                       </Grid>
                     }
