@@ -13,6 +13,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
+import { checkValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -56,6 +57,7 @@ const WhyAnalysis = () => {
 
   const updateIds = useRef();
   const checkPost = useRef();
+  const investigationData = useRef({});
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
@@ -67,6 +69,7 @@ const WhyAnalysis = () => {
     let incidentId = !isNaN(lastItem)
       ? lastItem
       : localStorage.getItem("fkincidentId");
+
     let previousData = await api.get(
       `/api/v1/incidents/${incidentId}/fivewhy/`
     );
@@ -87,6 +90,21 @@ const WhyAnalysis = () => {
     }
     updateIds.current = tempApiDataId;
   };
+
+  const handelInvestigationData = async () => {
+    let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current
+    const investigationpreviousData = await api.get(
+      `api/v1/incidents/${incidentId}/investigations/`
+    );
+    const investigationApiData = investigationpreviousData.data.data.results[0];
+    if (investigationApiData != null) {
+      investigationData.current = {
+        startData: investigationApiData.srartDate,
+        endDate: investigationApiData.endDate,
+        classification: investigationApiData.classification,
+      };
+    }
+  }
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
@@ -172,8 +190,7 @@ const WhyAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -186,6 +203,7 @@ const WhyAnalysis = () => {
   useEffect(() => {
     handelUpdateCheck();
     fetchIncidentData();
+    handelInvestigationData();
   }, []);
 
   const classes = useStyles();
@@ -221,11 +239,13 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Level of Investigation
+              Level of classification
             </Typography>
-            <Typography className={Type.labelValue}>Level 5</Typography>
+            <Typography className={Type.labelValue}>
+              {checkValue(investigationData.current["classification"])}
+            </Typography>
           </Grid>
 
           <Grid item xs={12} md={11}>
