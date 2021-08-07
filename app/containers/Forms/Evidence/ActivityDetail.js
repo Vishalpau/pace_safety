@@ -283,17 +283,7 @@ const ActivityDetails = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => {
-                  if (id) {
-                    history.push(
-                      `/app/incident-management/registration/evidence/evidence/${id}`
-                    );
-                  } else {
-                    history.push(
-                      `/app/incident-management/registration/evidence/evidence/`
-                    );
-                  }
-                }}
+                onClick={() => {history.push(`/app/incident-management/registration/evidence/evidence/${localStorage.getItem('fkincidentId')}`)}}
                 // href="/app/incident-management/registration/evidence/evidence/"
               >
                 Previous

@@ -564,6 +564,10 @@ export const RootCauseAnalysis = loadable(() =>
   fallback: <Loading />,
 });
 
+export const PaceManagement = loadable(() =>
+  import('./Forms/RootCauseAnalysis/PaceManagement'), {
+  fallback: <Loading />,
+});
 
 export const WhyAnalysis = loadable(() =>
   import('./Forms/RootCauseAnalysis/WhyAnalysis'), {

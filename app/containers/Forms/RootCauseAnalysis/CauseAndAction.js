@@ -24,6 +24,7 @@ import {
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
+import { handelConvert } from "../../../utils/CheckerValue"
 import ActionTracker from "../ActionTracker";
 
 const useStyles = makeStyles((theme) => ({
@@ -180,16 +181,7 @@ const BasicCauseAndAction = () => {
     }
   };
 
-  const handelConvert = (value) => {
-    let wordArray = value.split(/(?=[A-Z])/);
-    let wordArrayCombined = wordArray.join(" ");
-    var newString = wordArrayCombined
-      .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
-        return c.toUpperCase();
-      });
-    return newString;
-  };
+
 
   useEffect(() => {
     fetchIncidentDetails();
@@ -200,7 +192,7 @@ const BasicCauseAndAction = () => {
 
   return (
     <PapperBlock
-      title="Actions against Immediate Causes"
+      title="Corrective Actions"
       icon="ion-md-list-box"
     >
       <Grid container spacing={3}>
@@ -226,7 +218,7 @@ const BasicCauseAndAction = () => {
 
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom>
-              Actions
+              Corrective actions
             </Typography>
           </Grid>
 
@@ -241,7 +233,6 @@ const BasicCauseAndAction = () => {
             <Table className={classes.table}>
               <TableBody>
                 {Object.entries(data)
-                  .reverse()
                   .map(([key, value], index) => (
                     <>
                       {value.map((value, valueIndex) => (
@@ -293,7 +284,7 @@ const BasicCauseAndAction = () => {
             <Grid item md={3}>
               <FormSideBar
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Cause and action"}
+                selectedItem={"Corrective actions"}
               />
             </Grid>
           )}
