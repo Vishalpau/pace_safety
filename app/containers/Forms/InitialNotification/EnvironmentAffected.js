@@ -14,9 +14,7 @@ import { useHistory, useParams } from "react-router";
 import moment from "moment";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import {
-  INITIAL_NOTIFICATION_FORM,
-} from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM } from "../../../utils/constants";
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
 import FormSideBar from "../FormSideBar";
 import api from "../../../utils/axios";
@@ -44,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EnvironmentAffected = () => {
-
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
@@ -62,11 +59,14 @@ const EnvironmentAffected = () => {
   const [envComments, setEnvComments] = useState("");
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isNext, setIsNext] = useState(true)
-  const userId = JSON.parse(localStorage.getItem('userDetails'))!==null?JSON.parse(localStorage.getItem('userDetails')).id:null;
+  const [isNext, setIsNext] = useState(true);
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const nextPath = localStorage.getItem("nextPath");
-  
+
   const [form, setForm] = useState([
     {
       envQuestion: "Were there any spills?",
@@ -231,7 +231,7 @@ const EnvironmentAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-    await setEnvComments(result.enviromentalImpactComments)
+    await setEnvComments(result.enviromentalImpactComments);
     if (!id) {
       setIsLoading(true);
     }
@@ -608,7 +608,7 @@ const EnvironmentAffected = () => {
                 rows="3"
                 label="Comment if any"
                 className={classes.fullWidth}
-                value={envComments ||""}
+                value={envComments || ""}
                 onChange={(e) => setEnvComments(e.target.value)}
               />
             </Grid>
@@ -636,7 +636,7 @@ const EnvironmentAffected = () => {
             <Grid item md={3}>
               <FormSideBar
                 listOfItems={INITIAL_NOTIFICATION_FORM}
-                selectedItem="Environment affected"
+                selectedItem="Environment impact"
               />
             </Grid>
           )}
