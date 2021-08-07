@@ -249,7 +249,6 @@ const AdditionalDetails = () => {
                         variant="outlined"
                         label={value.question}
                         error={value.error}
-                        required
                         helperText={value.error ? value.error : null}
                         multiline
                         rows="4"
