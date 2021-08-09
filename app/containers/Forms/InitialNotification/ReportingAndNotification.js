@@ -482,7 +482,7 @@ const ReportingAndNotification = () => {
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
-    console.log(result);
+    
     for (var key in result) {
       reportedToFilterData.push(result[key].inputLabel);
     }
@@ -627,7 +627,9 @@ const ReportingAndNotification = () => {
         headers: HEADER_AUTH,
       };
       const res = await api(config);
+      console.log(res.data.data.results)
       if (res.status === 200) {
+        
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
@@ -742,14 +744,14 @@ const ReportingAndNotification = () => {
                   </FormLabel>
                   {notificationSentValue.map((value, index) => (
                     <FormControlLabel
-                      id={key}
-                      key={key}
-                      value={value.inputLabel}
+                      id={index}
+                      key={index}
+                      value={value.roleName}
                       control={<Checkbox />}
-                      label={value.inputLabel}
-                      checked={!!form.reportedto.includes(value.inputLabel)}
+                      label={value.roleName}
+                      checked={!!form.reportedto.includes(value.roleName)}
                       onChange={(e) => {
-                        handelReportedTo(e, value.inputLabel, "option");
+                        handelReportedTo(e, value.roleName, "option");
                       }}
                     />
                   ))}
