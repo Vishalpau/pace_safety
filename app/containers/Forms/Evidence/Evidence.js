@@ -359,10 +359,12 @@ const Evidence = () => {
   };
 
   const handleSubmit = async () => {
+    console.log(form)
     if(isNext === true){
       setIsNext(false)
-    if (evideceData.length > 0) {
       let status = 0
+    if (evideceData.length > 0) {
+      
       for (let i = 0; i < form.length; i++) {
         try {
             const res = await api.delete(
@@ -372,6 +374,7 @@ const Evidence = () => {
           setIsNext(true)
         }
       }
+    }
       for (let i = 0; i < form.length; i++) {
         try {
           let data = new FormData();
@@ -407,7 +410,7 @@ const Evidence = () => {
           "/app/incident-management/registration/evidence/activity-detail/"
         );
       }
-    }
+    
   }
   }
 

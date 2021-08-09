@@ -224,14 +224,9 @@ const LessionLearnSummary = () => {
                               <Tooltip
                                 title={handelFileName(value.evidenceDocument)}
                               >
-                                  <IconButton
-                                    onClick={() =>
-                                      handleOpen(value.evidenceDocument)
-                                    }
-                                    className={classes.fileIcon}
-                                  >
+                                  
                                     <Attachment value={value.evidenceDocument}/>
-                                  </IconButton>
+                                  
                                 </Tooltip>
                               </Typography>
                             </Grid>
