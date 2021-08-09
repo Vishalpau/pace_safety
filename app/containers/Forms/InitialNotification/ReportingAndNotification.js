@@ -627,9 +627,7 @@ const ReportingAndNotification = () => {
         headers: HEADER_AUTH,
       };
       const res = await api(config);
-      console.log(res.data.data.results)
       if (res.status === 200) {
-
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
@@ -688,7 +686,7 @@ const ReportingAndNotification = () => {
       {isLoading ? (
         <Grid container spacing={3}>
           <Grid container item xs={12} md={9} spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <FormControl
                 component="fieldset"
                 required
@@ -708,6 +706,9 @@ const ReportingAndNotification = () => {
                       onChange={(e) => {
                         handelReportedTo(e, value.inputValue, "option");
                       }}
+                      onChange={(e) =>
+                        handleEvidanceForm(e, index, "evidenceDocument")
+                      }
                     />
                   ))}
                 </FormGroup>
@@ -718,7 +719,7 @@ const ReportingAndNotification = () => {
             </Grid>
 
             {form.reportedto.includes("Others") ? (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12}>
                 <TextField
                   id="Other"
                   variant="outlined"
@@ -736,7 +737,7 @@ const ReportingAndNotification = () => {
               </Grid>
             ) : null}
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Notification to be sent?
@@ -963,8 +964,7 @@ const ReportingAndNotification = () => {
                     ? ""
                     : reportedByName.filter(
                       (item) =>
-                        item.name ===
-                        incidentsListData.incidentReportedByName
+                        item.name === incidentsListData.incidentReportedByName
                     ).length > 0
                       ? incidentsListData.incidentReportedByName
                       : ""
