@@ -406,7 +406,9 @@ const Evidence = () => {
       }
       if (status === 201) {
         history.push(
-          "/app/incident-management/registration/evidence/activity-detail/"
+          `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
+            "fkincidentId"
+          )}`
         );
       }
     
