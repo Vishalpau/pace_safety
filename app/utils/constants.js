@@ -170,7 +170,7 @@ export const SUPERVISON = [
 export const EQUIMENTMACHINARY = [
   "Operating Machinery - Mobile Equipment Without  Permission",
   "Operating at Excessive Speed / Over speed / Above Set Limits - Without Authority",
-  "Using a Nonfunctioning / Defective / Out of Order Machinery / Equip",
+  "Using a Non functioning / Defective / Out of Order Machinery / Equip",
   "Using Equipment Beyond Limits Company Policy or Manufacturer Recommendations",
   "Working on Equipment / Machinery While in Operation",
 ];
