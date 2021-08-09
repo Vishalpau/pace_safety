@@ -155,7 +155,6 @@ const EventDetails = () => {
           createdBy: 0,
         }]
         setOverAllCost(tempCostData)
-        console.log(tempCostData)
       }
 
     }
