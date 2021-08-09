@@ -290,6 +290,7 @@ const IncidentDetailsSummary = () => {
           {incidents.contractor}
         </Typography>
       </Grid>
+      {incidents["subContractor"] &&
       <Grid item xs={12} md={6}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
           Sub-contractor
@@ -299,6 +300,7 @@ const IncidentDetailsSummary = () => {
           {incidents.subContractor}
         </Typography>
       </Grid>
+    }
       {/* People Affected */}
       {incidents.isPersonAffected === 'Yes' ? (
         <Grid item xs={12}>
@@ -325,7 +327,8 @@ const IncidentDetailsSummary = () => {
 : Details of people
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    {peopledata.personDepartment &&
+                    <Grid item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -336,8 +339,9 @@ const IncidentDetailsSummary = () => {
                       <Typography className={Fonts.labelValue}>
                         {peopledata.personDepartment}
                       </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
+                    </Grid>}
+                    {peopledata.personName &&
+                    <Grid item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -349,7 +353,9 @@ const IncidentDetailsSummary = () => {
                         {peopledata.personName}
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    }
+                    {peopledata.personType &&
+                   <Grid item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -361,7 +367,9 @@ const IncidentDetailsSummary = () => {
                         {peopledata.personType}
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    }
+                    {peopledata.personIdentification &&
+                    <Grid item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -373,7 +381,8 @@ const IncidentDetailsSummary = () => {
                         {peopledata.personIdentification}
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+}{peopledata.locationAssessmentCenter &&
+                    <Grid item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -385,7 +394,8 @@ const IncidentDetailsSummary = () => {
                         {peopledata.locationAssessmentCenter}
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+}{peopledata.workerOffsiteAssessment &&
+                    <Grid item item md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -397,6 +407,7 @@ const IncidentDetailsSummary = () => {
                         {peopledata.workerOffsiteAssessment}
                       </Typography>
                     </Grid>
+}
                   </Grid>
                 ))
               ) : (
@@ -457,6 +468,7 @@ const IncidentDetailsSummary = () => {
 : Details of property
                       </Typography>
                     </Grid>
+                    {propertydata.propertyType &&
                     <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
@@ -468,8 +480,8 @@ const IncidentDetailsSummary = () => {
                       <Typography className={Fonts.labelValue}>
                         {propertydata.propertyType}
                       </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
+                    </Grid>}
+                    {propertydata.propertyOtherType && <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -480,7 +492,8 @@ const IncidentDetailsSummary = () => {
                       <Typography className={Fonts.labelValue}>
                         {propertydata.propertyOtherType}
                       </Typography>
-                    </Grid>
+                    </Grid>}
+                    {propertydata.damageDetails &&
                     <Grid item xs={12}>
                       <Typography
                         variant="h6"
@@ -493,6 +506,7 @@ const IncidentDetailsSummary = () => {
                         {propertydata.damageDetails}
                       </Typography>
                     </Grid>
+                  }
                   </Grid>
                 ))
               ) : (
@@ -585,6 +599,7 @@ const IncidentDetailsSummary = () => {
                         {equipmentdata.equipmentDeatils}
                       </Typography>
                     </Grid>
+                    {equipmentdata.equipmentOtherType &&
                     <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
@@ -597,6 +612,7 @@ const IncidentDetailsSummary = () => {
                         {equipmentdata.equipmentOtherType}
                       </Typography>
                     </Grid>
+                      }
                   </Grid>
                 ))
               ) : (
@@ -667,7 +683,7 @@ const IncidentDetailsSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        {'Details of'}
+                        {"Details of"}
                         {envData.envQuestion.slice(14, -1)}
                       </Typography>
                       <Typography className={Fonts.labelValue}>

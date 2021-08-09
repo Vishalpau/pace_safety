@@ -359,7 +359,6 @@ const Evidence = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(form)
     if(isNext === true){
       setIsNext(false)
       let status = 0
@@ -436,14 +435,8 @@ const Evidence = () => {
     if (e.target.value !== "Yes") {
       document.getElementById(`evidenceDocument${index}`).value = "";
       TempPpeData[index].evidenceDocument= null;
-      // TempPpeData[index]['evidenceCheck'] = e.target.value;
 
       await setForm(TempPpeData);
-      // TempPpeData[index].evidenceCheck = e.target.value;
-      // if (TempPpeData[index].evidenceDocument == null) {
-      //   TempPpeData[index].evidenceDocument = null;
-      // }
-      // await setForm(TempPpeData);
     }
     else{
       await setForm(TempPpeData);

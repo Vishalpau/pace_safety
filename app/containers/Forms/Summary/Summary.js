@@ -211,7 +211,7 @@ const Summary = () => {
                 >
                   Initial Notification
                 </Button>
-                <Typography variant="caption" display="block">
+                <Typography className={Fonts.labelValue}  display="block">
                   {initialNoticeficationStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
@@ -236,7 +236,7 @@ const Summary = () => {
                 >
                   Investigation
                 </Button>
-                <Typography variant="caption" display="block">
+                <Typography className={Fonts.labelValue}  display="block">
                   {investigationOverview ? "Done" : "Pending"}
                 </Typography>
               </div>
@@ -258,7 +258,7 @@ const Summary = () => {
                 >
                   Evidence
                 </Button>
-                <Typography variant="caption" display="block">
+                <Typography className={Fonts.labelValue}  display="block">
                   {evidencesData ? "Done" : "Pending"}
                 </Typography>
               </div>
@@ -289,7 +289,7 @@ const Summary = () => {
                 >
                   Root Cause & Analysis
                 </Button>
-                <Typography variant="caption" display="block">
+                <Typography className={Fonts.labelValue}  display="block">
                   {paceCauseData || rootCausesData || whyData
                     ? "Done"
                     : "Pending"}
@@ -312,7 +312,7 @@ const Summary = () => {
                 >
                   Lessons Learnt
                 </Button>
-                <Typography variant="caption" display="block">
+                <Typography className={Fonts.labelValue}  display="block">
                   {lessionlearnData ? "Done" : "Pending"}
                 </Typography>
               </div>
