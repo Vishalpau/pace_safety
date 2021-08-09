@@ -706,9 +706,6 @@ const ReportingAndNotification = () => {
                       onChange={(e) => {
                         handelReportedTo(e, value.inputValue, "option");
                       }}
-                      onChange={(e) =>
-                        handleEvidanceForm(e, index, "evidenceDocument")
-                      }
                     />
                   ))}
                 </FormGroup>

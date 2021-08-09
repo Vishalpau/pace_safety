@@ -140,7 +140,7 @@ const Details = () => {
         "Corrective actions",
         "Basic cause",
         "PACE Management control",
-        "Preventive Actions",
+        "Preventive actions",
         "Additional information",
         "Cause analysis",
       ]);
