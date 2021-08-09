@@ -553,7 +553,7 @@ const HazardiousActs = () => {
               component="fieldset"
               error={error.safetyIssues}
             >
-              <FormLabel component="legend">Saftey items</FormLabel>
+              <FormLabel component="legend">Safety items</FormLabel>
               <FormGroup>
                 {SAFETYITEMS.map((value) => (
                   <FormControlLabel
