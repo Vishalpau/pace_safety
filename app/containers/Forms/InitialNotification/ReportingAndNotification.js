@@ -566,7 +566,7 @@ const ReportingAndNotification = () => {
           setSuperVisorName([...result, { name: "other" }]);
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchReportedBy = () => {
@@ -631,7 +631,7 @@ const ReportingAndNotification = () => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // handle go back
@@ -806,7 +806,7 @@ const ReportingAndNotification = () => {
                       }
                       helperText={
                         evidenceError &&
-                        evidenceError[`evidenceRemark${[index]}`]
+                          evidenceError[`evidenceRemark${[index]}`]
                           ? evidenceError[`evidenceRemark${[index]}`]
                           : null
                       }
@@ -866,11 +866,11 @@ const ReportingAndNotification = () => {
                     incidentsListData.supervisorByName === ""
                       ? ""
                       : superVisorName.filter(
-                          (item) =>
-                            item.name === incidentsListData.supervisorByName
-                        ).length > 0
-                      ? incidentsListData.supervisorByName
-                      : ""
+                        (item) =>
+                          item.name === incidentsListData.supervisorByName
+                      ).length > 0
+                        ? incidentsListData.supervisorByName
+                        : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -898,11 +898,11 @@ const ReportingAndNotification = () => {
                   ).length > 0
                     ? ""
                     : superVisorName.filter(
-                        (item) =>
-                          item.name === incidentsListData.supervisorByName
-                      ).length > 0
-                    ? incidentsListData.supervisorByName
-                    : ""
+                      (item) =>
+                        item.name === incidentsListData.supervisorByName
+                    ).length > 0
+                      ? incidentsListData.supervisorByName
+                      : ""
                 }
                 disabled={form.supervisorname !== "other"}
                 className={classes.formControl}
@@ -928,12 +928,12 @@ const ReportingAndNotification = () => {
                     incidentsListData.incidentReportedByName === ""
                       ? ""
                       : reportedByName.filter(
-                          (item) =>
-                            item.name ===
-                            incidentsListData.incidentReportedByName
-                        ).length > 0
-                      ? incidentsListData.incidentReportedByName
-                      : ""
+                        (item) =>
+                          item.name ===
+                          incidentsListData.incidentReportedByName
+                      ).length > 0
+                        ? incidentsListData.incidentReportedByName
+                        : ""
                   }
                   onChange={(e) => {
                     setForm({
@@ -960,11 +960,11 @@ const ReportingAndNotification = () => {
                   incidentsListData.incidentReportedByName === ""
                     ? ""
                     : reportedByName.filter(
-                        (item) =>
-                          item.name === incidentsListData.incidentReportedByName
-                      ).length > 0
-                    ? incidentsListData.incidentReportedByName
-                    : ""
+                      (item) =>
+                        item.name === incidentsListData.incidentReportedByName
+                    ).length > 0
+                      ? incidentsListData.incidentReportedByName
+                      : ""
                 }
                 className={classes.formControl}
                 disabled={form.reportedby !== "other"}
