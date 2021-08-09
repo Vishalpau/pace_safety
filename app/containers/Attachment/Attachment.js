@@ -40,7 +40,6 @@ export const Attachment = ({ value }) => {
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
     let extension = fileName.split(".");
-    console.log(extension)
 
     if (extension[1].toLowerCase() === "pdf") {
         return (
@@ -72,7 +71,7 @@ export const Attachment = ({ value }) => {
     } else if (extension[1].toLowerCase() === "ppt") {
         return (
             <IconButton>
-                <Icon path={mdiFilePowerpoint} size={2} onClick={() => setOpen(true)}/>
+                <Icon path={mdiFilePowerpoint} size={2} onClick={() => setOpen(true)} />
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
