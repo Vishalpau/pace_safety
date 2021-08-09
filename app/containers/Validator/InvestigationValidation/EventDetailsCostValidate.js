@@ -12,8 +12,6 @@ function EventDetailsCostValidate(data) {
             }
         }
     }
-    console.log(errorCost)
-
     return { errorCost };
 }
 
