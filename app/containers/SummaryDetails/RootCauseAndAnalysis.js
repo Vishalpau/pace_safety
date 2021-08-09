@@ -370,7 +370,6 @@ const RootCauseAnalysisSummary = () => {
                         <p>{rcaValue}</p>
                       ))}
                     </Typography>
-
                   </>
                 ))}
               </Grid>
