@@ -18,9 +18,15 @@ const useStyles = makeStyles((theme) => ({
   activeList: {
     color: theme.palette.primary.main,
     borderLeft: `5px solid ${theme.palette.secondary.main}`,
+    "& .MuiTypography-root": {
+      whiteSpace: "normal",
+    },
   },
   notActiveList: {
     borderLeft: `5px solid ${theme.palette.primary.main}`,
+    "& .MuiTypography-root": {
+      whiteSpace: "normal",
+    },
   },
 }));
 

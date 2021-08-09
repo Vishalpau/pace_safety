@@ -9,24 +9,24 @@ export const SSO_URL = "https://dev-accounts-api.paceos.io";
 export const LOCAL_SSO_CLIENT_SECRET =
   "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW";
 export const LOCAL_SSO_CLIENT_ID = "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1";
-export const LOCAL_LOGIN_URL = 'https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code'
+export const LOCAL_LOGIN_URL =
+  "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code";
 
 export const SSO_CLIENT_SECRET =
   "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
 export const SSO_CLIENT_ID = "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo";
 // Redirect login api if login is not.
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
-export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`
-
+export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 
 export const API_URL = "https://dev-safety-api.paceos.io/";
 export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
 export const access_token = localStorage.getItem("access_token");
 
-export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/"
+export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/";
 
-// Header authenticatuon 
-export const HEADER_AUTH = { 'Authorization': `Bearer ${access_token}` }
+// Header authenticatuon
+export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
 
 export const INITIAL_NOTIFICATION_FORM = {
   "Incident details": `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
@@ -41,7 +41,7 @@ export const INITIAL_NOTIFICATION_FORM = {
   "Equipment affected": `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem(
     "fkincidentId"
   )}`,
-  "Environment affected": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
+  "Enviroment Impact": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
     "fkincidentId"
   )}`,
   "Reporting and notification": `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem(
@@ -53,36 +53,34 @@ export const EVIDENCE_FORM = {
   Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
     "fkincidentId"
   )}`,
-  "Activity details":
-    `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
-      "fkincidentId"
-    )}`,
-  "Personal and PPE details":
-    `/app/incident-management/registration/evidence/personal-and-ppedetails/${localStorage.getItem(
-      "fkincidentId"
-    )}`,
-  "Additional details":
-    `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem(
-      "fkincidentId"
-    )}`,
+  "Activity details": `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Personal and PPE details": `/app/incident-management/registration/evidence/personal-and-ppedetails/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
+  "Additional details": `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
 };
-
 
 export const INVESTIGATION_FORM = {
   "Investigation overview":
     "/app/incident-management/registration/investigation/investigation-overview/",
   "Severity consequences":
     "/app/incident-management/registration/investigation/severity-consequences/",
-  "Worker details":
-    `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`,
+  "Worker details": `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
   "Event details":
     "/app/incident-management/registration/investigation/event-details/",
   "Action taken":
-    "/app/incident-management/registration/investigation/action-taken/"
+    "/app/incident-management/registration/investigation/action-taken/",
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
-  "RCA Details": "/app/incident-management/registration/root-cause-analysis/details/",
+  "RCA Details":
+    "/app/incident-management/registration/root-cause-analysis/details/",
   "Hazardous acts":
     "/app/incident-management/registration/root-cause-analysis/hazardious-acts/",
   "Hazardous conditions":
@@ -125,7 +123,6 @@ export const FORM_HEADER = {
   "Lession Learned":
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
-
 
 export const HAZARDIOUS_ACTS_SUB_TYPES = [
   "Supervision",
@@ -173,7 +170,7 @@ export const SUPERVISON = [
 export const EQUIMENTMACHINARY = [
   "Operating Machinery - Mobile Equipment Without  Permission",
   "Operating at Excessive Speed / Over speed / Above Set Limits - Without Authority",
-  "Using a Nonfunctioning / Defective / Out of Order Machinery / Equip",
+  "Using a Non functioning / Defective / Out of Order Machinery / Equip",
   "Using Equipment Beyond Limits Company Policy or Manufacturer Recommendations",
   "Working on Equipment / Machinery While in Operation",
 ];
