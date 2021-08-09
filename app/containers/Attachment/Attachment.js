@@ -40,12 +40,12 @@ export const Attachment = ({ value }) => {
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
     let extension = fileName.split(".");
-    console.log(extension)
+
 
     if (extension[1].toLowerCase() === "pdf") {
         return (
             <IconButton>
-                <Icon path={mdiFilePdf} size={2} onClick={() => setOpen(true)} />
+                <Icon path={mdiFilePdf} size={1} onClick={() => setOpen(true)} />
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
@@ -55,7 +55,7 @@ export const Attachment = ({ value }) => {
     ) {
         return (
             <IconButton>
-                <Icon path={mdiMicrosoftExcel} size={2} onClick={() => setOpen(true)} />
+                <Icon path={mdiMicrosoftExcel} size={1} onClick={() => setOpen(true)} />
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
@@ -65,29 +65,31 @@ export const Attachment = ({ value }) => {
     ) {
         return (
             <IconButton>
-                <Icon path={mdiFileWord} size={2} onClick={() => setOpen(true)} />
+                <Icon path={mdiFileWord} size={1} onClick={() => setOpen(true)} />
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
     } else if (extension[1].toLowerCase() === "ppt") {
         return (
             <IconButton>
-                <Icon path={mdiFilePowerpoint} size={2} onClick={() => setOpen(true)}/>
+                <Icon path={mdiFilePowerpoint} size={1} onClick={() => setOpen(true)} />
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
     } else {
-        return (<>
-            <Avatar
-                alt="image"
-                src={value}
-                variant="square"
-                className={classes.square}
-                onClick={() => setOpen(true)}
+        return (
+            <>
+                <IconButton onClick={() => setOpen(true)}>
+                    <Avatar
+                        alt="image"
+                        src={value}
+                        variant="square"
+                        className={classes.square}
+                    />
+                </IconButton>
 
-            />
-            <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
-        </>
+                <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
+            </>
         );
     }
 };

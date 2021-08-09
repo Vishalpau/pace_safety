@@ -49,13 +49,22 @@ const RootCauseAnalysisSummary = () => {
   const [causeanalysis, setCauseAnalysis] = useState([]);
   const [pacecauses, setPaceCauses] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
-
+  const [additionalDetails, setAdditonalDetails] = useState([])
+  const [additionalRcaSubType, setAdditionalRcaSubType] = useState(["managementControl", "reasonsSupportAbove"])
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const fkid = localStorage.getItem("fkincidentId");
 
+  const setRemark = (value) => {
+    let remark = value.includes(",") ? value.split(",") : [value]
+    if (remark.includes("No option selected") && remark.length > 0) {
+      let removeItemIndex = remark.indexOf("No option selected")
+      remark.splice(removeItemIndex, 1)
+    }
+    return remark
+  }
   const fetchRootCauseData = async () => {
     const allRootCause = await api.get(`/api/v1/incidents/${fkid}/rootcauses/`);
     await setRootCause(allRootCause.data.data.results);
@@ -86,6 +95,13 @@ const RootCauseAnalysisSummary = () => {
     } else {
       await setPaceCauses(paceData);
     }
+    let temp = []
+    paceData.map((value) => {
+      if (additionalRcaSubType.includes(value.rcaSubType)) {
+        temp.push(value)
+      }
+    })
+    setAdditonalDetails(temp)
   };
 
   const handelConvert = (value) => {
@@ -104,9 +120,6 @@ const RootCauseAnalysisSummary = () => {
     return valueArray;
   };
   const history = useHistory();
-  // if (id) {
-  //   localStorage.setItem("fkincidentId", id);
-  // }
 
   const handelRootCauseAnalysis = (e, value) => {
     if (value == "modify") {
@@ -315,7 +328,7 @@ const RootCauseAnalysisSummary = () => {
                   </TableHead>
                   <TableBody>
                     {pacecauses.map((pc, key) =>
-                      pc.rcaRemark !== "No option selected" ? (
+                      pc.rcaRemark !== "No option selected" && !additionalRcaSubType.includes(pc.rcaSubType) ? (
                         <TableRow key={key}>
                           <TableCell>{pc.rcaNumber}</TableCell>
                           <TableCell>{pc.rcaType}</TableCell>
@@ -333,6 +346,38 @@ const RootCauseAnalysisSummary = () => {
           </Accordion>
         </Grid>
       ) : null}
+
+      {additionalDetails.length !== 0 ? (
+        <Grid item xs={12}>
+          <Accordion
+            expanded={expanded === "panel5"}
+            onChange={handleExpand("panel5")}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Additional details
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid item xs={12}>
+                {additionalDetails.map((value) => (
+                  <>
+                    <Typography className={classes.heading}>
+                      {handelConvert(value.rcaSubType)}
+                    </Typography>
+                    <Typography>
+                      {setRemark(value.rcaRemark).map((rcaValue) => (
+                        <p>{rcaValue}</p>
+                      ))}
+                    </Typography>
+                  </>
+                ))}
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
+      ) : null}
+
     </Grid>
   );
 };

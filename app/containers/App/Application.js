@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { PropTypes } from "prop-types";
 import { Switch, Route } from "react-router-dom";
 import { ThemeContext } from "./ThemeWrapper";
@@ -121,6 +121,7 @@ import {
   Summary,
   LessionLearned,
   UpdateIncidentDetails,
+  PaceManagement,
 } from "../pageListAsync";
 
 
@@ -175,7 +176,7 @@ function Application(props) {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
 
-        
+
         {/* form initialNotification */}
         <Route
           exact
@@ -339,6 +340,10 @@ function Application(props) {
         <Route
           path="/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
           component={RootCauseAnalysis}
+        />
+        <Route
+          path="/app/incident-management/registration/root-cause-analysis/pace-management/"
+          component={PaceManagement}
         />
         <Route
           path="/app/incident-management/registration/root-cause-analysis/why-analysis/"

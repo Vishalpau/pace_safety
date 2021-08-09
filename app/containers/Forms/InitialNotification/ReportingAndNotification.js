@@ -21,9 +21,7 @@ import { PapperBlock } from "dan-components";
 import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 import Tooltip from "@material-ui/core/Tooltip";
-
-// import { DropzoneArea, DropzoneDialogBase } from 'material-ui-dropzone';
-
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import FormLabel from "@material-ui/core/FormLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -45,15 +43,11 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
-// import FormHeader from '../FormHeader';
 
 import ReportingValidation from "../../Validator/ReportingValidation";
 import InitialEvidenceValidate from "../../Validator/InitialEvidance";
-
 import api from "../../../utils/axios";
 import Attachment from "../../Attachment/Attachment";
-
-// import UploadInputAll from '../demos/UploadInputAll';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -102,7 +96,7 @@ const ReportingAndNotification = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isNext, setIsnext] = useState(true);
-  const [evidanceId, setEvidanceId] = useState([])
+  const [evidanceId, setEvidanceId] = useState([]);
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -190,13 +184,13 @@ const ReportingAndNotification = () => {
     temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
-    try{
-    const res = await api.put(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-      temp
-    );
-    }catch(error){
-      setIsnext(true)
+    try {
+      const res = await api.put(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+        temp
+      );
+    } catch (error) {
+      setIsnext(true);
     }
   };
 
@@ -207,11 +201,13 @@ const ReportingAndNotification = () => {
         const reportId = reportedToObj[key].id;
 
         try {
-          setIsnext(false)
+          setIsnext(false);
           const res = await api.delete(
             `/api/v1/incidents/${id}/reports/${reportId}/`
           );
-        } catch (err) {setIsnext(true)}
+        } catch (err) {
+          setIsnext(true);
+        }
       }
     }
   };
@@ -221,14 +217,14 @@ const ReportingAndNotification = () => {
     if (reportOtherData !== "") {
       if (form.reportedto.includes("Others")) {
         try {
-          await setIsnext(false)
+          await setIsnext(false);
           const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
             createdBy: parseInt(userId),
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           });
         } catch (err) {
-          await setIsnext(true)
+          await setIsnext(true);
         }
       }
     }
@@ -248,14 +244,14 @@ const ReportingAndNotification = () => {
       if (evidanceChecked === true) {
         for (var key in evidanceForm) {
           if (typeof evidanceForm[key].evidenceDocument === "string") {
-            if(evidanceId.length>0){
-              for(let i in evidanceId){
+            if (evidanceId.length > 0) {
+              for (let i in evidanceId) {
                 await api.delete(
                   `api/v1/incidents/${localStorage.getItem(
                     "fkincidentId"
-                  )}/evidences/${evidanceId[i]}/`)
+                  )}/evidences/${evidanceId[i]}/`
+                );
               }
-              
             }
             try {
               await api.put(
@@ -270,7 +266,7 @@ const ReportingAndNotification = () => {
                   status: "Active",
                   createdBy: parseInt(userId),
                   fkIncidentId: localStorage.getItem("fkincidentId"),
-                  id:evidanceForm[key].id
+                  id: evidanceForm[key].id,
                 }
               );
             } catch (error) {
@@ -441,13 +437,12 @@ const ReportingAndNotification = () => {
       ) {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
-          let evdId = temp[key]["id"]
-          
-          if(evdId){
-            setEvidanceId([...evidanceId,evdId])
+          let evdId = temp[key]["id"];
+
+          if (evdId) {
+            setEvidanceId([...evidanceId, evdId]);
           }
-         
-          
+
           await setMessage("File uploaded successfully!");
           await setMessageType("success");
           await setOpen(true);
@@ -487,7 +482,7 @@ const ReportingAndNotification = () => {
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value");
     const result = res.data.data.results;
-    console.log(result)
+
     for (var key in result) {
       reportedToFilterData.push(result[key].inputLabel);
     }
@@ -685,12 +680,13 @@ const ReportingAndNotification = () => {
   }, []);
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
         <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
+          <Grid container item xs={12} md={9} spacing={3}>
+            <Grid item xs={12}>
               <FormControl
                 component="fieldset"
                 required
@@ -703,12 +699,12 @@ const ReportingAndNotification = () => {
                     <FormControlLabel
                       id={key}
                       key={key}
-                      value={value.inputLabel}
+                      value={value.inputValue}
                       control={<Checkbox />}
                       label={value.inputLabel}
-                      checked={!!form.reportedto.includes(value.inputLabel)}
+                      checked={!!form.reportedto.includes(value.inputValue)}
                       onChange={(e) => {
-                        handelReportedTo(e, value.inputLabel, "option");
+                        handelReportedTo(e, value.inputValue, "option");
                       }}
                     />
                   ))}
@@ -720,7 +716,7 @@ const ReportingAndNotification = () => {
             </Grid>
 
             {form.reportedto.includes("Others") ? (
-              <Grid item md={12}>
+              <Grid item xs={12}>
                 <TextField
                   id="Other"
                   variant="outlined"
@@ -738,29 +734,28 @@ const ReportingAndNotification = () => {
               </Grid>
             ) : null}
 
-            <Grid item lg={12} md={6} sm={6}>
+            <Grid item xs={12}>
               <FormControl component="fieldset">
                 <FormLabel component="legend">
                   Notification to be sent?
                 </FormLabel>
                 {notificationSentValue.map((value, index) => (
                   <FormControlLabel
+                    id={index}
                     key={index}
                     value={value.roleName}
                     control={<Checkbox />}
                     label={value.roleName}
+                    checked={!!form.reportedto.includes(value.roleName)}
                     onChange={(e) => {
-                      setForm({
-                        ...form,
-                        isnotificationsent: e.target.value,
-                      });
+                      handelReportedTo(e, value.roleName, "option");
                     }}
                   />
                 ))}
               </FormControl>
             </Grid>
 
-            <Grid item lg={12} justify="flex-start">
+            <Grid item xs={12} justify="flex-start">
               <Box marginTop={3} marginBottom={4}>
                 <Typography variant="h6" gutterBottom>
                   Initial evidences
@@ -772,7 +767,7 @@ const ReportingAndNotification = () => {
               </Box>
 
               {evidanceForm.map((item, index) => (
-                <Grid container item md={12} spacing={3} alignItems="center">
+                <Grid container item xs={12} spacing={3} alignItems="center">
                   <Grid
                     item
                     md={typeof item.evidenceDocument === "string" ? 2 : 6}
@@ -799,7 +794,7 @@ const ReportingAndNotification = () => {
                       </Tooltip>
                     </Grid>
                   ) : null}
-                  <Grid item md={4}>
+                  <Grid item xs={10} md={4}>
                     <TextField
                       id="evidanceRemark"
                       size="small"
@@ -822,7 +817,7 @@ const ReportingAndNotification = () => {
                       }
                     />
                   </Grid>
-                  <Grid item md={1}>
+                  <Grid item xs={1}>
                     <IconButton
                       variant="contained"
                       color="primary"
@@ -833,7 +828,7 @@ const ReportingAndNotification = () => {
                     </IconButton>
                   </Grid>
 
-                  <Grid item md={1}>
+                  <Grid item xs={1}>
                     {evidanceForm.length > 1 ? (
                       <IconButton
                         variant="contained"
@@ -846,7 +841,6 @@ const ReportingAndNotification = () => {
                   </Grid>
                 </Grid>
               ))}
-              {error && error.fileupload ? <p>{error.fileupload}</p> : null}
 
               <Snackbar
                 open={open}
@@ -859,13 +853,8 @@ const ReportingAndNotification = () => {
               </Snackbar>
             </Grid>
 
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                // required
-                className={classes.formControl}
-                // error={error && error.reportedby}
-              >
+            <Grid item xs={12} md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="supervisorname-label">
                   Supervisor name
                 </InputLabel>
@@ -873,7 +862,6 @@ const ReportingAndNotification = () => {
                   labelId="supervisorname-label"
                   id="supervisorname"
                   label="Supervisor name"
-                  // defaultValue={incidentsListData.supervisorByName? incidentsListData.supervisorByName: ""}
                   defaultValue={
                     incidentsListData.supervisorByName === ""
                       ? ""
@@ -897,12 +885,9 @@ const ReportingAndNotification = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* {error && error.reportedby ? (
-                  <FormHelperText>{error.reportedby}</FormHelperText>
-                ) : null} */}
               </FormControl>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <TextField
                 id="others"
                 variant="outlined"
@@ -912,7 +897,12 @@ const ReportingAndNotification = () => {
                     (item) => item.name === incidentsListData.supervisorByName
                   ).length > 0
                     ? ""
-                    : incidentsListData.supervisorByName
+                    : superVisorName.filter(
+                        (item) =>
+                          item.name === incidentsListData.supervisorByName
+                      ).length > 0
+                    ? incidentsListData.supervisorByName
+                    : ""
                 }
                 disabled={form.supervisorname !== "other"}
                 className={classes.formControl}
@@ -927,13 +917,8 @@ const ReportingAndNotification = () => {
               {error && error.othername ? <p>{error.othername}</p> : null}
             </Grid>
 
-            <Grid item md={6}>
-              <FormControl
-                variant="outlined"
-                // required
-                className={classes.formControl}
-                // error={error && error.reportedby}
-              >
+            <Grid item xs={12} md={6}>
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="reportedBy-label">Reported by</InputLabel>
                 <Select
                   labelId="reportedBy-label"
@@ -963,12 +948,10 @@ const ReportingAndNotification = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                {/* {error && error.reportedby ? (
-                  <FormHelperText>{error.reportedby}</FormHelperText>
-                ) : null} */}
               </FormControl>
             </Grid>
-            <Grid item md={6}>
+
+            <Grid item xs={12} md={6}>
               <TextField
                 id="others"
                 variant="outlined"
@@ -980,8 +963,8 @@ const ReportingAndNotification = () => {
                         (item) =>
                           item.name === incidentsListData.incidentReportedByName
                       ).length > 0
-                    ? ""
-                    : incidentsListData.incidentReportedByName
+                    ? incidentsListData.incidentReportedByName
+                    : ""
                 }
                 className={classes.formControl}
                 disabled={form.reportedby !== "other"}
@@ -993,17 +976,12 @@ const ReportingAndNotification = () => {
                 }}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   className={classes.formControl}
                   id="date-picker-dialog"
-                  // error={error && error.reportingdate}
-                  // helperText={
-                  //   error && error.reportingdate ? error.reportingdate : null
-                  // }
                   format="yyyy/MM/dd HH:mm"
-                  // required
                   inputVariant="outlined"
                   label="Reporting date"
                   value={incidentsListData.incidentReportedOn}
@@ -1016,7 +994,7 @@ const ReportingAndNotification = () => {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 id="reason"
                 variant="outlined"
@@ -1024,10 +1002,6 @@ const ReportingAndNotification = () => {
                 multiline
                 error={error && error.latereporting}
                 disabled={!lateReport}
-                // required
-                // helperText={
-                //   error && error.latereporting ? error.latereporting : null
-                // }
                 rows="4"
                 defaultValue={incidentsListData.reasonLateReporting}
                 className={classes.fullWidth}
@@ -1040,7 +1014,7 @@ const ReportingAndNotification = () => {
               />
             </Grid>
 
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <TextField
                 id="additionalDetails"
                 variant="outlined"
@@ -1058,7 +1032,7 @@ const ReportingAndNotification = () => {
               />
             </Grid>
 
-            <Grid item md={6}>
+            <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
@@ -1078,13 +1052,15 @@ const ReportingAndNotification = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={localStorage.getItem("deleteForm")}
-              listOfItems={INITIAL_NOTIFICATION_FORM}
-              selectedItem="Reporting and notification"
-            />
-          </Grid>
+          {isDesktop && (
+            <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={localStorage.getItem("deleteForm")}
+                listOfItems={INITIAL_NOTIFICATION_FORM}
+                selectedItem="Reporting and notification"
+              />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <h1>Loading...</h1>

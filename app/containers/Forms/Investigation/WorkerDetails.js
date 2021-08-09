@@ -41,7 +41,7 @@ import WorkerDetailValidator from "../../Validator/InvestigationValidation/Worke
 import { object } from "prop-types";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import Attachment from "../../../containers/Attachment/Attachment"
+import Attachment from "../../../containers/Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
   notActiveList: {
     borderLeft: `5px solid ${theme.palette.primary.main}`,
-  }
+  },
 }));
 
 const WorkerDetails = () => {
@@ -111,7 +111,7 @@ const WorkerDetails = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
-  const fileRef = useRef("")
+  const fileRef = useRef("");
 
   let [workerData, setworkerData] = useState({
     name: "",
@@ -321,7 +321,8 @@ const WorkerDetails = () => {
       if (!isNaN(form.id)) {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.put(
-          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/workers/${workerid}/`,
           data
         );
@@ -329,7 +330,8 @@ const WorkerDetails = () => {
       } else {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.post(
-          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/workers/`,
           data
         );
@@ -364,7 +366,7 @@ const WorkerDetails = () => {
 
       await handelUpdateCheck();
     }
-    document.getElementById("workerForm").reset()
+    document.getElementById("workerForm").reset();
   };
 
   const handelAddNew = async () => {
@@ -376,7 +378,7 @@ const WorkerDetails = () => {
       await localStorage.setItem("personEffected", JSON.stringify(worker));
       await handleNext();
     }
-    fileRef.current.value !== undefined ? fileRef.current.value = "" : null
+    fileRef.current.value !== undefined ? (fileRef.current.value = "") : null;
   };
 
   const handelPrevious = async () => {
@@ -400,7 +402,8 @@ const WorkerDetails = () => {
     if (!isNaN(worker_removed[workerNumber].id)) {
       let deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${
+          deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
@@ -445,8 +448,6 @@ const WorkerDetails = () => {
     );
     await handelUpdateCheck();
   };
-
-
 
   const PickList = async () => {
     await handelUpdateCheck();
@@ -1411,7 +1412,10 @@ const WorkerDetails = () => {
                   className={classes.fullWidth}
                   name="file"
                   accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                  style={{ color: typeof (form.attachments) === "string" && "transparent" }}
+                  style={{
+                    color:
+                      typeof form.attachments === "string" && "transparent",
+                  }}
                   onChange={(e) => {
                     handleFile(e);
                   }}
@@ -1419,7 +1423,8 @@ const WorkerDetails = () => {
               </Grid>
 
               <Grid item md={6}>
-                {form.attachments != "" && typeof form.attachments == "string" ? (
+                {form.attachments != "" &&
+                typeof form.attachments == "string" ? (
                   <Attachment value={form.attachments} />
                 ) : (
                   <p />
@@ -1470,7 +1475,7 @@ const WorkerDetails = () => {
                   />
                 </Grid>
                 <Grid item md={12}>
-                  <Box mt={4}>
+                  <Box mt={3}>
                     <Paper elevation={1}>
                       <List dense>
                         {localWorkerData.map((value, index) => (

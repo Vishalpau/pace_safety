@@ -59,9 +59,9 @@ const CorrectiveAction = () => {
       rcaSubType: "managementControl",
       rcaRemark: [],
     },
-    regionSupport: {
+    reasonsSupportAbove: {
       remarkType: "remark",
-      rcaSubType: "regionSupportAbove",
+      rcaSubType: "reasonsSupportAbove",
       rcaRemark: "",
     },
   });
@@ -84,10 +84,11 @@ const CorrectiveAction = () => {
 
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let allrcaSubType = ["managementControl", "regionSupportAbove"];
+    let allrcaSubType = ["managementControl", "reasonsSupportAbove"];
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
+    let putChecker = []
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
@@ -100,7 +101,14 @@ const CorrectiveAction = () => {
     );
     let allApiData = previousData.data.data.results;
 
-    if (allApiData.length > 19) {
+    allApiData.map((value) => {
+      if (allrcaSubType.includes(value.rcaSubType)) {
+        putChecker.push(true)
+      }
+    })
+
+    var numOfTrue = putChecker.filter(x => x === true).length;
+    if (numOfTrue > 0) {
       putId.current = lastItem;
       allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
@@ -122,10 +130,10 @@ const CorrectiveAction = () => {
           rcaSubType: "managementControl",
           rcaRemark: setRemark(tempApiData.managementControl),
         },
-        regionSupport: {
+        reasonsSupportAbove: {
           remarkType: "remark",
-          rcaSubType: "regionSupportAbove",
-          rcaRemark: tempApiData.regionSupportAbove,
+          rcaSubType: "reasonsSupportAbove",
+          rcaRemark: tempApiData.reasonsSupportAbove,
         },
       });
     }
@@ -156,12 +164,12 @@ const CorrectiveAction = () => {
     }
   };
 
-  const handelRegionSupport = (e) => {
+  const handelreasonsSupportAbove = (e) => {
     setForm({
       ...form,
-      regionSupport: {
+      reasonsSupportAbove: {
         remarkType: "remark",
-        rcaSubType: "regionSupportAbove",
+        rcaSubType: "reasonsSupportAbove",
         rcaRemark: e.target.value,
       },
     });
@@ -281,7 +289,7 @@ const CorrectiveAction = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-    <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
+    <PapperBlock title="Additional information" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item md={6}>
@@ -304,7 +312,7 @@ const CorrectiveAction = () => {
 
           <Grid item md={12}>
             <FormControl component="fieldset" error={error.managementControl}>
-              <FormLabel component="legend">Management control</FormLabel>
+              <FormLabel component="legend">Additional information</FormLabel>
               {MANAGEMENTCONTROL.map((value) => (
                 <FormControlLabel
                   control={<Checkbox name={value} />}
@@ -326,17 +334,17 @@ const CorrectiveAction = () => {
               id="filled-basic"
               variant="outlined"
               multiline
-              error={error.regionSupport}
+              error={error.reasonsSupportAbove}
               value={
-                form.regionSupport.rcaRemark !== "No option selected"
-                  ? form.regionSupport.rcaRemark
+                form.reasonsSupportAbove.rcaRemark !== "No option selected"
+                  ? form.reasonsSupportAbove.rcaRemark
                   : ""
               }
-              helperText={error ? error.regionSupport : ""}
+              helperText={error ? error.reasonsSupportAbove : ""}
               rows={3}
               label="Details of the reasons to support above"
               className={classes.formControl}
-              onChange={async (e) => handelRegionSupport(e)}
+              onChange={async (e) => handelreasonsSupportAbove(e)}
             />
           </Grid>
           <Grid item md={12}>
@@ -363,7 +371,7 @@ const CorrectiveAction = () => {
             <Grid item md={3}>
               <FormSideBar
                 listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Corrective actions"}
+                selectedItem={"Additional information"}
               />
             </Grid>
           )}

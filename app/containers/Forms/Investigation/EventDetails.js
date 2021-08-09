@@ -226,9 +226,11 @@ const EventDetails = () => {
 
   const handelNext = async (e) => {
     const { error, isValid } = EventDetailsValidate(form);
-    const { errorWeather } = EventDetailsWeatherValidate(weather)
+    const { errorWeather } = EventDetailsWeatherValidate(weather);
+    const { errorCost } = EventDetailsCostValidate(overAllCost)
     await setError(error);
-    await setErrorWeather(errorWeather)
+    await setErrorWeather(errorWeather);
+    await setErrorCost(errorCost)
 
     // event api call
     if (
@@ -273,7 +275,7 @@ const EventDetails = () => {
               }
             }
           }
-          history.push(
+          await history.push(
             `/app/incident-management/registration/investigation/action-taken/`
           );
         }
@@ -318,31 +320,33 @@ const EventDetails = () => {
           if (overAllCost.length > 0 && !isNaN(overAllCostId.current[0])) {
             let costObject = overAllCost;
             for (let keys in costObject) {
-              if (costObject[keys].id !== undefined) {
-                const resWeather = await api.put(
-                  `api/v1/incidents/${putId.current}/investigations/${investigationId.current
-                  }/events/${eventId.current}/cost/${overAllCostId.current[keys]
-                  }/`,
-                  costObject[keys]
-                );
-                if (resWeather == 200) {
-                  console.log("request done");
-                }
-              } else {
-                costObject[keys]["fkEventDetailsId"] = eventId.current;
-                const resWeather = await api.post(
-                  `api/v1/incidents/${putId.current}/investigations/${investigationId.current
-                  }/events/${eventId.current}/cost/`,
-                  costObject[keys]
-                );
-                if (resWeather == 201) {
-                  console.log("request done");
+              if (costObject[keys].costType !== "" && costObject[keys].costAmount !== "" && costObject[keys].casualFactor !== "") {
+                if (costObject[keys].id !== undefined) {
+                  const resWeather = await api.put(
+                    `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+                    }/events/${eventId.current}/cost/${overAllCostId.current[keys]
+                    }/`,
+                    costObject[keys]
+                  );
+                  if (resWeather == 200) {
+                    console.log("request done");
+                  }
+                } else {
+                  costObject[keys]["fkEventDetailsId"] = eventId.current;
+                  const resWeather = await api.post(
+                    `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+                    }/events/${eventId.current}/cost/`,
+                    costObject[keys]
+                  );
+                  if (resWeather == 201) {
+                    console.log("request done");
+                  }
                 }
               }
             }
           }
         }
-        history.push(
+        await history.push(
           `/app/incident-management/registration/investigation/action-taken/${putId.current
           }`
         );

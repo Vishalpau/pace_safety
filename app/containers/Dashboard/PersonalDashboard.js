@@ -288,6 +288,9 @@ function PersonalDashboard(props) {
         }
       })
       .catch(function(error) {
+        localStorage.removeItem("access_token");
+        localStorage.clear();
+        window.location.href = `${LOGOUT_URL}`;
       });
   };
 

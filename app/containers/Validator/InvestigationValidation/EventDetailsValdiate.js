@@ -5,17 +5,17 @@ function EventDetailsValidate(data) {
     const error = {};
 
     if (validator.isEmpty(data.activity.toString())) {
-        error.activity = "please enter activity";
+        error.activity = "please select activity";
         isValid = false;
     }
 
     if (validator.isEmpty(data.jobTask.toString())) {
-        error.jobTask = "please enter job task";
+        error.jobTask = "please select job task";
         isValid = false;
     }
 
     if (validator.isEmpty(data.spillsFluidType.toString())) {
-        error.spillsFluidType = "please enter spills type";
+        error.spillsFluidType = "please select spills type";
         isValid = false;
     }
     if (data.temperature.length !== 0 && data.temperature.length > 45) {
