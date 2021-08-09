@@ -222,7 +222,7 @@ const AdditionalDetails = () => {
                           id="filled-basic"
                           variant="outlined"
                           label={value.question}
-                          required
+                          required = {value.question === "Additional notes if any" ? false : true}
                           error={value.error}
                           helperText={value.error ? value.error : null}
                           multiline
@@ -249,7 +249,7 @@ const AdditionalDetails = () => {
                         variant="outlined"
                         label={value.question}
                         error={value.error}
-                        required
+                        required = {value.question === "Additional notes if any" ? false : true}
                         helperText={value.error ? value.error : null}
                         multiline
                         rows="4"
