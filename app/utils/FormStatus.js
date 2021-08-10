@@ -28,15 +28,31 @@ export const InvestigationStatus = async () => {
 }
 
 export const EvidenceStatus = async () => {
-    let res = await api.get(`/api/v1/incidents/${incident_id}/evidences/`);
-    let results = res.data.data.results;
-    return "pending"
+    const allEvidence = await api.get(`/api/v1/incidents/${incident_id}/activities/`);
+    const result = allEvidence.data.data.results[24];
+    let lastValue = result.question
+    let checkDoneOrPending = CheckDone(lastValue)
+    return checkDoneOrPending
 }
 
 export const RootCauseAnalysisStatus = async () => {
-    let res = await api.get(`/api/v1/incidents/${incident_id}/causeanalysis/`);
-    let results = res.data.data.results[0]
-    return "pending"
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
+    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+    if (rcaRecommended !== undefined) {
+        if (rcaRecommended == "PACE cause analysis") {
+            let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+            let paceCauseData = paceCause.data.data.results[0];
+
+        } else if (rcaRecommended == "Cause analysis") {
+            let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
+            let rootCauseData = rootCause.data.data.results[0];
+        } else if (rcaRecommended == "Five why analysis") {
+            let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+            let whyAnalysisData = whyAnalysis.data.data.results[0];
+            let checkDoneOrPending = CheckDone(lastValue)
+            return checkDoneOrPending
+        }
+    }
 }
 
 export const LessionLearnedStatus = async () => {

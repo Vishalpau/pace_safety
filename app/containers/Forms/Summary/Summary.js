@@ -218,7 +218,6 @@ const Summary = () => {
   }
 
   const handelRootCauseAnalysisView = () => {
-    console.log(rcaRecommendedValue.current)
     if (rcaRecommendedValue.current == "PACE cause analysis") {
       if (paceCauseData == undefined) {
         handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")

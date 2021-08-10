@@ -599,9 +599,9 @@ const InvestigationSummary = () => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Working hours.
+                        Working hours
                       </Typography>
-                      {value.workHours !== null ? (
+                      {value.workHours.toString().length > 0 ? (
                         <Typography variant="body" className={Fonts.labelValue}>
                           {value.workHours}
                         </Typography>
@@ -698,22 +698,20 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* time on project */}
-                    {value.timeOnProject !== null ? (
-                      <Grid item xs={12} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Time on project
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.timeOnProject}
-                        </Typography>
-                      </Grid>
-                    ) : (
-                      "-"
-                    )}
+
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Time on project
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {value.timeOnProject.toString().length > 0 ? <p>{value.timeOnProject}</p> : "-"}
+                      </Typography>
+                    </Grid>
+
 
                     {/* time in industry*/}
                     <Grid item xs={12} md={6}>
@@ -1432,7 +1430,7 @@ const InvestigationSummary = () => {
                       Pre-event mitigations
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.preEventMitigations != null
+                      {value.preEventMitigations.lenght > 0
                         ? value.preEventMitigations
                         : "-"}
                     </Typography>
