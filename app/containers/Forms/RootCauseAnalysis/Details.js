@@ -67,7 +67,7 @@ const Details = () => {
     new Date("2014-08-18T21:11:54")
   );
   let [hideArray, setHideArray] = useState([]);
-  let investigationData = useRef({});
+  let [investigationData, setInvestigationData] = useState({});
   let [rcaDisable, setRcaDisable] = useState("")
 
   // get data for put
@@ -80,27 +80,14 @@ const Details = () => {
     let incidentId = !isNaN(lastItem)
       ? lastItem
       : localStorage.getItem("fkincidentId");
+    putId.current = incidentId
     let previousData = await api.get(
       `/api/v1/incidents/${incidentId}/causeanalysis/`
     );
     let allApiData = previousData.data.data.results[0];
 
     // fetching data from 
-    let investigationpreviousData = await api.get(
-      `api/v1/incidents/${incidentId}/investigations/`
-    );
-    let investigationApiData = investigationpreviousData.data.data.results[0];
-    if (investigationApiData != null) {
-      if (investigationApiData.rcaRecommended != "") {
-        setForm({ ...form, rcaRecommended: investigationApiData.rcaRecommended });
-        await handelRcaRecommended("a", investigationApiData.rcaRecommended);
-      }
-      investigationData.current = {
-        startData: investigationApiData.srartDate,
-        endDate: investigationApiData.endDate,
-        classification: investigationApiData.classification
-      }
-    }
+
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
@@ -117,6 +104,24 @@ const Details = () => {
       checkPost.current = false;
     }
   };
+
+  const handelInvestigationData = async () => {
+    let investigationpreviousData = await api.get(
+      `api/v1/incidents/${putId.current}/investigations/`
+    );
+    let investigationApiData = investigationpreviousData.data.data.results[0];
+    if (investigationApiData != null) {
+      if (investigationApiData.rcaRecommended != "") {
+        setForm({ ...form, rcaRecommended: investigationApiData.rcaRecommended });
+        await handelRcaRecommended("a", investigationApiData.rcaRecommended);
+      }
+      setInvestigationData({
+        startData: investigationApiData.srartDate,
+        endDate: investigationApiData.endDate,
+        classification: investigationApiData.classification
+      })
+    }
+  }
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
@@ -230,6 +235,7 @@ const Details = () => {
     handelUpdateCheck();
     fetchIncidentData();
     setHideArray(localStorage.getItem("deleteForm"));
+    handelInvestigationData();
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -264,7 +270,7 @@ const Details = () => {
                 className={classes.formControl}
                 ampm={false}
                 value={moment(
-                  investigationData.current["startData"]
+                  investigationData["startData"]
                 ).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation start date"
@@ -281,7 +287,7 @@ const Details = () => {
                 className={classes.formControl}
                 ampm={false}
                 value={moment(
-                  investigationData.current["endData"]
+                  investigationData["endData"]
                 ).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation end date"
@@ -295,7 +301,7 @@ const Details = () => {
               Level of classification
             </Typography>
             <Typography className={Type.labelValue}>
-              {checkValue(investigationData.current["classification"])}
+              {checkValue(investigationData["classification"])}
             </Typography>
           </Grid>
 
