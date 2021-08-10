@@ -237,18 +237,34 @@ const Evidence = () => {
     let tempData = [];
     if (newData.length > 0) {
       for (let i = 0; i < newData.length; i++) {
-        tempData.push({
-          evidenceCategory: newData[i].evidenceCategory,
-          evidenceCheck: newData[i].evidenceCheck,
-          evidenceRemark: newData[i].evidenceRemark,
-          evidenceDocument: newData[i].evidenceDocument,
-          status: "Active",
-          createdBy: 0,
-          updatedBy: 0,
-          fkIncidentId: id || localStorage.getItem("fkincidentId"),
-          pk: newData[i].id,
-        });
+        if(newData[i].evidenceCheck!=="Yes"){
+          tempData.push({
+            evidenceCategory: newData[i].evidenceCategory,
+            evidenceCheck: newData[i].evidenceCheck,
+            evidenceRemark: newData[i].evidenceRemark,
+            evidenceDocument: null,
+            status: "Active",
+            createdBy: 0,
+            updatedBy: 0,
+            fkIncidentId: id || localStorage.getItem("fkincidentId"),
+            pk: newData[i].id,
+          });
+        }else{
+          tempData.push({
+            evidenceCategory: newData[i].evidenceCategory,
+            evidenceCheck: newData[i].evidenceCheck,
+            evidenceRemark: newData[i].evidenceRemark,
+            evidenceDocument: newData[i].evidenceDocument,
+            status: "Active",
+            createdBy: 0,
+            updatedBy: 0,
+            fkIncidentId: id || localStorage.getItem("fkincidentId"),
+            pk: newData[i].id,
+          });
+        }
+       
       }
+      console.log(tempData)
       await setForm(tempData);
       await setEvideceData(tempData);
     }
@@ -363,17 +379,49 @@ const Evidence = () => {
       setIsNext(false)
       let status = 0
     if (evideceData.length > 0) {
-      
+      console.log(form)
       for (let i = 0; i < form.length; i++) {
         try {
-            const res = await api.delete(
-              `/api/v1/incidents/${form[i].fkIncidentId}/evidences/${evideceData[i].pk}/`
+          let data = new FormData();
+          data.append("evidenceCheck", form[i].evidenceCheck);
+          data.append("evidenceNumber", form[i].evidenceNumber);
+          data.append("evidenceCategory", form[i].evidenceCategory);
+          data.append("evidenceRemark", form[i].evidenceRemark);
+          if (typeof form[i].evidenceDocument !== "string") {
+            if (form[i].evidenceDocument !== null) {
+              data.append("evidenceDocument", form[i].evidenceDocument);
+            }
+          }
+          data.append("status", "Active");
+          data.append("updatedAt", new Date().toISOString());
+          data.append("updatedBy", form[i].updatedBy);
+          data.append("fkIncidentId", form[i].fkIncidentId);
+          if(form[i].pk){
+            const res = await api.put(
+              `/api/v1/incidents/${localStorage.getItem(
+                "fkincidentId"
+              )}/evidences/${form[i].pk}/`,
+              data
             );
+            if(res.status === 200){
+              status = 201
+            } 
+          }else{
+            const res = await api.post(
+              `/api/v1/incidents/${localStorage.getItem(
+                "fkincidentId"
+              )}/evidences/`,
+              data
+            );
+            status = res.status
+          }
+          
+
         } catch (error) {
           setIsNext(true)
         }
       }
-    }
+    }else{
       for (let i = 0; i < form.length; i++) {
         try {
           let data = new FormData();
@@ -404,6 +452,8 @@ const Evidence = () => {
           setIsNext(true)
         }
       }
+    }
+
       if (status === 201) {
         history.push(
           `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
