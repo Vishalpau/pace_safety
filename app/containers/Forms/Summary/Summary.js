@@ -91,6 +91,7 @@ const Summary = () => {
     false
   );
   const rootCauseStatus = useRef(false);
+  const rcaRecommendedValue = useRef("")
 
   const [formStatus, setFormStatus] = useState({
     initialNotificationCheck: "",
@@ -136,32 +137,34 @@ const Summary = () => {
     await setLessionLearnData(result);
   };
 
+  const handelRcaValue = async () => {
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
+    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+    rcaRecommendedValue.current = rcaRecommended
+  }
+
   const rootCauseAnalysisCheck = async () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
 
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
 
-    let paceCause = await api.get(
-      `/api/v1/incidents/${incidentId}/pacecauses/`
-    );
+    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
     let paceCauseData = paceCause.data.data.results[0];
-
     await setPaceCauseData(paceCauseData);
 
-    let rootCause = await api.get(
-      `/api/v1/incidents/${incidentId}/rootcauses/`
-    );
+    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
     let rootCauseData = rootCause.data.data.results[0];
     await setRootCausesData(rootCauseData);
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
     let whyAnalysisData = whyAnalysis.data.data.results[0];
     await setWhyData(whyAnalysisData);
+
   };
 
   const [selectedDate, setSelectedDate] = React.useState(
@@ -202,7 +205,7 @@ const Summary = () => {
     }
   }
 
-  const handelEvidenceView = () => {
+  const handelEvidenceView = (e) => {
     if (evidencesData == undefined) {
       handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
     } else {
@@ -215,14 +218,39 @@ const Summary = () => {
   }
 
   const handelRootCauseAnalysisView = () => {
-    if (paceCauseData == undefined || rootCausesData == undefined || whyData == undefined) {
-      handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
+    console.log(rcaRecommendedValue.current)
+    if (rcaRecommendedValue.current == "PACE cause analysis") {
+      if (paceCauseData == undefined) {
+        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
+      } else {
+        setInitialNotification(false);
+        setInvestigation(false);
+        setEvidence(false);
+        setRootCauseAnalysis(true);
+        setLessionlearn(false);
+      }
+    } else if (rcaRecommendedValue.current == "Cause analysis") {
+      if (rootCausesData == undefined) {
+        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
+      } else {
+        setInitialNotification(false);
+        setInvestigation(false);
+        setEvidence(false);
+        setRootCauseAnalysis(true);
+        setLessionlearn(false);
+      }
+    } else if (rcaRecommendedValue.current == "Five why analysis") {
+      if (whyData == undefined) {
+        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
+      } else {
+        setInitialNotification(false);
+        setInvestigation(false);
+        setEvidence(false);
+        setRootCauseAnalysis(true);
+        setLessionlearn(false);
+      }
     } else {
-      setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(true);
-      setLessionlearn(false);
+      handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
     }
   }
 
@@ -247,7 +275,8 @@ const Summary = () => {
     fetchLessonLerned();
     rootCauseAnalysisCheck();
     fetchReportData();
-    CheckFormStatus()
+    CheckFormStatus();
+    handelRcaValue();
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -324,7 +353,7 @@ const Summary = () => {
                   size="large"
                   className={classes.statusButton}
                   endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
-                  onClick={(e) => handelEvidenceView()}
+                  onClick={(e) => handelEvidenceView(e)}
                 >
                   Evidence
                 </Button>
