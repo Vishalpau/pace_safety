@@ -122,7 +122,7 @@ const WhyAnalysis = () => {
   };
 
   const handelAdd = (e) => {
-    if (Object.keys(form).length < 5) {
+    if (Object.keys(form).length < 100) {
       setForm([...form, { why: "", whyCount: "" }]);
     }
   };
@@ -248,17 +248,6 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={11}>
-            <TextField
-              variant="outlined"
-              id="filled-basic"
-              label="Evidence Collection"
-              multiline
-              rows={3}
-              className={classes.formControl}
-            />
-          </Grid>
-
           {form.map((item, index) => (
             <Grid item xs={12}>
               <Grid container spacing={2}>
@@ -290,7 +279,7 @@ const WhyAnalysis = () => {
             </Grid>
           ))}
 
-          {form.length <= 4 ? (
+          {form.length <= 99 ? (
             <Grid item xs={12} md={1}>
               {/* This button will add another entry of why input  */}
               {putId.current == "" ? (

@@ -58,16 +58,11 @@ const ActionTaken = () => {
   const [error, setError] = useState({});
 
   const handleNext = async (e) => {
-    const res = await api.put(
-      `api/v1/incidents/${putId.current}/investigations/${
-        investigationId.current
-      }/`,
-      form
-    );
+    form.preEventMitigations === null ? form["preEventMitigations"] = "" : null
+    console.log(form.preEventMitigations)
+    const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
     if (res.status === 200) {
-      history.push(
-        `/app/incident-management/registration/summary/summary/${putId.current}`
-      );
+      history.push(`/app/incident-management/registration/summary/summary/${putId.current}`);
     }
   };
 
