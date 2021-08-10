@@ -227,7 +227,7 @@ const EvidenceSummary = () => {
                             </TableCell>
 
                             <TableCell>
-                              {value.evidenceDocument ? (
+                              {value.evidenceCheck!=='Yes'?"-":value.evidenceDocument ? (
                                 <Tooltip
                                   title={handelFileName(
                                     value.evidenceDocument
