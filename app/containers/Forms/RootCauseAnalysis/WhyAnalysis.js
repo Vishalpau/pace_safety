@@ -248,17 +248,6 @@ const WhyAnalysis = () => {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={11}>
-            <TextField
-              variant="outlined"
-              id="filled-basic"
-              label="Evidence Collection"
-              multiline
-              rows={3}
-              className={classes.formControl}
-            />
-          </Grid>
-
           {form.map((item, index) => (
             <Grid item xs={12}>
               <Grid container spacing={2}>
