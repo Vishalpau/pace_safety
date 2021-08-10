@@ -122,7 +122,7 @@ const WhyAnalysis = () => {
   };
 
   const handelAdd = (e) => {
-    if (Object.keys(form).length < 5) {
+    if (Object.keys(form).length < 100) {
       setForm([...form, { why: "", whyCount: "" }]);
     }
   };
@@ -290,7 +290,7 @@ const WhyAnalysis = () => {
             </Grid>
           ))}
 
-          {form.length <= 4 ? (
+          {form.length <= 99 ? (
             <Grid item xs={12} md={1}>
               {/* This button will add another entry of why input  */}
               {putId.current == "" ? (

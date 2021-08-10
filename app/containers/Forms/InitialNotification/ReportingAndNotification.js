@@ -237,7 +237,7 @@ const ReportingAndNotification = () => {
           if (evidanceForm[key].evidenceDocument !== null) {
             if (typeof evidanceForm[key].evidenceDocument === "string") {
               if (evidanceId.length > 0) {
-                for (let i in evidanceId) {
+                for (let i =0;i< evidanceId.length;i++) {
                   await api.delete(
                     `api/v1/incidents/${localStorage.getItem(
                       "fkincidentId"
@@ -265,6 +265,15 @@ const ReportingAndNotification = () => {
                 setIsnext(true);
               }
             } else {
+              if (evidanceId.length > 0) {
+                for (let i =0;i< evidanceId.length;i++) {
+                  await api.delete(
+                    `api/v1/incidents/${localStorage.getItem(
+                      "fkincidentId"
+                    )}/evidences/${evidanceId[i]}/`
+                  );
+                }
+              }
               try {
                 const formData = new FormData();
                 formData.append(
@@ -473,10 +482,23 @@ const ReportingAndNotification = () => {
   };
 
   // handle remove evidance
-  const handleRemoveEvidance = async (key) => {
-    const temp = [...evidanceForm];
+  const handleRemoveEvidance = async (key,id) => {  
+    if(id){
+     const res= await api.delete(
+        `api/v1/incidents/${localStorage.getItem(
+          "fkincidentId"
+        )}/evidences/${id}/`
+      );
+      if(res.status === 200){
+        const temp = [...evidanceForm];
     const newData = temp.filter((item, index) => index !== key);
     await setEvidanceForm(newData);
+      }
+    }else{
+      const temp = [...evidanceForm];
+      const newData = temp.filter((item, index) => index !== key);
+      await setEvidanceForm(newData);
+    }
   };
 
   //  Fetch checkbox value
@@ -684,178 +706,177 @@ const ReportingAndNotification = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
-      {isLoading ? (
-        <Grid container spacing={3}>
+    {isLoading ? (
+      <Grid container spacing={3}>
+        <Grid container item xs={12} md={9} spacing={3}>
           <Grid item xs={12}>
-            <Grid container item xs={12} md={9} spacing={3}>
-              <Grid item xs={12} md={6}>
-                <FormControl
-                  component="fieldset"
-                  required
-                  error={error && error.reportedto}
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">Reportable to</FormLabel>
-                  <FormGroup>
-                    {reportedTo.map((value, key) => (
-                      <FormControlLabel
-                        id={key}
-                        key={key}
-                        value={value.inputValue}
-                        control={<Checkbox />}
-                        label={value.inputLabel}
-                        checked={!!form.reportedto.includes(value.inputValue)}
-                        onChange={(e) => {
-                          handelReportedTo(e, value.inputValue, "option");
-                        }}
-                      />
-                    ))}
-                  </FormGroup>
-                  {error && error.reportedto && (
-                    <FormHelperText>{error.reportedto}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-
-              {form.reportedto.includes("Others") ? (
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    id="Other"
-                    variant="outlined"
-                    label="Other"
-                    error={error && error[`otherData`]}
-                    helperText={
-                      error && error[`otherData`] ? error[`otherData`] : null
-                    }
-                    defaultValue={reportOtherData}
-                    className={classes.formControl}
+            <FormControl
+              component="fieldset"
+              required
+              error={error && error.reportedto}
+              className={classes.formControl}
+            >
+              <FormLabel component="legend">Reportable to</FormLabel>
+              <FormGroup>
+                {reportedTo.map((value, key) => (
+                  <FormControlLabel
+                    id={key}
+                    key={key}
+                    value={value.inputValue}
+                    control={<Checkbox />}
+                    label={value.inputLabel}
+                    checked={!!form.reportedto.includes(value.inputValue)}
                     onChange={(e) => {
-                      setReportOtherData(e.target.value);
+                      handelReportedTo(e, value.inputValue, "option");
                     }}
                   />
-                </Grid>
-              ) : null}
-
-              <Grid item xs={12} md={6}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">
-                    Notification to be sent?
-                  </FormLabel>
-                  {notificationSentValue.map((value, index) => (
-                    <FormControlLabel
-                      id={index}
-                      key={index}
-                      value={value.roleName}
-                      control={<Checkbox />}
-                      label={value.roleName}
-                      // checked={!!form.reportedto.includes(value.roleName)}
-                      onChange={(e) => {
-                        handelNotifyTo(index, e);
-                      }}
-                    />
-                  ))}
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} justify="flex-start">
-                <Box marginTop={3} marginBottom={4}>
-                  <Typography variant="h6" gutterBottom>
-                    Initial evidences
-                  </Typography>
-                  <Typography variant="caption">
-                    Only PDF,PNG,JPEG,JPG,Excel,Xls,Doc,Word & PPT files are
-                    supported
-                  </Typography>
-                </Box>
-
-                {evidanceForm.map((item, index) => (
-                  <Grid container item xs={12} spacing={3} alignItems="center">
-                    <Grid
-                      item
-                      md={typeof item.evidenceDocument === "string" ? 2 : 6}
-                    >
-                      <input
-                        ref={ref}
-                        id="file"
-                        type="file"
-                        accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                        style={{
-                          color:
-                            typeof item.evidenceDocument === "string" &&
-                            "transparent",
-                        }}
-                        onChange={(e) =>
-                          handleEvidanceForm(e, index, "evidenceDocument")
-                        }
-                      />
-                    </Grid>
-                    {typeof item.evidenceDocument === "string" ? (
-                      <Grid item md={4}>
-                        <Tooltip title={"fileName"}>
-                          <Attachment value={item.evidenceDocument} />
-                        </Tooltip>
-                      </Grid>
-                    ) : null}
-                    <Grid item xs={10} md={4}>
-                      <TextField
-                        id="evidanceRemark"
-                        size="small"
-                        variant="outlined"
-                        label="Evidences remark"
-                        error={
-                          evidenceError &&
-                          evidenceError[`evidenceRemark${[index]}`]
-                        }
-                        helperText={
-                          evidenceError &&
-                            evidenceError[`evidenceRemark${[index]}`]
-                            ? evidenceError[`evidenceRemark${[index]}`]
-                            : null
-                        }
-                        className={classes.formControl}
-                        value={item.evidenceRemark}
-                        onChange={(e) =>
-                          handleEvidanceForm(e, index, "evidenceRemark")
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={1}>
-                      <IconButton
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={(e) => handleNewEvidance(e)}
-                      >
-                        <AddCircleIcon />
-                      </IconButton>
-                    </Grid>
-
-                    <Grid item xs={1}>
-                      {evidanceForm.length > 1 ? (
-                        <IconButton
-                          variant="contained"
-                          color="primary"
-                          onClick={() => handleRemoveEvidance(index)}
-                        >
-                          <DeleteForeverIcon />
-                        </IconButton>
-                      ) : null}
-                    </Grid>
-                  </Grid>
                 ))}
+              </FormGroup>
+              {error && error.reportedto && (
+                <FormHelperText>{error.reportedto}</FormHelperText>
+              )}
+            </FormControl>
+          </Grid>
 
-                <Snackbar
-                  open={open}
-                  autoHideDuration={6000}
-                  onClose={handleClose}
+          {form.reportedto.includes("Others") ? (
+            <Grid item xs={12}>
+              <TextField
+                id="Other"
+                variant="outlined"
+                label="Other"
+                error={error && error[`otherData`]}
+                helperText={
+                  error && error[`otherData`] ? error[`otherData`] : null
+                }
+                defaultValue={reportOtherData}
+                className={classes.formControl}
+                onChange={(e) => {
+                  setReportOtherData(e.target.value);
+                }}
+              />
+            </Grid>
+          ) : null}
+
+          <Grid item xs={12}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">
+                Notification to be sent?
+              </FormLabel>
+              {notificationSentValue.map((value, index) => (
+                <FormControlLabel
+                  id={index}
+                  key={index}
+                  value={value.roleName}
+                  control={<Checkbox />}
+                  label={value.roleName}
+                  checked={!!form.reportedto.includes(value.roleName)}
+                  onChange={(e) => {
+                    handelReportedTo(e, value.roleName, "option");
+                  }}
+                />
+              ))}
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} justify="flex-start">
+            <Box marginTop={3} marginBottom={4}>
+              <Typography variant="h6" gutterBottom>
+                Initial evidences
+              </Typography>
+              <Typography variant="caption">
+                Only PDF,PNG,JPEG,JPG,Excel,Xls,Doc,Word & PPT files are
+                supported
+              </Typography>
+            </Box>
+
+            {evidanceForm.map((item, index) => (
+              <Grid container item xs={12} spacing={3} alignItems="center">
+                <Grid
+                  item
+                  md={typeof item.evidenceDocument === "string" ? 2 : 6}
                 >
-                  <Alert onClose={handleClose} severity={messageType}>
-                    {message}
-                  </Alert>
-                </Snackbar>
-              </Grid>
+                  <input
+                    ref={ref}
+                    id="file"
+                    type="file"
+                    accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                    style={{
+                      color:
+                        typeof item.evidenceDocument === "string" &&
+                        "transparent",
+                    }}
+                    onChange={(e) =>
+                      handleEvidanceForm(e, index, "evidenceDocument")
+                    }
+                  />
+                </Grid>
+                {typeof item.evidenceDocument === "string" ? (
+                  <Grid item md={4}>
+                    <Tooltip title={"fileName"}>
+                      <Attachment value={item.evidenceDocument} />
+                    </Tooltip>
+                  </Grid>
+                ) : null}
+                <Grid item xs={10} md={4}>
+                  <TextField
+                    id="evidanceRemark"
+                    size="small"
+                    variant="outlined"
+                    label="Evidences remark"
+                    error={
+                      evidenceError &&
+                      evidenceError[`evidenceRemark${[index]}`]
+                    }
+                    helperText={
+                      evidenceError &&
+                        evidenceError[`evidenceRemark${[index]}`]
+                        ? evidenceError[`evidenceRemark${[index]}`]
+                        : null
+                    }
+                    className={classes.formControl}
+                    value={item.evidenceRemark}
+                    onChange={(e) =>
+                      handleEvidanceForm(e, index, "evidenceRemark")
+                    }
+                  />
+                </Grid>
+                <Grid item xs={1}>
+                  <IconButton
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={(e) => handleNewEvidance(e)}
+                  >
+                    <AddCircleIcon />
+                  </IconButton>
+                </Grid>
 
-              <Grid item xs={12} md={6}>
+                <Grid item xs={1}>
+                  {evidanceForm.length > 1 ? (
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleRemoveEvidance(index, item.id && item.id)}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  ) : null}
+                </Grid>
+              </Grid>
+            ))}
+
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+            >
+              <Alert onClose={handleClose} severity={messageType}>
+                {message}
+              </Alert>
+            </Snackbar>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="supervisorname-label">
                     Supervisor name
@@ -971,96 +992,95 @@ const ReportingAndNotification = () => {
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDateTimePicker
-                    className={classes.formControl}
-                    id="date-picker-dialog"
-                    format="yyyy/MM/dd HH:mm"
-                    inputVariant="outlined"
-                    label="Reporting date"
-                    value={incidentsListData.incidentReportedOn}
-                    KeyboardButtonProps={{
-                      "aria-label": "change date",
-                    }}
-                    disableFuture
-                    disabled
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDateTimePicker
+                className={classes.formControl}
+                id="date-picker-dialog"
+                format="yyyy/MM/dd HH:mm"
+                inputVariant="outlined"
+                label="Reporting date"
+                value={incidentsListData.incidentReportedOn}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                disableFuture
+                disabled
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  id="reason"
-                  variant="outlined"
-                  label="Reason for reporting later than 4 hours"
-                  multiline
-                  error={error && error.latereporting}
-                  disabled={!lateReport}
-                  rows="4"
-                  defaultValue={incidentsListData.reasonLateReporting}
-                  className={classes.fullWidth}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      latereporting: e.target.value.toString(),
-                    });
-                  }}
-                />
-              </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="reason"
+              variant="outlined"
+              label="Reason for reporting later than 4 hours"
+              multiline
+              error={error && error.latereporting}
+              disabled={!lateReport}
+              rows="4"
+              defaultValue={incidentsListData.reasonLateReporting}
+              className={classes.fullWidth}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  latereporting: e.target.value.toString(),
+                });
+              }}
+            />
+          </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  id="additionalDetails"
-                  variant="outlined"
-                  label="Additional details if any"
-                  multiline
-                  rows="4"
-                  defaultValue={incidentsListData.notificationComments}
-                  className={classes.fullWidth}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      additionaldetails: e.target.value.toString(),
-                    });
-                  }}
-                />
-              </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="additionalDetails"
+              variant="outlined"
+              label="Additional details if any"
+              multiline
+              rows="4"
+              defaultValue={incidentsListData.notificationComments}
+              className={classes.fullWidth}
+              onChange={(e) => {
+                setForm({
+                  ...form,
+                  additionaldetails: e.target.value.toString(),
+                });
+              }}
+            />
+          </Grid>
 
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={(e) => handleGoBack(e)}
-                >
-                  Previous
-                </Button>
-                <Button
-                  type="button"
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={(e) => handelNext(e)}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-            {isDesktop && (
-              <Grid item xs={12} md={3}>
-                <FormSideBar
-                  deleteForm={localStorage.getItem("deleteForm")}
-                  listOfItems={INITIAL_NOTIFICATION_FORM}
-                  selectedItem="Reporting and notification"
-                />
-              </Grid>
-            )}
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={(e) => handleGoBack(e)}
+            >
+              Previous
+            </Button>
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={(e) => handelNext(e)}
+            >
+              Submit
+            </Button>
           </Grid>
         </Grid>
-      ) : (
-        <h1>Loading...</h1>
-      )}
-    </PapperBlock>
+        {isDesktop && (
+          <Grid item xs={12} md={3}>
+            <FormSideBar
+              deleteForm={localStorage.getItem("deleteForm")}
+              listOfItems={INITIAL_NOTIFICATION_FORM}
+              selectedItem="Reporting and notification"
+            />
+          </Grid>
+        )}
+      </Grid>
+    ) : (
+      <h1>Loading...</h1>
+    )}
+  </PapperBlock>
   );
 };
 
