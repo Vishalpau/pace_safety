@@ -317,7 +317,7 @@ const LessionLearned = () => {
               </Typography>
 
               <Typography varint="body1" className={Type.labelValue}>
-                {incidentsListData.incidentNumber}
+                {incidentsListData.incidentNumber?incidentsListData.incidentNumber:"-"}
               </Typography>
             </Grid>
 
@@ -348,44 +348,44 @@ const LessionLearned = () => {
                 Reported by
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentReportedByName}
+                {incidentsListData.incidentReportedByName?incidentsListData.incidentReportedByName:"-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident type
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentType}
+                {incidentsListData.incidentType?incidentsListData.incidentType:"-"}
                 {' '}
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} >
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident title
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentTitle}
+                {incidentsListData.incidentTitle?incidentsListData.incidentTitle:"-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} >
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident description
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentDetails}
+                {incidentsListData.incidentDetails?incidentsListData.incidentDetails:"-"}
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} >
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident location
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentLocation}
+                {incidentsListData.incidentLocation?incidentsListData.incidentLocation:"-"}
               </Typography>
             </Grid>
 

@@ -80,9 +80,9 @@ const useStyles = makeStyles((theme) => ({
   table: { minWidth: 900 },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="up" ref={ref} {...props} />
+));
 
 const EvidenceSummary = () => {
   const [evidence, setEvidence] = useState([]);
@@ -109,10 +109,10 @@ const EvidenceSummary = () => {
   };
 
   const download = (image_link) => {
-    let onlyImage_url = image_link.replace("https://", "");
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
-    let imageArray = image_url.split("/");
-    let image_name = imageArray[imageArray.length - 1];
+    const onlyImage_url = image_link.replace("https://", "");
+    const image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    const imageArray = image_url.split("/");
+    const image_name = imageArray[imageArray.length - 1];
     saveAs(image_url, image_name);
     handleClose();
   };
@@ -154,7 +154,7 @@ const EvidenceSummary = () => {
         `/app/incident-management/registration/evidence/evidence/${id}`
       );
     } else if (value == "add") {
-      history.push(`/app/incident-management/registration/evidence/evidence/`);
+      history.push("/app/incident-management/registration/evidence/evidence/");
     }
   };
 
@@ -227,23 +227,19 @@ const EvidenceSummary = () => {
                       {evidence.length !== 0
                         ? evidence.map((value, index) => (
                             <TableRow key={index}>
-                              <TableCell align="center">
-                                {value.evidenceNumber}
-                              </TableCell>
-                              <TableCell align="center">
-                                {value.evidenceCheck}
-                              </TableCell>
-                              <TableCell align="center">
-                                {value.evidenceCategory}
-                              </TableCell>
-                              <TableCell align="center">
+                              <TableCell>{value.evidenceNumber}</TableCell>
+                              <TableCell>{value.evidenceCheck}</TableCell>
+                              <TableCell>{value.evidenceCategory}</TableCell>
+                              <TableCell>
                                 {value.evidenceRemark
                                   ? value.evidenceRemark
                                   : "-"}
                               </TableCell>
 
                               <TableCell>
-                                {value.evidenceDocument ? (
+                                {value.evidenceCheck !== "Yes" ? (
+                                  "-"
+                                ) : value.evidenceDocument ? (
                                   <Tooltip
                                     title={handelFileName(
                                       value.evidenceDocument
