@@ -20,12 +20,12 @@ import Divider from "@material-ui/core/Divider";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import HazardiousActsValidation from "../../Validator/RCAValidation/HazardiousActsValidation";
 import { call } from "file-loader";
 
 import {
   HAZARDIOUS_ACTS_SUB_TYPES,
+  ROOT_CAUSE_ANALYSIS_FORM,
   SUPERVISON,
   WORKPACKAGE,
   EQUIMENTMACHINARY,
@@ -35,6 +35,7 @@ import {
   PROCEDURES,
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
+import { checkValue, handelApiValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -54,7 +55,7 @@ const HazardiousActs = () => {
     safetyIssues: { remarkType: "options", rcaSubType: "safetyIssues", rcaRemark: [] },
     ergonimics: { remarkType: "options", rcaSubType: "ergonimics", rcaRemark: [] },
     procedures: { remarkType: "options", rcaSubType: "procedures", rcaRemark: [] },
-    others: { remarkType: "remark", rcaSubType: "otherActs", rcaRemark: "" },
+    others: { remarkType: "remark", rcaSubType: "otherActs", rcaRemark: [] },
   });
 
   const [error, setError] = useState({});
@@ -64,90 +65,74 @@ const HazardiousActs = () => {
   const { id } = useParams();
   const history = useHistory();
   const [incidentDetail, setIncidentDetail] = useState({});
-  const updateIds = useRef();
-  const checkPost = useRef()
+  const [paceCauseDelete, setPaceCauseDelete] = useState()
+  const [nextButton, setNextButton] = useState(false)
 
-  const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value]
-    if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected")
-      remark.splice(removeItemIndex, 1)
-    }
-    return remark
+  const handelDataView = (tempData) => {
+
   }
 
   // get data and set to states
   const handelUpdateCheck = async () => {
-
-    let tempApiData = {};
-    let tempApiDataId = [];
+    let tempData = {}
+    let paceCauseid = []
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
-    let allApiData = previousData.data.data.results;
-    if (allApiData.length !== 0) {
-      putId.current = incidentId;
+    let allApiData = previousData.data.data.results
+    if (allApiData.length > 0) {
       allApiData.map((value) => {
         if (HAZARDIOUS_ACTS_SUB_TYPES.includes(value.rcaSubType)) {
-          let valueQuestion = value.rcaSubType;
-          let valueAnser = value.rcaRemark;
-          tempApiData[valueQuestion] = valueAnser;
-          tempApiDataId.push(value.id);
+          if (Object.keys(tempData).includes(value.rcaSubType)) {
+            tempData[value.rcaSubType].push(value.rcaRemark)
+          } else {
+            tempData[value.rcaSubType] = [value.rcaRemark]
+          }
+          paceCauseid.push(value.id)
         }
-      });
-      updateIds.current = tempApiDataId.reverse();
-      await setFetchApiData(tempApiData);
-      checkPost.current = false
+      })
       setForm({
         ...form,
         supervision: {
-          remarkType: "options",
-          rcaSubType: "Supervision",
-          rcaRemark: setRemark(tempApiData.Supervision),
+          ...form.supervision,
+          rcaRemark: handelApiValue(tempData["Supervision"]),
         },
         workpackage: {
-          remarkType: "options",
-          rcaSubType: "workPackage",
-
-          rcaRemark: setRemark(tempApiData.workPackage),
+          ...form.workpackage,
+          rcaRemark: handelApiValue(tempData["workPackage"]),
         },
         equipmentMachinery: {
-          remarkType: "options",
-          rcaSubType: "equipmentMachinery",
-          rcaRemark: setRemark(tempApiData.equipmentMachinery),
+          ...form.equipmentMachinery,
+          rcaRemark: handelApiValue(tempData["equipmentMachinery"]),
         },
         behaviourIssue: {
-          remarkType: "options",
-          rcaSubType: "behaviourIssue",
-          rcaRemark: setRemark(tempApiData.behaviourIssue),
+          ...form.behaviourIssue,
+          rcaRemark: handelApiValue(tempData["behaviourIssue"]),
         },
         safetyIssues: {
-          remarkType: "options",
-          rcaSubType: "safetyIssues",
-          rcaRemark: setRemark(tempApiData.safetyIssues),
+          ...form.safetyIssues,
+          rcaRemark: handelApiValue(tempData["safetyIssues"]),
         },
         ergonimics: {
-          remarkType: "options",
-          rcaSubType: "ergonimics",
-          rcaRemark: setRemark(tempApiData.ergonimics),
+          ...form.ergonimics,
+          rcaRemark: handelApiValue(tempData["ergonimics"]),
         },
         procedures: {
-          remarkType: "options",
-          rcaSubType: "procedures",
-          rcaRemark: setRemark(tempApiData.procedures),
+          ...form.procedures,
+          rcaRemark: handelApiValue(tempData["procedures"]),
         },
         others: {
-          remarkType: "remark",
-          rcaSubType: "otherActs",
-          rcaRemark: tempApiData.otherActs,
+          ...form.others,
+          rcaRemark: handelApiValue(tempData["otherActs"]),
         },
       });
+      setPaceCauseDelete(paceCauseid)
     }
-  };
+  }
 
   const handelSupervison = (e, value) => {
     if (e.target.checked == false) {
@@ -322,99 +307,63 @@ const HazardiousActs = () => {
       others: {
         remarkType: "remark",
         rcaSubType: "otherActs",
-        rcaRemark: e.target.value,
+        rcaRemark: [e.target.value],
       },
     });
   };
 
   const selectValues = ["Option1", "Option2", "...."];
 
-  const classes = useStyles();
-
-  const handelNext = async (e) => {
-    let tempData = [];
-
-    Object.entries(form).map(async (item, index) => {
-      let api_data = item[1];
-      // post request object
-      if (checkPost.current !== false) {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Immediate",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-        };
-        tempData.push(temp);
-        // put request object
-      } else {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark: api_data["rcaRemark"].toString() !== "" ? api_data["rcaRemark"].toString() : "No option selected",
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Immediate",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-          pk: updateIds.current[index],
-        };
-        tempData.push(temp);
-      }
-    });
-
-    // api call //
-    let nextPageLink = 0;
-    let callObjects = tempData;
-    for (let key in callObjects) {
-      if (Object.keys(error).length == 0) {
-        if (checkPost.current == false) {
-          const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk}/`,
-            callObjects[key]
-          );
-          if (res.status == 200) {
-            nextPageLink = res.status;
-          }
-        } else {
-          const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/`,
-            callObjects[key]
-          );
-          if (res.status == 201) {
-            nextPageLink = res.status;
-          }
+  const handelDelete = async () => {
+    if (paceCauseDelete !== undefined && paceCauseDelete.length > 0) {
+      for (let key in paceCauseDelete) {
+        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${paceCauseDelete[key]}/`)
+        if (delPaceCause.status == 200) {
+          console.log("deleted")
         }
       }
     }
-    if (nextPageLink == 201 && Object.keys(error).length === 0) {
-      history.push(
-        "/app/incident-management/registration/root-cause-analysis/hazardious-condtions/"
-      );
-    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
-        }`
-      );
-    }
-  };
-
-  const handelPrevious = () => {
-    if (!isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
-        }`
-      );
-    } else if (isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/`
-      );
-    }
-
   }
+
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Hazardous conditions"]}${putId.current}`)
+    } else if (navigateType == "previous") {
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["RCA Details"]}${putId.current}`)
+    }
+  }
+
+  const handelApiCall = async () => {
+    console.log(form)
+    let tempData = []
+    Object.entries(form).map(async (item, index) => {
+      let api_data = item[1];
+      api_data.rcaRemark.map((value) => {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: putId.current,
+          rcaRemark: value,
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active",
+        };
+        tempData.push(temp);
+      })
+    })
+    const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
+    if (res.status == 200) {
+      handelNavigate("next")
+    }
+  }
+
+  const handelNext = async () => {
+    await setNextButton(true)
+    await handelDelete()
+    await handelApiCall()
+    await setNextButton(false)
+  }
+
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
@@ -424,9 +373,12 @@ const HazardiousActs = () => {
     await setIncidentDetail(result);
   };
 
+  const classes = useStyles();
+
   useEffect(() => {
     fetchIncidentDetails();
     handelUpdateCheck();
+
   }, []);
 
   return (
@@ -620,7 +572,7 @@ const HazardiousActs = () => {
               variant="outlined"
               multiline
               error={error.others}
-              value={form.others.rcaRemark !== "No option selected" ? form.others.rcaRemark : ""}
+              value={form.others.rcaRemark}
               helperText={error ? error.others : ""}
               rows={3}
               onChange={async (e) => handelOthers(e)}
@@ -632,7 +584,7 @@ const HazardiousActs = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={(e) => handelPrevious(e)}
+              onClick={(e) => handelNavigate("previous")}
             >
               Previous
             </Button>
@@ -640,6 +592,7 @@ const HazardiousActs = () => {
               variant="contained"
               color="primary"
               className={classes.button}
+              disabled={nextButton == true}
               onClick={(e) => handelNext(e)}
             >
               Next
