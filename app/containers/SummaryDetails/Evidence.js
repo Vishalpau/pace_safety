@@ -150,11 +150,13 @@ const EvidenceSummary = () => {
 
   const handelEvidence = (e, value) => {
     if (value == "modify") {
-      history.push(`/app/incident-management/registration/evidence/evidence/${id}`)
+      history.push(
+        `/app/incident-management/registration/evidence/evidence/${id}`
+      );
     } else if (value == "add") {
-      history.push(`/app/incident-management/registration/evidence/evidence/`)
+      history.push(`/app/incident-management/registration/evidence/evidence/`);
     }
-  }
+  };
 
   useEffect(() => {
     if (id) {
@@ -172,15 +174,23 @@ const EvidenceSummary = () => {
         <Grid container spacing={3}>
           {!isDesktop && (
             <Grid item xs={12}>
-              {evidence.length > 0 ?
-                <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelEvidence(e, "modify")}>
+              {evidence.length > 0 ? (
+                <Button
+                  variant="outlined"
+                  startIcon={<EditIcon />}
+                  onClick={(e) => handelEvidence(e, "modify")}
+                >
                   Modify Evidence
                 </Button>
-                :
-                <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelEvidence(e, "add")}>
+              ) : (
+                <Button
+                  variant="outlined"
+                  startIcon={<EditIcon />}
+                  onClick={(e) => handelEvidence(e, "add")}
+                >
                   Add Evidence
                 </Button>
-              }
+              )}
             </Grid>
           )}
           <Grid item xs={12}>
@@ -216,31 +226,39 @@ const EvidenceSummary = () => {
                     <TableBody>
                       {evidence.length !== 0
                         ? evidence.map((value, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{value.evidenceNumber}</TableCell>
-                            <TableCell>{value.evidenceCheck}</TableCell>
-                            <TableCell>{value.evidenceCategory}</TableCell>
-                            <TableCell>
-                              {value.evidenceRemark
-                                ? value.evidenceRemark
-                                : "-"}
-                            </TableCell>
+                            <TableRow key={index}>
+                              <TableCell align="center">
+                                {value.evidenceNumber}
+                              </TableCell>
+                              <TableCell align="center">
+                                {value.evidenceCheck}
+                              </TableCell>
+                              <TableCell align="center">
+                                {value.evidenceCategory}
+                              </TableCell>
+                              <TableCell align="center">
+                                {value.evidenceRemark
+                                  ? value.evidenceRemark
+                                  : "-"}
+                              </TableCell>
 
-                            <TableCell>
-                              {value.evidenceDocument ? (
-                                <Tooltip
-                                  title={handelFileName(
-                                    value.evidenceDocument
-                                  )}
-                                >
-                                  <Attachment value={value.evidenceDocument}/>
-                               </Tooltip>
-                              ) : (
-                                "-"
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))
+                              <TableCell>
+                                {value.evidenceDocument ? (
+                                  <Tooltip
+                                    title={handelFileName(
+                                      value.evidenceDocument
+                                    )}
+                                  >
+                                    <Attachment
+                                      value={value.evidenceDocument}
+                                    />
+                                  </Tooltip>
+                                ) : (
+                                  "-"
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))
                         : null}
                     </TableBody>
                   </Table>
@@ -263,43 +281,43 @@ const EvidenceSummary = () => {
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(0, 21).map((ad, key) => (
-                      <Grid item xs={12} md={6} key={key}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {ad.question}
-                        </Typography>
-                        <Typography
-                          variant="body"
-                          className={Fonts.labelValue}
-                        >
-                          {ad.answer}
-                        </Typography>
-                      </Grid>
-                    ))
+                        <Grid item xs={12} md={6} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer}
+                          </Typography>
+                        </Grid>
+                      ))
                     : null}
                 </Grid>
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(21, 25).map((ad, key) => (
-                      <Grid item xs={12} key={key}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {ad.question}
-                        </Typography>
-                        <Typography
-                          variant="body"
-                          className={Fonts.labelValue}
-                        >
-                          {ad.answer ? ad.answer : "-"}
-                        </Typography>
-                      </Grid>
-                    ))
+                        <Grid item xs={12} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer ? ad.answer : "-"}
+                          </Typography>
+                        </Grid>
+                      ))
                     : "-"}
                 </Grid>
               </AccordionDetails>

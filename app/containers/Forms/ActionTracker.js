@@ -24,7 +24,6 @@ import FlashOnIcon from "@material-ui/icons/FlashOn";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
-    marginTop: "20px",
   },
   button: {
     margin: theme.spacing(1),
@@ -123,102 +122,96 @@ export default function ActionTracker(props) {
         <FlashOnIcon />
       </button>
 
-      <Dialog
-        fullWidth={true}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
         <IconButton
           className={classes.dialogCloseButton}
           onClick={(e) => {
-            handleClose()
+            handleClose();
           }}
         >
           <CloseIcon />
         </IconButton>
         <DialogContent>
-          {/* action title */}
-          <Grid item md={12}>
-            <TextField
-              className={classes.formControl}
-              id="filled-basic"
-              label="Action title"
-              variant="outlined"
-              required
-              rows={1}
-              error={error.actionTitle}
-              helperText={error ? error.actionTitle : ""}
-              onChange={(e) =>
-                setForm({ ...form, actionTitle: e.target.value })
-              }
-            />
-          </Grid>
-
-          {/* assigen */}
-          <Grid item md={12}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Assignee</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="RCA recommended"
-              >
-                {user.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => setForm({ ...form, assignTo: 0 })}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* due date */}
-          <Grid item md={12}>
-            <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-              <KeyboardDatePicker
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <TextField
                 className={classes.formControl}
-                label="Due date"
-                format="dd/MM/yyyy"
-                inputVariant="outlined"
-                value={form.plannedEndDate}
-                disableFuture={true}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    plannedEndDate: moment(e).toISOString(),
-                  });
-                }}
+                id="filled-basic"
+                label="Action title"
+                variant="outlined"
+                required
+                error={error.actionTitle}
+                helperText={error ? error.actionTitle : null}
+                onChange={(e) =>
+                  setForm({ ...form, actionTitle: e.target.value })
+                }
               />
-            </MuiPickersUtilsProvider>
-          </Grid>
+            </Grid>
 
-          {/* severity */}
+            {/* assigen */}
+            <Grid item xs={12}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Assignee</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="RCA recommended"
+                >
+                  {user.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => setForm({ ...form, assignTo: 0 })}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-          <Grid item md={12}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Severity</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="RCA recommended"
-              >
-                {severity.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) =>
-                      setForm({ ...form, severity: selectValues })
-                    }
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {/* due date */}
+            <Grid item xs={12}>
+              <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  className={classes.formControl}
+                  label="Due date"
+                  format="dd/MM/yyyy"
+                  inputVariant="outlined"
+                  value={form.plannedEndDate}
+                  disableFuture={true}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      plannedEndDate: moment(e).toISOString(),
+                    });
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            {/* severity */}
+            <Grid item xs={12}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="project-name-label">Severity</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="RCA recommended"
+                >
+                  {severity.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) =>
+                        setForm({ ...form, severity: selectValues })
+                      }
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

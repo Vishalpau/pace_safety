@@ -19,6 +19,7 @@ import moment from "moment";
 import { FormHelperText } from "@material-ui/core";
 import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import TextButton from "../../CommonComponents/TextButton";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -45,14 +46,6 @@ const useStyles = makeStyles((theme) => ({
   },
   customLabel: {
     marginBottom: 0,
-  },
-  textButton: {
-    color: "#3498db",
-    padding: 0,
-    textDecoration: "underline",
-    display: "inlineBlock",
-    marginBlock: "1.5rem",
-    backgroundColor: "transparent",
   },
   button: {
     margin: theme.spacing(1),
@@ -268,7 +261,7 @@ const PropertyAffected = () => {
     );
     const result = res.data.data.results;
     await setIncidentsListdata(result);
-    await setPropertyDamagedComments(result.propertyDamagedComments)
+    await setPropertyDamagedComments(result.propertyDamagedComments);
     const isAvailable = result.isPropertyDamagedAvailable;
     await setDetailsOfPropertyAffect(isAvailable);
   };
@@ -454,12 +447,12 @@ const PropertyAffected = () => {
                 ))}
                 <Grid item xs={12}>
                   {/* Add new property details */}
-                  <button
-                    className={classes.textButton}
+                  <TextButton
+                    startIcon={<PersonAddIcon />}
                     onClick={() => addNewPropertyDetails()}
                   >
-                    <PersonAddIcon /> Add details of another property affected
-                  </button>
+                    Add details of another property affected
+                  </TextButton>
                 </Grid>
               </>
             ) : null}
@@ -473,7 +466,7 @@ const PropertyAffected = () => {
                   variant="outlined"
                   label="Describe property affected"
                   className={classes.fullWidth}
-                  value={propertyDamagedComments ||""}
+                  value={propertyDamagedComments || ""}
                   onChange={(e) => {
                     setPropertyDamagedComments(e.target.value);
                   }}

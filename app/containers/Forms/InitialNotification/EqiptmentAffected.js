@@ -19,6 +19,7 @@ import AddIcon from "@material-ui/icons/Add";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import TextButton from "../../CommonComponents/TextButton";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -408,12 +409,12 @@ const EqiptmentAffected = () => {
                   </>
                 ))}
                 <Grid item xs={12}>
-                  <button
-                    className={classes.textButton}
+                  <TextButton
+                    startIcon={<AddIcon />}
                     onClick={() => addNewEquipmentDetails()}
                   >
-                    <AddIcon /> Add details of additional equipment affected?
-                  </button>
+                    Add details of additional equipment affected?
+                  </TextButton>
                 </Grid>
               </>
             ) : null}
