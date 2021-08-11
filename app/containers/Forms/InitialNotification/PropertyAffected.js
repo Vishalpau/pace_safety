@@ -115,16 +115,19 @@ const PropertyAffected = () => {
   // hablde Remove property details
 
   const handleRemove = async (key) => {
-    // if this condition when update the data
-    if (propertyListData.length > 1) {
-      const temp = propertyListData;
-      const newData = temp.filter((item) => item.id !== key);
-      await setPropertyListData(newData);
-    } else {
-      // this condition use when create the data
+    if(form[key].id){
+      const res = await api.delete(
+        `api/v1/incidents/${id}/properties/${form[key].id}/`
+      );
+      if(res.status === 200){
+        const temp = form;
+        const newData = temp.filter((item, index) => index !== key);
+        await setForm(newData);
+      }
+    }else{
       const temp = form;
-      const newData = temp.filter((item, index) => index !== key);
-      await setForm(newData);
+    const newData = temp.filter((item, index) => index !== key);
+    await setForm(newData);
     }
   };
 
@@ -139,6 +142,7 @@ const PropertyAffected = () => {
 
   // On next click event capture.
   const handleNext = async () => {
+    console.log(form)
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
     // If property data there then don't do anything as we are doing put request on each change.
@@ -147,35 +151,43 @@ const PropertyAffected = () => {
 
     // If yes selected.
     if (detailsOfPropertyAffect === "Yes") {
-      if (propertyListData.length > 0) {
-        // Remove previous data
-        for (var i = 0; i < propertyListData.length; i++) {
-          const res = await api.delete(
-            `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`
-          );
-        }
-
-        // If that is not the case as if,
-      }
-
+     
       // Validate property data.
       const { error, isValid } = PropertyValidate(form);
       setError(error);
       let status = 0;
       for (var i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/properties/`,
-          {
-            propertyType: form[i].propertyType,
-            propertyOtherType: form[i].propertyOtherType,
-            damageDetails: form[i].damageDetails,
-            fkIncidentId: localStorage.getItem("fkincidentId"),
-            createdBy: parseInt(userId),
-          }
-        );
-        status = res.status;
+        if(form[i].id){
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/properties/${form[i].id}/`,
+            {
+              propertyType: form[i].propertyType,
+              propertyOtherType: form[i].propertyOtherType,
+              damageDetails: form[i].damageDetails,
+              fkIncidentId: localStorage.getItem("fkincidentId"),
+              createdBy: parseInt(userId),
+            }
+          );
+          status = res.status;
+        }else{
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/properties/`,
+            {
+              propertyType: form[i].propertyType,
+              propertyOtherType: form[i].propertyOtherType,
+              damageDetails: form[i].damageDetails,
+              fkIncidentId: localStorage.getItem("fkincidentId"),
+              createdBy: parseInt(userId),
+            }
+          );
+          status = res.status;
+        }
+        
+        
       }
 
       const temp = incidentsListData;
@@ -183,13 +195,13 @@ const PropertyAffected = () => {
         propertyDamagedComments || incidentsListData.propertyDamagedComments;
       temp["isPropertyDamagedAvailable"] =
         detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
-      temp["updatedAt"] = moment(new Date()).toISOString();
+      temp["updatedAt"] = new Date().toISOString();
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
       // If api success
-      if (status === 201) {
+      if (status === 201 ||status === 200) {
         if (nextPath.equipmentAffect === "Yes") {
           history.push(
             `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
@@ -222,7 +234,7 @@ const PropertyAffected = () => {
         propertyDamagedComments || incidentsListData.propertyDamagedComments;
       temp["isPropertyDamagedAvailable"] =
         detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
-      temp["updatedAt"] = moment(new Date()).toISOString();
+      temp["updatedAt"] = new Date().toISOString();
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp

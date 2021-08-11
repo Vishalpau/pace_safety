@@ -63,9 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LessionLearned = () => {
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
-  );
+ 
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -155,49 +153,73 @@ const LessionLearned = () => {
       if (attachment[0].evidenceDocument !== null) {
         if (typeof attachment[0].evidenceDocument !== 'string') {
           if (evidence.length > 0) {
-            for (const key in evidence) {
-              const res = await api.delete(
-                `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
+            const formData = new FormData();
+            formData.append('evidenceDocument', attachment[0].evidenceDocument);
+            formData.append('evidenceCheck', 'Yes');
+            formData.append('evidenceNumber', 'string');
+            formData.append('evidenceCategory', 'Lessons Learned');
+            formData.append('createdBy', parseInt(userId));
+            formData.append('status', 'Active');
+            formData.append('fkIncidentId', id);
+            try {
+              const res = await api.put(
+                `api/v1/incidents/${id}/evidences/${attachment[0].id}/`,
+                formData
               );
+            } catch (error) { }
+          }else{
+           
+              const formData = new FormData();
+              formData.append('evidenceDocument', attachment[0].evidenceDocument);
+              formData.append('evidenceCheck', 'Yes');
+              formData.append('evidenceNumber', 'string');
+              formData.append('evidenceCategory', 'Lessons Learned');
+              formData.append('createdBy', parseInt(userId));
+              formData.append('status', 'Active');
+              formData.append('fkIncidentId', id);
+              try {
+                const res = await api.post(
+                  `api/v1/incidents/${id}/evidences/`,
+                  formData
+                );
+              } catch (error) { }
             }
-          }
-          const formData = new FormData();
-          formData.append('evidenceDocument', attachment[0].evidenceDocument);
-          formData.append('evidenceCheck', 'Yes');
-          formData.append('evidenceNumber', 'string');
-          formData.append('evidenceCategory', 'Lessons Learned');
-          formData.append('createdBy', parseInt(userId));
-          formData.append('status', 'Active');
-          formData.append('fkIncidentId', id);
-          try {
-            const res = await api.post(
-              `api/v1/incidents/${id}/evidences/`,
-              formData
-            );
-          } catch (error) {}
+
         }
       }
 
-      if (learningList.length > 0) {
-        for (var i = 0; i < learningList.length; i++) {
-          const res = await api.delete(
-            `api/v1/incidents/${id}/learnings/${learningList[i].id}/`
-          );
-        }
-      }
+
       for (var i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
-          {
-            teamOrDepartment: form[i].teamOrDepartment,
-            learnings: form[i].learnings,
-            status: 'Active',
-            createdBy: parseInt(userId),
-            updatedBy: parseInt(userId),
-            fkIncidentId: localStorage.getItem('fkincidentId'),
+        if (form[i].id) {
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/${form[i].id}/`,
+            {
+              teamOrDepartment: form[i].teamOrDepartment,
+              learnings: form[i].learnings,
+              status: 'Active',
+              createdBy: parseInt(userId),
+              updatedBy: parseInt(userId),
+              fkIncidentId: localStorage.getItem('fkincidentId'),
+            }
+          );
+          if (res.status === 200) {
+            status = 201
           }
-        );
-        status = res.status;
+        } else {
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
+            {
+              teamOrDepartment: form[i].teamOrDepartment,
+              learnings: form[i].learnings,
+              status: 'Active',
+              createdBy: parseInt(userId),
+              updatedBy: parseInt(userId),
+              fkIncidentId: localStorage.getItem('fkincidentId'),
+            }
+          );
+          status = res.status;
+        }
+
       }
       if (status === 201) {
         history.push(
@@ -270,6 +292,7 @@ const LessionLearned = () => {
     }
   };
 
+  console.log(attachment)
   // handle Remove
 
   const handleRemove = async (key) => {
@@ -317,7 +340,7 @@ const LessionLearned = () => {
               </Typography>
 
               <Typography varint="body1" className={Type.labelValue}>
-                {incidentsListData.incidentNumber?incidentsListData.incidentNumber:"-"}
+                {incidentsListData.incidentNumber ? incidentsListData.incidentNumber : "-"}
               </Typography>
             </Grid>
 
@@ -348,7 +371,7 @@ const LessionLearned = () => {
                 Reported by
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentReportedByName?incidentsListData.incidentReportedByName:"-"}
+                {incidentsListData.incidentReportedByName ? incidentsListData.incidentReportedByName : "-"}
               </Typography>
             </Grid>
 
@@ -357,7 +380,7 @@ const LessionLearned = () => {
                 Incident type
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentType?incidentsListData.incidentType:"-"}
+                {incidentsListData.incidentType ? incidentsListData.incidentType : "-"}
                 {' '}
               </Typography>
             </Grid>
@@ -367,7 +390,7 @@ const LessionLearned = () => {
                 Incident title
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentTitle?incidentsListData.incidentTitle:"-"}
+                {incidentsListData.incidentTitle ? incidentsListData.incidentTitle : "-"}
               </Typography>
             </Grid>
 
@@ -376,7 +399,7 @@ const LessionLearned = () => {
                 Incident description
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentDetails?incidentsListData.incidentDetails:"-"}
+                {incidentsListData.incidentDetails ? incidentsListData.incidentDetails : "-"}
               </Typography>
             </Grid>
 
@@ -385,7 +408,7 @@ const LessionLearned = () => {
                 Incident location
               </Typography>
               <Typography className={Type.labelValue}>
-                {incidentsListData.incidentLocation?incidentsListData.incidentLocation:"-"}
+                {incidentsListData.incidentLocation ? incidentsListData.incidentLocation : "-"}
               </Typography>
             </Grid>
 
@@ -481,7 +504,7 @@ const LessionLearned = () => {
               >
                 <AddIcon />
                 {' '}
-Add learnings from another team/department
+                Add learnings from another team/department
               </button>
             </Grid>
             <Grid item xs={12}>
@@ -508,8 +531,8 @@ Add learnings from another team/department
                       onChange={(e) => handleAttchment(e)}
                       style={{
                         color:
-                            typeof item.evidenceDocument === 'string'
-                            && 'transparent',
+                          typeof item.evidenceDocument === 'string'
+                          && 'transparent',
                       }}
                     />
 

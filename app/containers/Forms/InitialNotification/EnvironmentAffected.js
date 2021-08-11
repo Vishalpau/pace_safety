@@ -121,7 +121,7 @@ const EnvironmentAffected = () => {
       temp[key].envAnswerDetails = temp[key].envQuestionOption;
     }
     temp[key].updatedBy = parseInt(userId);
-    temp[key].updatedAt = moment(new Date()).toISOString();
+    temp[key].updatedAt = new Date().toISOString();
     await setEnvironmentListData(temp);
   };
 
@@ -142,7 +142,7 @@ const EnvironmentAffected = () => {
           }
         } catch (error) {}
         const temp = incidentsListData;
-        temp.updatedAt = moment(new Date()).toISOString();
+        temp.updatedAt = new Date().toISOString();
         temp.enviromentalImpactComments =
           envComments || incidentsListData.enviromentalImpactComments;
         try {
@@ -169,7 +169,7 @@ const EnvironmentAffected = () => {
             );
           }
           const temp = incidentsListData;
-          temp.updatedAt = moment(new Date()).toISOString();
+          temp.updatedAt = new Date().toISOString();
           temp.enviromentalImpactComments =
             envComments || incidentsListData.enviromentalImpactComments;
 

@@ -39,6 +39,7 @@ import Type from '../../../styles/components/Fonts.scss';
 
 
 import { breakDownDetails } from '../../../redux/actions/initialDetails';
+import { ErrorOutlineRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -185,8 +186,8 @@ const IncidentDetails = () => {
           incidentLocation: form.incidentLocation,
           latitude: null,
           longitude: null,
-          createdAt: moment(new Date()).toISOString(),
-          updatedAt: moment(new Date()).toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           assignTo: incidentsListData.assignTo,
           createdBy: incidentsListData.createdBy,
           updatedBy: userId,
@@ -485,10 +486,10 @@ const IncidentDetails = () => {
   // fetchBreakdownData
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-    localStorage.removeItem('selectBreakDown');
+   
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
-    for (const key in breakDown) {
+    for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
           method: 'get',
@@ -497,12 +498,13 @@ const IncidentDetails = () => {
           }`,
           headers: HEADER_AUTH,
         };
+       
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            
             result.map((item) => {
-              if (breakDown[key].slice(-2) == item.id) {
+              if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
                   ...selectBreakDown,
                   { depth: item.depth, id: item.id, name: item.name },
@@ -511,6 +513,7 @@ const IncidentDetails = () => {
             });
           })
           .catch((error) => {
+            
             setIsNext(true);
           });
       } else {
@@ -518,28 +521,35 @@ const IncidentDetails = () => {
           method: 'get',
           url: `${SSO_URL}/${
             projectData.projectName.breakdown[key].structure[0].url
-          }${breakDown[key - 1].slice(-2)}`,
+          }${breakDown[key-1].slice(-1)}`,
           headers: HEADER_AUTH,
         };
-
+       
         await api(config)
           .then(async (response) => {
+          
             const result = response.data.data.results;
-            result.map((item, index) => {
-              if (breakDown[key].slice(-2) == item.id) {
+           
+            const res=result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+               
                 selectBreakDown = [
                   ...selectBreakDown,
                   { depth: item.depth, id: item.id, name: item.name },
                 ];
               }
             });
+
+          
           })
           .catch((error) => {
+            console.log(error)
             setIsNext(true);
           });
       }
     }
     dispatch(breakDownDetails(selectBreakDown));
+    
     localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 

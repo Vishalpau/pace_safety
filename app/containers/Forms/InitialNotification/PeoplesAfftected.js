@@ -157,20 +157,6 @@ const PeoplesAffected = () => {
 
     // This is the condition when Yes is clicked on the form.
     if (personAffect === "Yes") {
-      try {
-        if (peopleData.length > 0) {
-          const temp = peopleData;
-          for (var i = 0; i < peopleData.length; i++) {
-            const res = await api.delete(
-              `api/v1/incidents/${id}/people/${temp[i].id}/`
-            );
-          }
-        }
-      } catch (error) {
-        setMessage("Network error!");
-        setMessageType("error");
-        setOpen(true);
-      }
       // Validate the form.
       const { error, isValid } = PeopleValidate(form);
 
@@ -181,24 +167,47 @@ const PeoplesAffected = () => {
       // We don't have single API.
 
       if (isValid) {
-        try {
+       
           for (var i = 0; i < form.length; i++) {
-            const res = await api.post(
-              `api/v1/incidents/${localStorage.getItem(
-                "fkincidentId"
-              )}/people/`,
-              {
-                personType: form[i].personType,
-                personDepartment: form[i].personDepartment,
-                personName: form[i].personName,
-                personIdentification: form[i].personIdentification,
-                personMedicalCare: form[i].personMedicalCare,
-                workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-                locationAssessmentCenter: form[i].locationAssessmentCenter,
-                createdBy: parseInt(userId),
-                fkIncidentId: localStorage.getItem("fkincidentId"),
-              }
-            );
+            if(form[i].id){
+              try {
+              const res = await api.put(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/people/${form[i].id}/`,
+                {
+                  personType: form[i].personType,
+                  personDepartment: form[i].personDepartment,
+                  personName: form[i].personName,
+                  personIdentification: form[i].personIdentification,
+                  personMedicalCare: form[i].personMedicalCare,
+                  workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                  locationAssessmentCenter: form[i].locationAssessmentCenter,
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                }
+              );
+              }catch(error){}
+            }else{
+              try{
+              const res = await api.post(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/people/`,
+                {
+                  personType: form[i].personType,
+                  personDepartment: form[i].personDepartment,
+                  personName: form[i].personName,
+                  personIdentification: form[i].personIdentification,
+                  personMedicalCare: form[i].personMedicalCare,
+                  workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                  locationAssessmentCenter: form[i].locationAssessmentCenter,
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                }
+              );
+              }catch(error){}
+            } 
           }
 
           // We have hit the API to create person Affected.
@@ -206,8 +215,8 @@ const PeoplesAffected = () => {
           const temp = incidentsListData;
           temp.isPersonDetailsAvailable =
             personAffect || incidentsListData.isPersonDetailsAvailable;
-          temp.updatedAt = moment(new Date()).toISOString();
-
+          temp.updatedAt = new Date().toISOString();
+          try {
           const res = await api.put(
             `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
             temp
@@ -260,7 +269,7 @@ const PeoplesAffected = () => {
       const temp = incidentsListData;
       temp.isPersonDetailsAvailable =
         personAffect || incidentsListData.isPersonDetailsAvailable;
-      temp.updatedAt = moment(new Date()).toISOString();
+      temp.updatedAt = new Date().toISOString();
       temp.personAffectedComments =
         personAffectedComments || incidentsListData.personAffectedComments;
       try {
@@ -301,10 +310,23 @@ const PeoplesAffected = () => {
   // hablde Remove
 
   const handleRemove = async (key) => {
-    // this condition using when create new
-    const temp = form;
+    
+    // this condition for delete
+    if(form[key].id){
+      const res = await api.delete(
+        `api/v1/incidents/${id}/people/${form[key].id}/`
+      );
+      if(res.status === 200){
+        const temp = form;
+        const newData = temp.filter((item, index) => index !== key);
+        await setForm(newData);
+      }
+    }else{
+      const temp = form;
     const newData = temp.filter((item, index) => index !== key);
     await setForm(newData);
+    }
+    
   };
 
   // State for the error defination.
