@@ -1,92 +1,94 @@
-import React, { useEffect, useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, useParams } from 'react-router';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import EditIcon from '@material-ui/icons/Edit';
+import React, { useEffect, useState } from "react";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import { useHistory, useParams } from "react-router";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
 
 // Table
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 // Icons
-import Close from '@material-ui/icons/Close';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import ImageIcon from '@material-ui/icons/Image';
-import VideoCallIcon from '@material-ui/icons/VideoCall';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import DescriptionIcon from '@material-ui/icons/Description';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
+import Close from "@material-ui/icons/Close";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
+import ImageIcon from "@material-ui/icons/Image";
+import VideoCallIcon from "@material-ui/icons/VideoCall";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
+import DescriptionIcon from "@material-ui/icons/Description";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 
 // Styles
-import Styles from 'dan-styles/Summary.scss';
-import Type from 'dan-styles/Typography.scss';
-import Fonts from 'dan-styles/Fonts.scss';
-import moment from 'moment';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import api from '../../utils/axios';
-import '../../styles/custom.css';
+import Styles from "dan-styles/Summary.scss";
+import Type from "dan-styles/Typography.scss";
+import Fonts from "dan-styles/Fonts.scss";
+import moment from "moment";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import api from "../../utils/axios";
+import "../../styles/custom.css";
 
-import Attachment from '../Attachment/Attachment';
+import Attachment from "../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
   fileIcon: {
-    background: '#e2e2e2',
+    background: "#e2e2e2",
   },
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
-    position: 'absolute',
+    position: "absolute",
     width: 650,
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(4),
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
   modalButton: {
-    width: '100%',
+    width: "100%",
   },
   table: { minWidth: 900 },
 }));
 
-const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="up" ref={ref} {...props} />
+));
 
 const EvidenceSummary = () => {
   const [evidence, setEvidence] = useState([]);
   const [activity, setActivity] = useState([]);
   const [isLoading, setIsLoding] = useState(false);
-  const [documentUrl, setDocumentUrl] = useState('');
+  const [documentUrl, setDocumentUrl] = useState("");
   const [expanded, setExpanded] = React.useState(false);
 
   const { id } = useParams();
@@ -107,9 +109,9 @@ const EvidenceSummary = () => {
   };
 
   const download = (image_link) => {
-    const onlyImage_url = image_link.replace('https://', '');
-    const image_url = 'http://cors.digiqt.com/' + onlyImage_url;
-    const imageArray = image_url.split('/');
+    const onlyImage_url = image_link.replace("https://", "");
+    const image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    const imageArray = image_url.split("/");
     const image_name = imageArray[imageArray.length - 1];
     saveAs(image_url, image_name);
     handleClose();
@@ -123,8 +125,9 @@ const EvidenceSummary = () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
     const result = allEvidence.data.data.results;
     const newData = result.filter(
-      (item) => item.evidenceCategory !== 'Lessons Learned'
-        && item.evidenceCategory !== 'Initial Evidence'
+      (item) =>
+        item.evidenceCategory !== "Lessons Learned" &&
+        item.evidenceCategory !== "Initial Evidence"
     );
     await setEvidence(newData);
     await setIsLoding(true);
@@ -136,20 +139,22 @@ const EvidenceSummary = () => {
   };
 
   const handelFileName = (value) => {
-    const fileNameArray = value.split('/');
+    const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
     return fileName;
   };
 
   if (id) {
-    localStorage.setItem('fkincidentId', id);
+    localStorage.setItem("fkincidentId", id);
   }
 
   const handelEvidence = (e, value) => {
-    if (value == 'modify') {
-      history.push(`/app/incident-management/registration/evidence/evidence/${id}`);
-    } else if (value == 'add') {
-      history.push('/app/incident-management/registration/evidence/evidence/');
+    if (value == "modify") {
+      history.push(
+        `/app/incident-management/registration/evidence/evidence/${id}`
+      );
+    } else if (value == "add") {
+      history.push("/app/incident-management/registration/evidence/evidence/");
     }
   };
 
@@ -162,31 +167,36 @@ const EvidenceSummary = () => {
   }, []);
 
   const classes = useStyles();
-  const isDesktop = useMediaQuery('(min-width:992px)');
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <>
       {isLoading ? (
         <Grid container spacing={3}>
           {!isDesktop && (
             <Grid item xs={12}>
-              {evidence.length > 0
-                ? (
-                  <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelEvidence(e, 'modify')}>
+              {evidence.length > 0 ? (
+                <Button
+                  variant="outlined"
+                  startIcon={<EditIcon />}
+                  onClick={(e) => handelEvidence(e, "modify")}
+                >
                   Modify Evidence
-                  </Button>
-                )
-                : (
-                  <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelEvidence(e, 'add')}>
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  startIcon={<EditIcon />}
+                  onClick={(e) => handelEvidence(e, "add")}
+                >
                   Add Evidence
-                  </Button>
-                )
-              }
+                </Button>
+              )}
             </Grid>
           )}
           <Grid item xs={12}>
             <Accordion
-              expanded={expanded === 'panel1'}
-              onChange={handleExpand('panel1')}
+              expanded={expanded === "panel1"}
+              onChange={handleExpand("panel1")}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>Evidence</Typography>
@@ -216,31 +226,35 @@ const EvidenceSummary = () => {
                     <TableBody>
                       {evidence.length !== 0
                         ? evidence.map((value, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{value.evidenceNumber}</TableCell>
-                            <TableCell>{value.evidenceCheck}</TableCell>
-                            <TableCell>{value.evidenceCategory}</TableCell>
-                            <TableCell>
-                              {value.evidenceRemark
-                                ? value.evidenceRemark
-                                : '-'}
-                            </TableCell>
+                            <TableRow key={index}>
+                              <TableCell>{value.evidenceNumber}</TableCell>
+                              <TableCell>{value.evidenceCheck}</TableCell>
+                              <TableCell>{value.evidenceCategory}</TableCell>
+                              <TableCell>
+                                {value.evidenceRemark
+                                  ? value.evidenceRemark
+                                  : "-"}
+                              </TableCell>
 
-                            <TableCell>
-                              {value.evidenceCheck !== 'Yes' ? '-' : value.evidenceDocument ? (
-                                <Tooltip
-                                  title={handelFileName(
-                                    value.evidenceDocument
-                                  )}
-                                >
-                                  <Attachment value={value.evidenceDocument} />
-                                </Tooltip>
-                              ) : (
-                                '-'
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))
+                              <TableCell>
+                                {value.evidenceCheck !== "Yes" ? (
+                                  "-"
+                                ) : value.evidenceDocument ? (
+                                  <Tooltip
+                                    title={handelFileName(
+                                      value.evidenceDocument
+                                    )}
+                                  >
+                                    <Attachment
+                                      value={value.evidenceDocument}
+                                    />
+                                  </Tooltip>
+                                ) : (
+                                  "-"
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          ))
                         : null}
                     </TableBody>
                   </Table>
@@ -251,8 +265,8 @@ const EvidenceSummary = () => {
 
           <Grid item xs={12}>
             <Accordion
-              expanded={expanded === 'panel2'}
-              onChange={handleExpand('panel2')}
+              expanded={expanded === "panel2"}
+              onChange={handleExpand("panel2")}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>
@@ -263,44 +277,44 @@ const EvidenceSummary = () => {
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(0, 21).map((ad, key) => (
-                      <Grid item xs={12} md={6} key={key}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {ad.question}
-                        </Typography>
-                        <Typography
-                          variant="body"
-                          className={Fonts.labelValue}
-                        >
-                          {ad.answer}
-                        </Typography>
-                      </Grid>
-                    ))
+                        <Grid item xs={12} md={6} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer}
+                          </Typography>
+                        </Grid>
+                      ))
                     : null}
                 </Grid>
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(21, 25).map((ad, key) => (
-                      <Grid item xs={12} key={key}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          {ad.question}
-                        </Typography>
-                        <Typography
-                          variant="body"
-                          className={Fonts.labelValue}
-                        >
-                          {ad.answer ? ad.answer : '-'}
-                        </Typography>
-                      </Grid>
-                    ))
-                    : '-'}
+                        <Grid item xs={12} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer ? ad.answer : "-"}
+                          </Typography>
+                        </Grid>
+                      ))
+                    : "-"}
                 </Grid>
               </AccordionDetails>
             </Accordion>
@@ -322,7 +336,7 @@ const EvidenceSummary = () => {
         }}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          {' Please choose what do you want to?'}
+          {" Please choose what do you want to?"}
         </DialogTitle>
         <IconButton onClick={handleClose} className={classes.closeButton}>
           <Close />

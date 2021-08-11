@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
+import { Col, Row } from "react-grid-system";
 import DateFnsUtils from "@date-io/date-fns";
 import moment from "moment";
 import {
@@ -58,11 +58,20 @@ const ActionTaken = () => {
   const [error, setError] = useState({});
 
   const handleNext = async (e) => {
-    form.preEventMitigations === null ? form["preEventMitigations"] = "" : null
-    console.log(form.preEventMitigations)
-    const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
+    form.preEventMitigations === null
+      ? (form["preEventMitigations"] = "")
+      : null;
+    console.log(form.preEventMitigations);
+    const res = await api.put(
+      `api/v1/incidents/${putId.current}/investigations/${
+        investigationId.current
+      }/`,
+      form
+    );
     if (res.status === 200) {
-      history.push(`/app/incident-management/registration/summary/summary/${putId.current}`);
+      history.push(
+        `/app/incident-management/registration/summary/summary/${putId.current}`
+      );
     }
   };
 
@@ -75,77 +84,79 @@ const ActionTaken = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Action Taken" icon="ion-md-list-box">
-      <Grid container spacing={3} alignItems="flex-start">
-        <Grid container item xs={12} md={9} spacing={3}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              variant="outlined"
-              id="filled-basic"
-              label="Pre-event mitigation"
-              value={form.preEventMitigations}
-              placeholder="Pre-event mitigation"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  preEventMitigations: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                className={classes.formControl}
-                id="date-picker-dialog"
-                value={form.correctionActionClosedAt}
-                disableFuture={true}
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                variant="outlined"
+                id="filled-basic"
+                label="Pre-event mitigation"
+                value={form.preEventMitigations}
+                placeholder="Pre-event mitigation"
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 onChange={(e) => {
                   setForm({
                     ...form,
-                    correctionActionClosedAt: moment(e).toISOString(),
+                    preEventMitigations: e.target.value,
                   });
                 }}
-                format="yyyy/MM/dd"
-                inputVariant="outlined"
-                label="Correction action date completed"
+                className={classes.formControl}
               />
-            </MuiPickersUtilsProvider>
-          </Grid>
+            </Grid>
 
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => history.goBack()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handleNext(e)}
-            >
-              Submit
-            </Button>
+            <Grid item xs={12} md={6}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  className={classes.formControl}
+                  id="date-picker-dialog"
+                  value={form.correctionActionClosedAt}
+                  disableFuture={true}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      correctionActionClosedAt: moment(e).toISOString(),
+                    });
+                  }}
+                  format="yyyy/MM/dd"
+                  inputVariant="outlined"
+                  label="Correction action date completed"
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            <Grid item md={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => history.goBack()}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handleNext(e)}
+              >
+                Submit
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        </Col>
         {isDesktop && (
-          <Grid item md={3}>
+          <Col md={3}>
             <FormSideBar
               deleteForm={[1, 2, 3]}
               listOfItems={INVESTIGATION_FORM}
               selectedItem="Action taken"
             />
-          </Grid>
+          </Col>
         )}
-      </Grid>
+      </Row>
     </PapperBlock>
   );
 };

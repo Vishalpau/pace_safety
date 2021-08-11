@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
@@ -201,98 +202,112 @@ const AdditionalDetails = () => {
   return (
     <PapperBlock title="Additional Details" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item xs={12} md={9} spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
-            {additionalDetailList.length > 24 ? (
-              <>
-                {Object.entries(additionalDetailList)
-                  .slice(21, 25)
-                  .map(([key, value]) => (
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentDetail.incidentNumber}
+                </Typography>
+              </Grid>
+              {additionalDetailList.length > 24 ? (
+                <>
+                  {Object.entries(additionalDetailList)
+                    .slice(21, 25)
+                    .map(([key, value]) => (
+                      <Grid item xs={12}>
+                        <FormControl className={classes.formControl}>
+                          <TextField
+                            id="filled-basic"
+                            variant="outlined"
+                            label={value.question}
+                            required={
+                              value.question === "Additional notes if any"
+                                ? false
+                                : true
+                            }
+                            error={value.error}
+                            helperText={value.error ? value.error : null}
+                            multiline
+                            rows="4"
+                            defaultValue={value.answer}
+                            onChange={(e) => {
+                              handleRadioData(e, value.questionCode);
+                            }}
+                          />
+                        </FormControl>
+                      </Grid>
+                    ))}
+                </>
+              ) : (
+                <>
+                  {Object.entries(additionalList).map(([key, value]) => (
                     <Grid item xs={12}>
-                      <FormControl className={classes.formControl}>
+                      <FormControl
+                        className={classes.formControl}
+                        error={value.error}
+                      >
                         <TextField
                           id="filled-basic"
                           variant="outlined"
                           label={value.question}
-                          required = {value.question === "Additional notes if any" ? false : true}
                           error={value.error}
+                          required={
+                            value.question === "Additional notes if any"
+                              ? false
+                              : true
+                          }
                           helperText={value.error ? value.error : null}
                           multiline
                           rows="4"
-                          defaultValue={value.answer}
                           onChange={(e) => {
-                            handleRadioData(e, value.questionCode);
+                            handleRadioData2(e, value.questionCode);
                           }}
                         />
                       </FormControl>
                     </Grid>
                   ))}
-              </>
-            ) : (
-              <>
-                {Object.entries(additionalList).map(([key, value]) => (
-                  <Grid item xs={12}>
-                    <FormControl
-                      className={classes.formControl}
-                      error={value.error}
-                    >
-                      <TextField
-                        id="filled-basic"
-                        variant="outlined"
-                        label={value.question}
-                        error={value.error}
-                        required = {value.question === "Additional notes if any" ? false : true}
-                        helperText={value.error ? value.error : null}
-                        multiline
-                        rows="4"
-                        onChange={(e) => {
-                          handleRadioData2(e, value.questionCode);
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
-                ))}
-              </>
-            )}
+                </>
+              )}
 
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => history.goBack()}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => handleNext()}
-              >
-                Submit
-              </Button>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => history.goBack()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => handleNext()}
+                >
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          </Col>
 
           {isDesktop && (
-            <Grid item md={3}>
+            <Col md={3}>
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={EVIDENCE_FORM}
                 selectedItem="Additional details"
               />
-            </Grid>
+            </Col>
           )}
-        </Grid>
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}

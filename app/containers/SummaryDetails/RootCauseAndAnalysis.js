@@ -49,8 +49,11 @@ const RootCauseAnalysisSummary = () => {
   const [causeanalysis, setCauseAnalysis] = useState([]);
   const [pacecauses, setPaceCauses] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
-  const [additionalDetails, setAdditonalDetails] = useState([])
-  const [additionalRcaSubType, setAdditionalRcaSubType] = useState(["managementControl", "reasonsSupportAbove"])
+  const [additionalDetails, setAdditonalDetails] = useState([]);
+  const [additionalRcaSubType, setAdditionalRcaSubType] = useState([
+    "managementControl",
+    "reasonsSupportAbove",
+  ]);
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -58,13 +61,13 @@ const RootCauseAnalysisSummary = () => {
   const fkid = localStorage.getItem("fkincidentId");
 
   const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value]
+    let remark = value.includes(",") ? value.split(",") : [value];
     if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected")
-      remark.splice(removeItemIndex, 1)
+      let removeItemIndex = remark.indexOf("No option selected");
+      remark.splice(removeItemIndex, 1);
     }
-    return remark
-  }
+    return remark;
+  };
   const fetchRootCauseData = async () => {
     const allRootCause = await api.get(`/api/v1/incidents/${fkid}/rootcauses/`);
     await setRootCause(allRootCause.data.data.results);
@@ -95,13 +98,13 @@ const RootCauseAnalysisSummary = () => {
     } else {
       await setPaceCauses(paceData);
     }
-    let temp = []
+    let temp = [];
     paceData.map((value) => {
       if (additionalRcaSubType.includes(value.rcaSubType)) {
-        temp.push(value)
+        temp.push(value);
       }
-    })
-    setAdditonalDetails(temp)
+    });
+    setAdditonalDetails(temp);
   };
 
   const handelConvert = (value) => {
@@ -109,7 +112,7 @@ const RootCauseAnalysisSummary = () => {
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
         return c.toUpperCase();
       });
     return newString;
@@ -123,11 +126,15 @@ const RootCauseAnalysisSummary = () => {
 
   const handelRootCauseAnalysis = (e, value) => {
     if (value == "modify") {
-      history.push(`/app/incident-management/registration/root-cause-analysis/details/${id}`)
-    } else if (value = "add") {
-      history.push(`/app/incident-management/registration/root-cause-analysis/details/`)
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/${id}`
+      );
+    } else if ((value = "add")) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/`
+      );
     }
-  }
+  };
 
   useEffect(() => {
     fetchRootCauseData();
@@ -142,16 +149,25 @@ const RootCauseAnalysisSummary = () => {
     <Grid container spacing={3}>
       {!isDesktop && (
         <Grid item xs={12}>
-          {fiveWhy.length > 0 || rootCause.length > 0 || pacecauses.length > 0 ?
-            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelRootCauseAnalysis(e, "modify")}>
+          {fiveWhy.length > 0 ||
+          rootCause.length > 0 ||
+          pacecauses.length > 0 ? (
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={(e) => handelRootCauseAnalysis(e, "modify")}
+            >
               Modify RCA
             </Button>
-            :
-            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelRootCauseAnalysis(e, "add")}>
+          ) : (
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={(e) => handelRootCauseAnalysis(e, "add")}
+            >
               Add RCA
             </Button>
-          }
-
+          )}
         </Grid>
       )}
       {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (
@@ -328,7 +344,8 @@ const RootCauseAnalysisSummary = () => {
                   </TableHead>
                   <TableBody>
                     {pacecauses.map((pc, key) =>
-                      pc.rcaRemark !== "No option selected" && !additionalRcaSubType.includes(pc.rcaSubType) ? (
+                      pc.rcaRemark !== "No option selected" &&
+                      !additionalRcaSubType.includes(pc.rcaSubType) ? (
                         <TableRow key={key}>
                           <TableCell>{pc.rcaNumber}</TableCell>
                           <TableCell>{pc.rcaType}</TableCell>
@@ -361,23 +378,24 @@ const RootCauseAnalysisSummary = () => {
             <AccordionDetails>
               <Grid item xs={12}>
                 {additionalDetails.map((value) => (
-                  <>
-                    <Typography className={classes.heading}>
-                      {handelConvert(value.rcaSubType)}
-                    </Typography>
-                    <Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <Typography className={Fonts.labelName}>
+                        {handelConvert(value.rcaSubType)}
+                      </Typography>
                       {setRemark(value.rcaRemark).map((rcaValue) => (
-                        <p>{rcaValue}</p>
+                        <Typography className={Fonts.labelValue}>
+                          {rcaValue}
+                        </Typography>
                       ))}
-                    </Typography>
-                  </>
+                    </Grid>
+                  </Grid>
                 ))}
               </Grid>
             </AccordionDetails>
           </Accordion>
         </Grid>
       ) : null}
-
     </Grid>
   );
 };
