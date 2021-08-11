@@ -122,10 +122,9 @@ const RootCauseAnalysis = () => {
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${
-        putId.current !== ""
-          ? putId.current
-          : localStorage.getItem("fkincidentId")
+      `api/v1/incidents/${putId.current !== ""
+        ? putId.current
+        : localStorage.getItem("fkincidentId")
       }/`
     );
     await setIncidents(allIncidents.data.data.results);
@@ -170,8 +169,7 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }
@@ -182,8 +180,7 @@ const RootCauseAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {

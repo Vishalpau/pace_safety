@@ -111,14 +111,15 @@ const Details = () => {
     );
     let investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      if (investigationApiData.rcaRecommended != "") {
-        setForm({
-          ...form,
-          rcaRecommended: investigationApiData.rcaRecommended,
-        });
-        await handelRcaRecommended("a", investigationApiData.rcaRecommended);
-      }
+      // if (investigationApiData.rcaRecommended != "") {
+      //   setForm({
+      //     ...form,
+      //     rcaRecommended: investigationApiData.rcaRecommended,
+      //   });
+      //   await handelRcaRecommended("a", investigationApiData.rcaRecommended);
+      // }
       setInvestigationData({
+        rcaRecommended: investigationApiData.rcaRecommended,
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
         classification: investigationApiData.classification,
@@ -161,7 +162,7 @@ const Details = () => {
         "Corrective actions",
         "Basic cause",
         "PACE Management control",
-        "Preventive Actions",
+        "Preventive actions",
         "Additional information",
         "Five Why analysis",
       ]);
@@ -187,8 +188,7 @@ const Details = () => {
       } else {
         form["pk"] = pkValue.current;
         const res = await api.put(
-          `/api/v1/incidents/${putId.current}/causeanalysis/${
-            pkValue.current
+          `/api/v1/incidents/${putId.current}/causeanalysis/${pkValue.current
           }/`,
           form
         );
@@ -220,14 +220,12 @@ const Details = () => {
         );
       } else if (form.rcaRecommended == "PACE cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
           }`
         );
       } else if (form.rcaRecommended == "Cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
           }`
         );
       }
@@ -240,7 +238,7 @@ const Details = () => {
   useEffect(() => {
     handelUpdateCheck();
     fetchIncidentData();
-    setHideArray(localStorage.getItem("deleteForm"));
+    setHideArray(hideArray || localStorage.getItem("deleteForm"));
     handelInvestigationData();
   }, []);
 
@@ -248,6 +246,7 @@ const Details = () => {
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
+      {console.log(investigationData.rcaRecommended)}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
@@ -320,7 +319,7 @@ const Details = () => {
                   id="project-name"
                   labelId="project-name-label"
                   label="RCA recommended"
-                  value={form.rcaRecommended}
+                  value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
                   disabled={rcaDisable != "" ? true : false}
                 >
                   {RCAOPTION.map((selectValues) => (

@@ -91,9 +91,10 @@ export default function ActionTracker(props) {
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null });
+    await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
     await setOpen(false);
   };
+
   const handelSubmit = async () => {
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
@@ -101,7 +102,7 @@ export default function ActionTracker(props) {
       let res = await api.post("api/v1/actions/", form);
       if (res.status == 201) {
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null });
+        await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
         await setOpen(false);
       }
     }

@@ -207,7 +207,8 @@ const WorkerDetails = () => {
       setTesttaken(false);
     }
   };
-
+  let fileTypeError = "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!"
+  let fielSizeError = "Size less than 25Mb allowed"
   const handleFile = async (e) => {
     let acceptFileTypes = [
       "pdf",
@@ -221,18 +222,15 @@ const WorkerDetails = () => {
       "ppt",
     ];
     let file = e.target.files[0].name.split(".");
-    if (
-      acceptFileTypes.includes(file[1]) &&
-      e.target.files[0].size < 25670647
-    ) {
+
+    if (acceptFileTypes.includes(file[file.length - 1]) && e.target.files[0].size < 25670647) {
+      console.log("here")
       const temp = { ...form };
       temp.attachments = e.target.files[0];
       await setForm(temp);
     } else {
       ref.current.value = "";
-      await setMessage(
-        "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!"
-      );
+      !acceptFileTypes.includes(file[file.length - 1]) ? await setMessage(fileTypeError) : await setMessage(`${fielSizeError}`);
       await setMessageType("error");
       await setOpen(true);
     }
@@ -322,8 +320,7 @@ const WorkerDetails = () => {
       if (!isNaN(form.id)) {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.put(
-          `/api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/workers/${workerid}/`,
           data
         );
@@ -331,8 +328,7 @@ const WorkerDetails = () => {
       } else {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.post(
-          `/api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/workers/`,
           data
         );
@@ -403,8 +399,7 @@ const WorkerDetails = () => {
     if (!isNaN(worker_removed[workerNumber].id)) {
       let deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${
-          deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
@@ -1477,9 +1472,9 @@ const WorkerDetails = () => {
                   />
                 </Grid>
 
-                <Grid item md={6}>
+                <Grid item md={12}>
                   {form.attachments != "" &&
-                  typeof form.attachments == "string" ? (
+                    typeof form.attachments == "string" ? (
                     <Attachment value={form.attachments} />
                   ) : (
                     <p />
