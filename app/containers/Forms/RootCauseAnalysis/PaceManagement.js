@@ -139,19 +139,20 @@ const PaceManagementControl = () => {
 		let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
 		putId.current = incidentId;
 		let previousData = await api.get(`/api/v1/incidents/${putId.current}/pacecauses/`);
-		let tempid = [];
 		let allApiData = previousData.data.data.results;
 		allApiData.map((value, index) => {
-			if (subTypes.includes(value.rcaSubType) && value.rcaRemark !== "No option selected"
+			if (subTypes.includes(value.rcaSubType)
 			) {
-				tempid.push(value.id);
 				let valueQuestion = value.rcaSubType;
 				let valueAnser = value.rcaRemark;
-				tempApiData[valueQuestion] = valueAnser.includes(",")
-					? valueAnser.split(",")
-					: [valueAnser];
+				if (Object.keys(tempApiData).includes(valueQuestion)) {
+					tempApiData[valueQuestion].push(valueAnser)
+				} else {
+					tempApiData[valueQuestion] = [valueAnser]
+				}
 			}
 		});
+
 
 		let OptionWithSubType =
 			handelOptionDispay("Human factors", "personal", checkValue(tempApiData["personal"])).concat

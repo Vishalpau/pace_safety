@@ -58,19 +58,12 @@ const HazardiousActs = () => {
     others: { remarkType: "remark", rcaSubType: "otherActs", rcaRemark: [] },
   });
 
-  const [error, setError] = useState({});
-
   const putId = useRef("");
-  const [fetchApiData, setFetchApiData] = useState({});
-  const { id } = useParams();
   const history = useHistory();
   const [incidentDetail, setIncidentDetail] = useState({});
   const [paceCauseDelete, setPaceCauseDelete] = useState()
   const [nextButton, setNextButton] = useState(false)
 
-  const handelDataView = (tempData) => {
-
-  }
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -408,7 +401,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              error={error.supervision}
             >
               <FormLabel component="legend">Supervision</FormLabel>
               <FormGroup>
@@ -421,9 +413,6 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.supervision && (
-                <FormHelperText>{error.supervision}</FormHelperText>
-              )}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -432,7 +421,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              error={error.workpackage}
             >
               <FormLabel component="legend">Work package</FormLabel>
               <FormGroup>
@@ -445,9 +433,6 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.workpackage && (
-                <FormHelperText>{error.workpackage}</FormHelperText>
-              )}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -456,7 +441,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              error={error.equipmentMachinery}
             >
               <FormLabel component="legend">Equipment & machinery</FormLabel>
               <FormGroup>
@@ -469,9 +453,6 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.equipmentMachinery && (
-                <FormHelperText>{error.equipmentMachinery}</FormHelperText>
-              )}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -479,7 +460,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              error={error.behaviourIssue}
             >
               <FormLabel component="legend">Behaviour issue</FormLabel>
               <FormGroup>
@@ -492,9 +472,6 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.behaviourIssue && (
-                <FormHelperText>{error.behaviourIssue}</FormHelperText>
-              )}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -503,7 +480,6 @@ const HazardiousActs = () => {
           <Grid item md={12}>
             <FormControl
               component="fieldset"
-              error={error.safetyIssues}
             >
               <FormLabel component="legend">Safety items</FormLabel>
               <FormGroup>
@@ -516,15 +492,12 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.safetyIssues && (
-                <FormHelperText>{error.safetyIssues}</FormHelperText>
-              )}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.procedures}>
+            <FormControl component="fieldset">
               <FormLabel component="legend">Ergonomics</FormLabel>
               <FormGroup>
                 {ERGONOMICS.map((value) => (
@@ -536,15 +509,12 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.ergonimics && (
-                <FormHelperText>{error.ergonimics}</FormHelperText>
-              )}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
 
           <Grid item md={12}>
-            <FormControl component="fieldset" error={error.procedures}>
+            <FormControl component="fieldset">
               <FormLabel component="legend">Procedure</FormLabel>
               <FormGroup>
                 {PROCEDURES.map((value) => (
@@ -556,9 +526,6 @@ const HazardiousActs = () => {
                   />
                 ))}
               </FormGroup>
-              {error && error.procedures && (
-                <FormHelperText>{error.procedures}</FormHelperText>
-              )}
             </FormControl>
             <Box borderTop={1} marginTop={2} borderColor="grey.300" />
           </Grid>
@@ -571,9 +538,7 @@ const HazardiousActs = () => {
               label="Others"
               variant="outlined"
               multiline
-              error={error.others}
               value={form.others.rcaRemark}
-              helperText={error ? error.others : ""}
               rows={3}
               onChange={async (e) => handelOthers(e)}
             />

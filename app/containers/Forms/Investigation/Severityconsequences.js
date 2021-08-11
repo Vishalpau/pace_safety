@@ -117,8 +117,7 @@ const InvestigationOverview = () => {
       investigationId.current = allApiData.id;
     }
     let workerApiDataFetch = await api.get(
-      `api/v1/incidents/${incidentId}/investigations/${
-        investigationId.current
+      `api/v1/incidents/${incidentId}/investigations/${investigationId.current
       }/workers/`
     );
     if (workerApiDataFetch.data.data.results.length !== 0) {
@@ -153,16 +152,14 @@ const InvestigationOverview = () => {
 
   const handleNext = async (e) => {
     const res = await api.put(
-      `api/v1/incidents/${putId.current}/investigations/${
-        investigationId.current
+      `api/v1/incidents/${putId.current}/investigations/${investigationId.current
       }/`,
       form
     );
     if (putId.current) {
       if (JSON.parse(localStorage.getItem("personEffected")).length > 0) {
         history.push(
-          `/app/incident-management/registration/investigation/worker-details/0/${
-            putId.current
+          `/app/incident-management/registration/investigation/worker-details/0/${putId.current
           }`
         );
       } else {
@@ -197,6 +194,29 @@ const InvestigationOverview = () => {
     financialValues.current = await PickListData(46);
     await setIsLoading(true);
   };
+
+  const handelClassification = async (value) => {
+    if (value == classificationValues.current[0] || value == classificationValues.current[1]) {
+      await setForm({
+        ...form,
+        classification: value,
+        rcaRecommended: "PACE cause analysis",
+      });
+    } else if (value == classificationValues.current[2]) {
+      await setForm({
+        ...form,
+        classification: value,
+        rcaRecommended: "Cause analysis",
+      });
+    } else if (value == classificationValues.current[3]) {
+      await setForm({
+        ...form,
+        classification: value,
+        rcaRecommended: "Five why analysis",
+      });
+    }
+  }
+
 
   useEffect(() => {
     handelCall();
@@ -542,12 +562,7 @@ const InvestigationOverview = () => {
                   {classificationValues.current.map((selectValues) => (
                     <MenuItem
                       value={selectValues}
-                      onClick={(e) => {
-                        setForm({
-                          ...form,
-                          classification: selectValues,
-                        });
-                      }}
+                      onClick={(e) => handelClassification(selectValues)}
                     >
                       {selectValues}
                     </MenuItem>
@@ -558,7 +573,7 @@ const InvestigationOverview = () => {
 
             <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">RCA recommended</InputLabel>
+                <InputLabel id="unit-name-label" shrink={form.rcaRecommended !== null ? true : false}>RCA recommended</InputLabel>
                 <Select
                   labelId="unit-name-label"
                   id="unit-name"
@@ -613,8 +628,9 @@ const InvestigationOverview = () => {
         </Grid>
       ) : (
         <h1>Loading...</h1>
-      )}
-    </PapperBlock>
+      )
+      }
+    </PapperBlock >
   );
 };
 

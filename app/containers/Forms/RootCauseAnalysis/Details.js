@@ -158,7 +158,7 @@ const Details = () => {
         "Corrective actions",
         "Basic cause",
         "PACE Management control",
-        "Preventive Actions",
+        "Preventive actions",
         "Additional information",
         "Five Why analysis",
       ]);
@@ -234,7 +234,7 @@ const Details = () => {
   useEffect(() => {
     handelUpdateCheck();
     fetchIncidentData();
-    setHideArray(localStorage.getItem("deleteForm"));
+    setHideArray(hideArray || localStorage.getItem("deleteForm"));
     handelInvestigationData();
   }, []);
 

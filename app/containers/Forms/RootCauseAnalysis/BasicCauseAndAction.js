@@ -126,12 +126,13 @@ const BasicCauseAndAction = () => {
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType) && value.rcaRemark !== "No option selected"
       ) {
-        tempid.push(value.id);
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
-        tempApiData[valueQuestion] = valueAnser.includes(",")
-          ? valueAnser.split(",")
-          : [valueAnser];
+        if (Object.keys(tempApiData).includes(valueQuestion)) {
+          tempApiData[valueQuestion].push(valueAnser)
+        } else {
+          tempApiData[valueQuestion] = [valueAnser]
+        }
       }
     });
 
