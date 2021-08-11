@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
@@ -124,182 +125,184 @@ const InvestigationOverview = () => {
   return (
     <PapperBlock title="Investigation Overview" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="h6">Unit constructor manager</Typography>
-            </Grid>
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h6">Unit constructor manager</Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Name"
-                required
-                value={form.constructionManagerName}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    constructionManagerName: e.target.value,
-                  });
-                }}
-                error={error && error.constructionManagerName}
-                helperText={
-                  error && error.constructionManagerName
-                    ? error.constructionManagerName
-                    : null
-                }
-                className={classes.formControl}
-              />
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Name"
+                  required
+                  value={form.constructionManagerName}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      constructionManagerName: e.target.value,
+                    });
+                  }}
+                  error={error && error.constructionManagerName}
+                  helperText={
+                    error && error.constructionManagerName
+                      ? error.constructionManagerName
+                      : null
+                  }
+                  className={classes.formControl}
+                />
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Contact"
-                required
-                value={form.constructionManagerContactNo}
-                error={error && error.constructionManagerContactNo}
-                helperText={
-                  error && error.constructionManagerContactNo
-                    ? error.constructionManagerContactNo
-                    : null
-                }
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    constructionManagerContactNo: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6">Unit HSE specialist</Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                label="Name"
-                required
-                value={form.hseSpecialistName}
-                error={error && error.hseSpecialistName}
-                helperText={
-                  error && error.hseSpecialistName
-                    ? error.hseSpecialistName
-                    : null
-                }
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    hseSpecialistName: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="title"
-                variant="outlined"
-                value={form.hseSpecialistContactNo}
-                error={error && error.hseSpecialistContactNo}
-                helperText={
-                  error && error.hseSpecialistContactNo
-                    ? error.hseSpecialistContactNo
-                    : null
-                }
-                label="Contact"
-                required
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    hseSpecialistContactNo: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Actual severity & consequences
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label=" Actual severity & consequences"
-                  value={form.actualSeverityLevel || false}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Contact"
+                  required
+                  value={form.constructionManagerContactNo}
+                  error={error && error.constructionManagerContactNo}
+                  helperText={
+                    error && error.constructionManagerContactNo
+                      ? error.constructionManagerContactNo
+                      : null
+                  }
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      constructionManagerContactNo: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Unit HSE specialist</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Name"
+                  required
+                  value={form.hseSpecialistName}
+                  error={error && error.hseSpecialistName}
+                  helperText={
+                    error && error.hseSpecialistName
+                      ? error.hseSpecialistName
+                      : null
+                  }
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      hseSpecialistName: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  value={form.hseSpecialistContactNo}
+                  error={error && error.hseSpecialistContactNo}
+                  helperText={
+                    error && error.hseSpecialistContactNo
+                      ? error.hseSpecialistContactNo
+                      : null
+                  }
+                  label="Contact"
+                  required
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      hseSpecialistContactNo: e.target.value,
+                    });
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Actual severity & consequences
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label=" Actual severity & consequences"
+                    value={form.actualSeverityLevel || false}
+                  >
+                    {severityValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => {
+                          console.log("here");
+                          setForm({
+                            ...form,
+                            actualSeverityLevel: selectValues,
+                          });
+                        }}
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="unit-name-label">
+                    Potential severity & consequences
+                  </InputLabel>
+                  <Select
+                    labelId="unit-name-label"
+                    id="unit-name"
+                    label="Potential severity & consequences"
+                    value={form.potentialSeverityLevel || false}
+                  >
+                    {severityValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            potentialSeverityLevel: selectValues,
+                          });
+                        }}
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleNext()}
                 >
-                  {severityValues.current.map((selectValues) => (
-                    <MenuItem
-                      value={selectValues}
-                      onClick={(e) => {
-                        console.log("here");
-                        setForm({
-                          ...form,
-                          actualSeverityLevel: selectValues,
-                        });
-                      }}
-                    >
-                      {selectValues}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  Next
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="unit-name-label">
-                  Potential severity & consequences
-                </InputLabel>
-                <Select
-                  labelId="unit-name-label"
-                  id="unit-name"
-                  label="Potential severity & consequences"
-                  value={form.potentialSeverityLevel || false}
-                >
-                  {severityValues.current.map((selectValues) => (
-                    <MenuItem
-                      value={selectValues}
-                      onClick={(e) => {
-                        setForm({
-                          ...form,
-                          potentialSeverityLevel: selectValues,
-                        });
-                      }}
-                    >
-                      {selectValues}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleNext()}
-              >
-                Next
-              </Button>
-            </Grid>
-          </Grid>
+          </Col>
           {isDesktop && (
-            <Grid item md={3}>
+            <Col md={3}>
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={INVESTIGATION_FORM}
                 selectedItem="Investigation overview"
               />
-            </Grid>
+            </Col>
           )}
-        </Grid>
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}

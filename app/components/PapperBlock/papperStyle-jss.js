@@ -46,7 +46,7 @@ const styles = (theme) => ({
   },
   content: {
     marginTop: theme.spacing(2),
-    // padding: theme.spacing(1),
+    padding: theme.spacing(1),
     borderRadius: theme.rounded.medium,
     backgroundColor: theme.palette.background.default,
     [theme.breakpoints.up("lg")]: {

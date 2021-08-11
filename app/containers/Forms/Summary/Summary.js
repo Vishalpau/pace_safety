@@ -11,6 +11,7 @@ import AccessTime from "@material-ui/icons/AccessTime";
 import Divider from "@material-ui/core/Divider";
 import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 // List
 import List from "@material-ui/core/List";
@@ -437,39 +438,41 @@ const Summary = () => {
           <Divider />
 
           <Box marginTop={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={9}>
-                {/* summary and part */}
-                <>
-                  {(() => {
-                    if (
-                      initialNotification == true ||
-                      (investigation === false &&
-                        evidence === false &&
-                        rootcauseanalysis === false &&
-                        lessionlearn === false)
-                    ) {
-                      return <IncidentDetailsSummary />;
-                    }
-                    if (investigation == true) {
-                      return <InvestigationSummary />;
-                    }
-                    if (evidence == true) {
-                      return <EvidenceSummary />;
-                    }
-                    if (rootcauseanalysis == true) {
-                      return <RootCauseAnalysisSummary />;
-                    }
-                    if (lessionlearn == true) {
-                      return <LessionLearnSummary />;
-                    }
-                  })()}
-                </>
-              </Grid>
+            <Row>
+              <Col md={9}>
+                <Grid item xs={12}>
+                  {/* summary and part */}
+                  <>
+                    {(() => {
+                      if (
+                        initialNotification == true ||
+                        (investigation === false &&
+                          evidence === false &&
+                          rootcauseanalysis === false &&
+                          lessionlearn === false)
+                      ) {
+                        return <IncidentDetailsSummary />;
+                      }
+                      if (investigation == true) {
+                        return <InvestigationSummary />;
+                      }
+                      if (evidence == true) {
+                        return <EvidenceSummary />;
+                      }
+                      if (rootcauseanalysis == true) {
+                        return <RootCauseAnalysisSummary />;
+                      }
+                      if (lessionlearn == true) {
+                        return <LessionLearnSummary />;
+                      }
+                    })()}
+                  </>
+                </Grid>
+              </Col>
 
               {/* side bar    */}
               {isDesktop && (
-                <Grid item xs={12} md={3}>
+                <Col md={3}>
                   <Paper>
                     <List
                       dense
@@ -641,9 +644,9 @@ const Summary = () => {
                       </ListItem>
                     </List>
                   </Paper>
-                </Grid>
+                </Col>
               )}
-            </Grid>
+            </Row>
           </Box>
         </PapperBlock>
       ) : (
