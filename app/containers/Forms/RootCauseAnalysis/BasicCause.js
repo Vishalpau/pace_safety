@@ -14,6 +14,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -333,175 +334,187 @@ const BasicCause = () => {
 
   return (
     <PapperBlock title="Basic Cause" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-
-            <Typography className={Type.labelValue} gutterBottom>
-              {incidentDetail.incidentNumber}
-            </Typography>
-          </Grid>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              RCA method
-            </Typography>
-            <Typography className={Type.labelValue} gutterBottom>
-              PACE cause analysis
-            </Typography>
-          </Grid>
-          <Grid item md={12}>
-            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-              <Typography variant="h6" gutterBottom>
-                Human factors
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
               </Typography>
-            </Box>
-          </Grid>
-          <Grid item md={12}>
-            <FormControl component="fieldset" error={error.personal}>
-              <FormLabel component="legend">Personal</FormLabel>
-              <FormGroup>
-                {PERSONAL.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.personal.rcaRemark.includes(value)}
-                    onChange={async (e) => handelPersonal(e, value)}
-                  />
-                ))}
-              </FormGroup>
-              {error && error.personal && (
-                <FormHelperText>{error.personal}</FormHelperText>
-              )}
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
-          {/* wellness factors */}
-          <Grid item md={12}>
-            <FormControl component="fieldset" error={error.wellnessFactors}>
-              <FormLabel component="legend">Wellness factors</FormLabel>
-              <FormGroup>
-                {PERSONALWELNESSFACTORS.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.wellnessFactors.rcaRemark.includes(value)}
-                    onChange={async (e) => handelWellnessFactors(e, value)}
-                  />
-                ))}
-              </FormGroup>
-              {error && error.wellnessFactors && (
-                <FormHelperText>{error.wellnessFactors}</FormHelperText>
-              )}
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
-          {/* other human factors */}
-          <Grid item md={12}>
-            <TextField
-              id="filled-basic"
-              variant="outlined"
-              multiline
-              rows={4}
-              label="Other human factors"
-              value={form.otherHumanFactor.rcaRemark}
-              className={classes.formControl}
-              onChange={async (e) => handelOtherHumanFactors(e)}
-            />
-          </Grid>
 
-          <Grid item md={12}>
-            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-              <Typography variant="h6" gutterBottom>
-                Job factors
+              <Typography className={Type.labelValue} gutterBottom>
+                {incidentDetail.incidentNumber}
               </Typography>
-            </Box>
-          </Grid>
-
-          <Grid item md={12}>
-            <FormControl component="fieldset" error={error.leadership}>
-              <FormLabel component="legend">Leadership</FormLabel>
-              <FormGroup>
-                {LEADERSHIP.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.leadership.rcaRemark.includes(value)}
-                    onChange={async (e) => handelLeadership(e, value)}
-                  />
-                ))}
-              </FormGroup>
-              {error && error.leadership && (
-                <FormHelperText>{error.leadership}</FormHelperText>
-              )}
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
-          <Grid item md={12}>
-            <FormControl component="fieldset" error={error.processes}>
-              <FormLabel component="legend">Processes</FormLabel>
-              <FormGroup>
-                {PROCESSES.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.processes.rcaRemark.includes(value)}
-                    onChange={async (e) => handelProcesses(e, value)}
-                  />
-                ))}
-              </FormGroup>
-              {error && error.processes && (
-                <FormHelperText>{error.processes}</FormHelperText>
-              )}
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
-          {/* other job factors */}
-          <Grid item md={12}>
-            <TextField
-              id="filled-basic"
-              variant="outlined"
-              multiline
-              value={form.otherJobFactors.rcaRemark}
-              rows={3}
-              label="Other job factors"
-              className={classes.formControl}
-              onChange={async (e) => handelOtherJobFactors(e)}
-            />
-          </Grid>
-          <Grid item md={6}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNavigate("previous")}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              disabled={nextButton == true}
-              onClick={(e) => handelNext(e)}
-            >
-              Next
-            </Button>
-          </Grid>
-        </Grid>
-        {
-          isDesktop && (
-            <Grid item md={3}>
-              <FormSideBar
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Basic cause"}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                RCA method
+              </Typography>
+              <Typography className={Type.labelValue} gutterBottom>
+                PACE cause analysis
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                <Typography variant="h6" gutterBottom>
+                  Human factors
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl component="fieldset" error={error.personal}>
+                <FormLabel component="legend">Personal</FormLabel>
+                <FormGroup>
+                  {PERSONAL.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.personal.rcaRemark.includes(value)}
+                      onChange={async (e) => handelPersonal(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+                {error && error.personal && (
+                  <FormHelperText>{error.personal}</FormHelperText>
+                )}
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
+            {/* wellness factors */}
+            <Grid item xs={12}>
+              <FormControl component="fieldset" error={error.wellnessFactors}>
+                <FormLabel component="legend">Wellness factors</FormLabel>
+                <FormGroup>
+                  {PERSONALWELNESSFACTORS.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.wellnessFactors.rcaRemark.includes(value)}
+                      onChange={async (e) => handelWellnessFactors(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+                {error && error.wellnessFactors && (
+                  <FormHelperText>{error.wellnessFactors}</FormHelperText>
+                )}
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
+            {/* other human factors */}
+            <Grid item xs={12}>
+              <TextField
+                id="filled-basic"
+                variant="outlined"
+                multiline
+                rows={4}
+                label="Other human factors"
+                error={error.otherHumanFactor}
+                value={
+                  form.otherHumanFactor.rcaRemark !== "No option selected"
+                    ? form.otherHumanFactor.rcaRemark
+                    : ""
+                }
+                helperText={error ? error.otherHumanFactor : ""}
+                className={classes.formControl}
+                onChange={async (e) => handelOtherHumanFactors(e)}
               />
             </Grid>
-          )}
 
-      </Grid>
+            <Grid item xs={12}>
+              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                <Typography variant="h6" gutterBottom>
+                  Job factors
+                </Typography>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl component="fieldset" error={error.leadership}>
+                <FormLabel component="legend">Leadership</FormLabel>
+                <FormGroup>
+                  {LEADERSHIP.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.leadership.rcaRemark.includes(value)}
+                      onChange={async (e) => handelLeadership(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+                {error && error.leadership && (
+                  <FormHelperText>{error.leadership}</FormHelperText>
+                )}
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl component="fieldset" error={error.processes}>
+                <FormLabel component="legend">Processes</FormLabel>
+                <FormGroup>
+                  {PROCESSES.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.processes.rcaRemark.includes(value)}
+                      onChange={async (e) => handelProcesses(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+                {error && error.processes && (
+                  <FormHelperText>{error.processes}</FormHelperText>
+                )}
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
+            {/* other job factors */}
+            <Grid item xs={12}>
+              <TextField
+                id="filled-basic"
+                variant="outlined"
+                multiline
+                error={error.otherJobFactors}
+                value={
+                  form.otherJobFactors.rcaRemark !== "No option selected"
+                    ? form.otherJobFactors.rcaRemark
+                    : ""
+                }
+                helperText={error ? error.otherJobFactors : ""}
+                rows={3}
+                label="Other job factors"
+                className={classes.formControl}
+                onChange={async (e) => handelOtherJobFactors(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelPrevious(e)}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={nextButton == true}
+                className={classes.button}
+                onClick={(e) => handelNext(e)}
+              >
+                Next
+              </Button>
+            </Grid>
+          </Grid>
+        </Col>
+        {isDesktop && (
+          <Col md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Basic cause"}
+            />
+          </Col>
+        )}
+      </Row>
     </PapperBlock>
   );
 };

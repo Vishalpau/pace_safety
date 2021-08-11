@@ -28,12 +28,12 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
-
+import { Row, Col } from "react-grid-system";
 import axios from "axios";
+
 import FormSideBar from "../FormSideBar";
 import {
   access_token,
@@ -92,14 +92,14 @@ const ReportingAndNotification = () => {
   const [reportedByNameList, setReportedByNameList] = useState([]);
   const [evidence, setEvidence] = useState([]);
   const [notificationSentValue, setNotificationSentValue] = useState([]);
-  const [supervisorName, setSupervisorName] = useState('')
-  const [reportedByName, setReportedByName] = useState('')
+  const [supervisorName, setSupervisorName] = useState("");
+  const [reportedByName, setReportedByName] = useState("");
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isNext, setIsnext] = useState(true);
   const [evidanceId, setEvidanceId] = useState([]);
-  const [notifyToList, setNotifyToList] = useState([])
+  const [notifyToList, setNotifyToList] = useState([]);
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -163,7 +163,7 @@ const ReportingAndNotification = () => {
       form.latereporting || incidentsListData.reasonLateReporting;
     temp.notificationComments =
       form.additionaldetails || incidentsListData.notificationComments;
-    temp.updatedAt = moment(new Date()).toISOString();
+    temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
@@ -172,7 +172,6 @@ const ReportingAndNotification = () => {
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-      
     } catch (error) {
       setIsnext(true);
     }
@@ -205,7 +204,7 @@ const ReportingAndNotification = () => {
           const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
             createdBy: parseInt(userId),
-            notifyTo:notifyto,
+            notifyTo: notifyto,
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           });
         } catch (err) {
@@ -305,8 +304,12 @@ const ReportingAndNotification = () => {
         let status = 0;
 
         // Create new entries.
-        let stringNotifyList = notifyToList.toString()
-        const { error, isValid } = ReportingValidation(form, reportOtherData,stringNotifyList);
+        let stringNotifyList = notifyToList.toString();
+        const { error, isValid } = ReportingValidation(
+          form,
+          reportOtherData,
+          stringNotifyList
+        );
         setError(error);
 
         if (isValid === true && evidanceChecked === true) {
@@ -368,31 +371,31 @@ const ReportingAndNotification = () => {
   };
 
   // handle notify to
-  const handelNotifyTo = async (e,index) => {
-   
-   if(e.target.checked===true){
-    let temp = [...notifyToList]
-    let users = notificationSentValue[index].users
-    for(var i=0;i<users.length;i++){
-      let id = users[i].id 
-      temp=temp.concat(id)
-    }
-    let uniq = [...new Set(temp)];
-    setNotifyToList(uniq)
-   }else{
-    let temp = [...notifyToList]
-    let data=[]
-    let users = notificationSentValue[index].users
-    for(var i=0;i<users.length;i++){
-      let id = users[i].id 
-      let newData=temp.filter(item=>item !== id)
-     
-      data = newData     
+  const handelNotifyTo = async (e, index) => {
+    if (e.target.checked === true) {
+      let temp = [...notifyToList];
+      let users = notificationSentValue[index].users;
+      for (var i = 0; i < users.length; i++) {
+        let id = users[i].id;
+        temp = temp.concat(id);
+      }
+      let uniq = [...new Set(temp)];
+      setNotifyToList(uniq);
+    } else {
+      let temp = [...notifyToList];
+      let data = [];
+      let users = notificationSentValue[index].users;
+      for (var i = 0; i < users.length; i++) {
+        let id = users[i].id;
+        let newData = temp.filter((item) => item !== id);
+
+        data = newData;
+      }
+      setNotifyToList(data);
     }
     setNotifyToList(data)
    }  
-  }
- console.log(notifyToList)
+  
   
   // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
@@ -531,9 +534,9 @@ const ReportingAndNotification = () => {
     await fetchReportableTo();
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
     const result = res.data.data.results;
-    
+
     if (result.length > 0) {
-      await setNotifyToList(result[0].notifyTo)
+      await setNotifyToList(result[0].notifyTo);
       const reportToData = [];
       for (const key in result) {
         reportToData.push(result[key].reportTo);
@@ -547,9 +550,9 @@ const ReportingAndNotification = () => {
       }
 
       await setReportedToObj(result);
-      let temp = { ...form }
-      temp['reportedto'] = reportToData
-      await setForm(temp)
+      let temp = { ...form };
+      temp["reportedto"] = reportToData;
+      await setForm(temp);
       // await setForm({ ...form, reportedto: reportToData });
     }
 
@@ -576,18 +579,16 @@ const ReportingAndNotification = () => {
       } else {
         await SetLateReport(false);
       }
-      await setSupervisorName(result.supervisorByName)
-      await setReportedByName(result.incidentReportedByName)
+      await setSupervisorName(result.supervisorByName);
+      await setReportedByName(result.incidentReportedByName);
       await setIncidentsListdata(result);
-
-
 
       if (!id) {
         await setIsLoading(true);
       }
     }
   };
-  
+
   // fetch supervisor name
 
   const fetchSuperVisorName = () => {
@@ -602,13 +603,12 @@ const ReportingAndNotification = () => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          
           const result = response.data.data.results[0].roles[0].users;
-         
+
           setSuperVisorNameList([...result, { name: "other" }]);
         }
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   const fetchReportedBy = () => {
@@ -673,7 +673,7 @@ const ReportingAndNotification = () => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   // handle go back
@@ -702,7 +702,6 @@ const ReportingAndNotification = () => {
     }
   };
 
-
   useEffect(() => {
     fetchSuperVisorName();
     fetchReportedBy();
@@ -718,387 +717,401 @@ const ReportingAndNotification = () => {
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
-  return (
-    <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
+  return (<PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item xs={12} md={9} spacing={3}>
-            <Grid item xs={12}>
-              <FormControl
-                component="fieldset"
-                required
-                error={error && error.reportedto}
-                className={classes.formControl}
-              >
-                <FormLabel component="legend">Reportable to</FormLabel>
-                <FormGroup>
-                  {reportedTo.map((value, key) => (
-                    <FormControlLabel
-                      id={key}
-                      key={key}
-                      value={value.inputValue}
-                      control={<Checkbox />}
-                      label={value.inputLabel}
-                      checked={!!form.reportedto.includes(value.inputValue)}
-                      onChange={(e) => {
-                        handelReportedTo(e, value.inputValue, "option");
-                      }}
-                    />
-                  ))}
-                </FormGroup>
-                {error && error.reportedto && (
-                  <FormHelperText>{error.reportedto}</FormHelperText>
-                )}
-              </FormControl>
-            </Grid>
-
-            {form.reportedto.includes("Others") ? (
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
               <Grid item xs={12}>
-                <TextField
-                  id="Other"
-                  variant="outlined"
-                  label="Other"
-                  error={error && error[`otherData`]}
-                  helperText={
-                    error && error[`otherData`] ? error[`otherData`] : null
-                  }
-                  defaultValue={reportOtherData}
+                <FormControl
+                  component="fieldset"
+                  required
+                  error={error && error.reportedto}
                   className={classes.formControl}
-                  onChange={(e) => {
-                    setReportOtherData(e.target.value);
-                  }}
-                />
+                >
+                  <FormLabel component="legend">Reportable to</FormLabel>
+                  <FormGroup>
+                    {reportedTo.map((value, key) => (
+                      <FormControlLabel
+                        id={key}
+                        key={key}
+                        value={value.inputValue}
+                        control={<Checkbox />}
+                        label={value.inputLabel}
+                        checked={!!form.reportedto.includes(value.inputValue)}
+                        onChange={(e) => {
+                          handelReportedTo(e, value.inputValue, "option");
+                        }}
+                      />
+                    ))}
+                  </FormGroup>
+                  {error && error.reportedto && (
+                    <FormHelperText>{error.reportedto}</FormHelperText>
+                  )}
+                </FormControl>
               </Grid>
-            ) : null}
 
-            <Grid item xs={12}>
-              <FormControl 
-              error={error && error.notifyTo}
-              required
-              component="fieldset">
-                <FormLabel component="legend">
-                  Notification to be sent?
-                </FormLabel>
-                <FormGroup>
-                {notificationSentValue.map((value, index) => (
-                  <FormControlLabel
-                    id={index}
-                    key={index}
-                    value={value.roleName}
-                    control={<Checkbox />}
-                    label={value.roleName}
+              {form.reportedto.includes("Others") ? (
+                <Grid item xs={12}>
+                  <TextField
+                    id="Other"
+                    variant="outlined"
+                    label="Other"
+                    error={error && error[`otherData`]}
+                    helperText={
+                      error && error[`otherData`] ? error[`otherData`] : null
+                    }
+                    defaultValue={reportOtherData}
+                    className={classes.formControl}
                     onChange={(e) => {
-                      handelNotifyTo(e,index)
+                      setReportOtherData(e.target.value);
                     }}
                   />
-                ))}
-                </FormGroup>
-                {error && error.notifyTo && (
-                  <FormHelperText>{error.notifyTo}</FormHelperText>
-                )}
-              </FormControl>
-              
-            </Grid>
+                </Grid>
+              ) : null}
 
-            <Grid item xs={12} justify="flex-start">
-              <Box marginTop={3} marginBottom={4}>
-                <Typography variant="h6" gutterBottom>
-                  Initial evidences
-                </Typography>
-                <Typography variant="caption">
-                  Only PDF,PNG,JPEG,JPG,Excel,Xls,Doc,Word & PPT files are
-                  supported
-                </Typography>
-              </Box>
+              <Grid item xs={12}>
+                <FormControl
+                  error={error && error.notifyTo}
+                  required
+                  component="fieldset"
+                >
+                  <FormLabel component="legend">
+                    Notification to be sent?
+                  </FormLabel>
+                  <FormGroup>
+                    {notificationSentValue.map((value, index) => (
+                      <FormControlLabel
+                        id={index}
+                        key={index}
+                        value={value.roleName}
+                        control={<Checkbox />}
+                        label={value.roleName}
+                        onChange={(e) => {
+                          handelNotifyTo(e, index);
+                        }}
+                      />
+                    ))}
+                  </FormGroup>
+                  {error && error.notifyTo && (
+                    <FormHelperText>{error.notifyTo}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-              {evidanceForm.map((item, index) => (
-                <Grid container item xs={12} spacing={3} alignItems="center">
-                  <Grid
-                    item
-                    md={typeof item.evidenceDocument === "string" ? 2 : 6}
-                  >
-                    <input
-                      ref={ref}
-                      id="file"
-                      type="file"
-                      accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                      style={{
-                        color:
-                          typeof item.evidenceDocument === "string" &&
-                          "transparent",
-                      }}
-                      onChange={(e) =>
-                        handleEvidanceForm(e, index, "evidenceDocument")
-                      }
-                    />
-                  </Grid>
-                  {typeof item.evidenceDocument === "string" ? (
-                    <Grid item md={4}>
-                      <Tooltip title={"fileName"}>
-                        <Attachment value={item.evidenceDocument} />
-                      </Tooltip>
-                    </Grid>
-                  ) : null}
-                  <Grid item xs={10} md={4}>
-                    <TextField
-                      id="evidanceRemark"
-                      size="small"
-                      variant="outlined"
-                      label="Evidences remark"
-                      error={
-                        evidenceError &&
-                        evidenceError[`evidenceRemark${[index]}`]
-                      }
-                      helperText={
-                        evidenceError &&
-                          evidenceError[`evidenceRemark${[index]}`]
-                          ? evidenceError[`evidenceRemark${[index]}`]
-                          : null
-                      }
-                      className={classes.formControl}
-                      value={item.evidenceRemark}
-                      onChange={(e) =>
-                        handleEvidanceForm(e, index, "evidenceRemark")
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={1}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={(e) => handleNewEvidance(e)}
+              <Grid item xs={12} justify="flex-start">
+                <Box marginTop={3} marginBottom={4}>
+                  <Typography variant="h6" gutterBottom>
+                    Initial evidences
+                  </Typography>
+                  <Typography variant="caption">
+                    Only PDF,PNG,JPEG,JPG,Excel,Xls,Doc,Word & PPT files are
+                    supported
+                  </Typography>
+                </Box>
+
+                {evidanceForm.map((item, index) => (
+                  <Grid container item xs={12} spacing={3} alignItems="center">
+                    <Grid
+                      item
+                      md={typeof item.evidenceDocument === "string" ? 2 : 6}
                     >
-                      <AddCircleIcon />
-                    </IconButton>
-                  </Grid>
-
-                  <Grid item xs={1}>
-                    {evidanceForm.length > 1 ? (
+                      <input
+                        ref={ref}
+                        id="file"
+                        type="file"
+                        accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                        style={{
+                          color:
+                            typeof item.evidenceDocument === "string" &&
+                            "transparent",
+                        }}
+                        onChange={(e) =>
+                          handleEvidanceForm(e, index, "evidenceDocument")
+                        }
+                      />
+                    </Grid>
+                    {typeof item.evidenceDocument === "string" ? (
+                      <Grid item md={4}>
+                        <Tooltip title={"fileName"}>
+                          <Attachment value={item.evidenceDocument} />
+                        </Tooltip>
+                      </Grid>
+                    ) : null}
+                    <Grid item xs={8} md={4}>
+                      <TextField
+                        id="evidanceRemark"
+                        size="small"
+                        variant="outlined"
+                        label="Evidences remark"
+                        error={
+                          evidenceError &&
+                          evidenceError[`evidenceRemark${[index]}`]
+                        }
+                        helperText={
+                          evidenceError &&
+                          evidenceError[`evidenceRemark${[index]}`]
+                            ? evidenceError[`evidenceRemark${[index]}`]
+                            : null
+                        }
+                        className={classes.formControl}
+                        value={item.evidenceRemark}
+                        onChange={(e) =>
+                          handleEvidanceForm(e, index, "evidenceRemark")
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
                       <IconButton
                         variant="contained"
                         color="primary"
-                        onClick={() => handleRemoveEvidance(index, item.id && item.id)}
+                        className={classes.button}
+                        onClick={(e) => handleNewEvidance(e)}
                       >
-                        <DeleteForeverIcon />
+                        <AddCircleIcon />
                       </IconButton>
+                    </Grid>
+
+                    {evidanceForm.length > 1 ? (
+                      <Grid item xs={2}>
+                        <IconButton
+                          variant="contained"
+                          color="primary"
+                          onClick={() =>
+                            handleRemoveEvidance(index, item.id && item.id)
+                          }
+                        >
+                          <DeleteForeverIcon />
+                        </IconButton>
+                      </Grid>
                     ) : null}
                   </Grid>
-                </Grid>
-              ))}
+                ))}
 
-              <Snackbar
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-              >
-                <Alert onClose={handleClose} severity={messageType}>
-                  {message}
-                </Alert>
-              </Snackbar>
-            </Grid>
+                <Snackbar
+                  open={open}
+                  autoHideDuration={6000}
+                  onClose={handleClose}
+                >
+                  <Alert onClose={handleClose} severity={messageType}>
+                    {message}
+                  </Alert>
+                </Snackbar>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="supervisorname-label">
-                  Supervisor name
-                </InputLabel>
-                <Select
-                  labelId="supervisorname-label"
-                  id="supervisorname"
-                  label="Supervisor name"
-                  defaultValue={
-                    incidentsListData.supervisorByName === ""
-                      ? ""
-                      : superVisorNameList.filter(
-                        (item) =>
-                          item.name === incidentsListData.supervisorByName
-                      ).length > 0
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="supervisorname-label">
+                    Supervisor name
+                  </InputLabel>
+                  <Select
+                    labelId="supervisorname-label"
+                    id="supervisorname"
+                    label="Supervisor name"
+                    defaultValue={
+                      incidentsListData.supervisorByName === ""
+                        ? ""
+                        : superVisorNameList.filter(
+                            (item) =>
+                              item.name === incidentsListData.supervisorByName
+                          ).length > 0
                         ? incidentsListData.supervisorByName
                         : "other"
+                    }
+                    onChange={async (e) => {
+                      await setSupervisorName(e.target.value);
+                    }}
+                  >
+                    {superVisorNameList.map((value, index) => (
+                      <MenuItem key={index} value={value.name}>
+                        {value.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="others"
+                  variant="outlined"
+                  label="Others"
+                  defaultValue={
+                    superVisorNameList.length > 0
+                      ? superVisorNameList
+                          .slice(0, -1)
+                          .filter(
+                            (item) =>
+                              item.name === incidentsListData.supervisorByName
+                          ).length > 0
+                        ? ""
+                        : incidentsListData.supervisorByName
+                      : ""
                   }
-                  onChange={async (e) => {
-                  
-                    await setSupervisorName(e.target.value)
+                  disabled={
+                    superVisorNameList.length > 0
+                      ? superVisorNameList
+                          .slice(0, -1)
+                          .filter((item) => item.name === supervisorName)
+                          .length > 0
+                      : true
+                  }
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      supervisorOtherName: e.target.value.toString(),
+                    });
                   }}
-                >
-                  {superVisorNameList.map((value, index) => (
-                    <MenuItem key={index} value={value.name}>
-                      {value.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="others"
-                variant="outlined"
-                label="Others"
-                defaultValue={
-                  superVisorNameList.length > 0 ? superVisorNameList.slice(0, -1).filter(
-                    (item) => item.name === incidentsListData.supervisorByName
-                  ).length > 0
-                    ? ""
-                    : incidentsListData.supervisorByName : ""
+                />
 
-                }
-                disabled={superVisorNameList.length > 0 ? superVisorNameList.slice(0, -1).filter(
-                  (item) => item.name === supervisorName
-                ).length > 0 : true}
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    supervisorOtherName: e.target.value.toString(),
-                  });
-                }}
-              />
+                {error && error.othername ? <p>{error.othername}</p> : null}
+              </Grid>
 
-              {error && error.othername ? <p>{error.othername}</p> : null}
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="reportedBy-label">Reported by</InputLabel>
+                  <Select
+                    labelId="reportedBy-label"
+                    id="reportedBy"
+                    label="Reported by"
+                    defaultValue={
+                      reportedByNameList.filter(
+                        (item) =>
+                          item.name === incidentsListData.incidentReportedByName
+                      ).length > 0
+                        ? incidentsListData.incidentReportedByName
+                        : "other"
+                    }
+                    onChange={(e) => {
+                      setReportedByName(e.target.value);
+                    }}
+                  >
+                    {reportedByNameList.map((value, index) => (
+                      <MenuItem key={index} value={value.name}>
+                        {value.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="reportedBy-label">Reported by</InputLabel>
-                <Select
-                  labelId="reportedBy-label"
-                  id="reportedBy"
-                  label="Reported by"
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="others"
+                  variant="outlined"
+                  label="Others"
                   defaultValue={
                     reportedByNameList.filter(
                       (item) =>
-                        item.name ===
-                        incidentsListData.incidentReportedByName
+                        item.name === incidentsListData.incidentReportedByName
                     ).length > 0
-                      ? incidentsListData.incidentReportedByName
-                      : "other"
+                      ? ""
+                      : incidentsListData.incidentReportedByName
+                  }
+                  className={classes.formControl}
+                  disabled={
+                    reportedByNameList.length > 0
+                      ? reportedByNameList
+                          .slice(0, -1)
+                          .filter((item) => item.name === reportedByName)
+                          .length > 0
+                      : true
                   }
                   onChange={(e) => {
-                    setReportedByName(e.target.value)
+                    setForm({
+                      ...form,
+                      reportedByOtherName: e.target.value,
+                    });
                   }}
-                >
-                  {reportedByNameList.map((value, index) => (
-                    <MenuItem key={index} value={value.name}>
-                      {value.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="others"
-                variant="outlined"
-                label="Others"
-                defaultValue={
-                  reportedByNameList.filter(
-                    (item) =>
-                      item.name ===
-                      incidentsListData.incidentReportedByName
-                  ).length > 0
-                    ? "" : incidentsListData.incidentReportedByName
-
-                }
-                className={classes.formControl}
-                disabled={reportedByNameList.length > 0 ? reportedByNameList.slice(0, -1).filter(
-                  (item) => item.name === reportedByName
-                ).length > 0 : true}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    reportedByOtherName: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDateTimePicker
-                  className={classes.formControl}
-                  id="date-picker-dialog"
-                  format="yyyy/MM/dd HH:mm"
-                  inputVariant="outlined"
-                  label="Reporting date"
-                  value={incidentsListData.incidentReportedOn}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
-                  disableFuture
-                  disabled
                 />
-              </MuiPickersUtilsProvider>
-            </Grid>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDateTimePicker
+                    className={classes.formControl}
+                    id="date-picker-dialog"
+                    format="yyyy/MM/dd HH:mm"
+                    inputVariant="outlined"
+                    label="Reporting date"
+                    value={incidentsListData.incidentReportedOn}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                    disableFuture
+                    disabled
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                id="reason"
-                variant="outlined"
-                label="Reason for reporting later than 4 hours"
-                multiline
-                error={error && error.latereporting}
-                disabled={!lateReport}
-                rows="4"
-                defaultValue={incidentsListData.reasonLateReporting}
-                className={classes.fullWidth}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    latereporting: e.target.value.toString(),
-                  });
-                }}
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="reason"
+                  variant="outlined"
+                  label="Reason for reporting later than 4 hours"
+                  multiline
+                  error={error && error.latereporting}
+                  disabled={!lateReport}
+                  rows="4"
+                  defaultValue={incidentsListData.reasonLateReporting}
+                  className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      latereporting: e.target.value.toString(),
+                    });
+                  }}
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                id="additionalDetails"
-                variant="outlined"
-                label="Additional details if any"
-                multiline
-                rows="4"
-                defaultValue={incidentsListData.notificationComments}
-                className={classes.fullWidth}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    additionaldetails: e.target.value.toString(),
-                  });
-                }}
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="additionalDetails"
+                  variant="outlined"
+                  label="Additional details if any"
+                  multiline
+                  rows="4"
+                  defaultValue={incidentsListData.notificationComments}
+                  className={classes.fullWidth}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      additionaldetails: e.target.value.toString(),
+                    });
+                  }}
+                />
+              </Grid>
 
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handleGoBack(e)}
-              >
-                Previous
-              </Button>
-              <Button
-                type="button"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handelNext(e)}
-              >
-                Submit
-              </Button>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handleGoBack(e)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelNext(e)}
+                >
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          </Col>
           {isDesktop && (
-            <Grid item xs={12} md={3}>
+            <Col md={3}>
               <FormSideBar
                 deleteForm={localStorage.getItem("deleteForm")}
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem="Reporting and notification"
               />
-            </Grid>
+            </Col>
           )}
-        </Grid>
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}

@@ -13,6 +13,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -230,94 +231,94 @@ const CorrectiveAction = () => {
 
   return (
     <PapperBlock title="Additional information" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidentDetail.incidentNumber}
-            </Typography>
-          </Grid>
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
+            </Grid>
 
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              RCA method
-            </Typography>
-            <Typography className={Type.labelValue}>
-              PACE cause analysis
-            </Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                RCA method
+              </Typography>
+              <Typography className={Type.labelValue}>
+                PACE cause analysis
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <FormControl component="fieldset" error={error.managementControl}>
-              <FormLabel component="legend">Additional information</FormLabel>
-              {MANAGEMENTCONTROL.map((value) => (
-                <FormControlLabel
-                  control={<Checkbox name={value} />}
-                  label={value}
-                  checked={form.managementControl.rcaRemark.includes(value)}
-                  onChange={async (e) => handelManagementControl(e, value)}
-                />
-              ))}
-            </FormControl>
-            {error && error.managementControl && (
-              <FormHelperText style={{ color: "red" }}>
-                {error.managementControl}
-              </FormHelperText>
-            )}
-          </Grid>
+            <Grid item xs={12}>
+              <FormControl component="fieldset" error={error.managementControl}>
+                <FormLabel component="legend">Additional information</FormLabel>
+                {MANAGEMENTCONTROL.map((value) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={value}
+                    checked={form.managementControl.rcaRemark.includes(value)}
+                    onChange={async (e) => handelManagementControl(e, value)}
+                  />
+                ))}
+              </FormControl>
+              {error && error.managementControl && (
+                <FormHelperText style={{ color: "red" }}>
+                  {error.managementControl}
+                </FormHelperText>
+              )}
+            </Grid>
 
-          <Grid item md={12}>
-            <TextField
-              id="filled-basic"
-              variant="outlined"
-              multiline
-              error={error.reasonsSupportAbove}
-              value={
-                form.reasonsSupportAbove.rcaRemark !== "No option selected"
-                  ? form.reasonsSupportAbove.rcaRemark
-                  : ""
-              }
-              helperText={error ? error.reasonsSupportAbove : ""}
-              rows={3}
-              label="Details of the reasons to support above"
-              className={classes.formControl}
-              onChange={async (e) => handelreasonsSupportAbove(e)}
-            />
-          </Grid>
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNavigate("previous")}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              disabled={nextButton == true}
-              onClick={(e) => handelNext(e)}
-            >
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-        {
-          isDesktop && (
-            <Grid item md={3}>
-              <FormSideBar
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Additional information"}
+            <Grid item xs={12}>
+              <TextField
+                id="filled-basic"
+                variant="outlined"
+                multiline
+                error={error.reasonsSupportAbove}
+                value={
+                  form.reasonsSupportAbove.rcaRemark !== "No option selected"
+                    ? form.reasonsSupportAbove.rcaRemark
+                    : ""
+                }
+                helperText={error ? error.reasonsSupportAbove : ""}
+                rows={3}
+                label="Details of the reasons to support above"
+                className={classes.formControl}
+                onChange={async (e) => handelreasonsSupportAbove(e)}
               />
             </Grid>
-          )}
-
-      </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelPrevious(e)}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={nextButton == true}
+                className={classes.button}
+                onClick={(e) => handelNext(e)}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </Col>
+        {isDesktop && (
+          <Col md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Additional information"}
+            />
+          </Col>
+        )}
+      </Row>
     </PapperBlock>
   );
 };

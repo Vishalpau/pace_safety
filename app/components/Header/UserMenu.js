@@ -126,20 +126,21 @@ function UserMenu(props) {
 
   return (
     <div>
-      <Tooltip title="Support" placement="bottom">
-        <IconButton
-          className={classNames(
-            classes.helpIcon,
-            dark ? classes.dark : classes.light
-          )}
-        >
-          <i className="ion-md-help-circle" />
-        </IconButton>
-      </Tooltip>
+      {isDesktop && (
+        <Tooltip title="Support" placement="bottom">
+          <IconButton
+            className={classNames(
+              classes.helpIcon,
+              dark ? classes.dark : classes.light
+            )}
+          >
+            <i className="ion-md-help-circle" />
+          </IconButton>
+        </Tooltip>
+      )}
 
       {isDesktop && (
         <>
-          {" "}
           <IconButton
             aria-haspopup="true"
             onClick={handleMenu("notification")}

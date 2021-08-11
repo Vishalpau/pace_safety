@@ -41,7 +41,7 @@ export const INITIAL_NOTIFICATION_FORM = {
   "Equipment affected": `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem(
     "fkincidentId"
   )}`,
-  "Enviroment Impact": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
+  "Environment impact": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
     "fkincidentId"
   )}`,
   "Reporting and notification": `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem(
@@ -157,7 +157,7 @@ export const PACE_MANAGEMENT_CONTROL_SUB_TYPES = [
   "Assessments",
   "Compilance",
   "Engagement",
-]
+];
 
 // option in root cause and anlysis
 
@@ -322,7 +322,7 @@ export const PROACTIVEMANAGEMENT = [
   "Lack of timely and factual data based decisions",
   "Improvement required in communication processes",
   "Improvement required in work management system - Work permits, work direction",
-]
+];
 
 export const ASSESSMENTS = [
   "Lack of  Quality control and HSE  audits, inspections",
@@ -330,17 +330,17 @@ export const ASSESSMENTS = [
   "Lack of management system audits",
   "Corrective actions reverse analysis – effectiveness assessment",
   "Lack of Risk Assessment processes",
-]
+];
 
 export const COMPILANCE = [
   "Not following company policies and standards",
   "Not meeting regulatory requirements",
   "Not following the manufacturer recommendations",
   "Lack of Operational Discipline – non compliance with procedures, polices etc.",
-]
+];
 
 export const ENGAGEMENT = [
   "Leadership engagement needs improvement",
   "Poor reward and recognition",
   "Delay / withholding information",
-]
+];
