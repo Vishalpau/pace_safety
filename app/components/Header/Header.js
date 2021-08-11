@@ -39,6 +39,7 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import styles from "./header-jss";
 import logos from "dan-api/images/logos";
@@ -343,6 +344,8 @@ function Header(props) {
     handleProjectList();
   }, [initialValues.projectName]);
 
+  const isTablet = useMediaQuery("(min-width:768px)");
+
   return (
     <AppBar
       className={classNames(
@@ -367,7 +370,7 @@ function Header(props) {
         <div className={classes.headerProperties}>
           <div className={classes.projectSwitcher}>
             {/* project selections */}
-            <Typography display="inline">Project:</Typography>
+            {isTablet && <Typography display="inline">Project:</Typography>}
             <IconButton
               aria-label="control tower"
               variant="outlined"
@@ -380,7 +383,7 @@ function Header(props) {
             >
               {projectData !== null
                 ? projectData.projectName.projectName
-                : null}{" "}
+                : null}
               <EditIcon />
             </IconButton>
 

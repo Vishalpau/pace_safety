@@ -26,7 +26,7 @@ import { RCAOPTION } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import { FormHelperText } from "@material-ui/core";
 import { PassThrough } from "stream";
-import { checkValue } from "../../../utils/CheckerValue"
+import { checkValue } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -68,7 +68,7 @@ const Details = () => {
   );
   let [hideArray, setHideArray] = useState([]);
   let [investigationData, setInvestigationData] = useState({});
-  let [rcaDisable, setRcaDisable] = useState("")
+  let [rcaDisable, setRcaDisable] = useState("");
 
   // get data for put
   const handelUpdateCheck = async () => {
@@ -80,14 +80,13 @@ const Details = () => {
     let incidentId = !isNaN(lastItem)
       ? lastItem
       : localStorage.getItem("fkincidentId");
-    putId.current = incidentId
+    putId.current = incidentId;
     let previousData = await api.get(
       `/api/v1/incidents/${incidentId}/causeanalysis/`
     );
     let allApiData = previousData.data.data.results[0];
 
-    // fetching data from 
-
+    // fetching data from
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       pkValue.current = allApiData.id;
@@ -98,7 +97,7 @@ const Details = () => {
         evidenceNotSupport: allApiData.evidenceNotSupport,
         rcaRecommended: allApiData.rcaRecommended,
       });
-      setRcaDisable(allApiData.rcaRecommended)
+      setRcaDisable(allApiData.rcaRecommended);
       await handelRcaRecommended("a", allApiData.rcaRecommended);
       putId.current = incidentId;
       checkPost.current = false;
@@ -112,16 +111,19 @@ const Details = () => {
     let investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
       if (investigationApiData.rcaRecommended != "") {
-        setForm({ ...form, rcaRecommended: investigationApiData.rcaRecommended });
+        setForm({
+          ...form,
+          rcaRecommended: investigationApiData.rcaRecommended,
+        });
         await handelRcaRecommended("a", investigationApiData.rcaRecommended);
       }
       setInvestigationData({
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
-        classification: investigationApiData.classification
-      })
+        classification: investigationApiData.classification,
+      });
     }
-  }
+  };
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
@@ -184,7 +186,8 @@ const Details = () => {
       } else {
         form["pk"] = pkValue.current;
         const res = await api.put(
-          `/api/v1/incidents/${putId.current}/causeanalysis/${pkValue.current
+          `/api/v1/incidents/${putId.current}/causeanalysis/${
+            pkValue.current
           }/`,
           form
         );
@@ -216,12 +219,14 @@ const Details = () => {
         );
       } else if (form.rcaRecommended == "PACE cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+            putId.current
           }`
         );
       } else if (form.rcaRecommended == "Cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
+            putId.current
           }`
         );
       }
@@ -269,9 +274,7 @@ const Details = () => {
                 inputVariant="outlined"
                 className={classes.formControl}
                 ampm={false}
-                value={moment(
-                  investigationData["startData"]
-                ).toISOString()}
+                value={moment(investigationData["startData"]).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation start date"
                 disabled
@@ -286,9 +289,7 @@ const Details = () => {
                 inputVariant="outlined"
                 className={classes.formControl}
                 ampm={false}
-                value={moment(
-                  investigationData["endData"]
-                ).toISOString()}
+                value={moment(investigationData["endData"]).toISOString()}
                 onChange={handleDateChange}
                 label="Investigation end date"
                 disabled

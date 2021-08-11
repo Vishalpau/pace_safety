@@ -19,6 +19,7 @@ import api from "../../../utils/axios";
 import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
 import { FormHelperText } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Row, Col } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
@@ -228,87 +229,99 @@ const ActivityDetails = () => {
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item xs={12} md={9} spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
-            {activtyList.length ? (
-              <>
-                {Object.entries(activtyList)
-                  .slice(0, 7)
-                  .map(([key, value]) => (
-                    <Grid item xs={12} md={6}>
-                      <FormControl
-                        component="fieldset"
-                        required
-                        className={classes.formControl}
-                        error={value.error}
-                      >
-                        <FormLabel component="legend">
-                          {value.question}
-                        </FormLabel>
-                        <RadioGroup
-                          className={classes.inlineRadioGroup}
-                          defaultValue={value.answer || false}
-                          onChange={(e) => {
-                            handleRadioData(e, value.questionCode);
-                          }}
-                          // defaultValue={value.answer}
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentDetail.incidentNumber}
+                </Typography>
+              </Grid>
+              {activtyList.length ? (
+                <>
+                  {Object.entries(activtyList)
+                    .slice(0, 7)
+                    .map(([key, value]) => (
+                      <Grid item xs={12} md={6}>
+                        <FormControl
+                          component="fieldset"
+                          required
+                          className={classes.formControl}
+                          error={value.error}
                         >
-                          {radioDecide.map((value) => (
-                            <FormControlLabel
-                              value={value}
-                              control={<Radio />}
-                              label={value}
-                            />
-                          ))}
-                        </RadioGroup>
-                        ​
-                        {value.error ? (
-                          <FormHelperText>{value.error}</FormHelperText>
-                        ) : null}
-                      </FormControl>
-                    </Grid>
-                  ))}
-              </>
-            ) : null}
-            <Grid item md={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => {history.push(`/app/incident-management/registration/evidence/evidence/${localStorage.getItem('fkincidentId')}`)}}
-                // href="/app/incident-management/registration/evidence/evidence/"
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => handleNext()}
-                // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
-              >
-                Next
-              </Button>
+                          <FormLabel component="legend">
+                            {value.question}
+                          </FormLabel>
+                          <RadioGroup
+                            className={classes.inlineRadioGroup}
+                            defaultValue={value.answer || false}
+                            onChange={(e) => {
+                              handleRadioData(e, value.questionCode);
+                            }}
+                            // defaultValue={value.answer}
+                          >
+                            {radioDecide.map((value) => (
+                              <FormControlLabel
+                                value={value}
+                                control={<Radio />}
+                                label={value}
+                              />
+                            ))}
+                          </RadioGroup>
+                          ​
+                          {value.error ? (
+                            <FormHelperText>{value.error}</FormHelperText>
+                          ) : null}
+                        </FormControl>
+                      </Grid>
+                    ))}
+                </>
+              ) : null}
+              <Grid item md={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => {
+                    history.push(
+                      `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
+                        "fkincidentId"
+                      )}`
+                    );
+                  }}
+                  // href="/app/incident-management/registration/evidence/evidence/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => handleNext()}
+                  // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
+                >
+                  Next
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          </Col>
           {isDesktop && (
-            <Grid item md={3}>
+            <Col md={3}>
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={EVIDENCE_FORM}
                 selectedItem="Activity details"
               />
-            </Grid>
+            </Col>
           )}
-        </Grid>
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}

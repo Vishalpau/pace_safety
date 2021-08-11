@@ -279,7 +279,7 @@ const EnvironmentAffected = () => {
           <Grid container item xs={12} md={9} spacing={3}>
             {environmentListData.length !== 0 ? (
               environmentListData.map((env, key) => (
-                <Grid container item spacing={3} xs={12} key={key}>
+                <React.Fragment key={key}>
                   <Grid item xs={12} md={6}>
                     <FormControl
                       component="fieldset"
@@ -348,7 +348,7 @@ const EnvironmentAffected = () => {
                       />
                     ) : null}
                   </Grid>
-                </Grid>
+                </React.Fragment>
               ))
             ) : (
               <>

@@ -552,10 +552,7 @@ const styles = (theme) => ({
     minWidth: 150,
     marginLeft: theme.spacing(2),
   },
-  projectSwitcher: {
-    display: "flex",
-    alignItems: "center",
-  },
+
   searchHeaderMenu: {
     flex: 1,
     flexDirection: "row-reverse",
@@ -566,7 +563,7 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    marginLeft: theme.spacing(4),
+    marginLeft: theme.spacing(2),
   },
   projectSelect: {
     minWidth: 150,
