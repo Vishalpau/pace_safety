@@ -83,15 +83,21 @@ const EqiptmentAffected = () => {
 
   // hablde Remove preivous data
   const handleRemove = async (key) => {
-    if (equipmentListdata.length > 1) {
-      const temp = equipmentListdata;
-      const newData = temp.filter((item) => item.id !== key);
-      await setPeopleData(newData);
-    } else {
-      const temp = form;
-      const newData = temp.filter((item, index) => index !== key);
-      await setForm(newData);
-    }
+        // this condition for delete
+        if(form[key].id){
+          const res = await api.delete(
+            `api/v1/incidents/${id}/equipments/${form[key].id}/`
+          );
+          if(res.status === 200){
+            const temp = form;
+            const newData = temp.filter((item, index) => index !== key);
+            await setForm(newData);
+          }
+        }else{
+          const temp = form;
+        const newData = temp.filter((item, index) => index !== key);
+        await setForm(newData);
+        }
   };
 
   // Add new equipment details
@@ -121,20 +127,29 @@ const EqiptmentAffected = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     //  cheack condition equipment is already filled or new creation
     if (detailsOfEquipmentAffect === "Yes") {
-      if (equipmentListdata.length > 0) {
-        // remove existing data
-        for (let i = 0; i < equipmentListdata.length; i++) {
-          const res = await api.delete(
-            `api/v1/incidents/${id}/equipments/${equipmentListdata[i].id}/`
-          );
-        }
-      }
+     
       const { error, isValid } = EquipmentValidate(form);
       setError(error);
       const status = 0;
       if (isValid) {
         for (let i = 0; i < form.length; i++) {
-          const res = await api.post(
+          if(form[i].id){
+            try{
+              const res = await api.put(
+                `/api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/equipments/${form[i].id}/`,
+                {
+                  equipmentType: form[i].equipmentType,
+                  equipmentOtherType: form[i].equipmentOtherType,
+                  equipmentDeatils: form[i].equipmentDeatils,
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                }
+              )
+            }catch(error){}
+          }else{
+          try{const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
             )}/equipments/`,
@@ -145,7 +160,9 @@ const EqiptmentAffected = () => {
               createdBy: parseInt(userId),
               fkIncidentId: localStorage.getItem("fkincidentId"),
             }
-          );
+          )}catch(error){}
+          }
+          ;
         }
         const temp = incidentsListData;
         temp.equipmentDamagedComments =
@@ -154,7 +171,7 @@ const EqiptmentAffected = () => {
         temp.isEquipmentDamagedAvailable =
           detailsOfEquipmentAffect ||
           incidentsListData.isEquipmentDamagedAvailable;
-        temp.updatedAt = moment(new Date()).toISOString();
+        temp.updatedAt = new Date().toISOString();
         const res = await api.put(
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
@@ -186,7 +203,7 @@ const EqiptmentAffected = () => {
       temp.isEquipmentDamagedAvailable =
         detailsOfEquipmentAffect ||
         incidentsListData.isEquipmentDamagedAvailable;
-      temp.updatedAt = moment(new Date()).toISOString();
+      temp.updatedAt = new Date().toISOString();
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp

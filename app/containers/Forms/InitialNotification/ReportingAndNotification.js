@@ -163,7 +163,7 @@ const ReportingAndNotification = () => {
       form.latereporting || incidentsListData.reasonLateReporting;
     temp.notificationComments =
       form.additionaldetails || incidentsListData.notificationComments;
-    temp.updatedAt = moment(new Date()).toISOString();
+    temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
 
     // put call for update incident Details
@@ -393,9 +393,10 @@ const ReportingAndNotification = () => {
       }
       setNotifyToList(data);
     }
-  };
-  console.log(notifyToList);
-
+    setNotifyToList(data)
+   }  
+  
+  
   // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
     if ((type = "option")) {
@@ -716,8 +717,7 @@ const ReportingAndNotification = () => {
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
-  return (
-    <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
+  return (<PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
         <Row>
           <Col md={9}>
