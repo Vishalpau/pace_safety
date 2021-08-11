@@ -395,7 +395,7 @@ const ReportingAndNotification = () => {
     }
     setNotifyToList(data)
    }  
-  }
+  
   
   // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
@@ -717,8 +717,7 @@ const ReportingAndNotification = () => {
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
-  return (
-    <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
+  return (<PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
         <Row>
           <Col md={9}>
