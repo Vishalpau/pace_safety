@@ -296,10 +296,15 @@ function PersonalDashboard(props) {
 
   useState(() => {
     userDetails();
+    let viewMode = {
+      initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+
+    }
+    localStorage.setItem("viewMode",JSON.stringify(viewMode))
   },[]);
 
   return (
-    <PapperBlock title="Dashboard" icon="ion-md-warning">
+    <PapperBlock title="Home" icon="ion-md-list-box">
       <div class="honeycomb">
         <div class="ibws-fix hexagon_row1">
           <div class="hexagon hide_responsiv">

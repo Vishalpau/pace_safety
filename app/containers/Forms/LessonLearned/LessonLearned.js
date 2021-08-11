@@ -215,8 +215,13 @@ const LessionLearned = () => {
 
       }
       if (status === 201) {
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
+
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
         history.push(
-          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+          `/app/incident-management/registration/close-out/${localStorage.getItem(
             "fkincidentId"
           )}`
         );

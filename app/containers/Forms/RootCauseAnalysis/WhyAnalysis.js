@@ -171,12 +171,22 @@ const WhyAnalysis = () => {
         }
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
           )}`
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"

@@ -588,3 +588,10 @@ export const LessionLearned = loadable(() =>
   import('./Forms/LessonLearned/LessonLearned'), {
   fallback: <Loading />,
 });
+
+// form lession learned
+
+export const CloseOut = loadable(() =>
+  import('./Forms/CloseOut/CloseOut'), {
+  fallback: <Loading />,
+});

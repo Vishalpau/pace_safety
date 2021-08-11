@@ -69,6 +69,11 @@ const ActionTaken = () => {
       form
     );
     if (res.status === 200) {
+      let viewMode = {
+        initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
+  
+      }
+      localStorage.setItem("viewMode",JSON.stringify(viewMode))
       history.push(
         `/app/incident-management/registration/summary/summary/${putId.current}`
       );

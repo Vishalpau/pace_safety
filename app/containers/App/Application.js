@@ -122,6 +122,7 @@ import {
   LessionLearned,
   UpdateIncidentDetails,
   PaceManagement,
+  CloseOut
 } from "../pageListAsync";
 
 
@@ -402,6 +403,12 @@ function Application(props) {
           exact
           path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
+        />
+        {/* close out */}
+        <Route
+          exact
+          path="/app/incident-management/registration/close-out/:id"
+          component={CloseOut}
         />
         {/* Ui Components */}
         <Route exact path="/app/ui" component={Parent} />

@@ -218,11 +218,16 @@ const Summary = () => {
       setEvidence(false);
       setRootCauseAnalysis(false);
       setLessionlearn(false);
+      let viewMode = {
+        initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
+  
+      }
+      localStorage.setItem("viewMode",JSON.stringify(viewMode))
     }
   };
 
   const handelEvidenceView = (e) => {
-    if (evidencesData == undefined) {
+    if (evidencesData.length<0) {
       handelNaviagte(
         `/app/incident-management/registration/evidence/evidence/${id}`
       );
@@ -232,6 +237,11 @@ const Summary = () => {
       setEvidence(true);
       setRootCauseAnalysis(false);
       setLessionlearn(false);
+      let viewMode = {
+        initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+  
+      }
+      localStorage.setItem("viewMode",JSON.stringify(viewMode))
     }
   };
 
@@ -291,8 +301,29 @@ const Summary = () => {
       setEvidence(false);
       setRootCauseAnalysis(false);
       setLessionlearn(true);
+      
+      let viewMode = {
+        initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
+  
+      }
+      localStorage.setItem("viewMode",JSON.stringify(viewMode))
     }
   };
+  const handleIntitialNotification= ()=>{
+    setInitialNotification(true);
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
+    let viewMode = {
+      initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+
+    }
+    localStorage.setItem("viewMode",JSON.stringify(viewMode))
+  }
+  const handleLessionlearn= ()=>{
+   
+  }
 
   useEffect(() => {
     fetchIncidentData();
@@ -320,11 +351,7 @@ const Summary = () => {
               <div className={Styles.item}>
                 <Button
                   color={
-                    initialNotification == true ||
-                    (investigation === false &&
-                      evidence === false &&
-                      rootcauseanalysis === false &&
-                      lessionlearn === false)
+                    JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).initialNotification
                       ? "secondary"
                       : "primary"
                   }
@@ -342,11 +369,8 @@ const Summary = () => {
                   }
                   className={classes.statusButton}
                   onClick={(e) => {
-                    setInitialNotification(true);
-                    setInvestigation(false);
-                    setEvidence(false);
-                    setRootCauseAnalysis(false);
-                    setLessionlearn(false);
+                    handleIntitialNotification()
+                    
                   }}
                 >
                   Initial Notification
@@ -359,7 +383,7 @@ const Summary = () => {
               {/* investigation */}
               <div className={Styles.item}>
                 <Button
-                  color={investigation == true ? "secondary" : "primary"}
+                  color={investigation == true ||JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).investigation ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
                   variant={investigationOverview ? "contained" : "outlined"}
@@ -378,7 +402,7 @@ const Summary = () => {
 
               <div className={Styles.item}>
                 <Button
-                  color={evidence == true ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).evidence ? "secondary" : "primary"}
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -393,7 +417,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={rootcauseanalysis == true ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis? "secondary" : "primary"}
                   variant={
                     paceCauseData || rootCausesData || whyData
                       ? "contained"
@@ -420,7 +444,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={lessionlearn == true ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).lessionlearn ? "secondary" : "primary"}
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -445,24 +469,21 @@ const Summary = () => {
                   <>
                     {(() => {
                       if (
-                        initialNotification == true ||
-                        (investigation === false &&
-                          evidence === false &&
-                          rootcauseanalysis === false &&
-                          lessionlearn === false)
+                        JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).initialNotification
+                      
                       ) {
                         return <IncidentDetailsSummary />;
                       }
-                      if (investigation == true) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).investigation) {
                         return <InvestigationSummary />;
                       }
-                      if (evidence == true) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).evidence) {
                         return <EvidenceSummary />;
                       }
-                      if (rootcauseanalysis == true) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis) {
                         return <RootCauseAnalysisSummary />;
                       }
-                      if (lessionlearn == true) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).lessionlearn) {
                         return <LessionLearnSummary />;
                       }
                     })()}
