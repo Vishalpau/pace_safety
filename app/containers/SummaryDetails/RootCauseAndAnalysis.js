@@ -338,8 +338,8 @@ const RootCauseAnalysisSummary = () => {
                     <TableRow>
                       <TableCell style={{ width: 160 }}>RCA number</TableCell>
                       <TableCell style={{ width: 160 }}>RCA type</TableCell>
-                      <TableCell>RCA sub type</TableCell>
-                      <TableCell style={{ width: 200 }}>RCA Remark</TableCell>
+                      <TableCell style={{ width: 160 }}>RCA sub type</TableCell>
+                      <TableCell style={{ width: 250 }}>RCA Remark</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

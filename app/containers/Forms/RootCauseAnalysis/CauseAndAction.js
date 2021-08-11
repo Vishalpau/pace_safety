@@ -7,13 +7,16 @@ import ListItem from "@material-ui/core/ListItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Row, Col } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -24,7 +27,7 @@ import {
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-import { handelConvert } from "../../../utils/CheckerValue"
+import { handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,10 +48,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
-  table: {
-    width: "100%",
-    minWidth: 650,
-  },
+  table: { minWidth: 900 },
   rootTable: {
     width: "100%",
     overflowX: "auto",
@@ -151,7 +151,8 @@ const BasicCauseAndAction = () => {
     putId.current = lastItem;
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/basic-cause/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -171,7 +172,8 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -181,8 +183,6 @@ const BasicCauseAndAction = () => {
     }
   };
 
-
-
   useEffect(() => {
     fetchIncidentDetails();
     handelShowData();
@@ -191,105 +191,104 @@ const BasicCauseAndAction = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-    <PapperBlock
-      title="Corrective Actions"
-      icon="ion-md-list-box"
-    >
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-
-            <Typography className={Type.labelValue}>
-              {incidentDetail.incidentNumber}
-            </Typography>
-          </Grid>
-
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Method
-            </Typography>
-            <Typography className={Type.labelValue}>
-              PACE cause analysis
-            </Typography>
-          </Grid>
-
-          <Grid item md={12}>
-            <Typography variant="h6" gutterBottom>
-              Corrective actions
-            </Typography>
-          </Grid>
-
-          <Grid item md={12}>
-            <Divider />
-            <Box paddingTop={3}>
-              <Typography variant="h6">
-                Option Selected from Hazardous Acts and Condition
+    <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
               </Typography>
-            </Box>
 
-            <Table className={classes.table}>
-              <TableBody>
-                {Object.entries(data)
-                  .map(([key, value], index) => (
-                    <>
-                      {value.map((value, valueIndex) => (
-                        <TableRow>
-                          <TableCell align="left" style={{ width: 160 }}>
-                            {handelConvert(key)}
-                          </TableCell>
-                          <TableCell align="left">
-                            <li key={value}>
-                              <span>{value}</span>
-                            </li>
-                          </TableCell>
-                          <TableCell align="right">
-                            <ActionTracker
-                              actionContext="incidents:Pacacuase"
-                              enitityReferenceId={`${putId.current}:${id.current[index]
-                                }:${valueIndex}`}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </>
-                  ))}
-              </TableBody>
-            </Table>
-          </Grid>
-
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelPrevious(e)}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNext()}
-            >
-              Next
-            </Button>
-          </Grid>
-        </Grid>
-        {
-          isDesktop && (
-            <Grid item md={3}>
-              <FormSideBar
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Corrective actions"}
-              />
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
             </Grid>
-          )}
 
-      </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Method
+              </Typography>
+              <Typography className={Type.labelValue}>
+                PACE cause analysis
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                Corrective actions
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider />
+
+              <Box paddingTop={2}>
+                <Typography variant="h6">
+                  Option Selected from Hazardous Acts and Condition
+                </Typography>
+              </Box>
+              <TableContainer component={Paper}>
+                <Table className={classes.table}>
+                  <TableBody>
+                    {Object.entries(data).map(([key, value], index) => (
+                      <>
+                        {value.map((value, valueIndex) => (
+                          <TableRow>
+                            <TableCell align="left" style={{ minWidth: 160 }}>
+                              {handelConvert(key)}
+                            </TableCell>
+                            <TableCell align="left" style={{ minWidth: 160 }}>
+                              <li key={value}>
+                                <span>{value}</span>
+                              </li>
+                            </TableCell>
+                            <TableCell align="right" style={{ minWidth: 120 }}>
+                              <ActionTracker
+                                actionContext="incidents:Pacacuase"
+                                enitityReferenceId={`${putId.current}:${
+                                  id.current[index]
+                                }:${valueIndex}`}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelPrevious(e)}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelNext()}
+              >
+                Next
+              </Button>
+            </Grid>
+          </Grid>
+        </Col>
+        {isDesktop && (
+          <Col md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Corrective actions"}
+            />
+          </Col>
+        )}
+      </Row>
     </PapperBlock>
   );
 };

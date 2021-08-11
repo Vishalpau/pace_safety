@@ -485,7 +485,7 @@ const EventDetails = () => {
             {/* weather */}
             {weather.map((value, index) => (
               <>
-                <Grid item xs={10}>
+                <Grid item xs={8}>
                   <FormControl
                     error={
                       errorWeather && errorWeather[`weatherCondition${[index]}`]
@@ -520,7 +520,7 @@ const EventDetails = () => {
                 </Grid>
 
                 {weather.length > 1 ? (
-                  <Grid item xs={1}>
+                  <Grid item xs={2}>
                     <IconButton onClick={(e) => handelRemove(e, index)}>
                       <RemoveCircleOutlineIcon />
                     </IconButton>
@@ -530,7 +530,7 @@ const EventDetails = () => {
             ))}
 
             {weather.length < 3 ? (
-              <Grid item xs={1}>
+              <Grid item xs={2}>
                 <IconButton onClick={(e) => handelAdd(e)}>
                   <AddIcon />
                 </IconButton>

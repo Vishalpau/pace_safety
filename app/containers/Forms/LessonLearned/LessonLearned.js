@@ -16,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import moment from "moment";
 import TextButton from "../../CommonComponents/TextButton";
 import Tooltip from "@material-ui/core/Tooltip";
+import { Row, Col } from "react-grid-system";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -302,239 +303,273 @@ const LessionLearned = () => {
   return (
     <PapperBlock title="Lessons Learnt" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident number
+                </Typography>
 
-              <Typography varint="body1" className={Type.labelValue}>
-                {incidentsListData.incidentNumber
-                  ? incidentsListData.incidentNumber
-                  : "-"}
-              </Typography>
-            </Grid>
+                <Typography varint="body1" className={Type.labelValue}>
+                  {incidentsListData.incidentNumber
+                    ? incidentsListData.incidentNumber
+                    : "-"}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident occured on
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {moment(incidentsListData.incidentOccuredOn).format(
-                  "Do MMMM YYYY, h:mm:ss a"
-                )}
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident occured on
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {moment(incidentsListData.incidentOccuredOn).format(
+                    "Do MMMM YYYY, h:mm:ss a"
+                  )}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident reported on
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {moment(incidentsListData.incidentReportedOn).format(
-                  "Do MMMM YYYY, h:mm:ss a"
-                )}
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident reported on
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {moment(incidentsListData.incidentReportedOn).format(
+                    "Do MMMM YYYY, h:mm:ss a"
+                  )}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Reported by
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentReportedByName
-                  ? incidentsListData.incidentReportedByName
-                  : "-"}
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Reported by
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentReportedByName
+                    ? incidentsListData.incidentReportedByName
+                    : "-"}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident type
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentType
-                  ? incidentsListData.incidentType
-                  : "-"}{" "}
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident type
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentType
+                    ? incidentsListData.incidentType
+                    : "-"}{" "}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident title
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentTitle
-                  ? incidentsListData.incidentTitle
-                  : "-"}
-              </Typography>
-            </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident title
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentTitle
+                    ? incidentsListData.incidentTitle
+                    : "-"}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident description
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentDetails
-                  ? incidentsListData.incidentDetails
-                  : "-"}
-              </Typography>
-            </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident description
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentDetails
+                    ? incidentsListData.incidentDetails
+                    : "-"}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident location
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentLocation
-                  ? incidentsListData.incidentLocation
-                  : "-"}
-              </Typography>
-            </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident location
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentLocation
+                    ? incidentsListData.incidentLocation
+                    : "-"}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
-                Key learnings
-              </Typography>
-            </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom>
+                  Key learnings
+                </Typography>
+              </Grid>
 
-            {form.map((value, key) => (
-              <React.Fragment key={key}>
-                <Grid item xs={12}>
-                  <FormControl
-                    variant="outlined"
-                    required
-                    className={classes.formControl}
-                    error={error && error[`teamOrDepartment${[key]}`]}
-                    required
-                  >
-                    <InputLabel id="demo-simple-select-label">
-                      Team/department
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Team/department"
-                      value={value.teamOrDepartment || ""}
-                      onChange={(e) => handleForm(e, key, "teamOrDepartment")}
+              {form.map((value, key) => (
+                <React.Fragment key={key}>
+                  <Grid item xs={12}>
+                    <FormControl
+                      variant="outlined"
+                      required
+                      className={classes.formControl}
+                      error={error && error[`teamOrDepartment${[key]}`]}
+                      required
                     >
-                      {department.map((selectValues, index) => (
-                        <MenuItem
-                          value={selectValues.departmentName}
-                          key={index}
-                        >
-                          {selectValues.departmentName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {error && error[`teamOrDepartment${[key]}`] && (
-                      <FormHelperText>
-                        {error[`teamOrDepartment${[key]}`]}
-                      </FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="outlined-search"
-                    required
-                    error={error && error[`learnings${[key]}`]}
-                    helperText={
-                      error && error[`learnings${[key]}`]
-                        ? error[`learnings${[key]}`]
-                        : null
-                    }
-                    label="Team/department learnings"
-                    className={classes.formControl}
-                    variant="outlined"
-                    rows="3"
-                    multiline
-                    value={value.learnings || ""}
-                    onChange={(e) => handleForm(e, key, "learnings")}
-                  />
-                </Grid>
-                {form.length > 1 ? (
-                  <Grid item xs={12} md={3}>
-                    <Button
-                      onClick={() => handleRemove(key)}
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      startIcon={<DeleteForeverIcon />}
-                    >
-                      Remove
-                    </Button>
-                  </Grid>
-                ) : null}
-              </React.Fragment>
-            ))}
-
-            <Grid item xs={12}>
-              <TextButton
-                startIcon={<AddIcon />}
-                onClick={() => addNewTeamOrDeparment()}
-              >
-                Add learnings from another team/department
-              </TextButton>
-            </Grid>
-            <Grid item xs={12}>
-              <Snackbar
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-              >
-                <Alert onClose={handleClose} severity={messageType}>
-                  {message}
-                </Alert>
-              </Snackbar>
-
-              {attachment.length > 0
-                ? attachment.map((item, index) => (
-                    <>
-                      <Box paddingBottom={3}>
-                        <Typography variant="h6"> Add attachment</Typography>
-                      </Box>
-                      <input
-                        type="file"
-                        ref={ref}
-                        accept=".png, jpg, jpeg"
-                        onChange={(e) => handleAttchment(e)}
-                        style={{
-                          color:
-                            typeof item.evidenceDocument === "string" &&
-                            "transparent",
-                        }}
-                      />
-
-                      {typeof item.evidenceDocument === "string" && (
-                        <Attachment value={evidence[0].evidenceDocument} />
+                      <InputLabel id="demo-simple-select-label">
+                        Team/department
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Team/department"
+                        value={value.teamOrDepartment || ""}
+                        onChange={(e) => handleForm(e, key, "teamOrDepartment")}
+                      >
+                        {department.map((selectValues, index) => (
+                          <MenuItem
+                            value={selectValues.departmentName}
+                            key={index}
+                          >
+                            {selectValues.departmentName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {error && error[`teamOrDepartment${[key]}`] && (
+                        <FormHelperText>
+                          {error[`teamOrDepartment${[key]}`]}
+                        </FormHelperText>
                       )}
-                    </>
-                  ))
-                : null}
-            </Grid>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="outlined-search"
+                      required
+                      error={error && error[`learnings${[key]}`]}
+                      helperText={
+                        error && error[`learnings${[key]}`]
+                          ? error[`learnings${[key]}`]
+                          : null
+                      }
+                      label="Team/department learnings"
+                      className={classes.formControl}
+                      variant="outlined"
+                      rows="3"
+                      multiline
+                      value={value.learnings || ""}
+                      onChange={(e) => handleForm(e, key, "learnings")}
+                    />
+                  </Grid>
+                  {form.length > 1 ? (
+                    <Grid item xs={12} md={3}>
+                      <Button
+                        onClick={() => handleRemove(key)}
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        startIcon={<DeleteForeverIcon />}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  ) : null}
+                </React.Fragment>
+              ))}
 
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleNext()}
-              >
-                Submit
-              </Button>
+              <Grid item xs={12}>
+                <TextButton
+                  startIcon={<AddIcon />}
+                  onClick={() => addNewTeamOrDeparment()}
+                >
+                  Add learnings from another team/department
+                </TextButton>
+              </Grid>
+              <Grid item xs={12}>
+                <Snackbar
+                  open={open}
+                  autoHideDuration={6000}
+                  onClose={handleClose}
+                >
+                  <Alert onClose={handleClose} severity={messageType}>
+                    {message}
+                  </Alert>
+                </Snackbar>
+
+                {attachment.length > 0
+                  ? attachment.map((item, index) => (
+                      <>
+                        <Box paddingBottom={3}>
+                          <Typography variant="h6"> Add attachment</Typography>
+                        </Box>
+                        <input
+                          type="file"
+                          ref={ref}
+                          accept=".png, jpg, jpeg"
+                          onChange={(e) => handleAttchment(e)}
+                          style={{
+                            color:
+                              typeof item.evidenceDocument === "string" &&
+                              "transparent",
+                          }}
+                        />
+
+                        {typeof item.evidenceDocument === "string" && (
+                          <Attachment value={evidence[0].evidenceDocument} />
+                        )}
+                      </>
+                    ))
+                  : null}
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleNext()}
+                >
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          </Col>
           {isDesktop && (
-            <Grid item md={3}>
+            <Col md={3}>
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={LESSION_LEARNED_FORM}
                 selectedItem="Lessons learnt"
               />
-            </Grid>
+            </Col>
           )}
-        </Grid>
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}

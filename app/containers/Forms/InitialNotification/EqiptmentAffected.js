@@ -41,19 +41,6 @@ const useStyles = makeStyles((theme) => ({
   fullWidth: {
     width: "100%",
   },
-  customLabel: {
-    marginBottom: 0,
-  },
-  textButton: {
-    color: "#3498db",
-    padding: 0,
-    textDecoration: "underline",
-    display: "inline-block",
-    marginBlock: "1.5rem",
-    backgroundColor: "transparent",
-    whiteSpace: "pre-wrap",
-    textAlign: "left",
-  },
   button: {
     margin: theme.spacing(1),
   },
