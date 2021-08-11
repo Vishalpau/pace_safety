@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -300,7 +301,8 @@ const HazardiousCondition = () => {
       if (Object.keys(error).length == 0) {
         if (checkPost.current == false) {
           const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${callObjects[key].pk
+            `/api/v1/incidents/${putId.current}/pacecauses/${
+              callObjects[key].pk
             }/`,
             callObjects[key]
           );
@@ -326,7 +328,8 @@ const HazardiousCondition = () => {
       );
     } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
+          putId.current
         }`
       );
     }
@@ -348,7 +351,8 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -374,146 +378,148 @@ const HazardiousCondition = () => {
       title="Immediate causes - hazardous conditions"
       icon="ion-md-list-box"
     >
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidentDetail.incidentNumber}
-            </Typography>
-          </Grid>
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
+            </Grid>
 
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              RCA method
-            </Typography>
-            <Typography className={Type.labelValue}>
-              PACE cause analysis
-            </Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                RCA method
+              </Typography>
+              <Typography className={Type.labelValue}>
+                PACE cause analysis
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Warning system</FormLabel>
-              <FormGroup>
-                {WARNINGSYSTEM.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.warningSystem.rcaRemark.includes(value)}
-                    onChange={async (e) => handelWarningSystems(e, value)}
-                  />
-                ))}
-              </FormGroup>
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
+            <Grid item md={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Warning system</FormLabel>
+                <FormGroup>
+                  {WARNINGSYSTEM.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.warningSystem.rcaRemark.includes(value)}
+                      onChange={async (e) => handelWarningSystems(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
 
-          {/* energy types */}
-          <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Energy types</FormLabel>
-              <FormGroup>
-                {ENERGIES.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.energyTypes.rcaRemark.includes(value)}
-                    onChange={async (e) => handelEnergyTypes(e, value)}
-                  />
-                ))}
-              </FormGroup>
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
+            {/* energy types */}
+            <Grid item md={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Energy types</FormLabel>
+                <FormGroup>
+                  {ENERGIES.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.energyTypes.rcaRemark.includes(value)}
+                      onChange={async (e) => handelEnergyTypes(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
 
-          {/* tools */}
-          <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Tools</FormLabel>
-              <FormGroup>
-                {TOOLS.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.tools.rcaRemark.includes(value)}
-                    onChange={async (e) => handelTools(e, value)}
-                  />
-                ))}
-              </FormGroup>
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
+            {/* tools */}
+            <Grid item md={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Tools</FormLabel>
+                <FormGroup>
+                  {TOOLS.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.tools.rcaRemark.includes(value)}
+                      onChange={async (e) => handelTools(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
 
-          {/* safety items */}
-          <Grid item md={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Safety items</FormLabel>
-              <FormGroup>
-                {CONDITIONSAFETYITEMS.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.safetyitems.rcaRemark.includes(value)}
-                    onChange={async (e) => handelSafetyItems(e, value)}
-                  />
-                ))}
-              </FormGroup>
-            </FormControl>
-            <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-          </Grid>
+            {/* safety items */}
+            <Grid item md={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Safety items</FormLabel>
+                <FormGroup>
+                  {CONDITIONSAFETYITEMS.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.safetyitems.rcaRemark.includes(value)}
+                      onChange={async (e) => handelSafetyItems(e, value)}
+                    />
+                  ))}
+                </FormGroup>
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
 
-          <Grid item md={12}>
-            <TextField
-              variant="outlined"
-              id="filled-basic"
-              label="Others"
-              multiline
-              error={error.others}
-              value={
-                form.others.rcaRemark !== "No option selected"
-                  ? form.others.rcaRemark
-                  : ""
-              }
-              helperText={error ? error.others : null}
-              rows={3}
-              className={classes.formControl}
-              onChange={async (e) => handelOthers(e)}
-            />
-          </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                id="filled-basic"
+                label="Others"
+                multiline
+                error={error.others}
+                value={
+                  form.others.rcaRemark !== "No option selected"
+                    ? form.others.rcaRemark
+                    : ""
+                }
+                helperText={error ? error.others : null}
+                rows={3}
+                className={classes.formControl}
+                onChange={async (e) => handelOthers(e)}
+              />
+            </Grid>
 
-          <Grid item md={12}>
-            <Box marginTop={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handelPrevious(e)}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handelNext(e)}
-              >
-                Next
-              </Button>
-            </Box>
+            <Grid item md={12}>
+              <Box marginTop={3}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelPrevious(e)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelNext(e)}
+                >
+                  Next
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
+        </Col>
         {isDesktop && (
-          <Grid item md={3}>
+          <Col md={3}>
             <FormSideBar
               listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
               selectedItem="Hazardous conditions"
             />
-          </Grid>
+          </Col>
         )}
-      </Grid>
+      </Row>
     </PapperBlock>
   );
 };
