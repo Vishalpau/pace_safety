@@ -53,6 +53,8 @@ import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
 
+import { connect } from "react-redux";
+
 // Styles
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -148,13 +150,12 @@ const ILink = withStyles({
   },
 })(Link);
 
-function BlankPage() {
+function BlankPage(props) {
   const [incidents, setIncidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
   const history = useHistory();
-
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -162,13 +163,24 @@ function BlankPage() {
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
-
+  const selectBreakdown =
+  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    : null;
+let struct = "";
+for (const i in selectBreakdown) {
+  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+}
+const fkProjectStructureIds = struct.slice(0, -1);
+  
+console.log(props.projectName)
   const fetchData = async () => {
+    console.log(props.projectName.breakDown,"breakdown")
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
     const res = await api.get("api/v1/incidents/");
-    const selectBreakdown =
+    const selectBreakdown =props.projectName.breakDown
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
       : null;
@@ -177,13 +189,22 @@ function BlankPage() {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
+  if(fkProjectStructureIds){
     const newData = res.data.data.results.results.filter(
       (item) =>
-        (item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds === fkProjectStructureIds)||
-        (item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId)
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds ===fkProjectStructureIds
 
     );
     await setIncidents(newData);
+  }else{
+    const newData = res.data.data.results.results.filter(
+      (item) =>
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId 
+
+    );
+    await setIncidents(newData);
+  }
+   
   };
 
   const handlePush = async () => {
@@ -194,7 +215,7 @@ function BlankPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [props.projectName]);
 
   const handelSearchIncident = async (e) => {
     let allSeacrh = [];
@@ -360,9 +381,10 @@ function BlankPage() {
 
       {listToggle == false ? (
         <div className="gridView">
-          {Object.entries(incidents)
+           {Object.entries(incidents)
             .filter((searchText) => {
               return (
+              
                 searchText[1]["incidentTitle"]
                   .toLowerCase()
                   .includes(searchIncident.toLowerCase()) ||
@@ -598,5 +620,12 @@ function BlankPage() {
     </PapperBlock>
   );
 }
+const mapStateToProps = state => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state
 
-export default BlankPage;
+  }
+}
+
+export default connect(mapStateToProps,null)(BlankPage);

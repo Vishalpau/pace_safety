@@ -34,6 +34,9 @@ import styles from "./header-jss";
 
 import { connect } from "react-redux";
 import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+
+import { breakDownDetails } from "../../redux/actions/initialDetails";
 
 import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
 import Axios from "axios";
@@ -51,7 +54,7 @@ function HeaderBreakdown(props) {
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const {fkid}  = useParams();
-
+  const dispatch = useDispatch();
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
@@ -188,6 +191,10 @@ function HeaderBreakdown(props) {
               ...removeSelectBreakDown,
               { depth: item.depth, id: item.id, name: item.name },
             ]);
+            dispatch(breakDownDetails([
+              ...removeSelectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name },
+            ]))
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
@@ -208,6 +215,10 @@ function HeaderBreakdown(props) {
               ...selectBreakDown,
               { depth: item.depth, id: item.id, name: item.name },
             ]);
+            dispatch(breakDownDetails([
+              ...selectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name },
+            ]))
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
@@ -296,10 +307,10 @@ function HeaderBreakdown(props) {
   };
 
   const fetchIncidentData = async()=>{
-    alert(fkid)
+   
     const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
         const result = res.data.data.results;
-        console.log(result)
+      
   }
   useEffect(() => {
       fetchCallBack();

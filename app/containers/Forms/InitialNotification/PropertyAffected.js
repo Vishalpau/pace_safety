@@ -129,7 +129,7 @@ const PropertyAffected = () => {
 
   // On next click event capture.
   const handleNext = async () => {
-    console.log(form)
+    
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
     // If property data there then don't do anything as we are doing put request on each change.

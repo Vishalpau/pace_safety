@@ -322,7 +322,7 @@ const ReportingAndNotification = () => {
           var newData = [];
           reportedToFilterData = [];
           for (var key in reportedTo) {
-            reportedToFilterData.push(reportedTo[key].inputLabel);
+            reportedToFilterData.push(reportedTo[key].inputValue);
           }
           for (var i = 0; i < 8; i++) {
             if (reportedToFilterData.includes(form.reportedto[i])) {
@@ -530,7 +530,7 @@ const ReportingAndNotification = () => {
     const result = res.data.data.results;
 
     for (var key in result) {
-      reportedToFilterData.push(result[key].inputLabel);
+      reportedToFilterData.push(result[key].inputValue);
     }
 
     await setReportableTo(result);
