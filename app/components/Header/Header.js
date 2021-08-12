@@ -269,10 +269,14 @@ function Header(props) {
 
   // handle project Name
   const handleProjectName = async (key) => {
-    console.log(key);
+    let selectBreakDown=[]
     let data = projectListData[key];
     console.log(data);
     await dispatch(projectName(data));
+    localStorage.setItem(
+      "selectBreakDown",
+      JSON.stringify(selectBreakDown)
+    );
     localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
     setCompanyOpen(false);
