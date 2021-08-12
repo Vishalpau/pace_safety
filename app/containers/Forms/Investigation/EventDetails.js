@@ -94,6 +94,7 @@ const EventDetails = () => {
   const [error, setError] = useState({});
   const [errorWeather, setErrorWeather] = useState({});
   const [errorCost, setErrorCost] = useState({});
+  const [loading, setLoading] = useState(false)
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -363,6 +364,7 @@ const EventDetails = () => {
     costTypeValues.current = await PickListData(68);
     casualFactorTypeValues.current = await PickListData(69);
     await handelUpdateCheck();
+    await setLoading(true)
   };
 
   useEffect(() => {
@@ -374,520 +376,529 @@ const EventDetails = () => {
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
       <Grid container spacing={3}>
-        <Grid container item xs={12} md={9} spacing={3}>
-          {/* activity */}
-          <Grid item xs={12} md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Activity*</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Activity"
-                value={form.activity}
-              >
-                {activityListValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        activity: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {error && error.activity && (
-              <FormHelperText style={{ color: "red" }}>
-                {error.activity}
-              </FormHelperText>
-            )}
-          </Grid>
-
-          {/* job task */}
-          <Grid item xs={12} md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Job task*</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Job task"
-                value={form.jobTask}
-              >
-                {jobTaskValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        jobTask: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {error && error.jobTask && (
-              <FormHelperText style={{ color: "red" }}>
-                {error.jobTask}
-              </FormHelperText>
-            )}
-          </Grid>
-
-          {/* equiment involved */}
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Equipment involved"
-              value={form.equipmentInvolved}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  equipmentInvolved: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          {/* weather */}
-          {weather.map((value, index) => (
-            <>
-              <Grid item xs={10}>
-                <FormControl
-                  error={
-                    errorWeather && errorWeather[`weatherCondition${[index]}`]
-                  }
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="project-name-label">Weather</InputLabel>
+        {loading ?
+          <>
+            <Grid container item xs={12} md={9} spacing={3}>
+              {/* activity */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Activity*</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
-                    label="Weather"
-                    value={weather[index].weatherCondition || ""}
+                    label="Activity"
+                    value={form.activity}
                   >
-                    {weatherValues.current.map((selectValues) => (
+                    {activityListValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues}
-                        onClick={(e) => handelWeather(e, index, selectValues)}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            activity: selectValues,
+                          });
+                        }}
                       >
                         {selectValues}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
-                {errorWeather && errorWeather[`weatherCondition${[index]}`] && (
+                {error && error.activity && (
                   <FormHelperText style={{ color: "red" }}>
-                    {errorWeather[`weatherCondition${[index]}`]}
+                    {error.activity}
                   </FormHelperText>
                 )}
               </Grid>
 
-              {weather.length > 1 ? (
+              {/* job task */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Job task*</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Job task"
+                    value={form.jobTask}
+                  >
+                    {jobTaskValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            jobTask: selectValues,
+                          });
+                        }}
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {error && error.jobTask && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error.jobTask}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              {/* equiment involved */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Equipment involved"
+                  value={form.equipmentInvolved}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      equipmentInvolved: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              {/* weather */}
+              {weather.map((value, index) => (
+                <>
+                  <Grid item xs={10}>
+                    <FormControl
+                      error={
+                        errorWeather && errorWeather[`weatherCondition${[index]}`]
+                      }
+                      variant="outlined"
+                      required
+                      className={classes.formControl}
+                    >
+                      <InputLabel id="project-name-label">Weather</InputLabel>
+                      <Select
+                        id="project-name"
+                        labelId="project-name-label"
+                        label="Weather"
+                        value={weather[index].weatherCondition || ""}
+                      >
+                        {weatherValues.current.map((selectValues) => (
+                          <MenuItem
+                            value={selectValues}
+                            onClick={(e) => handelWeather(e, index, selectValues)}
+                          >
+                            {selectValues}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    {errorWeather && errorWeather[`weatherCondition${[index]}`] && (
+                      <FormHelperText style={{ color: "red" }}>
+                        {errorWeather[`weatherCondition${[index]}`]}
+                      </FormHelperText>
+                    )}
+                  </Grid>
+
+                  {weather.length > 1 ? (
+                    <Grid item xs={1}>
+                      <IconButton onClick={(e) => handelRemove(e, index)}>
+                        <RemoveCircleOutlineIcon />
+                      </IconButton>
+                    </Grid>
+                  ) : null}
+                </>
+              ))}
+
+              {weather.length < 3 ? (
                 <Grid item xs={1}>
-                  <IconButton onClick={(e) => handelRemove(e, index)}>
-                    <RemoveCircleOutlineIcon />
+                  <IconButton onClick={(e) => handelAdd(e)}>
+                    <AddIcon />
                   </IconButton>
                 </Grid>
               ) : null}
-            </>
-          ))}
 
-          {weather.length < 3 ? (
-            <Grid item xs={1}>
-              <IconButton onClick={(e) => handelAdd(e)}>
-                <AddIcon />
-              </IconButton>
-            </Grid>
-          ) : null}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Temperature"
+                  error={error && error.temperature}
+                  helperText={error && error.temperature}
+                  value={form.temperature}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      temperature: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
 
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Temperature"
-              error={error && error.temperature}
-              helperText={error && error.temperature}
-              value={form.temperature}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  temperature: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          {/* lightning */}
-          <Grid item xs={12} md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Lighting</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Lighting"
-                value={form.lighting}
-              >
-                {lightningValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        lighting: selectValues,
-                      });
-                    }}
+              {/* lightning */}
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Lighting</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Lighting"
+                    value={form.lighting}
                   >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* wind         */}
-          <Grid item xs={12}>
-            <Typography variant="h6">Wind</Typography>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Speed"
-              value={form.windSpeed}
-              error={error && error.windSpeed}
-              helperText={error && error.windSpeed}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  windSpeed: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Direction"
-              value={form.windDirection}
-              error={error && error.windDirection}
-              helperText={error && error.windDirection}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  windDirection: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          {/* spills */}
-          <Grid item xs={12}>
-            <Typography variant="h6">Spills</Typography>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Fluid type*</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="Fluid type"
-                value={form.spillsFluidType}
-              >
-                {fluidTypeValues.current.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => {
-                      setForm({
-                        ...form,
-                        spillsFluidType: selectValues,
-                      });
-                    }}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {error && error.spillsFluidType && (
-              <FormHelperText style={{ color: "red" }}>
-                {error.spillsFluidType}
-              </FormHelperText>
-            )}
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Fluid amount"
-              value={form.spillsFluidAmount}
-              value={form.spillsFluidAmount}
-              error={error && error.spillsFluidAmount}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  spillsFluidAmount: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="AEL"
-              value={form.acceptableExplosiveLimit}
-              error={error && error.acceptableExplosiveLimit}
-              helperText={error && error.acceptableExplosiveLimit}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  acceptableExplosiveLimit: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="PEL"
-              value={form.permissableExplosiveLimit}
-              error={error && error.permissableExplosiveLimit}
-              helperText={error && error.permissableExplosiveLimit}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  permissableExplosiveLimit: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          {/* property details */}
-          <Grid item xs={12}>
-            <Typography variant="h6">Property details</Typography>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Impact information"
-              value={form.propertyImpactInformation}
-              error={error && error.propertyImpactInformation}
-              helperText={error && error.propertyImpactInformation}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  propertyImpactInformation: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="title"
-              variant="outlined"
-              label="Cost impact"
-              value={form.propertyCostImpact}
-              error={error && error.propertyCostImpact}
-              helperText={error && error.propertyCostImpact}
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  propertyCostImpact: e.target.value,
-                });
-              }}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControl component="fieldset" required>
-              <FormLabel>Overall cost</FormLabel>
-              <RadioGroup className={classes.inlineRadioGroup}>
-                {radioYesNo.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    checked={form.isCostIncurred == value}
-                    onChange={(e) =>
-                      setForm({ ...form, isCostIncurred: value })
-                    }
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-
-          {/* cost incurred  */}
-          <Grid container item xs={12} spacing={2}>
-            {form.isCostIncurred == "Yes" ? (
-              <>
-                {overAllCost.map((value, index) => (
-                  <>
-                    {/* cost type */}
-                    <Grid item xs={6} md={4}>
-                      <FormControl
-                        variant="outlined"
-                        error={errorCost && errorCost[`costType${[index]}`]}
-                        className={classes.formControl}>
-                        <InputLabel id="project-name-label">Cost type</InputLabel>
-                        <Select
-                          id="project-name"
-                          labelId="project-name-label"
-                          label="Cost type"
-                          value={overAllCost[index].costType}
-                        >
-                          {costTypeValues.current.map((selectValues) => (
-                            <MenuItem
-                              value={selectValues}
-                              onClick={async (e) => {
-                                const temp = [...overAllCost];
-                                temp[index]["costType"] = selectValues;
-                                await setOverAllCost(temp);
-                              }}
-                            >
-                              {selectValues}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      {errorCost && errorCost[`costType${[index]}`] && (
-                        <FormHelperText style={{ color: "red" }}>
-                          {errorCost[`costType${[index]}`]}
-                        </FormHelperText>
-                      )}
-                    </Grid>
-
-                    {/* cost amount */}
-                    <Grid item xs={6} md={2}>
-                      <TextField
-                        id="title"
-                        error={errorCost && errorCost[`costAmount${[index]}`]}
-                        variant="outlined"
-                        label="Cost amount"
-                        value={overAllCost[index].costAmount}
-                        className={classes.formControl}
-                        onChange={async (e) => {
-                          const temp = [...overAllCost];
-                          temp[index]["costAmount"] = e.target.value;
-                          await setOverAllCost(temp);
+                    {lightningValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            lighting: selectValues,
+                          });
                         }}
-                      />
-                      {errorCost && errorCost[`costAmount${[index]}`] && (
-                        <FormHelperText style={{ color: "red" }}>
-                          {errorCost[`costAmount${[index]}`]}
-                        </FormHelperText>
-                      )}
-                    </Grid>
-
-                    {/* cost factor */}
-                    <Grid item xs={10} md={4}>
-                      <FormControl
-                        error={errorCost && errorCost[`casualFactor${[index]}`]}
-                        variant="outlined"
-                        className={classes.formControl}
                       >
-                        <InputLabel id="project-name-label">
-                          Casual factor
-                        </InputLabel>
-                        <Select
-                          id="project-name"
-                          labelId="project-name-label"
-                          label="Casual factor"
-                          value={overAllCost[index].casualFactor}
-                        >
-                          {casualFactorTypeValues.current.map(
-                            (selectValues) => (
-                              <MenuItem
-                                value={selectValues}
-                                onClick={async (e) => {
-                                  const temp = [...overAllCost];
-                                  temp[index]["casualFactor"] = selectValues;
-                                  await setOverAllCost(temp);
-                                }}
-                              >
-                                {selectValues}
-                              </MenuItem>
-                            )
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* wind         */}
+              <Grid item xs={12}>
+                <Typography variant="h6">Wind</Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Speed"
+                  value={form.windSpeed}
+                  error={error && error.windSpeed}
+                  helperText={error && error.windSpeed}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      windSpeed: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Direction"
+                  value={form.windDirection}
+                  error={error && error.windDirection}
+                  helperText={error && error.windDirection}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      windDirection: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              {/* spills */}
+              <Grid item xs={12}>
+                <Typography variant="h6">Spills</Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Fluid type*</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Fluid type"
+                    value={form.spillsFluidType}
+                  >
+                    {fluidTypeValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            spillsFluidType: selectValues,
+                          });
+                        }}
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {error && error.spillsFluidType && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error.spillsFluidType}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Fluid amount"
+                  value={form.spillsFluidAmount}
+                  value={form.spillsFluidAmount}
+                  error={error && error.spillsFluidAmount}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      spillsFluidAmount: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="AEL"
+                  value={form.acceptableExplosiveLimit}
+                  error={error && error.acceptableExplosiveLimit}
+                  helperText={error && error.acceptableExplosiveLimit}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      acceptableExplosiveLimit: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="PEL"
+                  value={form.permissableExplosiveLimit}
+                  error={error && error.permissableExplosiveLimit}
+                  helperText={error && error.permissableExplosiveLimit}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      permissableExplosiveLimit: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              {/* property details */}
+              <Grid item xs={12}>
+                <Typography variant="h6">Property details</Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Impact information"
+                  value={form.propertyImpactInformation}
+                  error={error && error.propertyImpactInformation}
+                  helperText={error && error.propertyImpactInformation}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      propertyImpactInformation: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  label="Cost impact"
+                  value={form.propertyCostImpact}
+                  error={error && error.propertyCostImpact}
+                  helperText={error && error.propertyCostImpact}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      propertyCostImpact: e.target.value,
+                    });
+                  }}
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl component="fieldset" required>
+                  <FormLabel>Overall cost</FormLabel>
+                  <RadioGroup className={classes.inlineRadioGroup}>
+                    {radioYesNo.map((value) => (
+                      <FormControlLabel
+                        value={value}
+                        checked={form.isCostIncurred == value}
+                        onChange={(e) =>
+                          setForm({ ...form, isCostIncurred: value })
+                        }
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              {/* cost incurred  */}
+              <Grid container item xs={12} spacing={2}>
+                {form.isCostIncurred == "Yes" ? (
+                  <>
+                    {overAllCost.map((value, index) => (
+                      <>
+                        {/* cost type */}
+                        <Grid item xs={6} md={4}>
+                          <FormControl
+                            variant="outlined"
+                            error={errorCost && errorCost[`costType${[index]}`]}
+                            className={classes.formControl}>
+                            <InputLabel id="project-name-label">Cost type</InputLabel>
+                            <Select
+                              id="project-name"
+                              labelId="project-name-label"
+                              label="Cost type"
+                              value={overAllCost[index].costType}
+                            >
+                              {costTypeValues.current.map((selectValues) => (
+                                <MenuItem
+                                  value={selectValues}
+                                  onClick={async (e) => {
+                                    const temp = [...overAllCost];
+                                    temp[index]["costType"] = selectValues;
+                                    await setOverAllCost(temp);
+                                  }}
+                                >
+                                  {selectValues}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          {errorCost && errorCost[`costType${[index]}`] && (
+                            <FormHelperText style={{ color: "red" }}>
+                              {errorCost[`costType${[index]}`]}
+                            </FormHelperText>
                           )}
-                        </Select>
-                      </FormControl>
-                      {errorCost && errorCost[`casualFactor${[index]}`] && (
-                        <FormHelperText style={{ color: "red" }}>
-                          {errorCost[`casualFactor${[index]}`]}
-                        </FormHelperText>
-                      )}
-                    </Grid>
-                    {overAllCost.length > 1 ? (
+                        </Grid>
+
+                        {/* cost amount */}
+                        <Grid item xs={6} md={2}>
+                          <TextField
+                            id="title"
+                            error={errorCost && errorCost[`costAmount${[index]}`]}
+                            variant="outlined"
+                            label="Cost amount"
+                            value={overAllCost[index].costAmount}
+                            className={classes.formControl}
+                            onChange={async (e) => {
+                              const temp = [...overAllCost];
+                              temp[index]["costAmount"] = e.target.value;
+                              await setOverAllCost(temp);
+                            }}
+                          />
+                          {errorCost && errorCost[`costAmount${[index]}`] && (
+                            <FormHelperText style={{ color: "red" }}>
+                              {errorCost[`costAmount${[index]}`]}
+                            </FormHelperText>
+                          )}
+                        </Grid>
+
+                        {/* cost factor */}
+                        <Grid item xs={10} md={4}>
+                          <FormControl
+                            error={errorCost && errorCost[`casualFactor${[index]}`]}
+                            variant="outlined"
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="project-name-label">
+                              Casual factor
+                            </InputLabel>
+                            <Select
+                              id="project-name"
+                              labelId="project-name-label"
+                              label="Casual factor"
+                              value={overAllCost[index].casualFactor}
+                            >
+                              {casualFactorTypeValues.current.map(
+                                (selectValues) => (
+                                  <MenuItem
+                                    value={selectValues}
+                                    onClick={async (e) => {
+                                      const temp = [...overAllCost];
+                                      temp[index]["casualFactor"] = selectValues;
+                                      await setOverAllCost(temp);
+                                    }}
+                                  >
+                                    {selectValues}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                          {errorCost && errorCost[`casualFactor${[index]}`] && (
+                            <FormHelperText style={{ color: "red" }}>
+                              {errorCost[`casualFactor${[index]}`]}
+                            </FormHelperText>
+                          )}
+                        </Grid>
+                        {overAllCost.length > 1 ? (
+                          <Grid item xs={1}>
+                            <IconButton
+                              onClick={(e) => handelOverallCostRemove(e, index)}
+                            >
+                              <RemoveCircleOutlineIcon />
+                            </IconButton>
+                          </Grid>
+                        ) : null}
+                      </>
+                    ))}
+
+                    {overAllCost.length < 4 ? (
                       <Grid item xs={1}>
-                        <IconButton
-                          onClick={(e) => handelOverallCostRemove(e, index)}
-                        >
-                          <RemoveCircleOutlineIcon />
+                        <IconButton onClick={(e) => handelOveallCostAdd(e)}>
+                          <AddIcon />
                         </IconButton>
                       </Grid>
                     ) : null}
                   </>
-                ))}
-
-                {overAllCost.length < 4 ? (
-                  <Grid item xs={1}>
-                    <IconButton onClick={(e) => handelOveallCostAdd(e)}>
-                      <AddIcon />
-                    </IconButton>
-                  </Grid>
                 ) : null}
-              </>
-            ) : null}
-          </Grid>
+              </Grid>
 
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => history.goBack()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNext(e)}
-            >
-              Next
-            </Button>
-          </Grid>
-        </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => history.goBack()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelNext(e)}
+                >
+                  Next
+                </Button>
+              </Grid>
+            </Grid>
+
+          </>
+          : <Grid container item xs={12} md={9} spacing={3}>
+            <Typography variant="h6">
+              Loading ...
+            </Typography>
+          </Grid>}
         {isDesktop && (
           <Grid item md={3}>
             <FormSideBar
@@ -899,6 +910,7 @@ const EventDetails = () => {
         )}
       </Grid>
     </PapperBlock>
+
   );
 };
 

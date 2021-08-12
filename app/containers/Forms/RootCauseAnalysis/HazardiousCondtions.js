@@ -262,16 +262,18 @@ const HazardiousCondition = () => {
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: putId.current,
-          rcaRemark: value,
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-        };
-        tempData.push(temp);
+        if (value !== "") {
+          let temp = {
+            createdBy: "0",
+            fkIncidentId: putId.current,
+            rcaRemark: value,
+            rcaSubType: api_data["rcaSubType"],
+            rcaType: "Basic",
+            remarkType: api_data["remarkType"],
+            status: "Active",
+          };
+          tempData.push(temp);
+        }
       })
     })
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
