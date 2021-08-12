@@ -296,9 +296,9 @@ const IncidentDetails = () => {
             reasonLateReporting: "",
             notificationComments: "",
             reviewedBy: 0,
-            reviewDate: new Date().toISOString(),
+            reviewDate: null,
             closedBy: 0,
-            closeDate: new Date().toISOString(),
+            closeDate: null,
             status: "Active",
             incidentLocation: form.incidentLocation,
             assignTo: 0,
@@ -558,7 +558,7 @@ const IncidentDetails = () => {
     }
     dispatch(breakDownDetails(selectBreakDown));
     
-    localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
+    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
   //  set state for hide sidebar

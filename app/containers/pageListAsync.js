@@ -588,3 +588,40 @@ export const LessionLearned = loadable(() =>
   import('./Forms/LessonLearned/LessonLearned'), {
   fallback: <Loading />,
 });
+
+// form lession learned
+
+export const CloseOut = loadable(() =>
+  import('./Forms/CloseOut/CloseOut'), {
+  fallback: <Loading />,
+});
+
+// Observations 
+
+export const Observations = loadable(() => import("./Pages/Observations/Observations"), {
+  fallback: <Loading />,
+});
+
+export const ObservationSummary = loadable(() => import("./Pages/Observations/ObservationSummary"), {
+  fallback: <Loading />,
+});
+
+export const ObservationInitialNotification = loadable(() => import("./Pages/Observations/ObservationInitialNotification"), {
+  fallback: <Loading />,
+});
+
+export const ObservationInitialNotificationView = loadable(() => import("./Pages/Observations/ObservationInitialNotificationView"), {
+  fallback: <Loading />,
+});
+
+export const ObservationCorrectiveAction = loadable(() => import("./Pages/Observations/ObservationCorrectiveAction"), {
+  fallback: <Loading />,
+});
+
+export const ObservationCloseOut = loadable(() => import("./Pages/Observations/ObservationCloseOut"), {
+  fallback: <Loading />,
+});
+
+export const ObservationInitialNotificationUpdate = loadable(() => import("./Pages/Observations/ObservationInitialNotificationUpdate"), {
+  fallback: <Loading />,
+});

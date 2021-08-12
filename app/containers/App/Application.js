@@ -122,6 +122,14 @@ import {
   LessionLearned,
   UpdateIncidentDetails,
   PaceManagement,
+  CloseOut,
+  Observations,
+  ObservationSummary,
+  ObservationInitialNotification,
+  ObservationInitialNotificationView,
+  ObservationCorrectiveAction,
+  ObservationCloseOut,
+  ObservationInitialNotificationUpdate,
 } from "../pageListAsync";
 
 
@@ -403,6 +411,12 @@ function Application(props) {
           path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
         />
+        {/* close out */}
+        <Route
+          exact
+          path="/app/incident-management/registration/close-out/:id"
+          component={CloseOut}
+        />
         {/* Ui Components */}
         <Route exact path="/app/ui" component={Parent} />
         <Route path="/app/ui/avatars" component={Avatars} />
@@ -455,6 +469,19 @@ function Application(props) {
           path="/app/charts/radar-polar-chart"
           component={RadarPolarCharts}
         />
+
+        {/* Observation Routes  */}
+        {/* <Route path="/app/pages/summary" component={Summary} /> */}
+        {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
+        <Route path="/app/pages/observations" component={Observations} />
+        <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction}/>
+        <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction}/>
+        <Route path="/app/pages/observation-close-out" component={ObservationCloseOut}/>
+        <Route path="/app/pages/observation-Summary/:id" component={ObservationSummary} />
+        <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
+        <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
+        <Route path="/app/pages/observation-observation-view" component={ObservationInitialNotificationView} />
+
         {/* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />
         <Route path="/app/pages/chat" component={Chat} />

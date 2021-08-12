@@ -153,11 +153,7 @@ const ActivityDetails = () => {
   };
 
   const handleNext = async () => {
-    const { error, isValid } = ActivityDetailValidate(activtyList);
-    await setError(error);
-    if (!isValid) {
-      return;
-    }
+
     if (id && activtyList.length > 0 && activtyList[0].id) {
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
@@ -183,6 +179,11 @@ const ActivityDetails = () => {
         );
       }
     } else {
+      const { error, isValid } = ActivityDetailValidate(activtyList);
+      await setError(error);
+      if (!isValid) {
+        return;
+      }
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList

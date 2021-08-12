@@ -109,6 +109,10 @@ export const LESSION_LEARNED_FORM = {
   "Lessons learnt":
     "/app/incident-management/registration/lession-learned/lession-learned/",
 };
+export const CLOSE_OUT_FORM = {
+  "Close out":
+    "/app/incident-management/registration/close-out/",
+};
 
 export const FORM_HEADER = {
   "Initial Notification":
