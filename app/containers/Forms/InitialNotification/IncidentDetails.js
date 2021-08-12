@@ -558,7 +558,7 @@ const IncidentDetails = () => {
     }
     dispatch(breakDownDetails(selectBreakDown));
     
-    localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
+    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
   //  set state for hide sidebar

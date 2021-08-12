@@ -168,10 +168,20 @@ function BlankPage() {
     const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
     const res = await api.get("api/v1/incidents/");
-
+    const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
     const newData = res.data.data.results.results.filter(
       (item) =>
-        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
+        (item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds === fkProjectStructureIds)||
+        (item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId)
+
     );
     await setIncidents(newData);
   };
