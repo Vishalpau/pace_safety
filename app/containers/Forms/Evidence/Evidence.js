@@ -7,16 +7,9 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { PapperBlock } from "dan-components";
-import {
-  makeStyles,
-  createMuiTheme,
-  ThemeProvider,
-} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { FormHelperText, withStyles } from "@material-ui/core";
-import FormLabel from "@material-ui/core/FormLabel";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -34,16 +27,13 @@ import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import EvidenceValidate from "../../Validator/EvidenceValidation";
-import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
-// import FormData from "form-data";
 
 import Attachment from "../../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
-    margin: "1rem 0",
   },
   button: {
     margin: theme.spacing(1),

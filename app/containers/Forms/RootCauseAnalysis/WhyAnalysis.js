@@ -10,10 +10,11 @@ import IconButton from "@material-ui/core/IconButton";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
-import { checkValue } from "../../../utils/CheckerValue"
+import { checkValue } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -57,7 +58,7 @@ const WhyAnalysis = () => {
 
   const updateIds = useRef();
   const checkPost = useRef();
-  const investigationData = useRef({});
+  const [investigationData, setInvestigationData] = useState({})
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
@@ -92,19 +93,22 @@ const WhyAnalysis = () => {
   };
 
   const handelInvestigationData = async () => {
-    let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current
+    let incidentId =
+      putId.current == ""
+        ? localStorage.getItem("fkincidentId")
+        : putId.current;
     const investigationpreviousData = await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
     );
     const investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      investigationData.current = {
+      setInvestigationData({
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
         classification: investigationApiData.classification,
-      };
+      })
     }
-  }
+  };
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
@@ -220,118 +224,120 @@ const WhyAnalysis = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Five why analysis" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item xs={12} md={9} spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidents.incidentNumber}
-            </Typography>
-          </Grid>
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidents.incidentNumber}
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Method
-            </Typography>
-            <Typography className={Type.labelValue}>
-              Five why analysis
-            </Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Method
+              </Typography>
+              <Typography className={Type.labelValue}>
+                Five why analysis
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Description
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidents.incidentDetails}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Level of classification
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {checkValue(investigationData.current["classification"])}
-            </Typography>
-          </Grid>
-
-          {form.map((item, index) => (
             <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={11}>
-                  <TextField
-                    id="filled-basic"
-                    label={`Why ${index + 1}`}
-                    variant="outlined"
-                    multiline
-                    required
-                    rows={3}
-                    error={error[`why${[index]}`]}
-                    value={form[index].why || ""}
-                    helperText={error ? error[`why${[index]}`] : ""}
-                    className={classes.formControl}
-                    onChange={(e) => handleForm(e, index)}
-                  />
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Description
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidents.incidentDetails}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Level of classification
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {checkValue(investigationData["classification"])}
+              </Typography>
+            </Grid>
+
+            {form.map((item, index) => (
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={11}>
+                    <TextField
+                      id="filled-basic"
+                      label={`Why ${index + 1}`}
+                      variant="outlined"
+                      multiline
+                      required
+                      rows={3}
+                      error={error[`why${[index]}`]}
+                      value={form[index].why || ""}
+                      helperText={error ? error[`why${[index]}`] : ""}
+                      className={classes.formControl}
+                      onChange={(e) => handleForm(e, index)}
+                    />
+                  </Grid>
+                  {form.length > 1 ? (
+                    putId.current == "" ? (
+                      <Grid item xs={12} md={1} justify="center">
+                        <IconButton onClick={(e) => handelRemove(e, index)}>
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                      </Grid>
+                    ) : null
+                  ) : null}
                 </Grid>
-                {form.length > 1 ? (
-                  putId.current == "" ? (
-                    <Grid item xs={12} md={1} justify="center">
-                      <IconButton onClick={(e) => handelRemove(e, index)}>
-                        <RemoveCircleOutlineIcon />
-                      </IconButton>
-                    </Grid>
-                  ) : null
+              </Grid>
+            ))}
+
+            {form.length <= 99 ? (
+              <Grid item xs={12} md={1}>
+                {/* This button will add another entry of why input  */}
+                {putId.current == "" ? (
+                  <button
+                    onClick={(e) => handelAdd(e)}
+                    className={classes.textButton}
+                  >
+                    <AddIcon /> Add
+                  </button>
                 ) : null}
               </Grid>
-            </Grid>
-          ))}
+            ) : null}
 
-          {form.length <= 99 ? (
-            <Grid item xs={12} md={1}>
-              {/* This button will add another entry of why input  */}
-              {putId.current == "" ? (
-                <button
-                  onClick={(e) => handelAdd(e)}
-                  className={classes.textButton}
-                >
-                  <AddIcon /> Add
-                </button>
-              ) : null}
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelPrevious(e)}
+              >
+                Previous
+              </Button>
+              <Button
+                id="myBtn"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelApiCall(e)}
+              >
+                Submit
+              </Button>
             </Grid>
-          ) : null}
-
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelPrevious(e)}
-            >
-              Previous
-            </Button>
-            <Button
-              id="myBtn"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelApiCall(e)}
-            >
-              Submit
-            </Button>
           </Grid>
-        </Grid>
+        </Col>
         {isDesktop && (
-          <Grid item md={3}>
+          <Col md={3}>
             <FormSideBar
               listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
               selectedItem={"Five Why analysis"}
             />
-          </Grid>
+          </Col>
         )}
-      </Grid>
+      </Row>
     </PapperBlock>
   );
 };

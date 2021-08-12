@@ -843,7 +843,7 @@ const ReportingAndNotification = () => {
                         </Tooltip>
                       </Grid>
                     ) : null}
-                    <Grid item xs={10} md={4}>
+                    <Grid item xs={8} md={4}>
                       <TextField
                         id="evidanceRemark"
                         size="small"
@@ -866,7 +866,7 @@ const ReportingAndNotification = () => {
                         }
                       />
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={2}>
                       <IconButton
                         variant="contained"
                         color="primary"
@@ -877,8 +877,8 @@ const ReportingAndNotification = () => {
                       </IconButton>
                     </Grid>
 
-                    <Grid item xs={1}>
-                      {evidanceForm.length > 1 ? (
+                    {evidanceForm.length > 1 ? (
+                      <Grid item xs={2}>
                         <IconButton
                           variant="contained"
                           color="primary"
@@ -888,8 +888,8 @@ const ReportingAndNotification = () => {
                         >
                           <DeleteForeverIcon />
                         </IconButton>
-                      ) : null}
-                    </Grid>
+                      </Grid>
+                    ) : null}
                   </Grid>
                 ))}
 

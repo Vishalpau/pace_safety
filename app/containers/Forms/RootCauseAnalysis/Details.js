@@ -17,6 +17,7 @@ import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
 import moment from "moment";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
@@ -110,14 +111,15 @@ const Details = () => {
     );
     let investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      if (investigationApiData.rcaRecommended != "") {
-        setForm({
-          ...form,
-          rcaRecommended: investigationApiData.rcaRecommended,
-        });
-        await handelRcaRecommended("a", investigationApiData.rcaRecommended);
-      }
+      // if (investigationApiData.rcaRecommended != "") {
+      //   setForm({
+      //     ...form,
+      //     rcaRecommended: investigationApiData.rcaRecommended,
+      //   });
+      //   await handelRcaRecommended("a", investigationApiData.rcaRecommended);
+      // }
       setInvestigationData({
+        rcaRecommended: investigationApiData.rcaRecommended,
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
         classification: investigationApiData.classification,
@@ -160,7 +162,7 @@ const Details = () => {
         "Corrective actions",
         "Basic cause",
         "PACE Management control",
-        "Preventive Actions",
+        "Preventive actions",
         "Additional information",
         "Five Why analysis",
       ]);
@@ -186,8 +188,7 @@ const Details = () => {
       } else {
         form["pk"] = pkValue.current;
         const res = await api.put(
-          `/api/v1/incidents/${putId.current}/causeanalysis/${
-            pkValue.current
+          `/api/v1/incidents/${putId.current}/causeanalysis/${pkValue.current
           }/`,
           form
         );
@@ -219,14 +220,12 @@ const Details = () => {
         );
       } else if (form.rcaRecommended == "PACE cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
           }`
         );
       } else if (form.rcaRecommended == "Cause analysis") {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/root-cause-analysis/${putId.current
           }`
         );
       }
@@ -239,7 +238,7 @@ const Details = () => {
   useEffect(() => {
     handelUpdateCheck();
     fetchIncidentData();
-    setHideArray(localStorage.getItem("deleteForm"));
+    setHideArray(hideArray || localStorage.getItem("deleteForm"));
     handelInvestigationData();
   }, []);
 
@@ -247,208 +246,212 @@ const Details = () => {
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item xs={12} md={9} spacing={3}>
-          <Grid item xs={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidents.incidentNumber}
-            </Typography>
-          </Grid>
+      {console.log(investigationData.rcaRecommended)}
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidents.incidentNumber}
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident description
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidents.incidentDetails}
-            </Typography>
-          </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident description
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidents.incidentDetails}
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12} md={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker
-                autoOk
-                inputVariant="outlined"
+            <Grid item xs={12} md={6}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <DateTimePicker
+                  autoOk
+                  inputVariant="outlined"
+                  className={classes.formControl}
+                  ampm={false}
+                  value={moment(investigationData["startData"]).toISOString()}
+                  onChange={handleDateChange}
+                  label="Investigation start date"
+                  disabled
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <DateTimePicker
+                  autoOk
+                  inputVariant="outlined"
+                  className={classes.formControl}
+                  ampm={false}
+                  value={moment(investigationData["endData"]).toISOString()}
+                  onChange={handleDateChange}
+                  label="Investigation end date"
+                  disabled
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Level of classification
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {checkValue(investigationData["classification"])}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl
+                variant="outlined"
+                required
                 className={classes.formControl}
-                ampm={false}
-                value={moment(investigationData["startData"]).toISOString()}
-                onChange={handleDateChange}
-                label="Investigation start date"
-                disabled
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker
-                autoOk
-                inputVariant="outlined"
-                className={classes.formControl}
-                ampm={false}
-                value={moment(investigationData["endData"]).toISOString()}
-                onChange={handleDateChange}
-                label="Investigation end date"
-                disabled
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Level of classification
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {checkValue(investigationData["classification"])}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <FormControl
-              variant="outlined"
-              required
-              className={classes.formControl}
-              error={error && error.rcaRecommended}
-            >
-              <InputLabel id="project-name-label">RCA recommended</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="RCA recommended"
-                value={form.rcaRecommended}
-                disabled={rcaDisable != "" ? true : false}
+                error={error && error.rcaRecommended}
               >
-                {RCAOPTION.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) => handelRcaRecommended(e, selectValues)}
-                  >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-              {error && error.rcaRecommended && (
-                <FormHelperText>{error.rcaRecommended}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
+                <InputLabel id="project-name-label">RCA recommended</InputLabel>
+                <Select
+                  id="project-name"
+                  labelId="project-name-label"
+                  label="RCA recommended"
+                  value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
+                  disabled={rcaDisable != "" ? true : false}
+                >
+                  {RCAOPTION.map((selectValues) => (
+                    <MenuItem
+                      value={selectValues}
+                      onClick={(e) => handelRcaRecommended(e, selectValues)}
+                    >
+                      {selectValues}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {error && error.rcaRecommended && (
+                  <FormHelperText>{error.rcaRecommended}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
 
-          <Grid item xs={12}>
-            <FormControl
-              component="fieldset"
-              required
-              error={error.evidenceSupport}
-            >
-              <FormLabel component="legend">
-                Evidence collected supports the incident event took place?
-              </FormLabel>
-              <RadioGroup className={classes.inlineRadioGroup}>
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                    checked={form.evidenceSupport == value}
-                    onChange={(e) =>
-                      setForm({ ...form, evidenceSupport: e.target.value })
-                    }
-                  />
-                ))}
-              </RadioGroup>
-              {error && error.evidenceSupport && (
-                <FormHelperText>{error.evidenceSupport}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControl
-              component="fieldset"
-              required
-              error={error.evidenceContradiction}
-            >
-              <FormLabel component="legend">
-                Contradictions between evidence and the description of incident?
-              </FormLabel>
-              <RadioGroup
-                className={classes.inlineRadioGroup}
-                aria-label="gender"
+            <Grid item xs={12}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error.evidenceSupport}
               >
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                    checked={form.evidenceContradiction == value}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        evidenceContradiction: e.target.value,
-                      })
-                    }
-                  />
-                ))}
-              </RadioGroup>
-              {error && error.evidenceContradiction && (
-                <FormHelperText>{error.evidenceContradiction}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
+                <FormLabel component="legend">
+                  Evidence collected supports the incident event took place?
+                </FormLabel>
+                <RadioGroup className={classes.inlineRadioGroup}>
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      checked={form.evidenceSupport == value}
+                      onChange={(e) =>
+                        setForm({ ...form, evidenceSupport: e.target.value })
+                      }
+                    />
+                  ))}
+                </RadioGroup>
+                {error && error.evidenceSupport && (
+                  <FormHelperText>{error.evidenceSupport}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
 
-          <Grid item xs={12}>
-            <FormControl
-              component="fieldset"
-              required
-              error={error.evidenceContradiction}
-            >
-              <FormLabel component="legend">
-                Evidence does not supports the incident event as described?
-              </FormLabel>
-              <RadioGroup
-                className={classes.inlineRadioGroup}
-                aria-label="gender"
+            <Grid item xs={12}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error.evidenceContradiction}
               >
-                {radioDecide.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                    checked={form.evidenceNotSupport == value}
-                    onChange={(e) =>
-                      setForm({ ...form, evidenceNotSupport: e.target.value })
-                    }
-                  />
-                ))}
-              </RadioGroup>
-              {error && error.evidenceNotSupport && (
-                <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
+                <FormLabel component="legend">
+                  Contradictions between evidence and the description of
+                  incident?
+                </FormLabel>
+                <RadioGroup
+                  className={classes.inlineRadioGroup}
+                  aria-label="gender"
+                >
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      checked={form.evidenceContradiction == value}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          evidenceContradiction: e.target.value,
+                        })
+                      }
+                    />
+                  ))}
+                </RadioGroup>
+                {error && error.evidenceContradiction && (
+                  <FormHelperText>{error.evidenceContradiction}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={(e) => handelNext(e)}
-            >
-              Next
-            </Button>
+            <Grid item xs={12}>
+              <FormControl
+                component="fieldset"
+                required
+                error={error.evidenceContradiction}
+              >
+                <FormLabel component="legend">
+                  Evidence does not supports the incident event as described?
+                </FormLabel>
+                <RadioGroup
+                  className={classes.inlineRadioGroup}
+                  aria-label="gender"
+                >
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      checked={form.evidenceNotSupport == value}
+                      onChange={(e) =>
+                        setForm({ ...form, evidenceNotSupport: e.target.value })
+                      }
+                    />
+                  ))}
+                </RadioGroup>
+                {error && error.evidenceNotSupport && (
+                  <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={(e) => handelNext(e)}
+              >
+                Next
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        </Col>
         {isDesktop && (
-          <Grid item md={3}>
+          <Col md={3}>
             <FormSideBar
               deleteForm={hideArray}
               listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
               selectedItem={"RCA Details"}
             />
-          </Grid>
+          </Col>
         )}
-      </Grid>
+      </Row>
     </PapperBlock>
   );
 };

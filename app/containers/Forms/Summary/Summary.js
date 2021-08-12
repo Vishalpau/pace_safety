@@ -11,7 +11,6 @@ import AccessTime from "@material-ui/icons/AccessTime";
 import Divider from "@material-ui/core/Divider";
 import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Col, Row } from "react-grid-system";
 
 // List
 import List from "@material-ui/core/List";
@@ -28,7 +27,7 @@ import Comment from "@material-ui/icons/Comment";
 import History from "@material-ui/icons/History";
 import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
-
+import { Col, Row } from "react-grid-system";
 // Styles
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
@@ -46,8 +45,8 @@ import {
   InvestigationStatus,
   EvidenceStatus,
   RootCauseAnalysisStatus,
-  LessionLearnedStatus,
-} from "../../../utils/FormStatus";
+  LessionLearnedStatus
+} from "../../../utils/FormStatus"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -92,15 +91,15 @@ const Summary = () => {
     false
   );
   const rootCauseStatus = useRef(false);
-  const rcaRecommendedValue = useRef("");
+  const rcaRecommendedValue = useRef("")
 
   const [formStatus, setFormStatus] = useState({
     initialNotificationCheck: "",
     investigationCheck: "",
     evidenceCheck: "",
     rootCauseCheck: "",
-    lessionLearntCheck: "",
-  });
+    lessionLearntCheck: ""
+  })
 
   const { id } = useParams();
   const history = useHistory();
@@ -140,45 +139,32 @@ const Summary = () => {
 
   const handelRcaValue = async () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
 
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(
-      `/api/v1/incidents/${incidentId}/causeanalysis/`
-    );
-    let rcaRecommended = previousData.data.data.results[0].rcaRecommended;
-    rcaRecommendedValue.current = rcaRecommended;
-  };
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
+    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+    rcaRecommendedValue.current = rcaRecommended
+  }
 
   const rootCauseAnalysisCheck = async () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
 
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
 
-    let paceCause = await api.get(
-      `/api/v1/incidents/${incidentId}/pacecauses/`
-    );
+    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
     let paceCauseData = paceCause.data.data.results[0];
     await setPaceCauseData(paceCauseData);
 
-    let rootCause = await api.get(
-      `/api/v1/incidents/${incidentId}/rootcauses/`
-    );
+    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
     let rootCauseData = rootCause.data.data.results[0];
     await setRootCausesData(rootCauseData);
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
     let whyAnalysisData = whyAnalysis.data.data.results[0];
     await setWhyData(whyAnalysisData);
+
   };
 
   const [selectedDate, setSelectedDate] = React.useState(
@@ -199,19 +185,17 @@ const Summary = () => {
       investigationCheck: await InvestigationStatus(),
       evidenceCheck: await EvidenceStatus(),
       rootCauseCheck: await RootCauseAnalysisStatus(),
-      lessionLearntCheck: await LessionLearnedStatus(),
-    });
-  };
+      lessionLearntCheck: await LessionLearnedStatus()
+    })
+  }
 
   const handelNaviagte = (value) => {
-    history.push(value);
-  };
+    history.push(value)
+  }
 
   const handelInvestigationView = () => {
     if (investigationOverview == undefined) {
-      handelNaviagte(
-        `/app/incident-management/registration/investigation/investigation-overview/`
-      );
+      handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
     } else {
       setInitialNotification(false);
       setInvestigation(true);
@@ -224,7 +208,7 @@ const Summary = () => {
       }
       localStorage.setItem("viewMode",JSON.stringify(viewMode))
     }
-  };
+  }
 
   const handelEvidenceView = (e) => {
     if (evidencesData.length<0) {
@@ -243,15 +227,12 @@ const Summary = () => {
       }
       localStorage.setItem("viewMode",JSON.stringify(viewMode))
     }
-  };
+  }
 
   const handelRootCauseAnalysisView = () => {
-    console.log(rcaRecommendedValue.current);
     if (rcaRecommendedValue.current == "PACE cause analysis") {
       if (paceCauseData == undefined) {
-        handelNaviagte(
-          "/app/incident-management/registration/root-cause-analysis/details/"
-        );
+        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
       } else {
         setInitialNotification(false);
         setInvestigation(false);
@@ -261,9 +242,7 @@ const Summary = () => {
       }
     } else if (rcaRecommendedValue.current == "Cause analysis") {
       if (rootCausesData == undefined) {
-        handelNaviagte(
-          "/app/incident-management/registration/root-cause-analysis/details/"
-        );
+        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
       } else {
         setInitialNotification(false);
         setInvestigation(false);
@@ -273,9 +252,7 @@ const Summary = () => {
       }
     } else if (rcaRecommendedValue.current == "Five why analysis") {
       if (whyData == undefined) {
-        handelNaviagte(
-          "/app/incident-management/registration/root-cause-analysis/details/"
-        );
+        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
       } else {
         setInitialNotification(false);
         setInvestigation(false);
@@ -284,17 +261,13 @@ const Summary = () => {
         setLessionlearn(false);
       }
     } else {
-      handelNaviagte(
-        "/app/incident-management/registration/root-cause-analysis/details/"
-      );
+      handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
     }
-  };
+  }
 
   const handelLessionLearnedView = () => {
     if (lessionlearnData == undefined) {
-      handelNaviagte(
-        `/app/incident-management/registration/lession-learned/lession-learned/${id}`
-      );
+      handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
     } else {
       setInitialNotification(false);
       setInvestigation(false);
@@ -309,21 +282,7 @@ const Summary = () => {
       localStorage.setItem("viewMode",JSON.stringify(viewMode))
     }
   };
-  const handleIntitialNotification= ()=>{
-    setInitialNotification(true);
-    setInvestigation(false);
-    setEvidence(false);
-    setRootCauseAnalysis(false);
-    setLessionlearn(false);
-    let viewMode = {
-      initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
 
-    }
-    localStorage.setItem("viewMode",JSON.stringify(viewMode))
-  }
-  const handleLessionlearn= ()=>{
-   
-  }
 
   useEffect(() => {
     fetchIncidentData();
@@ -493,7 +452,7 @@ const Summary = () => {
 
               {/* side bar    */}
               {isDesktop && (
-                <Col md={3}>
+                <Grid item xs={12} md={3}>
                   <Paper>
                     <List
                       dense
@@ -501,28 +460,20 @@ const Summary = () => {
                         <ListSubheader component="div">Actions</ListSubheader>
                       }
                     >
-                      <ListItemLink>
+                      <ListItemLink
+                      >
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
                         <ListItemText
-                          onClick={(e) =>
-                            handelNaviagte(
-                              `/app/incident-management/registration/initial-notification/incident-details/${id}`
-                            )
-                          }
-                          primary="Modify Notification"
-                        />
+                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/initial-notification/incident-details/${id}`)}
+                          primary="Modify Notification" />
                       </ListItemLink>
 
                       {investigationOverview ? (
                         <ListItemLink
                           // onClick = {(e)=>handelNaviagte()}
-                          onClick={(e) =>
-                            handelNaviagte(
-                              `/app/incident-management/registration/investigation/investigation-overview/${id}`
-                            )
-                          }
+                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/${id}`)}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -531,12 +482,7 @@ const Summary = () => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) =>
-                            handelNaviagte(
-                              "/app/incident-management/registration/investigation/investigation-overview/"
-                            )
-                          }
-                        >
+                          onClick={(e) => handelNaviagte("/app/incident-management/registration/investigation/investigation-overview/")}>
                           <ListItemIcon>
                             <Add />
                           </ListItemIcon>
@@ -547,11 +493,7 @@ const Summary = () => {
 
                       {evidencesData ? (
                         <ListItemLink
-                          onClick={(e) =>
-                            handelNaviagte(
-                              `/app/incident-management/registration/evidence/evidence/${id}`
-                            )
-                          }
+                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -560,12 +502,7 @@ const Summary = () => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) =>
-                            handelNaviagte(
-                              "/app/incident-management/registration/evidence/evidence/"
-                            )
-                          }
-                        >
+                          onClick={(e) => handelNaviagte("/app/incident-management/registration/evidence/evidence/")}>
                           <ListItemIcon>
                             <Add />
                           </ListItemIcon>
@@ -575,11 +512,7 @@ const Summary = () => {
                       )}
                       {paceCauseData || rootCausesData || whyData ? (
                         <ListItemLink
-                          onClick={(e) =>
-                            handelNaviagte(
-                              `/app/incident-management/registration/root-cause-analysis/details/${id}`
-                            )
-                          }
+                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -588,11 +521,7 @@ const Summary = () => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) =>
-                            handelNaviagte(
-                              `/app/incident-management/registration/root-cause-analysis/details/${id}`
-                            )
-                          }
+                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)}
                         >
                           <ListItemIcon>
                             <Add />
@@ -602,11 +531,7 @@ const Summary = () => {
                       )}
                       {lessionlearnData ? (
                         <ListItemLink
-                          onClick={(e) =>
-                            handelNaviagte(
-                              `/app/incident-management/registration/lession-learned/lession-learned/${id}`
-                            )
-                          }
+                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -615,11 +540,7 @@ const Summary = () => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) =>
-                            handelNaviagte(
-                              `/app/incident-management/registration/lession-learned/lession-learned/${id}`
-                            )
-                          }
+                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)}
                         >
                           <ListItemIcon>
                             <Add />
@@ -628,7 +549,9 @@ const Summary = () => {
                         </ListItemLink>
                       )}
 
-                      <ListItem button divider>
+                      <ListItem
+                      onClick={()=>history.push(`/app/incident-management/registration/close-out/${id}`)}
+                       button divider>
                         <ListItemIcon>
                           <Close />
                         </ListItemIcon>
@@ -665,7 +588,7 @@ const Summary = () => {
                       </ListItem>
                     </List>
                   </Paper>
-                </Col>
+                </Grid>
               )}
             </Row>
           </Box>

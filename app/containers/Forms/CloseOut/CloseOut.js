@@ -23,7 +23,6 @@ import {
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -86,13 +85,14 @@ const CloseOut = () => {
         );
         if(res.status === 200){
             const result = res.data.data.results;
-            if(result.length>0){
+            console.log(result)
+            if(Object.entries(result).length>0){
                 let temp = {...form}
                 temp=result
-                setForm(result)
-            }
-            await setIncidentsListdata(result);
-            setIsLoading(true)
+                await setForm(result)
+                await setIncidentsListdata(result);
+            await setIsLoading(true)
+            }          
        }
         
     };
@@ -135,6 +135,9 @@ const CloseOut = () => {
             `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
             temp
           );
+          if(res.status===200){
+              history.push(`/app/incident-management/registration/summary/summary/${id}`)
+          }
         } catch (error) {
           console.log(error)
         }
@@ -288,7 +291,7 @@ const CloseOut = () => {
                                     inputVariant="outlined"
                                     label="Reviewed on"
                                     value={form.reviewDate||null}
-                                    onChange={(e)=> setForm({...form, reviewDate:e.target.value})}
+                                    onChange={(e)=> setForm({...form, reviewDate:moment(e).toISOString()})}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
@@ -339,7 +342,7 @@ const CloseOut = () => {
                                 className={classes.formControl}
                               
                                 value={form.closeDate||null}
-                                onChange={(e)=> setForm({...form, closeDate:e.target.value})}
+                                onChange={(e)=> setForm({...form, closeDate:moment(e).toISOString()})}
                                 
                                 format="yyyy/MM/dd HH:mm"
                                 inputVariant="outlined"
@@ -353,7 +356,7 @@ const CloseOut = () => {
                                         "aria-label": "change date",
                                     }}
                                    
-
+                                    disableFuture
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>

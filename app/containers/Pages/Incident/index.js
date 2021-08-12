@@ -401,9 +401,7 @@ function BlankPage() {
                           >
                             Number:
                             <ILink
-                              href={`/app/incident-management/registration/summary/summary/${
-                                item[1].id
-                              }`}
+                              onClick={(e) => history.push(`/app/incident-management/registration/summary/summary/${item[1].id}`)}
                               variant="subtitle2"
                               className={Fonts.listingLabelValue}
                             >
