@@ -34,10 +34,7 @@ export const handelConvert = (value) => {
 
 export const handelIncidentId = () => {
     let page_url = window.location.href;
-    const lastItem = parseInt(
-        page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     return incidentId
 }

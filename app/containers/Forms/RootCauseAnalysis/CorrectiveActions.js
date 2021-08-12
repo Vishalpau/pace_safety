@@ -17,11 +17,11 @@ import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, MANAGEMENTCONTROL, SUMMERY_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation";
-import { MANAGEMENTCONTROL } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
+import { handelApiValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -63,7 +63,7 @@ const CorrectiveAction = () => {
     reasonsSupportAbove: {
       remarkType: "remark",
       rcaSubType: "reasonsSupportAbove",
-      rcaRemark: "",
+      rcaRemark: [],
     },
   });
 
@@ -73,6 +73,9 @@ const CorrectiveAction = () => {
   const history = useHistory();
   const updateIds = useRef();
   const checkPost = useRef();
+  const [paceCauseDelete, setPaceCauseDelete] = useState()
+  const [nextButton, setNextButton] = useState(false)
+
 
   const setRemark = (value) => {
     let remark = value.includes(",") ? value.split(",") : [value];
@@ -86,59 +89,43 @@ const CorrectiveAction = () => {
   // get data and set to states
   const handelUpdateCheck = async () => {
     let allrcaSubType = ["managementControl", "reasonsSupportAbove"];
-    let tempApiData = {};
-    let tempApiDataId = [];
+    let tempData = {}
+    let paceCauseid = []
     let page_url = window.location.href;
-    let putChecker = [];
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(
-      `/api/v1/incidents/${incidentId}/pacecauses/`
-    );
-    let allApiData = previousData.data.data.results;
-
-    allApiData.map((value) => {
-      if (allrcaSubType.includes(value.rcaSubType)) {
-        putChecker.push(true);
-      }
-    });
-
-    var numOfTrue = putChecker.filter((x) => x === true).length;
-    if (numOfTrue > 0) {
-      putId.current = lastItem;
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let allApiData = previousData.data.data.results
+    if (allApiData.length > 0) {
       allApiData.map((value) => {
         if (allrcaSubType.includes(value.rcaSubType)) {
-          let valueQuestion = value.rcaSubType;
-          let valueAnser = value.rcaRemark;
-          tempApiData[valueQuestion] = valueAnser;
-          tempApiDataId.push(value.id);
+          if (Object.keys(tempData).includes(value.rcaSubType)) {
+            tempData[value.rcaSubType].push(value.rcaRemark)
+          } else {
+            tempData[value.rcaSubType] = [value.rcaRemark]
+          }
+          paceCauseid.push(value.id)
         }
-      });
-      updateIds.current = tempApiDataId.reverse();
-      await setFetchApiData(tempApiData);
-      checkPost.current = false;
-
-      // set fetched spervised data
+      })
       setForm({
         ...form,
         managementControl: {
           remarkType: "options",
           rcaSubType: "managementControl",
-          rcaRemark: setRemark(tempApiData.managementControl),
+          rcaRemark: handelApiValue(tempData["managementControl"]),
         },
         reasonsSupportAbove: {
           remarkType: "remark",
           rcaSubType: "reasonsSupportAbove",
-          rcaRemark: tempApiData.reasonsSupportAbove,
+          rcaRemark: handelApiValue(tempData["reasonsSupportAbove"]),
         },
       });
+      setPaceCauseDelete(paceCauseid)
     }
-  };
+  }
 
   const handelManagementControl = (e, value) => {
     if (e.target.checked == false) {
@@ -171,110 +158,60 @@ const CorrectiveAction = () => {
       reasonsSupportAbove: {
         remarkType: "remark",
         rcaSubType: "reasonsSupportAbove",
-        rcaRemark: e.target.value,
+        rcaRemark: [e.target.value],
       },
     });
   };
 
-  const handelNext = async (e) => {
-    let tempData = [];
-
-    Object.entries(form).map(async (item, index) => {
-      let api_data = item[1];
-      // post request object
-      if (checkPost.current !== false) {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark:
-            api_data["rcaRemark"].toString() !== ""
-              ? api_data["rcaRemark"].toString()
-              : "No option selected",
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-        };
-        tempData.push(temp);
-        // put request object
-      } else {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark:
-            api_data["rcaRemark"].toString() !== ""
-              ? api_data["rcaRemark"].toString()
-              : "No option selected",
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-          pk: updateIds.current[index],
-        };
-        tempData.push(temp);
-      }
-    });
-
-    // api call //
-    let nextPageLink = 0;
-    let callObjects = tempData;
-    for (let key in callObjects) {
-      if (Object.keys(error).length == 0) {
-        if (checkPost.current == false) {
-          const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${
-              callObjects[key].pk
-            }/`,
-            callObjects[key]
-          );
-          if (res.status == 200) {
-            console.log("request done");
-            nextPageLink = res.status;
-          }
-        } else {
-          const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/`,
-            callObjects[key]
-          );
-          if (res.status == 201) {
-            console.log("request done");
-            nextPageLink = res.status;
-          }
+  const handelDelete = async () => {
+    if (paceCauseDelete !== undefined && paceCauseDelete.length > 0) {
+      for (let key in paceCauseDelete) {
+        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${paceCauseDelete[key]}/`)
+        if (delPaceCause.status == 200) {
+          console.log("deleted")
         }
       }
-      if (nextPageLink == 201 && Object.keys(error).length == 0) {
-        history.push(
-          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-            "fkincidentId"
-          )}`
-        );
-      } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
-        history.push(
-          `/app/incident-management/registration/summary/summary/${
-            putId.current
-          }`
-        );
-      }
     }
-    // api call //
-    localStorage.setItem("RootCause", "Done");
-  };
+  }
 
-  const handelPrevious = () => {
-    if (!isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${
-          putId.current
-        }`
-      );
-    } else if (isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/`
-      );
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push(`${SUMMERY_FORM["Summary"]}${putId.current}`)
+    } else if (navigateType == "previous") {
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Preventive actions"]}${putId.current}`)
     }
-  };
+  }
+
+  const handelApiCall = async () => {
+    console.log(form)
+    let tempData = []
+    Object.entries(form).map(async (item, index) => {
+      let api_data = item[1];
+      api_data.rcaRemark.map((value) => {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: putId.current,
+          rcaRemark: value,
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active",
+        };
+        tempData.push(temp);
+      })
+    })
+    const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
+    if (res.status == 200) {
+      handelNavigate("next")
+    }
+  }
+
+  const handelNext = async () => {
+    await setNextButton(true)
+    await handelDelete()
+    await handelApiCall()
+    await setNextButton(false)
+  }
 
   const classes = useStyles();
 
@@ -364,6 +301,7 @@ const CorrectiveAction = () => {
               <Button
                 variant="contained"
                 color="primary"
+                disabled={nextButton == true}
                 className={classes.button}
                 onClick={(e) => handelNext(e)}
               >

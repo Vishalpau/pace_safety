@@ -58,7 +58,7 @@ const WhyAnalysis = () => {
 
   const updateIds = useRef();
   const checkPost = useRef();
-  const investigationData = useRef({});
+  const [investigationData, setInvestigationData] = useState({})
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
@@ -102,11 +102,11 @@ const WhyAnalysis = () => {
     );
     const investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      investigationData.current = {
+      setInvestigationData({
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
         classification: investigationApiData.classification,
-      };
+      })
     }
   };
 
@@ -175,12 +175,22 @@ const WhyAnalysis = () => {
         }
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
           )}`
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -194,8 +204,7 @@ const WhyAnalysis = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -250,7 +259,7 @@ const WhyAnalysis = () => {
                 Level of classification
               </Typography>
               <Typography className={Type.labelValue}>
-                {checkValue(investigationData.current["classification"])}
+                {checkValue(investigationData["classification"])}
               </Typography>
             </Grid>
 

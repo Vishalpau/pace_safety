@@ -60,40 +60,37 @@ const PaceManagementControl = () => {
       rcaSubType: "Engagement",
       rcaRemark: [],
     },
-  });
+  })
   const [incidentDetail, setIncidentDetail] = useState({});
-  const [nextButton, setNextButton] = useState(false);
-  const paceCauseDelete = useRef();
+  const [nextButton, setNextButton] = useState(false)
+  const paceCauseDelete = useRef()
   const history = useHistory();
-  const putId = useRef("");
-  const [optionBasicCause, setOptionBasicCause] = useState([]);
+  const putId = useRef("")
+  const [optionBasicCause, setOptionBasicCause] = useState([])
+
 
   const handelUpdateCheck = async () => {
-    let tempData = {};
-    let paceCauseid = [];
+    let tempData = {}
+    let paceCauseid = []
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    putId.current = incidentId;
-    let previousData = await api.get(
-      `/api/v1/incidents/${incidentId}/pacecauses/`
-    );
-    let allApiData = previousData.data.data.results;
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let allApiData = previousData.data.data.results
     if (allApiData.length > 0) {
       allApiData.map((value) => {
         if (PACE_MANAGEMENT_CONTROL_SUB_TYPES.includes(value.rcaSubType)) {
           if (Object.keys(tempData).includes(value.rcaSubType)) {
-            tempData[value.rcaSubType].push(value.rcaRemark);
+            tempData[value.rcaSubType].push(value.rcaRemark)
           } else {
-            tempData[value.rcaSubType] = [value.rcaRemark];
+            tempData[value.rcaSubType] = [value.rcaRemark]
           }
-          paceCauseid.push(value.id);
+          paceCauseid.push(value.id)
         }
-      });
+      })
       setForm({
         ...form,
         ProActiveManagement: {
@@ -116,20 +113,20 @@ const PaceManagementControl = () => {
           rcaSubType: "Engagement",
           rcaRemark: handelApiValue(tempData["Engagement"]),
         },
-      });
-      paceCauseDelete.current = paceCauseid;
+      })
+      paceCauseDelete.current = paceCauseid
     }
-  };
+  }
 
   const handelOptionDispay = (type, subType, option) => {
-    let temp = [];
+    let temp = []
     if (option !== "-") {
       option.map((value) => {
-        temp.push(`${type} - ${subType} - ${value}`);
-      });
+        temp.push(`${type} - ${subType} - ${value}`)
+      })
     }
-    return temp;
-  };
+    return temp
+  }
 
   const handelShowData = async () => {
     let tempApiData = {};
@@ -139,63 +136,35 @@ const PaceManagementControl = () => {
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
 
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
-    let previousData = await api.get(
-      `/api/v1/incidents/${putId.current}/pacecauses/`
-    );
-    let tempid = [];
+    let previousData = await api.get(`/api/v1/incidents/${putId.current}/pacecauses/`);
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
-      if (
-        subTypes.includes(value.rcaSubType) &&
-        value.rcaRemark !== "No option selected"
+      if (subTypes.includes(value.rcaSubType)
       ) {
-        tempid.push(value.id);
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
-        tempApiData[valueQuestion] = valueAnser.includes(",")
-          ? valueAnser.split(",")
-          : [valueAnser];
+        if (Object.keys(tempApiData).includes(valueQuestion)) {
+          tempApiData[valueQuestion].push(valueAnser)
+        } else {
+          tempApiData[valueQuestion] = [valueAnser]
+        }
       }
     });
 
-    let OptionWithSubType = handelOptionDispay(
-      "Human factors",
-      "personal",
-      checkValue(tempApiData["personal"])
-    )
-      .concat(
-        handelOptionDispay(
-          "Human factors",
-          "wellnessFactors",
-          checkValue(tempApiData["wellnessFactors"])
-        )
-      )
-      .concat(
-        handelOptionDispay(
-          "Jobfactors",
-          "leadership",
-          checkValue(tempApiData["leadership"])
-        )
-      )
-      .concat(
-        handelOptionDispay(
-          "Jobfactors",
-          "processes",
-          checkValue(tempApiData["processes"])
-        )
-      );
-    setOptionBasicCause(OptionWithSubType);
+
+    let OptionWithSubType =
+      handelOptionDispay("Human factors", "personal", checkValue(tempApiData["personal"])).concat
+        (handelOptionDispay("Human factors", "wellnessFactors", checkValue(tempApiData["wellnessFactors"]))).concat
+        (handelOptionDispay("Jobfactors", "leadership", checkValue(tempApiData["leadership"]))).concat
+        (handelOptionDispay("Jobfactors", "processes", checkValue(tempApiData["processes"])))
+    setOptionBasicCause(OptionWithSubType)
   };
 
   const handelProactiveManagement = (e, value) => {
     if (e.target.checked == false) {
-      let newData = form.ProActiveManagement.rcaRemark.filter(
-        (item) => item !== value
-      );
+      let newData = form.ProActiveManagement.rcaRemark.filter((item) => item !== value);
       setForm({
         ...form,
         ProActiveManagement: {
@@ -288,34 +257,27 @@ const PaceManagementControl = () => {
   const handelDelete = async () => {
     if (paceCauseDelete.current.length > 0) {
       paceCauseDelete.current.map(async (value) => {
-        let delPaceCause = await api.delete(
-          `api/v1/incidents/${putId.current}/pacecauses/${value}/`
-        );
+        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${value}/`)
         if (delPaceCause.status == 200) {
-          console.log("deleted");
+          console.log("deleted")
         }
-      });
+      })
     }
-  };
+  }
 
   const handelNavigate = (nextPageLink, navigateType) => {
     if (navigateType == "next") {
       if (nextPageLink == 201) {
         history.push(
-          "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/"
-        );
+          "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/");
       } else if (nextPageLink == 200) {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${
-            putId.current
-          }`
-        );
+          `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current}`);
       }
     } else if (navigateType == "previous") {
       if (!isNaN(putId.current)) {
         history.push(
-          `/app/incident-management/registration/root-cause-analysis/basic-cause/${
-            putId.current
+          `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
           }`
         );
       } else if (isNaN(putId.current)) {
@@ -324,11 +286,11 @@ const PaceManagementControl = () => {
         );
       }
     }
-  };
+  }
 
   const handelApiCall = async () => {
     let nextPageLink = 0;
-    let tempData = [];
+    let tempData = []
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
@@ -342,24 +304,22 @@ const PaceManagementControl = () => {
           status: "Active",
         };
         tempData.push(temp);
-      });
-    });
-    const res = await api.post(
-      `api/v1/incidents/${putId.current}/bulkpacecauses/`,
-      tempData
-    );
+      })
+    })
+    const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
     if (res.status == 200) {
       nextPageLink = res.status;
-      handelNavigate(nextPageLink, "next");
+      handelNavigate(nextPageLink, "next")
     }
-  };
+  }
+
 
   const handelNext = async () => {
-    await setNextButton(true);
-    await handelDelete();
-    await handelApiCall();
-    await setNextButton(false);
-  };
+    await setNextButton(true)
+    await handelDelete()
+    await handelApiCall()
+    await setNextButton(false)
+  }
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(`/api/v1/incidents/${putId.current}/`);

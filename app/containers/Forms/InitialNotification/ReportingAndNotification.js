@@ -357,6 +357,11 @@ const ReportingAndNotification = () => {
           await setOtherDataReportTo(stringNotifyList);
 
           if (status === 201) {
+            let viewMode = {
+              initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+    
+            }
+            localStorage.setItem("viewMode",JSON.stringify(viewMode))
             history.push(
               `/app/incident-management/registration/summary/summary/${localStorage.getItem(
                 "fkincidentId"

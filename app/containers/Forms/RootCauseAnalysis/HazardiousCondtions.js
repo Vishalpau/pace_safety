@@ -30,6 +30,7 @@ import {
   CONDITIONSAFETYITEMS,
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
+import { checkValue, handelApiValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -61,88 +62,71 @@ const HazardiousCondition = () => {
     others: {
       remarkType: "remark",
       rcaSubType: "othersConditions",
-      rcaRemark: "",
+      rcaRemark: [],
     },
   });
 
   const putId = useRef("");
-  const [fetchApiData, setFetchApiData] = useState({});
-  const { id } = useParams();
   const history = useHistory();
+  const [error, setError] = useState({})
   const [incidentDetail, setIncidentDetail] = useState({});
-  const [error, setError] = useState({});
-  const updateIds = useRef();
-  const checkPost = useRef();
-
-  const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value];
-    if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected");
-      remark.splice(removeItemIndex, 1);
-    }
-    return remark;
-  };
+  const [paceCauseDelete, setPaceCauseDelete] = useState()
+  const [nextButton, setNextButton] = useState(false)
 
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let tempApiData = {};
-    let tempApiDataId = [];
+    let tempData = {}
+    let paceCauseid = []
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
     );
-
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(
-      `/api/v1/incidents/${incidentId}/pacecauses/`
-    );
-    let allApiData = previousData.data.data.results;
-
-    if (allApiData.length > 8) {
-      putId.current = incidentId;
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId
+    let previousData = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
+    let allApiData = previousData.data.data.results
+    if (allApiData.length > 0) {
       allApiData.map((value) => {
         if (HAZARDIOUS_CONDITION_SUB_TYPES.includes(value.rcaSubType)) {
-          let valueQuestion = value.rcaSubType;
-          let valueAnser = value.rcaRemark;
-          tempApiData[valueQuestion] = valueAnser;
-          tempApiDataId.push(value.id);
+          if (Object.keys(tempData).includes(value.rcaSubType)) {
+            tempData[value.rcaSubType].push(value.rcaRemark)
+          } else {
+            tempData[value.rcaSubType] = [value.rcaRemark]
+          }
+          paceCauseid.push(value.id)
         }
-      });
-      updateIds.current = tempApiDataId.reverse();
-      checkPost.current = false;
-
+      })
       setForm({
         ...form,
         warningSystem: {
           remarkType: "options",
           rcaSubType: "warningSystem",
-          rcaRemark: setRemark(tempApiData.warningSystem),
+          rcaRemark: handelApiValue(tempData["warningSystem"]),
         },
         energyTypes: {
           remarkType: "options",
           rcaSubType: "energyTypes",
-          rcaRemark: setRemark(tempApiData.energyTypes),
+          rcaRemark: handelApiValue(tempData["energyTypes"]),
         },
         tools: {
           remarkType: "options",
           rcaSubType: "tools",
-          rcaRemark: setRemark(tempApiData.tools),
+          rcaRemark: handelApiValue(tempData["tools"]),
         },
         safetyitems: {
           remarkType: "options",
           rcaSubType: "safetyItems",
-          rcaRemark: setRemark(tempApiData.safetyItems),
+          rcaRemark: handelApiValue(tempData["safetyItems"]),
         },
         others: {
           remarkType: "remark",
           rcaSubType: "othersConditions",
-          rcaRemark: tempApiData.othersConditions,
+          rcaRemark: handelApiValue(tempData["othersConditions"]),
         },
       });
+      setPaceCauseDelete(paceCauseid)
     }
-  };
+  }
 
   const handelWarningSystems = (e, value) => {
     if (e.target.checked == false) {
@@ -248,95 +232,60 @@ const HazardiousCondition = () => {
       others: {
         remarkType: "remark",
         rcaSubType: "othersConditions",
-        rcaRemark: e.target.value,
+        rcaRemark: [e.target.value],
       },
     });
   };
 
-  const handelNext = async (e) => {
-    // const { error, isValid } = HazardiousConditionsValidation(form);
-    // await setError(error);
-    let tempData = [];
-
-    Object.entries(form).map(async (item, index) => {
-      let api_data = item[1];
-      // post request object
-      if (checkPost.current !== false) {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: localStorage.getItem("fkincidentId"),
-          rcaRemark:
-            api_data["rcaRemark"].toString() !== ""
-              ? api_data["rcaRemark"].toString()
-              : "No option selected",
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Immediate",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-        };
-        tempData.push(temp);
-        // put request object
-      } else {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
-          rcaRemark:
-            api_data["rcaRemark"].toString() !== ""
-              ? api_data["rcaRemark"].toString()
-              : "No option selected",
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Immediate",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-          pk: updateIds.current[index],
-        };
-        tempData.push(temp);
-      }
-    });
-
-    // api call //
-    let nextPageLink = 0;
-    let callObjects = tempData;
-    for (let key in callObjects) {
-      if (Object.keys(error).length == 0) {
-        if (checkPost.current == false) {
-          const res = await api.put(
-            `/api/v1/incidents/${putId.current}/pacecauses/${
-              callObjects[key].pk
-            }/`,
-            callObjects[key]
-          );
-          if (res.status == 200) {
-            nextPageLink = res.status;
-          }
-        } else {
-          const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/pacecauses/`,
-            callObjects[key]
-          );
-          if (res.status == 201) {
-            nextPageLink = res.status;
-          }
+  const handelDelete = async () => {
+    if (paceCauseDelete !== undefined && paceCauseDelete.length > 0) {
+      for (let key in paceCauseDelete) {
+        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${paceCauseDelete[key]}/`)
+        if (delPaceCause.status == 200) {
+          console.log("deleted")
         }
       }
     }
-    if (nextPageLink == 201 && Object.keys(error).length === 0) {
-      history.push(
-        "/app/incident-management/registration/root-cause-analysis/cause-and-action/"
-      );
-    } else if (nextPageLink == 200 && Object.keys(error).length === 0) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/cause-and-action/${
-          putId.current
-        }`
-      );
-    }
-    // api call //
-  };
+  }
 
-  const selectValues = ["Option1", "Option2", "...."];
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Corrective actions"]}${putId.current}`)
+    } else if (navigateType == "previous") {
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Hazardous acts"]}${putId.current}`)
+    }
+  }
+
+  const handelApiCall = async () => {
+    console.log(form)
+    let tempData = []
+    Object.entries(form).map(async (item, index) => {
+      let api_data = item[1];
+      api_data.rcaRemark.map((value) => {
+        let temp = {
+          createdBy: "0",
+          fkIncidentId: putId.current,
+          rcaRemark: value,
+          rcaSubType: api_data["rcaSubType"],
+          rcaType: "Basic",
+          remarkType: api_data["remarkType"],
+          status: "Active",
+        };
+        tempData.push(temp);
+      })
+    })
+    const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
+    if (res.status == 200) {
+      handelNavigate("next")
+    }
+  }
+
+  const handelNext = async () => {
+    await setNextButton(true)
+    await handelDelete()
+    await handelApiCall()
+    await setNextButton(false)
+  }
 
   const classes = useStyles();
 
@@ -351,8 +300,7 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -362,13 +310,13 @@ const HazardiousCondition = () => {
     }
   };
 
-  const habelCallback = async () => {
+  const handelCallback = async () => {
     await handelUpdateCheck();
     await fetchIncidentDetails();
   };
 
   useEffect(() => {
-    habelCallback();
+    handelCallback();
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -502,6 +450,7 @@ const HazardiousCondition = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  disabled={nextButton == true}
                   className={classes.button}
                   onClick={(e) => handelNext(e)}
                 >
