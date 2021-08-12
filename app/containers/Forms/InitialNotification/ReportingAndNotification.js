@@ -358,10 +358,13 @@ const ReportingAndNotification = () => {
 
           if (status === 201) {
             let viewMode = {
-              initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
-    
-            }
-            localStorage.setItem("viewMode",JSON.stringify(viewMode))
+              initialNotification: true,
+              investigation: false,
+              evidence: false,
+              rootcauseanalysis: false,
+              lessionlearn: false,
+            };
+            localStorage.setItem("viewMode", JSON.stringify(viewMode));
             history.push(
               `/app/incident-management/registration/summary/summary/${localStorage.getItem(
                 "fkincidentId"
@@ -398,10 +401,9 @@ const ReportingAndNotification = () => {
       }
       setNotifyToList(data);
     }
-    setNotifyToList(data)
-   }  
-  
-  
+    setNotifyToList(data);
+  };
+
   // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
     if ((type = "option")) {
@@ -722,7 +724,8 @@ const ReportingAndNotification = () => {
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
-  return (<PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
+  return (
+    <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
         <Row>
           <Col md={9}>
@@ -804,7 +807,7 @@ const ReportingAndNotification = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} justify="flex-start">
+              <Grid item xs={12}>
                 <Box marginTop={3} marginBottom={4}>
                   <Typography variant="h6" gutterBottom>
                     Initial evidences
@@ -814,85 +817,85 @@ const ReportingAndNotification = () => {
                     supported
                   </Typography>
                 </Box>
-
-                {evidanceForm.map((item, index) => (
-                  <Grid container item xs={12} spacing={3} alignItems="center">
-                    <Grid
-                      item
-                      md={typeof item.evidenceDocument === "string" ? 2 : 6}
-                    >
-                      <input
-                        ref={ref}
-                        id="file"
-                        type="file"
-                        accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                        style={{
-                          color:
-                            typeof item.evidenceDocument === "string" &&
-                            "transparent",
-                        }}
-                        onChange={(e) =>
-                          handleEvidanceForm(e, index, "evidenceDocument")
-                        }
-                      />
-                    </Grid>
-                    {typeof item.evidenceDocument === "string" ? (
-                      <Grid item md={4}>
-                        <Tooltip title={"fileName"}>
-                          <Attachment value={item.evidenceDocument} />
-                        </Tooltip>
-                      </Grid>
-                    ) : null}
-                    <Grid item xs={8} md={4}>
-                      <TextField
-                        id="evidanceRemark"
-                        size="small"
-                        variant="outlined"
-                        label="Evidences remark"
-                        error={
-                          evidenceError &&
-                          evidenceError[`evidenceRemark${[index]}`]
-                        }
-                        helperText={
-                          evidenceError &&
-                          evidenceError[`evidenceRemark${[index]}`]
-                            ? evidenceError[`evidenceRemark${[index]}`]
-                            : null
-                        }
-                        className={classes.formControl}
-                        value={item.evidenceRemark}
-                        onChange={(e) =>
-                          handleEvidanceForm(e, index, "evidenceRemark")
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={2}>
-                      <IconButton
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={(e) => handleNewEvidance(e)}
+                <Grid item xs={12}>
+                  {evidanceForm.map((item, index) => (
+                    <Grid container spacing={3} alignItems="center">
+                      <Grid
+                        item
+                        md={typeof item.evidenceDocument === "string" ? 2 : 6}
                       >
-                        <AddCircleIcon />
-                      </IconButton>
-                    </Grid>
-
-                    {evidanceForm.length > 1 ? (
-                      <Grid item xs={2}>
+                        <input
+                          ref={ref}
+                          id="file"
+                          type="file"
+                          accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                          style={{
+                            color:
+                              typeof item.evidenceDocument === "string" &&
+                              "transparent",
+                          }}
+                          onChange={(e) =>
+                            handleEvidanceForm(e, index, "evidenceDocument")
+                          }
+                        />
+                      </Grid>
+                      {typeof item.evidenceDocument === "string" ? (
+                        <Grid item md={4}>
+                          <Tooltip title={"fileName"}>
+                            <Attachment value={item.evidenceDocument} />
+                          </Tooltip>
+                        </Grid>
+                      ) : null}
+                      <Grid item xs={8} md={4}>
+                        <TextField
+                          id="evidanceRemark"
+                          size="small"
+                          variant="outlined"
+                          label="Evidences remark"
+                          error={
+                            evidenceError &&
+                            evidenceError[`evidenceRemark${[index]}`]
+                          }
+                          helperText={
+                            evidenceError &&
+                            evidenceError[`evidenceRemark${[index]}`]
+                              ? evidenceError[`evidenceRemark${[index]}`]
+                              : null
+                          }
+                          className={classes.formControl}
+                          value={item.evidenceRemark}
+                          onChange={(e) =>
+                            handleEvidanceForm(e, index, "evidenceRemark")
+                          }
+                        />
+                      </Grid>
+                      <Grid item xs={2} md={1}>
                         <IconButton
                           variant="contained"
                           color="primary"
-                          onClick={() =>
-                            handleRemoveEvidance(index, item.id && item.id)
-                          }
+                          className={classes.button}
+                          onClick={(e) => handleNewEvidance(e)}
                         >
-                          <DeleteForeverIcon />
+                          <AddCircleIcon />
                         </IconButton>
                       </Grid>
-                    ) : null}
-                  </Grid>
-                ))}
 
+                      {evidanceForm.length > 1 ? (
+                        <Grid item xs={2} md={1}>
+                          <IconButton
+                            variant="contained"
+                            color="primary"
+                            onClick={() =>
+                              handleRemoveEvidance(index, item.id && item.id)
+                            }
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        </Grid>
+                      ) : null}
+                    </Grid>
+                  ))}
+                </Grid>
                 <Snackbar
                   open={open}
                   autoHideDuration={6000}

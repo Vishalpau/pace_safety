@@ -50,20 +50,20 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-import ImageIcon from '@material-ui/icons/Image';
+import ImageIcon from "@material-ui/icons/Image";
 
-import ProjectImg from 'dan-images/projectImages/projectimg.jpg';
-import ProjectImgOne from 'dan-images/projectImages/projectimgone.jpg';
-import cTower from 'dan-images/projectImages/cTower.png';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import CardActions from '@material-ui/core/CardActions';
-import Divider from '@material-ui/core/Divider';
-import EditIcon from '@material-ui/icons/Edit';
+import ProjectImg from "dan-images/projectImages/projectimg.jpg";
+import ProjectImgOne from "dan-images/projectImages/projectimgone.jpg";
+import cTower from "dan-images/projectImages/cTower.png";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import CardActions from "@material-ui/core/CardActions";
+import Divider from "@material-ui/core/Divider";
+import EditIcon from "@material-ui/icons/Edit";
 
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 
 import axios from "axios";
 import api from "../../utils/axios";
@@ -83,89 +83,85 @@ import { async } from "fast-glob";
 
 import { useDispatch } from "react-redux";
 
-import {
-  projectName,
-} from "../../redux/actions/initialDetails";
+import { projectName } from "../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
-//Project selections
-cardContentBox: {
-  minWidth: '260px',
+  //Project selections
+  cardContentBox: {
+    minWidth: "260px",
+  },
+  cardActionAreaBox: {
+    "&:hover .MuiCardMedia-root": {
+      webkitTransform: "scale(1.2)",
+      mozTransform: "scale(1.2)",
+      mozTransform: "scale(1.2)",
+      transform: "scale(1.2)",
+      webkitFilter: "grayscale(0%)",
+      filter: "grayscale(0%)",
+    },
+  },
+  cardMediaBox: {
+    overflow: "hidden",
+    height: "300px",
+  },
+  media: {
+    height: "300px",
+    webkitTransition: "all 1.5s ease",
+    mozTransition: "all 1.5s ease",
+    msTransition: "all 1.5s ease",
+    oTransition: "all 1.5s ease",
+    transition: "all 1.5s ease",
+    webkitFilter: "grayscale(100%)",
+    filter: "grayscale(100%)",
+  },
+  projectSelectionTitle: {
+    fontSize: "14px",
+    color: "#06425c",
+    fontWeight: "600",
+    whiteSpace: "normal",
+    lineHeight: "22px",
+  },
+  projectSelectionCode: {
+    fontSize: "13px",
+  },
+  actionBttmArea: {
+    float: "right",
+    "& button svg": {
+      color: "#06425c",
+    },
+  },
+  projectName: {
+    fontSize: "13px",
+    paddingLeft: "0px",
+    paddingRight: "0px",
+    color: "#ffffff",
+    "& .MuiSvgIcon-root": {
+      marginLeft: "4px",
+      fontSize: "15px",
+    },
+  },
+  cTowerIcon: {
+    width: "22px",
+    height: "22px",
+    "& img": {
+      width: "12px",
+      objectFit: "contain",
+    },
+  },
 
-},
-cardActionAreaBox: {
-  '&:hover .MuiCardMedia-root': {
-    webkitTransform: 'scale(1.2)',
-    mozTransform: 'scale(1.2)',
-    mozTransform: 'scale(1.2)',
-    transform: 'scale(1.2)',
-    webkitFilter: 'grayscale(0%)',
-    filter: 'grayscale(0%)',
+  //company selections
+  companyNameList: {
+    "& .MuiListItemText-primary": {
+      fontSize: "14px",
+      fontFamily: "Montserrat-Medium",
+      color: "#054D69",
+    },
+    "& .MuiListItemText-secondary": {
+      fontSize: "12px",
+      fontFamily: "Montserrat-Regular",
+      color: "#054D69",
+    },
   },
-},
-cardMediaBox: {
-  overflow: 'hidden',
-  height: '300px',
-},
-media: {
-  height: '300px',
-  webkitTransition: 'all 1.5s ease',
-  mozTransition: 'all 1.5s ease',
-  msTransition: 'all 1.5s ease',
-  oTransition: 'all 1.5s ease',
-  transition: 'all 1.5s ease',
-  webkitFilter: 'grayscale(100%)',
-  filter: 'grayscale(100%)',
-},
-projectSelectionTitle: {
-  fontSize: '14px',
-  color: '#06425c',
-  fontWeight: '600',
-  whiteSpace: 'normal',
-  lineHeight: '22px',
-},
-projectSelectionCode: {
-  fontSize: '13px',
-},
-actionBttmArea: {
-  float: 'right',
-  '& button svg': {
-    color: '#06425c',
-  },
-},
-projectName: {
-  fontSize: '13px',
-  paddingLeft: '0px',
-  paddingRight: '0px',
-  color: '#ffffff',
-  '& .MuiSvgIcon-root': {
-    marginLeft: '4px',
-    fontSize: '15px',
-  },
-},
-cTowerIcon: {
-  width: '22px',
-  height: '22px',
-  '& img': {
-    width: '12px',
-    objectFit: 'contain',
-  },
-},
-
-
-//company selections
-companyNameList: {
-  '& .MuiListItemText-primary': {
-      fontSize: '14px',
-      fontFamily: 'Montserrat-Medium',
-      color: '#054D69',
-  },
-  '& .MuiListItemText-secondary': {
-      fontSize: '12px',
-      fontFamily: 'Montserrat-Regular',
-      color: '#054D69',
-  },
-},
 
   root: {
     width: "100%",
@@ -183,8 +179,12 @@ companyNameList: {
     position: "absolute",
     width: 650,
     backgroundColor: "#fff",
-    // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
+  },
+  centeredDialogContent: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
@@ -212,7 +212,8 @@ function PersonalDashboard(props) {
   const [projectListData, setProjectListData] = useState([]);
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
-  const [projectOpen, setProjectOpen] = React.useState(false);8
+  const [projectOpen, setProjectOpen] = React.useState(false);
+  8;
   const dispatch = useDispatch();
 
   const handleClose = () => {
@@ -221,7 +222,6 @@ function PersonalDashboard(props) {
 
   // compney name get
   const handleCompanyName = async (e, key, name) => {
-    
     let companeyDetails = {};
     companeyDetails.fkCompanyId = e;
     companeyDetails.fkCompanyName = name;
@@ -245,7 +245,7 @@ function PersonalDashboard(props) {
     setProjectOpen(false);
   };
   // handle project Name
-  const handleProjectName = async (key) => {    
+  const handleProjectName = async (key) => {
     let data = projectListData[key];
     await dispatch(projectName(data));
     localStorage.setItem("projectName", JSON.stringify(data));
@@ -263,29 +263,33 @@ function PersonalDashboard(props) {
       .then(function(response) {
         if (response.status === 200) {
           if (response.data.data.results.data.companies.length > 1) {
-            const companey = JSON.parse(localStorage.getItem('company'))
-            if(companey===null){
+            const companey = JSON.parse(localStorage.getItem("company"));
+            if (companey === null) {
               setCompanyListData(response.data.data.results.data.companies);
-              setOpen(true)
-            }       
+              setOpen(true);
+            }
           }
-          if(response.data.data.results.data.companies.length === 1){
-            
+          if (response.data.data.results.data.companies.length === 1) {
             let companeyDetails = {};
-              companeyDetails.fkCompanyId = response.data.data.results.data.companies[0].companyId;
-              companeyDetails.fkCompanyName = response.data.data.results.data.companies[0].companyName;
-              localStorage.setItem("company", JSON.stringify(companeyDetails));
-              let newData = response.data.data.results.data.companies[0];
-              if (newData) {
-                if(newData.projects.length === 1){
-                  dispatch(projectName(newData.projects[0]))
-                  localStorage.setItem("projectName", JSON.stringify(newData.projects[0]));
-                }
-                if(newData.projects.length > 1){
-                   setProjectListData(newData.projects);
-                  setOpen(true)
-                }              
+            companeyDetails.fkCompanyId =
+              response.data.data.results.data.companies[0].companyId;
+            companeyDetails.fkCompanyName =
+              response.data.data.results.data.companies[0].companyName;
+            localStorage.setItem("company", JSON.stringify(companeyDetails));
+            let newData = response.data.data.results.data.companies[0];
+            if (newData) {
+              if (newData.projects.length === 1) {
+                dispatch(projectName(newData.projects[0]));
+                localStorage.setItem(
+                  "projectName",
+                  JSON.stringify(newData.projects[0])
+                );
               }
+              if (newData.projects.length > 1) {
+                setProjectListData(newData.projects);
+                setOpen(true);
+              }
+            }
           }
           setUserData(response.data.data.results);
         }
@@ -300,11 +304,14 @@ function PersonalDashboard(props) {
   useState(() => {
     userDetails();
     let viewMode = {
-      initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
-
-    }
-    localStorage.setItem("viewMode",JSON.stringify(viewMode))
-  },[]);
+      initialNotification: true,
+      investigation: false,
+      evidence: false,
+      rootcauseanalysis: false,
+      lessionlearn: false,
+    };
+    localStorage.setItem("viewMode", JSON.stringify(viewMode));
+  }, []);
 
   return (
     <PapperBlock title="Home" icon="ion-md-list-box">
@@ -452,76 +459,75 @@ function PersonalDashboard(props) {
       </div>
       {/* Company */}
       <Dialog
-     fullScreen
-     scroll='paper'
-              className={classes.projectDialog}
-              open={open}
-              onClose={handleClose}
-              
-            >
-              <DialogTitle onClose={handleClose}>
-                Select Company
-              </DialogTitle>
-              <DialogContent
-               PaperProps={{
-                style: {
-                  width: "100%",
-                  maxWidth: 400,
-                },
-              }}
-              
-              >
-                <DialogContentText id="alert-dialog-description">
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                    <List >
-                    {companyListData.length > 0
-                      ? companyListData.map((selectValues, key) => (
-                        <ListItem button key={key}
+        fullScreen
+        scroll="paper"
+        className={classes.projectDialog}
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle onClose={handleClose}>Select Company</DialogTitle>
+        <DialogContent className={classesm.centeredDialogContent}>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={12} md={5}>
+              <List>
+                {companyListData.length > 0
+                  ? companyListData.map((selectValues, key) => (
+                      <ListItem
+                        button
+                        key={key}
                         onClick={() =>
                           handleCompanyName(
                             selectValues.companyId,
                             key,
                             selectValues.companyName
                           )
-                        }>
-                            <ListItemAvatar>
-                            <Avatar variant="rounded">
-                                <ImageIcon />
-                            </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText className={classes.companyNameList} primary={selectValues.companyName}/>
-                        </ListItem>
-                         ))
-                         : null}
-                       
-                      </List>
-                    </Grid>
-                  </Grid>
-                </DialogContentText>
-              </DialogContent>
-            </Dialog>
-            {/* Project  */}
-            <Dialog
-              className={classes.projectDialog}
-              fullScreen
-              scroll='paper'
-              open={projectOpen}
-              onClose={handleProjectClose}
-            >
-              <DialogTitle onClose={handleProjectClose}>
-                Switch to a Different Project
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  <Grid container spacing={4}>
-                  {projectListData.length > 0?projectListData.map((selectValues, key) => (
-                    <Grid item md={4} sm={6} xs={12} className={classesm.cardContentBox}>  
-                      <Card key={key}
-                              key={key}
-                              onClick={() => handleProjectName(key)}
-                              
-                            >
+                        }
+                      >
+                        <ListItemAvatar>
+                          <Avatar variant="rounded">
+                            <ImageIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          className={classes.companyNameList}
+                          primary={selectValues.companyName}
+                        />
+                      </ListItem>
+                    ))
+                  : null}
+              </List>
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
+      {/* Project  */}
+      <Dialog
+        className={classes.projectDialog}
+        fullScreen
+        scroll="paper"
+        open={projectOpen}
+        onClose={handleProjectClose}
+      >
+        <DialogTitle onClose={handleProjectClose}>
+          Switch to a Different Project
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Grid container spacing={4}>
+              {projectListData.length > 0
+                ? projectListData.map((selectValues, key) => (
+                    <Grid
+                      item
+                      md={4}
+                      sm={6}
+                      xs={12}
+                      className={classesm.cardContentBox}
+                    >
+                      <Card
+                        key={key}
+                        key={key}
+                        onClick={() => handleProjectName(key)}
+                      >
                         <CardActionArea className={classesm.cardActionAreaBox}>
                           <div className={classesm.cardMediaBox}>
                             <CardMedia
@@ -531,10 +537,20 @@ function PersonalDashboard(props) {
                             />
                           </div>
                           <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2" className={classesm.projectSelectionTitle}>
-                             {selectValues.projectName}
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              className={classesm.projectSelectionTitle}
+                            >
+                              {selectValues.projectName}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p" className={classesm.projectSelectionCode}>
+                            <Typography
+                              variant="body2"
+                              color="textSecondary"
+                              component="p"
+                              className={classesm.projectSelectionCode}
+                            >
                               Code: {selectValues.projectCode}
                             </Typography>
                           </CardContent>
@@ -543,7 +559,10 @@ function PersonalDashboard(props) {
                         <CardActions className={classesm.actionBttmArea}>
                           <Tooltip title="Control Tower">
                             <IconButton aria-label="control tower">
-                              <Avatar className={classesm.cTowerIcon} src={cTower}/>
+                              <Avatar
+                                className={classesm.cTowerIcon}
+                                src={cTower}
+                              />
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="GIS Location">
@@ -554,13 +573,12 @@ function PersonalDashboard(props) {
                         </CardActions>
                       </Card>
                     </Grid>
-                   )):null}
-               
-                  </Grid>
-                </DialogContentText>
-              </DialogContent>
-            </Dialog>
-          
+                  ))
+                : null}
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </PapperBlock>
   );
 }
