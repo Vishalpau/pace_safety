@@ -860,7 +860,7 @@ module.exports = [
     name: "Observations",
     icon: "ion-md-eye",
     multilevel: false,
-    linkParent: "/app/maps/map-marker",
+    linkParent: "/app/pages/Observations",
   },
   {
     key: "inspections",
