@@ -14,8 +14,6 @@ function InvestigationOverviewValidate(data) {
     if (validator.isEmpty(data.constructionManagerContactNo.toString())) {
         error.constructionManagerContactNo = "please enter construction manager contact number";
         isValid = false;
-    } else if (isNaN(data.constructionManagerContactNo)) {
-        error.constructionManagerContactNo = "Only numbers allowed in Construction Manager contact number";
     }
     else if (data.constructionManagerContactNo.length > 21) {
         error.constructionManagerContactNo = "Less than 20 character allowed in Construction Manager contact number";
@@ -31,8 +29,6 @@ function InvestigationOverviewValidate(data) {
     if (validator.isEmpty(data.hseSpecialistContactNo.toString())) {
         error.hseSpecialistContactNo = "please enter hse specialist contact number";
         isValid = false;
-    } else if (isNaN(data.hseSpecialistContactNo)) {
-        error.hseSpecialistContactNo = "Only numbers allowed in hse specialist contact number";
     }
     else if (data.hseSpecialistContactNo.length > 21) {
         error.hseSpecialistContactNo = "Less than 20 character allowed in hse specialist contact number";

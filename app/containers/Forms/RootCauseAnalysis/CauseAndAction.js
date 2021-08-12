@@ -198,6 +198,13 @@ const BasicCauseAndAction = () => {
 
               </TableBody>
             </Table>
+            {data.length == 0 ?
+              <Grid container item md={9}>
+                <Typography variant="h6">
+                  No Options Selected
+                </Typography>
+              </Grid>
+              : null}
           </Grid>
 
           <Grid item md={12}>
@@ -219,6 +226,7 @@ const BasicCauseAndAction = () => {
             </Button>
           </Grid>
         </Grid>
+
         {
           isDesktop && (
             <Grid item md={3}>

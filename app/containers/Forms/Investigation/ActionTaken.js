@@ -62,10 +62,9 @@ const ActionTaken = () => {
       ? (form["preEventMitigations"] = "")
       : null;
     console.log(form.preEventMitigations);
+    form["endDate"] = new Date()
     const res = await api.put(
-      `api/v1/incidents/${putId.current}/investigations/${
-        investigationId.current
-      }/`,
+      `api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`,
       form
     );
     if (res.status === 200) {

@@ -41,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
+  tabelBorder: {
+    width: 110,
+    border: '1px solid black'
+  }
 }));
 
 const RootCauseAnalysisSummary = () => {
@@ -112,7 +116,7 @@ const RootCauseAnalysisSummary = () => {
     let wordArrayCombined = wordArray.join(" ");
     var newString = wordArrayCombined
       .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function(c) {
+      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
         return c.toUpperCase();
       });
     return newString;
@@ -150,8 +154,8 @@ const RootCauseAnalysisSummary = () => {
       {!isDesktop && (
         <Grid item xs={12}>
           {fiveWhy.length > 0 ||
-          rootCause.length > 0 ||
-          pacecauses.length > 0 ? (
+            rootCause.length > 0 ||
+            pacecauses.length > 0 ? (
             <Button
               variant="outlined"
               startIcon={<EditIcon />}
@@ -333,31 +337,33 @@ const RootCauseAnalysisSummary = () => {
             </AccordionSummary>
             <AccordionDetails>
               <TableContainer component={Paper}>
-                <Table className={classes.table} size="small">
+
+                <Table className={classes.table} style={{ border: '1px solid black' }} size="small">
                   <TableHead>
-                    <TableRow>
-                      <TableCell style={{ width: 160 }}>RCA number</TableCell>
-                      <TableCell style={{ width: 160 }}>RCA type</TableCell>
-                      <TableCell style={{ width: 160 }}>RCA sub type</TableCell>
-                      <TableCell style={{ width: 250 }}>RCA Remark</TableCell>
+                    <TableRow >
+                      <TableCell className={classes.tabelBorder}>Type</TableCell>
+                      <TableCell className={classes.tabelBorder}>Category</TableCell>
+                      <TableCell className={classes.tabelBorder}>Cause</TableCell>
+                      <TableCell className={classes.tabelBorder}>Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {pacecauses.map((pc, key) =>
                       pc.rcaRemark !== "No option selected" &&
-                      !additionalRcaSubType.includes(pc.rcaSubType) ? (
+                        !additionalRcaSubType.includes(pc.rcaSubType) ? (
                         <TableRow key={key}>
-                          <TableCell>{pc.rcaNumber}</TableCell>
-                          <TableCell>{pc.rcaType}</TableCell>
-                          <TableCell>{handelConvert(pc.rcaSubType)}</TableCell>
-                          <TableCell>
+                          <TableCell className={classes.tabelBorder}>{pc.rcaType}</TableCell>
+                          <TableCell className={classes.tabelBorder}>{handelConvert(pc.rcaSubType)}</TableCell>
+                          <TableCell className={classes.tabelBorder}>
                             {handelStringToArray(pc.rcaRemark)}
                           </TableCell>
+                          <TableCell className={classes.tabelBorder}>Action num</TableCell>
                         </TableRow>
                       ) : null
                     )}
                   </TableBody>
                 </Table>
+
               </TableContainer>
             </AccordionDetails>
           </Accordion>

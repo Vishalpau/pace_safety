@@ -89,7 +89,7 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/cause-and-action/",
   "Basic cause":
     "/app/incident-management/registration/root-cause-analysis/basic-cause/",
-  "PACE Management control":
+  "Management control":
     "/app/incident-management/registration/root-cause-analysis/pace-management/",
   "Preventive actions":
     "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/",

@@ -279,7 +279,7 @@ const BasicCause = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
-      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["PACE Management control"]}${putId.current}`)
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Management control"]}${putId.current}`)
     } else if (navigateType == "previous") {
       history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Corrective actions"]}${putId.current}`)
     }
@@ -490,7 +490,7 @@ const BasicCause = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={(e) => handelPrevious(e)}
+                onClick={(e) => handelNavigate("previous")}
               >
                 Previous
               </Button>
