@@ -85,7 +85,7 @@ const CloseOut = () => {
         );
         if(res.status === 200){
             const result = res.data.data.results;
-            console.log(result)
+           
             if(Object.entries(result).length>0){
                 let temp = {...form}
                 temp=result
@@ -110,7 +110,7 @@ const CloseOut = () => {
 
         axios(config)
             .then(function (response) {
-                console.log(response.data.data.results[0].users);
+               
                 if (response.status === 200) {
                     const result = response.data.data.results[0].users
                     setUserList(result)

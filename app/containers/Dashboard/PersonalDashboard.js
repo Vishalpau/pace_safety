@@ -221,7 +221,7 @@ function PersonalDashboard(props) {
 
   // compney name get
   const handleCompanyName = async (e, key, name) => {
-    console.log(e, key, name)
+    
     let companeyDetails = {};
     companeyDetails.fkCompanyId = e;
     companeyDetails.fkCompanyName = name;
@@ -263,11 +263,14 @@ function PersonalDashboard(props) {
       .then(function(response) {
         if (response.status === 200) {
           if (response.data.data.results.data.companies.length > 1) {
-            setCompanyListData(response.data.data.results.data.companies);
-            setOpen(true)
+            const companey = JSON.parse(localStorage.getItem('company'))
+            if(companey===null){
+              setCompanyListData(response.data.data.results.data.companies);
+              setOpen(true)
+            }       
           }
           if(response.data.data.results.data.companies.length === 1){
-            console.log(response.data.data.results.data.companies)
+            
             let companeyDetails = {};
               companeyDetails.fkCompanyId = response.data.data.results.data.companies[0].companyId;
               companeyDetails.fkCompanyName = response.data.data.results.data.companies[0].companyName;
@@ -449,20 +452,25 @@ function PersonalDashboard(props) {
       </div>
       {/* Company */}
       <Dialog
+     fullScreen
+     scroll='paper'
               className={classes.projectDialog}
               open={open}
               onClose={handleClose}
-              PaperProps={{
+              
+            >
+              <DialogTitle onClose={handleClose}>
+                Select Company
+              </DialogTitle>
+              <DialogContent
+               PaperProps={{
                 style: {
                   width: "100%",
                   maxWidth: 400,
                 },
               }}
-            >
-              <DialogTitle onClose={handleClose}>
-                Select Company
-              </DialogTitle>
-              <DialogContent>
+              
+              >
                 <DialogContentText id="alert-dialog-description">
                   <Grid container spacing={2}>
                     <Grid item xs={12}>

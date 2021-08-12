@@ -96,3 +96,10 @@ export const addbreakDownDetails = data=>{
       payload: data
   }
 }
+
+export const ViewIncidents = data=>{
+  return {
+      type: actionsType.VIEW_MODE,
+      payload: data
+  }
+}
