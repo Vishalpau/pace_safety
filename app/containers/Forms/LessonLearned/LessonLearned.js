@@ -291,7 +291,7 @@ const LessionLearned = () => {
     }
   };
 
-  console.log(attachment)
+ 
   // handle Remove
 
   const handleRemove = async (key) => {

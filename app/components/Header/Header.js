@@ -60,7 +60,7 @@ import { connect } from "react-redux";
 // redux
 
 import { useDispatch } from "react-redux";
-import { projectName } from "../../redux/actions/initialDetails";
+import { projectName, breakDownDetails } from "../../redux/actions/initialDetails";
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -271,12 +271,12 @@ function Header(props) {
   const handleProjectName = async (key) => {
     let selectBreakDown=[]
     let data = projectListData[key];
-    console.log(data);
     await dispatch(projectName(data));
     localStorage.setItem(
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
+    await dispatch(breakDownDetails([]))
     localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
     setCompanyOpen(false);
@@ -297,7 +297,7 @@ function Header(props) {
         (item) => item.companyId === parseInt(company.fkCompanyId)
       );
       let projectLength = filterData[0].projects.length <= 1;
-      console.log(projectLength);
+     
       setProjectDisable(projectLength);
     } catch (error) {}
   };
