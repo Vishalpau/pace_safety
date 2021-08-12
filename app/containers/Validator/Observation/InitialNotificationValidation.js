@@ -16,6 +16,11 @@ function InitialNotificationValidator(data) {
     isValid = false;
   }
 
+  if (validator.isEmpty(data.observationType.toString())) {
+    error.observationType = "Please choose any one observation type";
+    isValid = false;
+  }
+
   if (data.observedAt === null) {
     error.observedAt = "Please select date and time";
     isValid = false;

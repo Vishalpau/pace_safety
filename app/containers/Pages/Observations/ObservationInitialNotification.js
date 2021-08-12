@@ -10,6 +10,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from "@material-ui/core/FormGroup";
+import { FormHelperText } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
@@ -572,23 +573,43 @@ const ObservationInitialNotification = () => {
     let tempData = { ...form };
     tempData.reportedByName = value;
     if (tempData.reportedByName === "Viraj Kaulkar") {
-      tempData.reportedByBadgeId = reportedByBadgeId[0];
+      if(reportedByBadgeId[0] !== null){
+        tempData.reportedByBadgeId = reportedByBadgeId[0];
+      }else{
+        tempData.reportedByBadgeId = "";
+      }
       tempData.reportedById = reportedById[0];
     }
     if (tempData.reportedByName === "Vani Surekha") {
-      tempData.reportedByBadgeId = reportedByBadgeId[1];
+      if(reportedByBadgeId[1] !== null){
+        tempData.reportedByBadgeId = reportedByBadgeId[1];
+      }else{
+        tempData.reportedByBadgeId = "";
+      }
       tempData.reportedById = reportedById[1];
     }
     if (tempData.reportedByName === "Jwi kumar") {
-      tempData.reportedByBadgeId = reportedByBadgeId[2];
+      if(reportedByBadgeId[2] !== null){
+        tempData.reportedByBadgeId = reportedByBadgeId[2];
+      }else{
+        tempData.reportedByBadgeId = "";
+      }
       tempData.reportedById = reportedById[2];
     }
     if (tempData.reportedByName === "Vani") {
-      tempData.reportedByBadgeId = reportedByBadgeId[3];
+      if(reportedByBadgeId[3] !== null){
+        tempData.reportedByBadgeId = reportedByBadgeId[3];
+      }else{
+        tempData.reportedByBadgeId = "";
+      }
       tempData.reportedById = reportedById[3];
     }
     if (tempData.reportedByName === "Amol") {
-      tempData.reportedByBadgeId = reportedByBadgeId[4];
+      if(reportedByBadgeId[4] !== null){
+        tempData.reportedByBadgeId = reportedByBadgeId[4];
+      }else{
+        tempData.reportedByBadgeId = "";
+      }
       tempData.reportedById = reportedById[4];
     }
     setForm(tempData);
@@ -903,8 +924,10 @@ const ObservationInitialNotification = () => {
             </Grid>
 
             <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
+              <FormControl component="fieldset" error={
+                                  error && error["observationType"]
+                                } >
+                <FormLabel component="legend" className={classes.labelName} >
                   Type of observation*
                 </FormLabel>
                 <RadioGroup
@@ -927,6 +950,11 @@ const ObservationInitialNotification = () => {
                     />
                   ))}
                 </RadioGroup>
+                {error && error["observationType"] && (
+                                  <FormHelperText>
+                                    {error["observationType"]}
+                                  </FormHelperText>
+                                )}
               </FormControl>
             </Grid>
             <Grid item md={12} xs={12} className={classes.formBox}>
