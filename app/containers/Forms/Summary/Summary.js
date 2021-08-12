@@ -211,7 +211,7 @@ const Summary = () => {
   }
 
   const handelEvidenceView = (e) => {
-    if (evidencesData.length<0) {
+    if (evidencesData === undefined) {
       handelNaviagte(
         `/app/incident-management/registration/evidence/evidence/${id}`
       );
@@ -239,6 +239,11 @@ const Summary = () => {
         setEvidence(false);
         setRootCauseAnalysis(true);
         setLessionlearn(false);
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Cause analysis") {
       if (rootCausesData == undefined) {
@@ -249,6 +254,11 @@ const Summary = () => {
         setEvidence(false);
         setRootCauseAnalysis(true);
         setLessionlearn(false);
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Five why analysis") {
       if (whyData == undefined) {
@@ -259,6 +269,11 @@ const Summary = () => {
         setEvidence(false);
         setRootCauseAnalysis(true);
         setLessionlearn(false);
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        localStorage.setItem("viewMode",JSON.stringify(viewMode))
       }
     } else {
       handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
@@ -281,6 +296,21 @@ const Summary = () => {
       }
       localStorage.setItem("viewMode",JSON.stringify(viewMode))
     }
+  };
+  const handelInitialNoticeficationView = () => {
+   
+      setInitialNotification(true);
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false);
+      
+      let viewMode = {
+        initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+  
+      }
+      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+    
   };
 
 
@@ -328,7 +358,7 @@ const Summary = () => {
                   }
                   className={classes.statusButton}
                   onClick={(e) => {
-                    handleIntitialNotification()
+                    handelInitialNoticeficationView()
                     
                   }}
                 >
@@ -342,7 +372,7 @@ const Summary = () => {
               {/* investigation */}
               <div className={Styles.item}>
                 <Button
-                  color={investigation == true ||JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).investigation ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).investigation ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
                   variant={investigationOverview ? "contained" : "outlined"}
