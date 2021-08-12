@@ -330,23 +330,25 @@ const HazardiousActs = () => {
   }
 
   const handelApiCall = async () => {
-    console.log(form)
     let tempData = []
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: putId.current,
-          rcaRemark: value,
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-        };
-        tempData.push(temp);
+        if (value !== "") {
+          let temp = {
+            createdBy: "0",
+            fkIncidentId: putId.current,
+            rcaRemark: value,
+            rcaSubType: api_data["rcaSubType"],
+            rcaType: "Basic",
+            remarkType: api_data["remarkType"],
+            status: "Active",
+          };
+          tempData.push(temp);
+        }
       })
     })
+    console.log(tempData)
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
     if (res.status == 200) {
       handelNavigate("next")
