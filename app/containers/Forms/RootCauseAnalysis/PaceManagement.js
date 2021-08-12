@@ -63,7 +63,7 @@ const PaceManagementControl = () => {
   })
   const [incidentDetail, setIncidentDetail] = useState({});
   const [nextButton, setNextButton] = useState(false)
-  const paceCauseDelete = useRef()
+  const paceCauseDelete = useRef([])
   const history = useHistory();
   const putId = useRef("")
   const [optionBasicCause, setOptionBasicCause] = useState([])
@@ -132,9 +132,7 @@ const PaceManagementControl = () => {
     let tempApiData = {};
     let subTypes = BASIC_CAUSE_SUB_TYPES;
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
@@ -299,7 +297,7 @@ const PaceManagementControl = () => {
           fkIncidentId: putId.current,
           rcaRemark: value,
           rcaSubType: api_data["rcaSubType"],
-          rcaType: "Basic",
+          rcaType: "PACE Managemnt control",
           remarkType: api_data["remarkType"],
           status: "Active",
         };
@@ -373,6 +371,9 @@ const PaceManagementControl = () => {
             </Grid>
 
             <Grid item xs={12}>
+              <Box paddingBottom={2}>
+                <Typography variant="h6">Management control</Typography>
+              </Box>
               <FormControl component="fieldset">
                 <FormLabel component="legend">Proactive management</FormLabel>
                 <FormGroup>
@@ -469,7 +470,7 @@ const PaceManagementControl = () => {
           <Col md={3}>
             <FormSideBar
               listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"PACE Management control"}
+              selectedItem={"Management control"}
             />
           </Col>
         )}

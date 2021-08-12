@@ -577,7 +577,7 @@ const HazardiousActs = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={(e) => handelPrevious(e)}
+                onClick={(e) => handelNavigate("previous")}
               >
                 Previous
               </Button>

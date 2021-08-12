@@ -54,6 +54,7 @@ const InvestigationOverview = () => {
   const reputaionValues = useRef([]);
   const financialValues = useRef([]);
   const classificationValues = useRef([]);
+  const highestImpactReceptor = useRef([])
 
   const [form, setForm] = useState({});
 
@@ -193,6 +194,8 @@ const InvestigationOverview = () => {
     regulationValues.current = await PickListData(44);
     reputaionValues.current = await PickListData(45);
     financialValues.current = await PickListData(46);
+    highestImpactReceptor.current = await PickListData(77);
+
     await setIsLoading(true);
   };
 
@@ -536,7 +539,7 @@ const InvestigationOverview = () => {
                       form.highestPotentialImpactReceptor
                     )}
                   >
-                    {HIGHESTPOTENTIALIMPACTOR.map((selectValues) => (
+                    {highestImpactReceptor.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues}
                         onClick={(e) => {
@@ -606,7 +609,7 @@ const InvestigationOverview = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  onClick={() => history.goBack()}
+                  onClick={() => history.push(INVESTIGATION_FORM["Investigation overview"])}
                 >
                   Previous
                 </Button>

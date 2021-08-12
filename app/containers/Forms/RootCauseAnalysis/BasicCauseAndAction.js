@@ -75,36 +75,21 @@ const BasicCauseAndAction = () => {
   const [optionBasicCause, setOptionBasicCause] = useState([]);
 
   const handelShowData = async () => {
-    let tempApiData = {};
+    let tempApiData = [];
     let subTypes = PACE_MANAGEMENT_CONTROL_SUB_TYPES;
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
     let previousData = await api.get(
-      `/api/v1/incidents/${putId.current}/pacecauses/`
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
-    let tempid = [];
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
-      if (
-        subTypes.includes(value.rcaSubType) &&
-        value.rcaRemark !== "No option selected"
-      ) {
-        tempid.push(value.id);
-        let valueQuestion = value.rcaSubType;
-        let valueAnser = value.rcaRemark;
-        tempApiData[valueQuestion] = valueAnser.includes(",")
-          ? valueAnser.split(",")
-          : [valueAnser];
+      if (subTypes.includes(value.rcaSubType)) {
+        tempApiData.push(allApiData[index])
       }
     });
-    id.current = tempid.reverse();
     await setData(tempApiData);
   };
 
@@ -201,8 +186,7 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/pace-management/${
-          putId.current
+        `/app/incident-management/registration/root-cause-analysis/pace-management/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -250,13 +234,7 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
-              <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                <Typography variant="h6" gutterBottom>
-                  Actions
-                </Typography>
-              </Box>
-            </Grid>
+
 
             <Grid item xs={12}>
               <Typography variant="h6">Basic cause selected</Typography>
@@ -270,39 +248,39 @@ const BasicCauseAndAction = () => {
 
             <Grid item xs={12}>
               <Typography variant="h6">
-                Option selected from basic cause
+                Option selected from management control
               </Typography>
 
               <div className={classes.rootTable}>
                 <Table className={classes.table}>
                   <TableBody>
-                    {Object.entries(data).map(([key, value], index) => (
-                      <>
-                        {value.map((value, valueIndex) => (
-                          <TableRow>
-                            <TableCell align="left" style={{ width: 160 }}>
-                              {handelConvert(key)}
-                            </TableCell>
-                            <TableCell align="left">
-                              <li key={value}>
-                                <span>{value}</span>
-                              </li>
-                            </TableCell>
-                            <TableCell align="right">
-                              <ActionTracker
-                                actionContext="incidents:Pacacuase"
-                                enitityReferenceId={`${putId.current}:${
-                                  id.current[index]
-                                }:${valueIndex}`}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </>
+                    {data.map((value) => (
+                      <TableRow>
+                        <TableCell align="left" style={{ width: 160 }}>
+                          {handelConvert(value.rcaSubType)}
+                        </TableCell>
+                        <TableCell align="left">
+                          <span>{value.rcaRemark}</span>
+                        </TableCell>
+                        <TableCell align="right">
+                          <ActionTracker
+                            actionContext="incidents:Pacacuase"
+                            enitityReferenceId={`${putId.current}:${value.id}`}
+                          />
+                        </TableCell>
+                      </TableRow>
                     ))}
+
                   </TableBody>
                 </Table>
               </div>
+              {data.length == 0 ?
+                <Grid container item md={9}>
+                  <Typography variant="h6">
+                    No Options Selected
+                  </Typography>
+                </Grid>
+                : null}
             </Grid>
 
             <Grid item xs={12}>

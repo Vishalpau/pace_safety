@@ -211,7 +211,7 @@ const RootCauseAnalysis = () => {
     <PapperBlock title="Cause Analysis" icon="ion-md-list-box">
       <Row>
         <Col md={9}>
-          <Grid container ispacing={3}>
+          <Grid container spacing={3}>
             <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Incident number

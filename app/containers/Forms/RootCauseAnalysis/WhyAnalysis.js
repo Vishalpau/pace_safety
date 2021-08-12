@@ -79,7 +79,6 @@ const WhyAnalysis = () => {
     if (allApiData.length > 0) {
       form.length = 0;
       putId.current = incidentId;
-      console.log(putId.current, "Putid");
       allApiData.map((value) => {
         form.push({
           why: value.why,
@@ -93,13 +92,8 @@ const WhyAnalysis = () => {
   };
 
   const handelInvestigationData = async () => {
-    let incidentId =
-      putId.current == ""
-        ? localStorage.getItem("fkincidentId")
-        : putId.current;
-    const investigationpreviousData = await api.get(
-      `api/v1/incidents/${incidentId}/investigations/`
-    );
+    let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
+    const investigationpreviousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
     const investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
       setInvestigationData({
@@ -111,9 +105,7 @@ const WhyAnalysis = () => {
   };
 
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(
-      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
+    const allIncidents = await api.get(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/`);
     await setIncidents(allIncidents.data.data.results);
   };
 
@@ -132,9 +124,13 @@ const WhyAnalysis = () => {
   };
 
   const handelRemove = async (e, index) => {
+    let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
     if (form.length > 1) {
       let temp = form;
       let newData = form.filter((item, key) => key !== index);
+      if (form[index].whyId !== undefined) {
+        const removeWhy = await api.delete(`/api/v1/incidents/${incidentId}/fivewhy/${form[index].whyId}/`);
+      }
       await setForm(newData);
     }
   };
@@ -142,33 +138,22 @@ const WhyAnalysis = () => {
   const handelApiCall = async (e) => {
     const { error, isValid } = WhyAnalysisValidate(form);
     setError(error);
-
     let nextPageLink = 0;
     let callObjects = form;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-        if (checkPost.current !== false) {
+        if (callObjects[key]["whyId"] == undefined) {
           let postObject = { ...whyData, ...callObjects[key] };
-          const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/fivewhy/`,
-            postObject
-          );
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, postObject);
           if (res.status == 201) {
-            console.log("request done");
             nextPageLink = res.status;
           }
-        } else {
+        } else if (callObjects[key]["whyId"] !== undefined) {
           let dataID = callObjects[key].whyId;
           let postObject = { ...whyData, ...callObjects[key] };
           if (typeof postObject != "undefined") {
-            const res = await api.put(
-              `/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`,
-              postObject
-            );
+            const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
             if (res.status == 200) {
-              console.log("request done");
               nextPageLink = res.status;
             }
           }
@@ -203,21 +188,22 @@ const WhyAnalysis = () => {
 
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
-        }`
-      );
+      history.push(`/app/incident-management/registration/root-cause-analysis/details/${putId.current}`);
     } else if (isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/`
-      );
+      history.push(`/app/incident-management/registration/root-cause-analysis/details/`);
     }
   };
 
+
+
+  const handelCallBack = async () => {
+    await handelUpdateCheck();
+    await fetchIncidentData();
+    await handelInvestigationData();
+  }
+
   useEffect(() => {
-    handelUpdateCheck();
-    fetchIncidentData();
-    handelInvestigationData();
+    handelCallBack()
   }, []);
 
   const classes = useStyles();
@@ -282,13 +268,11 @@ const WhyAnalysis = () => {
                     />
                   </Grid>
                   {form.length > 1 ? (
-                    putId.current == "" ? (
-                      <Grid item xs={12} md={1} justify="center">
-                        <IconButton onClick={(e) => handelRemove(e, index)}>
-                          <RemoveCircleOutlineIcon />
-                        </IconButton>
-                      </Grid>
-                    ) : null
+                    <Grid item xs={12} md={1} justify="center">
+                      <IconButton onClick={(e) => handelRemove(e, index)}>
+                        <RemoveCircleOutlineIcon />
+                      </IconButton>
+                    </Grid>
                   ) : null}
                 </Grid>
               </Grid>
@@ -297,14 +281,12 @@ const WhyAnalysis = () => {
             {form.length <= 99 ? (
               <Grid item xs={12} md={1}>
                 {/* This button will add another entry of why input  */}
-                {putId.current == "" ? (
-                  <button
-                    onClick={(e) => handelAdd(e)}
-                    className={classes.textButton}
-                  >
-                    <AddIcon /> Add
-                  </button>
-                ) : null}
+                <button
+                  onClick={(e) => handelAdd(e)}
+                  className={classes.textButton}
+                >
+                  <AddIcon /> Add
+                </button>
               </Grid>
             ) : null}
 
