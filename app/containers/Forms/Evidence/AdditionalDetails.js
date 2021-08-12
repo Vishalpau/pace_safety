@@ -124,6 +124,11 @@ const AdditionalDetails = () => {
           additionalDetailList
         );
         if (res.status === 200) {
+          let viewMode = {
+            initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+  
+          }
+          localStorage.setItem("viewMode",JSON.stringify(viewMode))
           history.push(
             `/app/incident-management/registration/summary/summary/${localStorage.getItem(
               "fkincidentId"
