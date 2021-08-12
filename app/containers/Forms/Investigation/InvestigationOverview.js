@@ -134,7 +134,7 @@ const InvestigationOverview = () => {
 
               <Grid item xs={12} md={6}>
                 <TextField
-                  id="title"
+                  id="ucm-name"
                   variant="outlined"
                   label="Name"
                   required
@@ -157,7 +157,7 @@ const InvestigationOverview = () => {
 
               <Grid item xs={12} md={6}>
                 <TextField
-                  id="title"
+                  id="ucm-contact"
                   variant="outlined"
                   label="Contact"
                   required
@@ -184,7 +184,7 @@ const InvestigationOverview = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  id="title"
+                  id="uhs-name"
                   variant="outlined"
                   label="Name"
                   required
@@ -206,7 +206,7 @@ const InvestigationOverview = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  id="title"
+                  id="uhs-contact"
                   variant="outlined"
                   value={form.hseSpecialistContactNo}
                   error={error && error.hseSpecialistContactNo}
