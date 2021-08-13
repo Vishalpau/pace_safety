@@ -27,7 +27,7 @@ import Comment from "@material-ui/icons/Comment";
 import History from "@material-ui/icons/History";
 import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
-
+import { Col, Row } from "react-grid-system";
 // Styles
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
@@ -202,18 +202,30 @@ const Summary = () => {
       setEvidence(false);
       setRootCauseAnalysis(false);
       setLessionlearn(false);
+      let viewMode = {
+        initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+
+      }
+      localStorage.setItem("viewMode", JSON.stringify(viewMode))
     }
   }
 
   const handelEvidenceView = (e) => {
-    if (evidencesData == undefined) {
-      handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
+    if (evidencesData === undefined) {
+      handelNaviagte(
+        `/app/incident-management/registration/evidence/evidence/${id}`
+      );
     } else {
       setInitialNotification(false);
       setInvestigation(false);
       setEvidence(true);
       setRootCauseAnalysis(false);
       setLessionlearn(false);
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
+      }
+      localStorage.setItem("viewMode", JSON.stringify(viewMode))
     }
   }
 
@@ -227,6 +239,11 @@ const Summary = () => {
         setEvidence(false);
         setRootCauseAnalysis(true);
         setLessionlearn(false);
+        let viewMode = {
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Cause analysis") {
       if (rootCausesData == undefined) {
@@ -237,6 +254,11 @@ const Summary = () => {
         setEvidence(false);
         setRootCauseAnalysis(true);
         setLessionlearn(false);
+        let viewMode = {
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Five why analysis") {
       if (whyData == undefined) {
@@ -247,6 +269,11 @@ const Summary = () => {
         setEvidence(false);
         setRootCauseAnalysis(true);
         setLessionlearn(false);
+        let viewMode = {
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
       }
     } else {
       handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
@@ -262,9 +289,29 @@ const Summary = () => {
       setEvidence(false);
       setRootCauseAnalysis(false);
       setLessionlearn(true);
-    }
-  }
 
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
+
+      }
+      localStorage.setItem("viewMode", JSON.stringify(viewMode))
+    }
+  };
+  const handelInitialNoticeficationView = () => {
+
+    setInitialNotification(true);
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
+
+    let viewMode = {
+      initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+
+    }
+    localStorage.setItem("viewMode", JSON.stringify(viewMode))
+
+  };
 
 
   useEffect(() => {
@@ -292,11 +339,11 @@ const Summary = () => {
               {/* initital notificatin */}
               <div className={Styles.item}>
                 <Button
-                  color={initialNotification == true ||
-                    (investigation === false &&
-                      evidence === false &&
-                      rootcauseanalysis === false &&
-                      lessionlearn === false) ? "secondary" : "primary"}
+                  color={
+                    JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).initialNotification
+                      ? "secondary"
+                      : "primary"
+                  }
                   variant="contained"
                   size="large"
                   variant={
@@ -311,11 +358,8 @@ const Summary = () => {
                   }
                   className={classes.statusButton}
                   onClick={(e) => {
-                    setInitialNotification(true);
-                    setInvestigation(false);
-                    setEvidence(false);
-                    setRootCauseAnalysis(false);
-                    setLessionlearn(false);
+                    handelInitialNoticeficationView()
+
                   }}
                 >
                   Initial Notification
@@ -328,7 +372,7 @@ const Summary = () => {
               {/* investigation */}
               <div className={Styles.item}>
                 <Button
-                  color={investigation == true ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).investigation ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
                   variant={investigationOverview ? "contained" : "outlined"}
@@ -347,7 +391,7 @@ const Summary = () => {
 
               <div className={Styles.item}>
                 <Button
-                  color={evidence == true ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).evidence ? "secondary" : "primary"}
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -362,7 +406,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={rootcauseanalysis == true ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis ? "secondary" : "primary"}
                   variant={
                     paceCauseData || rootCausesData || whyData
                       ? "contained"
@@ -389,7 +433,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={lessionlearn == true ? "secondary" : "primary"}
+                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).lessionlearn ? "secondary" : "primary"}
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -407,36 +451,34 @@ const Summary = () => {
           <Divider />
 
           <Box marginTop={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={9}>
-                {/* summary and part */}
-                <>
-                  {(() => {
-                    if (
-                      initialNotification == true ||
-                      (investigation === false &&
-                        evidence === false &&
-                        rootcauseanalysis === false &&
-                        lessionlearn === false)
-                    ) {
-                      return <IncidentDetailsSummary />;
-                    }
-                    if (investigation == true) {
-                      return <InvestigationSummary />;
-                    }
-                    if (evidence == true) {
-                      return <EvidenceSummary />;
-                    }
-                    if (rootcauseanalysis == true) {
-                      return <RootCauseAnalysisSummary />;
-                    }
-                    if (lessionlearn == true) {
-                      return <LessionLearnSummary />;
-                    }
-                  })()}
-                </>
-              </Grid>
+            <Row>
+              <Col md={9}>
+                <Grid item xs={12}>
+                  {/* summary and part */}
+                  <>
+                    {(() => {
+                      if (
+                        JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).initialNotification
 
+                      ) {
+                        return <IncidentDetailsSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).investigation) {
+                        return <InvestigationSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).evidence) {
+                        return <EvidenceSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis) {
+                        return <RootCauseAnalysisSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).lessionlearn) {
+                        return <LessionLearnSummary />;
+                      }
+                    })()}
+                  </>
+                </Grid>
+              </Col>
 
               {/* side bar    */}
               {isDesktop && (
@@ -537,7 +579,9 @@ const Summary = () => {
                         </ListItemLink>
                       )}
 
-                      <ListItem button divider>
+                      <ListItem
+                        onClick={() => history.push(`/app/incident-management/registration/close-out/${id}`)}
+                        button divider>
                         <ListItemIcon>
                           <Close />
                         </ListItemIcon>
@@ -576,7 +620,7 @@ const Summary = () => {
                   </Paper>
                 </Grid>
               )}
-            </Grid>
+            </Row>
           </Box>
         </PapperBlock>
       ) : (
