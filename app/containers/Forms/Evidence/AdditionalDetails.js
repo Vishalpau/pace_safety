@@ -12,7 +12,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
+import { EVIDENCE_FORM, ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 import api from "../../../utils/axios";
@@ -107,12 +107,12 @@ const AdditionalDetails = () => {
       );
       if (res.status === 200) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
-  
+          initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
         history.push(
-          `/app/incident-management/registration/summary/summary/${id}`
+          `${ROOT_CAUSE_ANALYSIS_FORM["RCA Details"]}${id}`
         );
       }
     } else if (additionalDetailList.length == 25) {
@@ -130,12 +130,12 @@ const AdditionalDetails = () => {
         );
         if (res.status === 200) {
           let viewMode = {
-            initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
-  
+            initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
           }
-          localStorage.setItem("viewMode",JSON.stringify(viewMode))
+          localStorage.setItem("viewMode", JSON.stringify(viewMode))
           history.push(
-            `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+            `${ROOT_CAUSE_ANALYSIS_FORM["RCA Details"]}${localStorage.getItem(
               "fkincidentId"
             )}`
           );
@@ -153,12 +153,12 @@ const AdditionalDetails = () => {
         additionalList
       );
       let viewMode = {
-        initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+        initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
 
       }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+      localStorage.setItem("viewMode", JSON.stringify(viewMode))
       history.push(
-        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+        `${ROOT_CAUSE_ANALYSIS_FORM["RCA Details"]}${localStorage.getItem(
           "fkincidentId"
         )}`
       );

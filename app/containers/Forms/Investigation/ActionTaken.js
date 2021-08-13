@@ -17,7 +17,7 @@ import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
+import { INVESTIGATION_FORM, EVIDENCE_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -69,17 +69,17 @@ const ActionTaken = () => {
     );
     if (res.status === 200) {
       let viewMode = {
-        initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
-  
+        initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+
       }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
-      history.push(
-        `/app/incident-management/registration/summary/summary/${putId.current}`
+      localStorage.setItem("viewMode", JSON.stringify(viewMode))
+      history.push(`${EVIDENCE_FORM["Evidences"]}`
       );
     }
   };
 
   useEffect(() => {
+    console.log(EVIDENCE_FORM["Evidences"])
     handelUpdateCheck();
   }, []);
 

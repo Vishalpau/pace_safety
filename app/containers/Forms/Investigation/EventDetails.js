@@ -126,37 +126,37 @@ const EventDetails = () => {
       }
 
       // Weather data
-      const weather = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
-        }/events/${eventId.current}/weatherconditions/`
-      );
-      const weatherData = weather.data.data.results;
-      if (typeof weatherData !== "undefined") {
-        setWeather(weatherData);
-        weatherData.map((value) => {
-          weatherId.current.push(value.id);
-        });
+      if (eventId.current !== "") {
+        const weather = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/`);
+        const weatherData = weather.data.data.results;
+        if (typeof weatherData !== "undefined") {
+          setWeather(weatherData);
+          weatherData.map((value) => {
+            weatherId.current.push(value.id);
+          });
+        }
+
+        // event data
+        const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
+        const costData = cost.data.data.results
+        if (costData.length !== 0) {
+          setOverAllCost(costData)
+          costData.map((value) => {
+            overAllCostId.current.push(value.id)
+          })
+        } else if (costData.length == 0) {
+          let tempCostData = [{
+            costType: "",
+            costAmount: "",
+            casualFactor: "",
+            currency: "INR",
+            status: "Active",
+            createdBy: 0,
+          }]
+          setOverAllCost(tempCostData)
+        }
       }
 
-      // event data
-      const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
-      const costData = cost.data.data.results
-      if (costData.length !== 0) {
-        setOverAllCost(costData)
-        costData.map((value) => {
-          overAllCostId.current.push(value.id)
-        })
-      } else if (costData.length == 0) {
-        let tempCostData = [{
-          costType: "",
-          costAmount: "",
-          casualFactor: "",
-          currency: "INR",
-          status: "Active",
-          createdBy: 0,
-        }]
-        setOverAllCost(tempCostData)
-      }
 
     }
     localStorage.setItem("WorkerPost", "done");
