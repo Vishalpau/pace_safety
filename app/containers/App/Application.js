@@ -130,6 +130,7 @@ import {
   ObservationCorrectiveAction,
   ObservationCloseOut,
   ObservationInitialNotificationUpdate,
+  CheckList,
 } from "../pageListAsync";
 
 
@@ -410,6 +411,13 @@ function Application(props) {
           exact
           path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
+        />
+
+        {/* checklist */}
+        <Route
+          exact
+          path="/app/pages/checklist"
+          component={CheckList}
         />
         {/* close out */}
         <Route
