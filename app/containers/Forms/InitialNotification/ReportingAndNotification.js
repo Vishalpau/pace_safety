@@ -42,6 +42,7 @@ import {
   INITIAL_NOTIFICATION_FORM,
   LOGIN_URL,
   SSO_URL,
+  INVESTIGATION_FORM
 } from "../../../utils/constants";
 
 import ReportingValidation from "../../Validator/ReportingValidation";
@@ -365,10 +366,7 @@ const ReportingAndNotification = () => {
               lessionlearn: false,
             };
             localStorage.setItem("viewMode", JSON.stringify(viewMode));
-            history.push(
-              `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-                "fkincidentId"
-              )}`
+            history.push(`${INVESTIGATION_FORM["Investigation overview"]}${localStorage.getItem("fkincidentId")}`
             );
           }
         } else {
@@ -615,7 +613,7 @@ const ReportingAndNotification = () => {
           setSuperVisorNameList([...result, { name: "other" }]);
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchReportedBy = () => {
@@ -680,7 +678,7 @@ const ReportingAndNotification = () => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // handle go back
@@ -858,7 +856,7 @@ const ReportingAndNotification = () => {
                           }
                           helperText={
                             evidenceError &&
-                            evidenceError[`evidenceRemark${[index]}`]
+                              evidenceError[`evidenceRemark${[index]}`]
                               ? evidenceError[`evidenceRemark${[index]}`]
                               : null
                           }
@@ -920,11 +918,11 @@ const ReportingAndNotification = () => {
                       incidentsListData.supervisorByName === ""
                         ? ""
                         : superVisorNameList.filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
-                        ? incidentsListData.supervisorByName
-                        : "other"
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
+                          ? incidentsListData.supervisorByName
+                          : "other"
                     }
                     onChange={async (e) => {
                       await setSupervisorName(e.target.value);
@@ -946,11 +944,11 @@ const ReportingAndNotification = () => {
                   defaultValue={
                     superVisorNameList.length > 0
                       ? superVisorNameList
-                          .slice(0, -1)
-                          .filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
+                        .slice(0, -1)
+                        .filter(
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
                         ? ""
                         : incidentsListData.supervisorByName
                       : ""
@@ -958,9 +956,9 @@ const ReportingAndNotification = () => {
                   disabled={
                     superVisorNameList.length > 0
                       ? superVisorNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === supervisorName)
-                          .length > 0
+                        .slice(0, -1)
+                        .filter((item) => item.name === supervisorName)
+                        .length > 0
                       : true
                   }
                   className={classes.formControl}
@@ -1020,9 +1018,9 @@ const ReportingAndNotification = () => {
                   disabled={
                     reportedByNameList.length > 0
                       ? reportedByNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === reportedByName)
-                          .length > 0
+                        .slice(0, -1)
+                        .filter((item) => item.name === reportedByName)
+                        .length > 0
                       : true
                   }
                   onChange={(e) => {

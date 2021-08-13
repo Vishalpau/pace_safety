@@ -1430,7 +1430,7 @@ const InvestigationSummary = () => {
                       Pre-event mitigations
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.preEventMitigations.lenght > 0
+                      {value.preEventMitigations != null && value.preEventMitigations.lenght > 0
                         ? value.preEventMitigations
                         : "-"}
                     </Typography>

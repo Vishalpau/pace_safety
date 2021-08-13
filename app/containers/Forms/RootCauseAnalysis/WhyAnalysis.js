@@ -15,6 +15,8 @@ import { Col, Row } from "react-grid-system";
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
 import { checkValue } from "../../../utils/CheckerValue";
+import { LESSION_LEARNED_FORM } from "../../../utils/constants";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -161,23 +163,23 @@ const WhyAnalysis = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
         history.push(
-          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+          `${LESSION_LEARNED_FORM["Lessons learnt"]}${localStorage.getItem(
             "fkincidentId"
           )}`
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
         history.push(
-          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+          `${LESSION_LEARNED_FORM["Lessons learnt"]}${localStorage.getItem(
             "fkincidentId"
           )}`
         );

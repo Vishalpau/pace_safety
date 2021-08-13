@@ -50,9 +50,7 @@ export const INITIAL_NOTIFICATION_FORM = {
 };
 
 export const EVIDENCE_FORM = {
-  Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
+  Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem("fkincidentId")}`,
   "Activity details": `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
     "fkincidentId"
   )}`,
@@ -153,6 +151,7 @@ export const BASIC_CAUSE_SUB_TYPES = [
   "othersHumanFactors",
   "leadership",
   "processes",
+  "otherIssues",
   "othersJobFactors",
 ];
 
@@ -280,23 +279,29 @@ export const PERSONALWELNESSFACTORS = [
 ];
 
 export const LEADERSHIP = [
-  "Work Package Incomplete",
-  "Work Package Not Available",
-  "Fighting or Being Bullied at Work Place",
-  "Under the Influence of Drug or Alcohol",
-  "Physical or Mental Stress",
-  "Complacent Behavior(Worker / Supervisor)",
-  "Intentional Harmfully Act",
+  "Lack of  Leadership engagement",
+  "Lack of  supervision in field",
+  "Incompetent field supervision",
+  "Supervision failure to manage change",
+  "Lack of enforcement",
 ];
 
 export const PROCESSES = [
-  "Poor Posture",
-  "Poor Lifting Techniques",
-  "Repetitious Movements",
-  "Over Reaching",
-  "No or Improper Securing Devices Used",
-  "Wrong Loading- Lifting or Improper Placement Techniques Used",
+  "Poor engineering processes",
+  "Poor supply management / purchasing process",
+  "Poor preventive maintenance Processes",
+  "Lack of proper tools / equipment / material for the job",
+  "Lack of policies, standards and guidelines",
 ];
+
+export const OTHERISSUES = [
+  "Equipment wear and tear",
+  "Poor quality tools – wear & tear",
+  "Wrong calibration",
+  "Lack of quality or safety audits & Inspections",
+  "Failed to follow corrective actions from previous incidents",
+  "Abuse or misuse – Cultural issue",
+]
 
 export const MANAGEMENTCONTROL = [
   "Inadequate System",

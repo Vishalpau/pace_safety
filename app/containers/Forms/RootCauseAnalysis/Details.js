@@ -111,13 +111,13 @@ const Details = () => {
     );
     let investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      if (investigationApiData.rcaRecommended != "") {
-        setForm({
-          ...form,
-          rcaRecommended: investigationApiData.rcaRecommended,
-        });
-        await handelRcaRecommended("a", investigationApiData.rcaRecommended);
-      }
+      // if (investigationApiData.rcaRecommended != "") {
+      //   setForm({
+      //     ...form,
+      //     rcaRecommended: investigationApiData.rcaRecommended,
+      //   });
+      //   await handelRcaRecommended("a", investigationApiData.rcaRecommended);
+      // }
       setInvestigationData({
         rcaRecommended: investigationApiData.rcaRecommended,
         startData: investigationApiData.srartDate,
@@ -148,7 +148,7 @@ const Details = () => {
         "Hazardous conditions",
         "Corrective actions",
         "Basic cause",
-        "Management control",
+        "PACE Management control",
         "Preventive actions",
         "Additional information",
         "Cause analysis",
@@ -161,7 +161,7 @@ const Details = () => {
         "Hazardous conditions",
         "Corrective actions",
         "Basic cause",
-        "Management control",
+        "PACE Management control",
         "Preventive actions",
         "Additional information",
         "Five Why analysis",
@@ -235,15 +235,11 @@ const Details = () => {
     localStorage.setItem("deleteForm", hideArray);
   };
 
-  const handelCallBack = async () => {
-    await handelUpdateCheck();
-    await fetchIncidentData();
-    await setHideArray(hideArray || localStorage.getItem("deleteForm"));
-    await handelInvestigationData();
-  }
-
   useEffect(() => {
-    handelCallBack()
+    handelUpdateCheck();
+    fetchIncidentData();
+    setHideArray(hideArray || localStorage.getItem("deleteForm"));
+    handelInvestigationData();
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -323,8 +319,7 @@ const Details = () => {
                   id="project-name"
                   labelId="project-name-label"
                   label="RCA recommended"
-                  // value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
-                  value={form.rcaRecommended}
+                  value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
                   disabled={rcaDisable != "" ? true : false}
                 >
                   {RCAOPTION.map((selectValues) => (
