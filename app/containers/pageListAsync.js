@@ -625,3 +625,20 @@ export const ObservationCloseOut = loadable(() => import("./Pages/Observations/O
 export const ObservationInitialNotificationUpdate = loadable(() => import("./Pages/Observations/ObservationInitialNotificationUpdate"), {
   fallback: <Loading />,
 });
+
+// checklist
+
+export const CheckList = loadable(() =>
+  import("./Pages/CheckList/CheckList.js"), {
+  fallback: <Loading />,
+});
+
+export const Groups = loadable(() =>
+  import("./Pages/CheckList/Groups.js"), {
+  fallback: <Loading />,
+});
+
+export const Options = loadable(() =>
+  import("./Pages/CheckList/Options.js"), {
+  fallback: <Loading />,
+});
