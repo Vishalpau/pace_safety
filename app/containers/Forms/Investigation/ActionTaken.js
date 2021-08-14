@@ -73,8 +73,7 @@ const ActionTaken = () => {
 
       }
       localStorage.setItem("viewMode", JSON.stringify(viewMode))
-      history.push(`${EVIDENCE_FORM["Evidences"]}`
-      );
+      history.push(`/app/incident-management/registration/evidence/evidence/${localStorage.getItem("fkincidentId")}`);
     }
   };
 
