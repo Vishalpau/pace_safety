@@ -633,3 +633,13 @@ export const CheckList = loadable(() =>
   import("./Pages/CheckList/CheckList"), {
   fallback: <Loading />,
 });
+
+export const ShowGroup = loadable(() =>
+  import("./Pages/CheckList/ShowGroups"), {
+  fallback: <Loading />,
+});
+
+export const ShowCheckList = loadable(() =>
+  import("./Pages/CheckList/ShowCheckList"), {
+  fallback: <Loading />,
+});

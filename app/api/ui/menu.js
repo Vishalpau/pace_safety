@@ -864,7 +864,7 @@ module.exports = [
   },
   {
     key: "checklistManager",
-    name: "checklistManager",
+    name: "Checklist manager",
     icon: "ion-md-list-box",
     multilevel: false,
     linkParent: "/app/pages/checklist",
