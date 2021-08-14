@@ -130,6 +130,15 @@ import {
   ObservationCorrectiveAction,
   ObservationCloseOut,
   ObservationInitialNotificationUpdate,
+  Aha,
+  AhaSummary,
+  AssessmentsForms,
+  ProjectDetails,
+  ProjectAreaHazards,
+  Assessment,
+  DocumentNotification,
+  Approvals,
+  LessonsLearned,
 } from "../pageListAsync";
 
 
@@ -481,6 +490,18 @@ function Application(props) {
         <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
         <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
         <Route path="/app/pages/observation-observation-view" component={ObservationInitialNotificationView} />
+
+        {/* Aha Routes */}
+
+        <Route path="/app/pages/aha" exact component={Aha} />
+        <Route path="/app/pages/aha/aha-summary" exact component={AhaSummary} />
+        <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
+        <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetails} />
+        <Route path="/app/pages/aha/assessments/project-area-hazards" exact component={ProjectAreaHazards} />
+        <Route path="/app/pages/aha/assessments/assessment" exact component={Assessment} />
+        <Route path="/app/pages/aha/assessments/DocumentsNotifications" exact component={DocumentNotification} />
+        <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
+        <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
 
         {/* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />

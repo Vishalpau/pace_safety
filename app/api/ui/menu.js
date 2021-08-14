@@ -869,6 +869,13 @@ module.exports = [
     multilevel: false,
     linkParent: "/app/charts/area-filled-charts",
   },
+  {
+    key: 'aha',
+    name: 'AHA',
+    icon: 'ion-ios-checkbox',
+    multilevel: false,
+    linkParent: '/app/pages/aha',
+  },
   // {
   //   key: "menu-level",
   //   name: "Incident",
