@@ -860,14 +860,7 @@ module.exports = [
     name: "Observations",
     icon: "ion-md-eye",
     multilevel: false,
-    linkParent: "/app/pages/Observations/",
-  },
-  {
-    key: "checklistManager",
-    name: "checklistManager",
-    icon: "ion-md-list-box",
-    multilevel: false,
-    linkParent: "/app/pages/checklist",
+    linkParent: "/app/pages/Observations",
   },
   {
     key: "inspections",

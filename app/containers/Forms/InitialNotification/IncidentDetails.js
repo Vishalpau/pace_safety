@@ -470,7 +470,7 @@ const IncidentDetails = () => {
         // const user = localStorage.getItem({})
         // set right sidebar value
         if (result.isEnviromentalImpacted !== "Yes") {
-          hideAffect.push("Enviroment Impact");
+          hideAffect.push("Environment impact");
         }
         if (result.isEquipmentDamaged !== "Yes") {
           hideAffect.push("Equipment affected");
@@ -494,22 +494,23 @@ const IncidentDetails = () => {
   // fetchBreakdownData
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-
+   
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
           headers: HEADER_AUTH,
         };
-
+       
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
@@ -520,25 +521,26 @@ const IncidentDetails = () => {
             });
           })
           .catch((error) => {
-
+            
             setIsNext(true);
           });
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key-1].slice(-1)}`,
           headers: HEADER_AUTH,
         };
-
+       
         await api(config)
           .then(async (response) => {
-
+          
             const result = response.data.data.results;
-
-            const res = result.map((item, index) => {
+           
+            const res=result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-
+               
                 selectBreakDown = [
                   ...selectBreakDown,
                   { depth: item.depth, id: item.id, name: item.name },
@@ -546,7 +548,7 @@ const IncidentDetails = () => {
               }
             });
 
-
+          
           })
           .catch((error) => {
             console.log(error)
@@ -555,7 +557,7 @@ const IncidentDetails = () => {
       }
     }
     dispatch(breakDownDetails(selectBreakDown));
-
+    
     // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
@@ -628,10 +630,10 @@ const IncidentDetails = () => {
                   >
                     {incidentTypeValue.length !== 0
                       ? incidentTypeValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                          <MenuItem key={index} value={selectValues.inputValue}>
+                            {selectValues.inputLabel}
+                          </MenuItem>
+                        ))
                       : null}
                   </Select>
                   {error && error.incidentType && (
@@ -775,10 +777,10 @@ const IncidentDetails = () => {
                   >
                     {contractorValue.length !== 0
                       ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                          <MenuItem key={index} value={selectValues.inputValue}>
+                            {selectValues.inputLabel}
+                          </MenuItem>
+                        ))
                       : null}
                   </Select>
                   {error && error.contractor && (
@@ -811,10 +813,10 @@ const IncidentDetails = () => {
                   >
                     {subContractorValue.length !== 0
                       ? subContractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
+                          <MenuItem key={index} value={selectValues.inputValue}>
+                            {selectValues.inputLabel}
+                          </MenuItem>
+                        ))
                       : null}
                   </Select>
                   {error && error.subContractor && (
@@ -859,13 +861,13 @@ const IncidentDetails = () => {
                   >
                     {personAffectedValue.length !== 0
                       ? personAffectedValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
 
@@ -910,13 +912,13 @@ const IncidentDetails = () => {
                   >
                     {propertiesAffectValue.length !== 0
                       ? propertiesAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                   {error && error.isPropertyDamaged && (
@@ -960,12 +962,12 @@ const IncidentDetails = () => {
                   >
                     {eqiptmentAffectValue.length !== 0
                       ? eqiptmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                   {error && error.isEquipmentDamaged && (
@@ -998,7 +1000,7 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Enviroment Impact",
+                        "Environment impact",
                         "environmentAffect"
                       );
                       setNextPath({
@@ -1009,13 +1011,13 @@ const IncidentDetails = () => {
                   >
                     {environmentAffectValue.length !== 0
                       ? environmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
                       : null}
                   </RadioGroup>
                   {error && error.isEnviromentalImpacted && (

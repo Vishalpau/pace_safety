@@ -130,7 +130,6 @@ import {
   ObservationCorrectiveAction,
   ObservationCloseOut,
   ObservationInitialNotificationUpdate,
-  CheckList,
 } from "../pageListAsync";
 
 
@@ -412,13 +411,6 @@ function Application(props) {
           path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
         />
-
-        {/* checklist */}
-        <Route
-          exact
-          path="/app/pages/checklist"
-          component={CheckList}
-        />
         {/* close out */}
         <Route
           exact
@@ -479,11 +471,12 @@ function Application(props) {
         />
 
         {/* Observation Routes  */}
-
+        {/* <Route path="/app/pages/summary" component={Summary} /> */}
+        {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
         <Route path="/app/pages/observations" component={Observations} />
-        <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction} />
-        <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
-        <Route path="/app/pages/observation-close-out" component={ObservationCloseOut} />
+        <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction}/>
+        <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction}/>
+        <Route path="/app/pages/observation-close-out" component={ObservationCloseOut}/>
         <Route path="/app/pages/observation-Summary/:id" component={ObservationSummary} />
         <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
         <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />

@@ -1,7 +1,7 @@
 import validator from "validator";
 
 function ReportingValidation(data, otherData,notifyTo) {
-  console.log(data);
+ 
   let isValid = true;
   const error = {};
   const report = data.reportedto;
@@ -20,7 +20,7 @@ function ReportingValidation(data, otherData,notifyTo) {
     }
   }
   if(validator.isEmpty(notifyTo)){
-    console.log(notifyTo)    
+      
     error[`notifyTo`] = "Please choose notification sent";
     isValid = false;
   }

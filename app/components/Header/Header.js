@@ -61,6 +61,7 @@ import { connect } from "react-redux";
 
 import { useDispatch } from "react-redux";
 import { projectName, breakDownDetails } from "../../redux/actions/initialDetails";
+import Topbar from "./Topbar";
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -523,12 +524,7 @@ function Header(props) {
           </Hidden>
         </div>
 
-        {/* <Tooltip title="Turn Dark/Light" placement="bottom">
-          <IconButton className={classes.button} onClick={() => turnMode(mode)}>
-            <i className="ion-ios-bulb-outline" />
-          </IconButton>
-        </Tooltip> */}
-
+      
         <UserMenu />
       </Toolbar>
     </AppBar>

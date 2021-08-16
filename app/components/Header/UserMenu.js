@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
@@ -31,26 +31,80 @@ import link from "dan-api/ui/link";
 import styles from "./header-jss";
 import { useHistory } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import "../../styles/custom/customheader.css";
 import {
   access_token,
   ACCOUNT_API_URL,
   LOGIN_URL,
   LOGOUT_URL,
+  SELF_API,
   SSO_CLIENT_ID,
   SSO_URL,
 } from "../../utils/constants";
 import axios from "axios";
+import Topbar from "./Topbar";
+import api from "../../utils/axios";
 
-const useStyles = makeStyles({
+// redux
+import {connect} from 'react-redux'
+
+const useStyles = makeStyles((theme) => ({
   list: {
-    width: 300,
+    width: 350,
+    '& .MuiListItem-root': {
+      paddingTop: '8px',
+      paddingBottom: '8px',
+    },
   },
   fullList: {
     width: "auto",
   },
-});
+  headerItems: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  menuListItem: {
+    padding: theme.spacing(3),
+  },
+  nestedMenuListItem: {
+    paddingLeft: theme.spacing(6),
+  },
+  fontWeightMedium: {
+    fontWeight: 600,
+  },
+  appDrawerLable: {
+    paddingLeft: '20px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    backgroundColor: '#f7f7f7',
+    margin: '0px',
+    fontSize: '14px',
+    color: '#333333',
+    '& span': {
+      fontSize: '14px',
+      color: '#333333',
+    }
+  },
+  appDrawerLink: {
+    paddingLeft: '35px',
+    '& svg': {
+      marginRight: '10px',
+      color: '#06425c',
+    },
+    '& .MuiListItemText-root': {
+      '& span': {
+        fontSize: '15px',
+        fontWeight: '400',
+        color: '#06425c',
+      },
+    },
+  },
+
+}));
 
 function UserMenu(props) {
   const history = useHistory();
@@ -78,6 +132,14 @@ function UserMenu(props) {
 
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const appsOpen = Boolean(menuAnchorEl);
+  const [avatar, setAvatar] = useState([]);
+  const [name, setName] = useState("");
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [user, setUser] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [codes, setCodes] = useState([]);
+  const [apps, setApps] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAppsClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -115,10 +177,69 @@ function UserMenu(props) {
         window.location.href = `${LOGOUT_URL}`;
       });
   };
+  const getSubscriptions = async () => {
+    const companyId = localStorage.getItem('companyId')
+    let subscriptionData = {}
+    let data = await api
+      .get(`${ACCOUNT_API_URL}api/v1/applications/`)
+      .then(function (res) {
+        console.log('subscription', { applications: res.data.data.results })
+        subscriptionData = res.data.data.results;
+        // setSubscriptions(res.data.data.results);
+        return res.data.data.results
 
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setSubscriptions(data);
+    console.log({ subscriptions2: data })
+    setIsLoading(true)
+
+    // console.log({applications: data.map(app=>app.appId)})
+    //   const apps = data.map(app=>app.appId)
+    //   this.getModules(apps)
+
+  }
+
+
+
+  const getSubscribedApps = async () => {
+    const companyId = localStorage.getItem('companyId')
+    let subscriptionData = {}
+    let data = await api.get(`${SELF_API}1/`).then(function (res) {
+      console.log({ data: res.data.data.results.data.companies })
+      subscriptionData = res.data.data.results.data.companies[0].subscriptions;
+      // setSubscriptions(subscriptionData);
+      return subscriptionData
+
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    // await setSubscriptions(data);
+    console.log("data suubs", data)
+    await setApps(data.map(app => app.appId))
+
+    //   const apps = data.map(app=>app.appId)
+    //   this.getModules(apps)
+
+  }
+  const handleClosea = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+        return;
+    }
+    setOpena(false);
+};
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
+
+  useEffect(() => {
+    getSubscribedApps();
+    getSubscriptions();
+  }, [])
 
   const classnames = useStyles();
 
@@ -262,36 +383,48 @@ function UserMenu(props) {
           <i className="ion-ios-apps" />
         </IconButton>
       </Tooltip>
-
+      {/* <Topbar/> */}
       <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
-        <div className={classnames.list}>
-          <List dense className={classnames.menulist}>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Project Information Hub" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="HSE Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Assesments" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Complaince Protocols" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Environment Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Intelligent Permit Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Incident Reporting & Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Rapid Knowledge & Collaboration" />
-            </ListItemLink>
-          </List>
-        </div>
+
+        {isLoading ?
+          <div elevation={3} className={classnames.list}>
+            {console.log(subscriptions)}
+            <List component="nav">
+              
+              {subscriptions.map(subscription => (
+                (subscription.appName !== 'Safety') && subscription.modules.length >0 ?
+                  <div>
+                    <ListItemText
+                      className={classnames.appDrawerLable}
+                      primary={subscription.appName}
+                    />
+                    <Divider />
+                    <List>
+                      {subscription.modules.map((module) => (
+                        <div>
+
+                          <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId')===null?1:localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId')===null?1:localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
+                            {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
+                            <AssignmentIcon />
+                            <ListItemText primary={module.name} />
+                          </ListItemLink>
+                        </div>
+                      ))}
+                    </List>
+
+
+                  </div>
+                  : ""
+              )
+
+              )}
+
+              {/* <Divider /> */}
+            </List>
+
+
+          </div> : null}
+
       </Drawer>
 
       <Button
@@ -360,5 +493,8 @@ UserMenu.propTypes = {
 UserMenu.defaultProps = {
   dark: false,
 };
+const UserInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(UserMenu);
 
-export default withStyles(styles)(UserMenu);
+export default withStyles(styles)(UserInit);
