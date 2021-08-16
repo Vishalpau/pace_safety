@@ -43,7 +43,7 @@ function CheckList() {
     const history = useHistory();
     const handelCheckList = async () => {
         const temp = {}
-        const res = await api.get("api/v1/core/checklist/")
+        const res = await api.get("api/v1/core/checklists/")
         const result = res.data.data.results
         result.map((value) => {
             if (value.hasGroup == "Yes") {
@@ -56,7 +56,6 @@ function CheckList() {
                 })
             }
         })
-        console.log(temp)
         setCheckListData(result)
 
     }
@@ -69,20 +68,25 @@ function CheckList() {
         };
     }
 
-
-
     const [open, setOpen] = useState(false)
     const [hagGroup, setHasGroup] = useState()
+    const [checklistId, setCheckListID] = useState("")
 
-    const handleOpen = (value) => {
+    const handleOpen = (value, groupId) => {
         setOpen(true)
         setHasGroup(value)
+        setCheckListID(groupId)
     }
     const handleClose = () => {
         setOpen(false)
     }
 
-    const handelNavigate = () => {
+    const handelNavigate = (value) => {
+        if (value == "groups") {
+            history.push(`/app/pages/groups/${checklistId}`)
+        } else if (value == "options") {
+            history.push(`/app/pages/options/${checklistId}`)
+        }
 
     }
 
@@ -114,7 +118,7 @@ function CheckList() {
                             <TableCell className={classes.tabelBorder}>0</TableCell>
                             <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
                             <TableCell className={classes.tabelBorder}>0</TableCell>
-                            <TableCell className={classes.tabelBorder}><i className="ion-ios-more" onClick={(e) => handleOpen(value.hasGroup)} /></TableCell>
+                            <TableCell className={classes.tabelBorder}><i className="ion-ios-more" onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} /></TableCell>
                         </TableRow>
                     ))}
 
@@ -137,12 +141,12 @@ function CheckList() {
                     <div style={getModalStyle()} className={classes.paper}>
                         {hagGroup == "Yes" ?
                             <Typography variant="h6" id="modal-title">
-                                <Button onClick={(e) => handelNavigate()}>Group</Button>
+                                <Button onClick={(e) => handelNavigate("groups")}>Group</Button>
                             </Typography> :
                             null
                         }
                         <Typography variant="subtitle1" id="simple-modal-description">
-                            <Button >Options</Button>
+                            <Button onClick={(e) => handelNavigate("options")}>Options</Button>
                         </Typography>
                     </div>
                 </Modal>

@@ -417,19 +417,16 @@ function Application(props) {
 
         {/* checklist */}
         <Route
-          exact
           path="/app/pages/checklist/"
           component={CheckList}
         />
 
         <Route
-          exact
           path="/app/pages/groups/"
           component={Groups}
         />
 
         <Route
-          exact
           path="/app/pages/options/"
           component={Options}
         />
