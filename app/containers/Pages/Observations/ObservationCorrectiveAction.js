@@ -441,7 +441,7 @@ function ObservationCorrectiveAction() {
           <Typography className={classes.increaseRowBox}>
           <ActionTracker
                                 actionContext="Obsevations"
-                                enitityReferenceId={form.id}
+                                enitityReferenceId={id}
                               >add</ActionTracker>
           </Typography></>):null}
         </Grid>

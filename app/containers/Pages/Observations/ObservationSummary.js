@@ -151,6 +151,13 @@ const ObservationSummary = () => {
 
   }
 
+  const handlePrintPush = async () => {
+    //console.log("Ashutosh")
+    history.push(
+      `/app/pages/prints/${id}`
+    );
+  };
+
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
@@ -310,7 +317,7 @@ const ObservationSummary = () => {
                 </List>
                 <Divider />
                 <List dense>
-                  <ListItem button>
+                  <ListItem button onClick={(e) => handlePrintPush(e)}>
                     <ListItemIcon>
                       <Print />
                     </ListItemIcon>

@@ -625,3 +625,6 @@ export const ObservationCloseOut = loadable(() => import("./Pages/Observations/O
 export const ObservationInitialNotificationUpdate = loadable(() => import("./Pages/Observations/ObservationInitialNotificationUpdate"), {
   fallback: <Loading />,
 });
+export const Prints = loadable(() => import("./Print/Prints"), {
+  fallback: <Loading />,
+});

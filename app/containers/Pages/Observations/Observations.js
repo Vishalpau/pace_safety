@@ -241,6 +241,15 @@ function Observations() {
     rowsPerPage: 10,
     page: 0,
   };
+
+  const handlePrintPush = async (index) => {
+    const id = allInitialData[index].id
+    localStorage.setItem('fkobservationId', id)
+    //console.log("Ashutosh")
+    history.push(
+      `/app/pages/prints/${id}`
+    );
+  };
   const fetchInitialiObservation = async () => {
 
     const res = await api.get(`/api/v1/observations/`);
@@ -507,15 +516,17 @@ function Observations() {
                     </Grid>
 
                     <Grid item xs={6} md={3}>
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Print />}
-                        className={classes.actionButton}
-                      >
-                            Print
-                      </Button>
+                    <Button
+                  //disabled
+                  size="small"
+                  color="primary"
+                  startIcon={<Print />}
+                  className={Incidents.actionButton}
+                  onClick={() => handlePrintPush(index)}
+                >
+                  Print
+                </Button>
+                           
 
                       <Button
                         disabled

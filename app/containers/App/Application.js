@@ -130,6 +130,7 @@ import {
   ObservationCorrectiveAction,
   ObservationCloseOut,
   ObservationInitialNotificationUpdate,
+  Prints,
 } from "../pageListAsync";
 
 
@@ -480,6 +481,7 @@ function Application(props) {
         <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
         <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
         <Route path="/app/pages/observation-observation-view" component={ObservationInitialNotificationView} />
+        <Route path="/app/pages/prints/:id" component={Prints} />
 
         {/* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />
