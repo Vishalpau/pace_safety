@@ -24,13 +24,16 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION, LESSION_LEARNED_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
 
 import Type from "../../../styles/components/Fonts.scss";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import { checkValue } from "../../../utils/CheckerValue";
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -48,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const RootCauseAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
+  const dispatch = useDispatch()
 
   const [form, setForm] = useState({
     causeOfIncident: "",
@@ -163,23 +167,23 @@ const RootCauseAnalysis = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
         history.push(
-          `${LESSION_LEARNED_FORM["Lessons learnt"]}${localStorage.getItem(
+          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
           )}`
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
         history.push(
-          `${LESSION_LEARNED_FORM["Lessons learnt"]}${putId.current
+          `/app/incident-management/registration/summary/summary/${putId.current
           }`
         );
       }

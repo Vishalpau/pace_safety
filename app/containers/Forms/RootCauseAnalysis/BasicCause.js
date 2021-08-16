@@ -26,7 +26,6 @@ import {
   PERSONALWELNESSFACTORS,
   LEADERSHIP,
   PROCESSES,
-  OTHERISSUES
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import { handelApiValue } from "../../../utils/CheckerValue"
@@ -62,11 +61,6 @@ const BasicCause = () => {
     processes: {
       remarkType: "options",
       rcaSubType: "processes",
-      rcaRemark: [],
-    },
-    otherIssues: {
-      remarkType: "options",
-      rcaSubType: "otherIssues",
       rcaRemark: [],
     },
     otherJobFactors: {
@@ -144,11 +138,6 @@ const BasicCause = () => {
           remarkType: "options",
           rcaSubType: "processes",
           rcaRemark: handelApiValue(tempData["processes"]),
-        },
-        otherIssues: {
-          remarkType: "options",
-          rcaSubType: "otherIssues",
-          rcaRemark: handelApiValue(tempData["otherIssues"]),
         },
         otherJobFactors: {
           remarkType: "remark",
@@ -260,29 +249,6 @@ const BasicCause = () => {
           remarkType: "options",
           rcaSubType: "processes",
           rcaRemark: [...form.processes.rcaRemark, value],
-        },
-      });
-    }
-  };
-
-  const handelOtherIssues = (e, value) => {
-    if (e.target.checked == false) {
-      let newData = form.otherIssues.rcaRemark.filter((item) => item !== value);
-      setForm({
-        ...form,
-        otherIssues: {
-          remarkType: "options",
-          rcaSubType: "otherIssues",
-          rcaRemark: newData,
-        },
-      });
-    } else {
-      setForm({
-        ...form,
-        otherIssues: {
-          remarkType: "options",
-          rcaSubType: "otherIssues",
-          rcaRemark: [...form.otherIssues.rcaRemark, value],
         },
       });
     }
@@ -483,8 +449,6 @@ const BasicCause = () => {
               </FormControl>
               <Box borderTop={1} marginTop={2} borderColor="grey.300" />
             </Grid>
-
-            {/* processes */}
             <Grid item xs={12}>
               <FormControl component="fieldset" error={error.processes}>
                 <FormLabel component="legend">Processes</FormLabel>
@@ -504,26 +468,6 @@ const BasicCause = () => {
               </FormControl>
               <Box borderTop={1} marginTop={2} borderColor="grey.300" />
             </Grid>
-
-            {/* other issues */}
-            <Grid item xs={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Other issues</FormLabel>
-                <FormGroup>
-                  {OTHERISSUES.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.otherIssues.rcaRemark.includes(value)}
-                      onChange={async (e) => handelOtherIssues(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
-
-
             {/* other job factors */}
             <Grid item xs={12}>
               <TextField

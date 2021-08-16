@@ -276,6 +276,7 @@ function HeaderBreakdown(props) {
   };
 
   const fetchCallBack = async () => {
+    setSelectBreakDown([])
     for (var key in projectData.projectName.breakdown) {
 
       if (key == 0) {
