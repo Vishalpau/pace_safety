@@ -262,7 +262,10 @@ const IncidentDetails = () => {
         // Create case if id is not null and means it is an add new registration case.
         const { error, isValid } = validate(form);
         await setError(error);
-
+        if(fkProjectStructureIds === ""){
+          alert("Please select Level of phase.")
+          setIsNext(true);
+        }else{
         if (isValid === true) {
           const formData = {
             fkCompanyId: parseInt(fkCompanyId),
@@ -351,6 +354,7 @@ const IncidentDetails = () => {
         } else {
           setIsNext(true);
         }
+      }
       }
     }
   };
