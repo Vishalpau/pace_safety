@@ -131,6 +131,7 @@ import {
   ObservationCloseOut,
   ObservationInitialNotificationUpdate,
   Prints,
+  Setting,
 } from "../pageListAsync";
 
 
@@ -140,6 +141,8 @@ function Application(props) {
   return (
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
+      //settings
+      <Route path="/app/settings/setting" component={Setting} />
         {/* Home */}
         <Route exact path="/" component={PersonalDashboard} />
         <Route path="/app/crm-dashboard" component={CrmDashboard} />
@@ -514,6 +517,9 @@ function Application(props) {
         <Route path="/app/maps/street-view" component={StreetViewMap} />
         {/* Default */}
         <Route component={NotFound} />
+        {/* Administrations */}
+        
+
       </Switch>
     </Dashboard>
   );

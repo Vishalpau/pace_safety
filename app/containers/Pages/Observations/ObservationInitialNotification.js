@@ -31,7 +31,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import axios from "axios";
-// import Attachment from "../../App/Attachment/Attachment";
+import Attachment from "../../Attachment/Attachment";
 // import PickListData from "../../../utils/Picklist/InitialPicklist";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 
@@ -213,7 +213,7 @@ const ObservationInitialNotification = () => {
               filterSuperVisorBadgeNo.push(result[i].badgeNo);
             }
             let id = result[0].id;
-            setForm({...form,notifyTo:id})
+            setForm({...form,supervisorId:id})
             setSuperVisorBadgeNo(filterSuperVisorBadgeNo)
           setSuperVisorName(filterSuperVisorName);
         }
@@ -319,6 +319,7 @@ const ObservationInitialNotification = () => {
     supervisorByBadgeId: "",
     supervisorName: "",
     supervisorDepartment: "",
+    supervisorId : "",
     notifyTo : "",
     attachment: "",
     status: "Active",
@@ -457,6 +458,7 @@ const ObservationInitialNotification = () => {
     }
     data.append("supervisorByBadgeId", form.supervisorByBadgeId),
       data.append("supervisorName", form.supervisorName),
+      data.append("supervisorId", form.supervisorId),
       data.append("notifyTo", form.notifyTo),
       data.append("supervisorDepartment", form.supervisorDepartment);
     if (form.attachment !== null && typeof form.attachment !== "string") {
@@ -520,18 +522,18 @@ const ObservationInitialNotification = () => {
   const handleAssignee = async (e,value) => {
     let tempData = { ...form };
     tempData.assigneeName = value;
-    if (value === "Viraj Kaulkar") {
+    if (value === reportedByName[0]) {
       tempData.assigneeId = reportedById[0];
     }
-    if (value === "Vani Surekha") {
+    if (value === reportedByName[1]) {
       tempData.assigneeId = reportedById[1];
     }
-    if (value === "Jwi kumar") {
+    if (value === reportedByName[2]) {
       tempData.assigneeId = reportedById[2];
-    }if (value === "Vani") {
+    }if (value === reportedByName[3]) {
       tempData.assigneeId = reportedById[3];
     } 
-    if (value === "Amol") {
+    if (value ===reportedByName[4]) {
       tempData.assigneeId = reportedById[4];
     }
     setForm(tempData);
@@ -572,7 +574,7 @@ const ObservationInitialNotification = () => {
   const handleReportedBy = (e, value) => {
     let tempData = { ...form };
     tempData.reportedByName = value;
-    if (tempData.reportedByName === "Viraj Kaulkar") {
+    if (tempData.reportedByName === reportedByName[0]) {
       if(reportedByBadgeId[0] !== null){
         tempData.reportedByBadgeId = reportedByBadgeId[0];
       }else{
@@ -580,7 +582,7 @@ const ObservationInitialNotification = () => {
       }
       tempData.reportedById = reportedById[0];
     }
-    if (tempData.reportedByName === "Vani Surekha") {
+    if (tempData.reportedByName === reportedByName[1]) {
       if(reportedByBadgeId[1] !== null){
         tempData.reportedByBadgeId = reportedByBadgeId[1];
       }else{
@@ -588,7 +590,7 @@ const ObservationInitialNotification = () => {
       }
       tempData.reportedById = reportedById[1];
     }
-    if (tempData.reportedByName === "Jwi kumar") {
+    if (tempData.reportedByName === reportedByName[2]) {
       if(reportedByBadgeId[2] !== null){
         tempData.reportedByBadgeId = reportedByBadgeId[2];
       }else{
@@ -596,7 +598,7 @@ const ObservationInitialNotification = () => {
       }
       tempData.reportedById = reportedById[2];
     }
-    if (tempData.reportedByName === "Vani") {
+    if (tempData.reportedByName === reportedByName[3]) {
       if(reportedByBadgeId[3] !== null){
         tempData.reportedByBadgeId = reportedByBadgeId[3];
       }else{
@@ -604,7 +606,7 @@ const ObservationInitialNotification = () => {
       }
       tempData.reportedById = reportedById[3];
     }
-    if (tempData.reportedByName === "Amol") {
+    if (tempData.reportedByName === reportedByName[4]) {
       if(reportedByBadgeId[4] !== null){
         tempData.reportedByBadgeId = reportedByBadgeId[4];
       }else{
@@ -685,14 +687,17 @@ const ObservationInitialNotification = () => {
       `/api/v1/corepatterns/?fkCompanyId=1&fkProjectId=0&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
+    console.log(result);
     let ar = result.attachment;
-    let onlyImage_url = ar.replace("https://", "");
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
-    let imageArray = image_url.split("/");
-    let image_name = imageArray[imageArray.length - 1];
-    saveAs(image_url, image_name);
-    await setAttachment(image_name)
+    console.log(ar);
+    // let onlyImage_url = ar.replace("https://", "");
+    // let image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    // let imageArray = image_url.split("/");
+    // let image_name = imageArray[imageArray.length - 1];
+    // saveAs(image_url, image_name);
+    await setAttachment(ar)
   };
+  console.log(attachment)
   const classes = useStyles();
 
   const PickList = async () => {
@@ -710,7 +715,7 @@ const ObservationInitialNotification = () => {
     }else{
       fetchTags()
       fetchDepartment()
-      // fetchAttachment()
+      fetchAttachment()
       setIsLoading(true);
       fetchSuperVisorName()
       fetchReportedBy()
@@ -747,10 +752,10 @@ const ObservationInitialNotification = () => {
                 Unit
               </Typography>
               <Typography className={classes.labelValue}>
-                {selectBreakdown[1].name}
+                {selectBreakdown.length > 2 ? selectBreakdown[1].name : "-"}
               </Typography>
             </Grid>
-            <Grid item md={12} xs={12} className={classes.formBox}>
+            <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Location*"
                 name="location"
@@ -770,6 +775,7 @@ const ObservationInitialNotification = () => {
                 }}
               />
             </Grid>
+            
             <Grid item md={6} xs={12} className={classes.formBox}>
               <Autocomplete
                 id="combo-box-demo"
@@ -789,6 +795,23 @@ const ObservationInitialNotification = () => {
                 )}
               />
             </Grid>
+            <Grid
+            item
+            md={6}
+            xs={12}
+            className={classes.formBox}
+          >
+            <Autocomplete
+                id="observerdepartment"
+                options={departmentName}
+                className={classes.mT30}
+                getOptionLabel={(option) => option}
+                onChange={(e , value) => {
+                  setForm({...form,reportedByDepartment:value})
+                }}
+                renderInput={(params) => <TextField {...params} label="Observer Department*" variant="outlined" />}
+            />
+          </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Observer's Badge Number"
@@ -1175,6 +1198,27 @@ const ObservationInitialNotification = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBox}
+          >
+            <FormGroup>
+              <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="notify"
+                    onChange={handleChange}
+                  />
+                )}
+                label="Do you want to Notify the <Safety Officer>?"
+              />
+            </FormGroup>
+          </Grid>
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
@@ -1302,6 +1346,11 @@ const ObservationInitialNotification = () => {
                 src={FormObservationbanner}
               />
             </Grid>
+            {attachment ===
+                              null ? null : typeof attachment ===
+                                "string" ? (
+                                <Attachment value={attachment} />
+                              ) : null}
             <Grid item md={12} xs={12}>
               <Button
                 variant="outlined"

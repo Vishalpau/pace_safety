@@ -628,3 +628,7 @@ export const ObservationInitialNotificationUpdate = loadable(() => import("./Pag
 export const Prints = loadable(() => import("./Print/Prints"), {
   fallback: <Loading />,
 });
+
+export const Setting = loadable(() => import("./Settings/Setting"), {
+  fallback: <Loading />,
+});
