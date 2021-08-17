@@ -12,10 +12,14 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM, ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { EVIDENCE_FORM } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 import api from "../../../utils/axios";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -34,6 +38,7 @@ const AdditionalDetails = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
   const [additionalDetailList, setAdditionalDetailList] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
@@ -107,12 +112,12 @@ const AdditionalDetails = () => {
       );
       if (res.status === 200) {
         let viewMode = {
-          initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
-
+          initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+  
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode));
         history.push(
-          `${ROOT_CAUSE_ANALYSIS_FORM["RCA Details"]}${id}`
+          `/app/incident-management/registration/summary/summary/${id}`
         );
       }
     } else if (additionalDetailList.length == 25) {
@@ -130,12 +135,12 @@ const AdditionalDetails = () => {
         );
         if (res.status === 200) {
           let viewMode = {
-            initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
-
+            initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+  
           }
-          localStorage.setItem("viewMode", JSON.stringify(viewMode))
+          dispatch(tabViewMode(viewMode));
           history.push(
-            `${ROOT_CAUSE_ANALYSIS_FORM["RCA Details"]}${localStorage.getItem(
+            `/app/incident-management/registration/summary/summary/${localStorage.getItem(
               "fkincidentId"
             )}`
           );
@@ -153,12 +158,12 @@ const AdditionalDetails = () => {
         additionalList
       );
       let viewMode = {
-        initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+        initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
 
       }
-      localStorage.setItem("viewMode", JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode));
       history.push(
-        `${ROOT_CAUSE_ANALYSIS_FORM["RCA Details"]}${localStorage.getItem(
+        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
           "fkincidentId"
         )}`
       );

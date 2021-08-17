@@ -262,7 +262,10 @@ const IncidentDetails = () => {
         // Create case if id is not null and means it is an add new registration case.
         const { error, isValid } = validate(form);
         await setError(error);
-
+        if(fkProjectStructureIds === ""){
+          alert("Please select Level of phase.")
+          setIsNext(true);
+        }else{
         if (isValid === true) {
           const formData = {
             fkCompanyId: parseInt(fkCompanyId),
@@ -351,6 +354,7 @@ const IncidentDetails = () => {
         } else {
           setIsNext(true);
         }
+      }
       }
     }
   };
@@ -470,7 +474,7 @@ const IncidentDetails = () => {
         // const user = localStorage.getItem({})
         // set right sidebar value
         if (result.isEnviromentalImpacted !== "Yes") {
-          hideAffect.push("Enviroment Impact");
+          hideAffect.push("Environment impact");
         }
         if (result.isEquipmentDamaged !== "Yes") {
           hideAffect.push("Equipment affected");
@@ -1000,7 +1004,7 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Enviroment Impact",
+                        "Environment impact",
                         "environmentAffect"
                       );
                       setNextPath({
