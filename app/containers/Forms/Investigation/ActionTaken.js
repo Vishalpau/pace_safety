@@ -17,8 +17,12 @@ import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM, EVIDENCE_FORM } from "../../../utils/constants";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -34,6 +38,7 @@ const ActionTaken = () => {
   const history = useHistory();
   const putId = useRef("");
   const investigationId = useRef("");
+  const dispatch = useDispatch();
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -74,11 +79,11 @@ const ActionTaken = () => {
       }
       localStorage.setItem("viewMode", JSON.stringify(viewMode))
       history.push(`/app/incident-management/registration/evidence/evidence/${localStorage.getItem("fkincidentId")}`);
+      dispatch(tabViewMode(viewMode));
     }
   };
 
   useEffect(() => {
-    console.log(EVIDENCE_FORM["Evidences"])
     handelUpdateCheck();
   }, []);
 

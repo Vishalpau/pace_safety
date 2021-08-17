@@ -17,7 +17,7 @@ import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, MANAGEMENTCONTROL, SUMMERY_FORM, LESSION_LEARNED_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, MANAGEMENTCONTROL, SUMMERY_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation";
 import Type from "../../../styles/components/Fonts.scss";
@@ -176,7 +176,7 @@ const CorrectiveAction = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
-      history.push(`${LESSION_LEARNED_FORM["Lessons learnt"]}${putId.current}`)
+      history.push(`${SUMMERY_FORM["Summary"]}${putId.current}`)
     } else if (navigateType == "previous") {
       history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Preventive actions"]}${putId.current}`)
     }

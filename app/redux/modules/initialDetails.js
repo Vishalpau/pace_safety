@@ -5,12 +5,14 @@ const INITIAL_STATE = {
     error:null ,
     breakDown:[],
     userDetails:[] ,
-    viewMode:{initialNotification:true,
-    investigation:false,
-    evidence:false,
-    rootcauseanalysis:false,
-    lessionlearn:false
-  }
+    viewMode:{
+      initialNotification:true,
+      investigation:false,
+      evidence:false,
+      rootcauseanalysis:false,
+      lessionlearn:false
+    },
+    companyDataList:{}
 }
 
 const InitialDetailsReducer = (state = INITIAL_STATE,action)=>{
@@ -26,6 +28,8 @@ const InitialDetailsReducer = (state = INITIAL_STATE,action)=>{
           return{...state, breakDown: state.breakDown.concat(action.payload)  }
         case actionType.VIEW_MODE:
           return{...state, viewMode:action.payload}
+        case actionType.COMPANY_DATA:
+          return{...state, companyDataList:action.payload}
         default:
             return state
     }

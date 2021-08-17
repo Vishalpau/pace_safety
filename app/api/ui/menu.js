@@ -876,6 +876,41 @@ module.exports = [
     multilevel: false,
     linkParent: "/app/charts/area-filled-charts",
   },
+  {
+    key: 'aha',
+    name: 'AHA',
+    icon: 'ion-ios-checkbox',
+    multilevel: false,
+    linkParent: '/app/pages/aha',
+  },{
+
+    key: 'administration',
+    name: 'Administration',
+    multilevel: true,
+    icon: 'ion-ios-cog',
+    child: [
+      {
+        key: 'pick_lists',
+        name: 'Pick Lists',
+        linkParent: '#',
+      },
+      {
+        key: 'check_lists',
+        name: 'Check Lists',
+        linkParent: '#',
+      },
+      {
+        key: 'xflha_setting',
+        name: 'X-FLHA Setting',
+        linkParent: '#',
+      },
+      {
+        key: 'setting',
+        name: 'Setting',
+        linkParent: '/app/settings/setting',
+      },
+    ],
+  },
   // {
   //   key: "menu-level",
   //   name: "Incident",

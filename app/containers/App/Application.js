@@ -132,7 +132,18 @@ import {
   ObservationInitialNotificationUpdate,
   CheckList,
   Groups,
-  Options
+  Options,
+  Aha,
+  AhaSummary,
+  AssessmentsForms,
+  ProjectDetails,
+  ProjectAreaHazards,
+  Assessment,
+  DocumentNotification,
+  Approvals,
+  LessonsLearned,
+  Prints,
+  Setting,
 } from "../pageListAsync";
 
 
@@ -142,6 +153,8 @@ function Application(props) {
   return (
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
+      //settings
+        <Route path="/app/settings/setting" component={Setting} />
         {/* Home */}
         <Route exact path="/" component={PersonalDashboard} />
         <Route path="/app/crm-dashboard" component={CrmDashboard} />
@@ -494,7 +507,8 @@ function Application(props) {
         />
 
         {/* Observation Routes  */}
-
+        {/* <Route path="/app/pages/summary" component={Summary} /> */}
+        {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
         <Route path="/app/pages/observations" component={Observations} />
         <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction} />
         <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
@@ -503,6 +517,19 @@ function Application(props) {
         <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
         <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
         <Route path="/app/pages/observation-observation-view" component={ObservationInitialNotificationView} />
+        <Route path="/app/pages/prints/:id" component={Prints} />
+
+        {/* Aha Routes */}
+
+        <Route path="/app/pages/aha" exact component={Aha} />
+        <Route path="/app/pages/aha/aha-summary" exact component={AhaSummary} />
+        <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
+        <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetails} />
+        <Route path="/app/pages/aha/assessments/project-area-hazards" exact component={ProjectAreaHazards} />
+        <Route path="/app/pages/aha/assessments/assessment" exact component={Assessment} />
+        <Route path="/app/pages/aha/assessments/DocumentsNotifications" exact component={DocumentNotification} />
+        <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
+        <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
 
         {/* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />
@@ -535,6 +562,9 @@ function Application(props) {
         <Route path="/app/maps/street-view" component={StreetViewMap} />
         {/* Default */}
         <Route component={NotFound} />
+        {/* Administrations */}
+
+
       </Switch>
     </Dashboard>
   );

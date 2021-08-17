@@ -4,6 +4,7 @@ import { access_token, HEADER_AUTH, LOGIN_URL, SELF_API,SSO_URL } from '../../ut
 
 import { useDispatch } from 'react-redux';
 import Axios from 'axios';
+import { DataUsageOutlined } from '@material-ui/icons';
 
 
 
@@ -97,9 +98,16 @@ export const addbreakDownDetails = data=>{
   }
 }
 
-export const ViewIncidents = data=>{
+export const tabViewMode = data=>{
+  
   return {
       type: actionsType.VIEW_MODE,
       payload: data
+  }
+}
+export const company = data=>{
+  return {
+    type:actionsType.COMPANY_DATA,
+    payload:data
   }
 }
