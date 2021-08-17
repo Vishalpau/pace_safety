@@ -130,6 +130,9 @@ import {
   ObservationCorrectiveAction,
   ObservationCloseOut,
   ObservationInitialNotificationUpdate,
+  CheckList,
+  Groups,
+  Options,
   Aha,
   AhaSummary,
   AssessmentsForms,
@@ -151,7 +154,7 @@ function Application(props) {
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
       //settings
-      <Route path="/app/settings/setting" component={Setting} />
+        <Route path="/app/settings/setting" component={Setting} />
         {/* Home */}
         <Route exact path="/" component={PersonalDashboard} />
         <Route path="/app/crm-dashboard" component={CrmDashboard} />
@@ -424,6 +427,26 @@ function Application(props) {
           path="/app/incident-management/registration/lession-learned/lession-learned/:id"
           component={LessionLearned}
         />
+
+        {/* checklist */}
+        <Route
+          path="/app/pages/checklist/"
+          component={CheckList}
+        />
+
+        <Route
+          path="/app/pages/groups/"
+          component={Groups}
+        />
+
+        <Route
+          path="/app/pages/options/"
+          component={Options}
+        />
+
+
+
+
         {/* close out */}
         <Route
           exact
@@ -487,9 +510,9 @@ function Application(props) {
         {/* <Route path="/app/pages/summary" component={Summary} /> */}
         {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
         <Route path="/app/pages/observations" component={Observations} />
-        <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction}/>
-        <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction}/>
-        <Route path="/app/pages/observation-close-out" component={ObservationCloseOut}/>
+        <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction} />
+        <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
+        <Route path="/app/pages/observation-close-out" component={ObservationCloseOut} />
         <Route path="/app/pages/observation-Summary/:id" component={ObservationSummary} />
         <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
         <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
@@ -540,7 +563,7 @@ function Application(props) {
         {/* Default */}
         <Route component={NotFound} />
         {/* Administrations */}
-        
+
 
       </Switch>
     </Dashboard>

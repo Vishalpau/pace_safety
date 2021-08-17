@@ -626,6 +626,22 @@ export const ObservationInitialNotificationUpdate = loadable(() => import("./Pag
   fallback: <Loading />,
 });
 
+// checklist
+
+export const CheckList = loadable(() =>
+  import("./Pages/CheckList/CheckList.js"), {
+  fallback: <Loading />,
+});
+
+export const Groups = loadable(() =>
+  import("./Pages/CheckList/Groups.js"), {
+  fallback: <Loading />,
+});
+
+export const Options = loadable(() =>
+  import("./Pages/CheckList/Options.js"), {
+  fallback: <Loading />,
+});
 export const Prints = loadable(() => import("./Print/Prints"), {
   fallback: <Loading />,
 });
@@ -636,37 +652,37 @@ export const Aha = loadable(() => import("./Pages/Aha/Aha"), {
 });
 
 export const AhaSummary = loadable(() => import("./Pages/Aha/AhaSummary"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 export const AssessmentsForms = loadable(() => import("./Pages/Aha/Assessments/AssessmentsForms"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 export const ProjectDetails = loadable(() => import("./Pages/Aha/Assessments/ProjectDetails"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 export const ProjectAreaHazards = loadable(() => import("./Pages/Aha/Assessments/ProjectAreaHazards"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 
 
 export const Assessment = loadable(() => import("./Pages/Aha/Assessments/Assessment"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 export const DocumentNotification = loadable(() => import("./Pages/Aha/Assessments/DocumentsNotifications"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 export const Approvals = loadable(() => import("./Pages/Aha/Approvals/Approvals"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 export const LessonsLearned = loadable(() => import("./Pages/Aha/LessonsLearned/LessonsLearned"), {
-fallback: <Loading />,
+  fallback: <Loading />,
 });
 
 export const Setting = loadable(() => import("./Settings/Setting"), {
