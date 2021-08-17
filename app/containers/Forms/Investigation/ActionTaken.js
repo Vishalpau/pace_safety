@@ -20,6 +20,10 @@ import FormSideBar from "../FormSideBar";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
 
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -34,6 +38,7 @@ const ActionTaken = () => {
   const history = useHistory();
   const putId = useRef("");
   const investigationId = useRef("");
+  const dispatch = useDispatch();
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -72,7 +77,7 @@ const ActionTaken = () => {
         initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
   
       }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode));
       history.push(
         `/app/incident-management/registration/summary/summary/${putId.current}`
       );

@@ -626,6 +626,10 @@ export const ObservationInitialNotificationUpdate = loadable(() => import("./Pag
   fallback: <Loading />,
 });
 
+export const Prints = loadable(() => import("./Print/Prints"), {
+  fallback: <Loading />,
+});
+
 // Aha    
 export const Aha = loadable(() => import("./Pages/Aha/Aha"), {
   fallback: <Loading />,
@@ -664,3 +668,4 @@ fallback: <Loading />,
 export const LessonsLearned = loadable(() => import("./Pages/Aha/LessonsLearned/LessonsLearned"), {
 fallback: <Loading />,
 });
+

@@ -22,7 +22,7 @@ export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 export const API_URL = "https://dev-safety-api.paceos.io/";
 export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
 export const access_token = localStorage.getItem("access_token");
-
+export const API_VERSION = "api/v1/"
 export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/";
 
 // Header authenticatuon

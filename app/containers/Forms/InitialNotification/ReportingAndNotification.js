@@ -49,6 +49,10 @@ import InitialEvidenceValidate from "../../Validator/InitialEvidance";
 import api from "../../../utils/axios";
 import Attachment from "../../Attachment/Attachment";
 
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     minWidth: "100%",
@@ -122,6 +126,7 @@ const ReportingAndNotification = () => {
   const { id } = useParams();
   const history = useHistory();
   const ref = useRef();
+  const dispatch = useDispatch()
   let reportedToFilterData = [];
   let filterReportedByName = [];
 
@@ -364,7 +369,7 @@ const ReportingAndNotification = () => {
               rootcauseanalysis: false,
               lessionlearn: false,
             };
-            localStorage.setItem("viewMode", JSON.stringify(viewMode));
+            dispatch(tabViewMode(viewMode));
             history.push(
               `/app/incident-management/registration/summary/summary/${localStorage.getItem(
                 "fkincidentId"
@@ -382,26 +387,19 @@ const ReportingAndNotification = () => {
   const handelNotifyTo = async (e, index) => {
     if (e.target.checked === true) {
       let temp = [...notifyToList];
-      let users = notificationSentValue[index].users;
-      for (var i = 0; i < users.length; i++) {
-        let id = users[i].id;
-        temp = temp.concat(id);
-      }
+     
+      temp.push(e.target.value)
       let uniq = [...new Set(temp)];
+     
       setNotifyToList(uniq);
     } else {
       let temp = [...notifyToList];
-      let data = [];
-      let users = notificationSentValue[index].users;
-      for (var i = 0; i < users.length; i++) {
-        let id = users[i].id;
-        let newData = temp.filter((item) => item !== id);
-
-        data = newData;
-      }
-      setNotifyToList(data);
+      
+        let newData = temp.filter((item) => item !== e.target.value);
+      
+      setNotifyToList(newData);
     }
-    setNotifyToList(data);
+    
   };
 
   // handle checkbox reported to
@@ -543,7 +541,9 @@ const ReportingAndNotification = () => {
     const result = res.data.data.results;
 
     if (result.length > 0) {
-      await setNotifyToList(result[0].notifyTo);
+      let getNotifyTo = result[0].notifyTo.split(',')
+     
+      await setNotifyToList(getNotifyTo);
       const reportToData = [];
       for (const key in result) {
         reportToData.push(result[key].reportTo);
@@ -792,8 +792,9 @@ const ReportingAndNotification = () => {
                       <FormControlLabel
                         id={index}
                         key={index}
-                        value={value.roleName}
+                        value={value.id}
                         control={<Checkbox />}
+                        checked={notifyToList.includes(value.id.toString())}
                         label={value.roleName}
                         onChange={(e) => {
                           handelNotifyTo(e, index);
@@ -862,6 +863,7 @@ const ReportingAndNotification = () => {
                               ? evidenceError[`evidenceRemark${[index]}`]
                               : null
                           }
+                          disabled={item.evidenceDocument?false:true}
                           className={classes.formControl}
                           value={item.evidenceRemark}
                           onChange={(e) =>
@@ -956,12 +958,12 @@ const ReportingAndNotification = () => {
                       : ""
                   }
                   disabled={
-                    superVisorNameList.length > 0
-                      ? superVisorNameList
+                    supervisorName === ""?true:
+                       superVisorNameList
                           .slice(0, -1)
                           .filter((item) => item.name === supervisorName)
-                          .length > 0
-                      : true
+                          .length > 0?
+                     true : false
                   }
                   className={classes.formControl}
                   onChange={(e) => {
@@ -971,7 +973,6 @@ const ReportingAndNotification = () => {
                     });
                   }}
                 />
-
                 {error && error.othername ? <p>{error.othername}</p> : null}
               </Grid>
 

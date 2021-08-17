@@ -31,6 +31,9 @@ import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysis
 import Type from "../../../styles/components/Fonts.scss";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import { checkValue } from "../../../utils/CheckerValue";
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -48,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const RootCauseAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
+  const dispatch = useDispatch()
 
   const [form, setForm] = useState({
     causeOfIncident: "",
@@ -166,7 +170,7 @@ const RootCauseAnalysis = () => {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
     
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -177,7 +181,7 @@ const RootCauseAnalysis = () => {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
     
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${putId.current
           }`

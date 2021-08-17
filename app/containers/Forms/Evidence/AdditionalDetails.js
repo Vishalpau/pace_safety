@@ -17,6 +17,10 @@ import Type from "../../../styles/components/Fonts.scss";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 import api from "../../../utils/axios";
 
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -34,6 +38,7 @@ const AdditionalDetails = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
   const [additionalDetailList, setAdditionalDetailList] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
@@ -110,7 +115,7 @@ const AdditionalDetails = () => {
           initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
   
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode));
         history.push(
           `/app/incident-management/registration/summary/summary/${id}`
         );
@@ -133,7 +138,7 @@ const AdditionalDetails = () => {
             initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
   
           }
-          localStorage.setItem("viewMode",JSON.stringify(viewMode))
+          dispatch(tabViewMode(viewMode));
           history.push(
             `/app/incident-management/registration/summary/summary/${localStorage.getItem(
               "fkincidentId"
@@ -156,7 +161,7 @@ const AdditionalDetails = () => {
         initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
 
       }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode));
       history.push(
         `/app/incident-management/registration/summary/summary/${localStorage.getItem(
           "fkincidentId"

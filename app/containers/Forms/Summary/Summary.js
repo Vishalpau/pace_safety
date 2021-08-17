@@ -46,7 +46,12 @@ import {
   EvidenceStatus,
   RootCauseAnalysisStatus,
   LessionLearnedStatus
-} from "../../../utils/FormStatus"
+} from "../../../utils/FormStatus";
+
+// redux connect
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -73,7 +78,7 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
-const Summary = () => {
+const Summary = (props) => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
   const [investigationOverview, setInvestigationOverview] = useState({});
@@ -103,6 +108,8 @@ const Summary = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
+
   if (id) {
     localStorage.setItem("fkincidentId", id);
   }
@@ -192,6 +199,17 @@ const Summary = () => {
   const handelNaviagte = (value) => {
     history.push(value)
   }
+  const handleInitialNotificationView =()=>{
+    setInitialNotification(true);
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
+    let viewMode = {
+      initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+    }
+    dispatch(tabViewMode(viewMode))
+  }
 
   const handelInvestigationView = () => {
     if (investigationOverview == undefined) {
@@ -204,9 +222,8 @@ const Summary = () => {
       setLessionlearn(false);
       let viewMode = {
         initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
-  
       }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode))
     }
   }
 
@@ -223,9 +240,9 @@ const Summary = () => {
       setLessionlearn(false);
       let viewMode = {
         initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
-  
+
       }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode))
     }
   }
 
@@ -241,9 +258,9 @@ const Summary = () => {
         setLessionlearn(false);
         let viewMode = {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Cause analysis") {
       if (rootCausesData == undefined) {
@@ -256,9 +273,9 @@ const Summary = () => {
         setLessionlearn(false);
         let viewMode = {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Five why analysis") {
       if (whyData == undefined) {
@@ -271,9 +288,9 @@ const Summary = () => {
         setLessionlearn(false);
         let viewMode = {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
       }
     } else {
       handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
@@ -289,12 +306,11 @@ const Summary = () => {
       setEvidence(false);
       setRootCauseAnalysis(false);
       setLessionlearn(true);
-      
       let viewMode = {
         initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
-  
+
       }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode))
     }
   };
   const handelInitialNoticeficationView = () => {
@@ -339,11 +355,7 @@ const Summary = () => {
               {/* initital notificatin */}
               <div className={Styles.item}>
                 <Button
-                  color={
-                    JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).initialNotification
-                      ? "secondary"
-                      : "primary"
-                  }
+                  color={props.viewMode.viewMode.initialNotification ? "secondary" : "primary"}
                   variant="contained"
                   size="large"
                   variant={
@@ -358,8 +370,7 @@ const Summary = () => {
                   }
                   className={classes.statusButton}
                   onClick={(e) => {
-                    handelInitialNoticeficationView()
-                    
+                    handleInitialNotificationView()
                   }}
                 >
                   Initial Notification
@@ -372,7 +383,7 @@ const Summary = () => {
               {/* investigation */}
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).investigation ? "secondary" : "primary"}
+                  color={props.viewMode.viewMode.investigation == true ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
                   variant={investigationOverview ? "contained" : "outlined"}
@@ -391,7 +402,7 @@ const Summary = () => {
 
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).evidence ? "secondary" : "primary"}
+                  color={props.viewMode.viewMode.evidence == true ? "secondary" : "primary"}
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -406,7 +417,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis? "secondary" : "primary"}
+                  color={props.viewMode.viewMode.rootcauseanalysis == true ? "secondary" : "primary"}
                   variant={
                     paceCauseData || rootCausesData || whyData
                       ? "contained"
@@ -433,7 +444,7 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).lessionlearn ? "secondary" : "primary"}
+                  color={props.viewMode.viewMode.lessionlearn == true ? "secondary" : "primary"}
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -629,5 +640,12 @@ const Summary = () => {
     </>
   );
 };
+const mapStateToProps = state => {
+  return {
+    viewMode: state.getIn(["InitialDetailsReducer"]),
 
-export default Summary;
+  }
+}
+
+export default connect(mapStateToProps,null)(Summary);
+// export default Summary;

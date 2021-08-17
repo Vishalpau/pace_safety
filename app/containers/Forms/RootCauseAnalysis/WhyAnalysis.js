@@ -38,6 +38,10 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
 
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+
 const WhyAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
@@ -58,6 +62,7 @@ const WhyAnalysis = () => {
 
   const updateIds = useRef();
   const checkPost = useRef();
+  const dispatch = useDispatch();
   const [investigationData, setInvestigationData] = useState({})
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -164,7 +169,7 @@ const WhyAnalysis = () => {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
     
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -175,7 +180,7 @@ const WhyAnalysis = () => {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
     
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"

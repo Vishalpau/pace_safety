@@ -3,4 +3,5 @@ export const PROJECT_NAME = 'PROJECT_NAME';
 export const USER_DETAILS = 'USER_DETAILS';
 export const BREAKDOWN_DETAILS = 'BREAKDOWN_DETAILS';
 export const ADD_BREAKDOWN_DETAILS = 'ADD_BREAKDOWN_DETAILS';
-export const VIEW_MODE = "VIEW_MODE"
+export const VIEW_MODE = "VIEW_MODE";
+export const COMPANY_DATA = "COMPANY_DATA"
