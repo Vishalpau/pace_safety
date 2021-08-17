@@ -8,6 +8,10 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Editor from '../../../components/Editor';
 
 import api from "../../../utils/axios"
 import { handelIncidentId } from "../../../utils/CheckerValue"
@@ -35,17 +39,20 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(4),
     },
+    formControl: {
+        minWidth: 300,
+    },
 }));
 
 function Group() {
 
     const [form, setForm] = useState(
         {
-            "fkCompanyId": 0,
-            "fkProjectId": 0,
+            "fkCompanyId": "0",
+            "fkProjectId": "",
             "fkCheckListId": "",
             "checkListGroupName": "",
-            "parentGroup": 0,
+            "parentGroup": "",
             "createdBy": 0,
             "updatedBy": 0
         }
@@ -54,14 +61,22 @@ function Group() {
     const [group, setGroup] = useState([])
 
     const [checkListId, setCheckListId] = useState("")
-
+    const [allGroupName, setAllGroupName] = useState([])
+    const [projectName, setProjectName] = useState({})
     const handelGroup = async () => {
+        const tempGroupName = []
         let groupID = handelIncidentId()
         setCheckListId(groupID)
         const res = await api.get(`api/v1/core/checklists/${groupID}/groups/`)
         const result = res.data.data.results
         let allGroups = result
         setGroup(allGroups)
+        allGroups.map((value) => {
+            tempGroupName.push(value.checkListGroupName)
+        })
+        tempGroupName.push("Top")
+        // fkProjectId
+        setAllGroupName(tempGroupName)
     }
 
     const handelCheckList = (e) => {
@@ -84,12 +99,54 @@ function Group() {
         }
     }
 
+    const handelParentValue = (value) => {
+        if (value == "Top") {
+            setForm({
+                ...form,
+                parentGroup: "0",
+            })
+        } else {
+            setForm({
+                ...form,
+                parentGroup: "1",
+            })
+        }
+    }
 
+    const handelParentShow = (value) => {
+        if (value == 0) {
+            return "Top"
+        } else {
+            return "Sub"
+        }
+    }
+
+    const handelProjectName = () => {
+        const tempProject = {}
+        const company = JSON.parse(localStorage.getItem("company"));
+        const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+
+        const data = userDetails.companies.map((item) => {
+            if (item.companyId === parseInt(company.fkCompanyId)) {
+                return item.projects;
+            }
+        });
+
+        data.map((value) => {
+            if (value != undefined && Array.isArray(value)) {
+                value.map((subValue) => {
+                    tempProject[subValue["projectId"]] = subValue["projectName"]
+                })
+            }
+        })
+        setProjectName(tempProject)
+    }
 
     const classes = useStyles();
 
     useEffect(() => {
         handelGroup()
+        handelProjectName()
     }, [])
 
     return (
@@ -100,22 +157,33 @@ function Group() {
                     <TableBody>
                         <TableRow>
                             <TableCell className={classes.tabelBorder}>Sr.</TableCell>
+                            <TableCell className={classes.tabelBorder}>Project</TableCell>
                             <TableCell className={classes.tabelBorder}>Checklist group name</TableCell>
                             <TableCell className={classes.tabelBorder}>Parent group</TableCell>
-
                         </TableRow>
                         {group.map((value, index) => (
                             <TableRow>
                                 <TableCell className={classes.tabelBorder}>{index + 1}</TableCell>
-                                <TableCell className={classes.tabelBorder}>{value.checkListGroupName}</TableCell>
-                                <TableCell className={classes.tabelBorder}>{value.parentGroup}</TableCell>
+                                <TableCell className={classes.tabelBorder}>{projectName[value.fkProjectId] || "-"}</TableCell>
+                                <TableCell className={classes.tabelBorder}>
+                                    <Editor
+                                        type="text"
+                                        value={value.checkListGroupName}
+                                        column="name"
+                                    // isvalidate={isvalidate}
+                                    // save={(e) => handelEdit(value.fkCheckListId, value.fkGroupId, value.id)}
+                                    // edit={value.isSystem == "No"}
+                                    />
+                                </TableCell>
+                                <TableCell className={classes.tabelBorder}>
+                                    <p>{handelParentShow(value.parentGroup)}</p>
+                                </TableCell>
                             </TableRow>
                         ))}
 
                         <TableRow>
 
                             <TableCell className={classes.tabelBorder} >
-
                                 <TextField
                                     id="filled-basic"
                                     label="sr no"
@@ -124,7 +192,38 @@ function Group() {
                                     disabled
                                 />
                             </TableCell>
+                            <TableCell className={classes.tabelBorder}>
+                                <FormControl
+                                    variant="outlined"
+                                    className={classes.formControl}
+                                    label="Group name"
+                                >
+                                    <Select
+                                        id="Group-name"
+                                        className="inputCell"
+                                        labelId="Group name"
+                                        defaultValue="Top"
+                                    >
 
+                                        {Object.entries(projectName).map(([key, objValue]) => {
+                                            return (
+                                                <MenuItem
+                                                    key={key}
+                                                    value={objValue}
+                                                    onClick={(e) => {
+                                                        setForm({
+                                                            ...form,
+                                                            fkProjectId: key
+                                                        })
+                                                    }}
+                                                >
+                                                    {objValue}
+                                                </MenuItem>
+                                            )
+                                        })}
+                                    </Select>
+                                </FormControl>
+                            </TableCell>
                             <TableCell className={classes.tabelBorder} >
                                 <TextField
                                     id="filled-basic"
@@ -135,13 +234,27 @@ function Group() {
                             </TableCell>
 
                             <TableCell className={classes.tabelBorder} >
-                                <TextField
-                                    id="filled-basic"
-                                    label="parent group"
+                                <FormControl
                                     variant="outlined"
-                                    value={0}
-                                    disabled
-                                />
+                                    className={classes.formControl}
+                                    label="Group name"
+                                >
+                                    <Select
+                                        id="Group-name"
+                                        className="inputCell"
+                                        labelId="Group name"
+                                        defaultValue="Top"
+                                    >
+                                        {allGroupName.map((selectValues) => (
+                                            <MenuItem
+                                                value={selectValues}
+                                                onClick={(e) => handelParentValue(selectValues)}
+                                            >
+                                                {selectValues}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                                 <button onClick={(e) => handelNext(e)}>Save</button>
                             </TableCell>
                         </TableRow>
