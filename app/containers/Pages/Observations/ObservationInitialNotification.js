@@ -157,6 +157,8 @@ const ObservationInitialNotification = () => {
   const [departmentName , setDepartmentName] = useState([])
   const [shiftType, setShiftType] = useState([]);
   const [superVisorId , setSuperVisorId] = useState('')
+  const [notificationSentValue , setNotificationSentValue] = useState([])
+  const [notifyToList, setNotifyToList] = useState([]);
   let filterSuperVisorId = []
   let filterSuperVisorBadgeNo = []
   const radioType = ["Risk", "Comments", "Positive behavior"];
@@ -633,6 +635,26 @@ const ObservationInitialNotification = () => {
   
   }
 
+  const handleNotify = async (value, index ,e) => {
+    if (e.target.checked === true) {
+      let temp = [...notifyToList];
+     
+      temp.push(value)
+      let uniq = [...new Set(temp)];
+      setNotifyToList(uniq)
+     
+      setForm({...form , notifyTo : notifyToList.toString()});
+    } else {
+      let temp = [...notifyToList];
+      
+        let newData = temp.filter((item) => item !== value);
+      
+      setNotifyToList(newData);
+    }
+    
+  };
+
+
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results;
@@ -687,9 +709,7 @@ const ObservationInitialNotification = () => {
       `/api/v1/corepatterns/?fkCompanyId=1&fkProjectId=0&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
-    console.log(result);
     let ar = result.attachment;
-    console.log(ar);
     // let onlyImage_url = ar.replace("https://", "");
     // let image_url = "http://cors.digiqt.com/" + onlyImage_url;
     // let imageArray = image_url.split("/");
@@ -697,7 +717,7 @@ const ObservationInitialNotification = () => {
     // saveAs(image_url, image_name);
     await setAttachment(ar)
   };
-  console.log(attachment)
+
   const classes = useStyles();
 
   const PickList = async () => {
@@ -709,7 +729,6 @@ const ObservationInitialNotification = () => {
     if (id) {
       fetchInitialiObservationData();
       fetchCheckBoxData();
-      fetchNotificationSent()
       fetchSuperVisorName()
       setFileShow(true)
     }else{
@@ -717,6 +736,7 @@ const ObservationInitialNotification = () => {
       fetchDepartment()
       fetchAttachment()
       setIsLoading(true);
+      fetchNotificationSent()
       fetchSuperVisorName()
       fetchReportedBy()
       PickList()
@@ -1198,6 +1218,7 @@ const ObservationInitialNotification = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
+            {notificationSentValue.map((value,index) =>(
             <Grid
             item
             md={12}
@@ -1212,13 +1233,13 @@ const ObservationInitialNotification = () => {
                     icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     name="notify"
-                    onChange={handleChange}
+                    onChange={(e) => {handleNotify(value.id,index , e)}}
                   />
                 )}
-                label="Do you want to Notify the <Safety Officer>?"
+                label={`Do you want to Notify the ${value.roleName}`}
               />
             </FormGroup>
-          </Grid>
+          </Grid>))}
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">

@@ -140,8 +140,7 @@ const ObservationCorrectiveActionView = () => {
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
-  console.log(projectId)
-  console.log(fkCompanyId)
+
   const fetchInitialiObservation = async () => {
     // const response = await api.get('/api/v1/observations/${id}/')
     const res = await api.get(`/api/v1/observations/${id}/`);
@@ -184,7 +183,6 @@ bytes
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
     const result = res.data.data.results.results
-    console.log(result);
     // await setComments(result[3])
     await setComment(result[result.length -1] )
     await setIsLoading(true)
@@ -204,7 +202,6 @@ bytes
       )
       let sorting = newData.sort((a, b) => a.id - b.id)
     
-      console.log()
     await setActionTakenData(sorting)
     await setIsLoading(true);
 
@@ -282,7 +279,8 @@ bytes
                 
                 <a
                 //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
-                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
+                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
+                href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
                                 // enitityReferenceId={action.enitityReferenceId}
                                 // actionId={action.id}

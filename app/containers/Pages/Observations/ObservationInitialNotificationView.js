@@ -159,7 +159,6 @@ const ObservationInitialNotificationView = () => {
     await setInitialData(result)
 
   }
-  console.log(initialData.fkProjectStructureIds)
   const fetchTags = async () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)
     const tags = response.data.data.results.results
@@ -234,7 +233,6 @@ const ObservationInitialNotificationView = () => {
       }
     }
     // dispatch(breakDownDetails(selectBreakDown));
-    console.log(selectBreakDown)
     await setProjectSturcturedData(selectBreakDown)    
     // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
@@ -364,6 +362,14 @@ bytes
         </Grid>
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Observer Department
+          </Typography>
+          <Typography className={classes.labelValue}>
+            {initialData.reportedByDepartment}
+          </Typography>
+        </Grid>
+        <Grid item md={6}>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
             Observed On
           </Typography>
           <Typography className={classes.labelValue}>
@@ -384,13 +390,15 @@ bytes
 
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Shift
+                    Submited on
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.shift ? initialData.shift : "-"}
+          {moment(initialData["createdAt"]).format(
+            "Do MMMM YYYY, h:mm:ss a"
+          )}
           </Typography>
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
               Supervisor details
           </Typography>
