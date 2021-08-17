@@ -179,7 +179,6 @@ export default function ActionTracker(props) {
       url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
       },
     };
     axios(config)

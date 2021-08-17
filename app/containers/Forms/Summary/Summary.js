@@ -27,7 +27,7 @@ import Comment from "@material-ui/icons/Comment";
 import History from "@material-ui/icons/History";
 import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
-
+import { Col, Row } from "react-grid-system";
 // Styles
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
@@ -228,8 +228,10 @@ const Summary = (props) => {
   }
 
   const handelEvidenceView = (e) => {
-    if (evidencesData == undefined) {
-      handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
+    if (evidencesData === undefined) {
+      handelNaviagte(
+        `/app/incident-management/registration/evidence/evidence/${id}`
+      );
     } else {
       setInitialNotification(false);
       setInvestigation(false);
@@ -310,8 +312,22 @@ const Summary = (props) => {
       }
       dispatch(tabViewMode(viewMode))
     }
-  }
-
+  };
+  const handelInitialNoticeficationView = () => {
+   
+      setInitialNotification(true);
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false);
+      
+      let viewMode = {
+        initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+  
+      }
+      localStorage.setItem("viewMode",JSON.stringify(viewMode))
+    
+  };
 
 
   useEffect(() => {
@@ -446,36 +462,34 @@ const Summary = (props) => {
           <Divider />
 
           <Box marginTop={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={9}>
-                {/* summary and part */}
-                <>
-                  {(() => {
-                    if (
-                      initialNotification == true ||
-                      (investigation === false &&
-                        evidence === false &&
-                        rootcauseanalysis === false &&
-                        lessionlearn === false)
-                    ) {
-                      return <IncidentDetailsSummary />;
-                    }
-                    if (investigation == true) {
-                      return <InvestigationSummary />;
-                    }
-                    if (evidence == true) {
-                      return <EvidenceSummary />;
-                    }
-                    if (rootcauseanalysis == true) {
-                      return <RootCauseAnalysisSummary />;
-                    }
-                    if (lessionlearn == true) {
-                      return <LessionLearnSummary />;
-                    }
-                  })()}
-                </>
-              </Grid>
-
+            <Row>
+              <Col md={9}>
+                <Grid item xs={12}>
+                  {/* summary and part */}
+                  <>
+                    {(() => {
+                      if (
+                        JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).initialNotification
+                      
+                      ) {
+                        return <IncidentDetailsSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).investigation) {
+                        return <InvestigationSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).evidence) {
+                        return <EvidenceSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis) {
+                        return <RootCauseAnalysisSummary />;
+                      }
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).lessionlearn) {
+                        return <LessionLearnSummary />;
+                      }
+                    })()}
+                  </>
+                </Grid>
+              </Col>
 
               {/* side bar    */}
               {isDesktop && (
@@ -576,7 +590,9 @@ const Summary = (props) => {
                         </ListItemLink>
                       )}
 
-                      <ListItem button divider>
+                      <ListItem
+                      onClick={()=>history.push(`/app/incident-management/registration/close-out/${id}`)}
+                       button divider>
                         <ListItemIcon>
                           <Close />
                         </ListItemIcon>
@@ -615,7 +631,7 @@ const Summary = (props) => {
                   </Paper>
                 </Grid>
               )}
-            </Grid>
+            </Row>
           </Box>
         </PapperBlock>
       ) : (
