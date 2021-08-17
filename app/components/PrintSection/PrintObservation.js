@@ -73,7 +73,7 @@ const PrintObservation = React.forwardRef((props, ref) => {
     
 
   }
-  console.log(tagData[4])
+  console.log(actionTakenData)
   console.log(catagoryData[4])
   useEffect(() => {
     fetchInitialiObservation()
@@ -137,11 +137,23 @@ const PrintObservation = React.forwardRef((props, ref) => {
 
             <table style={{minWidth: '1150px', clear: 'both', marginTop: '15px', marginBottom: '15px' }}>
                 <tbody>
-                    <tr>
+                <tr>
                         <td rowspan="3" style={{width: '150px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>ACTION TAKEN <p>Write clearly.</p></td>
+                        {actionTakenData.length > 0 ?  (<td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}>{actionTakenData[0].actionNumber} - {actionTakenData[0].actionTitle} </td>): null}
+                    </tr>
+                    <tr>
+                    {actionTakenData.length > 1 ?  (<td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}> {actionTakenData[1].actionNumber} - {actionTakenData[1].actionTitle} </td>): null}
+                    </tr>
+                    <tr>
+                    {actionTakenData.length > 2 ?  (<td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}>{actionTakenData[2].actionNumber} - {actionTakenData[2].actionTitle} </td>): null}
                     </tr>
                     
-                    {actionTakenData ?  actionTakenData.map((action) => (<tr><td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}> {action.actionTitle} </td></tr>)) : null}
+                    {/* {actionTakenData !== null?  (<tr><td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}> {actionTakenData[0].actionTitle} </td></tr>): null} */}
+                    
+                    {/* {actionTakenData !== null ?  (<tr><td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}> {actionTakenData[1].actionTitle} </td></tr>): null} */}
+                   
+                    {/* {actionTakenData !== null ?  (<tr><td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}> {actionTakenData[2].actionTitle} </td></tr>): null} */}
+                   
                 </tbody>
             </table>
 
@@ -181,32 +193,64 @@ const PrintObservation = React.forwardRef((props, ref) => {
                 </tbody>
             </table> 
             
+            {/* <table style={{minWidth: '1150px', clear: 'both', marginTop: '15px', marginBottom: '20px' }}>
+                <tbody>
+
+                    <tr>
+                      <td rowspan="3" style={{width: '150px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>LOCATION <p>(X) On only</p></td>
+
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{initialData.location}</span> </label></td>
+                      
+                    </tr>
+                   
+
+                </tbody>
+            </table> */}
+            {/* <table style={{minWidth: '1150px', clear: 'both', marginTop: '15px', marginBottom: '15px' }}>
+                <tbody>
+                <tr>
+                        <td rowspan="3" style={{width: '150px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>LOCATION <p>(X) On only</p></td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)' }}> {initialData.location} </td>
+                    </tr>
+                   
+                    
+                </tbody>
+            </table> */}
+            {/* <table style={{minWidth: '50px', clear: 'both', marginTop: '20px', marginBottom: '30px' }}>
+                <tbody>
+                    <tr>
+                        <td rowspan="3" style={{width: '150px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>LOCATION <p>(X) On only</p></td>
+                         <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> {initialData.location}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}> <CheckIcon />  </span></label></td>
+                    </tr>
+                    
+                </tbody>
+            </table> */}
+
             <table style={{minWidth: '1150px', clear: 'both', marginTop: '15px', marginBottom: '20px' }}>
                 <tbody>
 
                     <tr>
                       <td rowspan="3" style={{width: '122px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>LOCATION <p>(X) On only</p></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>1000 - Train 1</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 4000 - Utility</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 5000 - Flare</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 8000 - Marine</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{initialData.location}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}> </td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> </label></td>
                     </tr>
                     <tr>
-                    <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 2000 - Train 2</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 5000 - Offsite General</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 6000 - Brownfield</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Off-site</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
+                    <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
                     </tr>
                     <tr>
-                    <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 3000 - Train 3</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 5000 - Condensate</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> 7000 - Common Buildings</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>  </span></label></td>
+                    <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
                     </tr>
 
                 </tbody>
             </table>
-
             <table style={{minWidth: '1150px', clear: 'both', marginTop: '30px', marginBottom: '30px' }}>
                 <tbody>
 
@@ -229,7 +273,7 @@ const PrintObservation = React.forwardRef((props, ref) => {
                     </tr>
                     <tr>
                     {/* {catagoryData.slice(8).map((value, index) => (              */}
-                               <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Others : {catagoryData[8].observationTag}</span> </label></td>
+                               <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Others </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{catagoryData[8].observationTag !== "" ? <CheckIcon /> : null} </span> </label></td>
 {/* ))} */}
                       {/* <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{catagoryData[8].observationTag}</span></label></td> */}
                       {/* <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> General safety</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>

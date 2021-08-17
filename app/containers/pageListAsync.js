@@ -669,3 +669,6 @@ export const LessonsLearned = loadable(() => import("./Pages/Aha/LessonsLearned/
 fallback: <Loading />,
 });
 
+export const Setting = loadable(() => import("./Settings/Setting"), {
+  fallback: <Loading />,
+});
