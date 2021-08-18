@@ -183,7 +183,6 @@ const CorrectiveAction = () => {
   }
 
   const handelApiCall = async () => {
-    console.log(form)
     let tempData = []
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
@@ -204,6 +203,7 @@ const CorrectiveAction = () => {
     })
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
     if (res.status == 200) {
+      console.log("here")
       handelNavigate("next")
     }
   }
@@ -296,7 +296,7 @@ const CorrectiveAction = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={(e) => handelPrevious(e)}
+                onClick={(e) => handelNavigate("previous")}
               >
                 Previous
               </Button>

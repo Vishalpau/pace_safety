@@ -49,7 +49,7 @@ import Topbar from "./Topbar";
 import api from "../../utils/axios";
 
 // redux
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -183,7 +183,6 @@ function UserMenu(props) {
     let data = await api
       .get(`${ACCOUNT_API_URL}api/v1/applications/`)
       .then(function (res) {
-        console.log('subscription', { applications: res.data.data.results })
         subscriptionData = res.data.data.results;
         // setSubscriptions(res.data.data.results);
         return res.data.data.results
@@ -193,7 +192,6 @@ function UserMenu(props) {
         console.log(error);
       });
     setSubscriptions(data);
-    console.log({ subscriptions2: data })
     setIsLoading(true)
 
     // console.log({applications: data.map(app=>app.appId)})
@@ -208,7 +206,6 @@ function UserMenu(props) {
     const companyId = localStorage.getItem('companyId')
     let subscriptionData = {}
     let data = await api.get(`${SELF_API}1/`).then(function (res) {
-      console.log({ data: res.data.data.results.data.companies })
       subscriptionData = res.data.data.results.data.companies[0].subscriptions;
       // setSubscriptions(subscriptionData);
       return subscriptionData
@@ -219,7 +216,6 @@ function UserMenu(props) {
       });
 
     // await setSubscriptions(data);
-    console.log("data suubs", data)
     await setApps(data.map(app => app.appId))
 
     //   const apps = data.map(app=>app.appId)
@@ -228,10 +224,10 @@ function UserMenu(props) {
   }
   const handleClosea = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
-        return;
+      return;
     }
     setOpena(false);
-};
+  };
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
@@ -388,11 +384,10 @@ function UserMenu(props) {
 
         {isLoading ?
           <div elevation={3} className={classnames.list}>
-            {console.log(subscriptions)}
             <List component="nav">
-              
+
               {subscriptions.map(subscription => (
-                (subscription.appName !== 'Safety') && subscription.modules.length >0 ?
+                (subscription.appName !== 'Safety') && subscription.modules.length > 0 ?
                   <div>
                     <ListItemText
                       className={classnames.appDrawerLable}
@@ -403,7 +398,7 @@ function UserMenu(props) {
                       {subscription.modules.map((module) => (
                         <div>
 
-                          <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId')===null?1:localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId')===null?1:localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
+                          <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId') === null ? 1 : localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId') === null ? 1 : localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <AssignmentIcon />
                             <ListItemText primary={module.name} />

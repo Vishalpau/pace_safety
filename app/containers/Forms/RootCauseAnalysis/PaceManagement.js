@@ -154,9 +154,10 @@ const PaceManagementControl = () => {
 
     let OptionWithSubType =
       handelOptionDispay("Human factors", "personal", checkValue(tempApiData["personal"])).concat
-        (handelOptionDispay("Human factors", "wellnessFactors", checkValue(tempApiData["wellnessFactors"]))).concat
+        (handelOptionDispay("Human factors", "wellness factors", checkValue(tempApiData["wellnessFactors"]))).concat
         (handelOptionDispay("Jobfactors", "leadership", checkValue(tempApiData["leadership"]))).concat
-        (handelOptionDispay("Jobfactors", "processes", checkValue(tempApiData["processes"])))
+        (handelOptionDispay("Jobfactors", "processes", checkValue(tempApiData["processes"]))).concat
+        (handelOptionDispay("Jobfactors", "other issuses", checkValue(tempApiData["otherIssues"])))
     setOptionBasicCause(OptionWithSubType)
   };
 

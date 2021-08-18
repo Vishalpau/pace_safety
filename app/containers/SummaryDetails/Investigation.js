@@ -25,7 +25,7 @@ import moment from "moment";
 import { useHistory, useParams } from "react-router";
 
 import api from "../../utils/axios";
-import { checkValue } from "../../utils/CheckerValue";
+import { checkValue, handelFileName } from "../../utils/CheckerValue";
 import Attachment from "../Attachment/Attachment";
 
 // Styles
@@ -1099,14 +1099,14 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
-                      {/* <Tooltip title="File Name"> */}
-                      {value.attachments != "" &&
-                        typeof value.attachments == "string" ? (
-                        <Attachment value={value.attachments} />
-                      ) :
-                        "-"
-                      }
-                      {/* </Tooltip> */}
+                      <Typography title={handelFileName(value.attachments)}>
+                        {value.attachments != "" &&
+                          typeof value.attachments == "string" ? (
+                          <Attachment value={value.attachments} />
+                        ) :
+                          "-"
+                        }
+                      </Typography>
                     </Grid>
                     <Grid item md={12}>
                       <Divider />
@@ -1430,7 +1430,7 @@ const InvestigationSummary = () => {
                       Pre-event mitigations
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.preEventMitigations === null ?null: value.preEventMitigations.lenght > 0
+                      {value.preEventMitigations === null ? null : value.preEventMitigations.lenght > 0
                         ? value.preEventMitigations
                         : "-"}
                     </Typography>

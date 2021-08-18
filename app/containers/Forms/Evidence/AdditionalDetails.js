@@ -112,8 +112,8 @@ const AdditionalDetails = () => {
       );
       if (res.status === 200) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
-  
+          initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
         }
         dispatch(tabViewMode(viewMode));
         history.push(
@@ -135,12 +135,12 @@ const AdditionalDetails = () => {
         );
         if (res.status === 200) {
           let viewMode = {
-            initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
-  
+            initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
           }
           dispatch(tabViewMode(viewMode));
           history.push(
-            `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+            `/app/incident-management/registration/root-cause-analysis/details/${localStorage.getItem(
               "fkincidentId"
             )}`
           );
@@ -158,12 +158,12 @@ const AdditionalDetails = () => {
         additionalList
       );
       let viewMode = {
-        initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+        initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
 
       }
       dispatch(tabViewMode(viewMode));
       history.push(
-        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+        `/app/incident-management/registration/root-cause-analysis/details/${localStorage.getItem(
           "fkincidentId"
         )}`
       );

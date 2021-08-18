@@ -219,16 +219,15 @@ const InvestigationOverview = () => {
                   >
                     {severityValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
-                          console.log("here");
                           setForm({
                             ...form,
-                            actualSeverityLevel: selectValues,
+                            actualSeverityLevel: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -247,15 +246,15 @@ const InvestigationOverview = () => {
                   >
                     {severityValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            potentialSeverityLevel: selectValues,
+                            potentialSeverityLevel: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>

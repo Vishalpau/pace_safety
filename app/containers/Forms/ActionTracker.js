@@ -180,7 +180,7 @@ export default function ActionTracker(props) {
                   format="dd/MM/yyyy"
                   inputVariant="outlined"
                   value={form.plannedEndDate}
-                  disableFuture={true}
+                  disablePast={true}
                   onChange={(e) => {
                     setForm({
                       ...form,
