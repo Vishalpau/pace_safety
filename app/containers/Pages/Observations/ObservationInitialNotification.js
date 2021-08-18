@@ -144,7 +144,7 @@ const ObservationInitialNotification = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({});
-  const [addressSituation, setAddressSituation] = useState(true);
+  const [addressSituation, setAddressSituation] = useState(false);
   const [tagData, setTagData] = useState([]);
   const [fileShow, setFileShow] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -507,7 +507,7 @@ const ObservationInitialNotification = () => {
     }
     setOpen(false);
   };
-
+  
   // this function when user upload the file
   const handleFile = async (e) => {
     let TempPpeData = { ...form };
@@ -520,7 +520,7 @@ const ObservationInitialNotification = () => {
       await setOpen(true);
     }
   };
-
+  
   const handleAssignee = async (e,value) => {
     let tempData = { ...form };
     tempData.assigneeName = value;
@@ -540,20 +540,23 @@ const ObservationInitialNotification = () => {
     }
     setForm(tempData);
   }
-
+  
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
       {file.path} 
     </li>
   ));
-
-  const handelAddressSituationYes = (e) => {
-    if (e.target.value == "Yes") {
-      setAddressSituation(true);
-    } else {
-      setForm({...form,actionTaken:""})
-      setAddressSituation(false);
+  
+  const handelAddressSituationYes = async (e) => {
+    let tempData = { ...form}
+    if (e.target.value === "Yes") {
+      await setAddressSituation(true);
+    } else if(e.target.value === "No") {
+      tempData.actionTaken = ""
+      
+      await setAddressSituation(false);
+      await setForm(tempData);
     }
   };
   const handleOther = (e) => {
@@ -724,7 +727,6 @@ const ObservationInitialNotification = () => {
     setShiftType(await PickListData(47));
     await setIsLoading(true);
   };
-
   useEffect(() => {
     if (id) {
       fetchInitialiObservationData();
@@ -772,7 +774,7 @@ const ObservationInitialNotification = () => {
                 Unit
               </Typography>
               <Typography className={classes.labelValue}>
-                {selectBreakdown.length > 2 ? selectBreakdown[1].name : "-"}
+                {selectBreakdown.length  ? selectBreakdown[1].name : "-"}
               </Typography>
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
@@ -811,6 +813,8 @@ const ObservationInitialNotification = () => {
                     {...params}
                     label="Observed by*"
                     variant="outlined"
+                    error={error.reportedByName}
+                helperText={error.reportedByName ? error.reportedByName : ""}
                   />
                 )}
               />
@@ -825,11 +829,13 @@ const ObservationInitialNotification = () => {
                 id="observerdepartment"
                 options={departmentName}
                 className={classes.mT30}
+                
                 getOptionLabel={(option) => option}
                 onChange={(e , value) => {
                   setForm({...form,reportedByDepartment:value})
                 }}
-                renderInput={(params) => <TextField {...params} label="Observer Department*" variant="outlined" />}
+                renderInput={(params) => <TextField {...params} label="Observer Department*" error={error.reportedByDepartment}
+                helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} variant="outlined" />}
             />
           </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
@@ -959,8 +965,8 @@ const ObservationInitialNotification = () => {
                 }}
               >
                 {shiftType.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
+                  <MenuItem key={option} value={option.value}>
+                    {option.label}
                   </MenuItem>
                 ))}
               </TextField>
@@ -1067,18 +1073,22 @@ const ObservationInitialNotification = () => {
               <>
                 <Grid item md={12} xs={12} className={classes.formBox}>
                   <TextField
-                    label="Describe the actions taken"
+                    label="Describe the actions taken*"
                     // margin="dense"
                     name="actionstaken"
                     id="actionstaken"
                     multiline
                     rows={4}
+                    error={error.actionTaken}
+                helperText={
+                  error.actionTaken ? error.actionTaken : ""
+                }
                     defaultValue={form.actionTaken}
                     fullWidth
                     variant="outlined"
                     className={classes.formControl}
                     onChange={(e) => {
-                      setForm({ ...form, actionTaken: e.target.value });
+                      setForm({ ...form, actionTaken: e.target.value });
                     }}
                   />
                 </Grid>
@@ -1323,7 +1333,7 @@ const ObservationInitialNotification = () => {
               <input
                     type="file"
                     id="attachment"
-                      accept=".png, .jpg"
+                      accept=".png, .jpg , .jpeg"
                       onChange={(e) => {
                         handleFile(e);
                       }}
@@ -1389,7 +1399,7 @@ const ObservationInitialNotification = () => {
                   history.push("/app/pages/observations");
                 }}
               >
-                Cancle
+                CANCEL
               </Button>
             </Grid>
           </Grid>
