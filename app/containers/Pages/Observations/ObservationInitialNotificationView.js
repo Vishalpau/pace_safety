@@ -152,11 +152,18 @@ const ObservationInitialNotificationView = () => {
   JSON.parse(localStorage.getItem("selectBreakDown")) !== null
     ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
+  const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).name
+    : null;
+  const userBadgeNo = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).badgeNo
+    : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
     await fetchBreakDownData(result.fkProjectStructureIds)
     await setInitialData(result)
+    await setIsLoading(true)
 
   }
   const fetchTags = async () => {
@@ -238,6 +245,7 @@ const ObservationInitialNotificationView = () => {
   };
 
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [isLoading , setIsLoading] = useState(false);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -275,6 +283,14 @@ bytes
     let image_name = imageArray[imageArray.length - 1]
     saveAs(image_url, image_name)
     handleClose()
+  };
+
+  const handelFileName = (value) => {
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1].split('-');
+    const lastNameArray = fileName[fileName.length - 1]
+    // const lastName = fileName.split("-");
+    return lastNameArray;
   };
 
   const [positiveObservation, setPositiveObservation] = useState(false);
@@ -318,6 +334,7 @@ bytes
   },[])
   return (
     <>
+    {isLoading ? (<>
       <Grid container spacing={3} className={classes.observationNewSection}>
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -383,7 +400,7 @@ bytes
               Submited by
           </Typography>
           <Typography className={classes.labelValue}>
-          {initialData.reportedByName}
+          {userName} , {userBadgeNo}
             {/* {initialData.observedAt} */}
           </Typography>
         </Grid>
@@ -505,7 +522,12 @@ bytes
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Attachments
           </Typography>
-          <Typography className={classes.labelValue}>
+          {initialData.attachment ? (
+          <Typography className={classes.labelValue} 
+          title={handelFileName(
+            initialData.attachment)
+          }
+                                    >
           {/* <Attachment value={initialData.attachment}/> */}
           {initialData.attachment ===
                               null ? null : typeof initialData.attachment ===
@@ -519,7 +541,7 @@ bytes
                                     }>
             <ImageIcon />
           </Avatar> */}
-          </Typography>
+          </Typography>):("-")}
         </Grid>
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -592,6 +614,7 @@ bytes
           </DialogContentText>
         </DialogContent>
       </Dialog>
+     </>) : (<h1>Loading...</h1>)}
     </>
   );
 };

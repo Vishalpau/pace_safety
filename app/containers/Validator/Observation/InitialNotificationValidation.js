@@ -20,6 +20,16 @@ function InitialNotificationValidator(data) {
     error.observationType = "Please choose any one observation type";
     isValid = false;
   }
+  
+  if (validator.isEmpty(data.reportedByDepartment.toString())) {
+    error.reportedByDepartment = "Please select the observer department";
+    isValid = false;
+  }
+  
+  if (validator.isEmpty(data.reportedByName.toString())) {
+    error.reportedByName = "Please select the observed by";
+    isValid = false;
+  }
 
   if (data.observedAt === null) {
     error.observedAt = "Please select date and time";
@@ -29,6 +39,13 @@ function InitialNotificationValidator(data) {
 //     error.supervisorByBadgeId = "Only numbers allowed in supervisor's badge number";
 //     isValid = false;
 //  }
+if(data.isSituationAddressed === "Yes") {
+  if(validator.isEmpty(data.actionTaken.toString())){
+    error.actionTaken = "Please enter describe the actions taken";
+    isValid = false;
+
+  }
+}
 
  if (validator.isEmpty(data.supervisorName.toString())) {
   error.supervisorName = "Please select the supervisor's name";
