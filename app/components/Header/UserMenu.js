@@ -151,7 +151,6 @@ function UserMenu(props) {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    console.log(access_token);
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/user/logout/`,
@@ -165,7 +164,6 @@ function UserMenu(props) {
     axios(config)
       .then((response) => {
         if (response.status === 201) {
-          console.log(response);
           localStorage.removeItem("access_token");
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
@@ -183,7 +181,6 @@ function UserMenu(props) {
     let data = await api
       .get(`${ACCOUNT_API_URL}api/v1/applications/`)
       .then(function (res) {
-        console.log('subscription', { applications: res.data.data.results })
         subscriptionData = res.data.data.results;
         // setSubscriptions(res.data.data.results);
         return res.data.data.results
@@ -193,12 +190,7 @@ function UserMenu(props) {
         console.log(error);
       });
     setSubscriptions(data);
-    console.log({ subscriptions2: data })
     setIsLoading(true)
-
-    // console.log({applications: data.map(app=>app.appId)})
-    //   const apps = data.map(app=>app.appId)
-    //   this.getModules(apps)
 
   }
 
@@ -208,7 +200,6 @@ function UserMenu(props) {
     const companyId = localStorage.getItem('companyId')
     let subscriptionData = {}
     let data = await api.get(`${SELF_API}1/`).then(function (res) {
-      console.log({ data: res.data.data.results.data.companies })
       subscriptionData = res.data.data.results.data.companies[0].subscriptions;
       // setSubscriptions(subscriptionData);
       return subscriptionData
@@ -217,13 +208,7 @@ function UserMenu(props) {
       .catch(function (error) {
         console.log(error);
       });
-
-    // await setSubscriptions(data);
-    console.log("data suubs", data)
     await setApps(data.map(app => app.appId))
-
-    //   const apps = data.map(app=>app.appId)
-    //   this.getModules(apps)
 
   }
   const handleClosea = (event) => {
@@ -388,7 +373,6 @@ function UserMenu(props) {
 
         {isLoading ?
           <div elevation={3} className={classnames.list}>
-            {console.log(subscriptions)}
             <List component="nav">
               
               {subscriptions.map(subscription => (

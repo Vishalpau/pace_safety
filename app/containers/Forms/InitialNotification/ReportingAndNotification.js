@@ -221,6 +221,7 @@ const ReportingAndNotification = () => {
 
   // handleSubmit incident details
   const handelNext = async (e) => {
+    if(!incidentsListData.closeDate){
     if (isNext) {
       setIsnext(false);
 
@@ -381,6 +382,7 @@ const ReportingAndNotification = () => {
         }
       }
     }
+  }
   };
 
   // handle notify to

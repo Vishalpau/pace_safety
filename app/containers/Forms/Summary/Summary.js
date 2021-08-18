@@ -34,6 +34,10 @@ import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import api from "../../../utils/axios";
 
+
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
 import IncidentDetails from "../InitialNotification/IncidentDetails";
 import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
 import InvestigationSummary from "../../SummaryDetails/Investigation";
@@ -52,6 +56,7 @@ import {
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
+import CloseOut from "../../SummaryDetails/CloseOut";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -77,7 +82,9 @@ const useStyles = makeStyles((theme) => ({
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const Summary = (props) => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
@@ -91,12 +98,19 @@ const Summary = (props) => {
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearnData, setLessionLearnData] = useState({});
   const [lessionlearn, setLessionlearn] = useState(false);
+  const [closeout, setCloseout] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [initialNoticeficationStatus, setInitialNotificationStatus] = useState(
     false
   );
   const rootCauseStatus = useRef(false);
-  const rcaRecommendedValue = useRef("")
+  const rcaRecommendedValue = useRef("");
+
+  const CLOSE_OUT_MESSAGE = "Incident is closed out. can't be modified! "
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const [formStatus, setFormStatus] = useState({
     initialNotificationCheck: "",
@@ -117,7 +131,10 @@ const Summary = (props) => {
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
     await setIncidents(allIncidents.data.data.results);
-    await setIsLoading(true);
+    if (allIncidents.data.data.results.closeDate) {
+      setCloseout(true)
+    }
+
   };
   const fetchReportData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
@@ -150,8 +167,11 @@ const Summary = (props) => {
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
+    await setIsLoading(true)
     let rcaRecommended = previousData.data.data.results[0].rcaRecommended
     rcaRecommendedValue.current = rcaRecommended
+
+
   }
 
   const rootCauseAnalysisCheck = async () => {
@@ -174,16 +194,13 @@ const Summary = (props) => {
 
   };
 
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+
   const classes = useStyles();
 
   const CheckFormStatus = async () => {
@@ -199,20 +216,29 @@ const Summary = (props) => {
   const handelNaviagte = (value) => {
     history.push(value)
   }
-  const handleInitialNotificationView =()=>{
-    setInitialNotification(true);
-    setInvestigation(false);
-    setEvidence(false);
-    setRootCauseAnalysis(false);
-    setLessionlearn(false);
-    let viewMode = {
-      initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+  const handleInitialNotificationView = () => {
+    if (initialNoticeficationStatus === false) {
+      handelNaviagte(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    } else {
+      setInitialNotification(true);
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false);
+      let viewMode = {
+        initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+      }
+      dispatch(tabViewMode(viewMode))
     }
-    dispatch(tabViewMode(viewMode))
   }
 
   const handelInvestigationView = () => {
-    if (investigationOverview == undefined) {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous step initial details")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
       handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
     } else {
       setInitialNotification(false);
@@ -221,14 +247,23 @@ const Summary = (props) => {
       setRootCauseAnalysis(false);
       setLessionlearn(false);
       let viewMode = {
-        initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
+        initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
       }
       dispatch(tabViewMode(viewMode))
     }
   }
 
   const handelEvidenceView = (e) => {
-    if (evidencesData == undefined) {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous step initial details and investigation")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step investigation")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
       handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
     } else {
       setInitialNotification(false);
@@ -237,7 +272,7 @@ const Summary = (props) => {
       setRootCauseAnalysis(false);
       setLessionlearn(false);
       let viewMode = {
-        initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+        initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
 
       }
       dispatch(tabViewMode(viewMode))
@@ -245,7 +280,20 @@ const Summary = (props) => {
   }
 
   const handelRootCauseAnalysisView = () => {
-    if (rcaRecommendedValue.current == "PACE cause analysis") {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous step initial details, investigation and evidance")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step investigation and evidance")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step investigation and evidance")
+      setMessageType("warning")
+    } else if (rcaRecommendedValue.current == "PACE cause analysis") {
       if (paceCauseData == undefined) {
         handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
       } else {
@@ -255,7 +303,7 @@ const Summary = (props) => {
         setRootCauseAnalysis(true);
         setLessionlearn(false);
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
@@ -270,7 +318,7 @@ const Summary = (props) => {
         setRootCauseAnalysis(true);
         setLessionlearn(false);
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
@@ -285,7 +333,7 @@ const Summary = (props) => {
         setRootCauseAnalysis(true);
         setLessionlearn(false);
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
@@ -294,10 +342,64 @@ const Summary = (props) => {
       handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
     }
   }
+  const handleCloseOutOverView = async => {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous step initial details, investigation, evidance and root and cause analysis")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step investigation, evidance and root and cause analysis")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step evidance and root and cause analysis")
+      setMessageType("warning")
+    } else if (!paceCauseData || !rootCausesData || !whyData) {
+      setOpen(true);
+      setMessage("Please complete the previous step evidance and root and cause analysis")
+      setMessageType("warning")
+    }
+    else {
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false,
+        closeout: true
+
+      }
+      dispatch(tabViewMode(viewMode))
+
+      // handelNaviagte(
+      //   `/app/incident-management/registration/close-out/${localStorage.getItem(
+      //     "fkincidentId"
+      //   )}`
+      // )
+    }
+  }
 
   const handelLessionLearnedView = () => {
-    if (lessionlearnData == undefined) {
-      handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous step initial details, investigation, evidance, root cause analysis and close out")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step investigation, evidance, root cause analysis and close out")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step evidance, root cause analysis and close out")
+      setMessageType("warning")
+    } else if (!paceCauseData || !rootCausesData || !whyData) {
+      setOpen(true);
+      setMessage("Please complete the previous step root cause analysis and close out")
+      setMessageType("warning")
+    }
+    else if (closeout) {
+      setOpen(true);
+      setMessage("Please complete the previous step close out")
+      setMessageType("warning")
     } else {
       setInitialNotification(false);
       setInvestigation(false);
@@ -305,14 +407,123 @@ const Summary = (props) => {
       setRootCauseAnalysis(false);
       setLessionlearn(true);
       let viewMode = {
-        initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
 
       }
       dispatch(tabViewMode(viewMode))
     }
   }
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenwarning(false)
+      return;
+    }
+    setOpen(false);
+  };
 
+  const modifyInitialDetails = () => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    } else {
+      handelNaviagte(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+    }
+  }
+
+  const modifyInvestigation = (fkid) => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete initial details")
+      setMessageType("warning")
+    }
+    else {
+
+      if (fkid) {
+        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/${fkid}`)
+      } else {
+        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
+      }
+
+    }
+  }
+  const modifyEvidence = (fkid) => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete initial details")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete in investigation")
+      setMessageType("warning")
+    }
+    else {
+      handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
+    }
+  }
+  const modifyRootCauseAnalysis = () => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete initial details")
+      setMessageType("warning")
+    }
+    else if (investigationOverview === undefined) {
+      setOpen(true);
+      setMessage("Please complete in investigation")
+      setMessageType("warning")
+    } else if (evidencesData === undefined) {
+
+      setOpen(true);
+      setMessage("Please complete in evidence")
+      setMessageType("warning")
+    }
+    else {
+      alert(evidencesData)
+      handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)
+    }
+  }
+  const modifyLessonLearn = () => {
+    if (closeout) {
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    } else {
+      handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+    }
+  }
+  const modifyCloseout = () => {
+    // if (closeout) {
+
+    //   setOpen(true);
+    //   setMessage(CLOSE_OUT_MESSAGE)
+    //   setMessageType("warning")
+    // } else {
+      handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
+    // }
+  }
 
   useEffect(() => {
     fetchIncidentData();
@@ -428,6 +639,22 @@ const Summary = (props) => {
               </div>
               <div className={Styles.item}>
                 <Button
+                  color={props.viewMode.viewMode.closeout == true ? "secondary" : "primary"}
+                  variant={closeout ? "contained" : "outlined"}
+                  size="large"
+                  className={classes.statusButton}
+                  endIcon={closeout ? <CheckCircle /> : <AccessTime />}
+                  onClick={(e) => handleCloseOutOverView()
+                  }
+                >
+                  Close out
+                </Button>
+                <Typography className={Fonts.labelValue} display="block">
+                  {closeout ? "Done" : "Pending"}
+                </Typography>
+              </div>
+              <div className={Styles.item}>
+                <Button
                   color={props.viewMode.viewMode.lessionlearn == true ? "secondary" : "primary"}
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
@@ -452,24 +679,23 @@ const Summary = (props) => {
                 <>
                   {(() => {
                     if (
-                      initialNotification == true ||
-                      (investigation === false &&
-                        evidence === false &&
-                        rootcauseanalysis === false &&
-                        lessionlearn === false)
+                      props.viewMode.viewMode.initialNotification == true
                     ) {
                       return <IncidentDetailsSummary />;
                     }
-                    if (investigation == true) {
+                    if (props.viewMode.viewMode.investigation == true) {
                       return <InvestigationSummary />;
                     }
-                    if (evidence == true) {
+                    if (props.viewMode.viewMode.evidence == true) {
                       return <EvidenceSummary />;
                     }
-                    if (rootcauseanalysis == true) {
+                    if (props.viewMode.viewMode.rootcauseanalysis == true) {
                       return <RootCauseAnalysisSummary />;
                     }
-                    if (lessionlearn == true) {
+                    if (props.viewMode.viewMode.closeout == true) {
+                      return <CloseOut />;
+                    }
+                    if (props.viewMode.viewMode.lessionlearn == true) {
                       return <LessionLearnSummary />;
                     }
                   })()}
@@ -487,20 +713,30 @@ const Summary = (props) => {
                         <ListSubheader component="div">Actions</ListSubheader>
                       }
                     >
-                      <ListItemLink
+                      <Snackbar
+                        open={open}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                      >
+                        <Alert onClose={handleClose} severity={messageType}>
+                          {message}
+                        </Alert>
+                      </Snackbar>
+                      <ListItemLink button
                       >
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
                         <ListItemText
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/initial-notification/incident-details/${id}`)}
+
+                          onClick={(e) => modifyInitialDetails()}
                           primary="Modify Notification" />
                       </ListItemLink>
 
                       {investigationOverview ? (
                         <ListItemLink
                           // onClick = {(e)=>handelNaviagte()}
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/${id}`)}
+                          onClick={(e) => modifyInvestigation(id)}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -509,7 +745,7 @@ const Summary = (props) => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) => handelNaviagte("/app/incident-management/registration/investigation/investigation-overview/")}>
+                          onClick={(e) => modifyInvestigation()}>
                           <ListItemIcon>
                             <Add />
                           </ListItemIcon>
@@ -520,7 +756,7 @@ const Summary = (props) => {
 
                       {evidencesData ? (
                         <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)}
+                          onClick={(e) => modifyEvidence(id)}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -529,7 +765,7 @@ const Summary = (props) => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) => handelNaviagte("/app/incident-management/registration/evidence/evidence/")}>
+                          onClick={(e) => modifyEvidence(id)}>
                           <ListItemIcon>
                             <Add />
                           </ListItemIcon>
@@ -539,7 +775,7 @@ const Summary = (props) => {
                       )}
                       {paceCauseData || rootCausesData || whyData ? (
                         <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)}
+                          onClick={(e) => modifyRootCauseAnalysis()}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -548,7 +784,7 @@ const Summary = (props) => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)}
+                          onClick={(e) => modifyRootCauseAnalysis()}
                         >
                           <ListItemIcon>
                             <Add />
@@ -558,7 +794,7 @@ const Summary = (props) => {
                       )}
                       {lessionlearnData ? (
                         <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)}
+                          onClick={(e) => modifyLessonLearn()}
                         >
                           <ListItemIcon>
                             <Edit />
@@ -566,8 +802,8 @@ const Summary = (props) => {
                           <ListItemText primary="Modify Lessons Learnt" />
                         </ListItemLink>
                       ) : (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)}
+                        <ListItemLink button
+                          onClick={(e) => modifyLessonLearn()}
                         >
                           <ListItemIcon>
                             <Add />
@@ -576,7 +812,9 @@ const Summary = (props) => {
                         </ListItemLink>
                       )}
 
-                      <ListItem button divider>
+                      <ListItem
+                        onClick={(e) => modifyCloseout()}
+                        button divider>
                         <ListItemIcon>
                           <Close />
                         </ListItemIcon>
@@ -605,12 +843,7 @@ const Summary = (props) => {
                         </ListItemIcon>
                         <ListItemText primary="Print" />
                       </ListItem>
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Share />
-                        </ListItemIcon>
-                        <ListItemText primary="Share" />
-                      </ListItem>
+
                     </List>
                   </Paper>
                 </Grid>
@@ -631,5 +864,5 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(Summary);
+export default connect(mapStateToProps, null)(Summary);
 // export default Summary;
