@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, lazy } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -76,6 +76,7 @@ const BasicCauseAndAction = () => {
   const [actionData, setActionData] = useState({});
 
   const handelShowData = async () => {
+    console.log("here")
     let tempApiData = [];
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(HAZARDIOUS_CONDITION_SUB_TYPES);
     let page_url = window.location.href;
@@ -91,17 +92,28 @@ const BasicCauseAndAction = () => {
         tempApiData.push(allApiData[index])
       }
     });
-    await setData(tempApiData);
+    await handelActionTracker(tempApiData);
   };
 
-  const handelActionTracker = async () => {
-    let allPaceID = id.current;
+  const handelActionTracker = async (apiData) => {
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    let ActionToCause = {};
-    const allActionTrackerData = await api_action.get("/api/v1/actions/");
+    for (let key in apiData) {
+      const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]}`);
+      console.log(allActionTrackerData)
+      if (allActionTrackerData.data.data.results.results.length > 0) {
+        let actionTracker = allActionTrackerData.data.data.results.results
+        const temp = []
+        actionTracker.map((value) => {
+          let actionTrackerId = value.id
+          temp.push(actionTrackerId)
+        })
+        apiData[key]["action"] = temp
+      }
+    }
+    await setData(apiData);
   };
 
   function ListItemLink(props) {
@@ -129,10 +141,13 @@ const BasicCauseAndAction = () => {
     await setIncidentDetail(result);
   };
 
+  const handelCallback = async () => {
+    await handelShowData();
+    await fetchIncidentDetails();
+  }
 
   useEffect(() => {
-    fetchIncidentDetails();
-    handelShowData();
+    handelCallback()
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -173,7 +188,7 @@ const BasicCauseAndAction = () => {
             <Divider />
             <Box paddingTop={3}>
               <Typography variant="h6">
-                Option Selected from Hazardous Acts and Condition
+                Option(s) Selected from Hazardous Acts and Condition
               </Typography>
             </Box>
 
@@ -188,6 +203,11 @@ const BasicCauseAndAction = () => {
                       <span>{value.rcaRemark}</span>
                     </TableCell>
                     <TableCell align="right">
+                      <Typography>
+                        {value.action != undefined && value.action.map((actionId) => (
+                          <p>{actionId}</p>
+                        ))}
+                      </Typography>
                       <ActionTracker
                         actionContext="incidents:Pacacuase"
                         enitityReferenceId={`${putId.current}:${value.id}`}
@@ -200,8 +220,8 @@ const BasicCauseAndAction = () => {
             </Table>
             {data.length == 0 ?
               <Grid container item md={9}>
-                <Typography variant="h6">
-                  No Options Selected
+                <Typography variant="h8">
+                  No option(s) selected
                 </Typography>
               </Grid>
               : null}

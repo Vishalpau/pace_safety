@@ -8,7 +8,6 @@ const PickListData = async (value) => {
     data_array.map((value) => {
         required_fields.push({ value: value.inputValue, label: value.inputLabel })
     })
-    console.log(required_fields)
     return required_fields
 }
 

@@ -66,12 +66,16 @@ const HazardiousActs = () => {
   const [incidentDetail, setIncidentDetail] = useState({});
   const [paceCauseDelete, setPaceCauseDelete] = useState()
   const [nextButton, setNextButton] = useState(false)
+  const [paceCauseRemark, setPaceCauseRemark] = useState()
+  const [allPaceCause, setAllPaceCause] = useState({})
 
 
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempData = {}
     let paceCauseid = []
+    let paceCauseRmk = []
+    let allFetchPaceCause = {}
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
@@ -88,7 +92,9 @@ const HazardiousActs = () => {
           } else {
             tempData[value.rcaSubType] = [value.rcaRemark]
           }
+          paceCauseRmk.push(value.rcaRemark)
           paceCauseid.push(value.id)
+          allFetchPaceCause[value.id] = value.rcaRemark
         }
       })
       setForm({
@@ -126,7 +132,9 @@ const HazardiousActs = () => {
           rcaRemark: handelApiValue(tempData["otherActs"]),
         },
       });
+      setPaceCauseRemark(paceCauseRmk)
       setPaceCauseDelete(paceCauseid)
+      setAllPaceCause(allFetchPaceCause)
     }
   }
 
@@ -311,11 +319,24 @@ const HazardiousActs = () => {
   const selectValues = ["Option1", "Option2", "...."];
 
   const handelDelete = async () => {
+
+    let currentRemark = [].concat.apply([], [
+      form.supervision.rcaRemark,
+      form.workpackage.rcaRemark,
+      form.equipmentMachinery.rcaRemark,
+      form.behaviourIssue.rcaRemark,
+      form.safetyIssues.rcaRemark,
+      form.ergonimics.rcaRemark,
+      form.procedures.rcaRemark,
+      form.others.rcaRemark,
+    ])
     if (paceCauseDelete !== undefined && paceCauseDelete.length > 0) {
-      for (let key in paceCauseDelete) {
-        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${paceCauseDelete[key]}/`)
-        if (delPaceCause.status == 200) {
-          console.log("deleted")
+      for (let key in allPaceCause) {
+        if (!currentRemark.includes(allPaceCause[key])) {
+          let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${key}/`)
+          if (delPaceCause.status == 200) {
+            console.log("deleted")
+          }
         }
       }
     }
@@ -331,10 +352,13 @@ const HazardiousActs = () => {
 
   const handelApiCall = async () => {
     let tempData = []
+
+    let lastRemark = Object.values(allPaceCause)
+
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
-        if (value !== "") {
+        if (!lastRemark.includes(value) && value !== "") {
           let temp = {
             createdBy: "0",
             fkIncidentId: putId.current,
@@ -348,7 +372,6 @@ const HazardiousActs = () => {
         }
       })
     })
-    console.log(tempData)
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
     if (res.status == 200) {
       handelNavigate("next")

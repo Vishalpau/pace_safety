@@ -28,6 +28,7 @@ import Type from "../../../styles/components/Fonts.scss";
 import { FormHelperText } from "@material-ui/core";
 import { PassThrough } from "stream";
 import { checkValue } from "../../../utils/CheckerValue";
+import { from } from "form-data";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -70,7 +71,6 @@ const Details = () => {
   let [hideArray, setHideArray] = useState([]);
   let [investigationData, setInvestigationData] = useState({});
   let [rcaDisable, setRcaDisable] = useState("");
-
   // get data for put
   const handelUpdateCheck = async () => {
     let page_url = window.location.href;
@@ -86,7 +86,6 @@ const Details = () => {
       `/api/v1/incidents/${incidentId}/causeanalysis/`
     );
     let allApiData = previousData.data.data.results[0];
-
     // fetching data from
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
@@ -141,9 +140,9 @@ const Details = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
-  const handelRcaRecommended = (e, value) => {
+  const handelRcaRecommended = async (e, value) => {
     if (value == "Five why analysis") {
-      setHideArray([
+      await setHideArray([
         "Hazardous acts",
         "Hazardous conditions",
         "Corrective actions",
@@ -154,9 +153,9 @@ const Details = () => {
         "Cause analysis",
       ]);
     } else if (value == "PACE cause analysis") {
-      setHideArray(["Cause analysis", "Five Why analysis"]);
+      await setHideArray(["Cause analysis", "Five Why analysis"]);
     } else if (value == "Cause analysis") {
-      setHideArray([
+      await setHideArray([
         "Hazardous acts",
         "Hazardous conditions",
         "Corrective actions",
@@ -208,7 +207,6 @@ const Details = () => {
           "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
         );
       } else if (form.rcaRecommended == "Cause analysis") {
-        console.log("here");
         history.push(
           "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
         );
@@ -229,7 +227,7 @@ const Details = () => {
           }`
         );
       }
-    }
+    } d
 
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
@@ -238,7 +236,7 @@ const Details = () => {
   const handelCallBack = async () => {
     await handelUpdateCheck();
     await fetchIncidentData();
-    await setHideArray(hideArray || localStorage.getItem("deleteForm"));
+    await setHideArray(localStorage.getItem("deleteForm"));
     await handelInvestigationData();
   }
 
@@ -250,7 +248,7 @@ const Details = () => {
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {console.log(investigationData.rcaRecommended)}
+      {/* {console.log(form.rcaRecommended)} */}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
@@ -323,8 +321,7 @@ const Details = () => {
                   id="project-name"
                   labelId="project-name-label"
                   label="RCA recommended"
-                  // value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
-                  value={form.rcaRecommended}
+                  value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
                   disabled={rcaDisable != "" ? true : false}
                 >
                   {RCAOPTION.map((selectValues) => (
