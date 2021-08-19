@@ -36,7 +36,7 @@ import api from "../../../../utils/axios";
 
 import ProjectDetailsValidator from "../../../Validator/AHA/ProjectDetailsValidation";
 
-import { AHA } from "../../../../utils/constants";
+import { AHA } from "../constants";
 
 
 
@@ -377,7 +377,7 @@ bytes
       "ahaStage": "",
       "badgeNumber": "",
       "status": "Active",
-      "createdBy": 0,
+      "createdBy": parseInt(userId),
       "source": "Web",
       "vendor": "string",
       "vendorReferenceId": "string"
@@ -400,6 +400,8 @@ bytes
     }
    
   }
+
+  
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -553,6 +555,8 @@ bytes
   }, []);
   return (
     <>
+        <PapperBlock title="Project details" icon="ion-md-list-box">
+
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
         {/* <Grid item xs={12} className={classes.coponentTitleBox}>
@@ -573,7 +577,7 @@ bytes
                 Unit
         </Typography>
         <Typography className={classes.labelValue}>
-        {selectBreakdown.length > 2 ? selectBreakdown[1].name : "-"}
+        {selectBreakdown.length !== 0 ? selectBreakdown[1].name : "-"}
         </Typography>
         </Grid>
         <Grid
@@ -879,6 +883,7 @@ bytes
               />
 </Grid>
     </Grid>
+    </PapperBlock>
     </>
   );
 };

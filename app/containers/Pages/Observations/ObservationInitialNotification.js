@@ -738,7 +738,7 @@ const ObservationInitialNotification = () => {
       fetchDepartment()
       fetchAttachment()
       setIsLoading(true);
-      fetchNotificationSent()
+      // fetchNotificationSent()
       fetchSuperVisorName()
       fetchReportedBy()
       PickList()

@@ -53,7 +53,7 @@ if(data.isSituationAddressed === "Yes") {
 }
 
 if (validator.isEmpty(data.acceptAndPledge.toString())) {
-  error.acceptAndPledge = "Please tick accept and pledge";
+  error.acceptAndPledge = "Please check the Accept & Pledge";
   isValid = false;
 }
 

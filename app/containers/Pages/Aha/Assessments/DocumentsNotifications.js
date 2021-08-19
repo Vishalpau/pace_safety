@@ -4,6 +4,7 @@ import {
   Grid, Typography, TextField, Button
 } from '@material-ui/core';
 import FormLabel from '@material-ui/core/FormLabel';
+import { PapperBlock } from 'dan-components';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -24,8 +25,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams , useHistory } from 'react-router';
 
-import { AHA } from "../../../../utils/constants";
-
+import { AHA } from "../constants";
 
 
 
@@ -168,6 +168,8 @@ const DocumentNotification = () => {
   const classes = useStyles();
   return (
     <>
+                <PapperBlock title="Documents & notifications" icon="ion-md-list-box">
+
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
 
@@ -246,7 +248,7 @@ const DocumentNotification = () => {
             />
         </FormGroup>
         </Grid>
-        <Grid
+        {/* <Grid
         item
         md={12}
         xs={12}
@@ -291,7 +293,7 @@ const DocumentNotification = () => {
             label="Work Area"
             />
         </FormGroup>
-        </Grid>
+        </Grid> */}
         <Grid
         item
         md={12}
@@ -310,6 +312,7 @@ const DocumentNotification = () => {
               />
 </Grid>
     </Grid>
+    </PapperBlock>
     </>
   );
 };

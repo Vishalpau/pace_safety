@@ -3,6 +3,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Grid, Typography, TextField, Button
 } from '@material-ui/core';
+import { PapperBlock } from 'dan-components';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -21,8 +22,7 @@ import MUIDataTable from 'mui-datatables';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams , useHistory } from 'react-router';
 
-import { AHA } from "../../../../utils/constants";
-
+import { AHA } from "../constants";
 
 
 
@@ -236,6 +236,8 @@ const Assessment = () => {
   const classes = useStyles();
   return (
     <>
+                    <PapperBlock title="Assessments" icon="ion-md-list-box">
+
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
 
@@ -351,6 +353,7 @@ const Assessment = () => {
               />
 </Grid>
     </Grid>
+    </PapperBlock>
     </>
   );
 };
