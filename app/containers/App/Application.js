@@ -144,6 +144,7 @@ import {
   LessonsLearned,
   Prints,
   Setting,
+  Comments,
 } from "../pageListAsync";
 
 
@@ -443,10 +444,7 @@ function Application(props) {
           path="/app/pages/options/"
           component={Options}
         />
-
-
-
-
+        <Route exact path="/app/:entity/comments/:id/" component={Comments} />
         {/* close out */}
         <Route
           exact

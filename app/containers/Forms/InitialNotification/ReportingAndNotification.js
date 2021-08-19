@@ -541,11 +541,16 @@ const ReportingAndNotification = () => {
     await fetchReportableTo();
     const res = await api.get(`/api/v1/incidents/${id}/reports/`);
     const result = res.data.data.results;
-
-    if (result.length > 0) {
-      let getNotifyTo = result[0].notifyTo.split(',')
-
-      await setNotifyToList(getNotifyTo);
+    
+    if (result.length>0) {
+      console.log({result:result})
+      if(result[0].notifyTo){
+        let getNotifyTo = result[0].notifyTo.split(',')
+        await setNotifyToList(getNotifyTo);
+      }
+      
+      
+      
       const reportToData = [];
       for (const key in result) {
         reportToData.push(result[key].reportTo);
@@ -557,17 +562,15 @@ const ReportingAndNotification = () => {
           }
         }
       }
-
+      console.log({reportedTo:reportToData})
       await setReportedToObj(result);
-      let temp = { ...form };
-      temp["reportedto"] = reportToData;
-      await setForm(temp);
-      // await setForm({ ...form, reportedto: reportToData });
+   
+      await setForm({ ...form, reportedto: reportToData });
     }
 
     await setIsLoading(true);
   };
-
+// console.log(form)
   // fetch incident data
   const fetchIncidentsData = async () => {
     const res = await api.get(
