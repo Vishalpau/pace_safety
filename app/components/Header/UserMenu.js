@@ -151,7 +151,6 @@ function UserMenu(props) {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    console.log(access_token);
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/user/logout/`,
@@ -161,11 +160,10 @@ function UserMenu(props) {
           "csrftoken=Z4uAv7EMxWG5KCWNNzqdravi8eoUZcIB8OoGeJ4W1abx4i3zqhLwIzloVMcsFrr5",
       },
     };
-    console.log(config);
+  
     axios(config)
       .then((response) => {
         if (response.status === 201) {
-          console.log(response);
           localStorage.removeItem("access_token");
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
@@ -194,10 +192,6 @@ function UserMenu(props) {
     setSubscriptions(data);
     setIsLoading(true)
 
-    // console.log({applications: data.map(app=>app.appId)})
-    //   const apps = data.map(app=>app.appId)
-    //   this.getModules(apps)
-
   }
 
 
@@ -214,12 +208,7 @@ function UserMenu(props) {
       .catch(function (error) {
         console.log(error);
       });
-
-    // await setSubscriptions(data);
     await setApps(data.map(app => app.appId))
-
-    //   const apps = data.map(app=>app.appId)
-    //   this.getModules(apps)
 
   }
   const handleClosea = (event) => {

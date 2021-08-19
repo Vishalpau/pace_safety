@@ -224,7 +224,7 @@ const IncidentDetailsSummary = () => {
       )}
       <Grid item xs={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incident overview
+          Incident title
         </Typography>
         <Typography
           className={classNames(classes.incidentTitle, Fonts.labelValue)}
