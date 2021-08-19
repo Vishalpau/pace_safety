@@ -36,9 +36,10 @@ import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
 
-// redux
 
-import { breakDownDetails } from "../../../redux/actions/initialDetails";
+// redux
+import {connect} from 'react-redux'
+import { breakDownDetails,levelBDownDetails } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -56,12 +57,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IncidentDetails = () => {
+const IncidentDetails = (props) => {
   // Props definations.
   const classes = useStyles();
   const [error, setError] = useState({});
-  const selectValues = [1, 2, 3, 4];
-  const companyName = ["ABC Ltd", "XYZ steel", "ABA power", "XDA works"];
   const [incidentsListData, setIncidentsListdata] = useState({
     incidentOccuredOn: null,
   });
@@ -73,6 +72,10 @@ const IncidentDetails = () => {
   const [eqiptmentAffectValue, setEquipmentAffectValue] = useState([]);
   const [environmentAffectValue, setEnvironmentAffectValue] = useState([]);
   const [isNext, setIsNext] = useState(true);
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [selectValue, setSelectValue] = useState([])
+
+  const [selectBreakDown, setSelectBreakDown] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -262,99 +265,99 @@ const IncidentDetails = () => {
         // Create case if id is not null and means it is an add new registration case.
         const { error, isValid } = validate(form);
         await setError(error);
-        if(fkProjectStructureIds === ""){
+        if (fkProjectStructureIds === "") {
           alert("Please select Level of phase.")
           setIsNext(true);
-        }else{
-        if (isValid === true) {
-          const formData = {
-            fkCompanyId: parseInt(fkCompanyId),
-            fkProjectId: parseInt(project.projectId),
-
-            fkProjectStructureIds:
-              fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-
-            incidentNumber: "",
-            incidentType: form.incidentType,
-            incidentTitle: form.incidentTitle,
-            incidentDetails: form.incidentDetails,
-            immediateActionsTaken: form.immediateActionsTaken,
-            incidentOccuredOn: form.incidentOccuredOn,
-            isPersonAffected: form.isPersonAffected,
-            isPersonDetailsAvailable: "No",
-            personAffectedComments: "",
-            isPropertyDamaged: form.isPropertyDamaged,
-            isPropertyDamagedAvailable: "No",
-            propertyDamagedComments: "",
-            isEquipmentDamaged: form.isEquipmentDamaged,
-            isEquipmentDamagedAvailable: "No",
-            equipmentDamagedComments: "",
-            isEnviromentalImpacted: form.isEnviromentalImpacted,
-            enviromentalImpactComments: "",
-            supervisorByName: "",
-            supervisorById: 0,
-            incidentReportedOn: new Date().toISOString(),
-            incidentReportedByName: userName,
-            incidentReportedById: 0,
-            reasonLateReporting: "",
-            notificationComments: "",
-            reviewedBy: 0,
-            reviewDate: null,
-            closedBy: 0,
-            closeDate: null,
-            status: "Active",
-            incidentLocation: form.incidentLocation,
-            assignTo: 0,
-            createdBy: parseInt(userId),
-            updatedBy: userId,
-            source: "Web",
-            vendor: "string",
-            vendorReferenceId: "string",
-            contractor: form.contractor,
-            subContractor: form.subContractor,
-          };
-          // sent post api
-          try {
-            const res = await api.post("/api/v1/incidents/", formData);
-            if (res.status === 201) {
-              const fkincidentId = res.data.data.results.id;
-              localStorage.setItem("fkincidentId", fkincidentId);
-              localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
-              localStorage.setItem("nextPath", JSON.stringify(nextPath));
-
-              // Decide on which path to go next.
-              if (nextPath.personAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
-                );
-              } else if (nextPath.propertyAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
-                );
-              } else if (nextPath.equipmentAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
-                );
-              } else if (nextPath.environmentAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
-                );
-              } else {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
-                );
-              }
-            }
-          } catch (error) {
-            setIsNext(true);
-            setMessage("Something went worng!");
-            setMessageType("error");
-            setOpen(true);
-          }
         } else {
-          setIsNext(true);
+          if (isValid === true) {
+            const formData = {
+              fkCompanyId: parseInt(fkCompanyId),
+              fkProjectId: parseInt(project.projectId),
+
+              fkProjectStructureIds:
+                fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+
+              incidentNumber: "",
+              incidentType: form.incidentType,
+              incidentTitle: form.incidentTitle,
+              incidentDetails: form.incidentDetails,
+              immediateActionsTaken: form.immediateActionsTaken,
+              incidentOccuredOn: form.incidentOccuredOn,
+              isPersonAffected: form.isPersonAffected,
+              isPersonDetailsAvailable: "No",
+              personAffectedComments: "",
+              isPropertyDamaged: form.isPropertyDamaged,
+              isPropertyDamagedAvailable: "No",
+              propertyDamagedComments: "",
+              isEquipmentDamaged: form.isEquipmentDamaged,
+              isEquipmentDamagedAvailable: "No",
+              equipmentDamagedComments: "",
+              isEnviromentalImpacted: form.isEnviromentalImpacted,
+              enviromentalImpactComments: "",
+              supervisorByName: "",
+              supervisorById: 0,
+              incidentReportedOn: new Date().toISOString(),
+              incidentReportedByName: userName,
+              incidentReportedById: 0,
+              reasonLateReporting: "",
+              notificationComments: "",
+              reviewedBy: 0,
+              reviewDate: null,
+              closedBy: 0,
+              closeDate: null,
+              status: "Active",
+              incidentLocation: form.incidentLocation,
+              assignTo: 0,
+              createdBy: parseInt(userId),
+              updatedBy: userId,
+              source: "Web",
+              vendor: "string",
+              vendorReferenceId: "string",
+              contractor: form.contractor,
+              subContractor: form.subContractor,
+            };
+            // sent post api
+            try {
+              const res = await api.post("/api/v1/incidents/", formData);
+              if (res.status === 201) {
+                const fkincidentId = res.data.data.results.id;
+                localStorage.setItem("fkincidentId", fkincidentId);
+                localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
+                localStorage.setItem("nextPath", JSON.stringify(nextPath));
+
+                // Decide on which path to go next.
+                if (nextPath.personAffect === "Yes") {
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
+                  );
+                } else if (nextPath.propertyAffect === "Yes") {
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
+                  );
+                } else if (nextPath.equipmentAffect === "Yes") {
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
+                  );
+                } else if (nextPath.environmentAffect === "Yes") {
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
+                  );
+                } else {
+                  history.push(
+                    `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
+                  );
+                }
+              }
+            } catch (error) {
+              setIsNext(true);
+              setMessage("Something went worng!");
+              setMessageType("error");
+              setOpen(true);
+            }
+          } else {
+            setIsNext(true);
+          }
         }
-      }
       }
     }
   };
@@ -495,26 +498,95 @@ const IncidentDetails = () => {
       }
     }
   };
-  // fetchBreakdownData
+
+  const handleBreakdown = async (e, index, label) => {
+  const projectData = JSON.parse(localStorage.getItem('projectName'))
+ 
+  
+  const temp = [...breakdown1ListData]
+  
+  const value = e.target.value
+  //  temp[index-1]["selectValue"] = value
+  
+  
+    // let name = breakdown1ListData[index - 1].breakdownValue.map(
+    //   async (item) => {
+    //     if (item.id === value) {
+    //       await setSelectBreakDown([
+    //         ...selectBreakDown,
+    //         { depth: item.depth, id: item.id, name: item.name,label:label },
+    //       ]);
+    
+    //       return;
+    //     }
+
+    //   }
+    // );
+    for (var key in projectData.projectName.breakdown) {
+     
+      if (key == index) {
+        await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+        }${value}`)
+          .then(function (response) {
+            if (response.status === 200) {
+
+              if (
+                breakdown1ListData.filter(
+                  (item) =>
+                    item.breakdownLabel ===
+                    projectData.projectName.breakdown[key].structure[0].name
+                ).length > 0
+              ) {
+                return;
+              } else {
+                setBreakdown1ListData([
+                  ...breakdown1ListData,
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[key].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: value,
+                    index:index
+                  },
+                ]);
+               
+              }
+            }
+          })
+          .catch(function (error) {
+
+          });
+      }
+    }
+  };
+ 
+
+  // fetch breakdown Data
+  const fetchCallBack = async () => {
+    const data = props.initialValues.levelBreakDown || localStorage.getItem('breakDownList')
+    await setBreakdown1ListData(data)
+    const selectbreakdown = props.initialValues.breakDown || localStorage.getItem('selectBreakDown')
+    await setSelectBreakDown(selectbreakdown) 
+  };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-   
+
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[0].structure[0].url
-          }`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
           headers: HEADER_AUTH,
         };
-       
+
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            
+
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
@@ -525,26 +597,25 @@ const IncidentDetails = () => {
             });
           })
           .catch((error) => {
-            
+
             setIsNext(true);
           });
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[key].structure[0].url
-          }${breakDown[key-1].slice(-1)}`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].slice(-1)}`,
           headers: HEADER_AUTH,
         };
-       
+
         await api(config)
           .then(async (response) => {
-          
+
             const result = response.data.data.results;
-           
-            const res=result.map((item, index) => {
+
+            const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-               
+
                 selectBreakDown = [
                   ...selectBreakDown,
                   { depth: item.depth, id: item.id, name: item.name },
@@ -552,16 +623,16 @@ const IncidentDetails = () => {
               }
             });
 
-          
+
           })
           .catch((error) => {
-            console.log(error)
+            
             setIsNext(true);
           });
       }
     }
     dispatch(breakDownDetails(selectBreakDown));
-    
+
     // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
@@ -586,7 +657,8 @@ const IncidentDetails = () => {
     fetchEquipmentAffectValue();
     fetchEnviornmentAffectValue();
     fetchIncidentsData();
-  }, []);
+    fetchCallBack();
+  }, [props.initialValues.levelBreakDown,props.initialValues.breakDown]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
@@ -597,19 +669,96 @@ const IncidentDetails = () => {
           <Col md={9}>
             <Grid container spacing={3}>
               {/* Project Name */}
-              <Grid item xs={12}>
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  Project name
-                </Typography>
+              <Grid item xs={6}>
+               
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
+                  >
+                    Project name
+                  </Typography>
+
+
                 <Typography className={Type.labelValue}>
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
+              {/* {selectBreakdown? selectBreakdown.map((item, index) =>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
+                  >
+                    {item.label}
+                  </Typography>
+                  <Typography className={Type.labelValue}>
+                    {item.name}
+                  </Typography>
+                </Grid>) : 
+               null} */}
+               {selectBreakdown&&selectBreakdown.map((selectBreakdown,value)=><Grid item xs={6}>
+               
+               <Typography
+                 variant="h6"
+                 className={Type.labelName}
+                 gutterBottom
+                 id="project-name-label"
+               >
+                 {selectBreakdown.label}
+               </Typography>
+
+
+             <Typography className={Type.labelValue}>
+             {selectBreakdown.name}
+             </Typography>
+           </Grid>)}
+           
+                {breakdown1ListData?breakdown1ListData.map((item, index) => (
+                   <Grid item xs={6}>
+                      <FormControl
+                        key={index}
+                        variant="outlined"
+                        required
+                        className={classes.formControl}
+                      >
+                        <InputLabel id="filter3-label">
+                          {item.breakdownLabel}
+                        </InputLabel>
+                        <Select
+                          labelId="filter3-label"
+                          id="filter3"
+                          // value={parseInt(item.selectValue) }
+                          onChange={(e) => {
+                            
+                            handleBreakdown(e, item.index+1,item.breakdownLabel,item.selectValue)
+
+                          }}
+                          label="Phases"
+                          style={{ width: "100%" }}
+                        >
+                          {item.breakdownValue.length
+                            ? item.breakdownValue.map(
+                              (selectValue, selectKey) => (
+                                <MenuItem
+                                  key={selectKey}
+                                  value={selectValue.id}
+                                  // onClick={(e)=> handleBreakdown(selectValue.id, index+1,item.breakdownLabel)}
+                                >
+                                  {selectValue.name}
+                                </MenuItem>
+                              )
+                            )
+                            : null}
+                        </Select>
+                      </FormControl>
+
+                      </Grid>
+                    )):null}
+               
               {/* Unit Name */}
 
               {/* Incident Type */}
@@ -634,10 +783,10 @@ const IncidentDetails = () => {
                   >
                     {incidentTypeValue.length !== 0
                       ? incidentTypeValue.map((selectValues, index) => (
-                          <MenuItem key={index} value={selectValues.inputValue}>
-                            {selectValues.inputLabel}
-                          </MenuItem>
-                        ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                       : null}
                   </Select>
                   {error && error.incidentType && (
@@ -657,7 +806,6 @@ const IncidentDetails = () => {
                     required
                     className={classes.formControl}
                     label="Incident date & time"
-                    error={error.incidentOccuredOn}
                     helperText={
                       error.incidentOccuredOn ? error.incidentOccuredOn : null
                     }
@@ -781,10 +929,10 @@ const IncidentDetails = () => {
                   >
                     {contractorValue.length !== 0
                       ? contractorValue.map((selectValues, index) => (
-                          <MenuItem key={index} value={selectValues.inputValue}>
-                            {selectValues.inputLabel}
-                          </MenuItem>
-                        ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                       : null}
                   </Select>
                   {error && error.contractor && (
@@ -817,10 +965,10 @@ const IncidentDetails = () => {
                   >
                     {subContractorValue.length !== 0
                       ? subContractorValue.map((selectValues, index) => (
-                          <MenuItem key={index} value={selectValues.inputValue}>
-                            {selectValues.inputLabel}
-                          </MenuItem>
-                        ))
+                        <MenuItem key={index} value={selectValues.inputValue}>
+                          {selectValues.inputLabel}
+                        </MenuItem>
+                      ))
                       : null}
                   </Select>
                   {error && error.subContractor && (
@@ -865,13 +1013,13 @@ const IncidentDetails = () => {
                   >
                     {personAffectedValue.length !== 0
                       ? personAffectedValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
                       : null}
                   </RadioGroup>
 
@@ -916,13 +1064,13 @@ const IncidentDetails = () => {
                   >
                     {propertiesAffectValue.length !== 0
                       ? propertiesAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
                       : null}
                   </RadioGroup>
                   {error && error.isPropertyDamaged && (
@@ -966,12 +1114,12 @@ const IncidentDetails = () => {
                   >
                     {eqiptmentAffectValue.length !== 0
                       ? eqiptmentAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
+                        <FormControlLabel
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
                       : null}
                   </RadioGroup>
                   {error && error.isEquipmentDamaged && (
@@ -1015,13 +1163,13 @@ const IncidentDetails = () => {
                   >
                     {environmentAffectValue.length !== 0
                       ? environmentAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
+                        <FormControlLabel
+                          key={index}
+                          value={value.inputValue}
+                          control={<Radio />}
+                          label={value.inputLabel}
+                        />
+                      ))
                       : null}
                   </RadioGroup>
                   {error && error.isEnviromentalImpacted && (
@@ -1064,4 +1212,10 @@ const IncidentDetails = () => {
     </PapperBlock>
   );
 };
-export default IncidentDetails;
+
+const IncidentDetailsInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(IncidentDetails);
+
+export default IncidentDetailsInit;
+// export default IncidentDetails;

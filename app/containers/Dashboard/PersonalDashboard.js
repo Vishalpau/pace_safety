@@ -228,20 +228,20 @@ function PersonalDashboard(props) {
     const companyId = props.initialValues.companyDataList.fkCompanyId || JSON.parse(localStorage.getItem('company')).fkCompanyId
     try {
 
-      // console.log(companyId)
+
       let data = await api.get(`${SELF_API}${companyId}/`)
         .then(function (res) {
-         
+
 
           return res.data.data.results.data.companies[0].subscriptions;
         })
         .catch(function (error) {
           console.log(error);
         });
-    
+
       await setSubscriptions(data)
 
-   
+
       const apps = data.map(app => app.appId)
       getModules(apps)
     } catch (error) { }
@@ -250,7 +250,7 @@ function PersonalDashboard(props) {
   }
 
   const getModules = async (apps) => {
-   
+
     let data = await api
       .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
       .then(function (res) {
@@ -260,17 +260,17 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-   
+
     const codes = data.map(module => module.moduleCode)
     setCode(codes)
 
 
-  
+
   }
 
   const handleClick = (appCode) => {
-   let fkAppId =""
-  
+    let fkAppId = ""
+
     let fkApp = modules.map(module => {
       if (module.moduleCode === appCode) {
         fkAppId = module.fkAppId
@@ -287,13 +287,13 @@ function PersonalDashboard(props) {
 
     let clientId = ''
     let hostings = subscriptions.map(apps => {
-      
+
       if (fkAppId === apps.appId) {
         clientId = apps.hostings[0].clientId
         return apps.hostings;
       }
     })[0];
-    
+
 
     if (clientId) {
 
@@ -321,7 +321,7 @@ function PersonalDashboard(props) {
       }
     })[0]
 
-  
+
   }
   const dispatch = useDispatch();
 
@@ -373,7 +373,7 @@ function PersonalDashboard(props) {
     };
     await axios(config)
       .then(function (response) {
-        console.log('user',response)
+
         if (response.status === 200) {
           if (response.data.data.results.data.companies.length > 1) {
             const companey = JSON.parse(localStorage.getItem("company"));
@@ -458,7 +458,7 @@ function PersonalDashboard(props) {
               <div className="hexagontent hexagon_content_box" />
             </div>
 
-            <div  className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+            <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
               <div className="hexagontent hexagon_content_box" >
                 <a
                   className="hse_incident_reporting_management"
@@ -572,46 +572,58 @@ function PersonalDashboard(props) {
 
       {/* <Hexagon companyId={companyId}/> */}
       {/* Company */}
+
       <Dialog
-        fullScreen
-        scroll="paper"
         className={classes.projectDialog}
         open={open}
-        onClose={handleClose}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            handleClose(event, reason);
+          }
+        }}
+        PaperProps={{
+          style: {
+            width: 400,
+          },
+        }}
       >
-        <DialogTitle onClose={handleClose}>Select Company</DialogTitle>
-        <DialogContent className={classesm.centeredDialogContent}>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12} md={5}>
-              <List>
-                {companyListData.length > 0
-                  ? companyListData.map((selectValues, key) => (
-                    <ListItem
-                      button
-                      key={key}
-                      onClick={() =>
-                        handleCompanyName(
-                          selectValues.companyId,
-                          key,
-                          selectValues.companyName
-                        )
-                      }
-                    >
-                      <ListItemAvatar>
-                        <Avatar variant="rounded">
-                          <ImageIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        className={classes.companyNameList}
-                        primary={selectValues.companyName}
-                      />
-                    </ListItem>
-                  ))
-                  : null}
-              </List>
+        <DialogTitle onClose={handleClose}>
+          Select Company
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <List>
+                  {companyListData.length > 0
+                    ? companyListData.map((selectValues, key) => (
+                      <ListItem
+                        button
+                        key={key}
+                        onClick={() =>
+                          handleCompanyName(
+                            selectValues.companyId,
+                            key,
+                            selectValues.companyName
+                          )
+                        }
+                      >
+                        <ListItemAvatar>
+                          <Avatar variant="rounded">
+                            <ImageIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          className={classes.companyNameList}
+                          primary={selectValues.companyName}
+                        />
+                      </ListItem>
+                    ))
+                    : null}
+                </List>
+              </Grid>
             </Grid>
-          </Grid>
+          </DialogContentText>
         </DialogContent>
       </Dialog>
       {/* Project  */}

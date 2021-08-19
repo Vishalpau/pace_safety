@@ -167,8 +167,8 @@ const RootCauseAnalysis = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
         }
         dispatch(tabViewMode(viewMode))
         history.push(
@@ -178,8 +178,8 @@ const RootCauseAnalysis = () => {
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
         }
         dispatch(tabViewMode(viewMode))
         history.push(

@@ -126,37 +126,39 @@ const EventDetails = () => {
       }
 
       // Weather data
-      const weather = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
-        }/events/${eventId.current}/weatherconditions/`
-      );
-      const weatherData = weather.data.data.results;
-      if (typeof weatherData !== "undefined") {
-        setWeather(weatherData);
-        weatherData.map((value) => {
-          weatherId.current.push(value.id);
-        });
+      if (eventId.current != "") {
+        const weather = await api.get(
+          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          }/events/${eventId.current}/weatherconditions/`
+        );
+        const weatherData = weather.data.data.results;
+        if (typeof weatherData !== "undefined") {
+          setWeather(weatherData);
+          weatherData.map((value) => {
+            weatherId.current.push(value.id);
+          });
+        }
+        const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
+        const costData = cost.data.data.results
+        if (costData.length !== 0) {
+          setOverAllCost(costData)
+          costData.map((value) => {
+            overAllCostId.current.push(value.id)
+          })
+        } else if (costData.length == 0) {
+          let tempCostData = [{
+            costType: "",
+            costAmount: "",
+            casualFactor: "",
+            currency: "INR",
+            status: "Active",
+            createdBy: 0,
+          }]
+          setOverAllCost(tempCostData)
+        }
       }
-
       // event data
-      const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
-      const costData = cost.data.data.results
-      if (costData.length !== 0) {
-        setOverAllCost(costData)
-        costData.map((value) => {
-          overAllCostId.current.push(value.id)
-        })
-      } else if (costData.length == 0) {
-        let tempCostData = [{
-          costType: "",
-          costAmount: "",
-          casualFactor: "",
-          currency: "INR",
-          status: "Active",
-          createdBy: 0,
-        }]
-        setOverAllCost(tempCostData)
-      }
+
 
     }
     localStorage.setItem("WorkerPost", "done");
@@ -391,15 +393,15 @@ const EventDetails = () => {
                   >
                     {activityListValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            activity: selectValues,
+                            activity: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -423,15 +425,15 @@ const EventDetails = () => {
                   >
                     {jobTaskValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            jobTask: selectValues,
+                            jobTask: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -481,10 +483,10 @@ const EventDetails = () => {
                       >
                         {weatherValues.current.map((selectValues) => (
                           <MenuItem
-                            value={selectValues}
-                            onClick={(e) => handelWeather(e, index, selectValues)}
+                            value={selectValues.value}
+                            onClick={(e) => handelWeather(e, index, selectValues.value)}
                           >
-                            {selectValues}
+                            {selectValues.label}
                           </MenuItem>
                         ))}
                       </Select>
@@ -544,15 +546,15 @@ const EventDetails = () => {
                   >
                     {lightningValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            lighting: selectValues,
+                            lighting: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -616,15 +618,15 @@ const EventDetails = () => {
                   >
                     {fluidTypeValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            spillsFluidType: selectValues,
+                            spillsFluidType: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -771,14 +773,14 @@ const EventDetails = () => {
                             >
                               {costTypeValues.current.map((selectValues) => (
                                 <MenuItem
-                                  value={selectValues}
+                                  value={selectValues.value}
                                   onClick={async (e) => {
                                     const temp = [...overAllCost];
-                                    temp[index]["costType"] = selectValues;
+                                    temp[index]["costType"] = selectValues.value;
                                     await setOverAllCost(temp);
                                   }}
                                 >
-                                  {selectValues}
+                                  {selectValues.label}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -831,14 +833,14 @@ const EventDetails = () => {
                               {casualFactorTypeValues.current.map(
                                 (selectValues) => (
                                   <MenuItem
-                                    value={selectValues}
+                                    value={selectValues.value}
                                     onClick={async (e) => {
                                       const temp = [...overAllCost];
-                                      temp[index]["casualFactor"] = selectValues;
+                                      temp[index]["casualFactor"] = selectValues.value;
                                       await setOverAllCost(temp);
                                     }}
                                   >
-                                    {selectValues}
+                                    {selectValues.label}
                                   </MenuItem>
                                 )
                               )}

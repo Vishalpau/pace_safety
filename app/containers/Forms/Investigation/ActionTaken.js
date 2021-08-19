@@ -100,11 +100,11 @@ const ActionTaken = () => {
                 variant="outlined"
                 id="filled-basic"
                 label="Pre-event mitigation"
-                value={form.preEventMitigations}
-                placeholder="Pre-event mitigation"
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                value={form.preEventMitigations != undefined ? form.preEventMitigations : ""}
+                // placeholder="Pre-event mitigation"
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
                 onChange={(e) => {
                   setForm({
                     ...form,

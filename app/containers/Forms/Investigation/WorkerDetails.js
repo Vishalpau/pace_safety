@@ -43,6 +43,7 @@ import { object } from "prop-types";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Attachment from "../../../containers/Attachment/Attachment";
+import { handelFileName } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -178,7 +179,7 @@ const WorkerDetails = () => {
       setForm(particularEffected);
     }
     if (
-      typeof particularEffected.id !== "undefined" ||
+      !particularEffected ||
       particularEffected.id != ""
     ) {
       setWorkerId(particularEffected.id);
@@ -211,6 +212,7 @@ const WorkerDetails = () => {
     "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
   let fielSizeError = "Size less than 25Mb allowed";
   const handleFile = async (e) => {
+    console.log("here")
     let acceptFileTypes = [
       "pdf",
       "png",
@@ -326,8 +328,7 @@ const WorkerDetails = () => {
       if (!isNaN(form.id)) {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.put(
-          `/api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/workers/${workerid}/`,
           data
         );
@@ -335,8 +336,7 @@ const WorkerDetails = () => {
       } else {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.post(
-          `/api/v1/incidents/${putId.current}/investigations/${
-            investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/workers/`,
           data
         );
@@ -407,8 +407,7 @@ const WorkerDetails = () => {
     if (!isNaN(worker_removed[workerNumber].id)) {
       let deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${
-          deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
@@ -519,6 +518,7 @@ const WorkerDetails = () => {
                     }}
                   />
                 </Grid>
+
                 {/* worker type */}
                 <Grid item xs={12} md={6}>
                   <FormControl
@@ -542,7 +542,10 @@ const WorkerDetails = () => {
                       }}
                     >
                       {workerType.current.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem
+                          value={value.value}>
+                          {value.label}
+                        </MenuItem>
                       ))}
                     </Select>
                     {error && error.workerType && (
@@ -573,7 +576,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {departmentName.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                     {error && error.department && (
@@ -604,7 +607,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {workHours.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -655,7 +658,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {shiftType.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -681,7 +684,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {occupation.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -707,7 +710,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {shiftCycle.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -735,7 +738,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {noOfDaysIntoShift.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -763,7 +766,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {timeInCompany.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -791,7 +794,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {timeOnProject.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -819,7 +822,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {timeInIndustry.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -890,7 +893,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {primaryBodyPartWithSide.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -918,7 +921,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {secondaryBodyPartWithSide.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -947,7 +950,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {typeOfInjury.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                     {error && error.typeOfInjury && (
@@ -1036,7 +1039,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {higherMedicalResponder.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -1084,7 +1087,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {treatmentType.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -1112,7 +1115,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {mechanismOfInjury.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -1387,7 +1390,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {supervisorTimeInIndustry.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -1415,7 +1418,7 @@ const WorkerDetails = () => {
                       value={form.supervisorTimeInCompany}
                     >
                       {supervisorTimeInCompany.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -1443,7 +1446,7 @@ const WorkerDetails = () => {
                       value={form.supervisorTimeOnProject}
                     >
                       {supervisorTimeOnProject.map((value) => (
-                        <MenuItem value={value}>{value}</MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -1468,6 +1471,7 @@ const WorkerDetails = () => {
                     type="file"
                     className={classes.fullWidth}
                     name="file"
+                    ref={ref}
                     accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
                     style={{
                       color:
@@ -1480,12 +1484,14 @@ const WorkerDetails = () => {
                 </Grid>
 
                 <Grid item md={12}>
-                  {form.attachments != "" &&
-                  typeof form.attachments == "string" ? (
-                    <Attachment value={form.attachments} />
-                  ) : (
-                    <p />
-                  )}
+                  <Typography title={handelFileName(form.attachments)}>
+                    {form.attachments != "" &&
+                      typeof form.attachments == "string" ? (
+                      <Attachment value={form.attachments} />
+                    ) : (
+                      <p />
+                    )}
+                  </Typography>
                 </Grid>
 
                 {localWorkerData.length > 1 ? (

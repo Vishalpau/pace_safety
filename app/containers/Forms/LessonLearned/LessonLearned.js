@@ -227,10 +227,7 @@ const LessionLearned = () => {
 
         }
         dispatch(tabViewMode(viewMode));
-        history.push(
-          `/app/incident-management/registration/close-out/${localStorage.getItem(
-            "fkincidentId"
-          )}`
+        history.push(`/app/incident-management/registration/summary/summary/${id}`
         );
       }
     }

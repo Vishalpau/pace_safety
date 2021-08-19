@@ -147,6 +147,7 @@ function Header(props) {
   const [projectOpen, setProjectOpen] = React.useState(false);
   const [projectListData, setProjectListData] = useState([]);
   const [projectDisable, setProjectDisable] = useState(false);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false)
   const dispatch = useDispatch();
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
@@ -278,6 +279,7 @@ function Header(props) {
       JSON.stringify(selectBreakDown)
     );
     await dispatch(breakDownDetails([]))
+    await setIsPopUpOpen(true)
     localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
     setCompanyOpen(false);
@@ -341,7 +343,7 @@ function Header(props) {
     },
   }))(MuiDialogActions);
 
-  const filterOpen = Boolean(anchorEl);
+  const filterOpen = Boolean();
   const id = filterOpen ? "simple-popover" : undefined;
   const classesm = useStyles();
 
@@ -520,7 +522,7 @@ function Header(props) {
             </Dialog>
           </div>
           <Hidden smDown>
-            <Headerbox />
+            <Headerbox filterOpen={isPopUpOpen} setIsPopUpOpen={setIsPopUpOpen}/>
           </Hidden>
         </div>
 
