@@ -688,3 +688,6 @@ export const LessonsLearned = loadable(() => import("./Pages/Aha/LessonsLearned/
 export const Setting = loadable(() => import("./Settings/Setting"), {
   fallback: <Loading />,
 });
+export const Comments = loadable(() => import("./Comments/Comments"), {
+  fallback: <Loading />,
+});

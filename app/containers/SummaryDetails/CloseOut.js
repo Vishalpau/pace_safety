@@ -179,7 +179,9 @@ const CloseOutSummary = () => {
                                     Close Date
                                 </Typography>
                                 <Typography className={Fonts.labelValue}>
-                                    {incidents.closeDate}
+                                {moment(incidents.closeDate).format(
+                                        "Do MMMM YYYY, h:mm:ss a"
+                                    )}  {}
                                 </Typography>
                             </Grid>
                         </Grid>

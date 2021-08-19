@@ -506,22 +506,8 @@ const IncidentDetails = (props) => {
   const temp = [...breakdown1ListData]
   
   const value = e.target.value
-  //  temp[index-1]["selectValue"] = value
+  let selectBreakDown = JSON.parse(localStorage.getItem('selectBreakDown')) || []
   
-  
-    // let name = breakdown1ListData[index - 1].breakdownValue.map(
-    //   async (item) => {
-    //     if (item.id === value) {
-    //       await setSelectBreakDown([
-    //         ...selectBreakDown,
-    //         { depth: item.depth, id: item.id, name: item.name,label:label },
-    //       ]);
-    
-    //       return;
-    //     }
-
-    //   }
-    // );
     for (var key in projectData.projectName.breakdown) {
      
       if (key == index) {
@@ -564,10 +550,10 @@ const IncidentDetails = (props) => {
 
   // fetch breakdown Data
   const fetchCallBack = async () => {
-    const data = props.initialValues.levelBreakDown || localStorage.getItem('breakDownList')
+    const data = props.initialValues.levelBreakDown || JSON.parse(localStorage.getItem('levelBreakDown'))
     await setBreakdown1ListData(data)
-    const selectbreakdown = props.initialValues.breakDown || localStorage.getItem('selectBreakDown')
-    await setSelectBreakDown(selectbreakdown) 
+    const selectbreakdown = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
+      await setSelectBreakDown(selectbreakdown) 
   };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
