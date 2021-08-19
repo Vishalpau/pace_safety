@@ -738,7 +738,7 @@ const ObservationInitialNotification = () => {
       fetchDepartment()
       fetchAttachment()
       setIsLoading(true);
-      fetchNotificationSent()
+//       fetchNotificationSent()
       fetchSuperVisorName()
       fetchReportedBy()
       PickList()
@@ -1228,28 +1228,28 @@ const ObservationInitialNotification = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-//             {notificationSentValue.map((value,index) =>(
-//             <Grid
-//             item
-//             md={12}
-//             xs={12}
-//             className={classes.formBox}
-//           >
-//             <FormGroup>
-//               <FormControlLabel
-//                 className={classes.labelValue}
-//                 control={(
-//                   <Checkbox
-//                     icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-//                     checkedIcon={<CheckBoxIcon fontSize="small" />}
-//                     name="notify"
-//                     onChange={(e) => {handleNotify(value.id,index , e)}}
-//                   />
-//                 )}
-//                 label={`Do you want to Notify the ${value.roleName}`}
-//               />
-//             </FormGroup>
-//           </Grid>))}
+            {notificationSentValue.map((value,index) =>(
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBox}
+          >
+            <FormGroup>
+              <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="notify"
+                    onChange={(e) => {handleNotify(value.id,index , e)}}
+                  />
+                )}
+                label={`Do you want to Notify the ${value.roleName}`}
+              />
+            </FormGroup>
+          </Grid>))}
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
