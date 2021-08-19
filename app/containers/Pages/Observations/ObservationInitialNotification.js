@@ -1354,19 +1354,24 @@ const ObservationInitialNotification = () => {
               <FormGroup className={classes.customCheckBoxList}>
                 <FormControlLabel
                   className={classes.labelValue}
+                // helperText={
+                //   error.acceptAndPledge ? error.acceptAndPledge : ""
+                // }
                   control={
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                       checkedIcon={<CheckBoxIcon fontSize="small" />}
+                      error={error.acceptAndPledge}
                       name="checkedI"
                       onChange={(e) => {
                         handlePledge(e);
                       }}
                     />
                   }
-                  label="I Accept & Pledge"
+                  label="I Accept & Pledge*"
                 />
               </FormGroup>
+              <p style={{color: "red"}}>{error.acceptAndPledge}</p>
             </Grid>
 
             <Grid item md={12} xs={12} className={classes.formBBanner}>
