@@ -25,10 +25,11 @@ import { useDropzone } from 'react-dropzone';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { Col, Row } from "react-grid-system";
 
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -103,14 +104,14 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '0px !important',
     paddingBottom: '0px !important',
     '& button': {
-        marginTop: '8px',
+      marginTop: '8px',
     },
   },
-// });
+  // });
 }));
 
 const JobDetails = () => {
-// class ObservationInitialNotification extends Component {
+  // class ObservationInitialNotification extends Component {
 
   const department = [
     {
@@ -161,16 +162,16 @@ const JobDetails = () => {
   // const {classes } = this.props;
   // const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-//   const files = acceptedFiles.map(file => (
-//     <li key={file.path}>
-//       {file.path}
-//       {' '}
-// -
-//       {file.size}
-//       {' '}
-// bytes
-//     </li>
-//   ));
+  //   const files = acceptedFiles.map(file => (
+  //     <li key={file.path}>
+  //       {file.path}
+  //       {' '}
+  // -
+  //       {file.size}
+  //       {' '}
+  // bytes
+  //     </li>
+  //   ));
 
 
   // const [positiveObservation, setPositiveObservation] = useState(true);
@@ -204,32 +205,32 @@ const JobDetails = () => {
   const classes = useStyles();
   return (
     <>
-    <Grid container spacing={3} className={classes.observationNewSection}>
+      <Grid container spacing={3} className={classes.observationNewSection}>
         {/* <Grid item xs={12} className={classes.coponentTitleBox}>
             <Typography variant="h5">Initial Notification</Typography>
         </Grid> */}
 
         <Grid item md={12}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Project
-        </Typography>
-        <Typography className={classes.labelValue}>
-                A23-ERT1236 - NTPC
-        </Typography>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            Project
+          </Typography>
+          <Typography className={classes.labelValue}>
+            A23-ERT1236 - NTPC
+          </Typography>
         </Grid>
         <Grid item md={12}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Unit
-        </Typography>
-        <Typography className={classes.labelValue}>
-                A23-ERT1236 - NTPC
-        </Typography>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            Unit
+          </Typography>
+          <Typography className={classes.labelValue}>
+            A23-ERT1236 - NTPC
+          </Typography>
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
+          item
+          md={12}
+          xs={12}
+          className={classes.formBox}
         >
           <TextField
             label="Job Title"
@@ -242,12 +243,12 @@ const JobDetails = () => {
           />
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
+          item
+          md={12}
+          xs={12}
+          className={classes.formBox}
         >
-        <TextField
+          <TextField
             label="Location"
             name="worklocation"
             id="worklocation"
@@ -255,25 +256,25 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
+          item
+          md={6}
+          xs={12}
+          className={classes.formBox}
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDateTimePicker
-                className={classes.formControl}
-                fullWidth
-                label="Date & Time*"
-                value={selectedDate}
-                onChange={handleDateChange}
-                inputVariant="outlined"
-                disableFuture="true"
-              />
-            </MuiPickersUtilsProvider>
+            <KeyboardDateTimePicker
+              className={classes.formControl}
+              fullWidth
+              label="Date & Time*"
+              value={selectedDate}
+              onChange={handleDateChange}
+              inputVariant="outlined"
+              disableFuture="true"
+            />
+          </MuiPickersUtilsProvider>
         </Grid>
         {/* <Grid
         item
@@ -290,12 +291,12 @@ const JobDetails = () => {
         </FormControl>
         </Grid> */}
         <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
+          item
+          md={6}
+          xs={12}
+          className={classes.formBox}
         >
-        <TextField
+          <TextField
             label="Permit to Work#"
             name="permitwork"
             id="permitwork"
@@ -304,15 +305,15 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
+          item
+          md={12}
+          xs={12}
+          className={classes.formBox}
         >
-        <TextField
+          <TextField
             label="Scope of work (Describe all tasks)"
             name="scopeofwork"
             id="scopeofwork"
@@ -322,24 +323,24 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.createHazardbox}
-        style={{marginTop: '12px', marginBottom: '10px'}}
+          item
+          md={12}
+          xs={12}
+          className={classes.createHazardbox}
+          style={{ marginTop: '12px', marginBottom: '10px' }}
         >
-        <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={11}
-        className={classes.createHazardbox}
+          item
+          md={6}
+          xs={11}
+          className={classes.createHazardbox}
         >
-        <TextField
+          <TextField
             label="Team Name"
             name="arename"
             id="arename"
@@ -348,43 +349,43 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid item md={1} className={classes.createHazardbox}>
-            <IconButton
-                variant="contained"
-                color="primary"
-            >
-                <DeleteForeverIcon />
-            </IconButton>
+          <IconButton
+            variant="contained"
+            color="primary"
+          >
+            <DeleteForeverIcon />
+          </IconButton>
         </Grid>
-        
+
         <Grid item md={12} className={classes.createHazardbox}>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddCircleIcon />}
-                className={classes.button}
-            >
-                Add
-            </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddCircleIcon />}
+            className={classes.button}
+          >
+            Add
+          </Button>
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.createHazardbox}
-        style={{marginTop: '30px'}}
+          item
+          md={12}
+          xs={12}
+          className={classes.createHazardbox}
+          style={{ marginTop: '30px' }}
         >
-        <Typography variant="h6" gutterBottom className={classes.labelName}>Emergency Contact Details</Typography>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>Emergency Contact Details</Typography>
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={11}
+          item
+          md={6}
+          xs={11}
         //className={classes.createHazardbox}
         >
-        <TextField
+          <TextField
             label="Supervisor"
             name="supervisor"
             id="supervisor"
@@ -393,36 +394,36 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={11}
+          item
+          md={6}
+          xs={11}
         //className={classes.createHazardbox}
         >
-        <TextField
+          <TextField
             label="Department"
             name="department"
             id="department"
             select
             fullWidth
             variant="outlined"
-        >
+          >
             {department.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
+              <MenuItem key={option.value} value={option.value}>
                 {option.label}
-            </MenuItem>
+              </MenuItem>
             ))}
-        </TextField>
+          </TextField>
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={11}
+          item
+          md={6}
+          xs={11}
         //className={classes.createHazardbox}
         >
-        <TextField
+          <TextField
             label="Emergency Phone Number"
             name="emergencyphonenumber"
             id="emergencyphonenumber"
@@ -431,15 +432,15 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={11}
+          item
+          md={6}
+          xs={11}
         //className={classes.createHazardbox}
         >
-        <TextField
+          <TextField
             label="Evacuation assembly point"
             name="evacuationassemblypoint"
             id="evacuationassemblypoint"
@@ -448,15 +449,15 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={11}
+          item
+          md={6}
+          xs={11}
         //className={classes.createHazardbox}
         >
-        <TextField
+          <TextField
             label="Permit number"
             name="permitnumber"
             id="permitnumber"
@@ -465,15 +466,15 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={6}
-        xs={11}
+          item
+          md={6}
+          xs={11}
         //className={classes.createHazardbox}
         >
-        <TextField
+          <TextField
             label="Order number"
             name="ordernumber"
             id="ordernumber"
@@ -482,17 +483,17 @@ const JobDetails = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        style={{marginTop: '15px'}}
+          item
+          md={12}
+          xs={12}
+          style={{ marginTop: '15px' }}
         >
-        <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
+          <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
         </Grid>
-    </Grid>
+      </Grid>
     </>
   );
 };

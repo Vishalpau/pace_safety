@@ -90,10 +90,10 @@ export const breakDownDetails = (data)=>{
       payload: data
   }
 }
-export const addbreakDownDetails = data=>{
+export const levelBDownDetails = data=>{
   
   return {
-      type: actionsType.ADD_BREAKDOWN_DETAILS,
+      type: actionsType.LEVEL_BREAKDOWN_DETAILS,
       payload: data
   }
 }
@@ -110,4 +110,8 @@ export const company = data=>{
     type:actionsType.COMPANY_DATA,
     payload:data
   }
+}
+
+export const handleBreakdown = data=>{
+ 
 }

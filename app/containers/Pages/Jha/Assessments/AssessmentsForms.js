@@ -14,6 +14,10 @@ import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
+import { Col, Row } from "react-grid-system";
+
+import FormSideBar from "../../../Forms/FormSideBar"
+import { JHA } from "../Utils/constants"
 
 // style
 const useStyles = makeStyles((theme) => ({
@@ -51,33 +55,33 @@ function AssessmentsForms() {
     <PapperBlock title="Assessments" icon="ion-md-list-box">
       <Grid container spacing={2}>
         <Grid container item xs={12} md={9}>
-        <>
-                {(() => {
-                  if (
-                    jobDetails == true
-                      || (projectAreaHazards === false
-                        && assessment === false
-                        && documentsNotifications === false)
-                  ) {
-                    return (<JobDetails />);
-                  }
-                  if (projectAreaHazards == true) {
-                    return (<ProjectAreaHazards />);
-                  }
-                  if (assessment == true) {
-                    return (<Assessment />);
-                  }
-                  if (documentsNotifications == true) {
-                    return (<DocumentsNotifications />);
-                  }
-                })()}
-              </>
+          <>
+            {(() => {
+              if (
+                jobDetails == true
+                || (projectAreaHazards === false
+                  && assessment === false
+                  && documentsNotifications === false)
+              ) {
+                return (<JobDetails />);
+              }
+              if (projectAreaHazards == true) {
+                return (<ProjectAreaHazards />);
+              }
+              if (assessment == true) {
+                return (<Assessment />);
+              }
+              if (documentsNotifications == true) {
+                return (<DocumentsNotifications />);
+              }
+            })()}
+          </>
         </Grid>
 
         <Grid item xs={12} md={3}>
           <Paper elevation={1}>
             <List dense>
-              <ListItem 
+              <ListItem
                 className={classes.activeList}
                 onClick={(e) => {
                   setJobDetails(true);
@@ -85,7 +89,7 @@ function AssessmentsForms() {
                   setAssessment(false);
                   setDocumentsNotifications(false);
                 }}
-                >
+              >
                 <ListItemIcon className={classes.icon}>
                   <DoubleArrowIcon fontSize="small" />
                 </ListItemIcon>
@@ -96,14 +100,14 @@ function AssessmentsForms() {
               </ListItem>
 
               <ListItem
-               className={classes.notActiveList}
-               onClick={(e) => {
+                className={classes.notActiveList}
+                onClick={(e) => {
                   setJobDetails(false);
                   setProjectAreaHazards(true);
                   setAssessment(false);
                   setDocumentsNotifications(false);
                 }}
-               >
+              >
                 <ListItemIcon className={classes.icon}>
                   <RemoveCircleOutlineIcon fontSize="small" />
                 </ListItemIcon>
@@ -112,7 +116,7 @@ function AssessmentsForms() {
                   primary="Job Hazards"
                 />
               </ListItem>
-              <ListItem 
+              <ListItem
                 className={classes.notActiveList}
                 onClick={(e) => {
                   setJobDetails(false);

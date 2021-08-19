@@ -36,7 +36,7 @@ import { connect } from "react-redux";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
 
-import { breakDownDetails } from "../../redux/actions/initialDetails";
+import { breakDownDetails, levelBDownDetails } from "../../redux/actions/initialDetails";
 
 import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
 import Axios from "axios";
@@ -172,7 +172,7 @@ function HeaderBreakdown(props) {
   const filterOpen = Boolean(anchorEl);
   const id = filterOpen ? "simple-popover" : undefined;
 
-  const handleBreakdown = async (e, index) => {
+  const handleBreakdown = async (e, index, label) => {
     const value = e.target.value;
     let temp = [...breakdown1ListData]
     temp[index - 1][`selectValue`] = value;
@@ -189,17 +189,17 @@ function HeaderBreakdown(props) {
           if (item.id === value) {
             setSelectBreakDown([
               ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
+              { depth: item.depth, id: item.id, name: item.name,label:label },
             ]);
             dispatch(breakDownDetails([
               ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
+              { depth: item.depth, id: item.id, name: item.name,label:label },
             ]))
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
                 ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name },
+                { depth: item.depth, id: item.id, name: item.name,label:label },
               ])
             );
             return;
@@ -213,17 +213,17 @@ function HeaderBreakdown(props) {
           if (item.id === value) {
             await setSelectBreakDown([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
+              { depth: item.depth, id: item.id, name: item.name,label:label },
             ]);
             dispatch(breakDownDetails([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
+              { depth: item.depth, id: item.id, name: item.name,label:label },
             ]))
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
                 ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name },
+                { depth: item.depth, id: item.id, name: item.name,label:label },
               ])
             );
             return;
@@ -233,7 +233,7 @@ function HeaderBreakdown(props) {
       );
     }
 
-
+    if(projectData.projectName.breakdown.length !== index){
     for (var key in projectData.projectName.breakdown) {
       if (key == index) {
         var config = {
@@ -262,9 +262,19 @@ function HeaderBreakdown(props) {
                       projectData.projectName.breakdown[index].structure[0]
                         .name,
                     breakdownValue: response.data.data.results,
-                    selectValue: ""
+                    selectValue: value
                   },
                 ]);
+                dispatch(levelBDownDetails([
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[index].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: value,
+                    index:index
+                  },
+                ]))
               }
             }
           })
@@ -273,6 +283,10 @@ function HeaderBreakdown(props) {
           });
       }
     }
+  }else{
+    dispatch(levelBDownDetails([
+    ]))
+  }
   };
 
   const fetchCallBack = async () => {
@@ -294,10 +308,25 @@ function HeaderBreakdown(props) {
                 breakdownLabel:
                   projectData.projectName.breakdown[0].structure[0].name,
                 breakdownValue: response.data.data.results,
-                selectValue: ""
+                selectValue: "",
+                index:0
               },
             ]);
-
+            if(JSON.parse(localStorage.getItem("selectBreakDown"))){
+              await dispatch(levelBDownDetails([]))
+            }else{
+              await dispatch(levelBDownDetails([
+                {
+                  breakdownLabel:
+                    projectData.projectName.breakdown[0].structure[0]
+                      .name,
+                  breakdownValue: response.data.data.results,
+                  selectValue: "",
+                  index:0
+                },
+              ]))
+            }
+            
             setIsLoading(true);
           })
           .catch(function (error) {
@@ -354,9 +383,10 @@ function HeaderBreakdown(props) {
           {isLoading ? (
             <Box p={3}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                
                   {breakdown1ListData.length > 0
                     ? breakdown1ListData.map((item, index) => (
+                      <Grid item xs={12}>
                       <FormControl
                         key={index}
                         variant="outlined"
@@ -373,7 +403,7 @@ function HeaderBreakdown(props) {
                           id="filter3"
                           value={item.selectValue}
                           onChange={(e) => {
-                            handleBreakdown(e, index + 1);
+                            handleBreakdown(e, index + 1,item.breakdownLabel);
 
                           }}
                           label="Phases"
@@ -393,9 +423,20 @@ function HeaderBreakdown(props) {
                             : null}
                         </Select>
                       </FormControl>
+                      </Grid>
                     ))
                     : null}
-                </Grid>
+                <Grid item md={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        disableElevation
+                        onClick={()=>props.setIsPopUpOpen(false)}
+                      >
+                        Apply
+                      </Button>
+                    </Grid>
               </Grid>
             </Box>
           ) : null}

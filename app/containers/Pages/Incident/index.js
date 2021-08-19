@@ -532,39 +532,26 @@ function BlankPage(props) {
                 </CardContent>
                 <Divider />
                 <CardActions className={Incidents.cardActions}>
-                  <Grid container spacing={2} alignItems="center">
+                  <Grid container spacing={2} justifyContent='space-between' alignItems="center">
                     <Grid item xs={6} md={3}>
                       <Typography
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
                       >
-                        <MessageIcon fontSize="small" /> Comments:
+                        <MessageIcon fontSize="small" /> Comments
                       </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
-                      </Typography>
+                      
                     </Grid>
 
+                   
                     <Grid item xs={6} md={3}>
                       <Typography
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
                       >
-                        <BuildIcon fontSize="small" /> Actions:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} md={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Fonts.listingLabelName}
-                      >
-                        <AttachmentIcon fontSize="small" /> Evidences:
+                        <AttachmentIcon fontSize="small" /> Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
                         <ILink href="#">3</ILink>
@@ -573,23 +560,13 @@ function BlankPage(props) {
 
                     <Grid item xs={6} md={3}>
                       <Button
-                        disabled
+                        // disabled
                         size="small"
                         color="primary"
                         startIcon={<Print />}
                         className={Incidents.actionButton}
                       >
                         Print
-                      </Button>
-
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
-                        Share
                       </Button>
                     </Grid>
                   </Grid>

@@ -12,6 +12,7 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { Col, Row } from "react-grid-system";
 
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -25,7 +26,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -101,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '0px !important',
     paddingBottom: '0px !important',
     '& button': {
-        marginTop: '8px',
+      marginTop: '8px',
     },
   },
   fileUploadFileDetails: {
@@ -141,7 +142,7 @@ const DocumentNotification = () => {
       <li key={file.path}>
         {file.path}
         {' '}
-  -
+        -
         {file.size}
         {' '}
         bytes
@@ -158,38 +159,38 @@ const DocumentNotification = () => {
   const classes = useStyles();
   return (
     <>
-    <Grid container spacing={3} className={classes.observationNewSection}>
-      <Grid
-        item
-        md={8}
-        xs={12}
-        className={classes.formBox}
-      >
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-          Risk assessment supporting documents
-        </Typography>
+      <Grid container spacing={3} className={classes.observationNewSection}>
+        <Grid
+          item
+          md={8}
+          xs={12}
+          className={classes.formBox}
+        >
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            Risk assessment supporting documents
+          </Typography>
+          <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.fileUploadFileDetails}
+          >
+            <h4>Files</h4>
+            <ul>{files}</ul>
+
+            {/* <DeleteIcon /> */}
+          </Grid>
+          <div {...getRootProps({ className: 'dropzone' })}>
+            <input {...getInputProps()} />
+            <p>Drag 'n' drop some files here, or click to select files</p>
+          </div>
+        </Grid>
         <Grid
           item
           md={12}
-          xs={12} 
-          className={classes.fileUploadFileDetails}
+          xs={12}
         >
-          <h4>Files</h4>
-          <ul>{files}</ul>
-          
-          {/* <DeleteIcon /> */}
-        </Grid>
-        <div {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
-        </div>
-      </Grid>
-      <Grid
-        item
-        md={12}
-        xs={12}
-        >
-        <TextField
+          <TextField
             label="Link"
             margin="dense"
             name="link"
@@ -198,96 +199,96 @@ const DocumentNotification = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
-        />
+          />
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
+          item
+          md={12}
+          xs={12}
+          className={classes.formBox}
         >
-        <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-        <FormGroup row>
+          <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
+          <FormGroup row>
             <FormControlLabel
-            className={classes.labelValue}
-            control={(
+              className={classes.labelValue}
+              control={(
                 <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  name="checkedI"
+                  onChange={handleChange}
                 />
-            )}
-            label="Manager"
+              )}
+              label="Manager"
             />
             <FormControlLabel
-            className={classes.labelValue}
-            control={(
+              className={classes.labelValue}
+              control={(
                 <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  name="checkedI"
+                  onChange={handleChange}
                 />
-            )}
-            label="Supervisor"
+              )}
+              label="Supervisor"
             />
-        </FormGroup>
+          </FormGroup>
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
+          item
+          md={12}
+          xs={12}
+          className={classes.formBox}
         >
-        <FormLabel className={classes.labelName} component="legend">Where would you want this assessment to appear</FormLabel>
-        <FormGroup className={classes.customCheckBoxList}>
+          <FormLabel className={classes.labelName} component="legend">Where would you want this assessment to appear</FormLabel>
+          <FormGroup className={classes.customCheckBoxList}>
             <FormControlLabel
-            className={classes.labelValue}
-            control={(
+              className={classes.labelValue}
+              control={(
                 <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  name="checkedI"
+                  onChange={handleChange}
                 />
-            )}
-            label="Project"
+              )}
+              label="Project"
             />
             <FormControlLabel
-            className={classes.labelValue}
-            control={(
+              className={classes.labelValue}
+              control={(
                 <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  name="checkedI"
+                  onChange={handleChange}
                 />
-            )}
-            label="Block"
+              )}
+              label="Block"
             />
             <FormControlLabel
-            className={classes.labelValue}
-            control={(
+              className={classes.labelValue}
+              control={(
                 <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
+                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                  name="checkedI"
+                  onChange={handleChange}
                 />
-            )}
-            label="Work Area"
+              )}
+              label="Work Area"
             />
-        </FormGroup>
+          </FormGroup>
         </Grid>
         <Grid
-        item
-        md={12}
-        xs={12}
+          item
+          md={12}
+          xs={12}
         >
-        <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
+          <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
         </Grid>
-    </Grid>
+      </Grid>
     </>
   );
 };

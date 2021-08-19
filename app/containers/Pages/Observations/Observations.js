@@ -56,6 +56,9 @@ import { List } from 'immutable';
 import { useHistory, useParams } from 'react-router';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import { connect } from "react-redux";
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -146,7 +149,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function Observations() {
+function Observations(props) {
   const [listToggle, setListToggle] = useState(false);
   const history = useHistory();
   const [allInitialData , setAllInitialData] = useState([])
@@ -273,20 +276,50 @@ function Observations() {
   };
 
   const fetchInitialiObservation = async () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const res = await api.get("/api/v1/observations/");
+    const selectBreakdown =props.projectName.breakDown ||
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`/api/v1/observations/`);
-    const result = res.data.data.results.results
-    await setAllInitialData(result)
+  if(fkProjectStructureIds){
+    const newData = res.data.data.results.results.filter(
+      (item) =>
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds ===fkProjectStructureIds
+
+    );
+    await setAllInitialData(newData);
+    await setIsLoading(true)
+
+  }else{
+    const newData = res.data.data.results.results.filter(
+      (item) =>
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId 
+
+    );
+    await setAllInitialData(newData);
+
+    // const res = await api.get(`/api/v1/observations/`);
+    // const result = res.data.data.results.results
+    // await setAllInitialData(result)
     await setIsLoading(true)
     handelActionTracker()
 
+    }
   }
-
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation()
     handleProjectList()
-},[])
+},[props.projectName])
 
   return (
     <PapperBlock title="Observations" icon="ion-md-list-box" desc="">
@@ -597,4 +630,14 @@ function Observations() {
   );
 }
 
-export default Observations;
+const mapStateToProps = state => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state
+
+  }
+}
+
+export default connect(mapStateToProps,null)(Observations)
+
+
