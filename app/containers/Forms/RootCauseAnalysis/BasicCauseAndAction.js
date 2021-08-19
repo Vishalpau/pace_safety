@@ -248,7 +248,7 @@ const BasicCauseAndAction = () => {
 
             <Grid item xs={12}>
               <Typography variant="h6">
-                Option selected from management control
+                Option(s) selected from management control
               </Typography>
 
               <div className={classes.rootTable}>
@@ -276,8 +276,8 @@ const BasicCauseAndAction = () => {
               </div>
               {data.length == 0 ?
                 <Grid container item md={9}>
-                  <Typography variant="h6">
-                    No Options Selected
+                  <Typography variant="h8">
+                    No option(s) selected
                   </Typography>
                 </Grid>
                 : null}

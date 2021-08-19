@@ -372,7 +372,7 @@ const ReportingAndNotification = () => {
             };
             dispatch(tabViewMode(viewMode));
             history.push(
-              `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+              `/app/incident-management/registration/investigation/investigation-overview/${localStorage.getItem(
                 "fkincidentId"
               )}`
             );
@@ -389,19 +389,19 @@ const ReportingAndNotification = () => {
   const handelNotifyTo = async (e, index) => {
     if (e.target.checked === true) {
       let temp = [...notifyToList];
-     
+
       temp.push(e.target.value)
       let uniq = [...new Set(temp)];
-     
+
       setNotifyToList(uniq);
     } else {
       let temp = [...notifyToList];
-      
-        let newData = temp.filter((item) => item !== e.target.value);
-      
+
+      let newData = temp.filter((item) => item !== e.target.value);
+
       setNotifyToList(newData);
     }
-    
+
   };
 
   // handle checkbox reported to
@@ -544,7 +544,7 @@ const ReportingAndNotification = () => {
 
     if (result.length > 0) {
       let getNotifyTo = result[0].notifyTo.split(',')
-     
+
       await setNotifyToList(getNotifyTo);
       const reportToData = [];
       for (const key in result) {
@@ -617,7 +617,7 @@ const ReportingAndNotification = () => {
           setSuperVisorNameList([...result, { name: "other" }]);
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchReportedBy = () => {
@@ -682,7 +682,7 @@ const ReportingAndNotification = () => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // handle go back
@@ -861,11 +861,11 @@ const ReportingAndNotification = () => {
                           }
                           helperText={
                             evidenceError &&
-                            evidenceError[`evidenceRemark${[index]}`]
+                              evidenceError[`evidenceRemark${[index]}`]
                               ? evidenceError[`evidenceRemark${[index]}`]
                               : null
                           }
-                          disabled={item.evidenceDocument?false:true}
+                          disabled={item.evidenceDocument ? false : true}
                           className={classes.formControl}
                           value={item.evidenceRemark}
                           onChange={(e) =>
@@ -924,11 +924,11 @@ const ReportingAndNotification = () => {
                       incidentsListData.supervisorByName === ""
                         ? ""
                         : superVisorNameList.filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
-                        ? incidentsListData.supervisorByName
-                        : "other"
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
+                          ? incidentsListData.supervisorByName
+                          : "other"
                     }
                     onChange={async (e) => {
                       await setSupervisorName(e.target.value);
@@ -950,22 +950,22 @@ const ReportingAndNotification = () => {
                   defaultValue={
                     superVisorNameList.length > 0
                       ? superVisorNameList
-                          .slice(0, -1)
-                          .filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
+                        .slice(0, -1)
+                        .filter(
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
                         ? ""
                         : incidentsListData.supervisorByName
                       : ""
                   }
                   disabled={
-                    supervisorName === ""?true:
-                       superVisorNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === supervisorName)
-                          .length > 0?
-                     true : false
+                    supervisorName === "" ? true :
+                      superVisorNameList
+                        .slice(0, -1)
+                        .filter((item) => item.name === supervisorName)
+                        .length > 0 ?
+                        true : false
                   }
                   className={classes.formControl}
                   onChange={(e) => {
@@ -1023,9 +1023,9 @@ const ReportingAndNotification = () => {
                   disabled={
                     reportedByNameList.length > 0
                       ? reportedByNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === reportedByName)
-                          .length > 0
+                        .slice(0, -1)
+                        .filter((item) => item.name === reportedByName)
+                        .length > 0
                       : true
                   }
                   onChange={(e) => {

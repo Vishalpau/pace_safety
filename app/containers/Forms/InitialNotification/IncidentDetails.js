@@ -501,13 +501,13 @@ const IncidentDetails = (props) => {
 
   const handleBreakdown = async (e, index, label) => {
   const projectData = JSON.parse(localStorage.getItem('projectName'))
-  console.log(index)
+ 
   
   const temp = [...breakdown1ListData]
-  console.log(temp)
+  
   const value = e.target.value
   //  temp[index-1]["selectValue"] = value
-   console.log({temp:temp,e,index,label})
+  
   
     // let name = breakdown1ListData[index - 1].breakdownValue.map(
     //   async (item) => {
@@ -523,7 +523,7 @@ const IncidentDetails = (props) => {
     //   }
     // );
     for (var key in projectData.projectName.breakdown) {
-      console.log(index)
+     
       if (key == index) {
         await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
         }${value}`)
@@ -560,7 +560,7 @@ const IncidentDetails = (props) => {
       }
     }
   };
-  console.log(breakdown1ListData)
+ 
 
   // fetch breakdown Data
   const fetchCallBack = async () => {

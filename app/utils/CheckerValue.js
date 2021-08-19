@@ -38,3 +38,12 @@ export const handelIncidentId = () => {
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     return incidentId
 }
+
+export const handelFileName = (value) => {
+    if (value != null && value !== undefined && typeof value == "string") {
+        const fileNameArray = value.split("/");
+        const fileName = fileNameArray[fileNameArray.length - 1].split('-');
+        const lastNameArray = fileName[fileName.length - 1]
+        return lastNameArray;
+    }
+};

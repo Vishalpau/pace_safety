@@ -152,6 +152,8 @@ function Observations() {
   const [allInitialData , setAllInitialData] = useState([])
   const [isLoading , setIsLoading] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
+  const [projectListData, setProjectListData] = useState([]);
+  const [projectDisable, setProjectDisable] = useState(false);
 
   const handelView = (e) => {
     setListToggle(false);
@@ -250,6 +252,26 @@ function Observations() {
       `/app/pages/prints/${id}`
     );
   };
+
+  const handleProjectList = () => {
+    try {
+      const company = JSON.parse(localStorage.getItem("company"));
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      const data = userDetails.companies.map((item) => {
+        if (item.companyId === parseInt(company.fkCompanyId)) {
+          setProjectDisable(item.projects.length > 1);
+          return setProjectListData(item.projects);
+        }
+      });
+      const filterData = userDetails.companies.filter(
+        (item) => item.companyId === parseInt(company.fkCompanyId)
+      );
+      let projectLength = filterData[0].projects.length <= 1;
+     
+      setProjectDisable(projectLength);
+    } catch (error) {}
+  };
+
   const fetchInitialiObservation = async () => {
 
     const res = await api.get(`/api/v1/observations/`);
@@ -263,6 +285,7 @@ function Observations() {
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation()
+    handleProjectList()
 },[])
 
   return (
@@ -331,7 +354,7 @@ function Observations() {
           <>
           {/* {allInitialData.map((data,index) => ( */}
             <div className="gridView">
-            {allInitialData.length > 0  &&Object.entries(allInitialData).filter((item) => item[1]["observationNumber"].includes(searchIncident.toUpperCase()) ||
+            {allInitialData.length > 0  && Object.entries(allInitialData).filter((item) => item[1]["observationNumber"].includes(searchIncident.toUpperCase()) ||
             item[1]["observationDetails"].toLowerCase().includes(
                       searchIncident.toLowerCase()
                     ) ).map((item, index) => (

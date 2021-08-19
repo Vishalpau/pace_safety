@@ -153,6 +153,7 @@ export const BASIC_CAUSE_SUB_TYPES = [
   "othersHumanFactors",
   "leadership",
   "processes",
+  "otherIssues",
   "othersJobFactors",
 ];
 
@@ -298,6 +299,15 @@ export const PROCESSES = [
   "Wrong Loading- Lifting or Improper Placement Techniques Used",
 ];
 
+export const OTHERISSUES = [
+  "Equipment wear and tear",
+  "Poor quality tools – wear & tear",
+  "Wrong calibration",
+  "Lack of quality or safety audits & Inspections",
+  "Failed to follow corrective actions from previous incidents",
+  "Abuse or misuse – Cultural issue",
+]
+
 export const MANAGEMENTCONTROL = [
   "Inadequate System",
   "Inadequate Standards",
@@ -351,8 +361,8 @@ export const ENGAGEMENT = [
 
 // AHA Route
 export const AHA = {
-  "Project Details" :"/app/pages/aha/assessments/project-details",
-  "Project Area Hazards" : "/app/pages/aha/assessments/project-area-hazards",
-  Assessment : "/app/pages/aha/assessments/assessment",
-  "Documents & Notifications" : "/app/pages/aha/assessments/DocumentsNotifications"
+  "Project Details": "/app/pages/aha/assessments/project-details",
+  "Project Area Hazards": "/app/pages/aha/assessments/project-area-hazards",
+  Assessment: "/app/pages/aha/assessments/assessment",
+  "Documents & Notifications": "/app/pages/aha/assessments/DocumentsNotifications"
 }
