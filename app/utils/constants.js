@@ -164,6 +164,34 @@ export const PACE_MANAGEMENT_CONTROL_SUB_TYPES = [
   "Engagement",
 ];
 
+// hide array 
+
+export const FIVEWHYHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Cause analysis",
+]
+
+export const PACEHIDE = [
+  "Cause analysis", "Five Why analysis"
+]
+
+export const ROOTHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Five Why analysis"
+]
+
 // option in root cause and anlysis
 
 export const SUPERVISON = [
