@@ -74,13 +74,12 @@ const ActionTaken = () => {
     );
     if (res.status === 200) {
       let viewMode = {
-        initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
-  
+        initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+
       }
+      localStorage.setItem("viewMode", JSON.stringify(viewMode))
+      history.push(`/app/incident-management/registration/evidence/evidence/${localStorage.getItem("fkincidentId")}`);
       dispatch(tabViewMode(viewMode));
-      history.push(
-        `/app/incident-management/registration/summary/summary/${putId.current}`
-      );
     }
   };
 

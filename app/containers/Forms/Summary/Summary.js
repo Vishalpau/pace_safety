@@ -27,7 +27,7 @@ import Comment from "@material-ui/icons/Comment";
 import History from "@material-ui/icons/History";
 import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
-
+import { Col, Row } from "react-grid-system";
 // Styles
 import Styles from "dan-styles/Summary.scss";
 import Type from "dan-styles/Typography.scss";
@@ -167,7 +167,8 @@ const Summary = (props) => {
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
-    await setIsLoading(true)
+   
+    
     let rcaRecommended = previousData.data.data.results[0].rcaRecommended
     rcaRecommendedValue.current = rcaRecommended
 
@@ -189,9 +190,12 @@ const Summary = (props) => {
     await setRootCausesData(rootCauseData);
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    if(whyAnalysis.status === 200){
+      await setIsLoading(true)
+    }
     let whyAnalysisData = whyAnalysis.data.data.results[0];
     await setWhyData(whyAnalysisData);
-
+    
   };
 
 
@@ -291,7 +295,7 @@ const Summary = (props) => {
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation and evidance")
+      setMessage("Please complete the previous step evidance")
       setMessageType("warning")
     } else if (rcaRecommendedValue.current == "PACE cause analysis") {
       if (paceCauseData == undefined) {
@@ -360,6 +364,8 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidance and root and cause analysis")
       setMessageType("warning")
+    }else if(!closeout){
+      handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
     }
     else {
       let viewMode = {
@@ -368,12 +374,12 @@ const Summary = (props) => {
 
       }
       dispatch(tabViewMode(viewMode))
-
-      // handelNaviagte(
-      //   `/app/incident-management/registration/close-out/${localStorage.getItem(
-      //     "fkincidentId"
-      //   )}`
-      // )
+      setInitialNotification(false);
+        setInvestigation(false);
+        setEvidence(false);
+        setRootCauseAnalysis(false);
+        setLessionlearn(false);
+        setCloseout(true)
     }
   }
 
@@ -396,11 +402,14 @@ const Summary = (props) => {
       setMessage("Please complete the previous step root cause analysis and close out")
       setMessageType("warning")
     }
-    else if (closeout) {
+    else if (!closeout) {
       setOpen(true);
       setMessage("Please complete the previous step close out")
       setMessageType("warning")
-    } else {
+    } else if(!lessionlearnData){
+      handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+    }
+    else {
       setInitialNotification(false);
       setInvestigation(false);
       setEvidence(false);
@@ -424,7 +433,6 @@ const Summary = (props) => {
 
   const modifyInitialDetails = () => {
     if (closeout) {
-
       setOpen(true);
       setMessage(CLOSE_OUT_MESSAGE)
       setMessageType("warning")
@@ -443,7 +451,7 @@ const Summary = (props) => {
 
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete initial details")
+      setMessage("Please complete the previous step initial details")
       setMessageType("warning")
     }
     else {
@@ -466,12 +474,12 @@ const Summary = (props) => {
 
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete initial details")
+      setMessage("Please complete the previous step initial details and investigation")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete in investigation")
+      setMessage("Please complete the previous step investigation")
       setMessageType("warning")
     }
     else {
@@ -487,17 +495,17 @@ const Summary = (props) => {
     }
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete initial details")
+      setMessage("Please complete the previous step initial details, investigation and evidence")
       setMessageType("warning")
     }
     else if (investigationOverview === undefined) {
       setOpen(true);
-      setMessage("Please complete in investigation")
+      setMessage("Please complete the previous step investigation and evidence")
       setMessageType("warning")
     } else if (evidencesData === undefined) {
 
       setOpen(true);
-      setMessage("Please complete in evidence")
+      setMessage("Please complete the previous step evidence")
       setMessageType("warning")
     }
     else {
@@ -507,22 +515,71 @@ const Summary = (props) => {
   }
   const modifyLessonLearn = () => {
     if (closeout) {
+
       setOpen(true);
       setMessage(CLOSE_OUT_MESSAGE)
       setMessageType("warning")
-    } else {
+    }
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous step initial details, investigation, evidence, root cause analysis and close out")
+      setMessageType("warning")
+    }
+    else if (investigationOverview === undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step investigation, evidence, root cause analysis and close out")
+      setMessageType("warning")
+    } else if (evidencesData === undefined) {
+
+      setOpen(true);
+      setMessage("Please complete the previous step evidence, root cause analysis and close out")
+      setMessageType("warning")
+    }else if (!paceCauseData || !rootCausesData || !whyData) {
+
+      setOpen(true);
+      setMessage("Please complete the previous step  root cause analysis and close out")
+      setMessageType("warning")
+    }
+    else if (!closeout) {
+
+      setOpen(true);
+      setMessage("Please complete the previous step close out")
+      setMessageType("warning")
+    }
+     else {
       handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
     }
   }
   const modifyCloseout = () => {
-    // if (closeout) {
+    if (closeout) {
 
-    //   setOpen(true);
-    //   setMessage(CLOSE_OUT_MESSAGE)
-    //   setMessageType("warning")
-    // } else {
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous step initial details, investigation, evidence and root cause analysis")
+      setMessageType("warning")
+    }
+    else if (investigationOverview === undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous step investigation, evidence and root cause analysis")
+      setMessageType("warning")
+    } else if (evidencesData === undefined) {
+
+      setOpen(true);
+      setMessage("Please complete the previous step evidence and root cause analysis")
+      setMessageType("warning")
+    }else if (!paceCauseData || !rootCausesData || !whyData) {
+
+      setOpen(true);
+      setMessage("Please complete the previous step  root cause analysis")
+      setMessageType("warning")
+    }
+     else {
       handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
-    // }
+    }
   }
 
   useEffect(() => {
@@ -848,7 +905,9 @@ const Summary = (props) => {
                   </Paper>
                 </Grid>
               )}
-            </Grid>
+              
+              </Grid>
+            
           </Box>
         </PapperBlock>
       ) : (
