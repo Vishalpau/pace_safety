@@ -150,8 +150,10 @@ const Summary = (props) => {
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
-    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
-    rcaRecommendedValue.current = rcaRecommended
+    if (previousData.data.data.results[0] !== undefined) {
+      let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+      rcaRecommendedValue.current = rcaRecommended
+    }
   }
 
   const rootCauseAnalysisCheck = async () => {
@@ -199,14 +201,14 @@ const Summary = (props) => {
   const handelNaviagte = (value) => {
     history.push(value)
   }
-  const handleInitialNotificationView =()=>{
+  const handleInitialNotificationView = () => {
     setInitialNotification(true);
     setInvestigation(false);
     setEvidence(false);
     setRootCauseAnalysis(false);
     setLessionlearn(false);
     let viewMode = {
-      initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+      initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
     }
     dispatch(tabViewMode(viewMode))
   }
@@ -221,7 +223,7 @@ const Summary = (props) => {
       setRootCauseAnalysis(false);
       setLessionlearn(false);
       let viewMode = {
-        initialNotification:false,investigation:true,evidence:false,rootcauseanalysis:false,lessionlearn:false
+        initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
       }
       dispatch(tabViewMode(viewMode))
     }
@@ -239,7 +241,7 @@ const Summary = (props) => {
       setRootCauseAnalysis(false);
       setLessionlearn(false);
       let viewMode = {
-        initialNotification:false,investigation:false,evidence:true,rootcauseanalysis:false,lessionlearn:false
+        initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
 
       }
       dispatch(tabViewMode(viewMode))
@@ -257,7 +259,7 @@ const Summary = (props) => {
         setRootCauseAnalysis(true);
         setLessionlearn(false);
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
@@ -272,7 +274,7 @@ const Summary = (props) => {
         setRootCauseAnalysis(true);
         setLessionlearn(false);
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
@@ -287,7 +289,7 @@ const Summary = (props) => {
         setRootCauseAnalysis(true);
         setLessionlearn(false);
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
@@ -307,26 +309,26 @@ const Summary = (props) => {
       setRootCauseAnalysis(false);
       setLessionlearn(true);
       let viewMode = {
-        initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
 
       }
       dispatch(tabViewMode(viewMode))
     }
   };
   const handelInitialNoticeficationView = () => {
-   
-      setInitialNotification(true);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false);
-      
-      let viewMode = {
-        initialNotification:true,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
-  
-      }
-      localStorage.setItem("viewMode",JSON.stringify(viewMode))
-    
+
+    setInitialNotification(true);
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
+
+    let viewMode = {
+      initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+
+    }
+    localStorage.setItem("viewMode", JSON.stringify(viewMode))
+
   };
 
 
@@ -469,21 +471,21 @@ const Summary = (props) => {
                   <>
                     {(() => {
                       if (
-                        JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).initialNotification
-                      
+                        JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).initialNotification
+
                       ) {
                         return <IncidentDetailsSummary />;
                       }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).investigation) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).investigation) {
                         return <InvestigationSummary />;
                       }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).evidence) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).evidence) {
                         return <EvidenceSummary />;
                       }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis) {
                         return <RootCauseAnalysisSummary />;
                       }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null?null: JSON.parse(localStorage.getItem("viewMode")).lessionlearn) {
+                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).lessionlearn) {
                         return <LessionLearnSummary />;
                       }
                     })()}
@@ -591,8 +593,8 @@ const Summary = (props) => {
                       )}
 
                       <ListItem
-                      onClick={()=>history.push(`/app/incident-management/registration/close-out/${id}`)}
-                       button divider>
+                        onClick={() => history.push(`/app/incident-management/registration/close-out/${id}`)}
+                        button divider>
                         <ListItemIcon>
                           <Close />
                         </ListItemIcon>
@@ -647,5 +649,5 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(Summary);
+export default connect(mapStateToProps, null)(Summary);
 // export default Summary;

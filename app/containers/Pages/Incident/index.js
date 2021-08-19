@@ -164,23 +164,6 @@ function BlankPage(props) {
     setListToggle(true);
   };
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-  
-console.log(props.projectName)
-  const fetchData = async () => {
-    console.log(props.projectName.breakDown,"breakdown")
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-    const res = await api.get("api/v1/incidents/");
-    const selectBreakdown =props.projectName.breakDown
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
       : null;
@@ -189,22 +172,39 @@ console.log(props.projectName)
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  if(fkProjectStructureIds){
-    const newData = res.data.data.results.results.filter(
-      (item) =>
-        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds ===fkProjectStructureIds
 
-    );
-    await setIncidents(newData);
-  }else{
-    const newData = res.data.data.results.results.filter(
-      (item) =>
-        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId 
+  console.log(props.projectName)
+  const fetchData = async () => {
+    console.log(props.projectName.breakDown, "breakdown")
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const res = await api.get("api/v1/incidents/");
+    const selectBreakdown = props.projectName.breakDown
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    if (fkProjectStructureIds) {
+      const newData = res.data.data.results.results.filter(
+        (item) =>
+          item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds === fkProjectStructureIds
 
-    );
-    await setIncidents(newData);
-  }
-   
+      );
+      await setIncidents(newData);
+    } else {
+      const newData = res.data.data.results.results.filter(
+        (item) =>
+          item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
+
+      );
+      await setIncidents(newData);
+    }
+
   };
 
   const handlePush = async () => {
@@ -381,10 +381,10 @@ console.log(props.projectName)
 
       {listToggle == false ? (
         <div className="gridView">
-           {Object.entries(incidents)
+          {Object.entries(incidents)
             .filter((searchText) => {
               return (
-              
+
                 searchText[1]["incidentTitle"]
                   .toLowerCase()
                   .includes(searchIncident.toLowerCase()) ||
@@ -628,4 +628,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(BlankPage);
+export default connect(mapStateToProps, null)(BlankPage);
