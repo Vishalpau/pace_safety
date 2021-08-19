@@ -20,7 +20,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, FIVEWHYHIDE, PACEHIDE, ROOTHIDE } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import { RCAOPTION } from "../../../utils/constants";
@@ -72,6 +72,7 @@ const Details = () => {
   let [investigationData, setInvestigationData] = useState({});
   let [rcaDisable, setRcaDisable] = useState("");
   // get data for put
+
   const handelUpdateCheck = async () => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -103,6 +104,8 @@ const Details = () => {
       checkPost.current = false;
     }
   };
+
+
 
   const handelInvestigationData = async () => {
     let investigationpreviousData = await api.get(
@@ -142,29 +145,16 @@ const Details = () => {
 
   const handelRcaRecommended = async (e, value) => {
     if (value == "Five why analysis") {
-      await setHideArray([
-        "Hazardous acts",
-        "Hazardous conditions",
-        "Corrective actions",
-        "Basic cause",
-        "Management control",
-        "Preventive actions",
-        "Additional information",
-        "Cause analysis",
-      ]);
+      await setHideArray(FIVEWHYHIDE);
+      localStorage.setItem("deleteForm", FIVEWHYHIDE)
     } else if (value == "PACE cause analysis") {
-      await setHideArray(["Cause analysis", "Five Why analysis"]);
+      await setHideArray(PACEHIDE);
+      localStorage.setItem("deleteForm", PACEHIDE)
     } else if (value == "Cause analysis") {
-      await setHideArray([
-        "Hazardous acts",
-        "Hazardous conditions",
-        "Corrective actions",
-        "Basic cause",
-        "Management control",
-        "Preventive actions",
-        "Additional information",
-        "Five Why analysis",
-      ]);
+      await setHideArray(ROOTHIDE);
+      localStorage.setItem("deleteForm", ROOTHIDE)
+    } else {
+      localStorage.setItem("deleteForm", [])
     }
     setForm({ ...form, rcaRecommended: value });
   };
