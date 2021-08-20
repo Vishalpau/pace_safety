@@ -360,9 +360,11 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidance and root and cause analysis")
       setMessageType("warning")
-    } else if (!paceCauseData || !rootCausesData || !whyData) {
+
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
+
       setOpen(true);
-      setMessage("Please complete the previous step evidance and root and cause analysis")
+      setMessage("Please complete the previous step root and cause analysis")
       setMessageType("warning")
     } else if (!closeout) {
       handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
@@ -397,7 +399,7 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidance, root cause analysis and close out")
       setMessageType("warning")
-    } else if (!paceCauseData || !rootCausesData || !whyData) {
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
       setOpen(true);
       setMessage("Please complete the previous step root cause analysis and close out")
       setMessageType("warning")
@@ -514,13 +516,7 @@ const Summary = (props) => {
     }
   }
   const modifyLessonLearn = () => {
-    if (closeout) {
-
-      setOpen(true);
-      setMessage(CLOSE_OUT_MESSAGE)
-      setMessageType("warning")
-    }
-    else if (initialNoticeficationStatus === false) {
+    if (initialNoticeficationStatus === false) {
       setOpen(true);
       setMessage("Please complete the previous step initial details, investigation, evidence, root cause analysis and close out")
       setMessageType("warning")
@@ -534,7 +530,7 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidence, root cause analysis and close out")
       setMessageType("warning")
-    } else if (!paceCauseData || !rootCausesData || !whyData) {
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
 
       setOpen(true);
       setMessage("Please complete the previous step  root cause analysis and close out")
@@ -571,7 +567,7 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidence and root cause analysis")
       setMessageType("warning")
-    } else if (!paceCauseData || !rootCausesData || !whyData) {
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
 
       setOpen(true);
       setMessage("Please complete the previous step  root cause analysis")

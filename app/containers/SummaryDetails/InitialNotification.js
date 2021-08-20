@@ -177,11 +177,15 @@ const IncidentDetailsSummary = () => {
       
       if (res.status === 200) {
         const result = res.data.data.results;
-        
-        const newData = result.map(item=> {notifyList.includes(item.id)
-          return item.roleName
+        data =[]
+        const newData = result.map(item=> {
+          console.log(notifyList.includes(item.id.toString()))
+          if(notifyList.includes(item.id.toString())){
+            return item.roleName
+          }
+          
         })
-       
+        console.log({notifyList: newData})
         setNotifyToList(newData)
         // setNotificationSentValue(result);
       }

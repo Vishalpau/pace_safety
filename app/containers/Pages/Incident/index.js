@@ -538,8 +538,9 @@ function BlankPage(props) {
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
+                        onClick={()=>history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                       >
-                        <MessageIcon fontSize="small" /> Comments
+                        <MessageIcon fontSize="small /app/:entity/comments/:id/" /> Comments
                       </Typography>
                       
                     </Grid>
