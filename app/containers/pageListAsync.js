@@ -689,6 +689,9 @@ export const Setting = loadable(() => import("./Settings/Setting"), {
   fallback: <Loading />,
 });
 
+export const Comments = loadable(() => import("./Comments/Comments"), {
+  fallback: <Loading />,
+});
 
 // Jha
 
@@ -725,6 +728,5 @@ export const JhaApprovals = loadable(() => import("./Pages/Jha/Approvals/Approva
 });
 
 export const JhaLessonsLearned = loadable(() => import("./Pages/Jha/LessonsLearned/LessonsLearned"), {
-
   fallback: <Loading />,
 });
