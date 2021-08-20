@@ -589,12 +589,6 @@ const Assessment = () => {
         >
           <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
         </Grid>
-        <Col md={3}>
-          <FormSideBar
-            listOfItems={JHA}
-            selectedItem={"RCA Details"}
-          />
-        </Col>
       </Grid>
     </>
   );

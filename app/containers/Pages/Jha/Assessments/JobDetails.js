@@ -27,6 +27,9 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
 
+import FormSideBar from '../../../Forms/FormSideBar';
+import { JHA_FORM } from "../Utils/constants"
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -36,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
-  },
-  observationNewSection: {
-
   },
   coponentTitleBox: {
     '& h5': {
@@ -140,62 +140,6 @@ const JobDetails = () => {
     },
   ];
 
-
-  // const [state, setState] = React.useState({
-  //   checkedA: true,
-  //   checkedB: true,
-  //   checkedF: true,
-  //   checkedG: true,
-  // });
-
-  // const handleChange = (event) => {
-  //   setState({ ...state, [event.target.name]: event.target.checked });
-  // };
-
-  // const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
-
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
-
-  // render() {
-  // const {classes } = this.props;
-  // const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  //   const files = acceptedFiles.map(file => (
-  //     <li key={file.path}>
-  //       {file.path}
-  //       {' '}
-  // -
-  //       {file.size}
-  //       {' '}
-  // bytes
-  //     </li>
-  //   ));
-
-
-  // const [positiveObservation, setPositiveObservation] = useState(true);
-  // const [riskObservation, setRiskObservation] = useState(true);
-  // const [addressSituation, setAddressSituation] = useState(true);
-
-  // const handelPositivObservation = (e) => {
-  //   setPositiveObservation(false);
-  //   setRiskObservation(true);
-  // };
-
-  // const handelAtRiskConcern = (e) => {
-  //   setPositiveObservation(true);
-  //   setRiskObservation(false);
-  // };
-
-  // const handelAddressSituationYes = (e) => {
-  //   setAddressSituation(false);
-  // };
-
-  // const handelAddressSituationNo = (e) => {
-  //   setAddressSituation(true);
-  // };
-
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleDateChange = (date) => {
@@ -204,297 +148,290 @@ const JobDetails = () => {
 
   const classes = useStyles();
   return (
-    <>
-      <Grid container spacing={3} className={classes.observationNewSection}>
-        {/* <Grid item xs={12} className={classes.coponentTitleBox}>
-            <Typography variant="h5">Initial Notification</Typography>
-        </Grid> */}
+    <PapperBlock title="Job Details" icon="ion-md-list-box">
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item md={12}>
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Project
+              </Typography>
+              <Typography className={classes.labelValue}>
+                A23-ERT1236 - NTPC
+              </Typography>
+            </Grid>
+            <Grid item md={12}>
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Unit
+              </Typography>
+              <Typography className={classes.labelValue}>
+                A23-ERT1236 - NTPC
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              className={classes.formBox}
+            >
+              <TextField
+                label="Job Title"
+                name="jobtitle"
+                id="jobtitle"
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              className={classes.formBox}
+            >
+              <TextField
+                label="Location"
+                name="worklocation"
+                id="worklocation"
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+              className={classes.formBox}
+            >
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDateTimePicker
+                  className={classes.formControl}
+                  fullWidth
+                  label="Date & Time*"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  inputVariant="outlined"
+                  disableFuture="true"
+                />
+              </MuiPickersUtilsProvider>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+              className={classes.formBox}
+            >
+              <TextField
+                label="Permit to Work#"
+                name="permitwork"
+                id="permitwork"
+                multiline
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              className={classes.formBox}
+            >
+              <TextField
+                label="Scope of work (Describe all tasks)"
+                name="scopeofwork"
+                id="scopeofwork"
+                multiline
+                rows={4}
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              className={classes.createHazardbox}
+              style={{ marginTop: '12px', marginBottom: '10px' }}
+            >
+              <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={11}
+              className={classes.createHazardbox}
+            >
+              <TextField
+                label="Team Name"
+                name="arename"
+                id="arename"
+                multiline
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid item md={1} className={classes.createHazardbox}>
+              <IconButton
+                variant="contained"
+                color="primary"
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </Grid>
 
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Project
-          </Typography>
-          <Typography className={classes.labelValue}>
-            A23-ERT1236 - NTPC
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Unit
-          </Typography>
-          <Typography className={classes.labelValue}>
-            A23-ERT1236 - NTPC
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.formBox}
-        >
-          <TextField
-            label="Job Title"
-            name="jobtitle"
-            id="jobtitle"
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
+            <Grid item md={12} className={classes.createHazardbox}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddCircleIcon />}
+                className={classes.button}
+              >
+                Add
+              </Button>
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              className={classes.createHazardbox}
+              style={{ marginTop: '30px' }}
+            >
+              <Typography variant="h6" gutterBottom className={classes.labelName}>Emergency Contact Details</Typography>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={11}
+            //className={classes.createHazardbox}
+            >
+              <TextField
+                label="Supervisor"
+                name="supervisor"
+                id="supervisor"
+                multiline
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={11}
+            //className={classes.createHazardbox}
+            >
+              <TextField
+                label="Department"
+                name="department"
+                id="department"
+                select
+                fullWidth
+                variant="outlined"
+              >
+                {department.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={11}
+            //className={classes.createHazardbox}
+            >
+              <TextField
+                label="Emergency Phone Number"
+                name="emergencyphonenumber"
+                id="emergencyphonenumber"
+                multiline
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={11}
+            //className={classes.createHazardbox}
+            >
+              <TextField
+                label="Evacuation assembly point"
+                name="evacuationassemblypoint"
+                id="evacuationassemblypoint"
+                multiline
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={11}
+            //className={classes.createHazardbox}
+            >
+              <TextField
+                label="Permit number"
+                name="permitnumber"
+                id="permitnumber"
+                multiline
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={11}
+            //className={classes.createHazardbox}
+            >
+              <TextField
+                label="Order number"
+                name="ordernumber"
+                id="ordernumber"
+                multiline
+                defaultValue=""
+                fullWidth
+                variant="outlined"
+                className={classes.formControl}
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              style={{ marginTop: '15px' }}
+            >
+              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
+            </Grid>
+          </Grid>
+        </Col>
+        <Col md={3}>
+          <FormSideBar
+            deleteForm={"hideArray"}
+            listOfItems={JHA_FORM}
+            selectedItem={"Project Details"}
           />
-        </Grid>
-        <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.formBox}
-        >
-          <TextField
-            label="Location"
-            name="worklocation"
-            id="worklocation"
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={12}
-          className={classes.formBox}
-        >
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDateTimePicker
-              className={classes.formControl}
-              fullWidth
-              label="Date & Time*"
-              value={selectedDate}
-              onChange={handleDateChange}
-              inputVariant="outlined"
-              disableFuture="true"
-            />
-          </MuiPickersUtilsProvider>
-        </Grid>
-        {/* <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <FormControl component="fieldset">
-            <FormLabel component="legend" className={classes.labelName}>Do you have a permit to perform the AHA?</FormLabel>
-            <RadioGroup row aria-label="gender" name="gender1">
-            <FormControlLabel value="yes" className={classes.labelValue} control={<Radio />} label="Yes" />
-            <FormControlLabel value="no" className={classes.labelValue} control={<Radio />} label="No" />
-            </RadioGroup>
-        </FormControl>
-        </Grid> */}
-        <Grid
-          item
-          md={6}
-          xs={12}
-          className={classes.formBox}
-        >
-          <TextField
-            label="Permit to Work#"
-            name="permitwork"
-            id="permitwork"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.formBox}
-        >
-          <TextField
-            label="Scope of work (Describe all tasks)"
-            name="scopeofwork"
-            id="scopeofwork"
-            multiline
-            rows={4}
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.createHazardbox}
-          style={{ marginTop: '12px', marginBottom: '10px' }}
-        >
-          <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={11}
-          className={classes.createHazardbox}
-        >
-          <TextField
-            label="Team Name"
-            name="arename"
-            id="arename"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid item md={1} className={classes.createHazardbox}>
-          <IconButton
-            variant="contained"
-            color="primary"
-          >
-            <DeleteForeverIcon />
-          </IconButton>
-        </Grid>
-
-        <Grid item md={12} className={classes.createHazardbox}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddCircleIcon />}
-            className={classes.button}
-          >
-            Add
-          </Button>
-        </Grid>
-        <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.createHazardbox}
-          style={{ marginTop: '30px' }}
-        >
-          <Typography variant="h6" gutterBottom className={classes.labelName}>Emergency Contact Details</Typography>
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={11}
-        //className={classes.createHazardbox}
-        >
-          <TextField
-            label="Supervisor"
-            name="supervisor"
-            id="supervisor"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={11}
-        //className={classes.createHazardbox}
-        >
-          <TextField
-            label="Department"
-            name="department"
-            id="department"
-            select
-            fullWidth
-            variant="outlined"
-          >
-            {department.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={11}
-        //className={classes.createHazardbox}
-        >
-          <TextField
-            label="Emergency Phone Number"
-            name="emergencyphonenumber"
-            id="emergencyphonenumber"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={11}
-        //className={classes.createHazardbox}
-        >
-          <TextField
-            label="Evacuation assembly point"
-            name="evacuationassemblypoint"
-            id="evacuationassemblypoint"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={11}
-        //className={classes.createHazardbox}
-        >
-          <TextField
-            label="Permit number"
-            name="permitnumber"
-            id="permitnumber"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={11}
-        //className={classes.createHazardbox}
-        >
-          <TextField
-            label="Order number"
-            name="ordernumber"
-            id="ordernumber"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
-        <Grid
-          item
-          md={12}
-          xs={12}
-          style={{ marginTop: '15px' }}
-        >
-          <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
-        </Grid>
-      </Grid>
-    </>
+        </Col>
+      </Row>
+    </PapperBlock>
   );
 };
 

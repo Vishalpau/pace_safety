@@ -364,7 +364,7 @@ const HazardiousActs = () => {
             fkIncidentId: putId.current,
             rcaRemark: value,
             rcaSubType: api_data["rcaSubType"],
-            rcaType: "Basic",
+            rcaType: "Immediate",
             remarkType: api_data["remarkType"],
             status: "Active",
           };
