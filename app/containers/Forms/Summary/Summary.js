@@ -167,8 +167,8 @@ const Summary = (props) => {
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
-   
-    
+
+
     let rcaRecommended = previousData.data.data.results[0].rcaRecommended
     rcaRecommendedValue.current = rcaRecommended
 
@@ -190,12 +190,12 @@ const Summary = (props) => {
     await setRootCausesData(rootCauseData);
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
-    if(whyAnalysis.status === 200){
+    if (whyAnalysis.status === 200) {
       await setIsLoading(true)
     }
     let whyAnalysisData = whyAnalysis.data.data.results[0];
     await setWhyData(whyAnalysisData);
-    
+
   };
 
 
@@ -360,13 +360,13 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidance and root and cause analysis")
       setMessageType("warning")
-      
+
     } else if (!paceCauseData && !rootCausesData && !whyData) {
-      
+
       setOpen(true);
       setMessage("Please complete the previous step root and cause analysis")
       setMessageType("warning")
-    }else if(!closeout){
+    } else if (!closeout) {
       handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
     }
     else {
@@ -377,11 +377,11 @@ const Summary = (props) => {
       }
       dispatch(tabViewMode(viewMode))
       setInitialNotification(false);
-        setInvestigation(false);
-        setEvidence(false);
-        setRootCauseAnalysis(false);
-        setLessionlearn(false);
-        setCloseout(true)
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false);
+      setCloseout(true)
     }
   }
 
@@ -408,7 +408,7 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step close out")
       setMessageType("warning")
-    } else if(!lessionlearnData){
+    } else if (!lessionlearnData) {
       handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
     }
     else {
@@ -530,7 +530,7 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidence, root cause analysis and close out")
       setMessageType("warning")
-    }else if (!paceCauseData && !rootCausesData && !whyData) {
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
 
       setOpen(true);
       setMessage("Please complete the previous step  root cause analysis and close out")
@@ -542,7 +542,7 @@ const Summary = (props) => {
       setMessage("Please complete the previous step close out")
       setMessageType("warning")
     }
-     else {
+    else {
       handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
     }
   }
@@ -567,13 +567,13 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous step evidence and root cause analysis")
       setMessageType("warning")
-    }else if (!paceCauseData && !rootCausesData && !whyData) {
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
 
       setOpen(true);
       setMessage("Please complete the previous step  root cause analysis")
       setMessageType("warning")
     }
-     else {
+    else {
       handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
     }
   }
@@ -901,9 +901,9 @@ const Summary = (props) => {
                   </Paper>
                 </Grid>
               )}
-              
-              </Grid>
-            
+
+            </Grid>
+
           </Box>
         </PapperBlock>
       ) : (

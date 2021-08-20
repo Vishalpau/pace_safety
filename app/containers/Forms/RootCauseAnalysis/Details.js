@@ -217,17 +217,20 @@ const Details = () => {
           }`
         );
       }
-    } d
+    }
 
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
+    localStorage.setItem("details", true)
   };
 
   const handelCallBack = async () => {
     await handelUpdateCheck();
     await fetchIncidentData();
     await setHideArray(localStorage.getItem("deleteForm"));
-    await handelInvestigationData();
+    if (localStorage.setItem("details") == null) {
+      await handelInvestigationData();
+    }
   }
 
   useEffect(() => {

@@ -40,19 +40,21 @@ export const EvidenceStatus = async () => {
 
 export const RootCauseAnalysisStatus = async () => {
     let previousData = await api.get(`/api/v1/incidents/${incident_id}/causeanalysis/`);
-    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
-    if (rcaRecommended !== undefined) {
-        if (rcaRecommended == "PACE cause analysis") {
-            let paceCause = await api.get(`/api/v1/incidents/${incident_id}/pacecauses/`);
-            let paceCauseData = paceCause.data.data.results[0];
-        } else if (rcaRecommended == "Cause analysis") {
-            let rootCause = await api.get(`/api/v1/incidents/${incident_id}/rootcauses/`);
-            let rootCauseData = rootCause.data.data.results[0];
-        } else if (rcaRecommended == "Five why analysis") {
-            let whyAnalysis = await api.get(`/api/v1/incidents/${incident_id}/fivewhy/`);
-            let whyAnalysisData = whyAnalysis.data.data.results[0];
-            let checkDoneOrPending = CheckDone(whyAnalysisData)
-            return checkDoneOrPending
+    if (previousData.data.data.results[0] != undefined) {
+        let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+        if (rcaRecommended !== undefined) {
+            if (rcaRecommended == "PACE cause analysis") {
+                let paceCause = await api.get(`/api/v1/incidents/${incident_id}/pacecauses/`);
+                let paceCauseData = paceCause.data.data.results[0];
+            } else if (rcaRecommended == "Cause analysis") {
+                let rootCause = await api.get(`/api/v1/incidents/${incident_id}/rootcauses/`);
+                let rootCauseData = rootCause.data.data.results[0];
+            } else if (rcaRecommended == "Five why analysis") {
+                let whyAnalysis = await api.get(`/api/v1/incidents/${incident_id}/fivewhy/`);
+                let whyAnalysisData = whyAnalysis.data.data.results[0];
+                let checkDoneOrPending = CheckDone(whyAnalysisData)
+                return checkDoneOrPending
+            }
         }
     }
 }
