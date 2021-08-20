@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { PapperBlock } from "dan-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useHistory, useParams } from "react-router";
-import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
-import api from "../../../utils/axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
+import api from "../../../utils/axios";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -37,6 +38,7 @@ const AdditionalDetails = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
   const [additionalDetailList, setAdditionalDetailList] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
@@ -88,7 +90,7 @@ const AdditionalDetails = () => {
   ]);
 
   const fetchActivityList = async () => {
-    let lastId = id ? id : localStorage.getItem("fkincidentId")
+    let lastId = id ? id : localStorage.getItem("fkincidentId");
     const res = await api.get(`/api/v1/incidents/${lastId}/activities/`);
     const result = res.data.data.results;
     if (result.length) {
@@ -98,8 +100,6 @@ const AdditionalDetails = () => {
   };
 
   const handleNext = async () => {
-    
-
     if (id && additionalDetailList.length > 24) {
       const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
       await setError(error);
@@ -111,40 +111,59 @@ const AdditionalDetails = () => {
         additionalDetailList
       );
       if (res.status === 200) {
+        let viewMode = {
+          initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
+        }
+        dispatch(tabViewMode(viewMode));
         history.push(
           `/app/incident-management/registration/summary/summary/${id}`
         );
       }
-    } else if(additionalDetailList.length  == 25){
+    } else if (additionalDetailList.length == 25) {
       {
         const { error, isValid } = AdditionalDetailValidate(additionalList);
         await setError(error);
         if (!isValid) {
-        return;
+          return;
         }
         const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          `api/v1/incidents/${localStorage.getItem(
+            "fkincidentId"
+          )}/activities/`,
           additionalDetailList
         );
         if (res.status === 200) {
+          let viewMode = {
+            initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
+          }
+          dispatch(tabViewMode(viewMode));
           history.push(
-            `/app/incident-management/registration/summary/summary/${localStorage.getItem("fkincidentId")}`
+            `/app/incident-management/registration/root-cause-analysis/details/${localStorage.getItem(
+              "fkincidentId"
+            )}`
           );
         }
       }
-    }else {
+    } else {
       const { error, isValid } = AdditionalDetailValidate(additionalList);
       await setError(error);
       if (!isValid) {
-      return;
-    }
+        return;
+      }
 
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         additionalList
       );
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
+
+      }
+      dispatch(tabViewMode(viewMode));
       history.push(
-        `/app/incident-management/registration/summary/summary/${localStorage.getItem(
+        `/app/incident-management/registration/root-cause-analysis/details/${localStorage.getItem(
           "fkincidentId"
         )}`
       );
@@ -187,7 +206,7 @@ const AdditionalDetails = () => {
   };
   useEffect(() => {
     fetchIncidentDetails();
-    
+
     if (id) {
       fetchActivityList();
     } else {
@@ -195,100 +214,116 @@ const AdditionalDetails = () => {
       fetchActivityList();
     }
   }, [id]);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Additional Details" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
-            {additionalDetailList.length > 24 ? (
-              <>
-                {Object.entries(additionalDetailList)
-                  .slice(21, 25)
-                  .map(([key, value]) => (
-                    <Grid item md={12}>
-                      <FormControl className={classes.formControl}>
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentDetail.incidentNumber}
+                </Typography>
+              </Grid>
+              {additionalDetailList.length > 24 ? (
+                <>
+                  {Object.entries(additionalDetailList)
+                    .slice(21, 25)
+                    .map(([key, value]) => (
+                      <Grid item xs={12}>
+                        <FormControl className={classes.formControl}>
+                          <TextField
+                            id="filled-basic"
+                            variant="outlined"
+                            label={value.question}
+                            required={
+                              value.question === "Additional notes if any"
+                                ? false
+                                : true
+                            }
+                            error={value.error}
+                            helperText={value.error ? value.error : null}
+                            multiline
+                            rows="4"
+                            defaultValue={value.answer}
+                            onChange={(e) => {
+                              handleRadioData(e, value.questionCode);
+                            }}
+                          />
+                        </FormControl>
+                      </Grid>
+                    ))}
+                </>
+              ) : (
+                <>
+                  {Object.entries(additionalList).map(([key, value]) => (
+                    <Grid item xs={12}>
+                      <FormControl
+                        className={classes.formControl}
+                        error={value.error}
+                      >
                         <TextField
                           id="filled-basic"
                           variant="outlined"
                           label={value.question}
-                          required
                           error={value.error}
+                          required={
+                            value.question === "Additional notes if any"
+                              ? false
+                              : true
+                          }
                           helperText={value.error ? value.error : null}
                           multiline
                           rows="4"
-                          defaultValue={value.answer}
                           onChange={(e) => {
-                            handleRadioData(e, value.questionCode);
+                            handleRadioData2(e, value.questionCode);
                           }}
                         />
                       </FormControl>
                     </Grid>
                   ))}
-              </>
-            ) : (
-              <>
-                {Object.entries(additionalList).map(([key, value]) => (
-                  <Grid item md={12}>
-                    <FormControl
-                      className={classes.formControl}
-                      error={value.error}
-                    >
-                      <TextField
-                        id="filled-basic"
-                        variant="outlined"
-                        label={value.question}
-                        error={value.error}
-                        
-                        required
-                        helperText={value.error ? value.error : null}
-                        multiline
-                        rows="4"
-                        onChange={(e) => {
-                          handleRadioData2(e, value.questionCode);
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
-                ))}
-              </>
-            )}
+                </>
+              )}
 
-            <Grid item md={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => history.goBack()}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => handleNext()}
-              >
-                Submit
-              </Button>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => history.goBack()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => handleNext()}
+                >
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          </Col>
 
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={EVIDENCE_FORM}
-              selectedItem="Additional details"
-            />
-          </Grid>
-        </Grid>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={EVIDENCE_FORM}
+                selectedItem="Additional details"
+              />
+            </Col>
+          )}
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}

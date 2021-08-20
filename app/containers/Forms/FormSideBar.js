@@ -10,6 +10,7 @@ import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
+import { useHistory, useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -18,9 +19,15 @@ const useStyles = makeStyles((theme) => ({
   activeList: {
     color: theme.palette.primary.main,
     borderLeft: `5px solid ${theme.palette.secondary.main}`,
+    "& .MuiTypography-root": {
+      whiteSpace: "normal",
+    },
   },
   notActiveList: {
     borderLeft: `5px solid ${theme.palette.primary.main}`,
+    "& .MuiTypography-root": {
+      whiteSpace: "normal",
+    },
   },
 }));
 
@@ -35,6 +42,10 @@ import {
 export const FormSideBar = (props) => {
   let linkBreak = Object.keys(props.listOfItems).indexOf(props.selectedItem);
   const classes = useStyles();
+  const history = useHistory();
+  const handelNavigate = (value) => {
+    history.push(value)
+  }
 
   const data = props.deleteForm || localStorage.getItem("deleteForm");
   return (
@@ -67,7 +78,7 @@ export const FormSideBar = (props) => {
                 <ListItemIcon className={classes.icon}>
                   <CheckIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary={<a href={value}>{key}</a>} />
+                <ListItemText primary={<a onClick={(e) => handelNavigate(value)}>{key}</a>} />
                 {/* <a href={value}>{key}</a> */}
               </ListItem>
             )

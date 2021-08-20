@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
@@ -30,29 +30,84 @@ import companyLogo from "dan-api/images/logos";
 import link from "dan-api/ui/link";
 import styles from "./header-jss";
 import { useHistory } from "react-router";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import "../../styles/custom/customheader.css";
 import {
   access_token,
   ACCOUNT_API_URL,
   LOGIN_URL,
   LOGOUT_URL,
+  SELF_API,
   SSO_CLIENT_ID,
-  SSO_URL
+  SSO_URL,
 } from "../../utils/constants";
 import axios from "axios";
+import Topbar from "./Topbar";
+import api from "../../utils/axios";
 
-const useStyles = makeStyles({
+// redux
+import { connect } from 'react-redux'
+
+const useStyles = makeStyles((theme) => ({
   list: {
-    width: 300,
+    width: 350,
+    '& .MuiListItem-root': {
+      paddingTop: '8px',
+      paddingBottom: '8px',
+    },
   },
   fullList: {
     width: "auto",
   },
-});
+  headerItems: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  menuListItem: {
+    padding: theme.spacing(3),
+  },
+  nestedMenuListItem: {
+    paddingLeft: theme.spacing(6),
+  },
+  fontWeightMedium: {
+    fontWeight: 600,
+  },
+  appDrawerLable: {
+    paddingLeft: '20px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    backgroundColor: '#f7f7f7',
+    margin: '0px',
+    fontSize: '14px',
+    color: '#333333',
+    '& span': {
+      fontSize: '14px',
+      color: '#333333',
+    }
+  },
+  appDrawerLink: {
+    paddingLeft: '35px',
+    '& svg': {
+      marginRight: '10px',
+      color: '#06425c',
+    },
+    '& .MuiListItemText-root': {
+      '& span': {
+        fontSize: '15px',
+        fontWeight: '400',
+        color: '#06425c',
+      },
+    },
+  },
+
+}));
 
 function UserMenu(props) {
-  const history = useHistory()
+  const history = useHistory();
   const [menuState, setMenuState] = useState({
     anchorEl: null,
     openMenu: null,
@@ -77,6 +132,14 @@ function UserMenu(props) {
 
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const appsOpen = Boolean(menuAnchorEl);
+  const [avatar, setAvatar] = useState([]);
+  const [name, setName] = useState("");
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [user, setUser] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [codes, setCodes] = useState([]);
+  const [apps, setApps] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAppsClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -87,157 +150,210 @@ function UserMenu(props) {
   };
 
   const handleLogout = (e) => {
-    e.preventDefault()
-    console.log(access_token);
+    e.preventDefault();
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/user/logout/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        'Cookie': 'csrftoken=Z4uAv7EMxWG5KCWNNzqdravi8eoUZcIB8OoGeJ4W1abx4i3zqhLwIzloVMcsFrr5'
+        Cookie:
+          "csrftoken=Z4uAv7EMxWG5KCWNNzqdravi8eoUZcIB8OoGeJ4W1abx4i3zqhLwIzloVMcsFrr5",
       },
     };
-    console.log(config);
+  
     axios(config)
       .then((response) => {
-        if(response.status === 201) {
-          console.log(response)
-          localStorage.removeItem('access_token')
+        if (response.status === 201) {
+          localStorage.removeItem("access_token");
           localStorage.clear();
-            window.location.href =`${LOGOUT_URL}`          
+          window.location.href = `${LOGOUT_URL}`;
         }
       })
       .catch((error) => {
-        localStorage.removeItem('access_token');
+        localStorage.removeItem("access_token");
         localStorage.clear();
-        window.location.href =`${LOGOUT_URL}`
+        window.location.href = `${LOGOUT_URL}`;
       });
   };
+  const getSubscriptions = async () => {
+    const companyId = localStorage.getItem('companyId')
+    let subscriptionData = {}
+    let data = await api
+      .get(`${ACCOUNT_API_URL}api/v1/applications/`)
+      .then(function (res) {
+        subscriptionData = res.data.data.results;
+        // setSubscriptions(res.data.data.results);
+        return res.data.data.results
 
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setSubscriptions(data);
+    setIsLoading(true)
+
+  }
+
+
+
+  const getSubscribedApps = async () => {
+    const companyId = localStorage.getItem('companyId')
+    let subscriptionData = {}
+    let data = await api.get(`${SELF_API}1/`).then(function (res) {
+      subscriptionData = res.data.data.results.data.companies[0].subscriptions;
+      // setSubscriptions(subscriptionData);
+      return subscriptionData
+
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
+    await setApps(data.map(app => app.appId))
+
+  }
+  const handleClosea = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setOpena(false);
+  };
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
 
+  useEffect(() => {
+    getSubscribedApps();
+    getSubscriptions();
+  }, [])
+
   const classnames = useStyles();
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <div>
-      <Tooltip title="Support" placement="bottom">
-        <IconButton
-          className={classNames(
-            classes.helpIcon,
-            dark ? classes.dark : classes.light
-          )}
-        >
-          <i className="ion-md-help-circle" />
-        </IconButton>
-      </Tooltip>
+      {isDesktop && (
+        <Tooltip title="Support" placement="bottom">
+          <IconButton
+            className={classNames(
+              classes.helpIcon,
+              dark ? classes.dark : classes.light
+            )}
+          >
+            <i className="ion-md-help-circle" />
+          </IconButton>
+        </Tooltip>
+      )}
 
-      <IconButton
-        aria-haspopup="true"
-        onClick={handleMenu("notification")}
-        color="inherit"
-        className={classNames(
-          classes.notifIcon,
-          dark ? classes.dark : classes.light
-        )}
-      >
-        <Badge className={classes.badge} badgeContent={4} color="secondary">
-          <i className="ion-ios-notifications-outline" />
-        </Badge>
-      </IconButton>
-      <Menu
-        id="menu-notification"
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        className={classes.notifMenu}
-        PaperProps={{
-          style: {
-            width: 350,
-          },
-        }}
-        open={openMenu === "notification"}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageInfo}>
-            <ListItemAvatar>
-              <Avatar alt="User Name" src={avatarApi[0]} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.subtitle}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageInfo}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Info />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.sentences}
-              className={classes.textNotif}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageSuccess}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Check />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.subtitle}
-              className={classes.textNotif}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageWarning}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Warning />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={dummy.text.subtitle}
-              className={classes.textNotif}
-              secondary={dummy.text.date}
-            />
-          </div>
-        </MenuItem>
-        <Divider variant="inset" />
-        <MenuItem onClick={handleClose}>
-          <div className={messageStyles.messageError}>
-            <ListItemAvatar>
-              <Avatar className={messageStyles.icon}>
-                <Error />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary="Suspendisse pharetra pulvinar sollicitudin. Aenean ut orci eu odio cursus lobortis eget tempus velit. "
-              className={classes.textNotif}
-              secondary="Jan 9, 2016"
-            />
-          </div>
-        </MenuItem>
-      </Menu>
+      {isDesktop && (
+        <>
+          <IconButton
+            aria-haspopup="true"
+            onClick={handleMenu("notification")}
+            color="inherit"
+            className={classNames(
+              classes.notifIcon,
+              dark ? classes.dark : classes.light
+            )}
+          >
+            <Badge className={classes.badge} badgeContent={4} color="secondary">
+              <i className="ion-ios-notifications-outline" />
+            </Badge>
+          </IconButton>
+          <Menu
+            id="menu-notification"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            className={classes.notifMenu}
+            PaperProps={{
+              style: {
+                width: 350,
+              },
+            }}
+            open={openMenu === "notification"}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageInfo}>
+                <ListItemAvatar>
+                  <Avatar alt="User Name" src={avatarApi[0]} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.subtitle}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageInfo}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Info />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.sentences}
+                  className={classes.textNotif}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageSuccess}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Check />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.subtitle}
+                  className={classes.textNotif}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageWarning}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Warning />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={dummy.text.subtitle}
+                  className={classes.textNotif}
+                  secondary={dummy.text.date}
+                />
+              </div>
+            </MenuItem>
+            <Divider variant="inset" />
+            <MenuItem onClick={handleClose}>
+              <div className={messageStyles.messageError}>
+                <ListItemAvatar>
+                  <Avatar className={messageStyles.icon}>
+                    <Error />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Suspendisse pharetra pulvinar sollicitudin. Aenean ut orci eu odio cursus lobortis eget tempus velit. "
+                  className={classes.textNotif}
+                  secondary="Jan 9, 2016"
+                />
+              </div>
+            </MenuItem>
+          </Menu>{" "}
+        </>
+      )}
 
       <Tooltip title="Apps" placement="bottom">
         <IconButton
@@ -252,103 +368,54 @@ function UserMenu(props) {
           <i className="ion-ios-apps" />
         </IconButton>
       </Tooltip>
+      {/* <Topbar/> */}
+      <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
 
-      <Drawer
-        anchor="right"
-        anchorEl={menuAnchorEl}
-        open={appsOpen}
-        onClose={handleAppsClose}
-      >
-        <div className={classnames.list}>
-          <List dense className={classnames.menulist}>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Project Information Hub" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="HSE Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Assesments" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Complaince Protocols" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Environment Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Intelligent Permit Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Incident Reporting & Management" />
-            </ListItemLink>
-            <ListItemLink href="#simple-list">
-              <ListItemText primary="Rapid Knowledge & Collaboration" />
-            </ListItemLink>
-          </List>
-        </div>
+        {isLoading ?
+          <div elevation={3} className={classnames.list}>
+            <List component="nav">
+
+              {subscriptions.map(subscription => (
+                (subscription.appName !== 'Safety') && subscription.modules.length > 0 ?
+                  <div>
+                    <ListItemText
+                      className={classnames.appDrawerLable}
+                      primary={subscription.appName}
+                    />
+                    <Divider />
+                    <List>
+                      {subscription.modules.map((module) => (
+                        <div>
+
+                          <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId') === null ? 1 : localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId') === null ? 1 : localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
+                            {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
+                            <AssignmentIcon />
+                            <ListItemText primary={module.name} />
+                          </ListItemLink>
+                        </div>
+                      ))}
+                    </List>
+
+
+                  </div>
+                  : ""
+              )
+
+              )}
+
+              {/* <Divider /> */}
+            </List>
+
+
+          </div> : null}
+
       </Drawer>
-
-      {/* <Menu
-        id="apps-menu"
-        anchorEl={menuAnchorEl}
-        keepMounted
-        PaperProps={{
-          style: {
-            width: 250,
-          },
-        }}
-        open={appsOpen}
-        onClose={handleAppsClose}
-        className="headerAppsGrid"
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Project Information Hub</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-        <MenuItem onClick={handleAppsClose}>
-          <AccountCircleIcon fontSize="large" />
-          <Typography variant="subtitle2">Menu Item</Typography>
-        </MenuItem>
-      </Menu> */}
 
       <Button
         className={classes.userControls}
         onClick={handleMenu("user-setting")}
       >
-        <img className={classes.userLogo} src={companyLogo[0]} />
+        {isDesktop && <img className={classes.userLogo} src={companyLogo[0]} />}
         <Avatar
           alt={dummy.user.name}
           variant="circle"
@@ -410,5 +477,8 @@ UserMenu.propTypes = {
 UserMenu.defaultProps = {
   dark: false,
 };
+const UserInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(UserMenu);
 
-export default withStyles(styles)(UserMenu);
+export default withStyles(styles)(UserInit);

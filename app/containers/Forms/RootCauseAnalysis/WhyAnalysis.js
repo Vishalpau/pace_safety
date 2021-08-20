@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Container } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Paper from "@material-ui/core/Paper";
-import FormControl from "@material-ui/core/FormControl";
-import RemoveCircleOutlineSharpIcon from "@material-ui/icons/RemoveCircleOutlineSharp";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -16,9 +9,12 @@ import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
+import { checkValue } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -42,6 +38,10 @@ import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
 
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+
 const WhyAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
@@ -62,20 +62,28 @@ const WhyAnalysis = () => {
 
   const updateIds = useRef();
   const checkPost = useRef();
+  const dispatch = useDispatch();
+  const [investigationData, setInvestigationData] = useState({})
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
+
+    let previousData = await api.get(
+      `/api/v1/incidents/${incidentId}/fivewhy/`
+    );
     let allApiData = previousData.data.data.results;
 
     if (allApiData.length > 0) {
       form.length = 0;
       putId.current = incidentId;
-      console.log(putId.current, 'Putid')
       allApiData.map((value) => {
         form.push({
           why: value.why,
@@ -88,10 +96,21 @@ const WhyAnalysis = () => {
     updateIds.current = tempApiDataId;
   };
 
+  const handelInvestigationData = async () => {
+    let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
+    const investigationpreviousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
+    const investigationApiData = investigationpreviousData.data.data.results[0];
+    if (investigationApiData != null) {
+      setInvestigationData({
+        startData: investigationApiData.srartDate,
+        endDate: investigationApiData.endDate,
+        classification: investigationApiData.classification,
+      })
+    }
+  };
+
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(
-      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
+    const allIncidents = await api.get(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/`);
     await setIncidents(allIncidents.data.data.results);
   };
 
@@ -104,15 +123,19 @@ const WhyAnalysis = () => {
   };
 
   const handelAdd = (e) => {
-    if (Object.keys(form).length < 5) {
+    if (Object.keys(form).length < 100) {
       setForm([...form, { why: "", whyCount: "" }]);
     }
   };
 
   const handelRemove = async (e, index) => {
+    let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
     if (form.length > 1) {
       let temp = form;
       let newData = form.filter((item, key) => key !== index);
+      if (form[index].whyId !== undefined) {
+        const removeWhy = await api.delete(`/api/v1/incidents/${incidentId}/fivewhy/${form[index].whyId}/`);
+      }
       await setForm(newData);
     }
   };
@@ -120,42 +143,44 @@ const WhyAnalysis = () => {
   const handelApiCall = async (e) => {
     const { error, isValid } = WhyAnalysisValidate(form);
     setError(error);
-
     let nextPageLink = 0;
     let callObjects = form;
     for (let key in callObjects) {
       if (Object.keys(error).length == 0) {
-        if (checkPost.current !== false) {
+        if (callObjects[key]["whyId"] == undefined) {
           let postObject = { ...whyData, ...callObjects[key] };
-          const res = await api.post(
-            `/api/v1/incidents/${localStorage.getItem(
-              "fkincidentId"
-            )}/fivewhy/`,
-            postObject
-          );
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, postObject);
           if (res.status == 201) {
-            console.log("request done");
             nextPageLink = res.status;
           }
-        } else {
+        } else if (callObjects[key]["whyId"] !== undefined) {
           let dataID = callObjects[key].whyId;
           let postObject = { ...whyData, ...callObjects[key] };
           if (typeof postObject != "undefined") {
             const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
             if (res.status == 200) {
-              console.log("request done");
               nextPageLink = res.status;
             }
           }
         }
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        dispatch(tabViewMode(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
           )}`
         );
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
+    
+        }
+        dispatch(tabViewMode(viewMode))
         history.push(
           `/app/incident-management/registration/summary/summary/${localStorage.getItem(
             "fkincidentId"
@@ -168,147 +193,138 @@ const WhyAnalysis = () => {
 
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
-        }`
-      );
+      history.push(`/app/incident-management/registration/root-cause-analysis/details/${putId.current}`);
     } else if (isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/`
-      );
+      history.push(`/app/incident-management/registration/root-cause-analysis/details/`);
     }
+  };
 
+
+
+  const handelCallBack = async () => {
+    await handelUpdateCheck();
+    await fetchIncidentData();
+    await handelInvestigationData();
   }
 
   useEffect(() => {
-    handelUpdateCheck();
-    fetchIncidentData();
+    handelCallBack()
   }, []);
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Five why analysis" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidents.incidentNumber}
-            </Typography>
-          </Grid>
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidents.incidentNumber}
+              </Typography>
+            </Grid>
 
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Method
-            </Typography>
-            <Typography className={Type.labelValue}>
-              Five why analysis
-            </Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Method
+              </Typography>
+              <Typography className={Type.labelValue}>
+                Five why analysis
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident Description
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidents.incidentDetails}
-            </Typography>
-          </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident Description
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {incidents.incidentDetails}
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Level of Investigation
-            </Typography>
-            <Typography className={Type.labelValue}>Level 5</Typography>
-          </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Level of classification
+              </Typography>
+              <Typography className={Type.labelValue}>
+                {checkValue(investigationData["classification"])}
+              </Typography>
+            </Grid>
 
-          <Grid item md={11}>
-            <TextField
-              variant="outlined"
-              id="filled-basic"
-              label="Evidence Collection"
-              multiline
-              rows={3}
-              className={classes.formControl}
-            />
-          </Grid>
-
-          {form.map((item, index) => (
-            <Grid item md={12}>
-              <Grid container spacing={2}>
-
-                <Grid item sm={11}>
-                  <TextField
-                    id="filled-basic"
-                    label={`Why ${index + 1}`}
-                    variant="outlined"
-                    multiline
-                    required
-                    rows={3}
-                    error={error[`why${[index]}`]}
-                    value={form[index].why || ""}
-                    helperText={error ? error[`why${[index]}`] : ""}
-                    className={classes.formControl}
-                    onChange={(e) => handleForm(e, index)}
-                  />
-                </Grid>
-                {form.length > 1 ? (
-                  putId.current == "" ? (
-                    <Grid item sm={1} justify="center">
+            {form.map((item, index) => (
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={11}>
+                    <TextField
+                      id="filled-basic"
+                      label={`Why ${index + 1}`}
+                      variant="outlined"
+                      multiline
+                      required
+                      rows={3}
+                      error={error[`why${[index]}`]}
+                      value={form[index].why || ""}
+                      helperText={error ? error[`why${[index]}`] : ""}
+                      className={classes.formControl}
+                      onChange={(e) => handleForm(e, index)}
+                    />
+                  </Grid>
+                  {form.length > 1 ? (
+                    <Grid item xs={12} md={1} justify="center">
                       <IconButton onClick={(e) => handelRemove(e, index)}>
                         <RemoveCircleOutlineIcon />
                       </IconButton>
                     </Grid>
-                  ) : null
-                ) : null}
+                  ) : null}
+                </Grid>
               </Grid>
-            </Grid>
-          ))}
+            ))}
 
-          {form.length <= 4 ?
-            <Grid item md={1}>
-              {/* This button will add another entry of why input  */}
-              {putId.current == "" ? (
+            {form.length <= 99 ? (
+              <Grid item xs={12} md={1}>
+                {/* This button will add another entry of why input  */}
                 <button
                   onClick={(e) => handelAdd(e)}
                   className={classes.textButton}
                 >
                   <AddIcon /> Add
                 </button>
-              ) : null}
-            </Grid>
-            : null
-          }
+              </Grid>
+            ) : null}
 
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelPrevious(e)}
-            >
-              Previous
-            </Button>
-            <Button
-              id="myBtn"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelApiCall(e)}
-            >
-              Submit
-            </Button>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelPrevious(e)}
+              >
+                Previous
+              </Button>
+              <Button
+                id="myBtn"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelApiCall(e)}
+              >
+                Submit
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Five Why analysis"}
-          />
-        </Grid>
-      </Grid>
+        </Col>
+        {isDesktop && (
+          <Col md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Five Why analysis"}
+            />
+          </Col>
+        )}
+      </Row>
     </PapperBlock>
   );
 };

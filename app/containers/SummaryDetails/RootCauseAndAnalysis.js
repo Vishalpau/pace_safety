@@ -7,6 +7,9 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
 
 // Table
 import Table from "@material-ui/core/Table";
@@ -20,7 +23,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-
+import { useHistory, useParams } from "react-router";
 
 // Styles
 import api from "../../utils/axios";
@@ -35,6 +38,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
+  table: {
+    minWidth: 650,
+  },
+  tabelBorder: {
+    width: 110,
+    border: '1px solid black'
+  }
 }));
 
 const RootCauseAnalysisSummary = () => {
@@ -43,37 +53,25 @@ const RootCauseAnalysisSummary = () => {
   const [causeanalysis, setCauseAnalysis] = useState([]);
   const [pacecauses, setPaceCauses] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
-
+  const [additionalDetails, setAdditonalDetails] = useState([]);
+  const [additionalRcaSubType, setAdditionalRcaSubType] = useState([
+    "managementControl",
+    "reasonsSupportAbove",
+  ]);
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const fkid = localStorage.getItem("fkincidentId");
 
-  const subValues = [
-    "Supervision",
-    "Workpackage",
-    "Equipment machinery",
-    "Behaviour issue",
-    "Safety issues",
-    "Ergonimics",
-    "Procedures",
-    "Other acts",
-    "Warning system",
-    "Energy types",
-    "Tools",
-    "Safety items",
-    "Others conditions",
-    "personal",
-    "wellnessFactors",
-    "Others human factors",
-    "Leadership",
-    "processes",
-    "Others job factors",
-    "Management control",
-    "Region support above",
-  ];
-
+  const setRemark = (value) => {
+    let remark = value.includes(",") ? value.split(",") : [value];
+    if (remark.includes("No option selected") && remark.length > 0) {
+      let removeItemIndex = remark.indexOf("No option selected");
+      remark.splice(removeItemIndex, 1);
+    }
+    return remark;
+  };
   const fetchRootCauseData = async () => {
     const allRootCause = await api.get(`/api/v1/incidents/${fkid}/rootcauses/`);
     await setRootCause(allRootCause.data.data.results);
@@ -92,7 +90,9 @@ const RootCauseAnalysisSummary = () => {
   };
 
   const fetchPaceCausesData = async () => {
-    const allPaceCauses = await api.get(`/api/v1/incidents/${fkid}/pacecauses/`);
+    const allPaceCauses = await api.get(
+      `/api/v1/incidents/${fkid}/pacecauses/`
+    );
     let paceData = allPaceCauses.data.data.results;
     if (
       typeof paceData[0] !== "undefined" &&
@@ -102,6 +102,13 @@ const RootCauseAnalysisSummary = () => {
     } else {
       await setPaceCauses(paceData);
     }
+    let temp = [];
+    paceData.map((value) => {
+      if (additionalRcaSubType.includes(value.rcaSubType)) {
+        temp.push(value);
+      }
+    });
+    setAdditonalDetails(temp);
   };
 
   const handelConvert = (value) => {
@@ -116,9 +123,22 @@ const RootCauseAnalysisSummary = () => {
   };
 
   const handelStringToArray = (value) => {
-    let valueArray = value.replace(',', ',  ')
-    return valueArray
-  }
+    let valueArray = value.replace(",", ",  ");
+    return valueArray;
+  };
+  const history = useHistory();
+
+  const handelRootCauseAnalysis = (e, value) => {
+    if (value == "modify") {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/${id}`
+      );
+    } else if ((value = "add")) {
+      history.push(
+        `/app/incident-management/registration/root-cause-analysis/details/`
+      );
+    }
+  };
 
   useEffect(() => {
     fetchRootCauseData();
@@ -128,14 +148,35 @@ const RootCauseAnalysisSummary = () => {
   }, []);
 
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <Grid container spacing={3}>
+      {!isDesktop && (
+        <Grid item xs={12}>
+          {fiveWhy.length > 0 ||
+            rootCause.length > 0 ||
+            pacecauses.length > 0 ? (
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={(e) => handelRootCauseAnalysis(e, "modify")}
+            >
+              Modify RCA
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={(e) => handelRootCauseAnalysis(e, "add")}
+            >
+              Add RCA
+            </Button>
+          )}
+        </Grid>
+      )}
       {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Typography className={classes.heading}>RCA details</Typography>
-            </Grid>
             <Grid item xs={12}>
               <Typography variant="h6" className={Fonts.labelName} gutterBottom>
                 RCA recommended
@@ -174,7 +215,7 @@ const RootCauseAnalysisSummary = () => {
           </Grid>
         </Grid>
       ) : (
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <Typography className={classes.heading}>
             Root cause is pending
           </Typography>
@@ -182,7 +223,7 @@ const RootCauseAnalysisSummary = () => {
       )}
 
       {rootCause.length !== 0 ? (
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel2"}
             onChange={handleExpand("panel2")}
@@ -195,10 +236,8 @@ const RootCauseAnalysisSummary = () => {
             <AccordionDetails classes={{ root: "details-wrapper" }}>
               <Grid container spacing={5}>
                 {rootCause.map((root, key) => (
-
                   <>
                     <Grid item md={12}>
-
                       {/* cause of incident */}
                       <Typography
                         variant="h6"
@@ -210,11 +249,9 @@ const RootCauseAnalysisSummary = () => {
                       <Typography className={Fonts.labelValue}>
                         {root.causeOfIncident}
                       </Typography>
-
                     </Grid>
 
                     <Grid item md={12}>
-
                       {/* corrective action */}
                       <Typography
                         variant="h6"
@@ -245,7 +282,6 @@ const RootCauseAnalysisSummary = () => {
                         </>
                       ) : null}
                     </Grid>
-
                   </>
                 ))}
               </Grid>
@@ -256,7 +292,7 @@ const RootCauseAnalysisSummary = () => {
 
       {/* five why analysis   */}
       {fiveWhy.length !== 0 ? (
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel2"}
             onChange={handleExpand("panel2")}
@@ -289,7 +325,7 @@ const RootCauseAnalysisSummary = () => {
       ) : null}
 
       {pacecauses.length !== 0 ? (
-        <Grid item md={12}>
+        <Grid item xs={12}>
           <Accordion
             expanded={expanded === "panel4"}
             onChange={handleExpand("panel4")}
@@ -299,42 +335,74 @@ const RootCauseAnalysisSummary = () => {
                 PACE cause analysis
               </Typography>
             </AccordionSummary>
-            <AccordionDetails classes={{ root: "details-wrapper" }}>
+            <AccordionDetails>
               <TableContainer component={Paper}>
-                <Table style={{ minWidth: 900 }} size="small">
+
+                <Table className={classes.table} style={{ border: '1px solid black' }} size="small">
                   <TableHead>
-                    <TableRow>
-                      <TableCell style={{ width: 200 }}>RCA number</TableCell>
-                      <TableCell style={{ width: 160 }}>RCA type</TableCell>
-                      <TableCell style={{ width: 200 }}>RCA sub type</TableCell>
-                      <TableCell style={{ width: 400 }}>RCA Remark</TableCell>
+                    <TableRow >
+                      <TableCell className={classes.tabelBorder}>Type</TableCell>
+                      <TableCell className={classes.tabelBorder}>Category</TableCell>
+                      <TableCell className={classes.tabelBorder}>Cause</TableCell>
+                      <TableCell className={classes.tabelBorder}>Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {pacecauses.map((pc, key) => (
-                      pc.rcaRemark !== "No option selected" ?
+                    {pacecauses.map((pc, key) =>
+                      pc.rcaRemark !== "No option selected" &&
+                        !additionalRcaSubType.includes(pc.rcaSubType) ? (
                         <TableRow key={key}>
-                          <TableCell>{pc.rcaNumber}</TableCell>
-                          <TableCell>{pc.rcaType}</TableCell>
-                          <TableCell>{handelConvert(pc.rcaSubType)}</TableCell>
-                          <TableCell>
-                            {
-                              handelStringToArray(pc.rcaRemark)
-                            }
+                          <TableCell className={classes.tabelBorder}>{pc.rcaType}</TableCell>
+                          <TableCell className={classes.tabelBorder}>{handelConvert(pc.rcaSubType)}</TableCell>
+                          <TableCell className={classes.tabelBorder}>
+                            {handelStringToArray(pc.rcaRemark)}
                           </TableCell>
+                          <TableCell className={classes.tabelBorder}>Action num</TableCell>
                         </TableRow>
-                        :
-                        null
-                    ))}
+                      ) : null
+                    )}
                   </TableBody>
                 </Table>
+
               </TableContainer>
             </AccordionDetails>
           </Accordion>
         </Grid>
-      ) : null
-      }
-    </Grid >
+      ) : null}
+
+      {additionalDetails.length !== 0 ? (
+        <Grid item xs={12}>
+          <Accordion
+            expanded={expanded === "panel5"}
+            onChange={handleExpand("panel5")}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography className={classes.heading}>
+                Additional details
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid item xs={12}>
+                {additionalDetails.map((value) => (
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <Typography className={Fonts.labelName}>
+                        {handelConvert(value.rcaSubType)}
+                      </Typography>
+                      {setRemark(value.rcaRemark).map((rcaValue) => (
+                        <Typography className={Fonts.labelValue}>
+                          {rcaValue}
+                        </Typography>
+                      ))}
+                    </Grid>
+                  </Grid>
+                ))}
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
+      ) : null}
+    </Grid>
   );
 };
 export default RootCauseAnalysisSummary;

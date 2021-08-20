@@ -455,10 +455,6 @@ export const IncidentDetails = loadable(() =>
   fallback: <Loading />,
 });
 
-export const UpdateIncidentDetails = loadable(() =>
-  import('./Forms/InitialNotification/UpdateIncidentDetails'), {
-  fallback: <Loading />,
-});
 
 export const PeoplesAfftected = loadable(() =>
   import('./Forms/InitialNotification/PeoplesAfftected'), {
@@ -568,6 +564,10 @@ export const RootCauseAnalysis = loadable(() =>
   fallback: <Loading />,
 });
 
+export const PaceManagement = loadable(() =>
+  import('./Forms/RootCauseAnalysis/PaceManagement'), {
+  fallback: <Loading />,
+});
 
 export const WhyAnalysis = loadable(() =>
   import('./Forms/RootCauseAnalysis/WhyAnalysis'), {
@@ -586,5 +586,108 @@ export const Summary = loadable(() =>
 
 export const LessionLearned = loadable(() =>
   import('./Forms/LessonLearned/LessonLearned'), {
+  fallback: <Loading />,
+});
+
+// form lession learned
+
+export const CloseOut = loadable(() =>
+  import('./Forms/CloseOut/CloseOut'), {
+  fallback: <Loading />,
+});
+
+// Observations 
+
+export const Observations = loadable(() => import("./Pages/Observations/Observations"), {
+  fallback: <Loading />,
+});
+
+export const ObservationSummary = loadable(() => import("./Pages/Observations/ObservationSummary"), {
+  fallback: <Loading />,
+});
+
+export const ObservationInitialNotification = loadable(() => import("./Pages/Observations/ObservationInitialNotification"), {
+  fallback: <Loading />,
+});
+
+export const ObservationInitialNotificationView = loadable(() => import("./Pages/Observations/ObservationInitialNotificationView"), {
+  fallback: <Loading />,
+});
+
+export const ObservationCorrectiveAction = loadable(() => import("./Pages/Observations/ObservationCorrectiveAction"), {
+  fallback: <Loading />,
+});
+
+export const ObservationCloseOut = loadable(() => import("./Pages/Observations/ObservationCloseOut"), {
+  fallback: <Loading />,
+});
+
+export const ObservationInitialNotificationUpdate = loadable(() => import("./Pages/Observations/ObservationInitialNotificationUpdate"), {
+  fallback: <Loading />,
+});
+
+// checklist
+
+export const CheckList = loadable(() =>
+  import("./Pages/CheckList/CheckList.js"), {
+  fallback: <Loading />,
+});
+
+export const Groups = loadable(() =>
+  import("./Pages/CheckList/Groups.js"), {
+  fallback: <Loading />,
+});
+
+export const Options = loadable(() =>
+  import("./Pages/CheckList/Options.js"), {
+  fallback: <Loading />,
+});
+export const Prints = loadable(() => import("./Print/Prints"), {
+  fallback: <Loading />,
+});
+
+// Aha    
+export const Aha = loadable(() => import("./Pages/Aha/Aha"), {
+  fallback: <Loading />,
+});
+
+export const AhaSummary = loadable(() => import("./Pages/Aha/AhaSummary"), {
+  fallback: <Loading />,
+});
+
+export const AssessmentsForms = loadable(() => import("./Pages/Aha/Assessments/AssessmentsForms"), {
+  fallback: <Loading />,
+});
+
+export const ProjectDetails = loadable(() => import("./Pages/Aha/Assessments/ProjectDetails"), {
+  fallback: <Loading />,
+});
+
+export const ProjectAreaHazards = loadable(() => import("./Pages/Aha/Assessments/ProjectAreaHazards"), {
+  fallback: <Loading />,
+});
+
+
+
+export const Assessment = loadable(() => import("./Pages/Aha/Assessments/Assessment"), {
+  fallback: <Loading />,
+});
+
+export const DocumentNotification = loadable(() => import("./Pages/Aha/Assessments/DocumentsNotifications"), {
+  fallback: <Loading />,
+});
+
+export const Approvals = loadable(() => import("./Pages/Aha/Approvals/Approvals"), {
+  fallback: <Loading />,
+});
+
+export const LessonsLearned = loadable(() => import("./Pages/Aha/LessonsLearned/LessonsLearned"), {
+  fallback: <Loading />,
+});
+
+export const Setting = loadable(() => import("./Settings/Setting"), {
+  fallback: <Loading />,
+});
+export const Comments = loadable(() => import("./Comments/Comments"), {
   fallback: <Loading />,
 });

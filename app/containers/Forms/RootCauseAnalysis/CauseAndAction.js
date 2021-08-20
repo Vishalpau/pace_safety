@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
+import React, { useEffect, useState, useRef, lazy } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -15,6 +13,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -25,8 +24,9 @@ import {
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
+import { handelConvert } from "../../../utils/CheckerValue"
 import ActionTracker from "../ActionTracker";
-
+import { checkValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -73,69 +73,48 @@ const BasicCauseAndAction = () => {
 
   const putId = useRef("");
   let id = useRef();
-  const [action, setAction] = useState({});
+  const [actionData, setActionData] = useState({});
 
   const handelShowData = async () => {
-    let tempApiData = {};
-    let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
-      HAZARDIOUS_CONDITION_SUB_TYPES
-    );
+    console.log("here")
+    let tempApiData = [];
+    let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(HAZARDIOUS_CONDITION_SUB_TYPES);
     let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     );
-    let tempid = [];
-    let all_pace_data = [];
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
-      if (
-        subTypes.includes(value.rcaSubType) &&
-        value.rcaRemark !== "No option selected"
-      ) {
-        all_pace_data.push(value);
-        tempid.push(value.id);
-        let valueQuestion = value.rcaSubType;
-        let valueAnser = value.rcaRemark;
-        tempApiData[valueQuestion] = valueAnser.includes(",")
-          ? valueAnser.split(",")
-          : [valueAnser];
+      if (subTypes.includes(value.rcaSubType)) {
+        tempApiData.push(allApiData[index])
       }
     });
-    id.current = tempid.reverse();
-    await setData(tempApiData);
-    handelActionTracker();
+    await handelActionTracker(tempApiData);
   };
 
-  const handelActionTracker = async () => {
+  const handelActionTracker = async (apiData) => {
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
-    const allActionTracker = allActionTrackerData.data.data.results.results
-    let allPaceID = id.current
-    allPaceID.map((paceId) => {
-      let tempActionID = []
-      allActionTracker.map((actionTracker) => {
-        let causeId = actionTracker.enitityReferenceId.split(":")[1]
-        if (causeId == paceId) {
-          let causeSubId = actionTracker.enitityReferenceId.split(":")[2]
-          tempActionID.push([actionTracker.id, causeSubId])
-        }
-      })
-      ActionToCause[paceId] = tempActionID
-    })
-
-    console.log(ActionToCause)
-  }
+    for (let key in apiData) {
+      const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]}`);
+      console.log(allActionTrackerData)
+      if (allActionTrackerData.data.data.results.results.length > 0) {
+        let actionTracker = allActionTrackerData.data.data.results.results
+        const temp = []
+        actionTracker.map((value) => {
+          let actionTrackerId = value.id
+          temp.push(actionTrackerId)
+        })
+        apiData[key]["action"] = temp
+      }
+    }
+    await setData(apiData);
+  };
 
   function ListItemLink(props) {
     return (
@@ -145,23 +124,15 @@ const BasicCauseAndAction = () => {
 
   const classes = useStyles();
 
-  const handelNext = () => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    putId.current = lastItem;
-    if (!isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
-        }`
-      );
-    } else if (isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/`
-      );
+
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]}${putId.current}`)
+    } else if (navigateType == "previous") {
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Hazardous conditions"]}${putId.current}`)
     }
-  };
+  }
+
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -170,38 +141,20 @@ const BasicCauseAndAction = () => {
     await setIncidentDetail(result);
   };
 
-  const handelPrevious = () => {
-    if (!isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/${putId.current
-        }`
-      );
-    } else if (isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-condtions/`
-      );
-    }
-  };
-
-  const handelConvert = (value) => {
-    let wordArray = value.split(/(?=[A-Z])/);
-    let wordArrayCombined = wordArray.join(" ");
-    var newString = wordArrayCombined
-      .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
-        return c.toUpperCase();
-      });
-    return newString;
-  };
+  const handelCallback = async () => {
+    await handelShowData();
+    await fetchIncidentDetails();
+  }
 
   useEffect(() => {
-    fetchIncidentDetails();
-    handelShowData();
+    handelCallback()
   }, []);
+
+  const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock
-      title="Actions against Immediate Causes"
+      title="Corrective Actions"
       icon="ion-md-list-box"
     >
       <Grid container spacing={3}>
@@ -227,7 +180,7 @@ const BasicCauseAndAction = () => {
 
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom>
-              Actions
+              Corrective actions
             </Typography>
           </Grid>
 
@@ -235,47 +188,43 @@ const BasicCauseAndAction = () => {
             <Divider />
             <Box paddingTop={3}>
               <Typography variant="h6">
-                Option Selected from Hazardous Acts and Condition
+                Option(s) Selected from Hazardous Acts and Condition
               </Typography>
             </Box>
 
-            <div>
-              <Table border={1}>
-                <TableBody>
-                  {Object.entries(data)
-                    .reverse()
-                    .map(([key, value], index) => (
-                      <>
-                        {value.map((value) => (
-                          <TableRow>
-                            <TableCell
-                              align="left"
-                            >
-                              {handelConvert(key)}
-                            </TableCell>
-                            <TableCell
-                              align="left"
-                            >
-                              <li key={value}>
-                                <span>{value}</span>
-                              </li>
-
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                            >
-                              <ActionTracker
-                                actionContext="incidents:Pacacuase"
-                                enitityReferenceId={`${putId.current}:${id.current[index]}:${index}`}
-                              />
-                            </TableCell>
-                          </TableRow>
+            <Table className={classes.table}>
+              <TableBody>
+                {data.map((value) => (
+                  <TableRow>
+                    <TableCell align="left" style={{ width: 160 }}>
+                      {handelConvert(value.rcaSubType)}
+                    </TableCell>
+                    <TableCell align="left">
+                      <span>{value.rcaRemark}</span>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography>
+                        {value.action != undefined && value.action.map((actionId) => (
+                          <p>{actionId}</p>
                         ))}
-                      </>
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
+                      </Typography>
+                      <ActionTracker
+                        actionContext="incidents:Pacacuase"
+                        enitityReferenceId={`${putId.current}:${value.id}`}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+              </TableBody>
+            </Table>
+            {data.length == 0 ?
+              <Grid container item md={9}>
+                <Typography variant="h8">
+                  No option(s) selected
+                </Typography>
+              </Grid>
+              : null}
           </Grid>
 
           <Grid item md={12}>
@@ -283,7 +232,7 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={(e) => handelPrevious(e)}
+              onClick={(e) => handelNavigate("previous")}
             >
               Previous
             </Button>
@@ -291,20 +240,25 @@ const BasicCauseAndAction = () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={(e) => handelNext()}
+              onClick={(e) => handelNavigate("next")}
             >
               Next
             </Button>
           </Grid>
         </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Cause and action"}
-          />
-        </Grid>
+
+        {
+          isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Corrective actions"}
+              />
+            </Grid>
+          )}
+
       </Grid>
-    </PapperBlock>
+    </PapperBlock >
   );
 };
 

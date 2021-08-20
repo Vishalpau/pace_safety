@@ -1,50 +1,29 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { AccessAlarm, ThreeDRotation } from "@material-ui/icons";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
-import Link from "@material-ui/core/Link";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
-import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
+import {
+  BASIC_CAUSE_SUB_TYPES,
+  PACE_MANAGEMENT_CONTROL_SUB_TYPES,
+} from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
+import { checkValue, handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
 
 const useStyles = makeStyles((theme) => ({
@@ -93,8 +72,38 @@ const BasicCauseAndAction = () => {
   let putId = useRef("");
   let id = useRef("");
   const [incidentDetail, setIncidentDetail] = useState({});
+  const [optionBasicCause, setOptionBasicCause] = useState([]);
 
   const handelShowData = async () => {
+    let tempApiData = [];
+    let subTypes = PACE_MANAGEMENT_CONTROL_SUB_TYPES;
+    let page_url = window.location.href;
+    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
+    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    putId.current = incidentId;
+    let previousData = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
+    );
+    let allApiData = previousData.data.data.results;
+    allApiData.map((value, index) => {
+      if (subTypes.includes(value.rcaSubType)) {
+        tempApiData.push(allApiData[index])
+      }
+    });
+    await setData(tempApiData);
+  };
+
+  const handelOptionDispay = (type, subType, option) => {
+    let temp = [];
+    if (option !== "-") {
+      option.map((value) => {
+        temp.push(`${type} - ${subType} - ${value}`);
+      });
+    }
+    return temp;
+  };
+
+  const handelBasicCauseData = async () => {
     let tempApiData = {};
     let subTypes = BASIC_CAUSE_SUB_TYPES;
     let page_url = window.location.href;
@@ -116,16 +125,43 @@ const BasicCauseAndAction = () => {
         subTypes.includes(value.rcaSubType) &&
         value.rcaRemark !== "No option selected"
       ) {
-        tempid.push(value.id);
         let valueQuestion = value.rcaSubType;
         let valueAnser = value.rcaRemark;
-        tempApiData[valueQuestion] = valueAnser.includes(",")
-          ? valueAnser.split(",")
-          : [valueAnser];
+        if (Object.keys(tempApiData).includes(valueQuestion)) {
+          tempApiData[valueQuestion].push(valueAnser)
+        } else {
+          tempApiData[valueQuestion] = [valueAnser]
+        }
       }
     });
-    id.current = tempid.reverse();
-    await setData(tempApiData);
+
+    let OptionWithSubType = handelOptionDispay(
+      "Human factors",
+      "personal",
+      checkValue(tempApiData["personal"])
+    )
+      .concat(
+        handelOptionDispay(
+          "Human factors",
+          "wellnessFactors",
+          checkValue(tempApiData["wellnessFactors"])
+        )
+      )
+      .concat(
+        handelOptionDispay(
+          "Jobfactors",
+          "leadership",
+          checkValue(tempApiData["leadership"])
+        )
+      )
+      .concat(
+        handelOptionDispay(
+          "Jobfactors",
+          "processes",
+          checkValue(tempApiData["processes"])
+        )
+      );
+    setOptionBasicCause(OptionWithSubType);
   };
 
   function ListItemLink(props) {
@@ -150,12 +186,12 @@ const BasicCauseAndAction = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/pace-management/${putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/basic-cause/`
+        `/app/incident-management/registration/root-cause-analysis/pace-management/`
       );
     }
   };
@@ -168,118 +204,114 @@ const BasicCauseAndAction = () => {
     await setIncidentDetail(result);
   };
 
-  const handleConvert = (value) => {
-    let wordArray = value.split(/(?=[A-Z])/);
-    let wordArrayCombined = wordArray.join(" ");
-    var newString = wordArrayCombined
-      .toLowerCase()
-      .replace(/(^\s*\w|[\.\!\?]\s*\w)/g, function (c) {
-        return c.toUpperCase();
-      });
-    return newString;
-  };
-
   useEffect(() => {
     fetchIncidentDetails();
     handelShowData();
+    handelBasicCauseData();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   const classes = useStyles();
   return (
-    <PapperBlock title="Actions Against Basic Causes" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-            <Typography className={Type.labelValue}>
-              {incidentDetail.incidentNumber}
-            </Typography>
-          </Grid>
-
-          <Grid item md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Method
-            </Typography>
-            <Typography className={Type.labelValue}>
-              PACE cause analysis
-            </Typography>
-          </Grid>
-
-          <Grid item md={12}>
-            <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-              <Typography variant="h6" gutterBottom>
-                Actions
+    <PapperBlock title="Preventive Actions" icon="ion-md-list-box">
+      <Row>
+        <Col md={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
               </Typography>
-            </Box>
-          </Grid>
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
+            </Grid>
 
-          <Grid item md={12}>
-            <Typography variant="h6">
-              Option selected from basic cause
-            </Typography>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Method
+              </Typography>
+              <Typography className={Type.labelValue}>
+                PACE cause analysis
+              </Typography>
+            </Grid>
 
-            <div className={classes.rootTable}>
-              <Table className={classes.table} aria-label="simple table">
-                <TableBody>
-                  {Object.entries(data)
-                    .reverse()
-                    .map(([key, value], index) => (
-                      <TableRow key={key}>
-                        <TableCell
-                          align="left"
-                          scope="row"
-                          className={classes.tableCell}
-                        >
-                          {handleConvert(key)}
+
+
+            <Grid item xs={12}>
+              <Typography variant="h6">Basic cause selected</Typography>
+              {optionBasicCause.map((value) => (
+                <p>
+                  <small>{value}</small>
+                </p>
+              ))}
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                Option(s) selected from management control
+              </Typography>
+
+              <div className={classes.rootTable}>
+                <Table className={classes.table}>
+                  <TableBody>
+                    {data.map((value) => (
+                      <TableRow>
+                        <TableCell align="left" style={{ width: 160 }}>
+                          {handelConvert(value.rcaSubType)}
                         </TableCell>
-                        <TableCell className={classes.tableCell}>
-                          <ul className={classes.tableUlList}>
-                            {value.map((value, key) => (
-                              <li key={key}>{value}</li>
-                            ))}
-                          </ul>
+                        <TableCell align="left">
+                          <span>{value.rcaRemark}</span>
                         </TableCell>
-                        <TableCell align="right" className={classes.tableCell}>
+                        <TableCell align="right">
                           <ActionTracker
                             actionContext="incidents:Pacacuase"
-                            enitityReferenceId={`${putId.current}:${id.current[index]
-                              }`}
+                            enitityReferenceId={`${putId.current}:${value.id}`}
                           />
                         </TableCell>
                       </TableRow>
                     ))}
-                </TableBody>
-              </Table>
-            </div>
-          </Grid>
 
-          <Grid item md={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelPrevious(e)}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNext()}
-            >
-              Next
-            </Button>
+                  </TableBody>
+                </Table>
+              </div>
+              {data.length == 0 ?
+                <Grid container item md={9}>
+                  <Typography variant="h8">
+                    No option(s) selected
+                  </Typography>
+                </Grid>
+                : null}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelPrevious(e)}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelNext()}
+              >
+                Next
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item md={3}>
-          <FormSideBar
-            listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-            selectedItem={"Basic cause and action"}
-          />
-        </Grid>
-      </Grid>
+        </Col>
+        {isDesktop && (
+          <Col md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Preventive actions"}
+            />
+          </Col>
+        )}
+      </Row>
     </PapperBlock>
   );
 };

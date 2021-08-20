@@ -2,7 +2,6 @@ import { is } from "immutable";
 import validator from "validator";
 
 function LessionLearnedValidator(data) {
-  console.log(data);
   let isValid = true;
   const error = {};
 
@@ -11,21 +10,12 @@ function LessionLearnedValidator(data) {
       error[`teamOrDepartment${[i]}`] = "Please select team or department";
       isValid = false;
     }
-
-    // if (validator.isEmpty(data[i].propertyOtherType.toString())) {
-    //   error[`propertyOtherType${[i]}`] = "This field is empty";
-    //   isValid = false;
-    // }
-
     if (validator.isEmpty(data[i].learnings.toString())) {
       error[`learnings${[i]}`] = "Please enter Team/Department learnings";
       isValid = false;
     }
   }
 
-  // const result =
-
-  // console.log('roor',error, isValid)
   return { error, isValid };
 }
 

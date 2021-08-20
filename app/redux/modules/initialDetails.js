@@ -4,7 +4,17 @@ const INITIAL_STATE = {
     projectName:{},
     error:null ,
     breakDown:[],
-    userDetails:[] 
+    userDetails:[] ,
+    viewMode:{
+      initialNotification:true,
+      investigation:false,
+      evidence:false,
+      rootcauseanalysis:false,
+      lessionlearn:false,
+      closeout:false,
+    },
+    companyDataList:{},
+    levelBreakDown:[]
 }
 
 const InitialDetailsReducer = (state = INITIAL_STATE,action)=>{
@@ -16,8 +26,12 @@ const InitialDetailsReducer = (state = INITIAL_STATE,action)=>{
           return{...state, userDetails:action.payload}
         case actionType.BREAKDOWN_DETAILS:
           return{...state, breakDown : action.payload}
-        case actionType.ADD_BREAKDOWN_DETAILS:
-          return{...state, breakDown: state.breakDown.concat(action.payload)  }
+        case actionType.LEVEL_BREAKDOWN_DETAILS:
+          return{...state, levelBreakDown: action.payload}
+        case actionType.VIEW_MODE:
+          return{...state, viewMode:action.payload}
+        case actionType.COMPANY_DATA:
+          return{...state, companyDataList:action.payload}
         default:
             return state
     }

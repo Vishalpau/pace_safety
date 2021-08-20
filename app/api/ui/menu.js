@@ -860,7 +860,14 @@ module.exports = [
     name: "Observations",
     icon: "ion-md-eye",
     multilevel: false,
-    linkParent: "/app/maps/map-marker",
+    linkParent: "/app/pages/Observations",
+  },
+  {
+    key: "CheckList",
+    name: "Check List",
+    icon: "ion-md-eye",
+    multilevel: false,
+    linkParent: "/app/pages/checklist",
   },
   {
     key: "inspections",
@@ -868,6 +875,41 @@ module.exports = [
     icon: "ion-ios-checkbox",
     multilevel: false,
     linkParent: "/app/charts/area-filled-charts",
+  },
+  {
+    key: 'aha',
+    name: 'AHA',
+    icon: 'ion-ios-checkbox',
+    multilevel: false,
+    linkParent: '/app/pages/aha',
+  },{
+
+    key: 'administration',
+    name: 'Administration',
+    multilevel: true,
+    icon: 'ion-ios-cog',
+    child: [
+      {
+        key: 'pick_lists',
+        name: 'Pick Lists',
+        linkParent: '#',
+      },
+      {
+        key: 'check_lists',
+        name: 'Check Lists',
+        linkParent: '#',
+      },
+      {
+        key: 'xflha_setting',
+        name: 'X-FLHA Setting',
+        linkParent: '#',
+      },
+      {
+        key: 'setting',
+        name: 'Setting',
+        linkParent: '/app/settings/setting',
+      },
+    ],
   },
   // {
   //   key: "menu-level",

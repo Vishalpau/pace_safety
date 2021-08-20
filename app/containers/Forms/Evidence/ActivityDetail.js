@@ -1,14 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import InputLabel from "@material-ui/core/InputLabel";
-import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -18,10 +14,14 @@ import { useHistory, useParams } from "react-router-dom";
 import api from "../../../utils/axios";
 import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
 import { FormHelperText } from "@material-ui/core";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Row, Col } from "react-grid-system";
+
 import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     flexDirection: "row",
@@ -127,16 +127,15 @@ const ActivityDetails = () => {
       error: "",
     },
   ]);
-  
+
   const fetchActivityList = async () => {
     const res = await api.get(`/api/v1/incidents/${id}/activities/`);
     const result = res.data.data.results;
     if (result.length) {
       await setActvityList(result);
     }
-      await setIsLoading(true);
+    await setIsLoading(true);
   };
-
 
   const fetchActivityData = async () => {
     const res = await api.get(
@@ -144,23 +143,18 @@ const ActivityDetails = () => {
     );
     const result = res.data.data.results;
     if (result.length) {
-      let temp = [...activtyList]
-      temp = result
-      await setActvityList(temp);    
+      let temp = [...activtyList];
+      temp = result;
+      await setActvityList(temp);
     }
-    if(!id){
-      setIsLoading(true)
+    if (!id) {
+      setIsLoading(true);
     }
-    
   };
 
   const handleNext = async () => {
-    const { error, isValid } = ActivityDetailValidate(activtyList);
-    await setError(error);
-    if (!isValid) {
-      return;
-    }
-    if (id && activtyList.length > 0  &&  activtyList[0].id) {
+
+    if (id && activtyList.length > 0 && activtyList[0].id) {
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
         activtyList
@@ -185,6 +179,11 @@ const ActivityDetails = () => {
         );
       }
     } else {
+      const { error, isValid } = ActivityDetailValidate(activtyList);
+      await setError(error);
+      if (!isValid) {
+        return;
+      }
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
@@ -220,95 +219,106 @@ const ActivityDetails = () => {
     fetchIncidentDetails();
     if (id) {
       fetchActivityList();
-    } 
+    }
   }, []);
 
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Activity Details" icon="ion-md-list-box">
       {isLoading ? (
-        
-        <Grid container spacing={3}>
-          <Grid container item md={9} spacing={3}>
-            <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
-            {activtyList.length ? (
-              <>
-                {Object.entries(activtyList)
-                  .slice(0, 7)
-                  .map(([key, value]) => (
-                    <Grid item md={6}>
-                      <FormControl
-                        component="fieldset"
-                        required
-                        className={classes.formControl}
-                        error={value.error}
-                      >
-                        <FormLabel component="legend">
-                          {value.question}
-                        </FormLabel>
-                        <RadioGroup
-                          className={classes.inlineRadioGroup}
-                          defaultValue={value.answer || false}
-                          onChange={(e) => {
-                            handleRadioData(e, value.questionCode);
-                          }}
-                          // defaultValue={value.answer}
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentDetail.incidentNumber}
+                </Typography>
+              </Grid>
+              {activtyList.length ? (
+                <>
+                  {Object.entries(activtyList)
+                    .slice(0, 7)
+                    .map(([key, value]) => (
+                      <Grid item xs={12} md={6}>
+                        <FormControl
+                          component="fieldset"
+                          required
+                          className={classes.formControl}
+                          error={value.error}
                         >
-                          {radioDecide.map((value) => (
-                            <FormControlLabel
-                              value={value}
-                              control={<Radio />}
-                              label={value}
-                            />
-                          ))}
-                        </RadioGroup>
-​
-                        {value.error ? (
-                          <FormHelperText>{value.error}</FormHelperText>
-                        ) : null}
-                      </FormControl>
-                    </Grid>
-                  ))}
-              </>
-            ) : null}
-            <Grid item md={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-
-                onClick={() => {if(id){history.push(`/app/incident-management/registration/evidence/evidence/${id}`)
-
-                }else{ history.push(`/app/incident-management/registration/evidence/evidence/`)}}}
-                // href="/app/incident-management/registration/evidence/evidence/"
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => handleNext()}
-                // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
-              >
-                Next
-              </Button>
+                          <FormLabel component="legend">
+                            {value.question}
+                          </FormLabel>
+                          <RadioGroup
+                            className={classes.inlineRadioGroup}
+                            defaultValue={value.answer || false}
+                            onChange={(e) => {
+                              handleRadioData(e, value.questionCode);
+                            }}
+                            // defaultValue={value.answer}
+                          >
+                            {radioDecide.map((value) => (
+                              <FormControlLabel
+                                value={value}
+                                control={<Radio />}
+                                label={value}
+                              />
+                            ))}
+                          </RadioGroup>
+                          ​
+                          {value.error ? (
+                            <FormHelperText>{value.error}</FormHelperText>
+                          ) : null}
+                        </FormControl>
+                      </Grid>
+                    ))}
+                </>
+              ) : null}
+              <Grid item md={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => {
+                    history.push(
+                      `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
+                        "fkincidentId"
+                      )}`
+                    );
+                  }}
+                  // href="/app/incident-management/registration/evidence/evidence/"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => handleNext()}
+                  // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
+                >
+                  Next
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={EVIDENCE_FORM}
-              selectedItem="Activity details"
-            />
-          </Grid>
-        </Grid>
+          </Col>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={EVIDENCE_FORM}
+                selectedItem="Activity details"
+              />
+            </Col>
+          )}
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}

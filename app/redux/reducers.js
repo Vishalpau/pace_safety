@@ -45,22 +45,8 @@ function branchReducer(reducerFunction, reducerName) {
 export default function createReducer(injectedReducers = {}) {
   const rootReducer = combineReducers({
     InitialDetailsReducer,
-    form,
+    
     ui: uiReducer,
-    initval,
-    login,
-    socmed,
-    calendar,
-    ecommerce,
-    contact,
-    chat,
-    email,
-    taskboard,
-    treeTableArrow: branchReducer(treeTable, 'treeTableArrow'),
-    treeTablePM: branchReducer(treeTable, 'treeTablePM'),
-    crudTableDemo: branchReducer(crudTable, 'crudTableDemo'),
-    crudTableForm,
-    crudTbFrmDemo: branchReducer(crudTableForm, 'crudTbFrmDemo'),
     language: languageProviderReducer,
     router: connectRouter(history),
     ...injectedReducers,

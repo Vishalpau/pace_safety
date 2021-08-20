@@ -5,13 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import { useParams } from "react-router";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import IconButton from '@material-ui/core/IconButton';
-import ImageIcon from '@material-ui/icons/Image';
-import Paper from "@material-ui/core/Paper";
+import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import Divider from '@material-ui/core/Divider'
+import Divider from "@material-ui/core/Divider";
 import Tooltip from "@material-ui/core/Tooltip";
 import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import Dialog from "@material-ui/core/Dialog";
@@ -21,9 +18,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
-import { saveAs } from 'file-saver'
+import { saveAs } from "file-saver";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
+import moment from "moment";
+import { useHistory, useParams } from "react-router";
 
 import api from "../../utils/axios";
+import { checkValue, handelFileName } from "../../utils/CheckerValue";
+import Attachment from "../Attachment/Attachment";
 
 // Styles
 import Fonts from "dan-styles/Fonts.scss";
@@ -48,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     width: 650,
     backgroundColor: theme.palette.background.paper,
-    // boxShadow: theme.shadows[5],
     padding: theme.spacing(4),
   },
   closeButton: {
@@ -69,7 +71,7 @@ const InvestigationSummary = () => {
   const [weather, setWeather] = useState([]);
   const [overAllCost, setOverAllCost] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
-  const [workerData, setWorkerData] = useState([])
+  const [workerData, setWorkerData] = useState([]);
   const putId = useRef("");
   const eventId = useRef("");
   const investigationId = useRef("");
@@ -126,7 +128,10 @@ const InvestigationSummary = () => {
   };
 
   const fecthWorkerData = async () => {
-    let res = await api.get(`api/v1/incidents/${id}/investigations/${investigationId.current}/workers/`);
+    let res = await api.get(
+      `api/v1/incidents/${id}/investigations/${investigationId.current
+      }/workers/`
+    );
     let result = res.data.data.results;
     await setWorkerData(result);
   };
@@ -135,15 +140,17 @@ const InvestigationSummary = () => {
     await fetchInvestigationData();
     await fetchEventData();
     await fecthWorkerData();
-
-  }
+  };
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
   const [documentUrl, setDocumentUrl] = useState("");
   const [open, setOpen] = React.useState(false);
-
+  const history = useHistory();
+  if (id) {
+    localStorage.setItem("fkincidentId", id);
+  }
   const handleOpen = (document) => {
     setDocumentUrl(document);
     setOpen(true);
@@ -153,28 +160,52 @@ const InvestigationSummary = () => {
     setOpen(false);
   };
 
+
   const download = (image_link) => {
-    let onlyImage_url = image_link.replace("https://", "")
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url
-    let imageArray = image_url.split("/")
-    let image_name = imageArray[imageArray.length - 1]
-    saveAs(image_url, image_name)
-    handleClose()
+    let onlyImage_url = image_link.replace("https://", "");
+    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    let imageArray = image_url.split("/");
+    let image_name = imageArray[imageArray.length - 1];
+    saveAs(image_url, image_name);
+    handleClose();
   };
+
+  const handelInvestigation = (e, value) => {
+    if (value = "modify") {
+      history.push(`/app/incident-management/registration/investigation/investigation-overview/${id}`)
+    }
+    else if (value = "add") {
+      history.push(`/app/incident-management/registration/investigation/investigation-overview/`)
+    }
+
+  }
 
   useEffect(() => {
     if (id) {
-      handelCallBack()
+      handelCallBack();
     }
   }, []);
   const classes = useStyles();
-
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <Grid container spacing={3}>
-
+      {/* {console.log(investigationOverview)} */}
       {/* investigation overview */}
+      {!isDesktop && (
+
+        <Grid item xs={12}>
+          {investigationOverview.length > 0 ?
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelInvestigation(e, "modify")}>
+              Modify Investigation
+            </Button>
+            :
+            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelInvestigation(e, "add")}>
+              Add Investigation
+            </Button>
+          }
+        </Grid>
+      )}
       <Grid item xs={12}>
-        {/* panel will open and close accordion accoring to click on accordion expand */}
         <Accordion
           expanded={expanded === "panel1"}
           onChange={handleExpand("panel1")}
@@ -188,12 +219,12 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {investigationOverview.map((value, index) => (
                 <>
-                  <Grid item lg={12} md={12}>
+                  <Grid item xs={12}>
                     <Typography className={classes.heading}>
                       Construction manager
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -205,7 +236,7 @@ const InvestigationSummary = () => {
                       {value.constructionManagerName}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -216,13 +247,13 @@ const InvestigationSummary = () => {
                     <Typography variant="body" className={Fonts.labelValue}>
                       {value.constructionManagerContactNo}
                     </Typography>
-                  </Grid>{" "}
-                  <Grid item lg={12} md={12}>
+                  </Grid>
+                  <Grid item xs={12} md={12}>
                     <Typography className={classes.heading}>
                       Hse specialist
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -234,7 +265,7 @@ const InvestigationSummary = () => {
                       {value.hseSpecialistName}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -243,10 +274,12 @@ const InvestigationSummary = () => {
                       Contact no
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.hseSpecialistContactNo != "" ? value.hseSpecialistContactNo : "--"}
+                      {value.hseSpecialistContactNo != ""
+                        ? value.hseSpecialistContactNo
+                        : "--"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -255,10 +288,10 @@ const InvestigationSummary = () => {
                       Actual serverity level
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.actualSeverityLevel}
+                      {checkValue(value.actualSeverityLevel)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -267,7 +300,7 @@ const InvestigationSummary = () => {
                       Potential serverity level
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.potentialSeverityLevel != "" ? value.potentialSeverityLevel : "-"}
+                      {checkValue(value.potentialSeverityLevel)}
                     </Typography>
                   </Grid>
                 </>
@@ -292,7 +325,7 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {investigationOverview.map((value, index) => (
                 <>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -304,7 +337,7 @@ const InvestigationSummary = () => {
                       {value.healthSafetyActual}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -313,10 +346,12 @@ const InvestigationSummary = () => {
                       Health & Safety potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.healthSafetyPotential != null ? value.healthSafetyPotential : "-"}
+                      {value.healthSafetyPotential != null
+                        ? value.healthSafetyPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -325,10 +360,12 @@ const InvestigationSummary = () => {
                       Environment-actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.environmentActual != null ? value.environmentActual : "-"}
+                      {value.environmentActual != null
+                        ? value.environmentActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -337,10 +374,12 @@ const InvestigationSummary = () => {
                       Environment-potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.environmentPotential != null ? value.environmentPotential : "-"}
+                      {value.environmentPotential != null
+                        ? value.environmentPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -349,10 +388,12 @@ const InvestigationSummary = () => {
                       Regulatory actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.regulatoryActual != null ? value.regulatoryActual : "-"}
+                      {value.regulatoryActual != null
+                        ? value.regulatoryActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -361,10 +402,12 @@ const InvestigationSummary = () => {
                       Regulatory potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.regulatoryPotential != null ? value.regulatoryPotential : "-"}
+                      {value.regulatoryPotential != null
+                        ? value.regulatoryPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -373,10 +416,12 @@ const InvestigationSummary = () => {
                       Reputation actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.reputationActual != null ? value.reputationActual : "-"}
+                      {value.reputationActual != null
+                        ? value.reputationActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -385,10 +430,12 @@ const InvestigationSummary = () => {
                       Reputation potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.reputationPotential != null ? value.reputationPotential : "-"}
+                      {value.reputationPotential != null
+                        ? value.reputationPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -397,10 +444,12 @@ const InvestigationSummary = () => {
                       Financial actual
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.financialActual != null ? value.financialActual : "-"}
+                      {value.financialActual != null
+                        ? value.financialActual
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -409,10 +458,12 @@ const InvestigationSummary = () => {
                       Financial potential
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.financialPotential != null ? value.financialPotential : "-"}
+                      {value.financialPotential != null
+                        ? value.financialPotential
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -421,10 +472,12 @@ const InvestigationSummary = () => {
                       Highest potential impact receptor
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.highestPotentialImpactReceptor != null ? value.highestPotentialImpactReceptor : "-"}
+                      {value.highestPotentialImpactReceptor != null
+                        ? value.highestPotentialImpactReceptor
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -433,10 +486,12 @@ const InvestigationSummary = () => {
                       Classification
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.classification != null ? value.classification : "-"}
+                      {value.classification != null
+                        ? value.classification
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -445,7 +500,9 @@ const InvestigationSummary = () => {
                       Rca recommended
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.rcaRecommended != null ? value.rcaRecommended : "-"}
+                      {value.rcaRecommended != null
+                        ? value.rcaRecommended
+                        : "-"}
                     </Typography>
                   </Grid>
                 </>
@@ -462,31 +519,39 @@ const InvestigationSummary = () => {
           onChange={handleExpand("panel3")}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>
-              Worker details
-            </Typography>
+            {expanded !== "panel3" ?
+              <Typography className={classes.heading}>Worker details</Typography>
+              :
+              null
+            }
+
           </AccordionSummary>
           <AccordionDetails>
             <paper>
               <Grid container item xs={12} spacing={3}>
+                <Grid item xs={12}>
+
+                </Grid>
                 {workerData.map((value, index) => (
                   <>
                     {/* worker number */}
-                    <Grid item lg={12}>
-                      <Typography variant="h5">
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
                         {`Worker ${index + 1}`}
                       </Typography>
                     </Grid>
 
                     {/* worker details */}
-                    <Grid item lg={12}>
-                      <Typography variant="h6">
-                        worker details
-                      </Typography>
+
+                    <Grid item xs={12}>
+                      <Typography>Worker details</Typography>
                     </Grid>
 
+
+
+
                     {/* name */}
-                    <Grid item lg={6} md={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -500,7 +565,7 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* worker type */}
-                    <Grid item lg={6} md={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -514,7 +579,7 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* department */}
-                    <Grid item lg={6} md={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography
                         variant="h6"
                         gutterBottom
@@ -528,465 +593,392 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     {/* working hours */}
-                    {value.workHours !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Working hours.
-                        </Typography>
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Working hours
+                      </Typography>
+                      {value.workHours.toString().length > 0 ? (
                         <Typography variant="body" className={Fonts.labelValue}>
                           {value.workHours}
                         </Typography>
-                      </Grid>
-                      : null}
+                      ) : (
+                        "-"
+                      )}
+                    </Grid>
 
                     {/* shift time start */}
-                    {value.shiftTimeStart !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          shift time start
-                        </Typography>
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        shift time start
+                      </Typography>
+                      {value.shiftTimeStart !== null ? (
                         <Typography variant="body" className={Fonts.labelValue}>
-                          {value.shiftTimeStart}
+                          {moment(value.shiftTimeStart).format("h:mm:ss a")}
                         </Typography>
-                      </Grid>
-                      : null}
+                      ) : (
+                        "-"
+                      )}
+                    </Grid>
 
                     {/* shift type */}
-                    {value.shiftType !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          shift type
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.shiftType}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        shift type
+                      </Typography>
+                      {checkValue(value.shiftType)}
+                    </Grid>
 
                     {/* occupatione */}
-                    {value.occupation !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Occupation
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.occupation}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Occupation
+                      </Typography>
+
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.occupation)}
+                      </Typography>
+                    </Grid>
 
                     {/* shift cycle */}
-                    {value.shiftCycle !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Shift cycle
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.shiftCycle}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* shift cycle */}
-                    {value.shiftCycle !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Shift cycle
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.shiftCycle}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Shift cycle
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.shiftCycle)}
+                      </Typography>
+                    </Grid>
 
                     {/* No of days into shift */}
-                    {value.noOfDaysIntoShift !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          No of days into shift
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.noOfDaysIntoShift}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        No of days into shift
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.noOfDaysIntoShift)}
+                      </Typography>
+                    </Grid>
 
                     {/* time in company */}
-                    {value.timeInCompany !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Time in company
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.timeInCompany}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Time in company
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.timeInCompany)}
+                      </Typography>
+                    </Grid>
 
                     {/* time on project */}
-                    {value.timeOnProject !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Time on project
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.timeOnProject}
-                        </Typography>
-                      </Grid>
-                      : null}
+
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Time on project
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {value.timeOnProject.toString().length > 0 ? <p>{value.timeOnProject}</p> : "-"}
+                      </Typography>
+                    </Grid>
+
 
                     {/* time in industry*/}
-                    {value.timeInIndustry !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Time in industry
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.timeInIndustry}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Time in industry
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.timeInIndustry)}
+                      </Typography>
+                    </Grid>
 
                     {/* injurty details */}
-                    <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Injurty details
-                      </Typography>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Injury details</Typography>
                     </Grid>
 
                     {/* event injury */}
-
-                    {value.eventLeadingToInjury !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Event leading to injurty.
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.eventLeadingToInjury}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* injury object */}
-                    {value.injuryObject !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Injury object
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.injuryObject}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* Primary body part with side */}
-                    {value.primaryBodyPartWithSide !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Primary body part with side
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.primaryBodyPartWithSide}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* Secondary body part with side */}
-                    {value.secondaryBodyPartWithSide !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Secondary body part with side
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.secondaryBodyPartWithSide}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* Secondary body part with side */}
-                    {value.secondaryBodyPartWithSide !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Secondary body part with side
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.secondaryBodyPartWithSide}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* type of injury */}
-                    {value.typeOfInjury !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Type of injury
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.typeOfInjury}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* Number of days away */}
-                    {value.NoOfDaysAway !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Number of days away
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.NoOfDaysAway}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* Medical response taken */}
-                    {value.medicalResponseTaken !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Medical response taken
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.medicalResponseTaken}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* treatment date */}
-                    {value.treatmentDate !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Treatment date
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.treatmentDate.substring(0, 10)}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* injury status */}
-                    {value.injuryStatus !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Injury status
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.injuryStatus}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* first aid treatment */}
-                    {value.firstAidTreatment !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          First aid treatment
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.firstAidTreatment}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* mechanismOfInjury */}
-                    {value.mechanismOfInjury !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Mechanism of injury
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.mechanismOfInjury}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* Worker care */}
-
-                    <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Worker care
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Event leading to injury.
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.eventLeadingToInjury)}
                       </Typography>
                     </Grid>
 
+                    {/* injury object */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Injury object
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.injuryObject)}
+                      </Typography>
+                    </Grid>
+
+                    {/* Primary body part with side */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Primary body part with side
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.primaryBodyPartWithSide)}
+                      </Typography>
+                    </Grid>
+
+                    {/* Secondary body part with side */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Secondary body part with side
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.secondaryBodyPartWithSide)}
+                      </Typography>
+                    </Grid>
+
+                    {/* type of injury */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Type of injury
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.typeOfInjury)}
+                      </Typography>
+                    </Grid>
+
+                    {/* Number of days away */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Number of days away
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.NoOfDaysAway)}
+                      </Typography>
+                    </Grid>
+
+                    {/* Medical response taken */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Medical response taken
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.medicalResponseTaken)}
+                      </Typography>
+                    </Grid>
+
+                    {/* treatment date */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Treatment date
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {value.treatmentDate !== null &&
+                          value.treatmentDate !== undefined ? (
+                          value.treatmentDate.substring(0, 10)
+                        ) : (
+                          <p>-</p>
+                        )}
+                      </Typography>
+                    </Grid>
+
+                    {/* injury status */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Injury status
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.injuryStatus)}
+                      </Typography>
+                    </Grid>
+
+                    {/* first aid treatment */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        First aid treatment
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.firstAidTreatment)}
+                      </Typography>
+                    </Grid>
+
+                    {/* mechanismOfInjury */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Mechanism of injury
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.mechanismOfInjury)}
+                      </Typography>
+                    </Grid>
+
+                    {/* Worker care */}
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Worker care</Typography>
+                    </Grid>
+
                     {/* medical issue */}
-                    {value.isMedicationIssued !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Medical issue ?
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.isMedicationIssued}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Medical issue ?
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.isMedicationIssued)}
+                      </Typography>
+                    </Grid>
 
                     {/* prescription issues */}
-                    {value.isPrescriptionIssued !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Prescription issued ?
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.isPrescriptionIssued}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Prescription issued ?
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.isPrescriptionIssued)}
+                      </Typography>
+                    </Grid>
 
                     {/* non-prescription */}
-                    {value.isNonPrescription !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Non-prescription ?
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.isNonPrescription}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Non-prescription ?
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.isNonPrescription)}
+                      </Typography>
+                    </Grid>
 
                     {/* any limitation */}
-                    {value.isAnyLimitation !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Any limitation
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.isAnyLimitation}
-                        </Typography>
-                      </Grid>
-                      : null}
+
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Any limitation
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.isAnyLimitation)}
+                      </Typography>
+                    </Grid>
 
                     {/* alcohal and drug test */}
-
-                    <Grid item lg={12}>
+                    <Grid item xs={12}>
                       <Typography variant="h6">
                         Alcohal and drug test
                       </Typography>
                     </Grid>
 
                     {/* test taken */}
-                    {value.isAlcoholDrugTestTaken !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Was the test taken?
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.isAlcoholDrugTestTaken}
-                        </Typography>
-                      </Grid>
-                      : null}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Was the test taken?
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.isAlcoholDrugTestTaken)}
+                      </Typography>
+                    </Grid>
 
-                    {value.isAlcoholDrugTestTaken == "Yes" && value.isWorkerClearedTest !== null ?
+                    {value.isAlcoholDrugTestTaken == "Yes" &&
+                      value.isWorkerClearedTest !== null ? (
                       <>
-                        {value.dateOfAlcoholDrugTest !== null ?
-                          <Grid item lg={6} md={6}>
+                        {value.dateOfAlcoholDrugTest !== null ? (
+                          <Grid item xs={12} md={6}>
                             <Typography
                               variant="h6"
                               gutterBottom
@@ -995,12 +987,15 @@ const InvestigationSummary = () => {
                               Date of the test
                             </Typography>
 
-                            <Typography variant="body" className={Fonts.labelValue}>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
                               {value.dateOfAlcoholDrugTest.substring(0, 10)}
                             </Typography>
                           </Grid>
-                          : null}
-                        <Grid item lg={6} md={6}>
+                        ) : null}
+                        <Grid item xs={12} md={6}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -1009,109 +1004,111 @@ const InvestigationSummary = () => {
                             Was worker cleared to work following a&d testing ?
                           </Typography>
 
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {value.isWorkerClearedTest}
                           </Typography>
                         </Grid>
                       </>
-                      : null}
+                    ) :
+                      // 
+                      <Grid item xs={12} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Why was the test not conducted ?
+                        </Typography>
+
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {checkValue(value.reasonForTestNotDone)}
+                        </Typography>
+                      </Grid>
+                    }
 
                     {/* supervisor details */}
-                    <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Supervisor details
-                      </Typography>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Supervisor details</Typography>
                     </Grid>
 
                     {/* supervisor name */}
-                    {value.supervisorName !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Supervisor name
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.supervisorName}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* supervisor time industry */}
-                    {value.supervisorTimeInIndustry !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Supervisor time in industry?
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.supervisorTimeInIndustry}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* supervisor time company */}
-                    {value.supervisorTimeInCompany !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Supervisor time in company?
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.supervisorTimeInCompany}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* supervisor time project */}
-                    {value.supervisorTimeOnProject !== null ?
-                      <Grid item lg={6} md={6}>
-                        <Typography
-                          variant="h6"
-                          gutterBottom
-                          className={Fonts.labelName}
-                        >
-                          Supervisor time on project?
-                        </Typography>
-                        <Typography variant="body" className={Fonts.labelValue}>
-                          {value.supervisorTimeOnProject}
-                        </Typography>
-                      </Grid>
-                      : null}
-
-                    {/* attachment */}
-
-                    <Grid item lg={12}>
-                      <Typography variant="h6">
-                        Attachment
+                    <Grid item lg={6} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Supervisor name
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.supervisorName)}
                       </Typography>
                     </Grid>
-                    {value.attachments != "" && typeof value.attachments == "string" ?
 
+                    {/* supervisor time industry */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Supervisor time in industry?
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.supervisorTimeInIndustry)}
+                      </Typography>
+                    </Grid>
 
-                      <Grid item lg={6} md={6}>
-                        <Tooltip title="File Name">
-                          <IconButton
-                            onClick={() =>
-                              handleOpen(value.attachments)
-                            }
-                            className={classes.fileIcon}
-                          >
-                            <PhotoSizeSelectActualIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Grid>
-                      : null}
+                    {/* supervisor time company */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Supervisor time in company?
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.supervisorTimeInCompany)}
+                      </Typography>
+                    </Grid>
 
-                    <Grid item lg={12} md={12}>
+                    {/* supervisor time project */}
+                    <Grid item xs={12} md={6}>
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={Fonts.labelName}
+                      >
+                        Supervisor time on project?
+                      </Typography>
+                      <Typography variant="body" className={Fonts.labelValue}>
+                        {checkValue(value.supervisorTimeOnProject)}
+                      </Typography>
+                    </Grid>
+
+                    {/* attachment */}
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Attachment</Typography>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <Typography title={handelFileName(value.attachments)}>
+                        {value.attachments != "" &&
+                          typeof value.attachments == "string" ? (
+                          <Attachment value={value.attachments} />
+                        ) :
+                          "-"
+                        }
+                      </Typography>
+                    </Grid>
+                    <Grid item md={12}>
                       <Divider />
                     </Grid>
                   </>
@@ -1167,7 +1164,6 @@ const InvestigationSummary = () => {
             </DialogContentText>
           </DialogContent>
         </Dialog>
-
       </Grid>
 
       {/* event details */}
@@ -1183,7 +1179,7 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {eventData.map((value, index) => (
                 <>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1195,7 +1191,7 @@ const InvestigationSummary = () => {
                       {value.activity}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1207,7 +1203,7 @@ const InvestigationSummary = () => {
                       {value.jobTask}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1216,22 +1212,12 @@ const InvestigationSummary = () => {
                       Equipment involved
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.equipmentInvolved}
+                      {checkValue(value.equipmentInvolved)}
                     </Typography>
                   </Grid>
-                  {/* <Grid item lg={12} md={12}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      className={Fonts.labelName}
-                    >
-                      Weather
-                    </Typography>
-                  </Grid> */}
-
                   {weather.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1246,7 +1232,7 @@ const InvestigationSummary = () => {
                     </>
                   ))}
 
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1255,10 +1241,10 @@ const InvestigationSummary = () => {
                       Temperature
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.temperature}
+                      {checkValue(value.temperature)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1267,10 +1253,10 @@ const InvestigationSummary = () => {
                       Lighting
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.lighting}
+                      {checkValue(value.lighting)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1279,10 +1265,10 @@ const InvestigationSummary = () => {
                       Speed
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.windSpeed}
+                      {checkValue(value.windSpeed)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1291,10 +1277,10 @@ const InvestigationSummary = () => {
                       Direction
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.windDirection}
+                      {checkValue(value.windDirection)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1303,10 +1289,10 @@ const InvestigationSummary = () => {
                       Fluid type
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.spillsFluidType}
+                      {checkValue(value.spillsFluidType)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1315,10 +1301,10 @@ const InvestigationSummary = () => {
                       Fluid amount
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.spillsFluidAmount}
+                      {checkValue(value.spillsFluidAmount)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1327,10 +1313,10 @@ const InvestigationSummary = () => {
                       AEL
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.acceptableExplosiveLimit}
+                      {checkValue(value.acceptableExplosiveLimit)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1339,10 +1325,10 @@ const InvestigationSummary = () => {
                       PEL
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.permissableExplosiveLimit}
+                      {checkValue(value.permissableExplosiveLimit)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1351,10 +1337,10 @@ const InvestigationSummary = () => {
                       Property impact information
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.propertyImpactInformation}
+                      {checkValue(value.propertyImpactInformation)}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1363,13 +1349,13 @@ const InvestigationSummary = () => {
                       Property cost impact
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.propertyCostImpact}
+                      {checkValue(value.propertyCostImpact)}
                     </Typography>
                   </Grid>
 
                   {overAllCost.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1385,7 +1371,7 @@ const InvestigationSummary = () => {
                   ))}
                   {overAllCost.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1401,7 +1387,7 @@ const InvestigationSummary = () => {
                   ))}
                   {overAllCost.map((value, index) => (
                     <>
-                      <Grid item lg={6} md={6}>
+                      <Grid item xs={12} md={6}>
                         <Typography
                           variant="h6"
                           gutterBottom
@@ -1435,7 +1421,7 @@ const InvestigationSummary = () => {
             <Grid container item xs={12} spacing={3}>
               {investigationOverview.map((value, index) => (
                 <>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1444,10 +1430,12 @@ const InvestigationSummary = () => {
                       Pre-event mitigations
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.preEventMitigations != null ? value.preEventMitigations : "-"}
+                      {value.preEventMitigations === null ? null : value.preEventMitigations.lenght > 0
+                        ? value.preEventMitigations
+                        : "-"}
                     </Typography>
                   </Grid>
-                  <Grid item lg={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography
                       variant="h6"
                       gutterBottom
@@ -1456,7 +1444,9 @@ const InvestigationSummary = () => {
                       Correction action date completed
                     </Typography>
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.correctionActionClosedAt != null ? value.correctionActionClosedAt.substring(0, 10) : "-"}
+                      {value.correctionActionClosedAt != null
+                        ? value.correctionActionClosedAt.substring(0, 10)
+                        : "-"}
                     </Typography>
                   </Grid>
                 </>
@@ -1465,7 +1455,7 @@ const InvestigationSummary = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-    </Grid>
+    </Grid >
   );
 };
 export default InvestigationSummary;

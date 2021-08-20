@@ -1,35 +1,30 @@
 import React, { useEffect, useState, useRef } from "react";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import DateFnsUtils from "@date-io/date-fns";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { PapperBlock } from "dan-components";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
+import IconButton from "@material-ui/core/IconButton";
 import moment from "moment";
+import TextButton from "../../CommonComponents/TextButton";
+import Tooltip from "@material-ui/core/Tooltip";
+import { Row, Col } from "react-grid-system";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory, useParams } from "react-router";
+import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -42,7 +37,12 @@ import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 
-import axios from "axios";
+import Attachment from "../../Attachment/Attachment";
+
+// redux
+
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -58,20 +58,10 @@ const useStyles = makeStyles((theme) => ({
   fullWidth: {
     width: "100%",
   },
-  textButton: {
-    color: "#3498db",
-    padding: 0,
-    textDecoration: "underline",
-    display: "inlineBlock",
-    marginBlock: "1.5rem",
-    backgroundColor: "transparent",
-  },
 }));
 
 const LessionLearned = () => {
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+ 
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -82,10 +72,11 @@ const LessionLearned = () => {
   const history = useHistory();
   const ref = useRef();
   const { id } = useParams();
+  const dispatch = useDispatch();
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
   const [learningList, setLearningList] = useState([]);
-  const [attachment, setAttachment] = useState({ evidenceDocument: "" });
+  const [attachment, setAttachment] = useState([{ evidenceDocument: null }]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
@@ -117,53 +108,25 @@ const LessionLearned = () => {
   // handleAttchment
 
   const handleAttchment = async (e) => {
-    let file = e.target.files[0].name.split(".");
-    
+    const inputValue = e.target.files[0].name;
+
+    const file = inputValue.split(".");
+
     if (
       file[1].toLowerCase() === "jpg" ||
       file[1].toLowerCase() === "jpeg" ||
       file[1].toLowerCase() === "png"
     ) {
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
-       
-        const formData = new FormData();
-        formData.append("evidenceDocument", e.target.files[0]);
-        formData.append("evidenceCheck", "Yes");
-        formData.append("evidenceNumber", "string");
-        formData.append("evidenceCategory", "Lessons Learned");
-        formData.append("createdBy", parseInt(userId));
-        formData.append("status", "Active");
-        formData.append("fkIncidentId", id);
-        if (evidence.length > 0) {
-          for (let key in evidence) {
-            const res = await api.delete(
-              `api/v1/incidents/${id}/evidences/${evidence[key].id}/`
-            );
-          }
-        }   
-        try {
-          const res = await api.post(
-            `api/v1/incidents/${id}/evidences/`,
-            formData
-          );
-          if (res.status === 201) {
-            await setMessage("File uploaded successfully!");
-            await setMessageType("success");
-            await setOpen(true);
-          }
-        } catch (error) {
-          await setMessage("File uploaded failed!");
-          await setMessageType("error");
-          await setOpen(true);
-          ref.current.value = "";
-        }
+        const temp = [...attachment];
+        temp[0].evidenceDocument = e.target.files[0];
+        await setAttachment(temp);
       } else {
         ref.current.value = "";
         await setMessage("File uploading failed! Select file less than 25MB!");
         await setMessageType("error");
         await setOpen(true);
       }
-      await setEvidanceForm(temp);
     } else {
       ref.current.value = "";
       await setMessage("Only JPG & PNG File is allowed!");
@@ -180,9 +143,6 @@ const LessionLearned = () => {
     setOpen(false);
   };
   const handleNext = async () => {
-    // attachment
-    if (attachment.evidenceDocument !== "") {
-    }
     // sent put request
     let status = 0;
     // sent post request
@@ -190,32 +150,84 @@ const LessionLearned = () => {
     setError(error);
 
     if (isValid === true) {
-      if (learningList.length > 0) {
-        for (var i = 0; i < learningList.length; i++) {
-          const res = await api.delete(
-            `api/v1/incidents/${id}/learnings/${learningList[i].id}/`
-          );
+      if (attachment[0].evidenceDocument !== null) {
+        if (typeof attachment[0].evidenceDocument !== "string") {
+          if (evidence.length > 0) {
+            const formData = new FormData();
+            formData.append('evidenceDocument', attachment[0].evidenceDocument);
+            formData.append('evidenceCheck', 'Yes');
+            formData.append('evidenceNumber', 'string');
+            formData.append('evidenceCategory', 'Lessons Learned');
+            formData.append('createdBy', parseInt(userId));
+            formData.append('status', 'Active');
+            formData.append('fkIncidentId', id);
+            try {
+              const res = await api.put(
+                `api/v1/incidents/${id}/evidences/${attachment[0].id}/`,
+                formData
+              );
+            } catch (error) { }
+          }else{
+           
+              const formData = new FormData();
+              formData.append('evidenceDocument', attachment[0].evidenceDocument);
+              formData.append('evidenceCheck', 'Yes');
+              formData.append('evidenceNumber', 'string');
+              formData.append('evidenceCategory', 'Lessons Learned');
+              formData.append('createdBy', parseInt(userId));
+              formData.append('status', 'Active');
+              formData.append('fkIncidentId', id);
+              try {
+                const res = await api.post(
+                  `api/v1/incidents/${id}/evidences/`,
+                  formData
+                );
+              } catch (error) { }
+            }
+
         }
       }
+
+
       for (var i = 0; i < form.length; i++) {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/learnings/`,
-          {
-            teamOrDepartment: form[i].teamOrDepartment,
-            learnings: form[i].learnings,
-            status: "Active",
-            createdBy: parseInt(userId),
-            updatedBy: parseInt(userId),
-            fkIncidentId: localStorage.getItem("fkincidentId"),
+        if (form[i].id) {
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/${form[i].id}/`,
+            {
+              teamOrDepartment: form[i].teamOrDepartment,
+              learnings: form[i].learnings,
+              status: 'Active',
+              createdBy: parseInt(userId),
+              updatedBy: parseInt(userId),
+              fkIncidentId: localStorage.getItem('fkincidentId'),
+            }
+          );
+          if (res.status === 200) {
+            status = 201
           }
-        );
-        status = res.status;
+        } else {
+          const res = await api.post(
+            `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
+            {
+              teamOrDepartment: form[i].teamOrDepartment,
+              learnings: form[i].learnings,
+              status: 'Active',
+              createdBy: parseInt(userId),
+              updatedBy: parseInt(userId),
+              fkIncidentId: localStorage.getItem('fkincidentId'),
+            }
+          );
+          status = res.status;
+        }
+
       }
       if (status === 201) {
-        history.push(
-          `/app/incident-management/registration/summary/summary/${localStorage.getItem(
-            "fkincidentId"
-          )}`
+        let viewMode = {
+          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
+
+        }
+        dispatch(tabViewMode(viewMode));
+        history.push(`/app/incident-management/registration/summary/summary/${id}`
         );
       }
     }
@@ -246,7 +258,7 @@ const LessionLearned = () => {
 
   // fetch team or deparment
   const fetchDepartment = () => {
-    var config = {
+    const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
       headers: {
@@ -254,7 +266,7 @@ const LessionLearned = () => {
       },
     };
     axios(config)
-      .then(function(response) {
+      .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
           setDepartment(result);
@@ -262,7 +274,7 @@ const LessionLearned = () => {
           // window.location.href = {LOGIN_URL}
         }
       })
-      .catch(function(error) {
+      .catch((error) => {
         // window.location.href = {LOGIN_URL}
       });
   };
@@ -270,17 +282,19 @@ const LessionLearned = () => {
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    
+
     if (allEvidence.status === 200) {
-      
       const newData = allEvidence.data.data.results.filter(
         (item) => item.evidenceCategory === "Lessons Learned"
       );
       await setEvidence(newData);
-      console.log('lesson learned',newData)
+      if (newData.length > 0) {
+        setAttachment(newData);
+      }
     }
   };
 
+ 
   // handle Remove
 
   const handleRemove = async (key) => {
@@ -292,10 +306,10 @@ const LessionLearned = () => {
 
   // handle file name
   const handelFileName = (value) => {
-    const fileNameArray = value.split('/')
-    const fileName = fileNameArray[fileNameArray.length - 1]
-    return fileName
-  }
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1];
+    return fileName;
+  };
 
   // handle remove initial evidance from databse
 
@@ -313,109 +327,146 @@ const LessionLearned = () => {
     if (id) {
       fetchLessonLerned();
       fetchEvidanceData();
-
     }
     fetchIncidentsData();
   }, []);
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Lessons Learnt" icon="ion-md-list-box">
       {isLoading ? (
-        <Grid container spacing={3}>
-          <Grid container item md={9} justify="flex-start" spacing={3}>
-            <Grid item md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-
-              <Typography varint="body1" className={Type.labelValue}>
-                {incidentsListData.incidentNumber}
-              </Typography>
-            </Grid>
-
-            <Grid item md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident occured on
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {moment(incidentsListData.incidentOccuredOn).format(
-                  "Do MMMM YYYY, h:mm:ss a"
-                )}
-              </Typography>
-            </Grid>
-
-            <Grid item md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident reported on
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {moment(incidentsListData.incidentReportedOn).format(
-                  "Do MMMM YYYY, h:mm:ss a"
-                )}
-              </Typography>
-            </Grid>
-
-            <Grid item md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Reported by
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentReportedByName}
-              </Typography>
-            </Grid>
-
-            <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident type
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentType}{" "}
-              </Typography>
-            </Grid>
-
-            <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident title
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentTitle}
-              </Typography>
-            </Grid>
-
-            <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident description
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentDetails}
-              </Typography>
-            </Grid>
-
-            <Grid item md={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident location
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentsListData.incidentLocation}
-              </Typography>
-            </Grid>
-
-            <Grid item md={12}>
-              <Typography variant="h6" gutterBottom>
-                Key learnings
-              </Typography>
-            </Grid>
-
-            <Grid item md={12}>
-              {form.map((value, key) => (
-                <Grid
-                  container
-                  spacing={3}
-                  item
-                  md={12}
-                  className="repeatedGrid"
-                  key={key}
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
                 >
-                  <Grid item md={12}>
+                  Incident number
+                </Typography>
+
+                <Typography varint="body1" className={Type.labelValue}>
+                  {incidentsListData.incidentNumber
+                    ? incidentsListData.incidentNumber
+                    : "-"}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident occured on
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {moment(incidentsListData.incidentOccuredOn).format(
+                    "Do MMMM YYYY, h:mm:ss a"
+                  )}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident reported on
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {moment(incidentsListData.incidentReportedOn).format(
+                    "Do MMMM YYYY, h:mm:ss a"
+                  )}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Reported by
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentReportedByName
+                    ? incidentsListData.incidentReportedByName
+                    : "-"}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident type
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentType
+                    ? incidentsListData.incidentType
+                    : "-"}{" "}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident title
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentTitle
+                    ? incidentsListData.incidentTitle
+                    : "-"}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident description
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentDetails
+                    ? incidentsListData.incidentDetails
+                    : "-"}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
+                  Incident location
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentsListData.incidentLocation
+                    ? incidentsListData.incidentLocation
+                    : "-"}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom>
+                  Key learnings
+                </Typography>
+              </Grid>
+
+              {form.map((value, key) => (
+                <React.Fragment key={key}>
+                  <Grid item xs={12}>
                     <FormControl
                       variant="outlined"
                       required
@@ -449,7 +500,7 @@ const LessionLearned = () => {
                       )}
                     </FormControl>
                   </Grid>
-                  <Grid item md={12}>
+                  <Grid item xs={12}>
                     <TextField
                       id="outlined-search"
                       required
@@ -469,7 +520,7 @@ const LessionLearned = () => {
                     />
                   </Grid>
                   {form.length > 1 ? (
-                    <Grid item md={3}>
+                    <Grid item xs={12} md={3}>
                       <Button
                         onClick={() => handleRemove(key)}
                         variant="contained"
@@ -481,61 +532,75 @@ const LessionLearned = () => {
                       </Button>
                     </Grid>
                   ) : null}
-                </Grid>
+                </React.Fragment>
               ))}
-            </Grid>
-            <Grid item md={12}>
-              <button
-                className={classes.textButton}
-                onClick={() => addNewTeamOrDeparment()}
-              >
-                <AddIcon /> Add learnings from another team/department
-              </button>
-            </Grid>
-            <Grid item md={12}>
-              <Snackbar
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-              >
-                <Alert onClose={handleClose} severity={messageType}>
-                  {message}
-                </Alert>
-              </Snackbar>
-              <Typography variant="h6"> Add attachment</Typography>
 
-              <input
-                type="file"
-                ref={ref}
-                accept=".png, jpg, jpeg"
-                onChange={(e) => handleAttchment(e)}
-              
-                placeholder={evidence.length>0?evidence[0].evidenceDocument:""}
-              />
-              {evidence.length>0?
-              <a href={`${evidence[0].evidenceDocument}`} target='_blank'>{handelFileName(evidence[0].evidenceDocument)}</a>:null}
-            </Grid>
-            <Grid item md={12}>
-              <Box marginTop={4}>
+              <Grid item xs={12}>
+                <TextButton
+                  startIcon={<AddIcon />}
+                  onClick={() => addNewTeamOrDeparment()}
+                >
+                  Add learnings from another team/department
+                </TextButton>
+              </Grid>
+              <Grid item xs={12}>
+                <Snackbar
+                  open={open}
+                  autoHideDuration={6000}
+                  onClose={handleClose}
+                >
+                  <Alert onClose={handleClose} severity={messageType}>
+                    {message}
+                  </Alert>
+                </Snackbar>
+
+                {attachment.length > 0
+                  ? attachment.map((item, index) => (
+                      <>
+                        <Box paddingBottom={3}>
+                          <Typography variant="h6"> Add attachment</Typography>
+                        </Box>
+                        <input
+                          type="file"
+                          ref={ref}
+                          accept=".png, jpg, jpeg"
+                          onChange={(e) => handleAttchment(e)}
+                          style={{
+                            color:
+                              typeof item.evidenceDocument === "string" &&
+                              "transparent",
+                          }}
+                        />
+
+                        {typeof item.evidenceDocument === "string" && (
+                          <Attachment value={evidence[0].evidenceDocument} />
+                        )}
+                      </>
+                    ))
+                  : null}
+              </Grid>
+
+              <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
-                  // href="#contained-buttons"
                   onClick={() => handleNext()}
                 >
                   Submit
                 </Button>
-              </Box>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lessons learnt"}
-            />
-          </Grid>
-        </Grid>
+          </Col>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={LESSION_LEARNED_FORM}
+                selectedItem="Lessons learnt"
+              />
+            </Col>
+          )}
+        </Row>
       ) : (
         <h1>Loading...</h1>
       )}
