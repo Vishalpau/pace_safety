@@ -688,7 +688,6 @@ export const LessonsLearned = loadable(() => import("./Pages/Aha/LessonsLearned/
 export const Setting = loadable(() => import("./Settings/Setting"), {
   fallback: <Loading />,
 });
-<<<<<<< HEAD
 
 
 // Jha
@@ -726,8 +725,6 @@ export const JhaApprovals = loadable(() => import("./Pages/Jha/Approvals/Approva
 });
 
 export const JhaLessonsLearned = loadable(() => import("./Pages/Jha/LessonsLearned/LessonsLearned"), {
-=======
-export const Comments = loadable(() => import("./Comments/Comments"), {
->>>>>>> 8b8c82f88a15b409efd2b72f3b813a2a3c07c443
+
   fallback: <Loading />,
 });
