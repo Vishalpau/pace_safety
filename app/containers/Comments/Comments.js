@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -62,24 +62,21 @@ const useStyles = makeStyles((theme) => ({
 const Comments = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState('female');
-
+    const {id} = useParams()
   const [expanded, setExpanded] = React.useState('panel1');
   const [comment, setComments] = React.useState('');
-  const [parentComments, setParentComments] = React.useState('')
+  const [replyComments, setReplyComments] = React.useState('');
+  const [commentDataList, setCommentDataList] = useState([])
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
-
-//   const fetchComments = async()=>{
-//       api.get(``)
-//   }
-  const handleComments = ()=>{
+  const handleComments = async()=>{
       const data = {
         
-        fkCompanyId: fkCompanyId,
-        fkProjectId: projectId,
+        fkCompanyId: 1,
+        fkProjectId: 1,
         commentContext: "incident",
         contextReferenceIds: id,
         commentTags: 'string',
@@ -87,34 +84,57 @@ const Comments = () => {
         parent: 0,
         private: 'No',
         thanksFlag: 0,
-        status: Active,
+        status: 'Active',
         createdBy: 6
           
       }
-      api.post(`api/v1/comments/incident/${id}/`)
+      console.log(data)
+      const res = await api.post(`api/v1/comments/`,data)
+      if(res.status === 201){
+        fetchComments();
+      }
+      console.log(res)
+      
   }
-  const handleParentComments = ()=>{
+  const handleReplyComments = async(commentId)=>{
     const data = {
       
-      fkCompanyId: fkCompanyId,
-      fkProjectId: projectId,
-      commentContext: "incident",
+      fkCompanyId: 1,
+      fkProjectId: 1,
+      commentContext: "Incident",
       contextReferenceIds: id,
-      commentTags: string,
-      comment: string,
-      parent: 0,
-      private: Yes,
+      commentTags: 'string',
+      comment: replyComments,
+      parent: commentId,
+      private: 'No',
       thanksFlag: 0,
-      status: Active,
+      status: 'Active',
       createdBy: 0
-        
     }
+    console.log(data)
+    const res = await api.post(`api/v1/comments/`,data)
+    if(res.status === 201){
+      fetchComments();
+    }
+    console.log(res)
 }
-
+const fetchReplyComment = async()=>{
+  const res = await api.get(`api/v1/comments/incident/1400/`)
+}
+const fetchComments = async()=>{
+  const res = await api.get(`api/v1/comments/incident/1400/`)
+  let result = res.data.data.results.results
+  console.log({result:result})
+  await setCommentDataList(result)   
+}
+React.useEffect(()=>{
+    fetchComments();
+    fetchReplyComment();
+},[])
   return (
     <>
-      <PapperBlock title="Comments (4)" icon="ion-ios-create-outline" desc="" color="primary">
-        <Paper elevation={1} className={classes.mTopfifty}>
+      {/* <PapperBlock title="Comments (4)" icon="ion-ios-create-outline" desc="" color="primary"> */}
+        <Paper title="Comments (4)" elevation={1} className={classes.mTopfifty}>
             <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 <Box padding={3}>
@@ -137,7 +157,7 @@ const Comments = () => {
                         size="small"
                         className={classes.newIncidentButton}
                         disableElevation
-                        onClick={(e) => handleNewJhaPush(e)}
+                        onClick={(e) => handleComments(e)}
                       >
                         Save
                       </Button> 
@@ -157,10 +177,11 @@ const Comments = () => {
             </Grid>
           </Grid>
         </Paper>
-
+        {commentDataList.map((comment,key)=>
         <Paper elevation={1} className={classes.mTopfifty}>
             <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
+                
                 <Box padding={3}>
                   <Grid container spacing={1}>
                     <Grid item xs={1}>
@@ -168,13 +189,14 @@ const Comments = () => {
                     </Grid>
                     <Grid item xs={10}>
                           <Typography>User Name<span className={classes.pL20}>August 4, 2021,  06 : 50 PM</span></Typography>
-                          <Typography>This is a new comment from me and I am using the dummy content. Thanks.</Typography>
+                          <Typography>{comment.comment}</Typography>
                     </Grid>
                     <Grid item xs={1}>
                           <Typography><ThumbUpAltOutlinedIcon /></Typography>
                     </Grid>
                   </Grid>
-                </Box>              
+                </Box> 
+                           
             </Grid>
           </Grid>
           <Box padding={3} marginLeft={6} marginRight={6}>
@@ -198,6 +220,7 @@ const Comments = () => {
                             id="JobTitle"
                             label="Add your reply here"
                             className={classes.fullWidth}
+                            onChange={(e)=> setReplyComments(e.target.value)}
                           />
                       </Grid>
                       <Grid item xs={3}>
@@ -207,7 +230,7 @@ const Comments = () => {
                         size="small"
                         className={classes.newIncidentButton}
                         disableElevation
-                        onClick={(e) => handleNewJhaPush(e)}
+                        onClick={() => handleReplyComments(comment.id)}
                       >
                         Save
                       </Button> 
@@ -229,7 +252,7 @@ const Comments = () => {
           </Grid>
           </Box>
         </Paper>
-          
+          )}  
         <Paper elevation={1} className={classes.mTopfifty}>
         <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
@@ -296,7 +319,7 @@ const Comments = () => {
           <Grid item md={12} xs={12}>
               <Pagination count={10} variant="outlined" shape="rounded" className={classes.mTopThirtybtten} />
             </Grid>
-      </PapperBlock>
+      {/* </PapperBlock> */}
     </>
   );
 };

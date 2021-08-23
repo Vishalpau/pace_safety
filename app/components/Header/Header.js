@@ -60,12 +60,8 @@ import { connect } from "react-redux";
 // redux
 
 import { useDispatch } from "react-redux";
-import { projectName, breakDownDetails,levelBDownDetails } from "../../redux/actions/initialDetails";
+import { projectName, breakDownDetails } from "../../redux/actions/initialDetails";
 import Topbar from "./Topbar";
-
-
-import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
-import Axios from "axios";
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -153,12 +149,6 @@ function Header(props) {
   const [projectDisable, setProjectDisable] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false)
   const dispatch = useDispatch();
-
-  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  
-
-  const [selectBreakDown, setSelectBreakDown] = useState([]);
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
 
@@ -289,7 +279,7 @@ function Header(props) {
       JSON.stringify(selectBreakDown)
     );
     await dispatch(breakDownDetails([]))
-
+    await setIsPopUpOpen(true)
     localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
     setCompanyOpen(false);
@@ -353,208 +343,12 @@ function Header(props) {
     },
   }))(MuiDialogActions);
 
-  const filterOpen = Boolean(anchorEl);
+  const filterOpen = Boolean();
   const id = filterOpen ? "simple-popover" : undefined;
   const classesm = useStyles();
 
-   // check and store in localstorage 
-   if (Object.keys(props.initialValues.projectName).length > 0) {
-
-    localStorage.setItem("projectName", JSON.stringify(props.initialValues));
-  }
-
-  if(props.initialValues.breakDown.length>0){
-    localStorage.setItem('selectBreakDown',JSON.stringify(props.initialValues.breakDown))
-  }
- 
-  
-  
-  const breakDownData = JSON.parse(localStorage.getItem("selectBreakDown"))
-
-  const handleBreakdown = async (e, index, label) => {
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    temp[index - 1][`selectValue`] = value;
-    localStorage.setItem('levelBreakDown',JSON.stringify(temp))
-    setBreakdown1ListData(temp)
-    if (selectBreakDown.filter(filterItem => filterItem.depth === `${index}L`).length > 0) {
-      const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
-      const removeBreakDownList = breakdown1ListData.slice(0, index + 1)
-      removeBreakDownList[index][`selectValue`] = "";
-
-      await setBreakdown1ListData(removeBreakDownList)
-
-      let name = breakdown1ListData[index - 1].breakdownValue.map(
-        async (item) => {
-          if (item.id === value) {
-            setSelectBreakDown([
-              ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
-            ]);
-            dispatch(breakDownDetails([
-              ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
-            ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name,label:label },
-              ])
-            );
-            return;
-          }
-
-        }
-      );
-    } else {
-      let name = breakdown1ListData[index - 1].breakdownValue.map(
-        async (item) => {
-          if (item.id === value) {
-            await setSelectBreakDown([
-              ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
-            ]);
-            dispatch(breakDownDetails([
-              ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
-            ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name,label:label },
-              ])
-            );
-            return;
-          }
-
-        }
-      );
-    }
-
-    if(projectData.projectName.breakdown.length !== index){
-    for (var key in projectData.projectName.breakdown) {
-      if (key == index) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`,
-          headers: HEADER_AUTH,
-        };
-        await Axios(config)
-          .then(function (response) {
-            if (response.status === 200) {
-
-              if (
-                breakdown1ListData.filter(
-                  (item) =>
-                    item.breakdownLabel ===
-                    projectData.projectName.breakdown[index].structure[0].name
-                ).length > 0
-              ) {
-                return;
-              } else {
-                setBreakdown1ListData([
-                  ...breakdown1ListData,
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[index].structure[0]
-                        .name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: value
-                  },
-                ]);
-                localStorage.setItem('levelBreakDown',JSON.stringify([
-                  ...breakdown1ListData,
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[index].structure[0]
-                        .name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: value
-                  },
-                ]))
-                dispatch(levelBDownDetails([
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[index].structure[0]
-                        .name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: value,
-                    index:index
-                  },
-                ]))
-              }
-            }
-          })
-          .catch(function (error) {
-
-          });
-      }
-    }
-  }else{
-    dispatch(levelBDownDetails([
-    ]))
-  }
-  };
-
-  const fetchCallBack = async () => {
-    setSelectBreakDown([])
-    for (var key in projectData.projectName.breakdown) {
-
-      if (key == 0) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
-          headers: HEADER_AUTH,
-        };
-        await Axios(config)
-          .then(async(response)=> {
-              
-            await setBreakdown1ListData([
-              {
-                breakdownLabel:
-                  projectData.projectName.breakdown[0].structure[0].name,
-                breakdownValue: response.data.data.results,
-                selectValue: "",
-                index:0
-              },
-            ]);
-            if(JSON.parse(localStorage.getItem("selectBreakDown"))!==null?
-            JSON.parse(localStorage.getItem("selectBreakDown")).length>0:false){
-              await dispatch(levelBDownDetails([]))
-            }else{
-              await dispatch(levelBDownDetails([
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[0].structure[0]
-                      .name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: "",
-                  index:0
-                },
-              ]))
-            }
-            
-            setIsLoading(true);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
-    }
-  };
-
   useEffect(() => {
-      fetchCallBack();
-      handleProjectList();
-      
-  }, [props.initialValues.projectName]);
-
-  useEffect(() => {
-   
+    handleProjectList();
   }, [initialValues.projectName]);
 
   const isTablet = useMediaQuery("(min-width:768px)");
@@ -728,113 +522,8 @@ function Header(props) {
             </Dialog>
           </div>
           <Hidden smDown>
-
-          
-      <div>
-        <IconButton
-          aria-describedby={id}
-          className={classes.filterIcon}
-          onClick={handleClick}
-        >
-          <FilterListIcon fontSize="small" />
-        </IconButton>
-        <Popover
-          id={id}
-          open={filterOpen ||isPopUpOpen}
-          anchorEl={anchorEl}
-          getContentAnchorEl={null}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          PaperProps={{
-            style: {
-              width: 200,
-            },
-          }}
-        >
-          {isLoading ? (
-            <Box p={3}>
-              <Grid container spacing={2}>
-                
-                  {breakdown1ListData.length > 0
-                    ? breakdown1ListData.map((item, index) => (
-                      <Grid item xs={12}>
-                      <FormControl
-                        key={index}
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-
-                        <InputLabel id="filter3-label">
-                          {item.breakdownLabel}
-                        </InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={item.selectValue}
-                          onChange={(e) => {
-                            handleBreakdown(e, index + 1,item.breakdownLabel);
-
-                          }}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          {item.breakdownValue.length
-                            ? item.breakdownValue.map(
-                              (selectValue, selectKey) => (
-                                <MenuItem
-                                  key={selectKey}
-                                  value={selectValue.id}
-                                >
-                                  {selectValue.name}
-                                </MenuItem>
-                              )
-                            )
-                            : null}
-                        </Select>
-                      </FormControl>
-                      </Grid>
-                    ))
-                    : null}
-                <Grid item md={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        disableElevation
-                        onClick={()=>props.setIsPopUpOpen(false)}
-                      >
-                        Apply
-                      </Button>
-                    </Grid>
-              </Grid>
-            </Box>
-          ) : null}
-        </Popover>
-      </div>
-      <Breadcrumbs
-        className={classes.projectBreadcrumbs}
-        separator={<NavigateNextIcon fontSize="small" />}
-      >
-
-        {breakDownData !== null
-          ? breakDownData.map(
-            (item, index) => (
-              <Chip size="small" label={item.name} key={index} />
-            )
-          )
-          : null}
-      </Breadcrumbs>
-   
-   </Hidden>
+            <Headerbox filterOpen={isPopUpOpen} setIsPopUpOpen={setIsPopUpOpen}/>
+          </Hidden>
         </div>
 
       

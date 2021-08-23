@@ -40,6 +40,7 @@ import {
   ACCOUNT_API_URL,
   HEADER_AUTH,
   INITIAL_NOTIFICATION_FORM,
+  SUMMERY_FORM,
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
@@ -371,11 +372,8 @@ const ReportingAndNotification = () => {
               lessionlearn: false,
             };
             dispatch(tabViewMode(viewMode));
-            history.push(
-              `/app/incident-management/registration/investigation/investigation-overview/${localStorage.getItem(
-                "fkincidentId"
-              )}`
-            );
+            
+            history.push(`${SUMMERY_FORM["Summary"]}`);
           }
         } else {
           setIsnext(true);
@@ -543,7 +541,7 @@ const ReportingAndNotification = () => {
     const result = res.data.data.results;
     
     if (result.length>0) {
-      console.log({result:result})
+      
       if(result[0].notifyTo){
         let getNotifyTo = result[0].notifyTo.split(',')
         await setNotifyToList(getNotifyTo);
@@ -562,7 +560,7 @@ const ReportingAndNotification = () => {
           }
         }
       }
-      console.log({reportedTo:reportToData})
+      
       await setReportedToObj(result);
    
       await setForm({ ...form, reportedto: reportToData });
@@ -570,7 +568,7 @@ const ReportingAndNotification = () => {
 
     await setIsLoading(true);
   };
-// console.log(form)
+
   // fetch incident data
   const fetchIncidentsData = async () => {
     const res = await api.get(

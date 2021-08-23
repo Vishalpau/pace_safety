@@ -188,6 +188,9 @@ function UserMenu(props) {
       })
       .catch(function (error) {
         console.log(error);
+        localStorage.removeItem("access_token");
+        localStorage.clear();
+        window.location.href = `${LOGOUT_URL}`;
       });
     setSubscriptions(data);
     setIsLoading(true)
@@ -206,6 +209,9 @@ function UserMenu(props) {
 
     })
       .catch(function (error) {
+        localStorage.removeItem("access_token");
+        localStorage.clear();
+        window.location.href = `${LOGOUT_URL}`;
         console.log(error);
       });
     await setApps(data.map(app => app.appId))

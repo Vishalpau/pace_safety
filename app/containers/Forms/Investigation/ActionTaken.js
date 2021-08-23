@@ -17,7 +17,7 @@ import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
+import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
 
 // Redux
@@ -78,8 +78,9 @@ const ActionTaken = () => {
 
       }
       localStorage.setItem("viewMode", JSON.stringify(viewMode))
-      history.push(`/app/incident-management/registration/evidence/evidence/${localStorage.getItem("fkincidentId")}`);
       dispatch(tabViewMode(viewMode));
+      history.push(SUMMERY_FORM['Summary']);
+      
     }
   };
 
