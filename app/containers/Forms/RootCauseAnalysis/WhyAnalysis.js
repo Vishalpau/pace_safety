@@ -65,6 +65,7 @@ const WhyAnalysis = () => {
   const checkPost = useRef();
   const dispatch = useDispatch();
   const [investigationData, setInvestigationData] = useState({})
+  const [fkid, setFkid] = useState("")
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
@@ -77,6 +78,7 @@ const WhyAnalysis = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
 
+      setFkid(incidentId)
     let previousData = await api.get(
       `/api/v1/incidents/${incidentId}/fivewhy/`
     );
@@ -171,14 +173,14 @@ const WhyAnalysis = () => {
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
+        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
+        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       }
     }
     localStorage.setItem("RootCause", "Done");
