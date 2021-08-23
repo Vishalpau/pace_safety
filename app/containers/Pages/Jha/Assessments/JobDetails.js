@@ -160,7 +160,7 @@ const JobDetails = () => {
       "department": "",
       "additionalRemarks": "string",
       "classification": "string",
-      "jobOrderNumber": "string",
+      "jobOrderNumber": "",
       "supervisorName": "",
       "emergencyNumber": "",
       "evacuationAssemblyPoint": "",
@@ -634,15 +634,14 @@ const JobDetails = () => {
               item
               md={6}
               xs={11}
-
             >
               <TextField
                 label="Order number"
                 name="ordernumber"
                 id="ordernumber"
                 multiline
-                defaultValue=""
-                onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
+                value={form.jobOrderNumber ? form.jobOrderNumber : ""}
+                onChange={(e) => setForm({ ...form, jobOrderNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
