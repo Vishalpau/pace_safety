@@ -516,11 +516,11 @@ const IncidentDetails = (props) => {
     
     if (selectDepthAndId.filter(filterItem => filterItem.slice(0,2) === `${index}L`).length > 0) {
       // const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
-      const removeBreakDownList = temp.slice(0, index)
-      console.log(removeBreakDownList,temp.slice(0, index))
+      temp.slice(0, index)
+    
       // removeBreakDownList[index-1][`selectValue`] = "";
-      console.log({removeBreakDownList:removeBreakDownList})
-      setBreakdown1ListData(removeBreakDownList)
+      
+    
 
     }
 
@@ -533,18 +533,18 @@ const IncidentDetails = (props) => {
           .then(function (response) {
             if (response.status === 200) {
               console.log(response.data)
-              // if (
-              //   breakdown1ListData.filter(
-              //     (item) =>
-              //       item.breakdownLabel ===
-              //       projectData.projectName.breakdown[key].structure[0].name
-              //   ).length > 0
-              // ) {
-              //   console.log(breakdown1ListData)
-              //   return;
-              // } else {
+              if (
+                temp.filter(
+                  (item) =>
+                    item.breakdownLabel ===
+                    projectData.projectName.breakdown[key].structure[0].name
+                ).length > 0
+              ) {
+                
+                return;
+              } else {
                 setBreakdown1ListData([
-                  ...breakdown1ListData,
+                  ...temp,
                   {
                     breakdownLabel:
                       projectData.projectName.breakdown[key].structure[0]
@@ -554,9 +554,9 @@ const IncidentDetails = (props) => {
                     index: index
                   },
                 ]);
-                console.log(breakdown1ListData, new Date())
+          
               }
-            // }
+            }
           })
           .catch(function (error) {
 
@@ -821,7 +821,7 @@ const IncidentDetails = (props) => {
                   <FormControl
                     key={index}
                     variant="outlined"
-                    required = {index === 0?true:false}
+                    
                     className={classes.formControl}
                   >
                     <InputLabel id="filter3-label">
