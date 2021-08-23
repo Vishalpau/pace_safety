@@ -502,7 +502,7 @@ const IncidentDetails = (props) => {
   };
 
   const handleBreakdown = async (e, index, label) => {
-   
+
     const projectData = JSON.parse(localStorage.getItem('projectName'))
 
     // const temp = [...breakdown1ListData]
@@ -512,9 +512,9 @@ const IncidentDetails = (props) => {
     const value = e.target.value;
     let temp = [...breakdown1ListData]
     temp[index - 1][`selectValue`] = value;
-    
-    
-    if (selectDepthAndId.filter(filterItem => filterItem.slice(0,2) === `${index}L`).length > 0) {
+
+
+    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
       // const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
       temp.slice(0, index)
     
@@ -525,9 +525,9 @@ const IncidentDetails = (props) => {
     }
 
     for (var key in projectData.projectName.breakdown) {
-      
+
       if (key == index) {
-        
+
         await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
           }${value}`)
           .then(function (response) {
@@ -570,16 +570,16 @@ const IncidentDetails = (props) => {
   const fetchCallBack = async () => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     const select = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
-  
-    for(var i in select){
-      let selectId= select[i].id;
+
+    for (var i in select) {
+      let selectId = select[i].id;
       let selectDepth = select[i].depth
-      setSelectDepthAndId([...selectDepthAndId,`${selectDepth}${selectId}`])
+      setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
     }
     if (select.length > 0) {
-      
+
       for (var key in projectData.projectName.breakdown) {
-        
+
         if (key == select.length) {
           try {
             var config = {
@@ -589,10 +589,10 @@ const IncidentDetails = (props) => {
               headers: HEADER_AUTH,
             };
 
-            
+
             await Axios(config)
               .then(async (response) => {
-      
+
                 await setBreakdown1ListData([
                   {
                     breakdownLabel:
@@ -608,7 +608,7 @@ const IncidentDetails = (props) => {
               });
           } catch (err) {
             // setBreakdown1ListData([])
-              ;
+            ;
           }
         }
         //  else { setBreakdown1ListData([]) }
@@ -741,11 +741,11 @@ const IncidentDetails = (props) => {
       setHideAffect(newHideAffect);
     }
   };
-  const handleDepthAndId = (depth,id)=>{
-    let newData = [...selectDepthAndId,`${depth}${id}`]
+  const handleDepthAndId = (depth, id) => {
+    let newData = [...selectDepthAndId, `${depth}${id}`]
     setSelectDepthAndId([... new Set(newData)])
   }
-  
+
   useEffect(() => {
     // fetchListData();
     fetchContractorValue();
@@ -846,7 +846,7 @@ const IncidentDetails = (props) => {
                               key={selectKey}
                               value={selectValue.id}
 
-                            onClick={(e)=> handleDepthAndId(selectValue.depth,selectValue.id)}
+                              onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
                             >
                               {selectValue.name}
                             </MenuItem>
