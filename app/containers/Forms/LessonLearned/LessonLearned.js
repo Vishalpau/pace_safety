@@ -32,6 +32,7 @@ import {
   access_token,
   ACCOUNT_API_URL,
   LESSION_LEARNED_FORM,
+  SUMMERY_FORM
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
@@ -227,8 +228,8 @@ const LessionLearned = () => {
 
         }
         dispatch(tabViewMode(viewMode));
-        history.push(`/app/incident-management/registration/summary/summary/${id}`
-        );
+        history.push(SUMMERY_FORM['Summary']);
+        
       }
     }
   };
