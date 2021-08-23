@@ -12,7 +12,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
+import { EVIDENCE_FORM,SUMMERY_FORM } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 import api from "../../../utils/axios";
@@ -117,7 +117,7 @@ const AdditionalDetails = () => {
         }
         dispatch(tabViewMode(viewMode));
         history.push(
-          `/app/incident-management/registration/summary/summary/${id}`
+          SUMMERY_FORM["Summary"]
         );
       }
     } else if (additionalDetailList.length == 25) {
@@ -140,9 +140,7 @@ const AdditionalDetails = () => {
           }
           dispatch(tabViewMode(viewMode));
           history.push(
-            `/app/incident-management/registration/root-cause-analysis/details/${localStorage.getItem(
-              "fkincidentId"
-            )}`
+            SUMMERY_FORM["Summary"]
           );
         }
       }
@@ -162,11 +160,7 @@ const AdditionalDetails = () => {
 
       }
       dispatch(tabViewMode(viewMode));
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${localStorage.getItem(
-          "fkincidentId"
-        )}`
-      );
+      history.push(SUMMERY_FORM["Summary"]);
     }
   };
 

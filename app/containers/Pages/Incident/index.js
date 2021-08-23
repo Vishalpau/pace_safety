@@ -54,6 +54,8 @@ import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
 
 import { connect } from "react-redux";
+import {tabViewMode} from '../../../redux/actions/initialDetails';
+import { useDispatch } from "react-redux";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -156,6 +158,7 @@ function BlankPage(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -164,6 +167,22 @@ function BlankPage(props) {
     setListToggle(true);
   };
   const selectBreakdown =
+  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    : null;
+let struct = "";
+for (const i in selectBreakdown) {
+  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+}
+const fkProjectStructureIds = struct.slice(0, -1);
+  
+
+  const fetchData = async () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const res = await api.get("api/v1/incidents/");
+    const selectBreakdown =props.projectName.breakDown
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
       : null;
@@ -172,39 +191,22 @@ function BlankPage(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
+  if(fkProjectStructureIds){
+    const newData = res.data.data.results.results.filter(
+      (item) =>
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds ===fkProjectStructureIds
 
-  console.log(props.projectName)
-  const fetchData = async () => {
-    console.log(props.projectName.breakDown, "breakdown")
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-    const res = await api.get("api/v1/incidents/");
-    const selectBreakdown = props.projectName.breakDown
-    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-    let struct = "";
-    for (const i in selectBreakdown) {
-      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-    }
-    const fkProjectStructureIds = struct.slice(0, -1);
-    if (fkProjectStructureIds) {
-      const newData = res.data.data.results.results.filter(
-        (item) =>
-          item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds === fkProjectStructureIds
+    );
+    await setIncidents(newData);
+  }else{
+    const newData = res.data.data.results.results.filter(
+      (item) =>
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId 
 
-      );
-      await setIncidents(newData);
-    } else {
-      const newData = res.data.data.results.results.filter(
-        (item) =>
-          item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
-
-      );
-      await setIncidents(newData);
-    }
-
+    );
+    await setIncidents(newData);
+  }
+   
   };
 
   const handlePush = async () => {
@@ -381,10 +383,10 @@ function BlankPage(props) {
 
       {listToggle == false ? (
         <div className="gridView">
-          {Object.entries(incidents)
+           {Object.entries(incidents)
             .filter((searchText) => {
               return (
-
+              
                 searchText[1]["incidentTitle"]
                   .toLowerCase()
                   .includes(searchIncident.toLowerCase()) ||
@@ -606,4 +608,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(BlankPage);
+export default connect(mapStateToProps,null)(BlankPage);

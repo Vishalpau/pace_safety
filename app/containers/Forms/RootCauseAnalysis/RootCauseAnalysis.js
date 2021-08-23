@@ -24,7 +24,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION, CLOSE_OUT_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION, SUMMERY_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
 
@@ -171,14 +171,14 @@ const RootCauseAnalysis = () => {
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${CLOSE_OUT_FORM["Close out"]}${putId.current}`)
+        history.push(SUMMERY_FORM["Summary"]);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${CLOSE_OUT_FORM["Close out"]}${putId.current}`)
+        history.push(SUMMERY_FORM["Summary"]);
       }
     }
     localStorage.setItem("RootCause", "Done");

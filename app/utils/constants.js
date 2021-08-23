@@ -102,7 +102,8 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
 };
 
 export const SUMMERY_FORM = {
-  Summary: "/app/incident-management/registration/summary/summary/",
+  Summary: "/app/incident-management/registration/summary/summary/"+localStorage.getItem(
+    "fkincidentId")+"/",
 };
 
 export const LESSION_LEARNED_FORM = {

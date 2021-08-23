@@ -35,11 +35,12 @@ import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
+import Axios from 'axios'
 
 
 // redux
-import {connect} from 'react-redux'
-import { breakDownDetails,levelBDownDetails } from "../../../redux/actions/initialDetails";
+import { connect } from 'react-redux'
+import { breakDownDetails, levelBDownDetails } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -86,6 +87,7 @@ const IncidentDetails = (props) => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [hideAffect, setHideAffect] = useState([]);
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
 
   const [nextPath, setNextPath] = useState({
     personAffect: "",
@@ -500,43 +502,59 @@ const IncidentDetails = (props) => {
   };
 
   const handleBreakdown = async (e, index, label) => {
-  const projectData = JSON.parse(localStorage.getItem('projectName'))
- 
-  
-  const temp = [...breakdown1ListData]
-  
-  const value = e.target.value
-  let selectBreakDown = JSON.parse(localStorage.getItem('selectBreakDown')) || []
-  
+
+    const projectData = JSON.parse(localStorage.getItem('projectName'))
+
+    // const temp = [...breakdown1ListData]
+
+    // const value = e.target.value
+    let selectBreakDown = JSON.parse(localStorage.getItem('selectBreakDown')) || []
+    const value = e.target.value;
+    let temp = [...breakdown1ListData]
+    temp[index - 1][`selectValue`] = value;
+
+
+    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
+      // const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
+      temp.slice(0, index)
+    
+      // removeBreakDownList[index-1][`selectValue`] = "";
+      
+    
+
+    }
+
     for (var key in projectData.projectName.breakdown) {
-     
+
       if (key == index) {
+
         await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-        }${value}`)
+          }${value}`)
           .then(function (response) {
             if (response.status === 200) {
-
+              console.log(response.data)
               if (
-                breakdown1ListData.filter(
+                temp.filter(
                   (item) =>
                     item.breakdownLabel ===
                     projectData.projectName.breakdown[key].structure[0].name
                 ).length > 0
               ) {
+                
                 return;
               } else {
                 setBreakdown1ListData([
-                  ...breakdown1ListData,
+                  ...temp,
                   {
                     breakdownLabel:
                       projectData.projectName.breakdown[key].structure[0]
                         .name,
                     breakdownValue: response.data.data.results,
                     selectValue: value,
-                    index:index
+                    index: index
                   },
                 ]);
-               
+          
               }
             }
           })
@@ -546,14 +564,105 @@ const IncidentDetails = (props) => {
       }
     }
   };
- 
+
 
   // fetch breakdown Data
   const fetchCallBack = async () => {
-    const data = props.initialValues.levelBreakDown || JSON.parse(localStorage.getItem('levelBreakDown'))
-    await setBreakdown1ListData(data)
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const select = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
+
+    for (var i in select) {
+      let selectId = select[i].id;
+      let selectDepth = select[i].depth
+      setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
+    }
+    if (select.length > 0) {
+
+      for (var key in projectData.projectName.breakdown) {
+
+        if (key == select.length) {
+          try {
+            var config = {
+              method: "get",
+              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                }${select[key - 1].id}`,
+              headers: HEADER_AUTH,
+            };
+
+
+            await Axios(config)
+              .then(async (response) => {
+
+                await setBreakdown1ListData([
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[key].structure[0].name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: "",
+                    index: key
+                  },
+                ]);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          } catch (err) {
+            // setBreakdown1ListData([])
+            ;
+          }
+        }
+        //  else { setBreakdown1ListData([]) }
+      }
+    } else {
+      for (var key in projectData.projectName.breakdown) {
+
+        if (key == 0) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+              }`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(async (response) => {
+
+              await setBreakdown1ListData([
+                {
+                  breakdownLabel:
+                    projectData.projectName.breakdown[0].structure[0].name,
+                  breakdownValue: response.data.data.results,
+                  selectValue: "",
+                  index: 0
+                },
+              ]);
+              if (JSON.parse(localStorage.getItem("selectBreakDown"))) {
+                await dispatch(levelBDownDetails([]))
+              } else {
+                await dispatch(levelBDownDetails([
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[0].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: "",
+                    index: 0
+                  },
+                ]))
+              }
+
+              setIsLoading(true);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
+      }
+    }
+
+    // const data = props.initialValues.levelBreakDown || JSON.parse(localStorage.getItem('levelBreakDown'))
+    // await setBreakdown1ListData(data)
     const selectbreakdown = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
-      await setSelectBreakDown(selectbreakdown) 
+    await setSelectBreakDown(selectbreakdown)
   };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -612,7 +721,7 @@ const IncidentDetails = (props) => {
 
           })
           .catch((error) => {
-            
+
             setIsNext(true);
           });
       }
@@ -632,6 +741,10 @@ const IncidentDetails = (props) => {
       setHideAffect(newHideAffect);
     }
   };
+  const handleDepthAndId = (depth, id) => {
+    let newData = [...selectDepthAndId, `${depth}${id}`]
+    setSelectDepthAndId([... new Set(newData)])
+  }
 
   useEffect(() => {
     // fetchListData();
@@ -644,7 +757,7 @@ const IncidentDetails = (props) => {
     fetchEnviornmentAffectValue();
     fetchIncidentsData();
     fetchCallBack();
-  }, [props.initialValues.levelBreakDown,props.initialValues.breakDown]);
+  }, [props.initialValues.breakDown]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
@@ -656,15 +769,15 @@ const IncidentDetails = (props) => {
             <Grid container spacing={3}>
               {/* Project Name */}
               <Grid item xs={6}>
-               
-                  <Typography
-                    variant="h6"
-                    className={Type.labelName}
-                    gutterBottom
-                    id="project-name-label"
-                  >
-                    Project name
-                  </Typography>
+
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                  id="project-name-label"
+                >
+                  Project name
+                </Typography>
 
 
                 <Typography className={Type.labelValue}>
@@ -686,65 +799,66 @@ const IncidentDetails = (props) => {
                   </Typography>
                 </Grid>) : 
                null} */}
-               {selectBreakdown&&selectBreakdown.map((selectBreakdown,value)=><Grid item xs={6}>
-               
-               <Typography
-                 variant="h6"
-                 className={Type.labelName}
-                 gutterBottom
-                 id="project-name-label"
-               >
-                 {selectBreakdown.label}
-               </Typography>
+              {selectBreakdown && selectBreakdown.map((selectBreakdown, value) => <Grid item xs={6}>
+
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                  id="project-name-label"
+                >
+                  {selectBreakdown.label}
+                </Typography>
 
 
-             <Typography className={Type.labelValue}>
-             {selectBreakdown.name}
-             </Typography>
-           </Grid>)}
-           
-                {breakdown1ListData?breakdown1ListData.map((item, index) => (
-                   <Grid item xs={6}>
-                      <FormControl
-                        key={index}
-                        variant="outlined"
-                        required
-                        className={classes.formControl}
-                      >
-                        <InputLabel id="filter3-label">
-                          {item.breakdownLabel}
-                        </InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          // value={parseInt(item.selectValue) }
-                          onChange={(e) => {
-                            
-                            handleBreakdown(e, item.index+1,item.breakdownLabel,item.selectValue)
+                <Typography className={Type.labelValue}>
+                  {selectBreakdown.name}
+                </Typography>
+              </Grid>)}
 
-                          }}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          {item.breakdownValue.length
-                            ? item.breakdownValue.map(
-                              (selectValue, selectKey) => (
-                                <MenuItem
-                                  key={selectKey}
-                                  value={selectValue.id}
-                                  // onClick={(e)=> handleBreakdown(selectValue.id, index+1,item.breakdownLabel)}
-                                >
-                                  {selectValue.name}
-                                </MenuItem>
-                              )
-                            )
-                            : null}
-                        </Select>
-                      </FormControl>
+              {breakdown1ListData ? breakdown1ListData.map((item, index) => (
+                <Grid item xs={6}>
+                  <FormControl
+                    key={index}
+                    variant="outlined"
+                    
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="filter3-label">
+                      {item.breakdownLabel}
+                    </InputLabel>
+                    <Select
+                      labelId="filter3-label"
+                      id="filter3"
+                      // value={parseInt(item.selectValue) }
+                      onChange={(e) => {
 
-                      </Grid>
-                    )):null}
-               
+                        handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
+
+                      }}
+                      label="Phases"
+                      style={{ width: "100%" }}
+                    >
+                      {item.breakdownValue.length
+                        ? item.breakdownValue.map(
+                          (selectValue, selectKey) => (
+                            <MenuItem
+                              key={selectKey}
+                              value={selectValue.id}
+
+                              onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
+                            >
+                              {selectValue.name}
+                            </MenuItem>
+                          )
+                        )
+                        : null}
+                    </Select>
+                  </FormControl>
+
+                </Grid>
+              )) : null}
+
               {/* Unit Name */}
 
               {/* Incident Type */}

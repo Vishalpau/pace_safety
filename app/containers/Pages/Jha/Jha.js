@@ -29,12 +29,13 @@ import MessageIcon from '@material-ui/icons/Message';
 import BuildIcon from '@material-ui/icons/Build';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import { useHistory, useParams } from 'react-router';
-
-import api from "../../../utils/axios";
 import moment from 'moment';
-
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
+
+import api from "../../../utils/axios";
+import { JHA_FORM } from './Utils/constants';
+import { handelIncidentId } from "./Utils/checkValue"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -179,9 +180,7 @@ function Jha() {
   };
 
   const handleNewJhaPush = async () => {
-    history.push(
-      "/app/pages/jha/assessments"
-    );
+    history.push("/app/pages/jha/assessments/project-details");
   };
 
   useEffect(() => {
