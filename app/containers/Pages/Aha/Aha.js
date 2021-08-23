@@ -166,10 +166,12 @@ function Aha() {
   };
 
   const handleSummaryPush = async (index) => {
+    const id = allAHAData[index].id
+      localStorage.setItem('fkAHAId', id)
 
     //console.log("Ashutosh")
     history.push(
-      `/app/pages/aha/aha-summary/${allAHAData[index].id}`
+      `/app/pages/aha/aha-summary/${id}`
     );
   };
 

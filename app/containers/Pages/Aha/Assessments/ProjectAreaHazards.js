@@ -117,6 +117,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ProjectAreaHazards = () => {
   const history = useHistory();
+  const {id} = useParams()
+  const [form , setForm] = useState([]);
 
 
   const areaName = [
@@ -265,6 +267,193 @@ const ProjectAreaHazards = () => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+
+  const handlePhysicalHazards = (e , index , value) => {
+    let temp = form
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['risk'] === value){
+         temp.splice(index, 1);
+         
+
+        }
+      })
+      console.log(temp)
+    }
+    else if(e.target.checked){
+      temp.push( {"hazard": physicalHazardsList.current.groupName[0].groupName,
+      "risk": value,
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId"),})
+    }
+    setForm(temp)
+    console.log(form)
+  };
+
+  const handleChemicalHazards = (e , index , value) => {
+    let temp = form
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['risk'] === value){
+         temp.splice(index, 1);
+         
+
+        }
+      })
+      console.log(temp)
+    }
+    else if(e.target.checked){
+      temp.push( {"hazard": chemicalHazardsList.current.groupName[0].groupName,
+      "risk": value,
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId"),})
+    }
+    setForm(temp)
+    console.log(form)
+  };
+
+  const handleEnergyHazards = (e , index , value) => {
+    let temp = form
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['risk'] === value){
+         temp.splice(index, 1);
+         
+
+        }
+      })
+      console.log(temp)
+    }
+    else if(e.target.checked){
+      temp.push( {"hazard": energyHazardList.current.groupName[0].groupName,
+      "risk": value,
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId"),})
+    }
+    setForm(temp)
+    console.log(form)
+  };
+  const handleErgonomicHazards = (e , index , value) => {
+    let temp = form
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['risk'] === value){
+         temp.splice(index, 1);
+         
+
+        }
+      })
+      console.log(temp)
+    }
+    else if(e.target.checked){
+      temp.push( {"hazard": ergonomicHazardsList.current.groupName[0].groupName,
+      "risk": value,
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId"),})
+    }
+    setForm(temp)
+    console.log(form)
+  };
+  const handleBiologicalHazards = (e , index , value) => {
+    let temp = form
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['risk'] === value){
+         temp.splice(index, 1);
+         
+
+        }
+      })
+      console.log(temp)
+    }
+    else if(e.target.checked){
+      temp.push( {"hazard": biologicalHazardsList.current.groupName[0].groupName,
+      "risk": value,
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId"),})
+    }
+    setForm(temp)
+    console.log(form)
+  };
+  const handleEnviromentHazards = (e , index , value) => {
+    let temp = form
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['risk'] === value){
+         temp.splice(index, 1);
+         
+
+        }
+      })
+      console.log(temp)
+    }
+    else if(e.target.checked){
+      temp.push( {"hazard": environmentalHazardsList.current.groupName[0].groupName,
+      "risk": value,
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId"),})
+    }
+    setForm(temp)
+    console.log(form)
+  };
+ 
   // const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
   // const handleDateChange = (date) => {
@@ -274,10 +463,67 @@ const ProjectAreaHazards = () => {
   // render() {
   // const {classes } = this.props;
 
+  // const handleTeamName = (e, key) => {
+  //   const temp = [...Teamform];
+  //   const value = e.target.value;
+  //   temp[key]["teamName"] = value;
+  //   setTeamForm(temp);
+  // };
+
+  const handleOthers = async (e , key) => {
+    const temp = [...form];
+    const value = e.target.value;
+    temp[key]["teamName"] = value;
+    setForm(temp);
+
+  }
+  const handelRemove = async (e, index) => {
+
+    if (form.length > 1) {
+      if (form[index].id !== undefined) {
+        console.log("here");
+        // const res = await api.delete(
+        //   `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
+        // );
+      }
+
+      let temp = form;
+      let newData = form.filter((item, key) => key !== index);
+      
+      await setForm(newData);
+    
+  };
+
+  }
+
+  const handleAdd = (e) => {
+    if (Object.keys(form).length < 100) {
+      setForm([...form, {"hazard": "others",
+      "risk": "",
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId"),}]);
+    }
+  };
+
+  
+
  
 
   const handleSubmit = async (e) => {
+    for(let i = 0; i < form.length; i++){
+      const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,form[i])
+      
+    }
     history.push("/app/pages/aha/assessments/assessment")
+
   }
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
@@ -292,10 +538,13 @@ bytes
     </li>
   ));
 
+  
+
 
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
+  
 
   const handelPositivObservation = (e) => {
     setPositiveObservation(false);
@@ -323,9 +572,12 @@ bytes
 
   const classes = useStyles();
   const [chemicalList , setChemicalList] = useState([])
-  const chemicalHazardsList = useRef([])
-  const physicalHazardsList = useRef([])
-  const energyhazardList = useRef([])
+  const chemicalHazardsList = useRef([{}])
+  const physicalHazardsList = useRef([{}])
+  const energyHazardList = useRef([{}])
+  const ergonomicHazardsList = useRef([{}])
+  const biologicalHazardsList = useRef([{}])
+  const environmentalHazardsList = useRef([{}])
 
   const fetchCheckList = async () => {
     // let list = []
@@ -338,15 +590,60 @@ bytes
     //   await setChemicalList(list)
     physicalHazardsList.current = await CheckListData(0)
     chemicalHazardsList.current = await CheckListData(1);
-    energyhazardList.current = await CheckListData(3);
+    energyHazardList.current = await CheckListData(2);
+    ergonomicHazardsList.current = await CheckListData(3);
+    biologicalHazardsList.current = await CheckListData(4);
+    environmentalHazardsList.current = await CheckListData(5);
     await setIsLoading(true)
 
   }
   console.log(chemicalHazardsList.current)
+  const [riskVales , setRiskvalue] = useState([]) 
+
+  const fetchHzardsData = async () => {
+    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
+    const result = res.data.data.results.results
+    const temp = {physicalHazards : [], chemicalHazards : [],energyHazard : [] , ergonomicHazards: [] , biologicalHazards : [] ,environmentalHazards : []}
+    for (let i = 0; i < result.length; i++){
+      if(result[i].hazard === "Physical Hazards"){
+        temp.physicalHazards.push(result[i].risk)
+      }else if(result[i].hazard === "Chemical Hazards"){
+        temp.chemicalHazards.push(result[i].risk)
+      }else if(result[i].hazard === "Energy Hazards"){
+        temp.energyHazard.push(result[i].risk)
+      }else if(result[i].hazard === "Ergonomic Hazards"){
+        temp.ergonomicHazards.push(result[i].risk)
+      }else if(result[i].hazard === "Biological Hazards"){
+        temp.biologicalHazards.push(result[i].risk)
+      }else if(result[i].hazard === "Environmental Hazards"){
+        temp.environmentalHazards.push(result[i].risk)
+      }
+    }
+    await setRiskvalue(temp)
+    await setForm(result)
+  }
+
+  console.log(riskVales)
+
+  const handleCheckbox =  (value) => {
+    console.log("sagar",value)
+    console.log("sagar 000",riskVales.physicalHazards )
+    const risk = false
+    if(riskVales.physicalHazards.length > 0){
+      if(riskVales.physicalHazards == value)
+      risk = true
+    }
+console.log("222222222222",risk)
+    return risk
+  }
+
   useEffect(() => {
     // fetchBreakdown()
     // fetchCallBack()
     fetchCheckList()
+    if(id){
+      fetchHzardsData()
+    }
     
   }, []);
   return (
@@ -363,9 +660,10 @@ bytes
             xs={12}
             className={classes.formBox}
             >
-            <FormLabel className={classes.labelName} component="legend">Physical Hazards</FormLabel>
+            <FormLabel className={classes.labelName} component="legend">{physicalHazardsList.current.groupName[0].groupName}</FormLabel>
             <FormGroup className={classes.customCheckBoxList}>
-            {physicalHazardsList.current.map((value) => (
+            {physicalHazardsList.current.required_fields.map((phyValue , index) => (
+              <>
               <FormControlLabel
                 className={classes.labelValue}
                 control={(
@@ -373,13 +671,18 @@ bytes
                     icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     name="checkedI"
-                    onChange={handleChange}
-                    value={value.value}
+                  //  defaultChecked={handleCheckbox(phyValue.value)}  
+                  //  defaultChecked={true}  
+                    onChange={(e) => handlePhysicalHazards(e, index, phyValue.value)}
+                    value={phyValue.value}
                     />
                 )}
-                label={value.label}
+                label={phyValue.label}
                 />
-            ))}
+                {console.log( phyValue.value ,"0000", riskVales[index])}
+                </>
+            )
+            )}
 
                 
             </FormGroup>
@@ -390,10 +693,10 @@ bytes
             xs={12}
             className={classes.formBox}
             >
-            <FormLabel className={classes.labelName} component="legend">Chemical Hazards</FormLabel>
+            <FormLabel className={classes.labelName} component="legend">{chemicalHazardsList.current.groupName[0].groupName}</FormLabel>
             
             <FormGroup className={classes.customCheckBoxList}>
-            {chemicalHazardsList.current.map((value) => (
+            {chemicalHazardsList.current.required_fields.map((chemicalValue,index) => (
               <FormControlLabel
                 className={classes.labelValue}
                 control={(
@@ -401,11 +704,12 @@ bytes
                     icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     name="checkedI"
-                    onChange={handleChange}
-                    value={value.value}
+                    // defaultChecked={riskVales.length > 0 ?  riskVales.chemicalHazards.includes(chemicalValue.value) : ""} 
+                    onChange={(e) => handleChemicalHazards(e, index, chemicalValue.value)}
+                    value={chemicalValue.value}
                     />
                 )}
-                label={value.label}
+                label={chemicalValue.label}
                 />
               ))}
                 
@@ -418,9 +722,9 @@ bytes
             xs={12}
             className={classes.formBox}
             >
-            <FormLabel className={classes.labelName} component="legend">Energy Hazard</FormLabel>
+            <FormLabel className={classes.labelName} component="legend">{energyHazardList.current.groupName[0].groupName}</FormLabel>
             <FormGroup className={classes.customCheckBoxList}>
-            {energyhazardList.current.map((value) => 
+            {energyHazardList.current.required_fields.map((energyValue , index) => 
             (
               <FormControlLabel
                 className={classes.labelValue}
@@ -429,112 +733,109 @@ bytes
                     icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     name="checkedI"
-                    onChange={handleChange}
-                    value={value.value}
+                    // defaultChecked={riskVales.length > 0 ?  riskVales.energyHazard.includes(energyValue.value) : ""} 
+                    onChange={(e) => handleEnergyHazards(e, index, energyValue.value)}
+                    value={energyValue.value}
                     />
                 )}
-                label={value.label}
+                label={energyValue.label}
                 />
             ))}
                 
                
             </FormGroup>
             </Grid>
+
             <Grid
             item
             md={12}
             xs={12}
             className={classes.formBox}
             >
-            <FormLabel className={classes.labelName} component="legend">Hazard Type</FormLabel>
+            <FormLabel className={classes.labelName} component="legend">{ergonomicHazardsList.current.groupName[0].groupName}</FormLabel>
             <FormGroup className={classes.customCheckBoxList}>
-                <FormControlLabel
+            {ergonomicHazardsList.current.required_fields.map((ergonomicValue , index) => 
+            (
+              <FormControlLabel
                 className={classes.labelValue}
                 control={(
                     <Checkbox
                     icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     name="checkedI"
-                    onChange={handleChange}
+                    // defaultChecked={ riskVales.length > 0 ? riskVales.ergonomicHazards.includes(ergonomicValue.value) : ""} 
+                    onChange={(e) => handleErgonomicHazards(e, index, ergonomicValue.value)}
+                    value={ergonomicValue.value}
                     />
                 )}
-                label="Option 1"
+                label={ergonomicValue.label}
                 />
-                <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                    <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="checkedI"
-                    onChange={handleChange}
-                    />
-                )}
-                label="Option 2"
-                />
-                <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                    <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="checkedI"
-                    onChange={handleChange}
-                    />
-                )}
-                label="Option 3"
-                />
-                <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                    <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="checkedI"
-                    onChange={handleChange}
-                    />
-                )}
-                label="Option 4"
-                />
-                <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                    <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="checkedI"
-                    onChange={handleChange}
-                    />
-                )}
-                label="Option 5"
-                />
-                <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                    <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="checkedI"
-                    onChange={handleChange}
-                    />
-                )}
-                label="Option 6"
-                />
-                <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                    <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="checkedI"
-                    onChange={handleChange}
-                    />
-                )}
-                label="Option 7"
-                />
+            ))}
+                
+               
             </FormGroup>
             </Grid>
+
             <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBox}
+            >
+            <FormLabel className={classes.labelName} component="legend">{biologicalHazardsList.current.groupName[0].groupName}</FormLabel>
+            <FormGroup className={classes.customCheckBoxList}>
+            {biologicalHazardsList.current.required_fields.map((biologicalValue , index) => 
+            (
+              <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    // defaultChecked={riskVales.length > 0 ? riskVales.biologicalHazards.includes(biologicalValue.value) : ""} 
+                    onChange={(e) => handleBiologicalHazards(e, index, biologicalValue.value)}
+                    value={biologicalValue.value}
+                    />
+                )}
+                label={biologicalValue.label}
+                />
+            ))}
+                
+               
+            </FormGroup>
+            </Grid>
+
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBox}
+            >
+            <FormLabel className={classes.labelName} component="legend">{environmentalHazardsList.current.groupName[0].groupName}</FormLabel>
+            <FormGroup className={classes.customCheckBoxList}>
+            {environmentalHazardsList.current.required_fields.map((environmentValue , index) => 
+            (
+              <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    // defaultChecked={ riskVales.length > 0 ? riskVales.environmentalHazards.includes(environmentValue.value) : ""} 
+                    onChange={(e) => handleEnviromentHazards(e, index, environmentValue.value)}
+                    value={environmentValue.value}
+                    />
+                )}
+                label={environmentValue.label}
+                />
+            ))}
+                
+               
+            </FormGroup>
+            </Grid>
+            {/* <Grid
             item
             md={12}
             xs={12}
@@ -627,8 +928,102 @@ bytes
                 label="Option 7"
                 />
             </FormGroup>
-        </Grid>
-        <Grid
+            </Grid> */}
+            {/* <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBox}
+            >
+            <FormLabel className={classes.labelName} component="legend">Hazard Type</FormLabel>
+            <FormGroup className={classes.customCheckBoxList}>
+                <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    onChange={handleChange}
+                    />
+                )}
+                label="Option 1"
+                />
+                <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    onChange={handleChange}
+                    />
+                )}
+                label="Option 2"
+                />
+                <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    onChange={handleChange}
+                    />
+                )}
+                label="Option 3"
+                />
+                <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    onChange={handleChange}
+                    />
+                )}
+                label="Option 4"
+                />
+                <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    onChange={handleChange}
+                    />
+                )}
+                label="Option 5"
+                />
+                <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    onChange={handleChange}
+                    />
+                )}
+                label="Option 6"
+                />
+                <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                    <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="checkedI"
+                    onChange={handleChange}
+                    />
+                )}
+                label="Option 7"
+                />
+            </FormGroup>
+        </Grid> */}
+        {/* <Grid
         item
         md={12}
         xs={12}
@@ -636,7 +1031,9 @@ bytes
         style={{marginTop: '12px'}}
         >
         <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
-        </Grid>
+        </Grid> */}
+        {/* {form.map((value,index ) => (<>
+
         <Grid
         item
         md={6}
@@ -652,27 +1049,43 @@ bytes
             fullWidth
             variant="outlined"
             className={classes.formControl}
+            onChange={(e) => {handleOthers(e, index)}
+            }
         />
         </Grid>
-        <Grid item md={1} className={classes.createHazardbox}>
+        {form.length > 1 ?
+        (<Grid item md={1} className={classes.createHazardbox}>
+            <IconButton
+                variant="contained"
+                color="primary"
+                onClick={(e) => {handelRemove(e, index)}}
+            >
+                <DeleteForeverIcon />
+            </IconButton>
+        </Grid>):null }
+
+        </> ))} */}
+
+        {/* <Grid item md={1} className={classes.createHazardbox}>
             <IconButton
                 variant="contained"
                 color="primary"
             >
                 <DeleteForeverIcon />
             </IconButton>
-        </Grid>
+        </Grid> */}
         
-        <Grid item md={12} className={classes.createHazardbox}>
+        {/* <Grid item md={12} className={classes.createHazardbox}>
             <Button
                 variant="contained"
                 color="primary"
                 startIcon={<AddCircleIcon />}
                 className={classes.button}
+                onClick={() => {handleAdd()}}
             >
                 Add
             </Button>
-        </Grid>
+        </Grid> */}
         <Grid
         item
         md={12}

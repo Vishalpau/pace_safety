@@ -591,12 +591,12 @@ bytes
   console.log(form)
 
   const fetchAhaData = async () => {
-    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
+    const res = await api.get(`/api/v1/ahas/${id}/`)
     const result = res.data.data.results;
     await setForm(result)
    }
   const fetchTeamData = async () => {
-    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
+    const res = await api.get(`/api/v1/ahas/${id}/teams/`)
     const result =  res.data.data.results.results
     await setTeamForm(result)
     console.log(result)
