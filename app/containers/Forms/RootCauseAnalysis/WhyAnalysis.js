@@ -14,6 +14,7 @@ import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
+import { CLOSE_OUT_FORM } from "../../../utils/constants";
 import { checkValue } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
@@ -166,15 +167,15 @@ const WhyAnalysis = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
         }
         dispatch(tabViewMode(viewMode))
         history.push(SUMMERY_FORM["Summary"]);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:true,lessionlearn:false
-    
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
         }
         dispatch(tabViewMode(viewMode))
         history.push(SUMMERY_FORM["Summary"]);

@@ -688,6 +688,45 @@ export const LessonsLearned = loadable(() => import("./Pages/Aha/LessonsLearned/
 export const Setting = loadable(() => import("./Settings/Setting"), {
   fallback: <Loading />,
 });
+
 export const Comments = loadable(() => import("./Comments/Comments"), {
+  fallback: <Loading />,
+});
+
+// Jha
+
+export const Jha = loadable(() => import("./Pages/Jha/Jha"), {
+  fallback: <Loading />,
+});
+
+export const JhaSummary = loadable(() => import("./Pages/Jha/JhaSummary"), {
+  fallback: <Loading />,
+});
+
+export const JhaAssessmentsForms = loadable(() => import("./Pages/Jha/Assessments/AssessmentsForms"), {
+  fallback: <Loading />,
+});
+
+export const JhaJobDetails = loadable(() => import("./Pages/Jha/Assessments/JobDetails"), {
+  fallback: <Loading />,
+});
+
+export const JhaProjectAreaHazards = loadable(() => import("./Pages/Jha/Assessments/ProjectAreaHazards"), {
+  fallback: <Loading />,
+});
+
+export const JhaAssessment = loadable(() => import("./Pages/Jha/Assessments/Assessment"), {
+  fallback: <Loading />,
+});
+
+export const JhaDocumentNotification = loadable(() => import("./Pages/Jha/Assessments/DocumentsNotifications"), {
+  fallback: <Loading />,
+});
+
+export const JhaApprovals = loadable(() => import("./Pages/Jha/Approvals/Approvals"), {
+  fallback: <Loading />,
+});
+
+export const JhaLessonsLearned = loadable(() => import("./Pages/Jha/LessonsLearned/LessonsLearned"), {
   fallback: <Loading />,
 });

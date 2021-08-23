@@ -852,37 +852,32 @@ module.exports = [
     key: "assessments",
     name: "Assessments",
     icon: "ion-ios-clipboard",
-    multilevel: false,
-    linkParent: "/app/pages/blank-page/",
+    multilevel: true,
+    child: [
+      {
+        key: 'flha',
+        name: 'FLHA',
+        linkParent: "/app/pages/blank-page/",
+      },
+      {
+        key: 'aha',
+        name: 'AHA',
+        linkParent: '/app/pages/aha',
+      },
+      {
+        key: 'jha',
+        name: 'JHA',
+        linkParent: "/app/pages/jha",
+      },
+    ],
   },
   {
     key: "observations",
     name: "Observations",
-    icon: "ion-md-eye",
-    multilevel: false,
-    linkParent: "/app/pages/Observations",
+    icon: 'ion-md-eye',
+    linkParent: '/app/pages/Observations',
   },
   {
-    key: "CheckList",
-    name: "Check List",
-    icon: "ion-md-eye",
-    multilevel: false,
-    linkParent: "/app/pages/checklist",
-  },
-  {
-    key: "inspections",
-    name: "Compliances",
-    icon: "ion-ios-checkbox",
-    multilevel: false,
-    linkParent: "/app/charts/area-filled-charts",
-  },
-  {
-    key: 'aha',
-    name: 'AHA',
-    icon: 'ion-ios-checkbox',
-    multilevel: false,
-    linkParent: '/app/pages/aha',
-  },{
 
     key: 'administration',
     name: 'Administration',
