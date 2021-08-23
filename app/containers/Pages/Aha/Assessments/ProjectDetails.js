@@ -34,7 +34,7 @@ import Axios from "axios";
 import api from "../../../../utils/axios";
 
 
-import ProjectDetailsValidator from "../../../Validator/AHA/ProjectDetailsValidation";
+import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
 
 import { AHA } from "../constants";
 
@@ -124,6 +124,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProjectDetails = () => {
 // class ObservationInitialNotification extends Component {
+  const {id} = useParams();
   const history = useHistory();
 
   const fkCompanyId =
@@ -299,7 +300,12 @@ bytes
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
-  const [Teamform, setTeamForm] = useState([{ why: "", whyCount: "" }]);
+  const [Teamform, setTeamForm] = useState([{
+    "teamName": "",
+    "status": "Active",
+    "createdBy": parseInt(userId),
+    "fkAhaId": 0
+  }]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const radioDecide = ['Yes' , 'No' ]
@@ -326,33 +332,43 @@ bytes
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
     const value = e.target.value;
-    temp[key]["why"] = value;
-    temp[key]["whyCount"] = key;
+    temp[key]["teamName"] = value;
     setTeamForm(temp);
   };
-
+  console.log(Teamform)
   const handleAdd = (e) => {
     if (Object.keys(Teamform).length < 100) {
-      setTeamForm([...Teamform, { why: "", whyCount: "" }]);
+      setTeamForm([...Teamform, { "teamName": "" ,
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": 0 }]);
     }
   };
 
   const handelRemove = async (e, index) => {
+
     if (Teamform.length > 1) {
+      if (Teamform[index].id !== undefined) {
+        console.log("here");
+        const res = await api.delete(
+          `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
+        );
+      }
+
       let temp = Teamform;
       let newData = Teamform.filter((item, key) => key !== index);
       
       await setTeamForm(newData);
-    }
+    
   };
 
-
+  }
 
   const [form , setForm] = useState(
     {
       "fkCompanyId": parseInt(fkCompanyId),
-    "fkProjectId": parseInt(project.projectId),
-    "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+      "fkProjectId": parseInt(project.projectId),
+      "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
       "workArea": "",
       "location": "",
       "assessmentDate": null,
@@ -392,12 +408,40 @@ bytes
     if (!isValid) {
       return "Data is not valid";
     }
-    const res = await api.post("/api/v1/ahas/",form)
-    if(res.status === 201){
-      let fkAHAId = res.data.data.results.id
-      localStorage.setItem("fkAHAId",fkAHAId)
-      history.push("/app/pages/aha/assessments/project-area-hazards")
+    if(id){
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,form)
+      for (let i = 0; i < Teamform.length; i++) {
+        if(Teamform[i].id){
+          const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`,Teamform[i]);
+        }else{
+          Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
+          const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          if(res.status === 200){
+            history.push("/app/pages/aha/assessments/project-area-hazards")
+          }
+        }
+        
+      }
+      if(res.status === 200){
+        history.push("/app/pages/aha/assessments/project-area-hazards")
+      }
+     
+
+    }else{
+      const res = await api.post("/api/v1/ahas/",form)
+      if(res.status === 201){
+        let fkAHAId = res.data.data.results.id
+        localStorage.setItem("fkAHAId",fkAHAId)
+
+        for (let i = 0; i < Teamform.length; i++) {
+          Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
+          const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+        }
+
+        history.push("/app/pages/aha/assessments/project-area-hazards")
     }
+    }
+    
    
   }
 
@@ -546,16 +590,31 @@ bytes
   };
   console.log(form)
 
+  const fetchAhaData = async () => {
+    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
+    const result = res.data.data.results;
+    await setForm(result)
+   }
+  const fetchTeamData = async () => {
+    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
+    const result =  res.data.data.results.results
+    await setTeamForm(result)
+    console.log(result)
+  }
   const classes = useStyles();
 
   useEffect(() => {
     // fetchBreakdown()
     fetchCallBack()
+    if(id){
+      fetchAhaData()
+      fetchTeamData()
+    }
     
   }, []);
   return (
     <>
-        <PapperBlock title="Project details" icon="ion-md-list-box">
+        <PapperBlock title="Project Details" icon="ion-md-list-box">
 
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
@@ -591,6 +650,7 @@ bytes
             margin="dense"
             name="workarea"
             id="workarea"
+            value={form.workArea ? form.workArea : ""}
             select
             fullWidth
             onChange={(e) => setForm({...form,workArea:e.target.value})}
@@ -614,7 +674,7 @@ bytes
             margin="dense"
             name="worklocation"
             id="worklocation"
-            defaultValue=""
+            value={form.location ? form.location : ""}
             error={error.location}
             helperText={error.location ? error.location : ""}
             fullWidth
@@ -665,7 +725,8 @@ bytes
             <RadioGroup row aria-label="gender" name="gender1"
             onChange={(e) => {
                                     {setForm({...form,permitToPerform:e.target.value})};
-                                  }}>
+                                  }}
+                                  value={form.permitToPerform ? form.permitToPerform : ""}>
             {radioDecide.map((value) => (
               <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
              ) )}
@@ -691,7 +752,7 @@ bytes
             name="reference"
             id="reference"
             multiline
-            defaultValue=""
+            value={form.permitNumber ? form.permitNumber : ""}         
             fullWidth
             onChange={(e) => {
                                     {setForm({...form,permitNumber:e.target.value})};
@@ -715,7 +776,7 @@ bytes
             error={error.description}
             helperText={error.description ? error.description : ""}
             rows={4}
-            defaultValue=""
+            value={form.description ? form.description : ""}         
             fullWidth
             onChange={(e) => {
                                     {setForm({...form,description:e.target.value})};
@@ -747,7 +808,7 @@ bytes
             name="arename"
             id="arename"
             multiline
-            value={Teamform[index].why || ""}
+            value={Teamform[index].teamName || ""}
             fullWidth
             variant="outlined"
             className={classes.formControl}
@@ -757,7 +818,8 @@ bytes
         
         
         </Grid>
-        <Grid item md={1} className={classes.createHazardbox}>
+        {Teamform.length > 1 ?
+        (<Grid item md={1} className={classes.createHazardbox}>
             <IconButton
                 variant="contained"
                 color="primary"
@@ -765,7 +827,8 @@ bytes
             >
                 <DeleteForeverIcon />
             </IconButton>
-        </Grid>
+        </Grid>):null }
+        
        </> ))}
 
         {/* {Teamform.map((item, index) => (<>

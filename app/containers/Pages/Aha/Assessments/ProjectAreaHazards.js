@@ -351,7 +351,7 @@ bytes
   }, []);
   return (
     <>
-            <PapperBlock title="Project area hazards" icon="ion-md-list-box">
+            <PapperBlock title="Project Area Hazards" icon="ion-md-list-box">
             {isLoading ? (
 
     <Grid container spacing={3} className={classes.observationNewSection}>

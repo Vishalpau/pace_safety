@@ -165,10 +165,11 @@ function Aha() {
     page: 0,
   };
 
-  const handleSummaryPush = async () => {
+  const handleSummaryPush = async (index) => {
+
     //console.log("Ashutosh")
     history.push(
-      "/app/pages/aha/aha-summary/"
+      `/app/pages/aha/aha-summary/${allAHAData[index].id}`
     );
   };
 
@@ -291,7 +292,7 @@ function Aha() {
                     >
                       Number:
                       <Link
-                        onClick={(e) => handleSummaryPush(e)}
+                        onClick={(e) => handleSummaryPush(index)}
                         variant="subtitle2"
                         className={Fonts.listingLabelValue}
                         style={{

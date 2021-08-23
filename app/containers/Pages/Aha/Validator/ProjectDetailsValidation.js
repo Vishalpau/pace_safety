@@ -25,16 +25,6 @@ function ProjectDetailsValidator(data) {
     error.assessmentDate = "Please select date and time";
     isValid = false;
   }
-//   if (isNaN(data.supervisorByBadgeId)) {
-//     error.supervisorByBadgeId = "Only numbers allowed in supervisor's badge number";
-//     isValid = false;
-//  }
-
-//  if (validator.isEmpty(data.supervisorName.toString())) {
-//   error.supervisorName = "Please select the supervisor's name";
-//   isValid = false;
-// }
-
 
 return { error, isValid };
 }

@@ -168,7 +168,7 @@ const DocumentNotification = () => {
   const classes = useStyles();
   return (
     <>
-                <PapperBlock title="Documents & notifications" icon="ion-md-list-box">
+                <PapperBlock title="Documents & Notifications" icon="ion-md-list-box">
 
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
