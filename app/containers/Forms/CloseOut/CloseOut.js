@@ -34,7 +34,8 @@ import {
     access_token,
     ACCOUNT_API_URL,
     HEADER_AUTH,
-    CLOSE_OUT_FORM
+    CLOSE_OUT_FORM,
+    SUMMERY_FORM
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
@@ -164,7 +165,7 @@ const CloseOut = () => {
                 ,closeout:true
               }
               dispatch(tabViewMode(viewMode));
-              history.push(`/app/incident-management/registration/summary/summary/${id}`)
+              history.push(SUMMERY_FORM["Summary"])
           }
         } catch (error) {
           console.log(error)

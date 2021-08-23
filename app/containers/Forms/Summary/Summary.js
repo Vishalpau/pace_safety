@@ -57,6 +57,7 @@ import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
 import CloseOut from "../../SummaryDetails/CloseOut";
+import { Comments } from "../../pageListAsync";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -111,6 +112,8 @@ const Summary = (props) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+
+  const [isComments,setIsComments] = useState(false)
 
   const [formStatus, setFormStatus] = useState({
     initialNotificationCheck: "",
@@ -239,7 +242,7 @@ const Summary = (props) => {
   const handelInvestigationView = () => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details")
+      setMessage("Please complete the previous pending stage(s) initial details")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
@@ -260,12 +263,12 @@ const Summary = (props) => {
   const handelEvidenceView = (e) => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details and investigation")
+      setMessage("Please complete the previous pending stage(s) initial details and investigation")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation")
+      setMessage("Please complete the previous pending stage(s) investigation")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
@@ -286,16 +289,16 @@ const Summary = (props) => {
   const handelRootCauseAnalysisView = () => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details, investigation and evidance")
+      setMessage("Please complete the previous pending stage(s) initial details, investigation and evidance")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation and evidance")
+      setMessage("Please complete the previous pending stage(s) investigation and evidance")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step evidance")
+      setMessage("Please complete the previous pending stage(s) evidance")
       setMessageType("warning")
     } else if (rcaRecommendedValue.current == "PACE cause analysis") {
       if (paceCauseData == undefined) {
@@ -349,22 +352,22 @@ const Summary = (props) => {
   const handleCloseOutOverView = async => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details, investigation, evidance and root and cause analysis")
+      setMessage("Please complete the previous pending stage(s) initial details, investigation, evidance and root and cause analysis")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation, evidance and root and cause analysis")
+      setMessage("Please complete the previous pending stage(s) investigation, evidance and root and cause analysis")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step evidance and root and cause analysis")
+      setMessage("Please complete the previous pending stage(s) evidance and root and cause analysis")
       setMessageType("warning")
       
     } else if (!paceCauseData && !rootCausesData && !whyData) {
       
       setOpen(true);
-      setMessage("Please complete the previous step root and cause analysis")
+      setMessage("Please complete the previous pending stage(s) root and cause analysis")
       setMessageType("warning")
     }else if(!closeout){
       handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
@@ -388,25 +391,25 @@ const Summary = (props) => {
   const handelLessionLearnedView = () => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details, investigation, evidance, root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s) initial details, investigation, evidance, root cause analysis and close out")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation, evidance, root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s) investigation, evidance, root cause analysis and close out")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step evidance, root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s) evidance, root cause analysis and close out")
       setMessageType("warning")
     } else if (!paceCauseData && !rootCausesData && !whyData) {
       setOpen(true);
-      setMessage("Please complete the previous step root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s) root cause analysis and close out")
       setMessageType("warning")
     }
     else if (!closeout) {
       setOpen(true);
-      setMessage("Please complete the previous step close out")
+      setMessage("Please complete the previous pending stage(s) close out")
       setMessageType("warning")
     } else if(!lessionlearnData){
       handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
@@ -453,7 +456,7 @@ const Summary = (props) => {
 
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details")
+      setMessage("Please complete the previous pending stage(s) initial details")
       setMessageType("warning")
     }
     else {
@@ -476,12 +479,12 @@ const Summary = (props) => {
 
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details and investigation")
+      setMessage("Please complete the previous pending stage(s) initial details and investigation")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation")
+      setMessage("Please complete the previous pending stage(s) investigation")
       setMessageType("warning")
     }
     else {
@@ -497,17 +500,17 @@ const Summary = (props) => {
     }
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details, investigation and evidence")
+      setMessage("Please complete the previous pending stage(s) initial details, investigation and evidence")
       setMessageType("warning")
     }
     else if (investigationOverview === undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation and evidence")
+      setMessage("Please complete the previous pending stage(s) investigation and evidence")
       setMessageType("warning")
     } else if (evidencesData === undefined) {
 
       setOpen(true);
-      setMessage("Please complete the previous step evidence")
+      setMessage("Please complete the previous pending stage(s) evidence")
       setMessageType("warning")
     }
     else {
@@ -518,28 +521,28 @@ const Summary = (props) => {
   const modifyLessonLearn = () => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details, investigation, evidence, root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s) initial details, investigation, evidence, root cause analysis and close out")
       setMessageType("warning")
     }
     else if (investigationOverview === undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation, evidence, root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s) investigation, evidence, root cause analysis and close out")
       setMessageType("warning")
     } else if (evidencesData === undefined) {
 
       setOpen(true);
-      setMessage("Please complete the previous step evidence, root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s) evidence, root cause analysis and close out")
       setMessageType("warning")
     }else if (!paceCauseData && !rootCausesData && !whyData) {
 
       setOpen(true);
-      setMessage("Please complete the previous step  root cause analysis and close out")
+      setMessage("Please complete the previous pending stage(s)  root cause analysis and close out")
       setMessageType("warning")
     }
     else if (!closeout) {
 
       setOpen(true);
-      setMessage("Please complete the previous step close out")
+      setMessage("Please complete the previous pending stage(s) close out")
       setMessageType("warning")
     }
      else {
@@ -555,22 +558,22 @@ const Summary = (props) => {
     }
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous step initial details, investigation, evidence and root cause analysis")
+      setMessage("Please complete the previous pending stage(s) initial details, investigation, evidence and root cause analysis")
       setMessageType("warning")
     }
     else if (investigationOverview === undefined) {
       setOpen(true);
-      setMessage("Please complete the previous step investigation, evidence and root cause analysis")
+      setMessage("Please complete the previous pending stage(s) investigation, evidence and root cause analysis")
       setMessageType("warning")
     } else if (evidencesData === undefined) {
 
       setOpen(true);
-      setMessage("Please complete the previous step evidence and root cause analysis")
+      setMessage("Please complete the previous pending stage(s) evidence and root cause analysis")
       setMessageType("warning")
     }else if (!paceCauseData && !rootCausesData && !whyData) {
 
       setOpen(true);
-      setMessage("Please complete the previous step  root cause analysis")
+      setMessage("Please complete the previous pending stage(s)  root cause analysis")
       setMessageType("warning")
     }
      else {
@@ -598,6 +601,7 @@ const Summary = (props) => {
           title={`Incident Number: ${incidents.incidentNumber}`}
           icon="ion-md-list-box"
         >
+          {isComments?null:
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
               {/* initital notificatin */}
@@ -723,12 +727,14 @@ const Summary = (props) => {
               </div>
             </div>
           </Box>
-          <Divider />
+         
+          }<Divider />
 
           <Box marginTop={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={9}>
                 {/* summary and part */}
+                {isComments?<Comments/>:
                 <>
                   {(() => {
                     if (
@@ -753,7 +759,8 @@ const Summary = (props) => {
                     }
                   })()}
                 </>
-              </Grid>
+}
+             </Grid>
 
 
               {/* side bar    */}
@@ -874,7 +881,9 @@ const Summary = (props) => {
                         <ListItemText primary="Close Out" />
                       </ListItem>
 
-                      <ListItem button>
+                      <ListItem 
+                      onClick={(e)=>setIsComments(true)}
+                      button>
                         <ListItemIcon>
                           <Comment />
                         </ListItemIcon>

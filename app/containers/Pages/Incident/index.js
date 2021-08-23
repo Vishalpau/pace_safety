@@ -54,6 +54,8 @@ import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
 
 import { connect } from "react-redux";
+import {tabViewMode} from '../../../redux/actions/initialDetails';
+import { useDispatch } from "react-redux";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -156,6 +158,7 @@ function BlankPage(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -173,9 +176,8 @@ for (const i in selectBreakdown) {
 }
 const fkProjectStructureIds = struct.slice(0, -1);
   
-console.log(props.projectName)
+
   const fetchData = async () => {
-    console.log(props.projectName.breakDown,"breakdown")
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;

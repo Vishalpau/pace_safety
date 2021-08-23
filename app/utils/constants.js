@@ -102,7 +102,8 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
 };
 
 export const SUMMERY_FORM = {
-  Summary: "/app/incident-management/registration/summary/summary/",
+  Summary: "/app/incident-management/registration/summary/summary/"+localStorage.getItem(
+    "fkincidentId")+"/",
 };
 
 export const LESSION_LEARNED_FORM = {
@@ -163,6 +164,34 @@ export const PACE_MANAGEMENT_CONTROL_SUB_TYPES = [
   "Compilance",
   "Engagement",
 ];
+
+// hide array 
+
+export const FIVEWHYHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Cause analysis",
+]
+
+export const PACEHIDE = [
+  "Cause analysis", "Five Why analysis"
+]
+
+export const ROOTHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Five Why analysis"
+]
 
 // option in root cause and anlysis
 

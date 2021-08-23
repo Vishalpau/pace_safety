@@ -316,7 +316,6 @@ const ObservationInitialNotificationUpdate = () => {
     await setIsLoading(true);
     
   }
-
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
@@ -530,8 +529,8 @@ const ObservationInitialNotificationUpdate = () => {
               shrink={initialData.location !== null ? true : false}
               value={initialData.location  ? initialData.location : ""}
               fullWidth
-              // error={error.location}
-              // helperText={error.location ? error.location : ""}
+              error={error ? error.location : null}
+              helperText={error ? error.location ? error.location : "" : ""}
               variant="outlined"
               className={classes.formControl}
               onChange={(e) => {
