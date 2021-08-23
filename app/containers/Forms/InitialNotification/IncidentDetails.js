@@ -38,8 +38,8 @@ import Type from "../../../styles/components/Fonts.scss";
 
 
 // redux
-import {connect} from 'react-redux'
-import { breakDownDetails,levelBDownDetails } from "../../../redux/actions/initialDetails";
+import { connect } from 'react-redux'
+import { breakDownDetails, levelBDownDetails } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -500,19 +500,19 @@ const IncidentDetails = (props) => {
   };
 
   const handleBreakdown = async (e, index, label) => {
-  const projectData = JSON.parse(localStorage.getItem('projectName'))
- 
-  
-  const temp = [...breakdown1ListData]
-  
-  const value = e.target.value
-  let selectBreakDown = JSON.parse(localStorage.getItem('selectBreakDown')) || []
-  
+    const projectData = JSON.parse(localStorage.getItem('projectName'))
+
+
+    const temp = [...breakdown1ListData]
+
+    const value = e.target.value
+    let selectBreakDown = JSON.parse(localStorage.getItem('selectBreakDown')) || []
+
     for (var key in projectData.projectName.breakdown) {
-     
+
       if (key == index) {
         await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-        }${value}`)
+          }${value}`)
           .then(function (response) {
             if (response.status === 200) {
 
@@ -533,10 +533,10 @@ const IncidentDetails = (props) => {
                         .name,
                     breakdownValue: response.data.data.results,
                     selectValue: value,
-                    index:index
+                    index: index
                   },
                 ]);
-               
+
               }
             }
           })
@@ -546,14 +546,14 @@ const IncidentDetails = (props) => {
       }
     }
   };
- 
+
 
   // fetch breakdown Data
   const fetchCallBack = async () => {
     const data = props.initialValues.levelBreakDown || JSON.parse(localStorage.getItem('levelBreakDown'))
     await setBreakdown1ListData(data)
     const selectbreakdown = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
-      await setSelectBreakDown(selectbreakdown) 
+    await setSelectBreakDown(selectbreakdown)
   };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -612,7 +612,7 @@ const IncidentDetails = (props) => {
 
           })
           .catch((error) => {
-            
+
             setIsNext(true);
           });
       }
@@ -644,7 +644,7 @@ const IncidentDetails = (props) => {
     fetchEnviornmentAffectValue();
     fetchIncidentsData();
     fetchCallBack();
-  }, [props.initialValues.levelBreakDown,props.initialValues.breakDown]);
+  }, [props.initialValues.levelBreakDown, props.initialValues.breakDown]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
@@ -656,15 +656,15 @@ const IncidentDetails = (props) => {
             <Grid container spacing={3}>
               {/* Project Name */}
               <Grid item xs={6}>
-               
-                  <Typography
-                    variant="h6"
-                    className={Type.labelName}
-                    gutterBottom
-                    id="project-name-label"
-                  >
-                    Project name
-                  </Typography>
+
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                  id="project-name-label"
+                >
+                  Project name
+                </Typography>
 
 
                 <Typography className={Type.labelValue}>
@@ -686,65 +686,65 @@ const IncidentDetails = (props) => {
                   </Typography>
                 </Grid>) : 
                null} */}
-               {selectBreakdown&&selectBreakdown.map((selectBreakdown,value)=><Grid item xs={6}>
-               
-               <Typography
-                 variant="h6"
-                 className={Type.labelName}
-                 gutterBottom
-                 id="project-name-label"
-               >
-                 {selectBreakdown.label}
-               </Typography>
+              {selectBreakdown && selectBreakdown.map((selectBreakdown, value) => <Grid item xs={6}>
+
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                  id="project-name-label"
+                >
+                  {selectBreakdown.label}
+                </Typography>
 
 
-             <Typography className={Type.labelValue}>
-             {selectBreakdown.name}
-             </Typography>
-           </Grid>)}
-           
-                {breakdown1ListData?breakdown1ListData.map((item, index) => (
-                   <Grid item xs={6}>
-                      <FormControl
-                        key={index}
-                        variant="outlined"
-                        required
-                        className={classes.formControl}
-                      >
-                        <InputLabel id="filter3-label">
-                          {item.breakdownLabel}
-                        </InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          // value={parseInt(item.selectValue) }
-                          onChange={(e) => {
-                            
-                            handleBreakdown(e, item.index+1,item.breakdownLabel,item.selectValue)
+                <Typography className={Type.labelValue}>
+                  {selectBreakdown.name}
+                </Typography>
+              </Grid>)}
 
-                          }}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          {item.breakdownValue.length
-                            ? item.breakdownValue.map(
-                              (selectValue, selectKey) => (
-                                <MenuItem
-                                  key={selectKey}
-                                  value={selectValue.id}
-                                  // onClick={(e)=> handleBreakdown(selectValue.id, index+1,item.breakdownLabel)}
-                                >
-                                  {selectValue.name}
-                                </MenuItem>
-                              )
-                            )
-                            : null}
-                        </Select>
-                      </FormControl>
+              {breakdown1ListData ? breakdown1ListData.map((item, index) => (
+                <Grid item xs={6}>
+                  <FormControl
+                    key={index}
+                    variant="outlined"
+                    required
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="filter3-label">
+                      {item.breakdownLabel}
+                    </InputLabel>
+                    <Select
+                      labelId="filter3-label"
+                      id="filter3"
+                      // value={parseInt(item.selectValue) }
+                      onChange={(e) => {
 
-                      </Grid>
-                    )):null}
-               
+                        handleBreakdown(e, item.index + 1, item.breakdownLabel, item.selectValue)
+
+                      }}
+                      label="Phases"
+                      style={{ width: "100%" }}
+                    >
+                      {item.breakdownValue.length
+                        ? item.breakdownValue.map(
+                          (selectValue, selectKey) => (
+                            <MenuItem
+                              key={selectKey}
+                              value={selectValue.id}
+                            // onClick={(e)=> handleBreakdown(selectValue.id, index+1,item.breakdownLabel)}
+                            >
+                              {selectValue.name}
+                            </MenuItem>
+                          )
+                        )
+                        : null}
+                    </Select>
+                  </FormControl>
+
+                </Grid>
+              )) : null}
+
               {/* Unit Name */}
 
               {/* Incident Type */}

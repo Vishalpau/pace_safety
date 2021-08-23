@@ -28,10 +28,13 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
 import { useParams, useHistory } from 'react-router';
+import moment from "moment";
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
+import api from "../../../../utils/axios";
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -146,23 +149,23 @@ const JobDetails = () => {
       "fkProjectId": parseInt(project.projectId),
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
       "workArea": "string",
-      "location": "string",
+      "location": "",
       "jhaAssessmentDate": "2021-08-20",
-      "permitToPerform": "Yes",
-      "permitNumber": "string",
+      "permitToPerform": "",
+      "permitNumber": "",
       "jhaNumber": "string",
-      "jobTitle": "string",
-      "description": "string",
+      "jobTitle": "",
+      "description": "",
       "workStopCondition": "string",
-      "department": "string",
+      "department": "",
       "additionalRemarks": "string",
       "classification": "string",
       "jobOrderNumber": "string",
-      "supervisorName": "string",
-      "emergencyNumber": "string",
-      "evacuationAssemblyPoint": "string",
+      "supervisorName": "",
+      "emergencyNumber": "",
+      "evacuationAssemblyPoint": "",
       "wrpApprovalUser": "string",
-      "wrpApprovalDateTime": "2021-08-20T09:01:02.938Z",
+      "wrpApprovalDateTime": null,
       "picApprovalUser": "string",
       "picApprovalDateTime": "2021-08-20T09:01:02.938Z",
       "signedUser": "string",
@@ -188,6 +191,7 @@ const JobDetails = () => {
   const fetchJhaData = async () => {
     const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/`)
     const result = res.data.data.results;
+    console.log(result)
     await setForm(result)
   }
 
@@ -195,6 +199,7 @@ const JobDetails = () => {
   const fetchTeamData = async () => {
     const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`)
     const result = res.data.data.results.results
+    console.log(result)
     await setTeamForm(result)
     console.log(result)
   }
@@ -234,18 +239,19 @@ const JobDetails = () => {
   ];
 
   const handleSubmit = async (e) => {
-    const { error, isValid } = JobDetailsValidate(form);
-    await setError(error);
-    if (!isValid) {
-      return "Data is not valid";
-    }
+    // const { error, isValid } = JobDetailsValidate(form);
+    // await setError(error);
+    // if (!isValid) {
+    //   return "Data is not valid";
+    // }
     if (id) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+      let jhaCreateID = res.data.data.results.id
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
           const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
         } else {
-          Teamform[i]["fkJHAId"] = localStorage.getItem("fkJHAId");
+          Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
           const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
           if (res.status === 200) {
             history.push(`${JHA_FORM["Project Area Hazards"]}`)
@@ -261,7 +267,7 @@ const JobDetails = () => {
         let fkJHAId = res.data.data.results.id
         localStorage.setItem("fkJHAId", fkJHAId)
         for (let i = 0; i < Teamform.length; i++) {
-          Teamform[i]["fkJHAId"] = localStorage.getItem("fkJHAId");
+          Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
           const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
         }
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
@@ -310,15 +316,12 @@ const JobDetails = () => {
     };
   }
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
   const classes = useStyles();
 
   const handelCallBack = async () => {
-    await fetchCallBack()
+    // await fetchCallBack()
     if (id) {
+      console.log(id)
       await fetchJhaData()
       await fetchTeamData()
     }
@@ -332,6 +335,7 @@ const JobDetails = () => {
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
+
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Project
@@ -340,6 +344,7 @@ const JobDetails = () => {
                 A23-ERT1236 - NTPC
               </Typography>
             </Grid>
+
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Unit
@@ -360,7 +365,6 @@ const JobDetails = () => {
                 label="Job Title"
                 name="jobtitle"
                 id="jobtitle"
-                defaultValue=""
                 value={form.jobTitle ? form.jobTitle : ""}
                 fullWidth
                 onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
@@ -391,6 +395,7 @@ const JobDetails = () => {
               />
             </Grid>
 
+            {/* approval time */}
             <Grid
               item
               md={6}
@@ -402,13 +407,23 @@ const JobDetails = () => {
                   className={classes.formControl}
                   fullWidth
                   label="Date & Time*"
-                  value={selectedDate}
-                  onChange={handleDateChange}
+                  value={form.wrpApprovalDateTime}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      wrpApprovalDateTime: moment(e).toISOString(),
+                    });
+                  }}
+                  format="yyyy/MM/dd HH:mm"
+                  inputVariant="outlined"
+
                   inputVariant="outlined"
                   disableFuture="true"
                 />
               </MuiPickersUtilsProvider>
             </Grid>
+
+            {/* perform to permit */}
             <Grid
               item
               md={6}
@@ -420,12 +435,15 @@ const JobDetails = () => {
                 name="permitwork"
                 id="permitwork"
                 multiline
-                defaultValue=""
+                value={form.permitToPerform ? form.permitToPerform : ""}
                 fullWidth
                 variant="outlined"
+                onChange={(e) => setForm({ ...form, permitToPerform: e.target.value })}
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* scope work */}
             <Grid
               item
               md={12}
@@ -438,13 +456,15 @@ const JobDetails = () => {
                 id="scopeofwork"
                 multiline
                 rows={4}
-                defaultValue=""
+                value={form.description ? form.description : ""}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
 
+            {/* team */}
             <Grid
               item
               md={12}
@@ -501,6 +521,8 @@ const JobDetails = () => {
                 Add
               </Button>
             </Grid>
+
+            {/* emergency contact details */}
             <Grid
               item
               md={12}
@@ -510,6 +532,8 @@ const JobDetails = () => {
             >
               <Typography variant="h6" gutterBottom className={classes.labelName}>Emergency Contact Details</Typography>
             </Grid>
+
+            {/* supervisor */}
             <Grid
               item
               md={6}
@@ -520,13 +544,15 @@ const JobDetails = () => {
                 name="supervisor"
                 id="supervisor"
                 multiline
-                defaultValue=""
+                value={form.supervisorName ? form.supervisorName : ""}
                 fullWidth
                 variant="outlined"
+                onChange={(e) => setForm({ ...form, supervisorName: e.target.value })}
                 className={classes.formControl}
               />
             </Grid>
 
+            {/* department */}
             <Grid item md={6} xs={11}>
               <TextField
                 label="Department"
@@ -534,6 +560,8 @@ const JobDetails = () => {
                 id="department"
                 select
                 fullWidth
+                value={form.department ? form.department : ""}
+                onChange={(e) => setForm({ ...form, department: e.target.value })}
                 variant="outlined"
               >
                 {department.map((option) => (
@@ -544,57 +572,64 @@ const JobDetails = () => {
               </TextField>
             </Grid>
 
+            {/* emergency number */}
             <Grid
               item
               md={6}
               xs={11}
-
             >
               <TextField
                 label="Emergency Phone Number"
                 name="emergencyphonenumber"
                 id="emergencyphonenumber"
                 multiline
-                defaultValue=""
+                value={form.emergencyNumber ? form.emergencyNumber : ""}
+                onChange={(e) => setForm({ ...form, emergencyNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* evacuation assembly point       */}
             <Grid
               item
               md={6}
               xs={11}
-
             >
               <TextField
                 label="Evacuation assembly point"
                 name="evacuationassemblypoint"
                 id="evacuationassemblypoint"
                 multiline
-                defaultValue=""
+                value={form.evacuationAssemblyPoint ? form.evacuationAssemblyPoint : ""}
+                onChange={(e) => setForm({ ...form, evacuationAssemblyPoint: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* permit number       */}
             <Grid
               item
               md={6}
               xs={11}
-
             >
               <TextField
                 label="Permit number"
                 name="permitnumber"
                 id="permitnumber"
                 multiline
-                defaultValue=""
+                value={form.permitNumber ? form.permitNumber : ""}
+                onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* order number */}
             <Grid
               item
               md={6}
@@ -607,6 +642,7 @@ const JobDetails = () => {
                 id="ordernumber"
                 multiline
                 defaultValue=""
+                onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
@@ -618,7 +654,7 @@ const JobDetails = () => {
               xs={12}
               style={{ marginTop: '15px' }}
             >
-              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
+              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn} onClick={(e) => handleSubmit()}>Next</Button>
             </Grid>
           </Grid>
         </Col>

@@ -35,6 +35,7 @@ import Incidents from 'dan-styles/IncidentsList.scss';
 
 import api from "../../../utils/axios";
 import { JHA_FORM } from './Utils/constants';
+import { handelIncidentId } from "./Utils/checkValue"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -178,9 +179,9 @@ function Jha() {
     );
   };
 
-  // const handleNewJhaPush = async () => {
-  //   history.push(`${JHA_FORM["Project Details"]}${localStorage.getItem("fkJHAId")`);
-  // };
+  const handleNewJhaPush = async () => {
+    history.push("/app/pages/jha/assessments/project-details");
+  };
 
   useEffect(() => {
     fetchData()

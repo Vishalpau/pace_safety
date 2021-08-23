@@ -305,7 +305,7 @@ const ProjectAreaHazards = () => {
 
   const classes = useStyles();
   return (
-    <PapperBlock title="Job Details" icon="ion-md-list-box">
+    <PapperBlock title="Project Area Hazard" icon="ion-md-list-box">
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
