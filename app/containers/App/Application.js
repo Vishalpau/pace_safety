@@ -144,6 +144,15 @@ import {
   LessonsLearned,
   Prints,
   Setting,
+  Jha,
+  JhaSummary,
+  JhaAssessmentsForms,
+  JhaJobDetails,
+  JhaProjectAreaHazards,
+  JhaAssessment,
+  JhaDocumentNotification,
+  JhaLessonsLearned,
+  JhaApprovals,
   Comments,
 } from "../pageListAsync";
 
@@ -532,6 +541,18 @@ function Application(props) {
         <Route path="/app/pages/aha/assessments/DocumentsNotifications/:id" exact component={DocumentNotification} />
         <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
         <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
+
+        {/* Jha  */}
+
+        <Route path="/app/pages/jha" exact component={Jha} />
+        <Route path="/app/pages/jha/jha-summary" exact component={JhaSummary} />
+        <Route path="/app/pages/jha/assessments" exact component={JhaAssessmentsForms} />
+        <Route path="/app/pages/jha/assessments/project-details" exact component={JhaJobDetails} />
+        <Route path="/app/pages/jha/assessments/project-area-hazards" exact component={JhaProjectAreaHazards} />
+        <Route path="/app/pages/jha/assessments/assessment" exact component={JhaAssessment} />
+        <Route path="/app/pages/jha/assessments/DocumentsNotifications" exact component={JhaDocumentNotification} />
+        <Route path="/app/pages/jha/approvals/approvals" exact component={JhaApprovals} />
+        <Route path="/app/pages/jha/lessons-learned/lessons-learned" exact component={JhaLessonsLearned} />
 
         {/* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />
