@@ -514,7 +514,6 @@ const Summary = (props) => {
       setMessageType("warning")
     }
     else {
-      alert(evidencesData)
       handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)
     }
   }
