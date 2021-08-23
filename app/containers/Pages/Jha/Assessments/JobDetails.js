@@ -1,16 +1,17 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
-  Grid, Typography, TextField, Button
+  Grid, Typography, TextField, Button, Select,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputLabel from "@material-ui/core/InputLabel";
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -26,9 +27,13 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
+import { useParams, useHistory } from 'react-router';
+import moment from "moment";
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
+import JobDetailsValidate from '../Validation/JobDetailsValidate';
+import api from "../../../../utils/axios";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -111,7 +116,100 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const JobDetails = () => {
-  // class ObservationInitialNotification extends Component {
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
+
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+
+  var struct = "";
+  for (var i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+
+  const fkProjectStructureIds = struct.slice(0, -1);
+
+  const [form, setForm] = useState(
+    {
+      "fkCompanyId": parseInt(fkCompanyId),
+      "fkProjectId": parseInt(project.projectId),
+      "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+      "workArea": "string",
+      "location": "",
+      "jhaAssessmentDate": "2021-08-20",
+      "permitToPerform": "",
+      "permitNumber": "",
+      "jhaNumber": "string",
+      "jobTitle": "",
+      "description": "",
+      "workStopCondition": "string",
+      "department": "",
+      "additionalRemarks": "string",
+      "classification": "string",
+      "jobOrderNumber": "string",
+      "supervisorName": "",
+      "emergencyNumber": "",
+      "evacuationAssemblyPoint": "",
+      "wrpApprovalUser": "string",
+      "wrpApprovalDateTime": null,
+      "picApprovalUser": "string",
+      "picApprovalDateTime": "2021-08-20T09:01:02.938Z",
+      "signedUser": "string",
+      "signedDateTime": "2021-08-20T09:01:02.938Z",
+      "anyLessonsLearnt": "Yes",
+      "lessonLearntDetails": "string",
+      "lessonLearntUserName": "string",
+      "jhaStatus": "string",
+      "jhaStage": "string",
+      "badgeNumber": "string",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "source": "Web",
+      "vendor": "string",
+      "vendorReferenceId": "string"
+    }
+  )
+  const { id } = useParams();
+  const history = useHistory();
+  const [error, setError] = useState({})
+
+  // fecth jha data
+  const fetchJhaData = async () => {
+    const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/`)
+    const result = res.data.data.results;
+    console.log(result)
+    await setForm(result)
+  }
+
+  // fetching jha team data
+  const fetchTeamData = async () => {
+    const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`)
+    const result = res.data.data.results.results
+    console.log(result)
+    await setTeamForm(result)
+    console.log(result)
+  }
+
+  // fetching company deatils
+
+  const areaName = [
+    'P1 - WA1',
+    'P1 - WA2',
+  ];
 
   const department = [
     {
@@ -140,18 +238,104 @@ const JobDetails = () => {
     },
   ];
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const handleSubmit = async (e) => {
+    // const { error, isValid } = JobDetailsValidate(form);
+    // await setError(error);
+    // if (!isValid) {
+    //   return "Data is not valid";
+    // }
+    if (id) {
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+      let jhaCreateID = res.data.data.results.id
+      for (let i = 0; i < Teamform.length; i++) {
+        if (Teamform[i].id) {
+          const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
+        } else {
+          Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
+          const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
+          if (res.status === 200) {
+            history.push(`${JHA_FORM["Project Area Hazards"]}`)
+          }
+        }
+      }
+      if (res.status === 200) {
+        history.push(`${JHA_FORM["Project Area Hazards"]}`)
+      }
+    } else {
+      const res = await api.post("/api/v1/jhas/", form)
+      if (res.status === 201) {
+        let fkJHAId = res.data.data.results.id
+        localStorage.setItem("fkJHAId", fkJHAId)
+        for (let i = 0; i < Teamform.length; i++) {
+          Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
+          const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
+        }
+        history.push(`${JHA_FORM["Project Area Hazards"]}`)
+      }
+    }
+  }
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+  const [Teamform, setTeamForm] = useState([{
+    "teamName": "",
+    "status": "Active",
+    "createdBy": parseInt(userId),
+    "fkJHAId": 0
+  }]);
+
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleTeamName = (e, key) => {
+    const temp = [...Teamform];
+    const value = e.target.value;
+    temp[key]["teamName"] = value;
+    setTeamForm(temp);
   };
 
+  const handleAdd = (e) => {
+    if (Object.keys(Teamform).length < 100) {
+      setTeamForm([...Teamform, {
+        "teamName": "",
+        "status": "Active",
+        "createdBy": parseInt(userId),
+        "fkJHAId": 0
+      }]);
+    }
+  };
+
+  const handelRemove = async (e, index) => {
+
+    if (Teamform.length > 1) {
+      if (Teamform[index].id !== undefined) {
+        const res = await api.delete(
+          `/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/${Teamform[index].id}/`
+        );
+      }
+      let temp = Teamform;
+      let newData = Teamform.filter((item, key) => key !== index);
+      await setTeamForm(newData);
+    };
+  }
+
   const classes = useStyles();
+
+  const handelCallBack = async () => {
+    // await fetchCallBack()
+    if (id) {
+      console.log(id)
+      await fetchJhaData()
+      await fetchTeamData()
+    }
+  }
+
+  useEffect(() => {
+    handelCallBack()
+  }, []);
   return (
     <PapperBlock title="Job Details" icon="ion-md-list-box">
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
+
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Project
@@ -160,6 +344,7 @@ const JobDetails = () => {
                 A23-ERT1236 - NTPC
               </Typography>
             </Grid>
+
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Unit
@@ -168,6 +353,8 @@ const JobDetails = () => {
                 A23-ERT1236 - NTPC
               </Typography>
             </Grid>
+
+            {/* job title */}
             <Grid
               item
               md={12}
@@ -178,12 +365,15 @@ const JobDetails = () => {
                 label="Job Title"
                 name="jobtitle"
                 id="jobtitle"
-                defaultValue=""
+                value={form.jobTitle ? form.jobTitle : ""}
                 fullWidth
+                onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* location  */}
             <Grid
               item
               md={12}
@@ -195,11 +385,17 @@ const JobDetails = () => {
                 name="worklocation"
                 id="worklocation"
                 defaultValue=""
+                value={form.location ? form.location : ""}
+                // error={error.location}
+                // helperText={error.location ? error.location : ""}
                 fullWidth
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* approval time */}
             <Grid
               item
               md={6}
@@ -211,13 +407,23 @@ const JobDetails = () => {
                   className={classes.formControl}
                   fullWidth
                   label="Date & Time*"
-                  value={selectedDate}
-                  onChange={handleDateChange}
+                  value={form.wrpApprovalDateTime}
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      wrpApprovalDateTime: moment(e).toISOString(),
+                    });
+                  }}
+                  format="yyyy/MM/dd HH:mm"
+                  inputVariant="outlined"
+
                   inputVariant="outlined"
                   disableFuture="true"
                 />
               </MuiPickersUtilsProvider>
             </Grid>
+
+            {/* perform to permit */}
             <Grid
               item
               md={6}
@@ -225,16 +431,19 @@ const JobDetails = () => {
               className={classes.formBox}
             >
               <TextField
-                label="Permit to Work#"
+                label="Permit to Work"
                 name="permitwork"
                 id="permitwork"
                 multiline
-                defaultValue=""
+                value={form.permitToPerform ? form.permitToPerform : ""}
                 fullWidth
                 variant="outlined"
+                onChange={(e) => setForm({ ...form, permitToPerform: e.target.value })}
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* scope work */}
             <Grid
               item
               md={12}
@@ -247,57 +456,73 @@ const JobDetails = () => {
                 id="scopeofwork"
                 multiline
                 rows={4}
-                defaultValue=""
+                value={form.description ? form.description : ""}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* team */}
             <Grid
               item
               md={12}
               xs={12}
               className={classes.createHazardbox}
-              style={{ marginTop: '12px', marginBottom: '10px' }}
+              style={{ marginTop: '12px' }}
             >
               <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={11}
-              className={classes.createHazardbox}
-            >
-              <TextField
-                label="Team Name"
-                name="arename"
-                id="arename"
-                multiline
-                defaultValue=""
-                fullWidth
-                variant="outlined"
-                className={classes.formControl}
-              />
-            </Grid>
-            <Grid item md={1} className={classes.createHazardbox}>
-              <IconButton
-                variant="contained"
-                color="primary"
+            {Teamform.map((value, index) => (<>
+              <Grid
+                item
+                md={6}
+                xs={11}
+                className={classes.createHazardbox}
               >
-                <DeleteForeverIcon />
-              </IconButton>
-            </Grid>
 
+                <TextField
+                  label="Team Name"
+                  margin="dense"
+                  name="arename"
+                  id="arename"
+                  multiline
+                  value={Teamform[index].teamName || ""}
+                  fullWidth
+                  variant="outlined"
+                  className={classes.formControl}
+                  onChange={(e) => { handleTeamName(e, index) }
+                  }
+                />
+
+
+              </Grid>
+              {Teamform.length > 1 ?
+                (<Grid item md={1} className={classes.createHazardbox}>
+                  <IconButton
+                    variant="contained"
+                    color="primary"
+                    onClick={(e) => { handelRemove(e, index) }}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </Grid>) : null}
+
+            </>))}
             <Grid item md={12} className={classes.createHazardbox}>
               <Button
                 variant="contained"
                 color="primary"
                 startIcon={<AddCircleIcon />}
                 className={classes.button}
+                onClick={() => { handleAdd() }}
               >
                 Add
               </Button>
             </Grid>
+
+            {/* emergency contact details */}
             <Grid
               item
               md={12}
@@ -307,35 +532,36 @@ const JobDetails = () => {
             >
               <Typography variant="h6" gutterBottom className={classes.labelName}>Emergency Contact Details</Typography>
             </Grid>
+
+            {/* supervisor */}
             <Grid
               item
               md={6}
               xs={11}
-            //className={classes.createHazardbox}
             >
               <TextField
                 label="Supervisor"
                 name="supervisor"
                 id="supervisor"
                 multiline
-                defaultValue=""
+                value={form.supervisorName ? form.supervisorName : ""}
                 fullWidth
                 variant="outlined"
+                onChange={(e) => setForm({ ...form, supervisorName: e.target.value })}
                 className={classes.formControl}
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={11}
-            //className={classes.createHazardbox}
-            >
+
+            {/* department */}
+            <Grid item md={6} xs={11}>
               <TextField
                 label="Department"
                 name="department"
                 id="department"
                 select
                 fullWidth
+                value={form.department ? form.department : ""}
+                onChange={(e) => setForm({ ...form, department: e.target.value })}
                 variant="outlined"
               >
                 {department.map((option) => (
@@ -345,62 +571,70 @@ const JobDetails = () => {
                 ))}
               </TextField>
             </Grid>
+
+            {/* emergency number */}
             <Grid
               item
               md={6}
               xs={11}
-            //className={classes.createHazardbox}
             >
               <TextField
                 label="Emergency Phone Number"
                 name="emergencyphonenumber"
                 id="emergencyphonenumber"
                 multiline
-                defaultValue=""
+                value={form.emergencyNumber ? form.emergencyNumber : ""}
+                onChange={(e) => setForm({ ...form, emergencyNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* evacuation assembly point       */}
             <Grid
               item
               md={6}
               xs={11}
-            //className={classes.createHazardbox}
             >
               <TextField
                 label="Evacuation assembly point"
                 name="evacuationassemblypoint"
                 id="evacuationassemblypoint"
                 multiline
-                defaultValue=""
+                value={form.evacuationAssemblyPoint ? form.evacuationAssemblyPoint : ""}
+                onChange={(e) => setForm({ ...form, evacuationAssemblyPoint: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* permit number       */}
             <Grid
               item
               md={6}
               xs={11}
-            //className={classes.createHazardbox}
             >
               <TextField
                 label="Permit number"
                 name="permitnumber"
                 id="permitnumber"
                 multiline
-                defaultValue=""
+                value={form.permitNumber ? form.permitNumber : ""}
+                onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
               />
             </Grid>
+
+            {/* order number */}
             <Grid
               item
               md={6}
               xs={11}
-            //className={classes.createHazardbox}
+
             >
               <TextField
                 label="Order number"
@@ -408,6 +642,7 @@ const JobDetails = () => {
                 id="ordernumber"
                 multiline
                 defaultValue=""
+                onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
@@ -419,7 +654,7 @@ const JobDetails = () => {
               xs={12}
               style={{ marginTop: '15px' }}
             >
-              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
+              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn} onClick={(e) => handleSubmit()}>Next</Button>
             </Grid>
           </Grid>
         </Col>
