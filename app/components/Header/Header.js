@@ -274,13 +274,14 @@ function Header(props) {
     let selectBreakDown=[]
     let data = projectListData[key];
     await dispatch(projectName(data));
+    
+    await dispatch(breakDownDetails([]))
+    await setIsPopUpOpen(true)
+    localStorage.setItem("projectName", JSON.stringify(data));
     localStorage.setItem(
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
-    await dispatch(breakDownDetails([]))
-    await setIsPopUpOpen(true)
-    localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
     setCompanyOpen(false);
   };
