@@ -113,13 +113,6 @@ const Details = () => {
     );
     let investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      if (investigationApiData.rcaRecommended != "") {
-        setForm({
-          ...form,
-          rcaRecommended: investigationApiData.rcaRecommended,
-        });
-        await handelRcaRecommended("a", investigationApiData.rcaRecommended);
-      }
       setInvestigationData({
         rcaRecommended: investigationApiData.rcaRecommended,
         startData: investigationApiData.srartDate,
@@ -222,15 +215,28 @@ const Details = () => {
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
     localStorage.setItem("details", true)
+    localStorage.setItem("rcaRecommended", "Yes")
   };
+
+  const rcaRecommendedValue = () => {
+    if (localStorage.getItem("rcaRecommended") == "No") {
+      if (investigationData.rcaRecommended != "") {
+        setForm({
+          ...form,
+          rcaRecommended: investigationApiData.rcaRecommended,
+        });
+        handelRcaRecommended("a", investigationApiData.rcaRecommended);
+      }
+    } else {
+      return form.rcaRecommended || ""
+    }
+  }
 
   const handelCallBack = async () => {
     await handelUpdateCheck();
     await fetchIncidentData();
     await setHideArray(localStorage.getItem("deleteForm"));
-    if (localStorage.setItem("details") == null) {
-      await handelInvestigationData();
-    }
+    await handelInvestigationData();
   }
 
   useEffect(() => {
@@ -294,6 +300,7 @@ const Details = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
+              {console.log(investigationData["classification"])}
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Level of classification
               </Typography>
@@ -303,6 +310,7 @@ const Details = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
+              {console.log(rcaRecommendedValue())}
               <FormControl
                 variant="outlined"
                 required
@@ -314,7 +322,7 @@ const Details = () => {
                   id="project-name"
                   labelId="project-name-label"
                   label="RCA recommended"
-                  value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
+                  value={rcaRecommendedValue()}
                   disabled={rcaDisable != "" ? true : false}
                 >
                   {RCAOPTION.map((selectValues) => (

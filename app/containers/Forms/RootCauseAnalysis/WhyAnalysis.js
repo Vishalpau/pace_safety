@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
 
@@ -171,14 +171,14 @@ const WhyAnalysis = () => {
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${CLOSE_OUT_FORM["Close out"]}${putId.current}`)
+        history.push(SUMMERY_FORM["Summary"]);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${CLOSE_OUT_FORM["Close out"]}${putId.current}`)
+        history.push(SUMMERY_FORM["Summary"]);
       }
     }
     localStorage.setItem("RootCause", "Done");

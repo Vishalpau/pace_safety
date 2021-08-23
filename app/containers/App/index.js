@@ -128,7 +128,7 @@ function App() {
           <Route component={Auth} />
           <Route component={NotFound} />
         </Switch>
-      ) : null}
+       ) : null} 
     </ThemeWrapper>
   );
 }

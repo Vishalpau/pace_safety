@@ -35,7 +35,8 @@ import {
     access_token,
     ACCOUNT_API_URL,
     HEADER_AUTH,
-    CLOSE_OUT_FORM
+    CLOSE_OUT_FORM,
+    SUMMERY_FORM
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
@@ -155,18 +156,18 @@ const CloseOut = () => {
         temp.updatedBy = parseInt(userId)
 
         try {
-            const res = await api.put(
-                `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-                temp
-            );
-            if (res.status === 200) {
-                let viewMode = {
-                    initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
-                    , closeout: true
-                }
-                dispatch(tabViewMode(viewMode));
-                history.push(`${LESSION_LEARNED_FORM["Lessons learnt"]}${id}`)
-            }
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+          if(res.status===200){
+            let viewMode = {
+                initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
+                ,closeout:true
+              }
+              dispatch(tabViewMode(viewMode));
+              history.push(SUMMERY_FORM["Summary"])
+          }
         } catch (error) {
             console.log(error)
         }

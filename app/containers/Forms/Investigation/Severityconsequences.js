@@ -178,6 +178,9 @@ const InvestigationOverview = () => {
     }
     localStorage.setItem("WorkerDataFetched", "Yes");
     localStorage.removeItem("WorkerPost");
+    if (localStorage.getItem("rcaRecommended") !== null && localStorage.getItem("rcaRecommended") != "Yes") {
+      localStorage.setItem("rcaRecommended", "No")
+    }
   };
 
   const handelDeaultValue = (value) => {

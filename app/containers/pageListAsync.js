@@ -703,10 +703,6 @@ export const JhaSummary = loadable(() => import("./Pages/Jha/JhaSummary"), {
   fallback: <Loading />,
 });
 
-export const JhaAssessmentsForms = loadable(() => import("./Pages/Jha/Assessments/AssessmentsForms"), {
-  fallback: <Loading />,
-});
-
 export const JhaJobDetails = loadable(() => import("./Pages/Jha/Assessments/JobDetails"), {
   fallback: <Loading />,
 });
