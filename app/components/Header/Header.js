@@ -275,15 +275,16 @@ function Header(props) {
     let data = projectListData[key];
     await dispatch(projectName(data));
     
-    await dispatch(breakDownDetails([]))
+    await dispatch(breakDownDetails(selectBreakDown))
     await setIsPopUpOpen(true)
+    setProjectOpen(false);
+    setCompanyOpen(false);
     localStorage.setItem("projectName", JSON.stringify(data));
     localStorage.setItem(
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
-    setProjectOpen(false);
-    setCompanyOpen(false);
+    
   };
 
   const handleProjectList = () => {

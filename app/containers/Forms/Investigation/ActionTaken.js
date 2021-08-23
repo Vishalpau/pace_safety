@@ -79,7 +79,7 @@ const ActionTaken = () => {
       }
       localStorage.setItem("viewMode", JSON.stringify(viewMode))
       dispatch(tabViewMode(viewMode));
-      history.push(SUMMERY_FORM['Summary']);
+      history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
       
     }
   };

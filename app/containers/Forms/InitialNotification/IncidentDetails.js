@@ -474,6 +474,7 @@ const IncidentDetails = (props) => {
           let temp = { ...form };
           temp = result;
           setForm(temp);
+          await setIsLoading(true);
         }
 
         // const user = localStorage.getItem({})
@@ -490,8 +491,6 @@ const IncidentDetails = (props) => {
         if (result.isPersonAffected !== "Yes") {
           hideAffect.push("People affected");
         }
-        await setIsLoading(true);
-        await fetchBreakDownData(result.fkProjectStructureIds);
       } catch (error) {
         setIsNext(true);
         setMessage("Something went worng!");
@@ -564,7 +563,16 @@ const IncidentDetails = (props) => {
       }
     }
   };
-
+useEffect(()=>{
+  fetchContractorValue();
+  fetchIncidentTypeValue();
+  fetchSubContractorValue();
+  fetchPersonAffectValue();
+  fetchPropertiesValue();
+  fetchEquipmentAffectValue();
+  fetchEnviornmentAffectValue();
+  fetchIncidentsData();
+},[])
 
   // fetch breakdown Data
   const fetchCallBack = async () => {
@@ -650,7 +658,7 @@ const IncidentDetails = (props) => {
                 ]))
               }
 
-              setIsLoading(true);
+            
             })
             .catch(function (error) {
               console.log(error);
@@ -748,14 +756,7 @@ const IncidentDetails = (props) => {
 
   useEffect(() => {
     // fetchListData();
-    fetchContractorValue();
-    fetchIncidentTypeValue();
-    fetchSubContractorValue();
-    fetchPersonAffectValue();
-    fetchPropertiesValue();
-    fetchEquipmentAffectValue();
-    fetchEnviornmentAffectValue();
-    fetchIncidentsData();
+    
     fetchCallBack();
   }, [props.initialValues.breakDown]);
 
@@ -1318,4 +1319,3 @@ const IncidentDetailsInit = connect((state) => ({
 }))(IncidentDetails);
 
 export default IncidentDetailsInit;
-// export default IncidentDetails;
