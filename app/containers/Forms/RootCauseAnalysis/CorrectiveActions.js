@@ -176,7 +176,7 @@ const CorrectiveAction = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
-      history.push(`${CLOSE_OUT_FORM["Close out"]}${putId.current}`)
+      history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
     } else if (navigateType == "previous") {
       history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Preventive actions"]}${putId.current}`)
     }

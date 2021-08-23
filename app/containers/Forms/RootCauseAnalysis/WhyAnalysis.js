@@ -171,14 +171,14 @@ const WhyAnalysis = () => {
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(SUMMERY_FORM["Summary"]);
+        history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(SUMMERY_FORM["Summary"]);
+        history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
       }
     }
     localStorage.setItem("RootCause", "Done");

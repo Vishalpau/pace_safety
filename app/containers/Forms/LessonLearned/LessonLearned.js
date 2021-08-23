@@ -228,7 +228,7 @@ const LessionLearned = () => {
 
         }
         dispatch(tabViewMode(viewMode));
-        history.push(SUMMERY_FORM['Summary']);
+        history.push(`${SUMMERY_FORM['Summary']}${id}/`);
         
       }
     }
