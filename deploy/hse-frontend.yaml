@@ -21,5 +21,5 @@ spec:
         ports:
         - containerPort: 8087
           name: frontend-port
-      nodeSelector:
-        beta.kubernetes.io/instance-type: t3.xlarge
+      #nodeSelector:
+      #  beta.kubernetes.io/instance-type: t3.xlarge
