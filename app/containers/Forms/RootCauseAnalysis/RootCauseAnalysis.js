@@ -52,6 +52,7 @@ const RootCauseAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
   const dispatch = useDispatch()
+  const [fkid, setFkid] = useState("")
 
   const [form, setForm] = useState({
     causeOfIncident: "",
@@ -84,9 +85,13 @@ const RootCauseAnalysis = () => {
     const incidentId = !isNaN(lastItem)
       ? lastItem
       : localStorage.getItem("fkincidentId");
+
+    setFkid(incidentId)
+
     const previousData = await api.get(
       `/api/v1/incidents/${incidentId}/rootcauses/`
     );
+
     const allApiData = previousData.data.data.results[0];
 
     const investigationpreviousData = await api.get(
@@ -171,14 +176,14 @@ const RootCauseAnalysis = () => {
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(SUMMERY_FORM["Summary"]);
+        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
-        history.push(SUMMERY_FORM["Summary"]);
+        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       }
     }
     localStorage.setItem("RootCause", "Done");

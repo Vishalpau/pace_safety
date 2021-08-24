@@ -116,9 +116,7 @@ const AdditionalDetails = () => {
 
         }
         dispatch(tabViewMode(viewMode));
-        history.push(
-          SUMMERY_FORM["Summary"]
-        );
+        history.push(`${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`);
       }
     } else if (additionalDetailList.length == 25) {
       {
@@ -139,9 +137,7 @@ const AdditionalDetails = () => {
 
           }
           dispatch(tabViewMode(viewMode));
-          history.push(
-            SUMMERY_FORM["Summary"]
-          );
+          history.push(`${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`);
         }
       }
     } else {
@@ -160,7 +156,7 @@ const AdditionalDetails = () => {
 
       }
       dispatch(tabViewMode(viewMode));
-      history.push(SUMMERY_FORM["Summary"]);
+      history.push(`${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`);
     }
   };
 

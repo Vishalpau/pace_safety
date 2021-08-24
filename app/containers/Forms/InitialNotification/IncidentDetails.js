@@ -131,7 +131,7 @@ const IncidentDetails = (props) => {
   const selectBreakdown =
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
+      : [];
   let struct = "";
   for (const i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -265,19 +265,22 @@ const IncidentDetails = (props) => {
         }
       } else {
         // Create case if id is not null and means it is an add new registration case.
-        const { error, isValid } = validate(form);
+        const { error, isValid } = validate(form,selectDepthAndId);
         await setError(error);
-        if (fkProjectStructureIds === "") {
-          alert("Please select Level of phase.")
+        if (selectDepthAndId.length === 0) {
+          // alert("Please select Level of phase.")
           setIsNext(true);
         } else {
           if (isValid === true) {
+                const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+                let fkProjectStructureId = uniqueProjectStructure.map(depth => {     
+                  return depth;    
+                 }).join(':')
             const formData = {
               fkCompanyId: parseInt(fkCompanyId),
               fkProjectId: parseInt(project.projectId),
 
-              fkProjectStructureIds:
-                fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+              fkProjectStructureIds:fkProjectStructureId.toString(),
 
               incidentNumber: "",
               incidentType: form.incidentType,
@@ -464,7 +467,7 @@ const IncidentDetails = (props) => {
   // fetch incident details data
   const fetchIncidentsData = async () => {
     if (!id) {
-      await setIsLoading(true);
+      // await setIsLoading(true);
     } else {
       try {
         const res = await api.get(`/api/v1/incidents/${id}/`);
@@ -474,6 +477,8 @@ const IncidentDetails = (props) => {
           let temp = { ...form };
           temp = result;
           setForm(temp);
+          // await fetchBreakDownData(result.fkProjectStructureIds)
+          // await setIsLoading(true);
         }
 
         // const user = localStorage.getItem({})
@@ -490,8 +495,7 @@ const IncidentDetails = (props) => {
         if (result.isPersonAffected !== "Yes") {
           hideAffect.push("People affected");
         }
-        await setIsLoading(true);
-        await fetchBreakDownData(result.fkProjectStructureIds);
+       
       } catch (error) {
         setIsNext(true);
         setMessage("Something went worng!");
@@ -501,169 +505,6 @@ const IncidentDetails = (props) => {
     }
   };
 
-  const handleBreakdown = async (e, index, label) => {
-
-    const projectData = JSON.parse(localStorage.getItem('projectName'))
-
-    // const temp = [...breakdown1ListData]
-
-    // const value = e.target.value
-    let selectBreakDown = JSON.parse(localStorage.getItem('selectBreakDown')) || []
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    temp[index - 1][`selectValue`] = value;
-
-
-    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
-      // const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
-      const removeBreakDownList = temp.slice(0, index)
-      console.log(removeBreakDownList, temp.slice(0, index))
-      // removeBreakDownList[index-1][`selectValue`] = "";
-      console.log({ removeBreakDownList: removeBreakDownList })
-      setBreakdown1ListData(removeBreakDownList)
-
-    }
-
-    for (var key in projectData.projectName.breakdown) {
-
-      if (key == index) {
-
-        await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-          }${value}`)
-          .then(function (response) {
-            if (response.status === 200) {
-              console.log(response.data)
-              // if (
-              //   breakdown1ListData.filter(
-              //     (item) =>
-              //       item.breakdownLabel ===
-              //       projectData.projectName.breakdown[key].structure[0].name
-              //   ).length > 0
-              // ) {
-              //   console.log(breakdown1ListData)
-              //   return;
-              // } else {
-              setBreakdown1ListData([
-                ...breakdown1ListData,
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[key].structure[0]
-                      .name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: value,
-                  index: index
-                },
-              ]);
-              console.log(breakdown1ListData, new Date())
-            }
-            // }
-          })
-          .catch(function (error) {
-
-          });
-      }
-    }
-  };
-
-
-  // fetch breakdown Data
-  const fetchCallBack = async () => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const select = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
-
-    for (var i in select) {
-      let selectId = select[i].id;
-      let selectDepth = select[i].depth
-      setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
-    }
-    if (select.length > 0) {
-
-      for (var key in projectData.projectName.breakdown) {
-
-        if (key == select.length) {
-          try {
-            var config = {
-              method: "get",
-              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-                }${select[key - 1].id}`,
-              headers: HEADER_AUTH,
-            };
-
-
-            await Axios(config)
-              .then(async (response) => {
-
-                await setBreakdown1ListData([
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[key].structure[0].name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: "",
-                    index: key
-                  },
-                ]);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          } catch (err) {
-            // setBreakdown1ListData([])
-            ;
-          }
-        }
-        //  else { setBreakdown1ListData([]) }
-      }
-    } else {
-      for (var key in projectData.projectName.breakdown) {
-
-        if (key == 0) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-              }`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(async (response) => {
-
-              await setBreakdown1ListData([
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[0].structure[0].name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: "",
-                  index: 0
-                },
-              ]);
-              if (JSON.parse(localStorage.getItem("selectBreakDown"))) {
-                await dispatch(levelBDownDetails([]))
-              } else {
-                await dispatch(levelBDownDetails([
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[0].structure[0]
-                        .name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: "",
-                    index: 0
-                  },
-                ]))
-              }
-
-              setIsLoading(true);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        }
-      }
-    }
-
-    // const data = props.initialValues.levelBreakDown || JSON.parse(localStorage.getItem('levelBreakDown'))
-    // await setBreakdown1ListData(data)
-    const selectbreakdown = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
-    await setSelectBreakDown(selectbreakdown)
-  };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
 
@@ -721,15 +562,159 @@ const IncidentDetails = (props) => {
 
           })
           .catch((error) => {
-
+            console.log(error)
             setIsNext(true);
           });
       }
     }
-    dispatch(breakDownDetails(selectBreakDown));
-
-    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
+
+
+useEffect(()=>{
+  fetchContractorValue();
+  fetchIncidentTypeValue();
+  fetchSubContractorValue();
+  fetchPersonAffectValue();
+  fetchPropertiesValue();
+  fetchEquipmentAffectValue();
+  fetchEnviornmentAffectValue();
+  fetchIncidentsData();
+},[])
+
+  // fetch breakdown Data
+  const fetchCallBack = async (select,projectData) => {
+    for (var i in select) {
+      let selectId = select[i].id;
+      let selectDepth = select[i].depth
+      setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
+    }
+    if (select!==null?select.length > 0:false) {
+      
+      for (var key in projectData.projectName.breakdown) {
+
+        if (key == select.length) {
+          try {
+            var config = {
+              method: "get",
+              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                }${select[key - 1].id}`,
+              headers: HEADER_AUTH,
+            };
+       
+            await Axios(config)
+              .then(async (response) => {
+
+                await setBreakdown1ListData([
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[key].structure[0].name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: "",
+                    index: key
+                  },
+                ]);
+                await setIsLoading(true);
+              })
+              .catch(function (error) {
+              });
+          } catch (err) {
+            ;
+          }
+        }
+      }
+    } else {
+      for (var key in projectData.projectName.breakdown) {
+       
+        if (key == 0) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+              }`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(async (response) => {
+            
+              await setBreakdown1ListData([
+                {
+                  breakdownLabel:
+                    projectData.projectName.breakdown[0].structure[0].name,
+                  breakdownValue: response.data.data.results,
+                  selectValue: "",
+                  index: 0
+                },
+              ]);
+              await setIsLoading(true);
+            })
+            .catch(function (error) {
+            });
+        }
+      }
+    }
+  };
+
+  const handleBreakdown = async (e, index, label) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const value = e.target.value;
+    let temp = [...breakdown1ListData]
+    setBreakdown1ListData(temp)
+    if (selectDepthAndId.filter(filterItem => filterItem.slice(0,2) === `${index}L`).length > 0) {
+      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown'))!==null?JSON.parse(localStorage.getItem('selectBreakDown')):[]
+      if(breakDownValue.length>0){
+        const removeBreakDownList = temp.slice(0, index-1)
+        temp = removeBreakDownList
+      }else{
+        const removeBreakDownList = temp.slice(0, index)
+        temp = removeBreakDownList
+      }
+     
+      
+    } 
+    if(projectData.projectName.breakdown.length !== index){
+    for (var key in projectData.projectName.breakdown) {
+      if (key == index) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${value}`,
+          headers: HEADER_AUTH,
+        };
+        await Axios(config)
+          .then(function (response) {
+            if (response.status === 200) {
+
+              if (
+                temp.filter(
+                  (item) =>
+                    item.breakdownLabel ===
+                    projectData.projectName.breakdown[key].structure[0].name
+                ).length > 0
+              ) {
+                return;
+              } else {
+                setBreakdown1ListData([
+                  ...temp,
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[index].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: value,
+                    index:index
+                  },
+                ]);
+              }
+            }
+          })
+          .catch(function (error) {
+
+          });
+      }
+    }
+  }else{
+  }
+  };
+
 
   //  set state for hide sidebar
   const handleHideAffect = (e, name, key) => {
@@ -748,15 +733,14 @@ const IncidentDetails = (props) => {
 
   useEffect(() => {
     // fetchListData();
-    fetchContractorValue();
-    fetchIncidentTypeValue();
-    fetchSubContractorValue();
-    fetchPersonAffectValue();
-    fetchPropertiesValue();
-    fetchEquipmentAffectValue();
-    fetchEnviornmentAffectValue();
-    fetchIncidentsData();
-    fetchCallBack();
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const select = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
+  
+    if(select===null?select.length === 0:false){
+      setBreakdown1ListData([])
+      selectDepthAndId([])
+    }
+    fetchCallBack(select,projectData); 
   }, [props.initialValues.breakDown]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -784,21 +768,7 @@ const IncidentDetails = (props) => {
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
-              {/* {selectBreakdown? selectBreakdown.map((item, index) =>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="h6"
-                    className={Type.labelName}
-                    gutterBottom
-                    id="project-name-label"
-                  >
-                    {item.label}
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {item.name}
-                  </Typography>
-                </Grid>) : 
-               null} */}
+              
               {selectBreakdown && selectBreakdown.map((selectBreakdown, value) => <Grid item xs={6}>
 
                 <Typography
@@ -821,8 +791,9 @@ const IncidentDetails = (props) => {
                   <FormControl
                     key={index}
                     variant="outlined"
-                    required={index === 0 ? true : false}
+                    required={selectDepthAndId.length === 0? true:false}
                     className={classes.formControl}
+                    error={error && error[`projectStructure`]}
                   >
                     <InputLabel id="filter3-label">
                       {item.breakdownLabel}
@@ -832,8 +803,7 @@ const IncidentDetails = (props) => {
                       id="filter3"
                       // value={parseInt(item.selectValue) }
                       onChange={(e) => {
-
-                        handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
+                        handleBreakdown(e, parseInt(item.index)+ 1, item.breakdownLabel, item.selectValue)
 
                       }}
                       label="Phases"
@@ -854,6 +824,9 @@ const IncidentDetails = (props) => {
                         )
                         : null}
                     </Select>
+                    {error && error.projectStructure && (
+                    <FormHelperText>{error.projectStructure}</FormHelperText>
+                  )}
                   </FormControl>
 
                 </Grid>
@@ -1318,4 +1291,3 @@ const IncidentDetailsInit = connect((state) => ({
 }))(IncidentDetails);
 
 export default IncidentDetailsInit;
-// export default IncidentDetails;

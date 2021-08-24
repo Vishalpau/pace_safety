@@ -166,7 +166,7 @@ const CloseOut = () => {
                 ,closeout:true
               }
               dispatch(tabViewMode(viewMode));
-              history.push(SUMMERY_FORM["Summary"])
+              history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
           }
         } catch (error) {
             console.log(error)

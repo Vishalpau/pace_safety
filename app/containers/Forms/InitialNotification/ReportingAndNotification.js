@@ -373,7 +373,7 @@ const ReportingAndNotification = () => {
             };
             dispatch(tabViewMode(viewMode));
             
-            history.push(`${SUMMERY_FORM["Summary"]}`);
+            history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
           }
         } else {
           setIsnext(true);
