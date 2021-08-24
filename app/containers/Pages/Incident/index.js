@@ -181,7 +181,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-    const res = await api.get("api/v1/incidents/");
+    const res = await api.get("api/v1/incidents/list/");
     const selectBreakdown =props.projectName.breakDown
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -418,14 +418,14 @@ const fkProjectStructureIds = struct.slice(0, -1);
                             justifyContent={isDesktop ? "flex-end" : null}
                           >
                             <Chip
-                              avatar={<Avatar src="/images/pp_boy.svg" />}
-                              label="Admin"
+                              avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
+                              label={item[1]["username"]?item[1]["username"]:"Admin"}
                             />
                           </Box>
                         </Grid>
                       </Grid>
                     </Grid>
-
+                  
                     <Grid item xs={12}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={3}>
@@ -557,7 +557,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                         <AttachmentIcon fontSize="small" /> Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
+                        <ILink href="#">{item[1]["attachment_count"]}</ILink>
                       </Typography>
                     </Grid>
 
