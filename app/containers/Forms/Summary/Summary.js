@@ -58,6 +58,7 @@ import { useDispatch } from "react-redux";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
 import CloseOut from "../../SummaryDetails/CloseOut";
 import { Comments } from "../../pageListAsync";
+import AhaSummary from "../../Pages/Aha/AhaSummary";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -113,7 +114,8 @@ const Summary = (props) => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
-  const [isComments,setIsComments] = useState(false)
+  const [isComments,setIsComments] = useState(false);
+  const [isActivityHistory, setActivityHistory] = useState(false)
 
   const [formStatus, setFormStatus] = useState({
     initialNotificationCheck: "",
@@ -600,7 +602,7 @@ const Summary = (props) => {
           title={`Incident Number: ${incidents.incidentNumber}`}
           icon="ion-md-list-box"
         >
-          {isComments?null:
+          {isComments || isActivityHistory?null:
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
               {/* initital notificatin */}
@@ -733,7 +735,9 @@ const Summary = (props) => {
             <Grid container spacing={3}>
               <Grid item xs={12} md={9}>
                 {/* summary and part */}
-                {isComments?<Comments/>:
+                {
+                // isActivityHistory?<AhaSummary/>:
+                isComments?<Comments/>:
                 <>
                   {(() => {
                     if (
@@ -889,7 +893,7 @@ const Summary = (props) => {
                         <ListItemText primary="Comments" />
                       </ListItem>
 
-                      <ListItem button>
+                      <ListItem button onClick={()=> setActivityHistory(true)}>
                         <ListItemIcon>
                           <History />
                         </ListItemIcon>

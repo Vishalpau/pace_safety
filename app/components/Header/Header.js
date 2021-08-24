@@ -276,15 +276,16 @@ function Header(props) {
     await dispatch(projectName(data));
     
     await dispatch(breakDownDetails(selectBreakDown))
-    await setIsPopUpOpen(true)
+    // await setIsPopUpOpen(true)
     setProjectOpen(false);
     setCompanyOpen(false);
+   
     localStorage.setItem("projectName", JSON.stringify(data));
     localStorage.setItem(
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
-    
+    // handleClick()
   };
 
   const handleProjectList = () => {
@@ -387,7 +388,7 @@ function Header(props) {
               size="small"
               className={classesm.projectName}
               disabled={projectDisable}
-              //label=""
+              
               onClick={handleCompanyOpen}
             >
               {projectData !== null
@@ -470,7 +471,9 @@ function Header(props) {
                             className={classesm.cardContentBox}
                             key={index}
                           >
-                            <Card onClick={() => handleProjectName(index)}>
+                            <Card onClick={() => {
+                            
+                              handleProjectName(index)}}>
                               <CardActionArea
                                 className={classesm.cardActionAreaBox}
                               >
