@@ -34,6 +34,7 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
 import api from "../../../../utils/axios";
+import { handelJhaId } from "../Utils/checkValue"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -189,7 +190,8 @@ const JobDetails = () => {
 
   // fecth jha data
   const fetchJhaData = async () => {
-    const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/`)
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const result = res.data.data.results;
     console.log(result)
     await setForm(result)
@@ -197,7 +199,8 @@ const JobDetails = () => {
 
   // fetching jha team data
   const fetchTeamData = async () => {
-    const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`)
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const result = res.data.data.results.results
     console.log(result)
     await setTeamForm(result)
@@ -244,9 +247,8 @@ const JobDetails = () => {
     // if (!isValid) {
     //   return "Data is not valid";
     // }
-    if (id) {
+    if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-      let jhaCreateID = res.data.data.results.id
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
           const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
@@ -319,12 +321,8 @@ const JobDetails = () => {
   const classes = useStyles();
 
   const handelCallBack = async () => {
-    // await fetchCallBack()
-    if (id) {
-      console.log(id)
-      await fetchJhaData()
-      await fetchTeamData()
-    }
+    await fetchJhaData()
+    await fetchTeamData()
   }
 
   useEffect(() => {

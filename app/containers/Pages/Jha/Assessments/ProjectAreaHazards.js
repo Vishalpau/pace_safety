@@ -22,6 +22,7 @@ import {
 import MomentUtils from '@date-io/moment';
 import DateFnsUtils from '@date-io/date-fns';
 import { useDropzone } from 'react-dropzone';
+import { useParams, useHistory } from 'react-router';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -32,6 +33,9 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
 import api from "../../../../utils/axios";
 import { handelJhaId } from "../Utils/checkValue"
+import { TramOutlined } from '@material-ui/icons';
+
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -120,12 +124,16 @@ const ProjectAreaHazards = () => {
   const [form, setForm] = useState([])
   const [checkGroups, setCheckListGroups] = useState([])
   const [selectedOptions, setSelectedOption] = useState({})
+  const [fetchOption, setFetchedOptions] = useState([])
+  const history = useHistory()
 
   const handelUpdate = async () => {
     const temp = {}
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const apiData = res.data.data.results.results
+    setForm(apiData)
+    setFetchedOptions(apiData)
     apiData.map((value) => {
       if (value.hazard in temp) {
         temp[value.hazard].push(value.risk)
@@ -138,7 +146,9 @@ const ProjectAreaHazards = () => {
 
   const checkList = async () => {
     const temp = {}
-    const res = await api.get("/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/1/")
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
@@ -154,13 +164,16 @@ const ProjectAreaHazards = () => {
     setCheckListGroups(temp)
   }
 
-  const handlePhysicalHazards = (e, hazard_value, risk_value) => {
-    let temp = form
-    let tempRemove = []
+  const handlePhysicalHazards = async (e, hazard_value, risk_value) => {
+    let temp = [...form]
     if (e.target.checked == false) {
       temp.map((jhaValue, index) => {
         if (jhaValue['risk'] === risk_value) {
           temp.splice(index, 1);
+          fetchOption.splice(index, 1);
+          if (jhaValue["id"] !== undefined) {
+            const res = api.delete(`/api/v1/jhas/${jhaValue["fkJhaId"]}/jobhazards/${jhaValue["id"]}/`)
+          }
         }
       })
     }
@@ -172,28 +185,45 @@ const ProjectAreaHazards = () => {
         "humanPerformanceAspects": "string",
         "status": "Active",
         "createdBy": 0,
-        "fkJhaId": localStorage.getItem("fkJHAId")
+        "fkJhaId": localStorage.getItem("fkJHAId"),
       })
     }
-    setForm(temp)
+    await setForm(temp)
   };
 
   const handelSelectOption = (hazard, risk) => {
-    if (hazard in selectedOptions) {
-      return selectedOptions[hazard].includes(risk)
+    for (let i = 0; i <= form.length; i++) {
+      if (form[i] != undefined && form[i]["hazard"] == hazard && form[i]["risk"] == risk) {
+        return true
+      }
+    }
+  }
+
+  const handelCheckPost = (hazard, risk) => {
+    for (let i = 0; i <= fetchOption.length; i++) {
+      if (fetchOption[i] != undefined && fetchOption[i]["hazard"] == hazard && fetchOption[i]["risk"] == risk) {
+        return true
+      }
     }
   }
 
   const handleSubmit = async (e) => {
     for (let i = 0; i < form.length; i++) {
-      const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
+      let decidePost = handelCheckPost(form[i]["hazard"], form[i]["risk"])
+      if (decidePost !== true) {
+        const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
+      }
     }
-    history.push("/app/pages/aha/assessments/assessment")
+    history.push("/app/pages/jhaz/assessments/assessment")
+  }
+
+  const handelCallback = async () => {
+    await handelUpdate()
+    await checkList()
   }
 
   useEffect(() => {
-    handelUpdate()
-    checkList()
+    handelCallback()
   }, [])
 
   const classes = useStyles();
@@ -202,7 +232,7 @@ const ProjectAreaHazards = () => {
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
-
+            {/* {console.log(form)} */}
             {Object.entries(checkGroups).map(([key, value]) => (
               <Grid item md={12}>
                 <FormControl component="fieldset">
@@ -212,8 +242,8 @@ const ProjectAreaHazards = () => {
                       <FormControlLabel
                         control={<Checkbox name={option.inputLabel} />}
                         label={option.inputLabel}
-                        // checked={handelSelectOption(key, option.inputLabel)}
-                        onChange={async (e) => await handlePhysicalHazards(e, key, option.inputLabel)}
+                        checked={handelSelectOption(key, option.inputLabel)}
+                        onChange={async (e) => handlePhysicalHazards(e, key, option.inputLabel)}
                       />
                     ))}
                   </FormGroup>
@@ -282,6 +312,7 @@ const ProjectAreaHazards = () => {
         </Col>
 
       </Row>
+
     </PapperBlock>
   );
 };
