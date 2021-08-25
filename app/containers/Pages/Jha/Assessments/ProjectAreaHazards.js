@@ -4,7 +4,7 @@ import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
-  Grid, Typography, TextField, Button
+  Grid, Typography, TextField, Button,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -28,12 +28,14 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
 import Box from "@material-ui/core/Box";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import classNames from "classnames"
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
 import api from "../../../../utils/axios";
 import { handelJhaId } from "../Utils/checkValue"
-import { TramOutlined } from '@material-ui/icons';
+import { TramOutlined, TramRounded } from '@material-ui/icons';
 
 
 
@@ -117,6 +119,9 @@ const useStyles = makeStyles((theme) => ({
       marginTop: '8px',
     },
   },
+  loader: {
+    marginLeft: "20px"
+  },
 }));
 
 const ProjectAreaHazards = () => {
@@ -125,6 +130,7 @@ const ProjectAreaHazards = () => {
   const [checkGroups, setCheckListGroups] = useState([])
   const [selectedOptions, setSelectedOption] = useState({})
   const [fetchOption, setFetchedOptions] = useState([])
+  const [submitLoader, setSubmitLoader] = useState(false)
   const history = useHistory()
 
   const handelUpdate = async () => {
@@ -157,6 +163,7 @@ const ProjectAreaHazards = () => {
         if (checkListOptions !== undefined) {
           checkObj["inputLabel"] = checkListOptions.inputLabel
           checkObj["inputValue"] = checkListOptions.inputValue
+          checkObj["checkListId"] = checkListOptions.id
           temp[value["checkListGroupName"]].push(checkObj)
         }
       })
@@ -164,11 +171,11 @@ const ProjectAreaHazards = () => {
     setCheckListGroups(temp)
   }
 
-  const handlePhysicalHazards = async (e, hazard_value, risk_value) => {
+  const handlePhysicalHazards = async (e, checkListId, hazard_value) => {
     let temp = [...form]
     if (e.target.checked == false) {
       temp.map((jhaValue, index) => {
-        if (jhaValue['risk'] === risk_value) {
+        if (jhaValue['fkChecklistId'] === checkListId) {
           temp.splice(index, 1);
           fetchOption.splice(index, 1);
           if (jhaValue["id"] !== undefined) {
@@ -179,9 +186,10 @@ const ProjectAreaHazards = () => {
     }
     else if (e.target.checked) {
       temp.push({
+        "fkChecklistId": checkListId,
         "hazard": hazard_value,
-        "risk": risk_value,
-        "control": "string",
+        "risk": "",
+        "control": "",
         "humanPerformanceAspects": "string",
         "status": "Active",
         "createdBy": 0,
@@ -191,30 +199,40 @@ const ProjectAreaHazards = () => {
     await setForm(temp)
   };
 
-  const handelSelectOption = (hazard, risk) => {
+  const handelSelectOption = (checklistId, hazard) => {
     for (let i = 0; i <= form.length; i++) {
-      if (form[i] != undefined && form[i]["hazard"] == hazard && form[i]["risk"] == risk) {
+      if (form[i] != undefined && form[i]["hazard"] == hazard && form[i]["fkChecklistId"] == checklistId) {
         return true
       }
     }
   }
 
-  const handelCheckPost = (hazard, risk) => {
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push("/app/pages/Jha/assessments/assessment/")
+    } else if (navigateType == "previous") {
+      history.push("/app/pages/Jha/assessments/project-details/")
+    }
+  }
+
+  const handelCheckPost = (checklistId, hazard) => {
     for (let i = 0; i <= fetchOption.length; i++) {
-      if (fetchOption[i] != undefined && fetchOption[i]["hazard"] == hazard && fetchOption[i]["risk"] == risk) {
+      if (fetchOption[i] != undefined && fetchOption[i]["hazard"] == hazard && fetchOption[i]["fkChecklistId"] == checklistId) {
         return true
       }
     }
   }
 
   const handleSubmit = async (e) => {
+    setSubmitLoader(TramRounded)
     for (let i = 0; i < form.length; i++) {
-      let decidePost = handelCheckPost(form[i]["hazard"], form[i]["risk"])
+      let decidePost = handelCheckPost(form[i]["fkChecklistId"], form[i]["hazard"])
       if (decidePost !== true) {
         const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
       }
     }
-    history.push("/app/pages/jhaz/assessments/assessment")
+    handelNavigate("next")
+    setSubmitLoader(false)
   }
 
   const handelCallback = async () => {
@@ -242,8 +260,8 @@ const ProjectAreaHazards = () => {
                       <FormControlLabel
                         control={<Checkbox name={option.inputLabel} />}
                         label={option.inputLabel}
-                        checked={handelSelectOption(key, option.inputLabel)}
-                        onChange={async (e) => handlePhysicalHazards(e, key, option.inputLabel)}
+                        checked={handelSelectOption(option.checkListId, option.inputLabel)}
+                        onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
                       />
                     ))}
                   </FormGroup>
@@ -295,11 +313,31 @@ const ProjectAreaHazards = () => {
             </Grid>
             <Grid
               item
-              md={12}
               xs={12}
-              style={{ marginTop: '5px' }}
+              alignItems="center"
             >
-              <Button variant="outlined" size="medium" onClick={(e) => handleSubmit()} className={classes.custmSubmitBtn}>Next</Button>
+              <Button
+                variant="outlined"
+                className={classes.custmSubmitBtn}
+                onClick={(e) => handelNavigate("previous")}
+              >
+                Previous
+              </Button>
+              {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
             </Grid>
           </Grid>
         </Col>

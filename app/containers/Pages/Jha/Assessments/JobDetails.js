@@ -99,12 +99,6 @@ const useStyles = makeStyles((theme) => ({
   },
   customCheckBoxList: {
     display: 'block',
-    '& .MuiFormControlLabel-root': {
-      width: '30%',
-      [theme.breakpoints.down("xs")]: {
-        width: '48%',
-      },
-    },
   },
   createHazardbox: {
     paddingTop: '0px !important',
@@ -187,6 +181,7 @@ const JobDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [error, setError] = useState({})
+  const radioDecide = ["Yes", "No"]
 
   // fecth jha data
   const fetchJhaData = async () => {
@@ -428,7 +423,7 @@ const JobDetails = () => {
               xs={12}
               className={classes.formBox}
             >
-              <TextField
+              {/* <TextField
                 label="Permit to Work"
                 name="permitwork"
                 id="permitwork"
@@ -438,7 +433,30 @@ const JobDetails = () => {
                 variant="outlined"
                 onChange={(e) => setForm({ ...form, permitToPerform: e.target.value })}
                 className={classes.formControl}
-              />
+              /> */}
+              <FormControl
+                component="fieldset"
+              >
+                <FormLabel component="legend">
+                  Permit to Work
+                </FormLabel>
+                <RadioGroup
+                  style={{ display: 'block' }}
+                  className={classes.customCheckBoxList}
+                  aria-label="permitwork"
+                  id="permitwork"
+                >
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      checked={form.permitToPerform == value}
+                      onChange={(e) => setForm({ ...form, permitToPerform: e.target.value })}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
             </Grid>
 
             {/* scope work */}
