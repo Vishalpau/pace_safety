@@ -39,8 +39,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ImageIcon from '@material-ui/icons/Image';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
-
-import MUIDataTable from 'mui-datatables';
+import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -86,36 +85,60 @@ const useStyles = makeStyles((theme) => ({
       textAlign: 'right',
     },
   },
+  ratioColorgreen: {
+    backgroundColor: 'green',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
+  },
+  ratioColorred: {
+    backgroundColor: 'red',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
+  },
+  ratioColororange: {
+    backgroundColor: 'orange',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
+  },
 }));
 
 function JhaSummary() {
-    const [assessments, setAssessments] = useState(false);
-    const [approvals, setApprovals] = useState(false);
-    const [lessonsLearned, setLessonsLearned] = useState(false);
-    //const [summary, setSummary] = useState(false);
-    const history = useHistory();
-    const [expanded, setExpanded] = React.useState(false);
+  const [assessments, setAssessments] = useState(false);
+  const [approvals, setApprovals] = useState(false);
+  const [lessonsLearned, setLessonsLearned] = useState(false);
+  //const [summary, setSummary] = useState(false);
+  const history = useHistory();
+  const [expanded, setExpanded] = React.useState('panel1');
 
-  
-    const handleNewAhaPush = async () => {
-      history.push(
-        "/app/pages/jha/assessments"
-      );
-    };
-    const handleAhaApprovalsPush = async () => {
-      history.push(
-        "/app/pages/jha/approvals/approvals"
-      );
-    };
-    const handleAhaLessonLearnPush = async () => {
-      history.push(
-        "/app/pages/jha/lessons-learned/lessons-learned"
-      );
-    };
 
-    const handleExpand = (panel) => (event, isExpanded) => {
-      setExpanded(isExpanded ? panel : false);
-    };
+  const handleNewAhaPush = async () => {
+    history.push(
+      "/app/pages/jha/assessments"
+    );
+  };
+  const handleAhaApprovalsPush = async () => {
+    history.push(
+      "/app/pages/jha/approvals/approvals"
+    );
+  };
+  const handleAhaLessonLearnPush = async () => {
+    history.push(
+      "/app/pages/jha/lessons-learned/lessons-learned"
+    );
+  };
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const classes = useStyles();
   return (
@@ -302,381 +325,393 @@ function JhaSummary() {
                   12th August 2021, 03:35 PM
                 </Typography>
               </Grid> */}
-            
+
               {/* summary and part */}
               <>
                 {(() => {
                   if (
                     assessments == true
-                      || (approvals === false
-                        && lessonsLearned === false)
+                    || (approvals === false
+                      && lessonsLearned === false)
                   ) {
 
+                    const [expandedTableDetail, setExpandedTableDetail] = React.useState('panel5');
 
-
-                    
-
-                      const columns = [
-                        {
-                          name: 'Identify Hazard',
-                          options: {
-                            filter: true
-                          }
-                        },
-                        {
-                          name: 'Identify Risk',
-                          options: {
-                            filter: true,
-                          }
-                        },
-                        {
-                          name: 'Severity',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                        {
-                          name: 'Probability',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                        {
-                          name: 'Evaluate Risk Rating',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                        {
-                          name: 'Identify Controls',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                        {
-                          name: 'Evaluate Residual Risk',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                        {
-                          name: 'Approve to Implement',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                        {
-                          name: 'Monitor',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                        {
-                          name: 'Action Item',
-                          options: {
-                            filter: false,
-                          }
-                        },
-                    
-                      ];
-                    
-                      const data = [
-                        ['Hazard Option Selected from previous page', 'Business Analyst', 30, 'active', 100000, 30, 'active', 100000 , 'Business Analyst', 100000],
-                      ];
-                    
-                      const options = {
-                        filterType: 'dropdown',
-                        responsive: 'vertical',
-                        print: false,
-                        search: false,
-                        filter: false,
-                        download: false,
-                        viewColumns: false,
-                        selectableRowsHideCheckboxes: false,
-                        selectableRowsHeader: false,
-                        selectableRowsOnClick: false,
-                        viewColumns: false,
-                        selectableRows: false,
-                        pagination: false,
-                        rowsPerPage: 10,
-                        page: 0,
-                      };
-
-
+                    const handleTDChange = (panel) => (event, isExpanded) => {
+                      setExpandedTableDetail(isExpanded ? panel : false);
+                    };
 
                     return (
-                        <>
-                          <Grid item xs={12}>
-                            <Accordion
-                              expanded={expanded === "panel1"}
-                              onChange={handleExpand("panel1")}
-                            >
-                              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                <Typography className={classes.heading}>
-                                  Job Details
-                                </Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <Grid container item xs={12} spacing={3}>
-                                    <>
-                                      <Grid item md={12}>
-                                        <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-                                            Project structure
-                                        </Typography>
-                                        <Typography className={Fonts.labelValue}>
-                                          Project Name - Phase Name - Unit Name
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Work Area
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Location
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          Delhi
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={12}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Job Title
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          None
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={12}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Job Description
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          None
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Assessment performed by
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Assessment started on
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          Yes
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Permit to perform
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Permit reference
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          Yes
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Risk Assessment team
-                                        </Typography>
-                                        <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
-                                        <Typography variant="body" display="block" className={Fonts.labelValue}>Team Two</Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={12}>
-                                        <Typography className={classes.heading}>
-                                          Emergency Contact Details
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Supervisor
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Department
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Emergency Phone Number
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Evacuation assembly point
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Permit number
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Order number
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                </Grid>
-                              </AccordionDetails>
-                            </Accordion>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Accordion
-                              expanded={expanded === "panel2"}
-                              onChange={handleExpand("panel2")}
-                            >
-                              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                <Typography className={classes.heading}>
-                                  Area Hazards
-                                </Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <Grid container item xs={12} spacing={3}>
-                                  <>
-                                    <Grid item xs={12} md={6}>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Hazards Group
-                                      </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
-                                      </Typography>
-                                    </Grid>
-                                  </>
-                                </Grid>
-                              </AccordionDetails>
-                            </Accordion>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Accordion
-                              expanded={expanded === "panel3"}
-                              onChange={handleExpand("panel3")}
-                            >
-                              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                <Typography className={classes.heading}>
-                                  Assessment
-                                </Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <Grid container item xs={12} spacing={3}>
-                                  <>
+                      <>
+                        <Grid item xs={12}>
+                          <Accordion
+                            expanded={expanded === "panel1"}
+                            onChange={handleExpand("panel1")}
+                          >
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                              <Typography className={classes.heading}>
+                                Job Details
+                              </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Grid container item xs={12} spacing={3}>
+                                <>
+                                  <Grid item md={12}>
+                                    <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                                      Project structure
+                                    </Typography>
+                                    <Typography className={Fonts.labelValue}>
+                                      Project Name - Phase Name - Unit Name
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Work Area
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Location
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      Delhi
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={12}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Job Title
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      None
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={12}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Job Description
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      None
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Assessment performed by
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Assessment started on
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      Yes
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Permit to perform
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Permit reference
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      Yes
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Risk Assessment team
+                                    </Typography>
+                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
+                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Team Two</Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={12}>
+                                    <Typography className={classes.heading}>
+                                      Emergency Contact Details
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Supervisor
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Department
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Emergency Phone Number
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Evacuation assembly point
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Permit number
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Order number
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                </>
+                              </Grid>
+                            </AccordionDetails>
+                          </Accordion>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Accordion
+                            expanded={expanded === "panel2"}
+                            onChange={handleExpand("panel2")}
+                          >
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                              <Typography className={classes.heading}>
+                                Area Hazards
+                              </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Grid container item xs={12} spacing={3}>
+                                <>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Hazards Group
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                </>
+                              </Grid>
+                            </AccordionDetails>
+                          </Accordion>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Accordion
+                            expanded={expanded === "panel3"}
+                            onChange={handleExpand("panel3")}
+                          >
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                              <Typography className={classes.heading}>
+                                Assessment
+                              </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Grid container item xs={12} spacing={3}>
+                                <>
                                   <Grid
                                     item
                                     md={12}
                                     xs={12}
-                                    //className={classes.formBox}
                                   >
+                                    <div>
+                                      <Accordion expanded={expandedTableDetail === 'panel5'} onChange={handleTDChange('panel5')} defaultExpanded className={classes.backPaper}>
+                                        <AccordionSummary
+                                          expandIcon={<ExpandMoreIcon />}
+                                          aria-controls="panel1bh-content"
+                                          id="panel1bh-header"
+                                          className={classes.headingColor}
+                                        >
+                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#1 - Hazard Name</Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                          <Grid container spacing={2}>
+                                            <Grid item md={5} sm={5} xs={12}>
+                                              <Typography
+                                                variant="h6"
+                                                gutterBottom
+                                                className={Fonts.labelName}
+                                              >
+                                                Job Steps
+                                              </Typography>
+                                              <Typography variant="body" className={Fonts.labelValue}>
+                                                NA
+                                              </Typography>
+                                            </Grid>
 
-                                      {/* <Typography variant="h6" gutterBottom className={classes.labelName}>Detailed Project Area Hazard Assessment</Typography> */}
-                                      <MUIDataTable
-                                        //title="Detailed Project Area Hazard Assessment"
-                                        data={data}
-                                        columns={columns}
-                                        options={options}
-                                        className={classes.tableSection}
-                                      />
+                                            <Grid item md={5} sm={5} xs={12}>
+                                              <Typography
+                                                variant="h6"
+                                                gutterBottom
+                                                className={Fonts.labelName}
+                                              >
+                                                Potential Hazards
+                                              </Typography>
+                                              <Typography variant="body" className={Fonts.labelValue}>
+                                                NA
+                                              </Typography>
+                                            </Grid>
+                                            <Grid item md={2} sm={2} xs={12}>
+                                              <div className={classes.ratioColororange}>50% Risk</div>
+                                            </Grid>
+
+                                            <Grid item md={12} sm={12} xs={12}>
+                                              <Typography
+                                                variant="h6"
+                                                gutterBottom
+                                                className={Fonts.labelName}
+                                              >
+                                                Controls
+                                              </Typography>
+                                              <Typography variant="body" className={Fonts.labelValue}>
+                                                NA
+                                              </Typography>
+                                            </Grid>
+                                            <Grid item md={12} xs={12} className={classes.createHazardbox}>
+                                              <Divider light />
+                                            </Grid>
+
+                                          </Grid>
+                                        </AccordionDetails>
+                                      </Accordion>
+                                      <Accordion expanded={expandedTableDetail === 'panel6'} onChange={handleTDChange('panel6')} className={classes.backPaper}>
+                                        <AccordionSummary
+                                          expandIcon={<ExpandMoreIcon />}
+                                          aria-controls="panel2bh-content"
+                                          id="panel2bh-header"
+                                          className={classes.headingColor}
+                                        >
+                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#3 - Hazard Name</Typography>
+
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                          <Typography>
+                                            Dummy content
+                                          </Typography>
+                                        </AccordionDetails>
+                                      </Accordion>
+                                      <Accordion expanded={expandedTableDetail === 'panel7'} onChange={handleTDChange('panel7')} className={classes.backPaper}>
+                                        <AccordionSummary
+                                          expandIcon={<ExpandMoreIcon />}
+                                          aria-controls="panel3bh-content"
+                                          id="panel3bh-header"
+                                          className={classes.headingColor}
+                                        >
+                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} />Hazard#2 - Hazard Name </Typography>
+
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                          <Typography>
+                                            Dummy content
+                                          </Typography>
+                                        </AccordionDetails>
+                                      </Accordion>
+                                      <Accordion expanded={expandedTableDetail === 'panel8'} onChange={handleTDChange('panel8')} className={classes.backPaper}>
+                                        <AccordionSummary
+                                          expandIcon={<ExpandMoreIcon />}
+                                          aria-controls="panel4bh-content"
+                                          id="panel4bh-header"
+                                          className={classes.headingColor}
+                                        >
+                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#4 - Hazard Name </Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                          <Typography>
+                                            Dummy content
+                                          </Typography>
+                                        </AccordionDetails>
+                                      </Accordion>
+                                    </div>
 
                                   </Grid>
-                                    {/* <Grid item xs={12} md={6}>
+                                  {/* <Grid item xs={12} md={6}>
                                       <Typography
                                         variant="h6"
                                         gutterBottom
@@ -688,258 +723,258 @@ function JhaSummary() {
                                         NA
                                       </Typography>
                                     </Grid> */}
-                                    <Grid item xs={12} md={12}>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Conditions when the work must be stopped
-                                      </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
-                                      </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} md={12}>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Additional remarks
-                                      </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        None
-                                      </Typography>
-                                    </Grid>
-                                  </>
+                                  <Grid item xs={12} md={12}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Conditions when the work must be stopped
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={12}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Additional remarks
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      None
+                                    </Typography>
+                                  </Grid>
+                                </>
                               </Grid>
-                              </AccordionDetails>
-                            </Accordion>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Accordion
-                              expanded={expanded === "panel4"}
-                              onChange={handleExpand("panel4")}
-                            >
-                              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                <Typography className={classes.heading}>
-                                  Documents & Notifications
-                                </Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <Grid container item xs={12} spacing={3}>
-                                  <>
-                                    <Grid item xs={12} md={12}>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Risk assessment supporting documents
-                                      </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        <Avatar variant="rounded" className={classes.rounded}>
-                                          <ImageIcon />
-                                        </Avatar>
-                                      </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} md={6}> 
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Links
-                                      </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
-                                      </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} md={12}>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Notifications sent to
-                                      </Typography>
-                                      <Typography variant="body" display="block" className={Fonts.labelValue}>Role one</Typography>
-                                      <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography>
-                                    </Grid>
-                                  </>
-                                </Grid>
-                              </AccordionDetails>
-                            </Accordion>
-                          </Grid>
-                        </>
-                        );
+                            </AccordionDetails>
+                          </Accordion>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Accordion
+                            expanded={expanded === "panel4"}
+                            onChange={handleExpand("panel4")}
+                          >
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                              <Typography className={classes.heading}>
+                                Documents & Notifications
+                              </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Grid container item xs={12} spacing={3}>
+                                <>
+                                  <Grid item xs={12} md={12}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Risk assessment supporting documents
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      <Avatar variant="rounded" className={classes.rounded}>
+                                        <ImageIcon />
+                                      </Avatar>
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={6}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Links
+                                    </Typography>
+                                    <Typography variant="body" className={Fonts.labelValue}>
+                                      NA
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} md={12}>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      className={Fonts.labelName}
+                                    >
+                                      Notifications sent to
+                                    </Typography>
+                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Role one</Typography>
+                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography>
+                                  </Grid>
+                                </>
+                              </Grid>
+                            </AccordionDetails>
+                          </Accordion>
+                        </Grid>
+                      </>
+                    );
                   }
                   if (approvals == true) {
                     return (
-                        <>
-                          
-                          <Grid item xs={12} style={{padding: '0px 12px'}}>
-                            <Typography className={classes.heading}>
-                              Work Responsible Person
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Grid container spacing={3}>
-                              <Grid item xs={12} md={6}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Approved by
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  NA
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={6}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Approved on
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  NA
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} style={{padding: '0px 12px', marginTop: '15px'}}>
-                                <Typography className={classes.heading}>
-                                  Person in-charge
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={6}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Approved by
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  NA
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={6}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Approved on
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  NA
-                                </Typography>
-                              </Grid>
+                      <>
+
+                        <Grid item xs={12} style={{ padding: '0px 12px' }}>
+                          <Typography className={classes.heading}>
+                            Work Responsible Person
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved by
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                NA
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved on
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                NA
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} style={{ padding: '0px 12px', marginTop: '15px' }}>
+                              <Typography className={classes.heading}>
+                                Person in-charge
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved by
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                NA
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved on
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                NA
+                              </Typography>
                             </Grid>
                           </Grid>
+                        </Grid>
 
-                          <Grid item xs={12}>
-                            <Typography className={classes.heading}>
-                              Actions
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Grid container spacing={3}>
-                              <Grid item xs={12} md={8}>
-                                <Typography className={classes.aLabelValue}>
-                                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                                  <div className={classes.actionTitleLable}>Action title</div>
-                                </Typography>
-                                <Typography className={classes.aLabelValue}>
-                                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                                  <div className={classes.actionTitleLable}>Action title</div>
-                                </Typography>
-                              </Grid>
+                        <Grid item xs={12}>
+                          <Typography className={classes.heading}>
+                            Actions
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} md={8}>
+                              <Typography className={classes.aLabelValue}>
+                                <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
+                                <div className={classes.actionTitleLable}>Action title</div>
+                              </Typography>
+                              <Typography className={classes.aLabelValue}>
+                                <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
+                                <div className={classes.actionTitleLable}>Action title</div>
+                              </Typography>
                             </Grid>
                           </Grid>
+                        </Grid>
 
 
-                          <Grid item xs={12}>
-                            <Typography className={classes.heading}>
-                              Sign-offs  
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Grid container spacing={3}>
-                              <Grid item xs={12} md={6}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Signed-off by
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  NA
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={6}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Signed-off on
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  NA
-                                </Typography>
-                              </Grid>
+                        <Grid item xs={12}>
+                          <Typography className={classes.heading}>
+                            Sign-offs
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Signed-off by
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                NA
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Signed-off on
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                NA
+                              </Typography>
                             </Grid>
                           </Grid>
+                        </Grid>
 
-                        </>
-                        );
+                      </>
+                    );
                   }
                   if (lessonsLearned == true) {
                     return (
-                        <>
-                          <Grid item xs={12}>
-                            <Grid container spacing={3}>
-                              <Grid item xs={12} md={12}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Work Responsible Person
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  Mayank, #23452
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} md={6}>
-                                <Typography
-                                  variant="h6"
-                                  gutterBottom
-                                  className={Fonts.labelName}
-                                >
-                                  Lessons learnt
-                                </Typography>
-                                <Typography variant="body" className={Fonts.labelValue}>
-                                  NA
-                                </Typography>
-                              </Grid>
+                      <>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} md={12}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Work Responsible Person
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                Mayank, #23452
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Lessons learnt
+                              </Typography>
+                              <Typography variant="body" className={Fonts.labelValue}>
+                                NA
+                              </Typography>
                             </Grid>
                           </Grid>
-                        </>
-                        );
+                        </Grid>
+                      </>
+                    );
                   }
                 })()}
               </>
 
-            </Grid> 
-          </Grid> 
- 
+            </Grid>
+          </Grid>
+
           <Grid item xs={12} md={3}>
             <Paper>
               <List

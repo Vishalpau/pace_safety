@@ -102,7 +102,6 @@ const BasicCauseAndAction = () => {
     });
     for (let key in apiData) {
       const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]}`);
-      console.log(allActionTrackerData)
       if (allActionTrackerData.data.data.results.results.length > 0) {
         let actionTracker = allActionTrackerData.data.data.results.results
         const temp = []

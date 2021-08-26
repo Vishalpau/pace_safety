@@ -99,7 +99,7 @@ const Details = () => {
         rcaRecommended: allApiData.rcaRecommended,
       });
       setRcaDisable(allApiData.rcaRecommended);
-      await handelRcaRecommended("a", allApiData.rcaRecommended);
+      await handelRcaRecommended(allApiData.rcaRecommended);
       putId.current = incidentId;
       checkPost.current = false;
     }
@@ -120,6 +120,15 @@ const Details = () => {
         classification: investigationApiData.classification,
       });
     }
+    if (localStorage.getItem("rcaRecommended") == `No${localStorage.getItem("fkincidentId")}`
+      &&
+      investigationApiData.rcaRecommended != "") {
+      setForm({
+        ...form,
+        rcaRecommended: investigationApiData.rcaRecommended,
+      });
+      handelRcaRecommended(investigationApiData.rcaRecommended);
+    }
   };
 
   const fetchIncidentData = async () => {
@@ -136,7 +145,7 @@ const Details = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
-  const handelRcaRecommended = async (e, value) => {
+  const handelRcaRecommended = async (value) => {
     if (value == "Five why analysis") {
       await setHideArray(FIVEWHYHIDE);
       localStorage.setItem("deleteForm", FIVEWHYHIDE)
@@ -215,22 +224,10 @@ const Details = () => {
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
     localStorage.setItem("details", true)
-    localStorage.setItem("rcaRecommended", "Yes")
+    localStorage.setItem("rcaRecommended", `Yes${localStorage.getItem("fkincidentId")}`)
   };
 
-  const rcaRecommendedValue = () => {
-    if (localStorage.getItem("rcaRecommended") == "No") {
-      if (investigationData.rcaRecommended != "") {
-        setForm({
-          ...form,
-          rcaRecommended: investigationApiData.rcaRecommended,
-        });
-        handelRcaRecommended("a", investigationApiData.rcaRecommended);
-      }
-    } else {
-      return form.rcaRecommended || ""
-    }
-  }
+
 
   const handelCallBack = async () => {
     await handelUpdateCheck();
@@ -247,7 +244,7 @@ const Details = () => {
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {/* {console.log(form.rcaRecommended)} */}
+      {console.log(form.rcaRecommended)}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
@@ -300,7 +297,6 @@ const Details = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              {console.log(investigationData["classification"])}
               <Typography variant="h6" className={Type.labelName} gutterBottom>
                 Level of classification
               </Typography>
@@ -310,7 +306,6 @@ const Details = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              {console.log(rcaRecommendedValue())}
               <FormControl
                 variant="outlined"
                 required
@@ -322,13 +317,13 @@ const Details = () => {
                   id="project-name"
                   labelId="project-name-label"
                   label="RCA recommended"
-                  value={rcaRecommendedValue()}
+                  value={form.rcaRecommended || ""}
                   disabled={rcaDisable != "" ? true : false}
                 >
                   {RCAOPTION.map((selectValues) => (
                     <MenuItem
                       value={selectValues}
-                      onClick={(e) => handelRcaRecommended(e, selectValues)}
+                      onClick={(e) => handelRcaRecommended(selectValues)}
                     >
                       {selectValues}
                     </MenuItem>

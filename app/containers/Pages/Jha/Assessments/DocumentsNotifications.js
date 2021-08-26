@@ -230,52 +230,7 @@ const DocumentNotification = () => {
                 />
               </FormGroup>
             </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Where would you want this assessment to appear</FormLabel>
-              <FormGroup className={classes.customCheckBoxList}>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Project"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Block"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Work Area"
-                />
-              </FormGroup>
-            </Grid>
+
             <Grid
               item
               md={12}
