@@ -1333,7 +1333,7 @@ const ObservationInitialNotification = () => {
               <input
                     type="file"
                     id="attachment"
-                      accept=".png, .jpg , .jpeg"
+                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                       onChange={(e) => {
                         handleFile(e);
                       }}
