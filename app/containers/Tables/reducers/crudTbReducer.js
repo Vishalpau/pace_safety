@@ -15,13 +15,11 @@ const initialState = {
   dataInit: List([
     {
       id: 0,
-      category: '',
-      price: '',
-      date: '',
-      time: '',
-      name: '',
-      available: false,
-      edited: true,
+    optionname: '',
+    inputvalue: '',
+    group: '1',
+    available: true,
+    edited: false,
     }
   ]),
   notifMsg: '',

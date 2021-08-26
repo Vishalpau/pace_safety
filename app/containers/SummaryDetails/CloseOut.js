@@ -138,7 +138,7 @@ const CloseOutSummary = () => {
                                     Reviewed by
                                 </Typography>
                                 <Typography className={Fonts.labelValue} >
-                                   {incidents.reviewedBy}
+                                   {incidents.reviewedby_name}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -166,7 +166,7 @@ const CloseOutSummary = () => {
                                     Closed by
                                 </Typography>
                                <Typography className={Fonts.labelValue} >
-                                   {incidents.closedBy}
+                                   {incidents.closedby_name}
                                 </Typography>
                                 
                             </Grid>

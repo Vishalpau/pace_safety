@@ -140,6 +140,7 @@ function UserMenu(props) {
   const [codes, setCodes] = useState([]);
   const [apps, setApps] = useState([])
   const [isLoading, setIsLoading] = useState(false);
+  const [userImageLink, setUserImageLink] = useState([])
 
   const handleAppsClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -204,6 +205,7 @@ function UserMenu(props) {
     let subscriptionData = {}
     let data = await api.get(`${SELF_API}1/`).then(function (res) {
       subscriptionData = res.data.data.results.data.companies[0].subscriptions;
+      setUserImageLink(res.data.data.results.data.avatar)
       // setSubscriptions(subscriptionData);
       return subscriptionData
 
@@ -346,7 +348,7 @@ function UserMenu(props) {
             <MenuItem onClick={handleClose}>
               <div className={messageStyles.messageError}>
                 <ListItemAvatar>
-                  <Avatar className={messageStyles.icon}>
+                  <Avatar src={userImageLink} className={messageStyles.icon}>
                     <Error />
                   </Avatar>
                 </ListItemAvatar>
@@ -425,7 +427,7 @@ function UserMenu(props) {
         <Avatar
           alt={dummy.user.name}
           variant="circle"
-          src={dummy.user.avatar}
+          src={userImageLink?userImageLink:dummy.user.avatar}
         />
       </Button>
       <Menu
