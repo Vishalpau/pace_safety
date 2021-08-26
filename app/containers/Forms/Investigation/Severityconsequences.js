@@ -178,8 +178,10 @@ const InvestigationOverview = () => {
     }
     localStorage.setItem("WorkerDataFetched", "Yes");
     localStorage.removeItem("WorkerPost");
-    if (localStorage.getItem("rcaRecommended") !== null && localStorage.getItem("rcaRecommended") != "Yes") {
-      localStorage.setItem("rcaRecommended", "No")
+    let rcaDecide = localStorage.getItem("rcaRecommended")
+    let incidentId = localStorage.getItem("fkincidentId")
+    if (rcaDecide == null || rcaDecide !== `Yes${incidentId}`) {
+      localStorage.setItem("rcaRecommended", `No${incidentId}`)
     }
   };
 
