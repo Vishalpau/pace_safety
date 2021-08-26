@@ -58,7 +58,7 @@ import { useDispatch } from "react-redux";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
 import CloseOut from "../../SummaryDetails/CloseOut";
 import { Comments } from "../../pageListAsync";
-import AhaSummary from "../../Pages/Aha/AhaSummary";
+import AhaSummary from "../../../containers/Activity/Activity";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -581,6 +581,25 @@ const Summary = (props) => {
       handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
     }
   }
+  const handleActivityHistory=()=>{
+    setActivityHistory(true);
+    setIsComments(false);
+    setInitialNotification(false);
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false); 
+  }
+  const handleComments=()=>{
+    setActivityHistory(false);
+    setIsComments(true);
+    setInitialNotification(false);
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false);
+  
+  }
 
   useEffect(() => {
     fetchIncidentData();
@@ -602,7 +621,7 @@ const Summary = (props) => {
           title={`Incident Number: ${incidents.incidentNumber}`}
           icon="ion-md-list-box"
         >
-          {isComments || isActivityHistory?null:
+          {isComments || isActivityHistory?null:<>
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
               {/* initital notificatin */}
@@ -729,14 +748,14 @@ const Summary = (props) => {
             </div>
           </Box>
          
-          }<Divider />
+          <Divider /></>}
 
           <Box marginTop={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={9}>
                 {/* summary and part */}
                 {
-                // isActivityHistory?<AhaSummary/>:
+                isActivityHistory?<AhaSummary/>:
                 isComments?<Comments/>:
                 <>
                   {(() => {
@@ -885,7 +904,7 @@ const Summary = (props) => {
                       </ListItem>
 
                       <ListItem 
-                      onClick={(e)=>setIsComments(true)}
+                      onClick={(e)=>handleComments()}
                       button>
                         <ListItemIcon>
                           <Comment />
@@ -893,7 +912,7 @@ const Summary = (props) => {
                         <ListItemText primary="Comments" />
                       </ListItem>
 
-                      <ListItem button onClick={()=> setActivityHistory(true)}>
+                      <ListItem button onClick={()=> handleActivityHistory()}>
                         <ListItemIcon>
                           <History />
                         </ListItemIcon>

@@ -21,45 +21,32 @@ const anchorTable = [
     type: 'static',
     initialValue: '',
     hidden: true
-  }, {
-    name: 'category',
-    label: 'Category',
-    type: 'selection',
-    initialValue: 'Electronics',
-    options: ['Electronics', 'Sporting Goods', 'Apparels', 'Other'],
+  },{
+    name: 'optionname',
+    label: 'Option Name (Input Label)',
+    type: 'text',
+    initialValue: '',
     width: 'auto',
     hidden: false
   }, {
-    name: 'price',
-    label: 'Price',
-    type: 'number',
-    initialValue: 0,
-    width: '100',
-    hidden: false
-  }, {
-    name: 'date',
-    label: 'Date Updated',
-    type: 'date',
-    initialValue: new Date(),
+    name: 'inputvalue',
+    label: 'Input Value',
+    type: 'text',
+    initialValue: '',
     width: 'auto',
     hidden: false
-  }, {
-    name: 'time',
-    label: 'Time Updated',
-    type: 'time',
-    initialValue: new Date(),
-    width: 'auto',
-    hidden: false
-  }, {
-    name: 'name',
-    label: 'Name',
+  }, 
+  
+  {
+    name: 'group',
+    label: 'Group',
     type: 'text',
     initialValue: '',
     width: 'auto',
     hidden: false
   }, {
     name: 'available',
-    label: 'Available',
+    label: 'Status',
     type: 'toggle',
     initialValue: true,
     width: '100',
@@ -75,64 +62,59 @@ const anchorTable = [
     label: 'Action',
     type: 'static',
     initialValue: '',
+    width: '150',
     hidden: false
   },
 ];
 const dataApi = [
   {
     id: 1,
-    category: 'Sporting Goods',
-    price: '49.99',
-    date: '4/3/2018',
-    time: 'Tue Apr 03 2018 00:00:00 GMT+0700 (WIB)',
-    name: 'football',
+    optionname: 'Option 1',
+    inputvalue: '',
+    group: '1',
     available: true,
     edited: false,
+    
   }, {
     id: 2,
-    category: 'Other',
-    price: '9.99',
-    date: '4/2/2018',
-    time: 'Tue Apr 03 2018 00:00:00 GMT+0700 (WIB)',
-    name: 'baseball',
+    optionname: 'Option 1',
+    inputvalue: '',
+    group: '1',
     available: true,
     edited: false,
+    
   }, {
     id: 3,
-    category: 'Sporting Goods',
-    price: '29.99',
-    date: '4/1/2018',
-    time: 'Tue Apr 03 2018 00:00:00 GMT+0700 (WIB)',
-    name: 'basketball',
-    available: false,
+    optionname: 'Option 1',
+    inputvalue: '',
+    group: '1',
+    available: true,
     edited: false,
+    
   }, {
     id: 4,
-    category: 'Electronics',
-    price: '99.99',
-    date: '3/30/2018',
-    time: 'Tue Apr 03 2018 00:00:00 GMT+0700 (WIB)',
-    name: 'iPod Touch',
+    optionname: 'Option 1',
+    inputvalue: '',
+    group: '1',
     available: true,
     edited: false,
+    
   }, {
     id: 5,
-    category: 'Electronics',
-    price: '399.99',
-    date: '3/29/2018',
-    time: 'Tue Apr 03 2018 00:00:00 GMT+0700 (WIB)',
-    name: 'iPhone 5',
-    available: false,
-    edited: false,
-  }, {
-    id: 6,
-    category: 'Electronics',
-    price: '199.99',
-    date: '3/28/2018',
-    time: 'Tue Apr 03 2018 00:00:00 GMT+0700 (WIB)',
-    name: 'nexus 7',
+    optionname: 'Option 1',
+    inputvalue: '',
+    group: '1',
     available: true,
     edited: false,
+    
+  }, {
+    id: 6,
+    optionname: 'Option 1',
+    inputvalue: '',
+    group: '1',
+    available: true,
+    edited: false,
+    
   }
 ];
 
