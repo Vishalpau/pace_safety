@@ -177,6 +177,7 @@ function Aha() {
 
   const handleNewAhaPush = async () => {
     //console.log("Ashutosh")
+    localStorage.removeItem('fkAHAId')
     history.push(
       "/app/pages/aha/assessments/project-details"
     );

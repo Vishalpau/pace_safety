@@ -274,11 +274,18 @@ function AhaSummary() {
       await setProjectSturcturedData(selectBreakDown)    
       // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
     };
-console.log(projectSturcturedData)
+const [form , setForm] = useState([])
+    const fetchHzardsData = async () => {
+      const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
+      const result = res.data.data.results.results
+      await setForm(result)
+    }
+console.log(form)
     useEffect(() => {
       if(id){
         fetchAHASummary();
         fetchTeamData()
+        fetchHzardsData()
       }
     },[])
 
@@ -635,16 +642,21 @@ console.log(projectSturcturedData)
                                 <Grid container item xs={12} spacing={3}>
                                   <>
                                     <Grid item xs={12} md={6}>
-                                      <Typography
+                                      {
+                                        form.map((item) => (<>
+                                          <Typography
                                         variant="h6"
                                         gutterBottom
                                         className={Fonts.labelName}
                                       >
-                                        Hazards Group
+                                        {item.hazard}
                                       </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                        {item.risk}
                                       </Typography>
+                                       </> ))
+                                      }
+                                      
                                     </Grid>
                                   </>
                                 </Grid>

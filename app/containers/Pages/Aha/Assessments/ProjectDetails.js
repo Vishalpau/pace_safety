@@ -29,6 +29,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams , useHistory } from 'react-router';
+import { CircularProgress } from '@material-ui/core';
 
 import Axios from "axios";
 import api from "../../../../utils/axios";
@@ -300,7 +301,8 @@ bytes
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
-  const [Teamform, setTeamForm] = useState([{
+  const [submitLoader , setSubmitLoader] = useState(false);
+   const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
     "createdBy": parseInt(userId),
@@ -403,12 +405,14 @@ bytes
 
 
   const handleSubmit = async (e) => {
+    
     const { error, isValid } = ProjectDetailsValidator(form);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
     }
-    if(id){
+    await setSubmitLoader(true);
+    if(form.id){
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,form)
       for (let i = 0; i < Teamform.length; i++) {
         if(Teamform[i].id){
@@ -423,7 +427,7 @@ bytes
         
       }
       if(res.status === 200){
-        history.push("/app/pages/aha/assessments/project-area-hazards")
+        history.push(`/app/pages/aha/assessments/project-area-hazards/`)
       }
      
 
@@ -591,12 +595,12 @@ bytes
   console.log(form)
 
   const fetchAhaData = async () => {
-    const res = await api.get(`/api/v1/ahas/${id}/`)
+    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
     const result = res.data.data.results;
     await setForm(result)
    }
   const fetchTeamData = async () => {
-    const res = await api.get(`/api/v1/ahas/${id}/teams/`)
+    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
     const result =  res.data.data.results.results
     await setTeamForm(result)
     console.log(result)
@@ -606,10 +610,10 @@ bytes
   useEffect(() => {
     // fetchBreakdown()
     fetchCallBack()
-    if(id){
+    
       fetchAhaData()
       fetchTeamData()
-    }
+    
     
   }, []);
   return (
@@ -928,14 +932,28 @@ bytes
             />
         </FormGroup>
         </Grid> */}
+        
         <Grid
         item
         md={12}
         xs={12}
         style={{marginTop: '15px'}}
         >
-        <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
-        onClick={() =>handleSubmit()}>Next</Button>
+        {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
         </Grid>
         </Grid>
         <Grid item xs={12} md={3}>
