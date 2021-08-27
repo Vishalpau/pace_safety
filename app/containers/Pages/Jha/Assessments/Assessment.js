@@ -201,11 +201,12 @@ const Assessment = () => {
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const apiData = res.data.data.results.results
     setForm(apiData)
-
-    const specificPerformance = await api.get("https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-human-performance-aspects/1/")
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const specificPerformance = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
     const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
 
-    const documentCondition = await api.get("https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-document-conditions/1/")
+    const documentCondition = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
     const apiCondition = documentCondition.data.data.results[0].checklistValues
 
     apiDataPerformance.map((value) => {

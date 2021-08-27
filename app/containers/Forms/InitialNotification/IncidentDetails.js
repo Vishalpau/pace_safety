@@ -77,6 +77,7 @@ const IncidentDetails = (props) => {
   const [selectValue, setSelectValue] = useState([])
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -265,22 +266,22 @@ const IncidentDetails = (props) => {
         }
       } else {
         // Create case if id is not null and means it is an add new registration case.
-        const { error, isValid } = validate(form,selectDepthAndId);
+        const { error, isValid } = validate(form, selectDepthAndId);
         await setError(error);
         if (selectDepthAndId.length === 0) {
           // alert("Please select Level of phase.")
           setIsNext(true);
         } else {
           if (isValid === true) {
-                const uniqueProjectStructure = [... new Set(selectDepthAndId)]
-                let fkProjectStructureId = uniqueProjectStructure.map(depth => {     
-                  return depth;    
-                 }).join(':')
+            const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+            let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+              return depth;
+            }).join(':')
             const formData = {
               fkCompanyId: parseInt(fkCompanyId),
               fkProjectId: parseInt(project.projectId),
 
-              fkProjectStructureIds:fkProjectStructureId.toString(),
+              fkProjectStructureIds: fkProjectStructureId.toString(),
 
               incidentNumber: "",
               incidentType: form.incidentType,
@@ -467,7 +468,7 @@ const IncidentDetails = (props) => {
   // fetch incident details data
   const fetchIncidentsData = async () => {
     if (!id) {
-      // await setIsLoading(true);
+      await setIsLoading(true);
     } else {
       try {
         const res = await api.get(`/api/v1/incidents/${id}/`);
@@ -477,6 +478,7 @@ const IncidentDetails = (props) => {
           let temp = { ...form };
           temp = result;
           setForm(temp);
+          fetchBreakDownData(temp.fkProjectStructureIds)
           // await fetchBreakDownData(result.fkProjectStructureIds)
           // await setIsLoading(true);
         }
@@ -495,7 +497,7 @@ const IncidentDetails = (props) => {
         if (result.isPersonAffected !== "Yes") {
           hideAffect.push("People affected");
         }
-       
+
       } catch (error) {
         setIsNext(true);
         setMessage("Something went worng!");
@@ -527,8 +529,9 @@ const IncidentDetails = (props) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                 ];
+                setFetchSelectBreakDownList(selectBreakDown)
               }
             });
           })
@@ -548,14 +551,15 @@ const IncidentDetails = (props) => {
           .then(async (response) => {
 
             const result = response.data.data.results;
-
+            console.log({ fetchSelectBreakDownList: result })
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                 ];
+                setFetchSelectBreakDownList(selectBreakDown)
               }
             });
 
@@ -568,28 +572,28 @@ const IncidentDetails = (props) => {
       }
     }
   };
+  console.log(fetchSelectBreakDownList)
 
-
-useEffect(()=>{
-  fetchContractorValue();
-  fetchIncidentTypeValue();
-  fetchSubContractorValue();
-  fetchPersonAffectValue();
-  fetchPropertiesValue();
-  fetchEquipmentAffectValue();
-  fetchEnviornmentAffectValue();
-  fetchIncidentsData();
-},[])
+  useEffect(() => {
+    fetchContractorValue();
+    fetchIncidentTypeValue();
+    fetchSubContractorValue();
+    fetchPersonAffectValue();
+    fetchPropertiesValue();
+    fetchEquipmentAffectValue();
+    fetchEnviornmentAffectValue();
+    fetchIncidentsData();
+  }, [])
 
   // fetch breakdown Data
-  const fetchCallBack = async (select,projectData) => {
+  const fetchCallBack = async (select, projectData) => {
     for (var i in select) {
       let selectId = select[i].id;
       let selectDepth = select[i].depth
       setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
     }
-    if (select!==null?select.length > 0:false) {
-      
+    if (select !== null ? select.length > 0 : false) {
+
       for (var key in projectData.projectName.breakdown) {
 
         if (key == select.length) {
@@ -600,7 +604,7 @@ useEffect(()=>{
                 }${select[key - 1].id}`,
               headers: HEADER_AUTH,
             };
-       
+
             await Axios(config)
               .then(async (response) => {
 
@@ -624,7 +628,7 @@ useEffect(()=>{
       }
     } else {
       for (var key in projectData.projectName.breakdown) {
-       
+
         if (key == 0) {
           var config = {
             method: "get",
@@ -634,7 +638,7 @@ useEffect(()=>{
           };
           await Axios(config)
             .then(async (response) => {
-            
+
               await setBreakdown1ListData([
                 {
                   breakdownLabel:
@@ -658,61 +662,61 @@ useEffect(()=>{
     const value = e.target.value;
     let temp = [...breakdown1ListData]
     setBreakdown1ListData(temp)
-    if (selectDepthAndId.filter(filterItem => filterItem.slice(0,2) === `${index}L`).length > 0) {
-      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown'))!==null?JSON.parse(localStorage.getItem('selectBreakDown')):[]
-      if(breakDownValue.length>0){
-        const removeBreakDownList = temp.slice(0, index-1)
+    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
+      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
+      if (breakDownValue.length > 0) {
+        const removeBreakDownList = temp.slice(0, index - 1)
         temp = removeBreakDownList
-      }else{
+      } else {
         const removeBreakDownList = temp.slice(0, index)
         temp = removeBreakDownList
       }
-     
-      
-    } 
-    if(projectData.projectName.breakdown.length !== index){
-    for (var key in projectData.projectName.breakdown) {
-      if (key == index) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`,
-          headers: HEADER_AUTH,
-        };
-        await Axios(config)
-          .then(function (response) {
-            if (response.status === 200) {
 
-              if (
-                temp.filter(
-                  (item) =>
-                    item.breakdownLabel ===
-                    projectData.projectName.breakdown[key].structure[0].name
-                ).length > 0
-              ) {
-                return;
-              } else {
-                setBreakdown1ListData([
-                  ...temp,
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[index].structure[0]
-                        .name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: value,
-                    index:index
-                  },
-                ]);
-              }
-            }
-          })
-          .catch(function (error) {
 
-          });
-      }
     }
-  }else{
-  }
+    if (projectData.projectName.breakdown.length !== index) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+              }${value}`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(function (response) {
+              if (response.status === 200) {
+
+                if (
+                  temp.filter(
+                    (item) =>
+                      item.breakdownLabel ===
+                      projectData.projectName.breakdown[key].structure[0].name
+                  ).length > 0
+                ) {
+                  return;
+                } else {
+                  setBreakdown1ListData([
+                    ...temp,
+                    {
+                      breakdownLabel:
+                        projectData.projectName.breakdown[index].structure[0]
+                          .name,
+                      breakdownValue: response.data.data.results,
+                      selectValue: value,
+                      index: index
+                    },
+                  ]);
+                }
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    } else {
+    }
   };
 
 
@@ -735,12 +739,12 @@ useEffect(()=>{
     // fetchListData();
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     const select = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
-  
-    if(select===null?select.length === 0:false){
+
+    if (select === null ? select.length === 0 : false) {
       setBreakdown1ListData([])
       selectDepthAndId([])
     }
-    fetchCallBack(select,projectData); 
+    fetchCallBack(select, projectData);
   }, [props.initialValues.breakDown]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -768,30 +772,48 @@ useEffect(()=>{
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
-              
-              {selectBreakdown && selectBreakdown.map((selectBreakdown, value) => <Grid item xs={6}>
 
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  {selectBreakdown.label}
-                </Typography>
+              {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
+                <Grid item xs={6} key={key}>
+
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
+                  >
+                    {selectBdown.label}
+                  </Typography>
 
 
-                <Typography className={Type.labelValue}>
-                  {selectBreakdown.name}
-                </Typography>
-              </Grid>)}
+                  <Typography className={Type.labelValue}>
+                    {selectBdown.name}
+                  </Typography>
+                </Grid>
+              ) : selectBreakdown && selectBreakdown.map((selectBreakdown, key) =>
+                <Grid item xs={6} key={key}>
 
-              {breakdown1ListData ? breakdown1ListData.map((item, index) => (
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
+                  >
+                    {selectBreakdown.label}
+                  </Typography>
+
+
+                  <Typography className={Type.labelValue}>
+                    {selectBreakdown.name}
+                  </Typography>
+                </Grid>)}
+
+              {id ? null : breakdown1ListData ? breakdown1ListData.map((item, index) => (
                 <Grid item xs={6}>
                   <FormControl
                     key={index}
                     variant="outlined"
-                    required={selectDepthAndId.length === 0? true:false}
+                    required={selectDepthAndId.length === 0 ? true : false}
                     className={classes.formControl}
                     error={error && error[`projectStructure`]}
                   >
@@ -803,7 +825,7 @@ useEffect(()=>{
                       id="filter3"
                       // value={parseInt(item.selectValue) }
                       onChange={(e) => {
-                        handleBreakdown(e, parseInt(item.index)+ 1, item.breakdownLabel, item.selectValue)
+                        handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
 
                       }}
                       label="Phases"
@@ -825,8 +847,8 @@ useEffect(()=>{
                         : null}
                     </Select>
                     {error && error.projectStructure && (
-                    <FormHelperText>{error.projectStructure}</FormHelperText>
-                  )}
+                      <FormHelperText>{error.projectStructure}</FormHelperText>
+                    )}
                   </FormControl>
 
                 </Grid>

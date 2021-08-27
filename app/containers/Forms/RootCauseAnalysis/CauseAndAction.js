@@ -7,6 +7,7 @@ import ListItem from "@material-ui/core/ListItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
+import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -24,9 +25,9 @@ import {
 } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-import { handelConvert } from "../../../utils/CheckerValue"
+import { handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
-import { checkValue } from "../../../utils/CheckerValue"
+import { checkValue } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -77,12 +78,18 @@ const BasicCauseAndAction = () => {
   const [updatePage, setUpdatePage] = useState(false)
 
   const handelShowData = async () => {
-    console.log("here")
+    console.log("here");
     let tempApiData = [];
-    let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(HAZARDIOUS_CONDITION_SUB_TYPES);
+    let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
+      HAZARDIOUS_CONDITION_SUB_TYPES
+    );
     let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
+    const lastItem = parseInt(
+      page_url.substring(page_url.lastIndexOf("/") + 1)
+    );
+    let incidentId = !isNaN(lastItem)
+      ? lastItem
+      : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
@@ -90,7 +97,7 @@ const BasicCauseAndAction = () => {
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
-        tempApiData.push(allApiData[index])
+        tempApiData.push(allApiData[index]);
       }
     });
     await handelActionTracker(tempApiData);
@@ -102,15 +109,18 @@ const BasicCauseAndAction = () => {
       baseURL: API_URL_ACTION_TRACKER,
     });
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]}`);
+      const allActionTrackerData = await api_action.get(
+        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]
+        }`
+      );
       if (allActionTrackerData.data.data.results.results.length > 0) {
-        let actionTracker = allActionTrackerData.data.data.results.results
-        const temp = []
+        let actionTracker = allActionTrackerData.data.data.results.results;
+        const temp = [];
         actionTracker.map((value) => {
-          let actionTrackerId = value.id
-          temp.push(actionTrackerId)
-        })
-        apiData[key]["action"] = temp
+          let actionTrackerId = value.id;
+          temp.push(actionTrackerId);
+        });
+        apiData[key]["action"] = temp;
       }
     }
     await setData(apiData);
@@ -124,14 +134,17 @@ const BasicCauseAndAction = () => {
 
   const classes = useStyles();
 
-
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
-      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]}${putId.current}`)
+      history.push(
+        `${ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]}${putId.current}`
+      );
     } else if (navigateType == "previous") {
-      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Hazardous conditions"]}${putId.current}`)
+      history.push(
+        `${ROOT_CAUSE_ANALYSIS_FORM["Hazardous conditions"]}${putId.current}`
+      );
     }
-  }
+  };
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
@@ -144,7 +157,7 @@ const BasicCauseAndAction = () => {
   const handelCallback = async () => {
     await handelShowData();
     await fetchIncidentDetails();
-  }
+  };
 
   useEffect(() => {
     handelCallback()
@@ -153,13 +166,10 @@ const BasicCauseAndAction = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-    <PapperBlock
-      title="Corrective Actions"
-      icon="ion-md-list-box"
-    >
+    <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Incident number
             </Typography>
@@ -169,7 +179,7 @@ const BasicCauseAndAction = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={6}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={Type.labelName} gutterBottom>
               Method
             </Typography>
@@ -178,13 +188,13 @@ const BasicCauseAndAction = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
               Corrective actions
             </Typography>
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Divider />
             <Box paddingTop={3}>
               <Typography variant="h6">
@@ -223,16 +233,14 @@ const BasicCauseAndAction = () => {
 
               </TableBody>
             </Table>
-            {data.length == 0 ?
+            {data.length == 0 ? (
               <Grid container item md={9}>
-                <Typography variant="h8">
-                  No option(s) selected
-                </Typography>
+                <Typography variant="h8">No option(s) selected</Typography>
               </Grid>
-              : null}
+            ) : null}
           </Grid>
 
-          <Grid item md={12}>
+          <Grid item xs={12}>
             <Button
               variant="contained"
               color="primary"
@@ -252,18 +260,16 @@ const BasicCauseAndAction = () => {
           </Grid>
         </Grid>
 
-        {
-          isDesktop && (
-            <Grid item md={3}>
-              <FormSideBar
-                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-                selectedItem={"Corrective actions"}
-              />
-            </Grid>
-          )}
-
+        {isDesktop && (
+          <Grid item md={3}>
+            <FormSideBar
+              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+              selectedItem={"Corrective actions"}
+            />
+          </Grid>
+        )}
       </Grid>
-    </PapperBlock >
+    </PapperBlock>
   );
 };
 
