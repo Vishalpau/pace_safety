@@ -34,6 +34,7 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
 import api from "../../../../utils/axios";
+import { handelJhaId } from "../Utils/checkValue"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -98,12 +99,6 @@ const useStyles = makeStyles((theme) => ({
   },
   customCheckBoxList: {
     display: 'block',
-    '& .MuiFormControlLabel-root': {
-      width: '30%',
-      [theme.breakpoints.down("xs")]: {
-        width: '48%',
-      },
-    },
   },
   createHazardbox: {
     paddingTop: '0px !important',
@@ -160,7 +155,7 @@ const JobDetails = () => {
       "department": "",
       "additionalRemarks": "string",
       "classification": "string",
-      "jobOrderNumber": "string",
+      "jobOrderNumber": "",
       "supervisorName": "",
       "emergencyNumber": "",
       "evacuationAssemblyPoint": "",
@@ -186,10 +181,12 @@ const JobDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [error, setError] = useState({})
+  const radioDecide = ["Yes", "No"]
 
   // fecth jha data
   const fetchJhaData = async () => {
-    const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/`)
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const result = res.data.data.results;
     console.log(result)
     await setForm(result)
@@ -197,7 +194,8 @@ const JobDetails = () => {
 
   // fetching jha team data
   const fetchTeamData = async () => {
-    const res = await api.get(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`)
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const result = res.data.data.results.results
     console.log(result)
     await setTeamForm(result)
@@ -244,9 +242,8 @@ const JobDetails = () => {
     // if (!isValid) {
     //   return "Data is not valid";
     // }
-    if (id) {
+    if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-      let jhaCreateID = res.data.data.results.id
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
           const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
@@ -319,12 +316,8 @@ const JobDetails = () => {
   const classes = useStyles();
 
   const handelCallBack = async () => {
-    // await fetchCallBack()
-    if (id) {
-      console.log(id)
-      await fetchJhaData()
-      await fetchTeamData()
-    }
+    await fetchJhaData()
+    await fetchTeamData()
   }
 
   useEffect(() => {
@@ -430,7 +423,7 @@ const JobDetails = () => {
               xs={12}
               className={classes.formBox}
             >
-              <TextField
+              {/* <TextField
                 label="Permit to Work"
                 name="permitwork"
                 id="permitwork"
@@ -440,7 +433,30 @@ const JobDetails = () => {
                 variant="outlined"
                 onChange={(e) => setForm({ ...form, permitToPerform: e.target.value })}
                 className={classes.formControl}
-              />
+              /> */}
+              <FormControl
+                component="fieldset"
+              >
+                <FormLabel component="legend">
+                  Permit to Work
+                </FormLabel>
+                <RadioGroup
+                  style={{ display: 'block' }}
+                  className={classes.customCheckBoxList}
+                  aria-label="permitwork"
+                  id="permitwork"
+                >
+                  {radioDecide.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      control={<Radio />}
+                      label={value}
+                      checked={form.permitToPerform == value}
+                      onChange={(e) => setForm({ ...form, permitToPerform: e.target.value })}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
             </Grid>
 
             {/* scope work */}
@@ -634,15 +650,14 @@ const JobDetails = () => {
               item
               md={6}
               xs={11}
-
             >
               <TextField
                 label="Order number"
                 name="ordernumber"
                 id="ordernumber"
                 multiline
-                defaultValue=""
-                onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
+                value={form.jobOrderNumber ? form.jobOrderNumber : ""}
+                onChange={(e) => setForm({ ...form, jobOrderNumber: e.target.value })}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
