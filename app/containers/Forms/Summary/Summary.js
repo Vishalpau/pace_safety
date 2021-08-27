@@ -559,22 +559,22 @@ const Summary = (props) => {
     }
     else if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence & Root Cause Analysis")
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence and Root Cause & Analysis")
       setMessageType("warning")
     }
     else if (investigationOverview === undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Investigation, Evidence and Root Cause Analysis")
+      setMessage("Please complete the previous pending stages Investigation, Evidence and Root Cause & Analysis")
       setMessageType("warning")
     } else if (evidencesData === undefined) {
 
       setOpen(true);
-      setMessage("Please complete the previous pending stages Evidence & Root Cause Analysis")
+      setMessage("Please complete the previous pending stages Evidence and Root Cause & Analysis")
       setMessageType("warning")
     } else if (!paceCauseData && !rootCausesData && !whyData) {
 
       setOpen(true);
-      setMessage("Please complete the previous pending stage  Root Cause Analysis")
+      setMessage("Please complete the previous pending stage  Root Cause & Analysis")
       setMessageType("warning")
     }
     else {

@@ -443,7 +443,7 @@ const Details = () => {
         {isDesktop && (
           <Col md={3}>
             <FormSideBar
-              deleteForm={hideArray}
+              deleteForm={hideArray||[]}
               listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
               selectedItem={"RCA Details"}
             />

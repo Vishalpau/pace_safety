@@ -401,7 +401,8 @@ function PersonalDashboard(props) {
               }
               if (newData.projects.length > 1) {
                 setProjectListData(newData.projects);
-                setOpen(true);
+                setProjectOpen(true);
+                // setOpen(true);
               }
             }
           }
