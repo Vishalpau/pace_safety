@@ -168,6 +168,7 @@ const ProjectAreaHazards = () => {
         }
       })
     })
+    console.log(temp)
     setCheckListGroups(temp)
   }
 
