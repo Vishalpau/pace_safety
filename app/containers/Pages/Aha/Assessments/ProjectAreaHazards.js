@@ -178,7 +178,6 @@ const ProjectAreaHazards = () => {
         }
       })
     })
-    console.log(temp)
     setCheckListGroups(temp)
     setIsLoading(true)
   }
@@ -189,14 +188,16 @@ const ProjectAreaHazards = () => {
     if(e.target.checked == false){
       temp.map((ahaValue,index) => {
         if(ahaValue['hazard'] === value){
-                    const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
+          if(temp[index].id){
+            const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
+
+          }
 
          temp.splice(index, 1);
          
 
         }
       })
-      console.log(temp)
     }
     else if(e.target.checked){
       temp.push( {
@@ -219,7 +220,6 @@ const ProjectAreaHazards = () => {
   };
 
   
-  console.log(form)
  
   const handleOthers = async (e , key) => {
     const temp = [...others];
@@ -238,7 +238,6 @@ const ProjectAreaHazards = () => {
 
     if (others.length > 1) {
       if (others[index].id !== undefined) {
-        console.log("here");
         // const res = await api.delete(
         //   `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
         // );
@@ -277,16 +276,17 @@ const ProjectAreaHazards = () => {
 
   const handleSubmit = async (e) => {
     await setSubmitLoader(true)
-    for(let i = 0; i < form.length; i++){
-      if(form[i].id){
-        // const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
+    // for(let i = 0; i < form.length; i++){
+    //   if(form[i].id){
+    //     // const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
       
-      }else{
-        const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,form[i])
+    //   }else{
         
-      }
-      
-    }
+    //   }
+    // } 
+    const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, form)
+
+    // }
     // for(let j = 0; j < others.length; j++){
     //   if(others[j]['risk'] !== null){
     //     const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,others[j])
@@ -343,7 +343,6 @@ bytes
     await setIsLoading(true)
 
   }
-  console.log(chemicalHazardsList.current)
   const [riskVales , setRiskvalue] = useState([]) 
 
   const handelSelectOption = (hazard , checklistId) => {
@@ -356,13 +355,10 @@ bytes
 
 
   const handelUpdate = async () => {
-    console.log("here")
     const temp = {}
     // const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
-    console.log("sagar",res)
     const apiData = res.data.data.results.results
-    console.log(apiData)
     setForm(apiData)
     apiData.map((value) => {
       if (value.hazard in temp) {
@@ -400,17 +396,13 @@ bytes
     await setForm(result)
   }
 
-  console.log(riskVales)
 
   const handleCheckbox =  (value) => {
-    console.log("sagar",value)
-    console.log("sagar 000",riskVales.physicalHazards )
     const risk = false
     if(riskVales.physicalHazards.length > 0){
       if(riskVales.physicalHazards == value)
       risk = true
     }
-console.log("222222222222",risk)
     return risk
   }
 
@@ -534,30 +526,6 @@ console.log("222222222222",risk)
                 </IconButton>
               }
               </Grid>
-        {/* <Grid
-        item
-        md={12}
-        xs={12}
-        style={{marginTop: '5px'}}
-        >
-        <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={() => {
-                    history.push(
-                      `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
-                        "fkincidentId"
-                      )}`
-                    );
-                  }}
-                  // href="/app/incident-management/registration/evidence/evidence/"
-                >
-                  Previous
-                </Button>
-        <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
-        onClick={() =>handleSubmit()}>Next</Button>
-        </Grid> */}
   
     </Grid>
         <Grid item xs={12} md={3}>

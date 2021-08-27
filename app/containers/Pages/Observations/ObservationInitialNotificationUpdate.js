@@ -27,6 +27,8 @@ import InitialNotificationValidator from "../../Validator/Observation/InitialNot
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import axios from "axios";
+import { CircularProgress } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 
 import {
   access_token,
@@ -167,6 +169,7 @@ const ObservationInitialNotificationUpdate = () => {
   const [tagData , setTagData] = useState([])
   const [reportedByName , setReportedByName] = useState([]);
   const [departmentName , setDepartmentName] = useState([])
+  const [submitLoader , setSubmitLoader] = useState(false);
   const [projectSturcturedData , setProjectSturcturedData] = useState([])
   let filterReportedByName = []
   let filterDepartmentName = []
@@ -235,6 +238,7 @@ const ObservationInitialNotificationUpdate = () => {
     if (!isValid) {
       return "Data is not valid";
     }
+    await setSubmitLoader(true)
     
     let data = new FormData();
       data.append("fkCompanyId", initialData.fkCompanyId),
@@ -627,14 +631,29 @@ const ObservationInitialNotificationUpdate = () => {
             md={12}
             xs={12}
           >
-            <Button
+          {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+               Submit
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
+            {/* <Button
                 variant="outlined"
                 size="medium"
                 className={classes.custmSubmitBtn}
                 onClick={() => handleSubmit()}
               >
                 Submit
-              </Button>
+              </Button> */}
             <Button variant="outlined" size="medium" className={classes.custmCancelBtn} 
                         onClick={() => handleClose()}
 >Cancel</Button>

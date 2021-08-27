@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from "react";
+import React, { useEffect, useState, Component ,useRef} from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Grid, Typography, TextField, Button } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -31,6 +31,10 @@ import Divider from "@material-ui/core/Divider";
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
 import ActionTracker from "./ActionTracker";
+import { CircularProgress } from '@material-ui/core';
+
+import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
+
 
 
 import api from "../../../../utils/axios";
@@ -200,7 +204,16 @@ const Assessment = () => {
   const [severityValue, setSeverityValue] = useState("");
   const [probabilityValue, setProbabilityValue] = useState("");
   const [colorId,setColorId] = useState({})
+  const [isLoading , setIsLoading] = useState(false);
   const [idPerColor , setIdPerColor] = useState({243 : "yellow"});
+  const [submitLoader , setSubmitLoader] = useState(false);
+  const risk = useRef([])
+  const [ahaform, setAHAForm] = useState({});
+  const riskResidual = useRef([])
+  const monitor = useRef([])
+  const [additinalJobDetails, setAdditionalJobDetails] = useState({
+    workStopCondition: [],
+  })
   const severity = {
     1: "Negligible",
     2: "Minor",
@@ -216,6 +229,7 @@ const Assessment = () => {
     4: "Probable",
     5: "Frequent",
   };
+  const approver = ['Yes' , 'No' ]
   const riskColor = ["1EBD10", "FFEB13", "F3C539", "FF0000"];
 
   // console.log(Object.keys(obj[2])[0])
@@ -231,35 +245,28 @@ const Assessment = () => {
     );
     const result = res.data.data.results.results;
     await setForm(result);
-    console.log(result[0].id);
 
     result.map((value) => {
       temp[value.id] = {"severity":"","probability": ""}
     })
-    console.log(temp)
     await setColorId(temp)
   };
 
-  console.log(colorId)
 
-  const handleSeverity = async (key) => {
-    console.log(key);
+  const handleSeverityss = async (key) => {
   
     await handleRisk()
 
   };
-  const handleProbability = async (key) => {
-    console.log(key);
-    await setProbabilityValue(key);
-    await handleRisk()
-  };
+  // const handleProbability = async (key) => {
+  //   console.log(key);
+  //   await setProbabilityValue(key);
+  //   await handleRisk()
+  // };
 
   const handleRisk = () => {
-    console.log("sagar");
     // temp = [...form]
 
-    console.log(severityValue );
-    console.log(probabilityValue);
     // if(severityValue * probabilityValue > 4){
     //   temp[0]['riskRating'] = "Low"
     // }
@@ -267,8 +274,7 @@ const Assessment = () => {
   };
 
   const handleSeverityValue = async (e, index) => {
-    console.log(severityValue);
-    console.log(probabilityValue);
+    
     let temp = [...form];
     // await setColorId(...colorId,{...temp[index].id , {severity}})
 
@@ -277,8 +283,58 @@ const Assessment = () => {
 
   };
 
+  const handelRiskAndControl = (changeType, index, value) => {
+    const temp = [...form]
+    // temp[index]["severity"] = value
+
+    if (changeType == "risk") {
+      temp[index]["risk"] = value
+    } else if (changeType == "control") {
+      temp[index]["control"] = value.target.value
+    } else if (changeType == "residual") {
+      temp[index]["residualRisk"] = value
+    } else if (changeType == "approver") {
+      temp[index]["approveToImplement"] = value
+    } else if (changeType == "monitor") {
+      temp[index]["monitor"] = value
+    } 
+    setForm(temp)
+  }
+
+  const handleSeverity = (e , index ) => {
+    const temp = [...form]
+
+      temp[index]["severity"] = e.target.value
+      setForm(temp)
+
+  }
+  const handleProbability = (e , index ) => {
+    const temp = [...form]
+
+      temp[index]["probability"] = e.target.value
+      setForm(temp)
+
+  }
+
+  
+  const handleControlChange = async (e, index) => {
+    let temp = [...form];
+    // await setColorId(...colorId,{...temp[index].id , {severity}})
+
+    temp[index].control = e.target.value;
+    await setForm(temp)
+
+  };
+  const control = async (e, index) => {
+    let temp = [...form];
+    // await setColorId(...colorId,{...temp[index].id , {severity}})
+
+    temp[index].control = e.target.value;
+    await setForm(temp)
+
+  };
+
   const colorid = (id) => {
-    console.log(id)
     let idcolor = idPerColor[id]
     if(idcolor !== undefined){
       return idcolor
@@ -287,10 +343,7 @@ const Assessment = () => {
     }
   }
 
-  console.log(idPerColor)
   const handleProbabilityValue = async (e, index) => {
-    console.log(5 * 5);
-    console.log(probabilityValue);
     let temp = [...form];
     temp[index].probability = e.target.value;
     await setForm(temp);
@@ -299,6 +352,12 @@ const Assessment = () => {
   const [checkGroups, setCheckListGroups] = useState([]);
 
   const handleSubmit = async (e) => {
+    await setSubmitLoader(true);
+    for (let i = 0; i <form.length; i++){
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
+    }
+    ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
+
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
       ahaform
@@ -308,35 +367,116 @@ const Assessment = () => {
     }
   };
 
-  
+  // const handleWorkStopCondition = (index,value ,e) => {
+
+  // }
+  const [notifyToList, setNotifyToList] = useState([]);
+
+
+  // const handleWorkStopCondition = async (value,e) => {
+  //   if (e.target.checked === true) {
+  //     let temp = [...notifyToList];
+     
+  //     temp.push(value)
+  //     let uniq = [...new Set(temp)];
+  //     setNotifyToList(uniq)
+  //     console.log(uniq)
+  //     console.log(temp.toString())
+     
+  //    await setAHAForm({...ahaform , workStopCondition : temp.toString()});
+  //   } else {
+  //     let temp = [...notifyToList];
+      
+  //       let newData = temp.filter((item) => item !== value);
+      
+  //     setNotifyToList(newData);
+  //     setAHAForm({...ahaform , workStopCondition : newData.toString()});
+
+  //   }
+    
+  // };
+
+  const handleWorkStopCondition = (value,e) => {
+    if (e.target.checked == false) {
+      let newData = additinalJobDetails.workStopCondition.filter((item) => item !== value);
+      setAdditionalJobDetails({
+        ...additinalJobDetails,
+        workStopCondition: newData
+      });
+    } else {
+      setAdditionalJobDetails({
+        ...additinalJobDetails,
+        workStopCondition: [...additinalJobDetails.workStopCondition, value]
+      });
+    }
+  };
+
+  // const handleWorkStopCondition = (value,e) => {
+  //   if (e.target.checked == false) {
+  //     let newData = ahaform.workStopCondition.filter((item) => item !== value);
+  //     setAHAForm({
+  //       ...ahaform,
+  //       workStopCondition: newData
+  //     });
+  //   } else {
+  //     setAHAForm({
+  //       ...ahaform,
+  //       workStopCondition: [...ahaform.workStopCondition, value]
+  //     });
+  //   }
+  // };
+
+  const handleRiskValue = async (e , index) => {
+    let tempData = [...form]
+    tempData[index]['risk'] = e.target.value;
+    await setForm(tempData);
+  }
   // console.log(form)
   
-  console.log("severityValue", severityValue);
-  console.log("probabilityValue", probabilityValue);
 
   const checkList = async () => {
     const temp = {};
     const res = await api.get(
       "/api/v1/core/checklists/aha-document-conditions/1/"
     );
-    const checklistGroups = res.data.data.results[0];
-    temp[checklistGroups.checkListLabel] = checklistGroups.checklistValues;
-    setCheckListGroups(temp);
-  };
+    // const checklistGroups = res.data.data.results[0];
+    const checklistGroups = res.data.data.results[0].checklistValues;
+    // console.log("00000",checklistGroups)
+    // let checkList = []
 
-  const [ahaform, setAHAForm] = useState({});
+    // checklistGroups.map((checklist) => {
+    //   let checkObj = {}
+    //   checkObj["inputLabel"] = checkValue.inputLabel
+    //   checkObj["inputValue"] = checkValue.inputValue
+    //   checkList.push(checkObj)
+    // }
+    // temp[checklistGroups.checkListLabel] = checklistGroups.checklistValues;
+    // console.log(temp)
+    setCheckListGroups(checklistGroups);
+  };
   const fetchAhaData = async () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const result = res.data.data.results;
     await setAHAForm(result);
+    setAdditionalJobDetails({
+      ...additinalJobDetails,
+      workStopCondition: result.workStopCondition != null ? result.workStopCondition.split(",") :[],
+    });
+    await setIsLoading(true)
   };
 
+  const pickListValue = async () => {
+    risk.current = await PickListData(78)
+    riskResidual.current = await PickListData(76)
+    monitor.current = await PickListData(77)
+  }
   useEffect(() => {
     fetchHzardsData();
     checkList();
     fetchAhaData();
+    pickListValue()
   }, []);
 
   const classes = useStyles();
@@ -344,6 +484,7 @@ const Assessment = () => {
     <>
       {" "}
       <PapperBlock title="Assessments" icon="ion-md-list-box">
+      {isLoading ? (
         <Grid container spacing={3} className={classes.observationNewSection}>
           <Grid container spacing={3} item xs={12} md={9}>
             <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
@@ -370,14 +511,33 @@ const Assessment = () => {
                     <AccordionDetails>
                       <Grid container spacing={2}>
                         <Grid item md={12} sm={12} xs={12}>
-                          <TextField
+                          <FormControl
                             variant="outlined"
-                            id="immediate-actions"
-                            multiline
-                            rows="1"
-                            label="Identify risk"
-                            className={classes.fullWidth}
-                          />
+                            requirement
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="demo-simple-select-label">
+                            Identify risk
+                            </InputLabel>
+                            <Select
+                              labelId="incident-type-label"
+                              id="incident-type"
+                              label="Identify risk"
+                              value={form[index].risk ? form[index].risk : ""}
+                              // onChange={(e) => {handleRiskValue(e, index)}}
+                            >
+                              {risk.current.map(
+                                (value) => (
+                                  <MenuItem
+                                    value={value.label}
+                                  onClick={(e) => handelRiskAndControl("risk", index, value.label)}
+                                  >
+                                    {value.label}
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
                         </Grid>
 
                         <Grid item md={4} sm={4} xs={12}>
@@ -393,13 +553,17 @@ const Assessment = () => {
                               labelId="incident-type-label"
                               id="incident-type"
                               label="Incident Type"
-                              onChange={(e) => {handleSeverityValue(e, index)}}
+                              value={form[index].severity ? form[index].severity : ''}
+
+                              onChange={(e) => {handleSeverity(e, index)}}
+
                             >
                               {Object.entries(severity).map(
                                 ([key, value], index) => (
                                   <MenuItem
+                                    // onClick={(e) => handleSeverity( index, value)}
                                     value={value}
-                                    onClick={async (e) => await handleSeverity(key)}
+
                                   >
                                     {value}
                                   </MenuItem>
@@ -421,8 +585,10 @@ const Assessment = () => {
                               labelId="incident-type-label"
                               id="incident-type"
                               label="Incident Type"
+                              value={form[index].probability ? form[index].probability : ''}
+
                               onChange={(e) => {
-                                handleProbabilityValue(e, index);
+                                handleProbability(e, index);
                               }}
                             >
                               {Object.entries(probability).map(
@@ -431,7 +597,7 @@ const Assessment = () => {
                                     value={value}
                                     //  onChange={async(e) => {await setProbabilityValue(key) ;await handleRisk()} }>
 
-                                    onClick={(e) => handleProbability(key)}
+                                    // onClick={(e) => handelRiskAndControl("probability", index, value)}
                                   >
                                     {value}
                                   </MenuItem>
@@ -453,6 +619,8 @@ const Assessment = () => {
                             rows="1"
                             label="Identify controls"
                             className={classes.fullWidth}
+                            value={form[index].control ? form[index].control : ''}
+                            onChange={(e) => handelRiskAndControl("control", index, e)}
                           />
                         </Grid>
                         <Grid item md={4} sm={4} xs={12}>
@@ -468,11 +636,18 @@ const Assessment = () => {
                               labelId="incident-type-label"
                               id="incident-type"
                               label="Eveluate residual risk"
+                              value={form[index].residualRisk ? form[index].residualRisk : ''}
                             >
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
+                              {riskResidual.current.map(
+                                (value) => (
+                                  <MenuItem
+                                    value={value.label}
+                                    onClick={(e) => handelRiskAndControl("residual", index, value.label)}
+                                  >
+                                    {value.label}
+                                  </MenuItem>
+                                )
+                              )}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -489,11 +664,12 @@ const Assessment = () => {
                               labelId="incident-type-label"
                               id="incident-type"
                               label="Eveluate residual risk"
+                              value={form[index].approveToImplement ? form[index].approveToImplement : ''}
                             >
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
+                             {approver.map((value) => (<MenuItem value={value}
+                              onClick={(e) => handelRiskAndControl("approver", index, value)}
+
+                              >{value}</MenuItem>))}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -511,11 +687,20 @@ const Assessment = () => {
                               labelId="incident-type-label"
                               id="incident-type"
                               label="Eveluate residual risk"
+                              value={form[index].monitor ? form[index].monitor : ""}
                             >
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
-                              <MenuItem>One</MenuItem>
+                              {monitor.current.map(
+                                (value) => (
+                                  <MenuItem
+                                    value={value.label}
+                                    // onClick={async (e) => await handleSeverity(key)}
+                                    onClick={(e) => handelRiskAndControl("monitor", index, value.label)}
+
+                                  >
+                                    {value.label}
+                                  </MenuItem>
+                                )
+                              )}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -530,10 +715,10 @@ const Assessment = () => {
 
                         <Grid item xs={12} className={classes.createHazardbox}>
                         <Typography className={classes.increaseRowBox}>
-          <ActionTracker
-                                actionContext="Obsevations"
-                                enitityReferenceId={value.id}
-                              >add</ActionTracker>
+                        <ActionTracker
+                            actionContext="aha:hazard"
+                            enitityReferenceId={`${localStorage.getItem("fkAHAId")}:${value.id}`}
+                          />
           </Typography>
                           {/* <Typography className={classes.increaseRowBox}>
                             <ControlPointIcon />
@@ -549,31 +734,22 @@ const Assessment = () => {
               </div>
             </Grid>
 
-            {Object.entries(checkGroups).map(([key, value]) => (
-              <Grid item md={12} xs={12} className={classes.formBox}>
-                <FormLabel className={classes.labelName} component="legend">
-                  {key}
-                </FormLabel>
-                <FormGroup className={classes.customCheckBoxList}>
-                  {value.map((option) => (
-                    <>
-                      <FormControlLabel
-                        className={classes.labelValue}
-                        control={
-                          <Checkbox
-                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                            checkedIcon={<CheckBoxIcon fontSize="small" />}
-                            name="checkedI"
-                            value={option.inputLabel}
-                          />
-                        }
-                        label={option.inputLabel}
-                      />
-                    </>
+            <Grid item md={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Discuss and document conditions when the work must be stopped</FormLabel>
+                <FormGroup>
+                  {checkGroups.map((option) => (
+                    <FormControlLabel
+                      control={<Checkbox name={option.inputLabel} />}
+                      label={option.inputLabel}
+                      checked={additinalJobDetails.workStopCondition.includes(option.inputValue)}
+                        onChange={async (e) => {handleWorkStopCondition( option.inputValue,e)}}
+                    />
                   ))}
                 </FormGroup>
-              </Grid>
-            ))}
+              </FormControl>
+              {/* <Box borderTop={1} marginTop={2} borderColor="grey.300" /> */}
+            </Grid>
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <TextField
@@ -603,14 +779,29 @@ const Assessment = () => {
               >
                 Previous
               </Button>
-              <Button
+              {submitLoader == false ?
+                <Button
+                  variant="contained"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.button}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
+              {/* <Button
                 variant="contained"
                 size="medium"
                 className={classes.button}
                 onClick={() => handleSubmit()}
               >
                 Next
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
           <Grid item xs={12} md={3}>
@@ -620,7 +811,7 @@ const Assessment = () => {
               selectedItem="Assessment"
             />
           </Grid>
-        </Grid>
+        </Grid>):(<h1>Loading...</h1>)}
       </PapperBlock>
     </>
   );

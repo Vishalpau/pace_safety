@@ -52,6 +52,9 @@ import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import api from "../../../utils/axios";
 import moment from 'moment';
 
+import Attachment from "../../Attachment/Attachment";
+
+
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -189,9 +192,17 @@ function AhaSummary() {
       );
     };
 
+    const handelFileName = (value) => {
+      const fileNameArray = value.split("/");
+      const fileName = fileNameArray[fileNameArray.length - 1].split('-');
+      const lastNameArray = fileName[fileName.length - 1]
+      // const lastName = fileName.split("-");
+      return lastNameArray;
+    };
+  
+
     const fetchAHASummary = async () => {
       const res = await api.get(`/api/v1/ahas/${id}/`);
-      console.log(res)
       const result = res.data.data.results
       await fetchBreakDownData(result.fkProjectStructureIds)
       await setAHAData(result)
@@ -200,11 +211,8 @@ function AhaSummary() {
     const fetchTeamData = async () => {
       const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
       const result =  res.data.data.results.results
-      console.log(result)
       await setTeamForm(result)
-      console.log(result)
     }
-    console.log(ahaData)
 
     const fetchBreakDownData = async (projectBreakdown) => {
       const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -280,7 +288,6 @@ const [form , setForm] = useState([])
       const result = res.data.data.results.results
       await setForm(result)
     }
-console.log(form)
     useEffect(() => {
       if(id){
         fetchAHASummary();
@@ -642,20 +649,21 @@ console.log(form)
                                 <Grid container item xs={12} spacing={3}>
                                   <>
                                     <Grid item xs={12} md={6}>
-                                      {
-                                        form.map((item) => (<>
-                                          <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        {item.hazard}
-                                      </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
+                                      
+                                      {form.map((item , index) => (<>
+            
+            
+            <ul className={classes.labelValue} key={index}>
+           { <li>{item.hazard}</li>} 
+             
+          
+          
+            </ul>
+         </> ))}
+                                          {/* <Typography variant="body" className={Fonts.labelValue}>
                                         {item.risk}
-                                      </Typography>
-                                       </> ))
-                                      }
+                                      </Typography> */}
+                                      
                                       
                                     </Grid>
                                   </>
@@ -673,6 +681,7 @@ console.log(form)
                                   Assessment
                                 </Typography>
                               </AccordionSummary>
+                              
                               <AccordionDetails>
                                 <Grid container item xs={12} spacing={3}>
                                   <>
@@ -683,15 +692,16 @@ console.log(form)
                                   >
 
                                     <Grid item md={12}>
-                                      <div>
-                                        <Accordion expanded={expandedTableDetail === 'panel5'} onChange={handleTDChange('panel5')} defaultExpanded className={classes.backPaper}>
+                                      <div>{
+                                form.map((item , index) => (<>
+                                  <Accordion expanded={expandedTableDetail === `panel5${index}`} onChange={handleTDChange(`panel5${index}`)} defaultExpanded className={classes.backPaper}>
                                           <AccordionSummary
                                             expandIcon={<ExpandMoreIcon />}
                                             aria-controls="panel1bh-content"
                                             id="panel1bh-header"
                                             className={classes.headingColor}
                                           >
-                                            <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#1 - Hazard Name</Typography>  
+                                            <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} />{item.hazard}</Typography>  
                                           </AccordionSummary>
                                             <AccordionDetails>
                                             <Grid container spacing={2}>
@@ -704,7 +714,7 @@ console.log(form)
                                                   Identify Risk
                                                 </Typography>
                                                 <Typography variant="body" className={Fonts.labelValue}>
-                                                  NA
+                                                  {item.risk ? item.risk : "-"}
                                                 </Typography>
                                               </Grid>
                                               
@@ -717,7 +727,7 @@ console.log(form)
                                                   Risk Severity
                                                 </Typography>
                                                 <Typography variant="body" className={Fonts.labelValue}>
-                                                  NA
+                                                  {item.severity ? item.severity : "-"}
                                                 </Typography>
                                               </Grid>
                                               <Grid item md={5} sm={5} xs={12}>
@@ -729,7 +739,7 @@ console.log(form)
                                                   Risk Probability
                                                 </Typography>
                                                 <Typography variant="body" className={Fonts.labelValue}>
-                                                  NA
+                                                  {item.probability ? item.probability : "-"}
                                                 </Typography>
                                               </Grid>
                                               <Grid item md={2} sm={2} xs={12}>
@@ -745,7 +755,7 @@ console.log(form)
                                                   Identify Controls
                                                 </Typography>
                                                 <Typography variant="body" className={Fonts.labelValue}>
-                                                  NA
+                                                  {item.control ? item.control : "-"}
                                                 </Typography>
                                               </Grid>
                                               <Grid item md={4} sm={4} xs={12}>
@@ -757,7 +767,7 @@ console.log(form)
                                                   Evaluate Residual Risk
                                                 </Typography>
                                                 <Typography variant="body" className={Fonts.labelValue}>
-                                                  NA
+                                                  {item.residualRisk ? item.residualRisk : "-"}
                                                 </Typography>
                                               </Grid>
                                               <Grid item md={4} sm={4} xs={12}>
@@ -769,7 +779,7 @@ console.log(form)
                                                   Approve to Implement
                                                 </Typography>
                                                 <Typography variant="body" className={Fonts.labelValue}>
-                                                  NA
+                                                  {item.approveToImplement ? item.approveToImplement : "-"}
                                                 </Typography>
                                               </Grid>
                                               
@@ -782,7 +792,7 @@ console.log(form)
                                                   Monitor
                                                 </Typography>
                                                 <Typography variant="body" className={Fonts.labelValue}>
-                                                  NA
+                                                  {item.monitor ? item.monitor : "-"}
                                                 </Typography>
                                               </Grid>
                                               <Grid item md={12} xs={12} className={classes.createHazardbox}>
@@ -791,53 +801,11 @@ console.log(form)
                                             </Grid>  
                                             </AccordionDetails>
                                           </Accordion>
-                                          <Accordion expanded={expandedTableDetail === 'panel6'} onChange={handleTDChange('panel6')} className={classes.backPaper}>
-                                            <AccordionSummary
-                                              expandIcon={<ExpandMoreIcon />}
-                                              aria-controls="panel2bh-content"
-                                              id="panel2bh-header"
-                                              className={classes.headingColor}
-                                            >
-                                              <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#3 - Hazard Name</Typography>
-                                              
-                                            </AccordionSummary>
-                                            <AccordionDetails>
-                                              <Typography>
-                                                Dummy content
-                                              </Typography>
-                                            </AccordionDetails>
-                                          </Accordion>
-                                          <Accordion expanded={expandedTableDetail === 'panel7'} onChange={handleTDChange('panel7')} className={classes.backPaper}>
-                                            <AccordionSummary
-                                              expandIcon={<ExpandMoreIcon />}
-                                              aria-controls="panel3bh-content"
-                                              id="panel3bh-header"
-                                              className={classes.headingColor}
-                                            >
-                                              <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} />Hazard#2 - Hazard Name </Typography>
-                                              
-                                            </AccordionSummary>
-                                            <AccordionDetails>
-                                              <Typography>
-                                                Dummy content
-                                              </Typography>
-                                            </AccordionDetails>
-                                          </Accordion>
-                                          <Accordion expanded={expandedTableDetail === 'panel8'} onChange={handleTDChange('panel8')} className={classes.backPaper}>
-                                            <AccordionSummary
-                                              expandIcon={<ExpandMoreIcon />}
-                                              aria-controls="panel4bh-content"
-                                              id="panel4bh-header"
-                                              className={classes.headingColor}
-                                            >
-                                              <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#4 - Hazard Name </Typography>
-                                            </AccordionSummary>
-                                            <AccordionDetails>
-                                              <Typography>
-                                                Dummy content
-                                              </Typography>
-                                            </AccordionDetails>
-                                          </Accordion>
+
+                                </>))
+                              }
+                                        
+                                          
                                         </div>  
                                       </Grid>                                     
 
@@ -863,7 +831,7 @@ console.log(form)
                                         Conditions when the work must be stopped
                                       </Typography>
                                       <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
+                                      {ahaData.workStopCondition}
                                       </Typography>
                                     </Grid>
                                     <Grid item xs={12} md={12}>
@@ -875,7 +843,7 @@ console.log(form)
                                         Additional remarks
                                       </Typography>
                                       <Typography variant="body" className={Fonts.labelValue}>
-                                        None
+                                        {ahaData.additionalRemarks}
                                       </Typography>
                                     </Grid>
                                   </>
@@ -904,11 +872,21 @@ console.log(form)
                                       >
                                         Risk assessment supporting documents
                                       </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        <Avatar variant="rounded" className={classes.rounded}>
-                                          <ImageIcon />
-                                        </Avatar>
-                                      </Typography>
+                                      {ahaData.ahaAssessmentAttachment ? (
+          <Typography className={classes.labelValue} 
+          title={handelFileName(
+            ahaData.ahaAssessmentAttachment)
+          }
+                                    >
+          {/* <Attachment value={initialData.attachment}/> */}
+          {ahaData.ahaAssessmentAttachment ===
+                              null ? null : typeof ahaData.ahaAssessmentAttachment ===
+                                "string" ? (
+                                <Attachment value={ahaData.ahaAssessmentAttachment} />
+                              ) : null}
+
+          </Typography>):("-")}
+                                     
                                     </Grid>
                                     <Grid item xs={12} md={6}> 
                                       <Typography
@@ -919,7 +897,8 @@ console.log(form)
                                         Links
                                       </Typography>
                                       <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
+                                      {ahaData.link}
+
                                       </Typography>
                                     </Grid>
                                     <Grid item xs={12} md={12}>
@@ -930,8 +909,8 @@ console.log(form)
                                       >
                                         Notifications sent to
                                       </Typography>
-                                      <Typography variant="body" display="block" className={Fonts.labelValue}>Role one</Typography>
-                                      <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography>
+                                      <Typography variant="body" display="block" className={Fonts.labelValue}>{ahaData.notifyTo}</Typography>
+                                      {/* <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography> */}
                                     </Grid>
                                   </>
                                 </Grid>

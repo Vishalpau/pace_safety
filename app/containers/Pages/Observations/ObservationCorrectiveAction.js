@@ -38,6 +38,8 @@ import TableRow from "@material-ui/core/TableRow";
 
 import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveActionValidation";
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
+import { CircularProgress } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 
 import {
   access_token,
@@ -128,8 +130,9 @@ function ObservationCorrectiveAction() {
   const {id} = useParams();
   const [actionTakenData , setActionTakenData ]= useState([])
   const [actionOpen , setActionOpen] = useState(false)
-  const [error, setError] = useState({ comment: "" });
+  const [error, setError] = useState({ comment: "" , reviewedOn : ""});
   const [reportedByName , setReportedByName] = useState([]);
+  const [submitLoader , setSubmitLoader] = useState(false);
   let filterReportedByName = []
 
   const [comment , setComment] = useState({
@@ -162,18 +165,10 @@ function ObservationCorrectiveAction() {
     if(comment.comment === ""){
       setError({ comment: "Please enter comment" });
     }else{
+      await setSubmitLoader(true)
       const res1 = await api.post(`/api/v1/comments/`,comment);
     if (res1.status === 201) {
-      localStorage.setItem('updateAction', "Done")
-      localStorage.setItem("action" , "Done")
-      history.push(
-        `/app/pages/observation-Summary/${localStorage.getItem(
-          "fkobservationId"
-        )}`
-      );
-    }
-    }
-    let data = new FormData();
+      let data = new FormData();
     data.append("fkCompanyId", form.fkCompanyId),
       data.append("fkProjectId", form.fkProjectId),
       data.append("fkProjectStructureIds", form.fkProjectStructureIds),
@@ -216,6 +211,19 @@ function ObservationCorrectiveAction() {
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
     )}/`, data);
+    if(res.status === 200){
+      localStorage.setItem('updateAction', "Done")
+      localStorage.setItem("action" , "Done")
+      history.push(
+        `/app/pages/observation-Summary/${localStorage.getItem(
+          "fkobservationId"
+        )}`
+      );
+    }
+    }
+    }
+    
+    
     
     
   }
@@ -254,6 +262,19 @@ function ObservationCorrectiveAction() {
     setSelectedDate(date);
   };
 
+  const handleCloseDate = (e) => {
+
+
+    if (new Date(e) <= new Date()) {
+        setForm({ ...form, reviewedOn: moment(e).toISOString() })
+        setError({...error , reviewedOn : ""})
+
+    }
+    else {
+        let errorMessage = "Review Time cannot be prior to current time"
+        setError({...error , reviewedOn : errorMessage})
+    }
+}
   const handelActionTracker = async () => {
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
@@ -262,8 +283,13 @@ function ObservationCorrectiveAction() {
     let ActionToCause = {}
     const allActionTrackerData = await api_action.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
-    console.log(allActionTracker)
 
+  }
+  const handleReview  = (e ,value) => {
+    let temp ={ ...form}
+temp.reviewedByName = value.name
+temp.reviewedById = value.id
+    setForm(temp)
   }
 
   const fetchactionTrackerData = async () =>{
@@ -300,7 +326,7 @@ function ObservationCorrectiveAction() {
           let user = [];
           user = result;
           for (var i in result) {
-            filterReportedByName.push(result[i].name);
+            filterReportedByName.push(result[i]);
           }
           setReportedByName(filterReportedByName);
         }
@@ -313,7 +339,6 @@ function ObservationCorrectiveAction() {
       });
   };
 
-  console.log(actionTakenData)
 
   useEffect(() => {
     if(id){
@@ -419,7 +444,18 @@ function ObservationCorrectiveAction() {
             {actionTakenData.map((action) => (<>
               <TableRow>
                 <TableCell style={{ width:50}}>
-                {action.actionNumber}
+                <a
+                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
+                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
+                href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
+                                // actionContext="Obsevations"
+                                // enitityReferenceId={action.enitityReferenceId}
+                                // actionId={action.id}
+                                // actionData = {action}
+                                // onClick = {() => {handleActionTracker(action)}}
+                                target="_blank"
+                              >{action.actionNumber}</a>
+                
                 </TableCell>
                 <TableCell style={{ width:50}}>
                 {action.actionTitle}
@@ -442,6 +478,7 @@ function ObservationCorrectiveAction() {
           <ActionTracker
                                 actionContext="Obsevations"
                                 enitityReferenceId={id}
+                                actionTitle = ""
                               >add</ActionTracker>
           </Typography></>):null}
         </Grid>
@@ -461,15 +498,20 @@ function ObservationCorrectiveAction() {
             fullWidth
             error={error.reviewedByName}
             helperText={error.reviewedByName ? error.reviewedByName : null}
-            value={form.reviewedByName}
+            value={form.reviewedByName ? form.reviewedByName : ""}
             variant="outlined"
-            onChange={(e) => {
-              setForm({ ...form, reviewedByName: e.target.value });
-                    }}
+            
           >
+          {/* {reportedByName.map((option) => (
+                  <MenuItem key={option} value={option.name}
+                  onClick={(e , option) => handleReview(e,option)}>
+                    {option.name}
+                  </MenuItem>
+                ))} */}
             {reportedByName.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+              <MenuItem key={option} value={option.name}
+              onClick={(e ) => handleReview(e , option)}>
+                {option.name}
               </MenuItem>
             ))}
           </TextField>
@@ -487,17 +529,12 @@ function ObservationCorrectiveAction() {
               fullWidth
               label="Reviewed on*"
               value={form.reviewedOn ? form.reviewedOn : null}
-              onChange={handleDateChange}
+              // onChange={handleDateChange}
               error={error.reviewedOn}
               helperText={error.reviewedOn ? error.reviewedOn : null}
               disableFuture={true}
               inputVariant="outlined"
-              onChange={(e) => {
-                    setForm({
-                      ...form,
-                      reviewedOn: moment(e).toISOString(),
-                    });
-                  }}
+              onChange={(e) => handleCloseDate(e)}
             />
           </MuiPickersUtilsProvider>
         </Grid>
@@ -532,8 +569,23 @@ function ObservationCorrectiveAction() {
           md={12}
           xs={12}
         >
-          <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
-          onClick={() => handleSubmit()}>Submit</Button>
+        {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+               Submit
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
+          {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
+          onClick={() => handleSubmit()}>Submit</Button> */}
         </Grid> 
       </Grid>: <h1>Loading...</h1>}
     </>
