@@ -148,7 +148,6 @@ const ObservationCorrectiveActionView = () => {
     await setInitialData(result)
 
   }
-
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
   const handleDateChange = (date) => {
@@ -185,7 +184,7 @@ bytes
     const result = res.data.data.results.results
     // await setComments(result[3])
     await setComment(result[result.length -1] )
-    await setIsLoading(true)
+    // await setIsLoading(true)
   }
 
   const fetchactionTrackerData = async () =>{
@@ -223,7 +222,7 @@ bytes
           Are there any corrective actions to be taken?
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.isCorrectiveActionTaken}
+                    {initialData.isCorrectiveActionTaken ? initialData.isCorrectiveActionTaken : ""}
           </Typography>
         </Grid>
 
