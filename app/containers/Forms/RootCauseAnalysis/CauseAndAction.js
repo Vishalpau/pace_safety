@@ -74,6 +74,7 @@ const BasicCauseAndAction = () => {
   const putId = useRef("");
   let id = useRef();
   const [actionData, setActionData] = useState({});
+  const [updatePage, setUpdatePage] = useState(false)
 
   const handelShowData = async () => {
     console.log("here")
@@ -147,7 +148,7 @@ const BasicCauseAndAction = () => {
 
   useEffect(() => {
     handelCallback()
-  }, []);
+  }, [updatePage]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
@@ -202,15 +203,20 @@ const BasicCauseAndAction = () => {
                       <span>{value.rcaRemark}</span>
                     </TableCell>
                     <TableCell align="right">
+
+                      <ActionTracker
+                        actionContext="incidents:Pacacuase"
+                        enitityReferenceId={`${putId.current}:${value.id}`}
+                        setUpdatePage={setUpdatePage}
+                        updatePage={updatePage}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
                       <Typography>
                         {value.action != undefined && value.action.map((actionId) => (
                           <p>{actionId}</p>
                         ))}
                       </Typography>
-                      <ActionTracker
-                        actionContext="incidents:Pacacuase"
-                        enitityReferenceId={`${putId.current}:${value.id}`}
-                      />
                     </TableCell>
                   </TableRow>
                 ))}
