@@ -260,8 +260,9 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-
+      console.log(data)
     const codes = data.map(module => module.moduleCode)
+    console.log(codes)
     setCode(codes)
 
 
@@ -401,7 +402,8 @@ function PersonalDashboard(props) {
               }
               if (newData.projects.length > 1) {
                 setProjectListData(newData.projects);
-                setOpen(true);
+                setProjectOpen(true);
+                // setOpen(true);
               }
             }
           }
@@ -449,7 +451,7 @@ function PersonalDashboard(props) {
             <div className={!(codes.includes('compliance')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
               <div className="hexagontent hexagon_content_box">
                 <a className="hse_compliance_protocols" onClick={() => handleClick('compliance')}>
-                  <p>Compliances</p>
+                  <p>Compliance Protocols</p>
                 </a>
               </div>
             </div>
@@ -464,7 +466,7 @@ function PersonalDashboard(props) {
                   className="hse_incident_reporting_management"
                   onClick={() => handleClick('incidents')}
                 >
-                  <p >Incidents</p>
+                  <p >Incident Management</p>
                 </a>
               </div>
             </div>
@@ -472,13 +474,21 @@ function PersonalDashboard(props) {
             <div className="hexagon hide_responsiv">
               <div className="hexagontent hexagon_content_box" />
             </div>
-          </div>
+          </div> 
+
+
+{/* Action Tracker
+
+Permit Management */}
+
+
+
 
           <div className="ibws-fix hexagon_row2">
             <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
               <div className="hexagontent hexagon_content_box">
                 <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
-                  <p>Project Information Hub</p>
+                  <p>Project Information Hub </p>
                 </a>
               </div>
             </div>
@@ -509,7 +519,7 @@ function PersonalDashboard(props) {
                   className="hse_intelligent_permit_management_new"
                   onClick={() => handleClick('intelligent_permit_management')}
                 >
-                  <p>Intelligent Permit Management</p>
+                  <p>Permit Management</p>
                 </a>
               </div>
             </div>
@@ -532,7 +542,7 @@ function PersonalDashboard(props) {
                 <a
                   onClick={() => handleClick('collaboration')}
                 >
-                  <p>Rapid Knowledge &amp; Collaboration</p>
+                  <p>Rapid Knowledge & Collaboration</p>
                 </a>
               </div>
             </div>

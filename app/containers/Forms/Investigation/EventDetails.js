@@ -140,6 +140,7 @@ const EventDetails = () => {
         }
         const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
         const costData = cost.data.data.results
+        console.log(costData)
         if (costData.length !== 0) {
           setOverAllCost(costData)
           costData.map((value) => {
@@ -158,8 +159,6 @@ const EventDetails = () => {
         }
       }
       // event data
-
-
     }
     localStorage.setItem("WorkerPost", "done");
   };
@@ -320,7 +319,7 @@ const EventDetails = () => {
 
         // cost api call put
         if (form.isCostIncurred == "Yes") {
-          if (overAllCost.length > 0 && !isNaN(overAllCostId.current[0])) {
+          if (overAllCost.length > 0) {
             let costObject = overAllCost;
             for (let keys in costObject) {
               if (costObject[keys].costType !== "" && costObject[keys].costAmount !== "" && costObject[keys].casualFactor !== "") {

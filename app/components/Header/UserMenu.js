@@ -140,6 +140,9 @@ function UserMenu(props) {
   const [codes, setCodes] = useState([]);
   const [apps, setApps] = useState([])
   const [isLoading, setIsLoading] = useState(false);
+  const [userImageLink, setUserImageLink] = useState([])
+  const [companyLogoLink, setCompanyLogoLink] = useState('')
+  const [companyName, setCompanyName] = useState('')
 
   const handleAppsClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -176,7 +179,7 @@ function UserMenu(props) {
       });
   };
   const getSubscriptions = async () => {
-    const companyId = localStorage.getItem('companyId')
+    
     let subscriptionData = {}
     let data = await api
       .get(`${ACCOUNT_API_URL}api/v1/applications/`)
@@ -187,7 +190,7 @@ function UserMenu(props) {
 
       })
       .catch(function (error) {
-        console.log(error);
+    
         localStorage.removeItem("access_token");
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
@@ -200,21 +203,27 @@ function UserMenu(props) {
 
 
   const getSubscribedApps = async () => {
-    const companyId = localStorage.getItem('companyId')
-    let subscriptionData = {}
-    let data = await api.get(`${SELF_API}1/`).then(function (res) {
-      subscriptionData = res.data.data.results.data.companies[0].subscriptions;
-      // setSubscriptions(subscriptionData);
-      return subscriptionData
-
-    })
-      .catch(function (error) {
-        localStorage.removeItem("access_token");
-        localStorage.clear();
-        window.location.href = `${LOGOUT_URL}`;
-        console.log(error);
-      });
-    await setApps(data.map(app => app.appId))
+    const companyId = props.initialValues.companyDataList.fkCompanyId||JSON.parse(localStorage.getItem('company')).fkCompanyId
+    if(companyId){
+      let subscriptionData = {}
+      let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
+        subscriptionData = res.data.data.results.data.companies[0].subscriptions;
+        setUserImageLink(res.data.data.results.data.avatar)
+        setCompanyLogoLink(res.data.data.results.data.companies[0].logo)
+        setCompanyName(res.data.data.results.data.companies[0].companyName)
+        // setSubscriptions(subscriptionData);
+        return subscriptionData
+  
+      })
+        .catch(function (error) {
+          localStorage.removeItem("access_token");
+          localStorage.clear();
+          window.location.href = `${LOGOUT_URL}`;
+    
+        });
+      await setApps(data.map(app => app.appId))
+    }
+   
 
   }
   const handleClosea = (event) => {
@@ -230,7 +239,7 @@ function UserMenu(props) {
   useEffect(() => {
     getSubscribedApps();
     getSubscriptions();
-  }, [])
+  }, [props.initialValues.companyDataList])
 
   const classnames = useStyles();
 
@@ -346,7 +355,7 @@ function UserMenu(props) {
             <MenuItem onClick={handleClose}>
               <div className={messageStyles.messageError}>
                 <ListItemAvatar>
-                  <Avatar className={messageStyles.icon}>
+                  <Avatar src={userImageLink} className={messageStyles.icon}>
                     <Error />
                   </Avatar>
                 </ListItemAvatar>
@@ -421,11 +430,11 @@ function UserMenu(props) {
         className={classes.userControls}
         onClick={handleMenu("user-setting")}
       >
-        {isDesktop && <img className={classes.userLogo} src={companyLogo[0]} />}
+        {isDesktop && companyLogoLink?<img className={classes.userLogo} src={companyLogoLink} />:<MenuItem style={{color:"white"}} color="white">{companyName}</MenuItem>}
         <Avatar
           alt={dummy.user.name}
           variant="circle"
-          src={dummy.user.avatar}
+          src={userImageLink?userImageLink:dummy.user.avatar}
         />
       </Button>
       <Menu

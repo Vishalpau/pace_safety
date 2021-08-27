@@ -432,7 +432,7 @@ function HeaderBreakdown(props) {
                         color="primary"
                         size="small"
                         disableElevation
-                        onClick={()=>props.setIsPopUpOpen(false)}
+                        onClick={handleClose}
                       >
                         Apply
                       </Button>

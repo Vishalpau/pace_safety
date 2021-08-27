@@ -431,6 +431,14 @@ bytes
                     {initialData.location}
           </Typography>
         </Grid>
+        <Grid item md={12}>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+          Classification
+          </Typography>
+          <Typography className={classes.labelValue}>
+                    {initialData.observationClassification}
+          </Typography>
+        </Grid>
         {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Actions Taken
@@ -485,7 +493,7 @@ bytes
         </Grid>
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Category
+          Categories
           </Typography>
           {/* {tagsData.} */}
           {tagsData.map((tag , index) => (

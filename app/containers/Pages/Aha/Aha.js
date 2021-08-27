@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { PapperBlock } from 'dan-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -32,6 +32,9 @@ import { useHistory, useParams } from 'react-router';
 // Local Imports
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
+import moment from 'moment';
+
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -136,6 +139,9 @@ const ILink = withStyles({
 
 function Aha() {
   const [cardView, setCardView] = useState(true);
+  const [allAHAData , setAllAHAData] = useState([])
+  const [listToggle, setListToggle] = useState(false);
+  const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
 
   // Function to toggle the view mode
@@ -159,22 +165,40 @@ function Aha() {
     page: 0,
   };
 
-  const handleSummaryPush = async () => {
+  const handleSummaryPush = async (index) => {
+    const id = allAHAData[index].id
+      localStorage.setItem('fkAHAId', id)
+
     //console.log("Ashutosh")
     history.push(
-      "/app/pages/aha/aha-summary/"
+      `/app/pages/aha/aha-summary/${id}`
     );
   };
 
   const handleNewAhaPush = async () => {
     //console.log("Ashutosh")
+    localStorage.removeItem('fkAHAId')
     history.push(
       "/app/pages/aha/assessments/project-details"
     );
   };
 
+  const fetchAllAHAData = async () => {
+    const res = await api.get("/api/v1/ahas/")
+    const result = res.data.data.results.results
+    
+    await setAllAHAData(result)
+  }
+  
+  console.log(allAHAData);
+
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
+
+  useEffect(() => {
+    fetchAllAHAData()
+    // handleProjectList()
+},[])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
       <div className={classes.root}>
@@ -192,7 +216,10 @@ function Aha() {
                       classes={{
                         root: classes.inputRoot,
                         input: classes.inputInput,
+                        
                       }}
+                      onChange={(e) => setSeacrhIncident(e.target.value)}
+
                     />
                   </Paper>
                 </div>
@@ -234,7 +261,11 @@ function Aha() {
         </AppBar>
       </div>
 
-      {cardView ? (
+      {cardView ? (<>
+        {allAHAData.length > 0  && Object.entries(allAHAData).filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
+            item[1]["description"].toLowerCase().includes(
+                      searchIncident.toLowerCase()
+                    ) ).map((item, index) => (
         <Card variant="outlined" className={Incidents.card}>
           <CardContent>
             <Grid container spacing={3}>
@@ -242,8 +273,7 @@ function Aha() {
                 <Grid container spacing={3} alignItems="flex-start">
                   <Grid item xs={11}>
                     <Typography variant="h6">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Reprehenderit culpa voluptates iste.
+                      {item[1]["description"]}
                     </Typography>
                   </Grid>
 
@@ -265,7 +295,7 @@ function Aha() {
                     >
                       Number:
                       <Link
-                        onClick={(e) => handleSummaryPush(e)}
+                        onClick={(e) => handleSummaryPush(index)}
                         variant="subtitle2"
                         className={Fonts.listingLabelValue}
                         style={{
@@ -274,7 +304,7 @@ function Aha() {
                           marginLeft: '8px',
                         }}
                       >
-                        IR-15415415
+                        {item[1]["ahaNumber"]}
                       </Link>
                     </Typography>
                   </Grid>
@@ -295,7 +325,9 @@ function Aha() {
                     >
                       <CalendarTodayIcon fontSize="small" />
                       <span className={Fonts.listingLabelValue}>
-                        25th July 2021, 02:51 PM
+                      {moment(item[1]["assessmentDate"]).format(
+            "Do MMMM YYYY"
+          )}
                       </span>
                     </Typography>
                   </Grid>
@@ -308,7 +340,7 @@ function Aha() {
                 </Typography>
 
                 <Typography className={Fonts.listingLabelValue}>
-                  Not found
+                {item[1]["workArea"]}
                 </Typography>
               </Grid>
               <Grid item xs={6} lg={3}>
@@ -316,7 +348,7 @@ function Aha() {
                   Location
                 </Typography>
                 <Typography className={Fonts.listingLabelValue}>
-                  New Delhi
+                {item[1]["location"]}
                 </Typography>
               </Grid>
 
@@ -326,7 +358,9 @@ function Aha() {
                 </Typography>
 
                 <Typography variant="body1" className={Fonts.listingLabelValue}>
-                  29th July 2021, 08:44 AM
+                {moment(item[1]["createdAt"]).format(
+            "Do MMMM YYYY, h:mm:ss a"
+          )}
                 </Typography>
               </Grid>
 
@@ -336,7 +370,7 @@ function Aha() {
                 </Typography>
 
                 <Typography className={Fonts.listingLabelValue}>
-                  John Doe
+                {item[1]["createdBy"]}
                 </Typography>
               </Grid>
             </Grid>
@@ -412,8 +446,8 @@ function Aha() {
               </Grid>
             </Grid>
           </CardActions>
-        </Card>
-      ) : (
+        </Card> ))}</>)
+       : (
         <MUIDataTable
           title="Incidents List"
           data={data}

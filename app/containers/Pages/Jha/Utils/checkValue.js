@@ -32,11 +32,11 @@ export const handelConvert = (value) => {
 };
 
 
-export const handelIncidentId = () => {
+export const handelJhaId = () => {
     let page_url = window.location.href;
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    return incidentId
+    let jhaID = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkJHAId");
+    return jhaID
 }
 
 export const handelFileName = (value) => {

@@ -1,9 +1,10 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, Component , useRef } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Grid, Typography, TextField, Button
 } from '@material-ui/core';
 import FormLabel from '@material-ui/core/FormLabel';
+import { PapperBlock } from 'dan-components';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -23,9 +24,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams , useHistory } from 'react-router';
+import api from "../../../../utils/axios";
+import { CircularProgress } from '@material-ui/core';
 
-import { AHA } from "../../../../utils/constants";
 
+import { AHA } from "../constants";
 
 
 
@@ -135,20 +138,71 @@ const useStyles = makeStyles((theme) => ({
 
 const DocumentNotification = () => {
   const history = useHistory();
+  const attachmentName = useRef("")
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   
   };
-  const handleSubmit = async (e) => {
-    history.push("/app/pages/aha/aha-summary/")
-  }
+
+  const notification = ["Manager" , "Supervisor" ]
+  const [submitLoader , setSubmitLoader] = useState(false);
+
+  const [ahaform , setAHAForm] = useState({})
+  const handleSubmit = async () => {
+
+    let data = new FormData()
+    
+      data.append("fkCompanyId" ,  ahaform.fkCompanyId)
+      data.append("fkProjectId" , ahaform.fkProjectId),
+      data.append("fkProjectStructureIds" , ahaform.fkProjectStructureIds) ,
+      data.append("workArea" , ahaform.workArea),
+      data.append("location" , ahaform.location),
+      data.append("assessmentDate" , ahaform.assessmentDate),
+      data.append("permitToPerahaform" ,  ahaform.permitToPerahaform),
+      data.append("permitNumber" , ahaform.permitNumber),
+      data.append("ahaNumber" , ahaform.ahaNumber),
+      data.append("ahaAssessmentAttachment" , ahaform.ahaAssessmentAttachment)
+      data.append("description" ,  ahaform.description),
+      data.append("workStopCondition" , ahaform.workStopCondition),
+      data.append("department" , ahaform.department),
+      data.append("additionalRemarks" ,  ahaform.additionalRemarks),
+      data.append("classification",ahaform.classification),
+      data.append("link",ahaform.link),
+      data.append("notifyTo",ahaform.notifyTo),
+      data.append("permitToPerform",ahaform.permitToPerform),
+      data.append("wrpApprovalUser", ahaform.wrpApprovalUser),
+      data.append("wrpApprovalDateTime" , ahaform.wrpApprovalDateTime),
+      data.append("picApprovalUser" , ahaform.picApprovalUser),
+      data.append("picApprovalDateTime", ahaform.picApprovalDateTime),
+      data.append("signedUser" , ahaform.signedUser),
+      data.append("signedDateTime" , ahaform.signedDateTime),
+      data.append("anyLessonsLearnt" ,ahaform.anyLessonsLearnt),
+      data.append("lessonLearntDetails", ahaform.lessonLearntDetails),
+      data.append("lessonLearntUserName" , ahaform.lessonLearntUserName),
+      data.append("ahaStatus" , ahaform.ahaStatus),
+      data.append("ahaStage" , ahaform.ahaStage),
+      data.append("badgeNumber" , ahaform.badgeNumber),
+      data.append("status" , ahaform.status),
+      data.append("createdBy" , ahaform.createdBy),
+      data.append("source", ahaform.source),
+      data.append("vendor" , ahaform.vendor)
+      data.append("vendorReferenceId", ahaform.vendorReferenceId)
+      await setSubmitLoader(true)
+      const res = await api.put(
+        `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
+        data
+      );      
+      if(res.status === 200) {
+        history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
+      }
+    }
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   const files = acceptedFiles.map(file => (
     <>
-      <li key={file.path}>
+        <li key={file.path}>
         {file.path}
         {' '}
   -
@@ -164,10 +218,61 @@ const DocumentNotification = () => {
       </IconButton>
     </>
   ));
+  // const handleNotification = (e ,value) => {
+  //   temp = {...form}
+  //   tempdata  = []
+  //   if(e.target.checked=== true) {
+  //     temp
+  //   }
+  // }
+const [notifyToList,setNotifyToList] = useState([]);
+  const handleNotification = async (e, value) => {
+    if (e.target.checked === true) {
+      let temp = [...notifyToList];
+     
+      temp.push(value)
+      let uniq = [...new Set(temp)];
+      setNotifyToList(uniq)
+     
+      setAHAForm({...ahaform , notifyTo : temp.toString()});
+    } else {
+      let temp = [...notifyToList];
+      
+        let newData = temp.filter((item) => item !== value);
+      
+      setNotifyToList(newData);
+      setForm({...form , notifyTo : newData.toString()});
+
+    }
+    
+  };
+
+  const handleFile = (e) => {
+    let temp = {...ahaform}
+    temp.ahaAssessmentAttachment = e.target.files[0]
+    attachmentName.current = e.target.files[0].name
+    setAHAForm(temp)
+  }
+  const fetchAhaData = async () => {
+    const res = await api.get(
+      `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
+    );
+    const result = res.data.data.results;
+    await setAHAForm(result);
+  };
+
+  console.log(ahaform)
 
   const classes = useStyles();
+
+  useEffect(() => {
+ 
+    fetchAhaData();
+  }, []);
   return (
     <>
+                <PapperBlock title="Documents & Notifications" icon="ion-md-list-box">
+
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
 
@@ -187,12 +292,12 @@ const DocumentNotification = () => {
           className={classes.fileUploadFileDetails}
         >
           <h4>Files</h4>
-          <ul>{files}</ul>
+          <ul>{attachmentName.current}</ul>
           
           {/* <DeleteIcon /> */}
         </Grid>
         <div {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} />
+          <input {...getInputProps()} onChange={(e) => handleFile(e)}/>
           <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
       </Grid>
@@ -210,6 +315,7 @@ const DocumentNotification = () => {
             fullWidth
             variant="outlined"
             className={classes.formControl}
+            onChange={(e) => setAHAForm({...ahaform , link: e.target.value})}
         />
         </Grid>
         <Grid
@@ -219,20 +325,25 @@ const DocumentNotification = () => {
         className={classes.formBox}
         >
         <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-        <FormGroup row>
-            <FormControlLabel
+        <FormGroup row>{notification.map((value) => (
+          <FormControlLabel
             className={classes.labelValue}
             control={(
                 <Checkbox
                 icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                 checkedIcon={<CheckBoxIcon fontSize="small" />}
                 name="checkedI"
-                onChange={handleChange}
+                // onChange={handleChange}
+                // onChange={}
+                onChange={(e) => handleNotification(e , value)}
                 />
             )}
-            label="Manager"
+            label={value}
             />
-            <FormControlLabel
+
+        ))}
+            
+            {/* <FormControlLabel
             className={classes.labelValue}
             control={(
                 <Checkbox
@@ -243,63 +354,33 @@ const DocumentNotification = () => {
                 />
             )}
             label="Supervisor"
-            />
+            /> */}
         </FormGroup>
         </Grid>
-        <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <FormLabel className={classes.labelName} component="legend">Where would you want this assessment to appear</FormLabel>
-        <FormGroup className={classes.customCheckBoxList}>
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Project"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Block"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Work Area"
-            />
-        </FormGroup>
-        </Grid>
+        
         <Grid
         item
         md={12}
         xs={12}
         >
-        <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
+        {submitLoader == false ?
+                <Button
+                  variant="contained"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.button}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
+        {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
         onClick={() =>handleSubmit()}>
-        Submit</Button>
+        Submit</Button> */}
         </Grid>
         </Grid>
         <Grid item xs={12} md={3}>
@@ -310,6 +391,7 @@ const DocumentNotification = () => {
               />
 </Grid>
     </Grid>
+    </PapperBlock>
     </>
   );
 };
