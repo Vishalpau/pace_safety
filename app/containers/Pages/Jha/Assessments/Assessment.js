@@ -9,22 +9,38 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { PapperBlock } from 'dan-components';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { Col, Row } from "react-grid-system";
-
+import { useParams, useHistory } from 'react-router';
+import { PapperBlock } from 'dan-components';
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Chip from '@material-ui/core/Chip';
+import { Col, Row } from "react-grid-system";
 import MUIDataTable from 'mui-datatables';
 
-import FormSideBar from '../../../Forms/FormSideBar';
+import MenuItem from '@material-ui/core/MenuItem';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import Link from '@material-ui/core/Link';
+import Divider from '@material-ui/core/Divider';
+
+import api from "../../../../utils/axios";
+import { handelJhaId } from "../Utils/checkValue"
 import { JHA_FORM } from "../Utils/constants"
+import FormSideBar from '../../../Forms/FormSideBar';
+import ActionTracker from "../../../Forms/ActionTracker";
+
 
 const useStyles = makeStyles((theme) => ({
-  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -42,9 +58,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   formControl: {
-    '& .MuiInputBase-root': {
-      borderRadius: '4px',
-    },
+    margin: '.5rem 0',
+    width: '100%',
   },
   labelName: {
     fontSize: '0.88rem',
@@ -123,129 +138,101 @@ const useStyles = makeStyles((theme) => ({
     '& table thead th': {
       padding: '5px 16px',
     },
-
+  },
+  fullWidth: {
+    width: '100%',
+    margin: '.5rem 0',
+    //boxShadow: 'inset 0px 0px 9px #dedede',
+    '& td textHeight': {
+      padding: '2.5px 5px',
+      borderRadius: '8px',
+    },
+  },
+  ratioColorgreen: {
+    backgroundColor: 'green',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
+  },
+  ratioColorred: {
+    backgroundColor: 'red',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
+  },
+  ratioColororange: {
+    backgroundColor: 'orange',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
+  },
+  increaseRowBox: {
+    marginTop: '10px',
+    color: '#06425c',
   },
 }));
 
 const Assessment = () => {
 
-  const columns = [
-    {
-      name: 'Job Steps',
-      options: {
-        filter: false,
-        customBodyRender: (value) => (
-          <>
-            <TextField
-              label="Job Steps"
-              margin="dense"
-              name="jobsteps"
-              id="jobsteps"
-              defaultValue=""
-              fullWidth
-              variant="outlined"
-              className={classes.formControl}
-            />
-          </>
-        )
-      }
-    },
-    {
-      name: 'Potential Hazards',
-      options: {
-        filter: false,
-        customBodyRender: (value) => (
-          <>
-            <TextField
-              label="Potential Hazards"
-              margin="dense"
-              name="potentialhazards"
-              id="potentialhazards"
-              defaultValue=""
-              fullWidth
-              variant="outlined"
-              className={classes.formControl}
-            />
-          </>
-        )
-      }
-    },
-    {
-      name: 'Risk',
-      options: {
-        filter: false,
-        customBodyRender: (value) => (
-          <>
-            <TextField
-              label="Risk"
-              margin="dense"
-              name="risk"
-              id="risk"
-              defaultValue=""
-              fullWidth
-              variant="outlined"
-              className={classes.formControl}
-            />
-          </>
-        )
-      }
-    },
-    {
-      name: 'Controls',
-      options: {
-        filter: false,
-        customBodyRender: (value) => (
-          <>
-            <TextField
-              label="Controls"
-              margin="dense"
-              name="controls"
-              id="controls"
-              defaultValue=""
-              fullWidth
-              variant="outlined"
-              className={classes.formControl}
-            />
-          </>
-        )
-      }
-    },
-  ];
+  const [form, setForm] = useState([])
+  const history = useHistory()
+  const [expanded, setExpanded] = useState(false);
 
-  const data = [
-    ['Job step', 'Potential Hazards', 'Risk', 'Controls'],
-  ];
+  const handelCheckList = async () => {
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
+    const apiData = res.data.data.results.results
+    console.log(apiData)
+    setForm(apiData)
+  }
 
-  const options = {
-    filterType: 'dropdown',
-    responsive: 'vertical',
-    print: false,
-    search: false,
-    filter: false,
-    download: false,
-    viewColumns: false,
-    selectableRowsHideCheckboxes: false,
-    selectableRowsHeader: false,
-    selectableRowsOnClick: false,
-    viewColumns: false,
-    selectableRows: false,
-    pagination: false,
-    rowsPerPage: 10,
-    page: 0,
-  };
-
-  // const [state, setState] = React.useState({
-  //   checkedA: true,
-  //   checkedB: true,
-  //   checkedF: true,
-  //   checkedG: true,
-  // });
+  const selectValues = [1, 2, 3, 4]
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push("/app/pages/Jha/assessments/DocumentsNotifications/")
+    } else if (navigateType == "pervious") {
+      history.push("/app/pages/Jha/assessments/project-area-hazards/")
+    }
+  }
+
+  const handelRiskAndControl = (changeType, index, value) => {
+    const temp = [...form]
+    if (changeType == "risk") {
+      temp[index]["risk"] = value
+    } else if (changeType == "control") {
+      temp[index]["control"] = value
+    }
+    setForm(temp)
+  }
+
+  const handelNext = async () => {
+    for (let obj in form) {
+      const res = await api.put(`/api/v1/jhas/${form[obj]["fkJhaId"]}/jobhazards/${form[obj]["id"]}/`, form[obj])
+    }
+    handelNavigate("next")
+  }
+
   const classes = useStyles();
+
+  useEffect(() => {
+    handelCheckList()
+  }, [])
+
   return (
     <PapperBlock title="Assessments" icon="ion-md-list-box">
       <Row>
@@ -255,16 +242,83 @@ const Assessment = () => {
               item
               md={12}
               xs={12}
-            //className={classes.formBox}
             >
-              {/* <Typography variant="h6" gutterBottom className={classes.labelName}>Detailed Project Area Hazard Assessment</Typography> */}
-              <MUIDataTable
-                title="Detailed Project Job Hazard Assessment"
-                data={data}
-                columns={columns}
-                options={options}
-                className={classes.tableSection}
-              />
+              <div>
+                {form.map((value, index) => (
+                  <Accordion
+                    expanded={expanded === `panel${index}`}
+                    onChange={handleExpand(`panel${index}`)}
+                    defaultExpanded
+                    className={classes.backPaper}
+                    key={index}
+                  >
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1bh-content"
+                      id="panel1bh-header"
+                      className={classes.headingColor}
+                    >
+                      <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} />
+                        {value["hazard"]}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Grid container spacing={2}>
+
+                        <Grid item md={6} sm={6} xs={6}>
+                          <FormControl
+                            variant="outlined"
+                            requirement
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="demo-simple-select-label">
+                              Risk
+                            </InputLabel>
+                            <Select
+                              labelId="jobstep_label"
+                              id="jobstep_label"
+                              label="Risk"
+                              value={form[index]["risk"]}
+                            >
+                              {selectValues.map((value) => (
+                                <MenuItem
+                                  value={value}
+                                  onClick={(e) => handelRiskAndControl("risk", index, value)}
+                                >
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+
+                        <Grid item md={6} sm={6} xs={6}>
+                          <TextField
+                            variant="outlined"
+                            id="controls"
+                            multiline
+                            rows="1"
+                            label="Controls"
+                            className={classes.fullWidth}
+                            value={form[index]["control"]}
+                            onChange={(e) => handelRiskAndControl("control", index, e.target.value)}
+                          />
+                        </Grid>
+                        <Grid item md={12} xs={12} className={classes.createHazardbox}>
+                          <Divider light />
+                        </Grid>
+
+                        <Grid item xs={6} className={classes.createHazardbox}>
+                          <ActionTracker
+                            actionContext="jha:hazard"
+                            enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
+                          />
+                        </Grid>
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </div>
 
             </Grid>
             <Grid
@@ -590,7 +644,23 @@ const Assessment = () => {
               md={12}
               xs={12}
             >
-              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
+              <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmSubmitBtn}
+                onClick={(e) => handelNavigate("pervious")}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmSubmitBtn}
+                style={{ marginLeft: "10px" }}
+                onClick={(e) => handelNext()}
+              >
+                Next
+              </Button>
             </Grid>
           </Grid>
         </Col>

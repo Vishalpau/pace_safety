@@ -4,7 +4,8 @@ import * as types from '../constants/crudTbConstants';
 export const fetchAction = (items, branch) => ({
   branch,
   type: `${branch}/${types.FETCH_DATA}`,
-  items
+  items,
+  
 });
 export const addAction = (anchor, branch) => ({
   branch,

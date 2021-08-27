@@ -4,7 +4,7 @@ import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
-  Grid, Typography, TextField, Button
+  Grid, Typography, TextField, Button,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -22,13 +22,21 @@ import {
 import MomentUtils from '@date-io/moment';
 import DateFnsUtils from '@date-io/date-fns';
 import { useDropzone } from 'react-dropzone';
+import { useParams, useHistory } from 'react-router';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
+import Box from "@material-ui/core/Box";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import classNames from "classnames"
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
+import api from "../../../../utils/axios";
+import { handelJhaId } from "../Utils/checkValue"
+import { TramOutlined, TramRounded } from '@material-ui/icons';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -111,197 +119,130 @@ const useStyles = makeStyles((theme) => ({
       marginTop: '8px',
     },
   },
+  loader: {
+    marginLeft: "20px"
+  },
 }));
 
 const ProjectAreaHazards = () => {
 
-  const areaName = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'areaName',
-      label: 'Area Name',
-    },
-    {
-      value: 'areaName1',
-      label: 'Area Name 1',
-    },
-    {
-      value: 'areaName2',
-      label: 'Area Name 2',
-    },
-    {
-      value: 'areaName3',
-      label: 'Area Name 3',
-    },
-    {
-      value: 'areaName4',
-      label: 'Area Name 4',
-    },
-  ];
+  const [form, setForm] = useState([])
+  const [checkGroups, setCheckListGroups] = useState([])
+  const [selectedOptions, setSelectedOption] = useState({})
+  const [fetchOption, setFetchedOptions] = useState([])
+  const [submitLoader, setSubmitLoader] = useState(false)
+  const history = useHistory()
 
-  const reportedBy = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'reportedBy',
-      label: 'Reported By',
-    },
-    {
-      value: 'reportedBy1',
-      label: 'Reported By 1',
-    },
-    {
-      value: 'reportedBy2',
-      label: 'Reported By 2',
-    },
-    {
-      value: 'reportedBy3',
-      label: 'Reported By 3',
-    },
-    {
-      value: 'reportedBy4',
-      label: 'Reported By 4',
-    },
-  ];
+  const handelUpdate = async () => {
+    const temp = {}
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
+    const apiData = res.data.data.results.results
+    setForm(apiData)
+    setFetchedOptions(apiData)
+    apiData.map((value) => {
+      if (value.hazard in temp) {
+        temp[value.hazard].push(value.risk)
+      } else {
+        temp[value.hazard] = [value.risk]
+      }
+    })
+    setSelectedOption(temp)
+  }
 
-  const supervisorName = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'supervisorName',
-      label: 'Supervisor Name',
-    },
-    {
-      value: 'supervisorName1',
-      label: 'Supervisor Name 1',
-    },
-    {
-      value: 'supervisorName2',
-      label: 'Supervisor Name 2',
-    },
-    {
-      value: 'supervisorName3',
-      label: 'Supervisor Name 3',
-    },
-    {
-      value: 'supervisorName4',
-      label: 'Supervisor Name 4',
-    },
-  ];
+  const checkList = async () => {
+    const temp = {}
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
+    const checklistGroups = res.data.data.results[0].checklistGroups
+    checklistGroups.map((value) => {
+      temp[value["checkListGroupName"]] = []
+      value.checkListValues.map((checkListOptions) => {
+        let checkObj = {}
+        if (checkListOptions !== undefined) {
+          checkObj["inputLabel"] = checkListOptions.inputLabel
+          checkObj["inputValue"] = checkListOptions.inputValue
+          checkObj["checkListId"] = checkListOptions.id
+          temp[value["checkListGroupName"]].push(checkObj)
+        }
+      })
+    })
+    setCheckListGroups(temp)
+  }
 
-  const assignee = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'assignee',
-      label: 'Assignee',
-    },
-    {
-      value: 'assignee1',
-      label: 'Assignee 1',
-    },
-    {
-      value: 'assignee2',
-      label: 'Assignee 2',
-    },
-    {
-      value: 'assignee3',
-      label: 'Assignee 3',
-    },
-    {
-      value: 'assignee4',
-      label: 'Assignee 4',
-    },
-  ];
-
-  const assigneeDepartment = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'assigneeDepartment',
-      label: 'Assignee Department',
-    },
-    {
-      value: 'assigneeDepartment1',
-      label: 'Assignee Department 1',
-    },
-    {
-      value: 'assigneeDepartment2',
-      label: 'Assignee Department 2',
-    },
-    {
-      value: 'assigneeDepartment3',
-      label: 'Assignee Department 3',
-    },
-    {
-      value: 'assigneeDepartment4',
-      label: 'Assignee Department 4',
-    },
-  ];
-
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
-
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+  const handlePhysicalHazards = async (e, checkListId, hazard_value) => {
+    let temp = [...form]
+    if (e.target.checked == false) {
+      temp.map((jhaValue, index) => {
+        if (jhaValue['fkChecklistId'] === checkListId) {
+          temp.splice(index, 1);
+          fetchOption.splice(index, 1);
+          if (jhaValue["id"] !== undefined) {
+            const res = api.delete(`/api/v1/jhas/${jhaValue["fkJhaId"]}/jobhazards/${jhaValue["id"]}/`)
+          }
+        }
+      })
+    }
+    else if (e.target.checked) {
+      temp.push({
+        "fkChecklistId": checkListId,
+        "hazard": hazard_value,
+        "risk": "",
+        "control": "",
+        "humanPerformanceAspects": "string",
+        "status": "Active",
+        "createdBy": 0,
+        "fkJhaId": localStorage.getItem("fkJHAId"),
+      })
+    }
+    await setForm(temp)
   };
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const handelSelectOption = (checklistId, hazard) => {
+    for (let i = 0; i <= form.length; i++) {
+      if (form[i] != undefined && form[i]["hazard"] == hazard && form[i]["fkChecklistId"] == checklistId) {
+        return true
+      }
+    }
+  }
 
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path}
-      {' '}
-      -
-      {file.size}
-      {' '}
-      bytes
-    </li>
-  ));
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push("/app/pages/Jha/assessments/assessment/")
+    } else if (navigateType == "previous") {
+      history.push("/app/pages/Jha/assessments/project-details/")
+    }
+  }
 
+  const handelCheckPost = (checklistId, hazard) => {
+    for (let i = 0; i <= fetchOption.length; i++) {
+      if (fetchOption[i] != undefined && fetchOption[i]["hazard"] == hazard && fetchOption[i]["fkChecklistId"] == checklistId) {
+        return true
+      }
+    }
+  }
 
-  const [positiveObservation, setPositiveObservation] = useState(true);
-  const [riskObservation, setRiskObservation] = useState(true);
-  const [addressSituation, setAddressSituation] = useState(true);
+  const handleSubmit = async (e) => {
+    setSubmitLoader(TramRounded)
+    for (let i = 0; i < form.length; i++) {
+      let decidePost = handelCheckPost(form[i]["fkChecklistId"], form[i]["hazard"])
+      if (decidePost !== true) {
+        const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
+      }
+    }
+    handelNavigate("next")
+    setSubmitLoader(false)
+  }
 
-  const handelPositivObservation = (e) => {
-    setPositiveObservation(false);
-    setRiskObservation(true);
-  };
+  const handelCallback = async () => {
+    await handelUpdate()
+    await checkList()
+  }
 
-  const handelAtRiskConcern = (e) => {
-    setPositiveObservation(true);
-    setRiskObservation(false);
-  };
-
-  const handelAddressSituationYes = (e) => {
-    setAddressSituation(false);
-  };
-
-  const handelAddressSituationNo = (e) => {
-    setAddressSituation(true);
-  };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  useEffect(() => {
+    handelCallback()
+  }, [])
 
   const classes = useStyles();
   return (
@@ -309,485 +250,30 @@ const ProjectAreaHazards = () => {
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Physical Hazards</FormLabel>
-              <FormGroup className={classes.customCheckBoxList}>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 1"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 2"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 3"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 4"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 5"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 6"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 7"
-                />
-              </FormGroup>
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Chemical Hazards</FormLabel>
-              <FormGroup className={classes.customCheckBoxList}>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 1"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 2"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 3"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 4"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 5"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 6"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 7"
-                />
-              </FormGroup>
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Energy Hazard</FormLabel>
-              <FormGroup className={classes.customCheckBoxList}>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 1"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 2"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 3"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 4"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 5"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 6"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 7"
-                />
-              </FormGroup>
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Hazard Type</FormLabel>
-              <FormGroup className={classes.customCheckBoxList}>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 1"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 2"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 3"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 4"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 5"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 6"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 7"
-                />
-              </FormGroup>
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Hazard Type</FormLabel>
-              <FormGroup className={classes.customCheckBoxList}>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 1"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 2"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 3"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 4"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 5"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 6"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Option 7"
-                />
-              </FormGroup>
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.createHazardbox}
-              style={{ marginTop: '12px' }}
-            >
+            {/* {console.log(form)} */}
+            {Object.entries(checkGroups).map(([key, value]) => (
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">{key}</FormLabel>
+                  <FormGroup>
+                    {value.map((option) => (
+                      <FormControlLabel
+                        control={<Checkbox name={option.inputLabel} />}
+                        label={option.inputLabel}
+                        checked={handelSelectOption(option.checkListId, option.inputLabel)}
+                        onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
+            ))}
+
+            <Grid item md={12} xs={12} className={classes.createHazardbox} style={{ marginTop: '12px' }}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
             </Grid>
+
             <Grid
               item
               md={6}
@@ -804,6 +290,7 @@ const ProjectAreaHazards = () => {
                 variant="outlined"
                 className={classes.formControl}
               />
+
             </Grid>
             <Grid item md={1} className={classes.createHazardbox}>
               <IconButton
@@ -826,11 +313,31 @@ const ProjectAreaHazards = () => {
             </Grid>
             <Grid
               item
-              md={12}
               xs={12}
-              style={{ marginTop: '5px' }}
+              alignItems="center"
             >
-              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
+              <Button
+                variant="outlined"
+                className={classes.custmSubmitBtn}
+                onClick={(e) => handelNavigate("previous")}
+              >
+                Previous
+              </Button>
+              {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
             </Grid>
           </Grid>
         </Col>
@@ -843,6 +350,7 @@ const ProjectAreaHazards = () => {
         </Col>
 
       </Row>
+
     </PapperBlock>
   );
 };
