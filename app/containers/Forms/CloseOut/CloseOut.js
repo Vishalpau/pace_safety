@@ -70,7 +70,7 @@ const CloseOut = () => {
     const [incidentsListData, setIncidentsListdata] = useState([]);
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("")
+    const [error, setError] = useState({})
     const [form, setForm] = useState({
         reviewedBy: 0,
         reviewDate: null,
@@ -114,11 +114,29 @@ const CloseOut = () => {
     };
     const handleCloseDate = (e) => {
         if (new Date(e) > new Date(form.reviewDate)) {
-            setForm({ ...form, closeDate: moment(e).toISOString() })
+            setForm({ ...form, closeDate: moment(e).toISOString() });
+            error.closeDate = ""
+            setError(error);
         }
         else {
+            setForm({ ...form, closeDate: null })
             let errorMessage = "Closed date cannot be prior to reviewed date"
-            setError(errorMessage)
+            error.closeDate = errorMessage
+            setError(error);
+            
+        }
+    }
+
+    const handleReviewDate = (e) => {
+        if (new Date(e) < new Date()) {
+            setForm({ ...form, reviewDate: moment(e).toISOString() });
+            error.reviewDate = ""
+            setError(error)
+        }
+        else {
+            setForm({ ...form, reviewDate: null })
+            error.reviewDate = "Invalid date-time selected"
+            setError(error);
         }
     }
 
@@ -156,18 +174,25 @@ const CloseOut = () => {
         temp.updatedBy = parseInt(userId)
 
         try {
-          const res = await api.put(
-            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-            temp
-          );
-          if(res.status===200){
-            let viewMode = {
-                initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:false
-                ,closeout:true
-              }
-              dispatch(tabViewMode(viewMode));
-              history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
-          }
+            if (new Date(form.closeDate) > new Date(form.reviewDate)) {
+                const res = await api.put(
+                    `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+                    temp
+                );
+                if (res.status === 200) {
+                    let viewMode = {
+                        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+                        , closeout: true
+                    }
+                    dispatch(tabViewMode(viewMode));
+                    history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
+                }
+            }
+            else {
+                setForm({ ...form, closeDate: null })
+                let errorMessage = "Closed date cannot be prior to reviewed date"
+                setError(errorMessage)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -320,14 +345,17 @@ const CloseOut = () => {
                         <Grid item xs={12} md={6}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
-
+                                    error={error.reviewDate}
+                                    helperText={
+                                        error.reviewDate ? error.reviewDate : null
+                                    }
                                     className={classes.formControl}
                                     id="date-picker-dialog"
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     label="Reviewed on"
                                     value={form.reviewDate || null}
-                                    onChange={(e) => setForm({ ...form, reviewDate: moment(e).toISOString() })}
+                                    onChange={(e) => handleReviewDate(e)}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
@@ -376,16 +404,14 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
-                                    error={error}
+                                    error={error.closeDate}
                                     helperText={
-                                        error ? error : null
+                                        error.closeDate ? error.closeDate : null
                                     }
                                     value={form.closeDate || null}
                                     onChange={(e) => handleCloseDate(e)}
-
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
-
                                     id="date-picker-dialog"
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"

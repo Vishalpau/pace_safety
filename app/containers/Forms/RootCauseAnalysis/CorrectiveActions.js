@@ -23,6 +23,10 @@ import CorrectiveActionValidation from "../../Validator/RCAValidation/Corrective
 import Type from "../../../styles/components/Fonts.scss";
 import { handelApiValue } from "../../../utils/CheckerValue"
 
+// redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -73,8 +77,10 @@ const CorrectiveAction = () => {
   const history = useHistory();
   const updateIds = useRef();
   const checkPost = useRef();
-  const [paceCauseDelete, setPaceCauseDelete] = useState()
-  const [nextButton, setNextButton] = useState(false)
+  const [paceCauseDelete, setPaceCauseDelete] = useState();
+  const [nextButton, setNextButton] = useState(false);
+
+  const dispatch = useDispatch()
 
 
   const setRemark = (value) => {
@@ -176,6 +182,11 @@ const CorrectiveAction = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
+      }
+      dispatch(tabViewMode(viewMode))
       history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
     } else if (navigateType == "previous") {
       history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Preventive actions"]}${putId.current}`)

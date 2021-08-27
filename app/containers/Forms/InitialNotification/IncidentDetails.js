@@ -77,6 +77,7 @@ const IncidentDetails = (props) => {
   const [selectValue, setSelectValue] = useState([])
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList]= useState([])
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -477,6 +478,7 @@ const IncidentDetails = (props) => {
           let temp = { ...form };
           temp = result;
           setForm(temp);
+          fetchBreakDownData(temp.fkProjectStructureIds)
           // await fetchBreakDownData(result.fkProjectStructureIds)
           // await setIsLoading(true);
         }
@@ -527,8 +529,9 @@ const IncidentDetails = (props) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  { depth: item.depth, id: item.id, name: item.name, label:projectData.projectName.breakdown[key].structure[0].name },
                 ];
+                setFetchSelectBreakDownList(selectBreakDown)
               }
             });
           })
@@ -548,14 +551,15 @@ const IncidentDetails = (props) => {
           .then(async (response) => {
 
             const result = response.data.data.results;
-
+            console.log({fetchSelectBreakDownList:result})
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  { depth: item.depth, id: item.id, name: item.name, label:projectData.projectName.breakdown[key].structure[0].name },
                 ];
+                setFetchSelectBreakDownList(selectBreakDown)
               }
             });
 
@@ -568,7 +572,7 @@ const IncidentDetails = (props) => {
       }
     }
   };
-
+console.log(fetchSelectBreakDownList)
 
 useEffect(()=>{
   fetchContractorValue();
@@ -769,7 +773,25 @@ useEffect(()=>{
                 </Typography>
               </Grid>
               
-              {selectBreakdown && selectBreakdown.map((selectBreakdown, value) => <Grid item xs={6}>
+              {id?fetchSelectBreakDownList.map((selectBdown,key)=>
+              <Grid item xs={6} key={key}>
+
+              <Typography
+                variant="h6"
+                className={Type.labelName}
+                gutterBottom
+                id="project-name-label"
+              >
+                {selectBdown.label}
+              </Typography>
+
+
+              <Typography className={Type.labelValue}>
+                {selectBdown.name}
+              </Typography>
+            </Grid>
+              ): selectBreakdown && selectBreakdown.map((selectBreakdown, key) =>
+               <Grid item xs={6} key={key}>
 
                 <Typography
                   variant="h6"
@@ -786,7 +808,7 @@ useEffect(()=>{
                 </Typography>
               </Grid>)}
 
-              {breakdown1ListData ? breakdown1ListData.map((item, index) => (
+              {id?null:breakdown1ListData ? breakdown1ListData.map((item, index) => (
                 <Grid item xs={6}>
                   <FormControl
                     key={index}
