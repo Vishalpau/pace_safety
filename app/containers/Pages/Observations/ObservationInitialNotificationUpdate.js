@@ -323,8 +323,8 @@ const ObservationInitialNotificationUpdate = () => {
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
-    await fetchBreakDownData(result.fkProjectStructureIds)
     await setInitialData(result)
+    await fetchBreakDownData(result.fkProjectStructureIds)
     // await setIsLoading(true);
 
   }
