@@ -20,7 +20,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, FIVEWHYHIDE, PACEHIDE, ROOTHIDE } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, FIVEWHYHIDE, PACEHIDE, ROOTHIDE, DETAILS } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import { RCAOPTION } from "../../../utils/constants";
@@ -442,11 +442,20 @@ const Details = () => {
         </Col>
         {isDesktop && (
           <Col md={3}>
-            <FormSideBar
-              deleteForm={hideArray||[]}
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"RCA Details"}
-            />
+            {form.rcaRecommended !== "" ?
+              <FormSideBar
+                deleteForm={hideArray || []}
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"RCA Details"}
+              />
+              :
+              <FormSideBar
+                deleteForm={hideArray || []}
+                listOfItems={DETAILS}
+                selectedItem={"RCA Details"}
+              />
+            }
+
           </Col>
         )}
       </Row>

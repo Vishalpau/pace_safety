@@ -85,6 +85,7 @@ const BasicCause = () => {
   const checkPost = useRef();
   const [paceCauseDelete, setPaceCauseDelete] = useState();
   const [nextButton, setNextButton] = useState(false);
+  const [allPaceCause, setAllPaceCause] = useState({})
 
   const setRemark = (value) => {
     let remark = value.includes(",") ? value.split(",") : [value];
@@ -99,6 +100,7 @@ const BasicCause = () => {
   const handelUpdateCheck = async () => {
     let tempData = {}
     let paceCauseid = []
+    let allFetchPaceCause = {}
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
@@ -116,6 +118,7 @@ const BasicCause = () => {
             tempData[value.rcaSubType] = [value.rcaRemark]
           }
           paceCauseid.push(value.id)
+          allFetchPaceCause[value.id] = value.rcaRemark
         }
       })
       setForm({
@@ -157,6 +160,7 @@ const BasicCause = () => {
         },
       });
       setPaceCauseDelete(paceCauseid)
+      setAllPaceCause(allFetchPaceCause)
     }
   }
 
@@ -300,11 +304,22 @@ const BasicCause = () => {
   };
 
   const handelDelete = async () => {
+    let currentRemark = [].concat.apply([], [
+      form.personal.rcaRemark,
+      form.wellnessFactors.rcaRemark,
+      form.otherHumanFactor.rcaRemark,
+      form.leadership.rcaRemark,
+      form.processes.rcaRemark,
+      form.otherIssues.rcaRemark,
+      form.otherJobFactors.rcaRemark,
+    ])
     if (paceCauseDelete !== undefined && paceCauseDelete.length > 0) {
-      for (let key in paceCauseDelete) {
-        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${paceCauseDelete[key]}/`)
-        if (delPaceCause.status == 200) {
-          console.log("deleted")
+      for (let key in allPaceCause) {
+        if (!currentRemark.includes(allPaceCause[key])) {
+          let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${key}/`)
+          if (delPaceCause.status == 200) {
+            console.log("deleted")
+          }
         }
       }
     }
@@ -320,12 +335,12 @@ const BasicCause = () => {
   }
 
   const handelApiCall = async () => {
-    console.log(form)
     let tempData = []
+    let lastRemark = Object.values(allPaceCause)
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
-        if (value !== "") {
+        if (!lastRemark.includes(value) && value !== "") {
           let temp = {
             createdBy: "0",
             fkIncidentId: putId.current,

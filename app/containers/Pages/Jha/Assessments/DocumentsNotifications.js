@@ -316,7 +316,7 @@ const DocumentNotification = () => {
                 name="link"
                 name="link"
                 id="link"
-                value={form.link != null ? form.link : "  "}
+                value={form.link != null ? form.link : ""}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}

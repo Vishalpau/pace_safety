@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -40,6 +40,9 @@ import ImageIcon from '@material-ui/icons/Image';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
+import api from "../../../utils/axios";
+import { handelJhaId } from "../Jha/Utils/checkValue"
+
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -112,33 +115,50 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaSummary() {
-  const [assessments, setAssessments] = useState(false);
-  const [approvals, setApprovals] = useState(false);
-  const [lessonsLearned, setLessonsLearned] = useState(false);
-  //const [summary, setSummary] = useState(false);
+  const [assessmentsView, setAssessmentsView] = useState(false);
+  const [approvalsView, setApprovalsView] = useState(false);
+  const [lessonsLearnedView, setLessonsLearnedView] = useState(false);
   const history = useHistory();
-  const [expanded, setExpanded] = React.useState('panel1');
+  const [assessment, setAssessment] = useState({})
+  const [expanded, setExpanded] = useState('panel1');
 
+  const handelAsessment = async () => {
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/`)
+    const result = res.data.data.results;
+    console.log(result)
+    setAssessment(result)
+  }
 
-  const handleNewAhaPush = async () => {
+  const handleNewJhaPush = async () => {
     history.push(
-      "/app/pages/jha/assessments"
+      "/app/pages/Jha/assessments/project-details/"
     );
   };
-  const handleAhaApprovalsPush = async () => {
+  const handleJhaApprovalsPush = async () => {
     history.push(
       "/app/pages/jha/approvals/approvals"
     );
   };
-  const handleAhaLessonLearnPush = async () => {
+  const handleJhaLessonLearnPush = async () => {
     history.push(
       "/app/pages/jha/lessons-learned/lessons-learned"
     );
   };
 
+  const [expandedTableDetail, setExpandedTableDetail] = useState('panel5');
+
+  const handleTDChange = (panel) => (event, isExpanded) => {
+    setExpandedTableDetail(isExpanded ? panel : false);
+  };
+
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  useEffect(() => {
+    handelAsessment()
+  }, [])
 
   const classes = useStyles();
   return (
@@ -153,10 +173,9 @@ function JhaSummary() {
               endIcon={<CheckCircle />}
               className={classes.statusButton}
               onClick={(e) => {
-                setAssessments(true);
-                setApprovals(false);
-                setLessonsLearned(false);
-                //setSummary(false);
+                setAssessmentsView(true);
+                setApprovalsView(false);
+                setLessonsLearnedView(false);
               }}
             >
               Assessments
@@ -174,10 +193,9 @@ function JhaSummary() {
               endIcon={<AccessTime />}
               className={classes.statusButton}
               onClick={(e) => {
-                setAssessments(false);
-                setApprovals(true);
-                setLessonsLearned(false);
-                //setSummary(false);
+                setAssessmentsView(false);
+                setApprovalsView(true);
+                setLessonsLearnedView(false);
               }}
             >
               Approvals
@@ -195,10 +213,9 @@ function JhaSummary() {
               endIcon={<AccessTime />}
               className={classes.statusButton}
               onClick={(e) => {
-                setAssessments(false);
-                setApprovals(false);
-                setLessonsLearned(true);
-                setSummary(false);
+                setAssessmentsView(false);
+                setApprovalsView(false);
+                setLessonsLearnedView(true);
               }}
             >
               Lessons Learned
@@ -207,26 +224,6 @@ function JhaSummary() {
               Pending
             </Typography>
           </div>
-          {/* <div className={Styles.item}>
-            <Button
-              color="primary"
-              variant="outlined"
-              size="small"
-              endIcon={<AccessTime />}
-              className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(false);
-                setApprovals(false);
-                setLessonsLearned(false);
-                setSummary(true);
-              }}
-            >
-              Summary
-            </Button>
-            <Typography variant="caption" display="block">
-              Pending
-            </Typography>
-          </div> */}
         </div>
         <Divider />
       </Box>
@@ -235,112 +232,15 @@ function JhaSummary() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={9}>
             <Grid container spacing={3}>
-              {/* <Grid item xs={12}>
-                <Typography
-                  variant="h6"
-                  className={classNames(
-                    Fonts.labelName,
-                    'demo__class',
-                    classes.customClass
-                  )}
-                  gutterBottom
-                >
-                  Incident Title
-                </Typography>
-                <Typography className={Fonts.labelValue}>
-                  The cherry and plum flavors have good intensity and appealing
-                  traction from dense tannins and notes of black licorice and
-                  tobacco.
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography
-                  variant="h6"
-                  className={Fonts.labelName}
-                  gutterBottom
-                >
-                  Incident on
-                </Typography>
-                <Typography className={Fonts.labelValue}>
-                  12th August 2021, 03:35 PM
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography
-                  variant="h6"
-                  className={Fonts.labelName}
-                  gutterBottom
-                >
-                  Reported on
-                </Typography>
-                <Typography className={Fonts.labelValue}>
-                  14th August 2021, 09:22 PM
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography
-                  variant="h6"
-                  className={Fonts.labelName}
-                  gutterBottom
-                >
-                  Incident on
-                </Typography>
-                <Typography className={Fonts.labelValue}>
-                  12th August 2021, 03:35 PM
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography
-                  variant="h6"
-                  className={Fonts.labelName}
-                  gutterBottom
-                >
-                  Incident on
-                </Typography>
-                <Typography className={Fonts.labelValue}>
-                  12th August 2021, 03:35 PM
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography
-                  variant="h6"
-                  className={Fonts.labelName}
-                  gutterBottom
-                >
-                  Incident on
-                </Typography>
-                <Typography className={Fonts.labelValue}>
-                  12th August 2021, 03:35 PM
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Typography
-                  variant="h6"
-                  className={Fonts.labelName}
-                  gutterBottom
-                >
-                  Incident on
-                </Typography>
-                <Typography className={Fonts.labelValue}>
-                  12th August 2021, 03:35 PM
-                </Typography>
-              </Grid> */}
 
               {/* summary and part */}
               <>
                 {(() => {
                   if (
-                    assessments == true
-                    || (approvals === false
-                      && lessonsLearned === false)
+                    assessmentsView == true
+                    || (approvalsView === false
+                      && lessonsLearnedView === false)
                   ) {
-
-                    const [expandedTableDetail, setExpandedTableDetail] = React.useState('panel5');
-
-                    const handleTDChange = (panel) => (event, isExpanded) => {
-                      setExpandedTableDetail(isExpanded ? panel : false);
-                    };
-
                     return (
                       <>
                         <Grid item xs={12}>
@@ -810,7 +710,7 @@ function JhaSummary() {
                       </>
                     );
                   }
-                  if (approvals == true) {
+                  if (approvalsView == true) {
                     return (
                       <>
 
@@ -935,7 +835,7 @@ function JhaSummary() {
                       </>
                     );
                   }
-                  if (lessonsLearned == true) {
+                  if (lessonsLearnedView == true) {
                     return (
                       <>
                         <Grid item xs={12}>
@@ -983,19 +883,19 @@ function JhaSummary() {
                   <ListSubheader component="div">Actions</ListSubheader>
                 }
               >
-                <ListItemLink onClick={(e) => handleNewAhaPush(e)}>
+                <ListItemLink onClick={(e) => handleNewJhaPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Assessments" />
                 </ListItemLink>
-                <ListItemLink onClick={(e) => handleAhaApprovalsPush(e)}>
+                <ListItemLink onClick={(e) => handleJhaApprovalsPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Approvals" />
                 </ListItemLink>
-                <ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
+                <ListItemLink onClick={(e) => handleJhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
