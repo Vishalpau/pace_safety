@@ -75,6 +75,7 @@ const BasicCauseAndAction = () => {
   const putId = useRef("");
   let id = useRef();
   const [actionData, setActionData] = useState({});
+  const [updatePage, setUpdatePage] = useState(false)
 
   const handelShowData = async () => {
     console.log("here");
@@ -109,8 +110,7 @@ const BasicCauseAndAction = () => {
     });
     for (let key in apiData) {
       const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${
-          apiData[key]["id"]
+        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {
@@ -160,8 +160,8 @@ const BasicCauseAndAction = () => {
   };
 
   useEffect(() => {
-    handelCallback();
-  }, []);
+    handelCallback()
+  }, [updatePage]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
@@ -202,32 +202,37 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Box>
 
-            <TableContainer component="div">
-              <Table className={classes.table}>
-                <TableBody>
-                  {data.map((value) => (
-                    <TableRow>
-                      <TableCell align="left" style={{ width: 160 }}>
-                        {handelConvert(value.rcaSubType)}
-                      </TableCell>
-                      <TableCell align="left">
-                        <span>{value.rcaRemark}</span>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography>
-                          {value.action != undefined &&
-                            value.action.map((actionId) => <p>{actionId}</p>)}
-                        </Typography>
-                        <ActionTracker
-                          actionContext="incidents:Pacacuase"
-                          enitityReferenceId={`${putId.current}:${value.id}`}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Table className={classes.table}>
+              <TableBody>
+                {data.map((value) => (
+                  <TableRow>
+                    <TableCell align="left" style={{ width: 160 }}>
+                      {handelConvert(value.rcaSubType)}
+                    </TableCell>
+                    <TableCell align="left">
+                      <span>{value.rcaRemark}</span>
+                    </TableCell>
+                    <TableCell align="right">
+
+                      <ActionTracker
+                        actionContext="incidents:Pacacuase"
+                        enitityReferenceId={`${putId.current}:${value.id}`}
+                        setUpdatePage={setUpdatePage}
+                        updatePage={updatePage}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography>
+                        {value.action != undefined && value.action.map((actionId) => (
+                          <p>{actionId}</p>
+                        ))}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+              </TableBody>
+            </Table>
             {data.length == 0 ? (
               <Grid container item md={9}>
                 <Typography variant="h8">No option(s) selected</Typography>

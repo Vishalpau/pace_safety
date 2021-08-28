@@ -266,12 +266,13 @@ function ObservationCorrectiveAction() {
 
 
     if (new Date(e) <= new Date()) {
+      
         setForm({ ...form, reviewedOn: moment(e).toISOString() })
         setError({...error , reviewedOn : ""})
 
     }
     else {
-        let errorMessage = "Review Time cannot be prior to current time"
+        let errorMessage = "Reviewed time should not be ahead of current time"
         setError({...error , reviewedOn : errorMessage})
     }
 }
