@@ -27,6 +27,8 @@ import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 import { handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
+import ActionTrack from "../ActionTrack";
+
 import { checkValue } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
@@ -78,7 +80,6 @@ const BasicCauseAndAction = () => {
   const [updatePage, setUpdatePage] = useState(false)
 
   const handelShowData = async () => {
-    console.log("here");
     let tempApiData = [];
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
       HAZARDIOUS_CONDITION_SUB_TYPES
@@ -117,7 +118,7 @@ const BasicCauseAndAction = () => {
         let actionTracker = allActionTrackerData.data.data.results.results;
         const temp = [];
         actionTracker.map((value) => {
-          let actionTrackerId = value.id;
+          let actionTrackerId = value.actionNumber;
           temp.push(actionTrackerId);
         });
         apiData[key]["action"] = temp;
@@ -224,7 +225,9 @@ const BasicCauseAndAction = () => {
                     <TableCell align="right">
                       <Typography>
                         {value.action != undefined && value.action.map((actionId) => (
-                          <p>{actionId}</p>
+                          <ActionTrack actionID={actionId}>
+                            {actionId}
+                          </ActionTrack>
                         ))}
                       </Typography>
                     </TableCell>
