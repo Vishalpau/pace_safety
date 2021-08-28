@@ -142,6 +142,8 @@ const ObservationInitialNotificationView = () => {
   const [tagsData , setTagsData] = useState([])
   const [actionTakenData ,setActionTakenData] = useState([])
   const [projectSturcturedData , setProjectSturcturedData] = useState([])
+  const [isLoading , setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   const project =
@@ -161,9 +163,10 @@ const ObservationInitialNotificationView = () => {
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
-    await fetchBreakDownData(result.fkProjectStructureIds)
     await setInitialData(result)
     await setIsLoading(true)
+
+    await fetchBreakDownData(result.fkProjectStructureIds)
 
   }
   const fetchTags = async () => {
@@ -245,7 +248,6 @@ const ObservationInitialNotificationView = () => {
   };
 
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
-  const [isLoading , setIsLoading] = useState(false);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
