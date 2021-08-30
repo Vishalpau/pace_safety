@@ -6,9 +6,14 @@ import {
 import { PapperBlock } from 'dan-components';
 import Link from '@material-ui/core/Link';
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import { Col, Row } from "react-grid-system";
+import FormSideBar from '../../../Forms/FormSideBar';
+import { APPROVAL_FORM } from "../Utils/constants"
+
+
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -16,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
-  
+
   labelName: {
     fontSize: '0.88rem',
     fontWeight: '400',
@@ -98,51 +103,53 @@ const Approvals = () => {
   const classes = useStyles();
   return (
     <>
-    <PapperBlock title="Approval" icon="ion-md-list-box">
-        <Grid container spacing={3}>
-            <Grid
+      <PapperBlock title="Approval" icon="ion-md-list-box">
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid
                 item
                 md={8}
                 xs={12}
                 className={classes.formBox}
-            >
+              >
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Work Responsible Person (WRP)
+                  Work Responsible Person (WRP)
                 </Typography>
                 <Button variant="contained" color="primary" className={classes.approvalButton}>Approve Now</Button>
-            </Grid>
-            <Grid
+              </Grid>
+              <Grid
                 item
                 md={8}
                 xs={12}
                 className={classes.formBox}
-            >
+              >
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    PIC (if attended the Toolbox meeting)
+                  PIC (if attended the Toolbox meeting)
                 </Typography>
                 <Button variant="contained" color="primary" className={classes.approvalButton}>Approve Now</Button>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Actions
-              </Typography>
-              <Typography className={classes.aLabelValue}>
-                <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                <div className={classes.actionTitleLable}>Action title</div>
-              </Typography>
-              <Typography className={classes.aLabelValue}>
-                <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                <div className={classes.actionTitleLable}>Action title</div>
-              </Typography>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <Typography variant="h6" gutterBottom className={classes.labelName}>
+                  Actions
+                </Typography>
+                <Typography className={classes.aLabelValue}>
+                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
+                  <div className={classes.actionTitleLable}>Action title</div>
+                </Typography>
+                <Typography className={classes.aLabelValue}>
+                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
+                  <div className={classes.actionTitleLable}>Action title</div>
+                </Typography>
 
-              <Typography className={classes.increaseRowBox}>
-                <ControlPointIcon />
-                <span className={classes.addLink}><Link to="">Add a new action</Link></span>
-              </Typography>
-            </Grid>
+                <Typography className={classes.increaseRowBox}>
+                  <ControlPointIcon />
+                  <span className={classes.addLink}><Link to="">Add a new action</Link></span>
+                </Typography>
+              </Grid>
 
 
-            {/* <Grid item md={8}>
+              {/* <Grid item md={8}>
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
                             Corrective Actions
                 </Typography>
@@ -163,27 +170,36 @@ const Approvals = () => {
                     <span className={classes.addLink}><Link to="">Add a new action</Link></span>
                 </Typography>
             </Grid> */}
-            <Grid
+              <Grid
                 item
                 md={8}
                 xs={12}
                 className={classes.formBox}
-            >
+              >
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Signature
+                  Signature
                 </Typography>
                 <Button variant="contained" color="primary" className={classes.approvalButton}>Sign Now</Button>
-            </Grid>
+              </Grid>
 
-            <Grid
-            item
-            md={12}
-            xs={12}
-            >
-            <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
+              <Grid
+                item
+                md={12}
+                xs={12}
+              >
+                <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
+              </Grid>
             </Grid>
-        </Grid>
-    </PapperBlock>
+          </Col>
+          <Col md={3}>
+            <FormSideBar
+              deleteForm={"hideArray"}
+              listOfItems={APPROVAL_FORM}
+              selectedItem={"Approval"}
+            />
+          </Col>
+        </Row>
+      </PapperBlock>
     </>
   );
 };
