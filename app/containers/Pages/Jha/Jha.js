@@ -149,6 +149,7 @@ function Jha() {
     const res = await api.get("/api/v1/jhas/")
     const result = res.data.data.results.results
     await setAllAHAData(result)
+    localStorage.removeItem("fkJHAId")
   }
 
   // Function to toggle the view mode
@@ -180,7 +181,6 @@ function Jha() {
   };
 
   const handleNewJhaPush = async () => {
-    localStorage.removeItem("fkJHAId")
     history.push("/app/pages/jha/assessments/project-details");
   };
 

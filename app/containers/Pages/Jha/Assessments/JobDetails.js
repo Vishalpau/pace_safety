@@ -148,7 +148,7 @@ const JobDetails = () => {
       "jhaAssessmentDate": "2021-08-20",
       "permitToPerform": "",
       "permitNumber": "",
-      "jhaNumber": "string",
+      "jhaNumber": "",
       "jobTitle": "",
       "description": "",
       "department": "",
@@ -422,17 +422,6 @@ const JobDetails = () => {
               xs={12}
               className={classes.formBox}
             >
-              {/* <TextField
-                label="Permit to Work"
-                name="permitwork"
-                id="permitwork"
-                multiline
-                value={form.permitToPerform ? form.permitToPerform : ""}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => setForm({ ...form, permitToPerform: e.target.value })}
-                className={classes.formControl}
-              /> */}
               <FormControl
                 component="fieldset"
               >
