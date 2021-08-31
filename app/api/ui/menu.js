@@ -835,47 +835,107 @@ module.exports = [
   //   ]
   // },
   {
-    key: "home",
-    name: "Home",
-    icon: "ion-ios-home",
+    key: 'home',
+    name: 'Home',
+    icon: 'ion-ios-home',
     multilevel: false,
-    linkParent: "/",
+    linkParent: '/',
   },
   {
-    key: "Incidents",
-    name: "Incidents",
-    icon: "ion-md-warning",
+    key: 'Incidents',
+    name: 'Incidents',
+    icon: 'ion-md-warning',
     multilevel: false,
-    linkParent: "/app/pages/incident/",
+    linkParent: '/app/pages/incident/',
   },
   {
-    key: "assessments",
-    name: "Assessments",
-    icon: "ion-ios-clipboard",
+    key: 'assessments',
+    name: 'Assessments',
+    icon: 'ion-ios-clipboard',
     multilevel: false,
-    linkParent: "/app/pages/blank-page/",
+    linkParent: '/app/pages/blank-page/',
   },
   {
-    key: "observations",
-    name: "Observations",
-    icon: "ion-md-eye",
+    key: 'observations',
+    name: 'Observations',
+    icon: 'ion-md-eye',
     multilevel: false,
-    linkParent: "/app/pages/Observations/",
+    linkParent: '/app/pages/Observations',
   },
   {
-    key: "checklistManager",
-    name: "Checklist manager",
-    icon: "ion-md-list-box",
+    key: 'inspections',
+    name: 'Compliances',
+    icon: 'ion-ios-checkbox',
     multilevel: false,
-    linkParent: "/app/pages/checklist",
+    linkParent: '/app/charts/area-filled-charts',
   },
   {
-    key: "inspections",
-    name: "Compliances",
-    icon: "ion-ios-checkbox",
-    multilevel: false,
-    linkParent: "/app/charts/area-filled-charts",
+    key: 'menu_levels',
+    name: 'Assessment',
+    multilevel: true,
+    icon: 'ion-ios-menu-outline',
+    child: [
+      {
+        key: 'FLHA',
+        name: 'FLHA',
+        link: '/app/pages/assesments/xflha',
+      },
+      {
+        key: 'AHA',
+        name: 'AHA',
+        link: '/app/pages/jha/',
+      },
+      {
+        key: 'JHA',
+        name: 'JHA',
+        link: '/app/pages/jha/jha',
+      },
+      
+    ],
   },
+  // {
+  //   key: 'level_2',
+  //   keyParent: 'menu_levels',
+  //   name: 'Administration',
+  //   child: [
+  //     {
+  //       key: 'level_3',
+  //       name: 'X-FLHA Job titles',
+  //       link: '/app/pages/assesments/FlhaConfig',
+  //     },
+  //   ]
+  // },
+
+
+{
+  key: 'administration',
+  name: 'Administration',
+  multilevel: true,
+  icon: 'ion-ios-cog',
+  child: [
+    {
+      key: 'pick_lists',
+      name: 'Pick Lists',
+      linkParent: '#',
+    },
+    {
+      key: 'check_lists',
+      name: 'Check Lists',
+      linkParent: '/app/checkList/checkList',
+    },
+    {
+      key: 'xflha_setting',
+      name: 'X-FLHA Setting',
+      linkParent: '/app/pages/assesments/FlhaConfig',
+    },
+    {
+      key: 'setting',
+      name: 'Setting',
+      linkParent: '/app/settings/setting',
+    },
+  ],
+},
+
   // {
   //   key: "menu-level",
   //   name: "Incident",

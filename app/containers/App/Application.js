@@ -133,6 +133,10 @@ import {
   CheckList,
   ShowGroup,
   ShowCheckList,
+  FlhaConfigHazard,
+  FlhaConfig,
+  FlhaConfigCriticalTask,
+  FlhaConfigAdd,
 } from "../pageListAsync";
 
 
@@ -522,6 +526,12 @@ function Application(props) {
         <Route path="/app/maps/map-searchbox" component={SearchMap} />
         <Route path="/app/maps/map-traffic" component={TrafficIndicator} />
         <Route path="/app/maps/street-view" component={StreetViewMap} />
+        {/* Xflha Config  */}
+        <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
+        <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
+        <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
+        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} />
+
         {/* Default */}
         <Route component={NotFound} />
       </Switch>
