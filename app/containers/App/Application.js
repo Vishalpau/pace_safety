@@ -543,14 +543,14 @@ function Application(props) {
 
         {/* Jha  */}
 
-        <Route path="/app/pages/jha" exact component={Jha} />
-        <Route path="/app/pages/jha/jha-summary" exact component={JhaSummary} />
-        <Route path="/app/pages/jha/assessments/project-details" exact component={JhaJobDetails} />
-        <Route path="/app/pages/jha/assessments/project-area-hazards" exact component={JhaProjectAreaHazards} />
-        <Route path="/app/pages/jha/assessments/assessment" exact component={JhaAssessment} />
-        <Route path="/app/pages/jha/assessments/DocumentsNotifications" exact component={JhaDocumentNotification} />
-        <Route path="/app/pages/jha/approvals/approvals" exact component={JhaApprovals} />
-        <Route path="/app/pages/jha/lessons-learned/lessons-learned" exact component={JhaLessonsLearned} />
+        <Route path="/app/pages/jha/all_jha" component={Jha} />
+        <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
+        <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
+        <Route path="/app/pages/jha/assessments/project-area-hazards" component={JhaProjectAreaHazards} />
+        <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessment} />
+        <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />
+        <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
+        <Route path="/app/pages/jha/lessons-learned/lessons-learned" component={JhaLessonsLearned} />
 
         <Route path="/app/pages/jha/assessments/project-details/:id" exact component={JhaJobDetails} />
         <Route path="/app/pages/jha/assessments/project-area-hazards/:id" exact component={JhaProjectAreaHazards} />

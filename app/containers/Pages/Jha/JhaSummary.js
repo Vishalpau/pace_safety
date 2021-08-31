@@ -41,8 +41,10 @@ import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import api from "../../../utils/axios";
-import { handelJhaId } from "../Jha/Utils/checkValue"
-
+import { handelJhaId, checkValue } from "../Jha/Utils/checkValue"
+import Assessment from './Assessments/Assessment';
+import { handelFileName } from "../Jha/Utils/checkValue"
+import Attachment from "../../../containers/Attachment/Attachment";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -120,14 +122,48 @@ function JhaSummary() {
   const [lessonsLearnedView, setLessonsLearnedView] = useState(false);
   const history = useHistory();
   const [assessment, setAssessment] = useState({})
-  const [expanded, setExpanded] = useState('panel1');
+  const [expanded, setExpanded] = useState(false);
+  const [expandedHazard, setExpandedHazard] = useState(false);
+  const [projectStructure, setProjectStructure] = useState({})
+  const [team, setTeam] = useState([])
+  const [hazard, setHazard] = useState([])
+  const [formStatus, setFormStatus] = useState({
+    assessmentStatus: false,
+    approvalStatus: false,
+    lessionLeranedStatus: false
+  })
 
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const result = res.data.data.results;
-    console.log(result)
     setAssessment(result)
+
+    const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
+    const resultTeam = resTeam.data.data.results.results
+    setTeam(resultTeam)
+
+    const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
+    const resultHazard = resHazards.data.data.results.results
+    setHazard(resultHazard)
+
+    if (result.notifyTo !== null) {
+      setFormStatus({ ...formStatus, assessmentStatus: true })
+    }
+  }
+
+  const handelProjectStructre = () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectName = project.projectName.projectName
+
+    const phaseAndUnit = JSON.parse(localStorage.getItem("selectBreakDown")) != null ? JSON.parse(localStorage.getItem("selectBreakDown"))[0] : ""
+    const phaseName = phaseAndUnit.label || ""
+    const unitName = phaseAndUnit.name || ""
+    setProjectStructure({
+      projectName: projectName,
+      phaseName: phaseName,
+      unitName: unitName
+    })
   }
 
   const handleNewJhaPush = async () => {
@@ -156,8 +192,19 @@ function JhaSummary() {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const handleHazardExpand = (panel) => (event, isExpanded) => {
+    setExpandedHazard(isExpanded ? panel : false);
+  };
+
+  const CheckStatus = () => {
+    const jhaStatus = JSON.parse(localStorage.getItem("Jha Status"))
+    setFormStatus(jhaStatus)
+  }
+
   useEffect(() => {
+    CheckStatus()
     handelAsessment()
+    handelProjectStructre()
   }, [])
 
   const classes = useStyles();
@@ -167,10 +214,13 @@ function JhaSummary() {
         <div className={Styles.incidents}>
           <div className={Styles.item}>
             <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              endIcon={<CheckCircle />}
+              color={formStatus.assessmentStatus ? "secondary" : "primary"}
+              variant="outlined"
+              size="large"
+              variant={formStatus.assessmentStatus ? "contained" : "outlined"}
+              endIcon={
+                formStatus.assessmentStatus ? <CheckCircle /> : <AccessTime />
+              }
               className={classes.statusButton}
               onClick={(e) => {
                 setAssessmentsView(true);
@@ -181,7 +231,7 @@ function JhaSummary() {
               Assessments
             </Button>
             <Typography variant="caption" display="block">
-              Done
+              {formStatus.assessmentStatus ? "Done" : "Pending"}
             </Typography>
           </div>
 
@@ -261,9 +311,10 @@ function JhaSummary() {
                                       Project structure
                                     </Typography>
                                     <Typography className={Fonts.labelValue}>
-                                      Project Name - Phase Name - Unit Name
+                                      {projectStructure.projectName} - {projectStructure.phaseName} - {projectStructure.unitName}
                                     </Typography>
                                   </Grid>
+                                  {/* work area */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -273,9 +324,11 @@ function JhaSummary() {
                                       Work Area
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.workArea)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* location */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -285,9 +338,11 @@ function JhaSummary() {
                                       Location
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      Delhi
+                                      {checkValue(assessment.location)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* job title */}
                                   <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
@@ -297,9 +352,11 @@ function JhaSummary() {
                                       Job Title
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      None
+                                      {checkValue(assessment.jobTitle)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* job description */}
                                   <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
@@ -309,9 +366,11 @@ function JhaSummary() {
                                       Job Description
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      None
+                                      {checkValue(assessment.description)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* assessment performed by */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -324,6 +383,8 @@ function JhaSummary() {
                                       NA
                                     </Typography>
                                   </Grid>
+
+                                  {/* assessment start date */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -333,9 +394,11 @@ function JhaSummary() {
                                       Assessment started on
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      Yes
+                                      {checkValue(assessment.jhaAssessmentDate)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* permit to perform */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -345,9 +408,11 @@ function JhaSummary() {
                                       Permit to perform
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.permitToPerform)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* permit refrence */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -360,6 +425,8 @@ function JhaSummary() {
                                       Yes
                                     </Typography>
                                   </Grid>
+
+                                  {/* risk assessment team */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -368,14 +435,20 @@ function JhaSummary() {
                                     >
                                       Risk Assessment team
                                     </Typography>
-                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
-                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Team Two</Typography>
+                                    {team.map((value) => (
+                                      <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
+                                    ))}
+
                                   </Grid>
+
+                                  {/* emergench details      */}
                                   <Grid item xs={12} md={12}>
                                     <Typography className={classes.heading}>
                                       Emergency Contact Details
                                     </Typography>
                                   </Grid>
+
+                                  {/* supervisor */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -385,9 +458,11 @@ function JhaSummary() {
                                       Supervisor
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.supervisorName)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* department */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -397,9 +472,11 @@ function JhaSummary() {
                                       Department
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.department)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* emergency phone number */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -409,9 +486,11 @@ function JhaSummary() {
                                       Emergency Phone Number
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.emergencyNumber)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* evacuation assembly point */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -421,9 +500,11 @@ function JhaSummary() {
                                       Evacuation assembly point
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.evacuationAssemblyPoint)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* permit number */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -433,9 +514,11 @@ function JhaSummary() {
                                       Permit number
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.permitNumber)}
                                     </Typography>
                                   </Grid>
+
+                                  {/* order number */}
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -445,7 +528,7 @@ function JhaSummary() {
                                       Order number
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.jobOrderNumber)}
                                     </Typography>
                                   </Grid>
                                 </>
@@ -474,9 +557,17 @@ function JhaSummary() {
                                     >
                                       Hazards Group
                                     </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
-                                    </Typography>
+                                    {hazard.map((value) => (
+                                      <div>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(value.risk)}
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "20px" }}>
+                                          {checkValue(value.hazard)}
+                                        </Typography>
+                                      </div>
+                                    ))}
+
                                   </Grid>
                                 </>
                               </Grid>
@@ -502,127 +593,69 @@ function JhaSummary() {
                                     xs={12}
                                   >
                                     <div>
-                                      <Accordion expanded={expandedTableDetail === 'panel5'} onChange={handleTDChange('panel5')} defaultExpanded className={classes.backPaper}>
-                                        <AccordionSummary
-                                          expandIcon={<ExpandMoreIcon />}
-                                          aria-controls="panel1bh-content"
-                                          id="panel1bh-header"
-                                          className={classes.headingColor}
+                                      {hazard.map((value, index) => (
+                                        <Accordion
+                                          expanded={expandedHazard === `panel${index}`}
+                                          onChange={handleHazardExpand(`panel${index}`)}
+                                          defaultExpanded
+                                          className={classes.backPaper}
+                                          key={index}
                                         >
-                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#1 - Hazard Name</Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                          <Grid container spacing={2}>
-                                            <Grid item md={5} sm={5} xs={12}>
-                                              <Typography
-                                                variant="h6"
-                                                gutterBottom
-                                                className={Fonts.labelName}
-                                              >
-                                                Job Steps
-                                              </Typography>
-                                              <Typography variant="body" className={Fonts.labelValue}>
-                                                NA
-                                              </Typography>
-                                            </Grid>
+                                          <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1bh-content"
+                                            id="panel1bh-header"
+                                            className={classes.headingColor}
+                                          >
+                                            <Typography
+                                              className={classes.heading}>
+                                              <MenuOpenOutlinedIcon
+                                                className={classes.headingIcon}
+                                              />
+                                              {`Hazard ${index} ${value.hazard}`}
+                                            </Typography>
+                                          </AccordionSummary>
+                                          <AccordionDetails>
+                                            <Grid container spacing={2}>
 
-                                            <Grid item md={5} sm={5} xs={12}>
-                                              <Typography
-                                                variant="h6"
-                                                gutterBottom
-                                                className={Fonts.labelName}
-                                              >
-                                                Potential Hazards
-                                              </Typography>
-                                              <Typography variant="body" className={Fonts.labelValue}>
-                                                NA
-                                              </Typography>
-                                            </Grid>
-                                            <Grid item md={2} sm={2} xs={12}>
-                                              <div className={classes.ratioColororange}>50% Risk</div>
-                                            </Grid>
+                                              <Grid item md={6} sm={6} xs={6}>
+                                                <Typography
+                                                  variant="h6"
+                                                  gutterBottom
+                                                  className={Fonts.labelName}
+                                                >
+                                                  Risk
+                                                </Typography>
+                                                <Typography variant="body" className={Fonts.labelValue}>
+                                                  {checkValue(value.risk)}
+                                                </Typography>
+                                              </Grid>
 
-                                            <Grid item md={12} sm={12} xs={12}>
-                                              <Typography
-                                                variant="h6"
-                                                gutterBottom
-                                                className={Fonts.labelName}
-                                              >
-                                                Controls
-                                              </Typography>
-                                              <Typography variant="body" className={Fonts.labelValue}>
-                                                NA
-                                              </Typography>
+                                              <Grid item md={6} sm={6} xs={6}>
+                                                <Typography
+                                                  variant="h6"
+                                                  gutterBottom
+                                                  className={Fonts.labelName}
+                                                >
+                                                  Controls
+                                                </Typography>
+                                                <Typography variant="body" className={Fonts.labelValue}>
+                                                  {checkValue(value.control)}
+                                                </Typography>
+                                              </Grid>
+
+                                              <Grid item md={12} xs={12} className={classes.createHazardbox}>
+                                                <Divider light />
+                                              </Grid>
+
                                             </Grid>
-                                            <Grid item md={12} xs={12} className={classes.createHazardbox}>
-                                              <Divider light />
-                                            </Grid>
-
-                                          </Grid>
-                                        </AccordionDetails>
-                                      </Accordion>
-                                      <Accordion expanded={expandedTableDetail === 'panel6'} onChange={handleTDChange('panel6')} className={classes.backPaper}>
-                                        <AccordionSummary
-                                          expandIcon={<ExpandMoreIcon />}
-                                          aria-controls="panel2bh-content"
-                                          id="panel2bh-header"
-                                          className={classes.headingColor}
-                                        >
-                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#3 - Hazard Name</Typography>
-
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                          <Typography>
-                                            Dummy content
-                                          </Typography>
-                                        </AccordionDetails>
-                                      </Accordion>
-                                      <Accordion expanded={expandedTableDetail === 'panel7'} onChange={handleTDChange('panel7')} className={classes.backPaper}>
-                                        <AccordionSummary
-                                          expandIcon={<ExpandMoreIcon />}
-                                          aria-controls="panel3bh-content"
-                                          id="panel3bh-header"
-                                          className={classes.headingColor}
-                                        >
-                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} />Hazard#2 - Hazard Name </Typography>
-
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                          <Typography>
-                                            Dummy content
-                                          </Typography>
-                                        </AccordionDetails>
-                                      </Accordion>
-                                      <Accordion expanded={expandedTableDetail === 'panel8'} onChange={handleTDChange('panel8')} className={classes.backPaper}>
-                                        <AccordionSummary
-                                          expandIcon={<ExpandMoreIcon />}
-                                          aria-controls="panel4bh-content"
-                                          id="panel4bh-header"
-                                          className={classes.headingColor}
-                                        >
-                                          <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Hazard#4 - Hazard Name </Typography>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                          <Typography>
-                                            Dummy content
-                                          </Typography>
-                                        </AccordionDetails>
-                                      </Accordion>
+                                          </AccordionDetails>
+                                        </Accordion>
+                                      ))}
                                     </div>
 
                                   </Grid>
-                                  {/* <Grid item xs={12} md={6}>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Energy Hazard
-                                      </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
-                                      </Typography>
-                                    </Grid> */}
+
                                   <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
@@ -631,9 +664,13 @@ function JhaSummary() {
                                     >
                                       Conditions when the work must be stopped
                                     </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
-                                    </Typography>
+
+                                    {checkValue(assessment.workStopCondition).split(",").map((value) => (
+                                      <p>
+                                        {value.replace("-", " ")}
+                                      </p>
+                                    ))}
+
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     <Typography
@@ -644,7 +681,11 @@ function JhaSummary() {
                                       Additional remarks
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      None
+                                      {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
+                                        <p>
+                                          {value.replace("-", " ")}
+                                        </p>
+                                      ))}
                                     </Typography>
                                   </Grid>
                                 </>
@@ -673,10 +714,13 @@ function JhaSummary() {
                                     >
                                       Risk assessment supporting documents
                                     </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      <Avatar variant="rounded" className={classes.rounded}>
-                                        <ImageIcon />
-                                      </Avatar>
+                                    <Typography title={handelFileName(assessment.jhaAssessmentAttachment)}>
+                                      {assessment.jhaAssessmentAttachment != "" &&
+                                        typeof assessment.jhaAssessmentAttachment == "string" ? (
+                                        <Attachment value={assessment.jhaAssessmentAttachment} />
+                                      ) :
+                                        "-"
+                                      }
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -688,7 +732,7 @@ function JhaSummary() {
                                       Links
                                     </Typography>
                                     <Typography variant="body" className={Fonts.labelValue}>
-                                      NA
+                                      {checkValue(assessment.link)}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -699,8 +743,9 @@ function JhaSummary() {
                                     >
                                       Notifications sent to
                                     </Typography>
-                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Role one</Typography>
-                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography>
+                                    {checkValue(assessment.notifyTo).split(",").map((value) => (
+                                      <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
+                                    ))}
                                   </Grid>
                                 </>
                               </Grid>
@@ -885,8 +930,9 @@ function JhaSummary() {
               >
                 <ListItemLink onClick={(e) => handleNewJhaPush(e)}>
                   <ListItemIcon>
-                    <Add />
+                    {formStatus.assessmentStatus ? <Edit /> : <Add />}
                   </ListItemIcon>
+
                   <ListItemText primary="Assessments" />
                 </ListItemLink>
                 <ListItemLink onClick={(e) => handleJhaApprovalsPush(e)}>

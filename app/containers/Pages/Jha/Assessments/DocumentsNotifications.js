@@ -16,6 +16,8 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
 import Snackbar from "@material-ui/core/Snackbar";
 import { useParams, useHistory } from 'react-router';
+import FormControl from '@material-ui/core/FormControl';
+import Box from "@material-ui/core/Box";
 
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -27,7 +29,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MuiAlert from "@material-ui/lab/Alert";
 
 import FormSideBar from '../../../Forms/FormSideBar';
-import { JHA_FORM } from "../Utils/constants";
+import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
 import api from "../../../../utils/axios";
 import { handelJhaId } from "../Utils/checkValue"
 import { handelFileName } from "../../../../utils/CheckerValue";
@@ -36,6 +38,8 @@ import {
   HEADER_AUTH,
   SSO_URL,
 } from "../../../../utils/constants";
+import { from } from 'form-data';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -151,17 +155,19 @@ const DocumentNotification = () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const apiData = res.data.data.results
+    apiData["notifyTo"] == null ? apiData["notifyTo"] = "" : apiData["notifyTo"] = apiData["notifyTo"]
     setForm(apiData)
 
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
     var config = {
       method: "get",
-      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
+      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/`,
       headers: HEADER_AUTH,
     };
     const notify = await api(config);
     if (notify.status === 200) {
+      console.log(notify.data.data.results)
       const result = notify.data.data.results;
       setNotificationSentValue(result);
     }
@@ -224,22 +230,23 @@ const DocumentNotification = () => {
     }
   }
 
-  const handelNotifyTo = async (e, index) => {
-    if (e.target.checked === true) {
-      let temp = [...notifyToList];
-      temp.push(e.target.value)
-      let uniq = [...new Set(temp)];
-      setNotifyToList(uniq);
+  const handelNotifyTo = async (e, value) => {
+    if (e.target.checked == false) {
+      let newData = form.notifyTo.filter((item) => item !== value);
+      setForm({
+        ...form,
+        notifyTo: newData
+      });
     } else {
-      let temp = [...notifyToList];
-      let newData = temp.filter((item) => item !== e.target.value);
-      setNotifyToList(newData);
+      setForm({
+        ...form,
+        notifyTo: [...form.notifyTo, value]
+      });
     }
-
   };
 
   const handelNext = async () => {
-    if (typeof form.jhaAssessmentAttachment === "object") {
+    if (typeof form.jhaAssessmentAttachment == "object" && form.jhaAssessmentAttachment != null) {
       let data = new FormData();
       data.append("fkCompanyId", form.fkCompanyId);
       data.append("fkProjectId", form.fkProjectId);
@@ -250,13 +257,18 @@ const DocumentNotification = () => {
       data.append("description", form.description);
       data.append("classification", form.classification);
       data.append("workHours", form.workHours);
+      data.append("notifyTo", form.notifyTo.toString())
+      data.append("link", form.link)
       data.append("jhaAssessmentAttachment", form.jhaAssessmentAttachment)
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data)
     }
     else {
       delete form["jhaAssessmentAttachment"]
+      form["notifyTo"] = form.notifyTo.toString()
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
     }
+    history.push(SUMMARY_FORM["Summary"])
+    localStorage.setItem("Jha Status", JSON.stringify({ "assessment": "done" }))
   }
 
   useEffect(() => {
@@ -266,6 +278,7 @@ const DocumentNotification = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Document And Notification" icon="ion-md-list-box">
+      {/* {console.log(form)} */}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
@@ -327,39 +340,21 @@ const DocumentNotification = () => {
               />
             </Grid>
 
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-              <FormGroup row>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
+            <Grid item md={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Notifications to be sent to</FormLabel>
+                <FormGroup>
+                  {notificationSentValue.map((value, index) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value.roleName} />}
+                      label={value.roleName}
+                      checked={form.notifyTo && form.notifyTo !== null && form.notifyTo == value.id}
+                      onChange={async (e) => handelNotifyTo(e, value.id)}
                     />
-                  )}
-                  label="Manager"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Supervisor"
-                />
-              </FormGroup>
+                  ))}
+                </FormGroup>
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
             </Grid>
 
             <Grid
