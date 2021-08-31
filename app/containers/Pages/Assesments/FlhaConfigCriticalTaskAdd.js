@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -67,6 +68,8 @@ import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutline
 import Tooltip from "@material-ui/core/Tooltip";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
+import Link from '@material-ui/core/Link';
+import MUIDataTable from 'mui-datatables';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -235,27 +238,89 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: '0.5rem',
     },
   },
-
+  headerBackground: {
+    backgroundColor: '#ffffff',
+    color: '#06425c',
+  },
+  pTopandRight: {
+    paddingLeft: '20px',
+    paddingRight: '20px',
+    marginTop: '13px',
+  },
   mbThirty: {
     marginBottom: '30px',
   },
-  headingIcon: {
-    width: '35px',
-    border: '1px solid rgb(229, 233, 235)',
-    height: '35px',
-    background: 'rgb(131, 166, 181)',
-    boxShadow: '0 2px 15px -5px #06425c',
-    textAlign: 'center',
-    lineHeight: '44px',
-    marginRight: '12px',
-    borderRadius: '8px',
-    verticalAlign: 'middle',
-    padding: '3px',
-    color: '#ffffff',
+  formControlTwo: {
+    width: '100%',
+  },
+  inputTab: {
+    display: 'none',
+  },
+  widthSelect: {
+    minWidth: '170px',
+    height: '58px',
+    borderRadius: '4px',
+  },
+  divider: {
+    margin: '15px 15px',
+    width: '97.4%',
+    boxShadow: '1px 2px 10px #d4d4d4',
+  },
+  table: {
+    minWidth: '100%',
+    width: '100%',
+  },
+  plTen: {
+    paddingLeft: '3px;',
+    height: '18px;',
+  },
+  plFive: {
+    paddingLeft: '5px;',
+    height: '22px;',
+  },
+  createHazardbox: {
+    margin: '0px 0px 10px 0px',
+  },
+  createHazardboxRight: {
+    paddingLeft: '5px',
+    float: 'right',
+    margin: '0px 16px 20px 20px',
+  },
+  mLeft: {
+    marginLeft: '10px',
+  },
+  mRight: {
+    minHeight: '30px',
+    height: '30px',
+    width: '30px',
+  },
+  labelColor: {
+    color: 'rgba(0, 0, 0, 0.54)',
+    fontSize: '14px;',
+    fontFamily: 'Open Sans,sans-serif',
+    fontWeight: '400;',
   },
 }));
 const FlhaDetails = () => {
   const classes = useStyles();
+  const [state, setState] = React.useState({
+    checkedA: true,
+    checkedB: true,
+  });
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div>
@@ -263,45 +328,27 @@ const FlhaDetails = () => {
         <Box padding={3}>
           <Grid item xs={12}>
             <Grid container spacing={3}>
-              <Grid item md={12} sm={12} xs={12}>
+              <Grid item sm={12} xs={12}>
                 <TextField
                   variant="outlined"
                   id="immediate-actions"
                   multiline
                   rows="1"
-                  label="titles"
+                  label="Task identification"
                   className={classes.fullWidth}
                 />
               </Grid>
-              <Grid item md={12} sm={12} xs={12}>
-                <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label="department"
-                  className={classes.fullWidth}
-                />
-              </Grid>
-              <Grid item md={8} sm={8} xs={12}>
-                <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-              </Grid>
-              <Grid item md={4} sm={4} xs={12}>
-                <label htmlFor="icon-button-file">
-                  <IconButton color="primary" aria-label="upload picture" component="span">
-                    <AttachmentIcon />
-                  </IconButton>
-                </label>
-              </Grid>
-              <Grid item md={12} sm={12} xs={12}>
-                <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label="details"
-                  className={classes.fullWidth}
-                />
+              <Grid item sm={12} xs={12}>
+                <Grid item sm={12} xs={12}>
+                  <TextField
+                    variant="outlined"
+                    id="immediate-actions"
+                    multiline
+                    rows="1"
+                    label="Control"
+                    className={classes.fullWidth}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

@@ -70,6 +70,8 @@ import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
 import MUIDataTable from 'mui-datatables';
 import api from "../../../utils/axios";
+import FlhaConfigCriticalTaskAdd from './FlhaConfigCriticalTaskAdd';
+
 // import React ,{useState } from "react";
 
 
@@ -367,7 +369,7 @@ const FlhaDetails = () => {
   const [task, setTask] = React.useState([]);
   React.useEffect(() => {
     let jobIdName = document.URL.split('/')
-    setTaskName(jobIdName[jobIdName.length-1])
+    setTaskName(jobIdName[jobIdName.length - 1])
 
     criticalApiHandler();
   }, []);
@@ -376,18 +378,18 @@ const FlhaDetails = () => {
   const [criticalForm, setCriticalForm] = React.useState({
     taskIdentification: "",
     control: "",
-    fkCompanyId:"",
-    fkJobId:"",
-    fkProjectId:"",
-    taskIdentification:""
+    fkCompanyId: "",
+    fkJobId: "",
+    fkProjectId: "",
+    taskIdentification: ""
   });
 
 
-//for status
-const initialState = {
-  status: true,
-}
-const [statusChange, setStatusChange] = React.useState(initialState.status);
+  //for status
+  const initialState = {
+    status: true,
+  }
+  const [statusChange, setStatusChange] = React.useState(initialState.status);
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -405,18 +407,19 @@ const [statusChange, setStatusChange] = React.useState(initialState.status);
 
     let formClone = JSON.parse(JSON.stringify(criticalForm));
     formClone["fkCompanyId"] = fkCompanyId;
-    formClone["fkProjectId"] = JSON.parse(localStorage.getItem("projectName")).projectName.projectId ;
-    formClone["createdBy"] = JSON.parse(localStorage.getItem("userDetails")).id ;
+    formClone["fkProjectId"] = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    formClone["createdBy"] = JSON.parse(localStorage.getItem("userDetails")).id;
     formClone["fkJobId"] = localStorage.getItem("fkJobId");
 
     let res = await api.post(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/`, formClone);
-    setCriticalForm({...criticalForm,
+    setCriticalForm({
+      ...criticalForm,
       taskIdentification: "",
       control: "",
-      fkCompanyId:"",
-      fkJobId:"",
-      fkProjectId:"",
-      taskIdentification:""
+      fkCompanyId: "",
+      fkJobId: "",
+      fkProjectId: "",
+      taskIdentification: ""
     })
 
     criticalApiHandler()
@@ -429,36 +432,36 @@ const [statusChange, setStatusChange] = React.useState(initialState.status);
     let data = [];
     res.data.data.results.results.map(critcalTask => {
       let taskData = [];
-      
+
       taskData.push(critcalTask.taskIdentification);
       taskData.push(critcalTask.control);
       taskData.push(critcalTask.status);
       taskData.push(critcalTask.id);
       data.push(taskData);
-      localStorage.setItem('critcalTaskId',critcalTask.id)
+      localStorage.setItem('critcalTaskId', critcalTask.id)
 
     });
     setTask(data);
   }
 
-//for status api
-const statusToggle = async (value,data) => {
-  let fkJobId = localStorage.getItem('fkJobId')
+  //for status api
+  const statusToggle = async (value, data) => {
+    let fkJobId = localStorage.getItem('fkJobId')
 
-  console.log(data,"vis")
+    console.log(data, "vis")
 
-  let obj = {
-    fkCompanyId:fkCompanyId,
-    taskIdentification: data[0],
-    control: data[1],
-    fkJobId: localStorage.getItem("fkJobId"),
-    status:value
-  }    
+    let obj = {
+      fkCompanyId: fkCompanyId,
+      taskIdentification: data[0],
+      control: data[1],
+      fkJobId: localStorage.getItem("fkJobId"),
+      status: value
+    }
 
-  const res = await api.put(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/${data[3]}/`,obj);
-  console.log('status',res)
-  setStatusChange(res.data.data.results.results)
-}
+    const res = await api.put(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/${data[3]}/`, obj);
+    console.log('status', res)
+    setStatusChange(res.data.data.results.results)
+  }
 
 
   const handleChange = (event) => {
@@ -476,15 +479,29 @@ const statusToggle = async (value,data) => {
   };
 
   const onInputChange = (e, data) => {
-    console.log('target',data)
-    let value =e.target.checked === true ? "Active" : "Inactive";
-    console.log('value',value)
+    console.log('target', data)
+    let value = e.target.checked === true ? "Active" : "Inactive";
+    console.log('value', value)
     setStatusChange({
-      ...initialState,status: value,
+      ...initialState, status: value,
     })
     statusToggle(value, data);
   }
 
+  // second dialog
+  const [CttaskOpen, setCttaskOpen] = React.useState(false);
+
+  function handleCttaskClickOpen() {
+    setCttaskOpen(true);
+  }
+
+  function handleCttaskClose() {
+    setCttaskOpen(false);
+  }
+  function handleFlhaClose() {
+    setOpen(false);
+  }
+  
 
   //   Data for the table view
   const columns = [
@@ -504,9 +521,9 @@ const statusToggle = async (value,data) => {
       name: 'Status',
       options: {
         filter: false,
-        customBodyRender: (value,tableMeta) => (
+        customBodyRender: (value, tableMeta) => (
           <>
-            <Switch onChange= {(e) => onInputChange(e, tableMeta.rowData)} checked='checked'/>
+            <Switch onChange={(e) => onInputChange(e, tableMeta.rowData)} checked='checked' />
           </>
         )
       }
@@ -515,39 +532,36 @@ const statusToggle = async (value,data) => {
       name: '',
       options: {
         filter: false,
-        customBodyRender: (value,tableMeta) => {
+        customBodyRender: (value, tableMeta) => {
           console.log(tableMeta);
 
           return (
-          <>
-            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-              <MoreVertIcon />
-            </Button>
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
-                <Link
-                  href="/app/pages/assesments/FlhaConfig"
-                >
-                  Flha Config
+            <>
+              <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                <MoreVertIcon />
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>
+                  <span variant="outlined" color="primary" onClick={handleCttaskClickOpen}>
+                    Edit Critical Task
+                  </span>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link
+                    href={`/app/pages/assesments/FlhaConfigHazard/${tableMeta.rowData[3]}`}
+                  >
+                    Hazards
 
-                </Link>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Link
-                  href={`/app/pages/assesments/FlhaConfigHazard/${tableMeta.rowData[3]}`}
-                >
-                  Hazards
-
-                </Link>
-              </MenuItem>
-            </Menu>
-          </>
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </>
           )
         }
       }
@@ -581,71 +595,97 @@ const statusToggle = async (value,data) => {
     page: 0,
   };
 
-  
+
   return (
     <div>
-      <PapperBlock title={`Job Title - ${taskName}` }icon="ion-ios-create-outline" desc="" color="primary" >
+      <PapperBlock title={`Job Title - ${taskName}`} icon="ion-ios-create-outline" desc="" color="primary" >
         <Paper elevation={3}>
-          <Box padding={3}>
-            <Grid item xs={12}>
-              <Grid component={Paper}>
-                <MUIDataTable
-                  data={task}
-                  columns={columns}
-                  options={options}
+    
+          <div>
+          <Dialog
+            open={CttaskOpen}
+            onClose={handleFlhaClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Update Critical tasks
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <FlhaConfigCriticalTaskAdd />
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" size="medium" variant="contained" className={classes.spacerRight}>
+                Save
+              </Button>
+              <Button onClick={handleCttaskClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+    </div>
+        <Box padding={3}>
+          <Grid item xs={12}>
+            <Grid component={Paper}>
+              <MUIDataTable
+                data={task}
+                columns={columns}
+                options={options}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <Divider className={classes.divider} />
+        <Box padding={3}>
+          <Grid item xs={12}>
+            <Typography variant="h6">
+              <CheckOutlinedIcon className={classes.headingIcon} />
+              New Critical Task
+            </Typography>
+            <Grid container spacing={3} className={classes.mttopThirty}>
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label="Task identification"
+                  value={criticalForm.taskIdentification}
+                  onChange={(e) => payloadHandler(e, "taskIdentification")}
+                  // onChange={(e) => setCriticalForm({...criticalForm, taskIdentification:e.target.value})}
+
+
+                  className={classes.fullWidth}
                 />
               </Grid>
-            </Grid>
-          </Box>
-          <Divider className={classes.divider} />
-          <Box padding={3}>
-            <Grid item xs={12}>
-              <Typography variant="h6">
-                <CheckOutlinedIcon className={classes.headingIcon} />
-                New Critical Task
-              </Typography>
-              <Grid container spacing={3} className={classes.mttopThirty}>
-                <Grid item sm={6} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Task identification"
-                    value= {criticalForm.taskIdentification}
-                    onChange={(e) => payloadHandler(e, "taskIdentification")}
-                    // onChange={(e) => setCriticalForm({...criticalForm, taskIdentification:e.target.value})}
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label="Control"
+                  className={classes.fullWidth}
+                  value={criticalForm.control}
 
+                  onChange={(e) => payloadHandler(e, "control")}
+                />
+              </Grid>
+              <Grid item md={12} sm={12} xs={12}>
+                <Button size="medium" variant="contained" color="primary" onClick={(e) => handelSubmit()}>
+                  Save
 
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item sm={6} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Control"
-                    className={classes.fullWidth}
-                    value= {criticalForm.control}
-
-                    onChange={(e) => payloadHandler(e, "control")}
-                  />
-                </Grid>
-                <Grid item md={12} sm={12} xs={12}>
-                  <Button size="medium" variant="contained" color="primary" onClick={(e) => handelSubmit()}>
-                    Save
-
-                    {' '}
-                  </Button>
-                </Grid>
+                  {' '}
+                </Button>
               </Grid>
             </Grid>
-          </Box>
+          </Grid>
+        </Box>
         </Paper>
       </PapperBlock>
-    </div>
+    </div >
   );
 };
 

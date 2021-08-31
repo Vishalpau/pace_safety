@@ -77,6 +77,8 @@ import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import zIndex from '@material-ui/core/styles/zIndex';
 import { AlternateEmail } from '@material-ui/icons';
+import FlhaConfigHazard from './FlhaConfigHazard';
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -530,17 +532,22 @@ const ConfigHazard = () => {
 
   //for remove icon
   const handleRemoveEvidance = async (index) => {
-    alert(index)
-//     hazardForm.splice(index,1);
-//     setHazardForm(val => {
-//       return [val, hazardForm]
-//     })
-        const temp = [...hazardForm]
-        temp.splice(index,1)
-        setHazardForm(temp)
+    const temp = [...hazardForm]
+    temp.splice(index, 1)
+    setHazardForm(temp)
 
   };
 
+  //for edit
+  const [open, setOpen] = React.useState(false);
+
+  function handleFlhaClickOpen() {
+    setOpen(true);
+  }
+
+  function handleFlhaClose() {
+    setOpen(false);
+  }
 
   //   Data for the table view
 
@@ -598,12 +605,9 @@ const ConfigHazard = () => {
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleClose}>
-                <Link
-                  href="/app/pages/assesments/FlhaConfigHazard"
-                >
-                  Hazards
-
-                </Link>
+                <span variant="outlined" color="primary" onClick={handleFlhaClickOpen}>
+                  Edit Hazards
+                </span>
               </MenuItem>
             </Menu>
           </>
@@ -619,7 +623,7 @@ const ConfigHazard = () => {
     setHazardForm(val => {
       return [...val, obj]
     })
-    console.log(hazardForm, "vissss")
+    // console.log(hazardForm, "vissss")
   }
 
 
@@ -665,6 +669,32 @@ const ConfigHazard = () => {
     <div>
       <PapperBlock title={`Critical Task - ${criticalName}`} icon="ion-ios-create-outline" desc="" color="primary">
         <Paper elevation={3}>
+          {/* Menur Hazards */}
+          <div>
+            <Dialog
+              open={open}
+              onClose={handleFlhaClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Update hazards
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <FlhaConfigHazard />
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleFlhaClose} color="primary" size="medium" variant="contained" className={classes.spacerRight}>
+                  Save
+                </Button>
+                <Button onClick={handleFlhaClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
           <Box padding={3}>
             <Grid item xs={12}>
               <Grid component={Paper}>
@@ -769,8 +799,8 @@ const ConfigHazard = () => {
             </Grid>
           </Box>
         </Paper>
-      </PapperBlock>
-    </div>
+      </PapperBlock >
+    </div >
   );
 };
 

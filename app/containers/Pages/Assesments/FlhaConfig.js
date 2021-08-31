@@ -70,6 +70,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
 import { useDropzone } from 'react-dropzone';
+import FlhaConfigAdd from './FlhaConfigAdd';
+
 import MUIDataTable from 'mui-datatables';
 import api from '../../../utils/axios';
 import {
@@ -511,9 +513,6 @@ const FlhaDetails = () => {
       innerAr.push(jobTitle.fkDepartmentId);
       localStorage.setItem('fkJobId', jobTitle.id);
 
-      // innerAr.push(jobTitle.projectName);
-
-
       data.push(innerAr);
     });
 
@@ -545,6 +544,18 @@ const FlhaDetails = () => {
     });
     statusToggle(value, data);
   };
+
+
+  // for edit jobtitle
+  const [ConfigOpen, setConfigOpen] = React.useState(false);
+
+  function handleConfigClickOpen() {
+    setConfigOpen(true);
+  }
+
+  function handleConfigClose() {
+    setConfigOpen(false);
+  }
 
   //   Data for the table view
   const columns = [
@@ -599,7 +610,7 @@ const FlhaDetails = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta) => {
-          // console.log(tableMeta);
+          console.log(tableMeta);
           const rowID = [tableMeta.tableData[tableMeta.rowIndex][5]];
           return (
             <>
@@ -620,18 +631,24 @@ const FlhaDetails = () => {
                     href={`/app/pages/assesments/flhaconfigcriticaltask/${rowID}`}
 
                   >
+                    {console.log(tableMeta.rowData[5],"vishal")}
                     Critical task
 
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
+                  <span variant="outlined" color="primary" onClick={handleConfigClickOpen}>
+                    Edit job title
+                  </span>
+                </MenuItem>
+                {/* <MenuItem onClick={handleClose}>
                   <Link
                     href="/app/pages/assesments/flhaconfighazard"
                   >
                     Hazards
 
                   </Link>
-                </MenuItem>
+                </MenuItem> */}
               </Menu>
             </>
           )
@@ -685,6 +702,32 @@ const FlhaDetails = () => {
     <div>
       <PapperBlock title="X-FLHA - Job Titles" icon="ion-ios-create-outline" desc="" color="primary">
         <Paper elevation={3}>
+          {/* Flha config */}
+          <div>
+            <Dialog
+              open={ConfigOpen}
+              onClose={handleConfigClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Edit X-FLHA Job Titles
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <FlhaConfigAdd/>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button color="primary" size="medium" variant="contained" className={classes.spacerRight} onClick={(e) => handelSubmit()}>
+                  Save
+                </Button>
+                <Button onClick={handleConfigClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
           <Box padding={3}>
             <Grid item xs={12}>
               <Grid component={Paper}>
