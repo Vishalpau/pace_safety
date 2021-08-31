@@ -39,7 +39,9 @@ import { handelJhaId } from "../Utils/checkValue"
 import { JHA_FORM } from "../Utils/constants"
 import FormSideBar from '../../../Forms/FormSideBar';
 import ActionTracker from "../../../Forms/ActionTracker";
-
+import { PickListData } from "../Utils/checkValue"
+import { result } from 'lodash';
+import { SUMMARY_FORM } from "../Utils/constants"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -193,6 +195,7 @@ const Assessment = () => {
     humanPerformanceAspects: [],
     workStopCondition: [],
   })
+  const [risk, setRisk] = useState([])
 
   const handelCheckList = async () => {
     const tempPerformance = {}
@@ -203,10 +206,10 @@ const Assessment = () => {
     setForm(apiData)
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
-    const specificPerformance = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-human-performance-aspects/1/`)
+    const specificPerformance = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
     const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
 
-    const documentCondition = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-document-conditions/1/`)
+    const documentCondition = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
     const apiCondition = documentCondition.data.data.results[0].checklistValues
 
     apiDataPerformance.map((value) => {
@@ -313,16 +316,23 @@ const Assessment = () => {
 
   const classes = useStyles();
 
+  const handelCallBack = async () => {
+    await setLoading(true)
+    await handelCheckList()
+    await handelJobDetails()
+    PickListData(78).then(function (results) {
+      setRisk(results)
+    });
+    await setLoading(false)
+  }
+
   useEffect(() => {
-    setLoading(true)
-    handelCheckList()
-    handelJobDetails()
-    setLoading(false)
+    handelCallBack()
   }, [])
 
   return (
     <PapperBlock title="Assessments" icon="ion-md-list-box">
-      {console.log(additinalJobDetails)}
+      {/* {console.log(form.Assessment)} */}
       {loading == false ?
         <Row>
           <Col md={9}>
@@ -369,12 +379,12 @@ const Assessment = () => {
                                 label="Risk"
                                 value={form[index]["risk"]}
                               >
-                                {selectValues.map((value) => (
+                                {risk.map((value) => (
                                   <MenuItem
-                                    value={value}
-                                    onClick={(e) => handelRiskAndControl("risk", index, value)}
+                                    value={value.value}
+                                    onClick={(e) => handelRiskAndControl("risk", index, value.value)}
                                   >
-                                    {value}
+                                    {value.label}
                                   </MenuItem>
                                 ))}
                               </Select>

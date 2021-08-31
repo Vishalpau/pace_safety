@@ -6,10 +6,15 @@ import {
 import { PapperBlock } from 'dan-components';
 import Link from '@material-ui/core/Link';
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import { useParams, useHistory } from 'react-router';
 import { Col, Row } from "react-grid-system";
+
+import api from "../../../../utils/axios";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { APPROVAL_FORM } from "../Utils/constants"
-
+import ActionTracker from "../../../Forms/ActionTracker";
+import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
+import { handelJhaId } from "../Utils/checkValue"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -99,6 +104,35 @@ const useStyles = makeStyles((theme) => ({
 
 const Approvals = () => {
 
+  const [form, setForm] = useState({})
+  const history = useHistory()
+  const handelJobDetails = async () => {
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/`)
+    const apiData = res.data.data.results
+    setForm(apiData)
+  }
+
+  const handelWorkAndPic = (type) => {
+    let user = JSON.parse(localStorage.getItem("userDetails"))
+    let name = user.id
+    if (type == "work") {
+      setForm({ ...form, wrpApprovalUser: name, wrpApprovalDateTime: new Date() })
+    } else if (type == "pic") {
+      setForm({ ...form, picApprovalUser: name, picApprovalDateTime: new Date() })
+    }
+  }
+
+  const handelSubmit = async () => {
+    delete form["jhaAssessmentAttachment"]
+    const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+    // history.push(SUMMARY_FORM["Summary"])
+  }
+
+  useEffect(() => {
+    handelJobDetails()
+    handelWorkAndPic()
+  }, [])
 
   const classes = useStyles();
   return (
@@ -116,7 +150,14 @@ const Approvals = () => {
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
                   Work Responsible Person (WRP)
                 </Typography>
-                <Button variant="contained" color="primary" className={classes.approvalButton}>Approve Now</Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.approvalButton}
+                  onClick={(e) => handelWorkAndPic("work")}
+                >
+                  Approve Now
+                </Button>
               </Grid>
               <Grid
                 item
@@ -127,49 +168,24 @@ const Approvals = () => {
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
                   PIC (if attended the Toolbox meeting)
                 </Typography>
-                <Button variant="contained" color="primary" className={classes.approvalButton}>Approve Now</Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.approvalButton}
+                  onClick={(e) => handelWorkAndPic("pic")}
+                >
+                  Approve Now
+                </Button>
               </Grid>
               <Grid item md={6} xs={12}>
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  Actions
+                  <ActionTracker />
                 </Typography>
                 <Typography className={classes.aLabelValue}>
                   <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
                   <div className={classes.actionTitleLable}>Action title</div>
-                </Typography>
-                <Typography className={classes.aLabelValue}>
-                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                  <div className={classes.actionTitleLable}>Action title</div>
-                </Typography>
-
-                <Typography className={classes.increaseRowBox}>
-                  <ControlPointIcon />
-                  <span className={classes.addLink}><Link to="">Add a new action</Link></span>
                 </Typography>
               </Grid>
-
-
-              {/* <Grid item md={8}>
-                <Typography variant="h6" gutterBottom className={classes.labelName}>
-                            Corrective Actions
-                </Typography>
-                <Typography className={classes.labelValue}>
-                            Action title
-                    {' '}
-                    <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                </Typography>
-                <Typography className={classes.labelValue}>
-                            Action title
-                    {' '}
-                    <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                </Typography>
-
-                <Typography className={classes.increaseRowBox}>
-                    <ControlPointIcon />
-                    {' '}
-                    <span className={classes.addLink}><Link to="">Add a new action</Link></span>
-                </Typography>
-            </Grid> */}
               <Grid
                 item
                 md={8}
@@ -187,7 +203,14 @@ const Approvals = () => {
                 md={12}
                 xs={12}
               >
-                <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  className={classes.custmSubmitBtn}
+                  onClick={(e) => handelSubmit()}
+                >
+                  Submit
+                </Button>
               </Grid>
             </Grid>
           </Col>

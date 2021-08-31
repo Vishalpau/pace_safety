@@ -289,12 +289,13 @@ const ProjectAreaHazards = () => {
     }
 
     for (let i = 0; i < otherHazards.length; i++) {
-      if (otherHazards[i]["id"] == undefined) {
-        const resOther = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, otherHazards[i])
-      } else {
-        const resOther = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[i]["id"]}/`, otherHazards[i])
+      if (otherHazards[i]["hazard"] != "") {
+        if (otherHazards[i]["id"] == undefined) {
+          const resOther = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, otherHazards[i])
+        } else {
+          const resOther = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[i]["id"]}/`, otherHazards[i])
+        }
       }
-
     }
 
     handelNavigate("next")
