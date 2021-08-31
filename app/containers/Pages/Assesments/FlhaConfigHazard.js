@@ -76,6 +76,7 @@ import { useHistory, useParams } from "react-router";
 
 import api from "../../../utils/axios";
 import zIndex from '@material-ui/core/styles/zIndex';
+import { AlternateEmail } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -472,8 +473,6 @@ const ConfigHazard = () => {
       dataHazard.push(hazardView.hazardImage);
       dataHazard.push(hazardView.status);
       dataHazard.push(hazardView.id);
-
-
       data.push(dataHazard);
     });
     setHazardList(data);
@@ -482,17 +481,12 @@ const ConfigHazard = () => {
   // New form submit
   const handelSubmit = async () => {
     const fkTaskId = localStorage.getItem('critcalTaskId')
-
     let formData = new FormData();    //formdata object
-
-
-
     hazardForm.map(async (item, index) => {
 
       formData.append('fkCompanyId', JSON.parse(localStorage.getItem("company")).fkCompanyId);
       formData.append('fkProjectId', JSON.parse(localStorage.getItem("projectName")).projectName.projectId);
       formData.append('createdBy', JSON.parse(localStorage.getItem("userDetails")).id);
-
       formData.append('hazard', item.hazard);
       formData.append('hazardImage', item.hazardImage);
       formData.append('fkTaskId', fkTaskId)
@@ -536,7 +530,14 @@ const ConfigHazard = () => {
 
   //for remove icon
   const handleRemoveEvidance = async (index) => {
-
+    alert(index)
+//     hazardForm.splice(index,1);
+//     setHazardForm(val => {
+//       return [val, hazardForm]
+//     })
+        const temp = [...hazardForm]
+        temp.splice(index,1)
+        setHazardForm(temp)
 
   };
 
@@ -685,7 +686,6 @@ const ConfigHazard = () => {
               <Grid container spacing={3} className={classes.mttopThirty}>
                 {
                   hazardForm && hazardForm.length > 0 && hazardForm.map((val, index) => {
-                    // {console.log(val,'val....')}
 
                     return <>
                       <Grid item md={5} sm={5} xs={12}>
@@ -728,22 +728,24 @@ const ConfigHazard = () => {
                           <ul>{files}</ul>
                         </aside>
                       </Grid>
+                      {hazardForm.length > 1 ? (
+                        <Grid item xs={2} md={1}>
+                          <IconButton
+                            variant="contained"
+                            color="primary"
+                            onClick={() =>
+                              handleRemoveEvidance(index)
+                            }
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        </Grid>
+                      ) : null}
                     </>
+
                   })
                 }
-                {hazardForm.length > 1 ? (
-                  <Grid item xs={2} md={1}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={() =>
-                        handleRemoveEvidance(index)
-                      }
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </Grid>
-                ) : null}
+
 
                 <Grid item md={12} sm={12} xs={12}>
                   <Button

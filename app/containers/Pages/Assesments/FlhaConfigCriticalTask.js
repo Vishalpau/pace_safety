@@ -69,7 +69,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
 import MUIDataTable from 'mui-datatables';
-import api from '../../../utils/axios';
+import api from "../../../utils/axios";
 // import React ,{useState } from "react";
 
 
@@ -362,101 +362,103 @@ const FlhaDetails = () => {
     checkedB: true,
   });
 
-  const [taskName, setTaskName] = React.useState(' ');
+  const [taskName, setTaskName] = React.useState(" ");
 
   const [task, setTask] = React.useState([]);
   React.useEffect(() => {
-    const jobIdName = document.URL.split('/');
-    setTaskName(jobIdName[jobIdName.length - 1]);
+    let jobIdName = document.URL.split('/')
+    setTaskName(jobIdName[jobIdName.length-1])
 
     criticalApiHandler();
   }, []);
 
   // Initial forms.
   const [criticalForm, setCriticalForm] = React.useState({
-    taskIdentification: '',
-    control: '',
-    fkCompanyId: '',
-    fkJobId: '',
-    fkProjectId: '',
-    taskIdentification: ''
+    taskIdentification: "",
+    control: "",
+    fkCompanyId:"",
+    fkJobId:"",
+    fkProjectId:"",
+    taskIdentification:""
   });
 
 
-  // for status
-  const initialState = {
-    status: true,
-  };
-  const [statusChange, setStatusChange] = React.useState(initialState.status);
+//for status
+const initialState = {
+  status: true,
+}
+const [statusChange, setStatusChange] = React.useState(initialState.status);
 
-  const fkCompanyId = JSON.parse(localStorage.getItem('company')) !== null
-    ? JSON.parse(localStorage.getItem('company')).fkCompanyId
-    : null;
-  console.log('company', fkCompanyId);
-  const projectName = JSON.parse(localStorage.getItem('projectName')) !== null
-    ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
-    : null;
-  console.log('project', projectName);
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  console.log('company', fkCompanyId)
+  const projectName =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
+  console.log('project', projectName)
 
   const handelSubmit = async () => {
-    const fkJobId = localStorage.getItem('fkJobId');
+    let fkJobId = localStorage.getItem('fkJobId')
 
-    const formClone = JSON.parse(JSON.stringify(criticalForm));
-    formClone.fkCompanyId = fkCompanyId;
-    formClone.fkProjectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId;
-    formClone.createdBy = JSON.parse(localStorage.getItem('userDetails')).id;
-    formClone.fkJobId = localStorage.getItem('fkJobId');
+    let formClone = JSON.parse(JSON.stringify(criticalForm));
+    formClone["fkCompanyId"] = fkCompanyId;
+    formClone["fkProjectId"] = JSON.parse(localStorage.getItem("projectName")).projectName.projectId ;
+    formClone["createdBy"] = JSON.parse(localStorage.getItem("userDetails")).id ;
+    formClone["fkJobId"] = localStorage.getItem("fkJobId");
 
-    const res = await api.post(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/`, formClone);
-    setCriticalForm({
-      ...criticalForm,
-      taskIdentification: '',
-      control: '',
-      fkCompanyId: '',
-      fkJobId: '',
-      fkProjectId: '',
-      taskIdentification: ''
-    });
+    let res = await api.post(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/`, formClone);
+    setCriticalForm({...criticalForm,
+      taskIdentification: "",
+      control: "",
+      fkCompanyId:"",
+      fkJobId:"",
+      fkProjectId:"",
+      taskIdentification:""
+    })
 
-    criticalApiHandler();
+    criticalApiHandler()
   };
 
   const criticalApiHandler = async () => {
-    const fkJobId = localStorage.getItem('fkJobId');
+    let fkJobId = localStorage.getItem('fkJobId')
     const res = await api.get(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/`);
-    console.log('res ', res, res.data.data.results.results);
-    const data = [];
+    console.log("res ", res, res.data.data.results.results);
+    let data = [];
     res.data.data.results.results.map(critcalTask => {
-      const taskData = [];
-
+      let taskData = [];
+      
       taskData.push(critcalTask.taskIdentification);
       taskData.push(critcalTask.control);
       taskData.push(critcalTask.status);
       taskData.push(critcalTask.id);
       data.push(taskData);
-      localStorage.setItem('critcalTaskId', critcalTask.id);
+      localStorage.setItem('critcalTaskId',critcalTask.id)
+
     });
     setTask(data);
-  };
+  }
 
-  // for status api
-  const statusToggle = async (value, data) => {
-    const fkJobId = localStorage.getItem('fkJobId');
+//for status api
+const statusToggle = async (value,data) => {
+  let fkJobId = localStorage.getItem('fkJobId')
 
-    console.log(data, 'vis');
+  console.log(data,"vis")
 
-    const obj = {
-      fkCompanyId,
-      taskIdentification: data[0],
-      control: data[1],
-      fkJobId: localStorage.getItem('fkJobId'),
-      status: value
-    };
+  let obj = {
+    fkCompanyId:fkCompanyId,
+    taskIdentification: data[0],
+    control: data[1],
+    fkJobId: localStorage.getItem("fkJobId"),
+    status:value
+  }    
 
-    const res = await api.put(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/${data[3]}/`, obj);
-    console.log('status', res);
-    setStatusChange(res.data.data.results.results);
-  };
+  const res = await api.put(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/${data[3]}/`,obj);
+  console.log('status',res)
+  setStatusChange(res.data.data.results.results)
+}
 
 
   const handleChange = (event) => {
@@ -474,14 +476,14 @@ const FlhaDetails = () => {
   };
 
   const onInputChange = (e, data) => {
-    console.log('target', data);
-    const value = e.target.checked === true ? 'Active' : 'Inactive';
-    console.log('value', value);
+    console.log('target',data)
+    let value =e.target.checked === true ? "Active" : "Inactive";
+    console.log('value',value)
     setStatusChange({
-      ...initialState, status: value,
-    });
+      ...initialState,status: value,
+    })
     statusToggle(value, data);
-  };
+  }
 
 
   //   Data for the table view
@@ -502,9 +504,9 @@ const FlhaDetails = () => {
       name: 'Status',
       options: {
         filter: false,
-        customBodyRender: (value, tableMeta) => (
+        customBodyRender: (value,tableMeta) => (
           <>
-            <Switch onChange={(e) => onInputChange(e, tableMeta.rowData)} checked="checked" />
+            <Switch onChange= {(e) => onInputChange(e, tableMeta.rowData)} checked='checked'/>
           </>
         )
       }
@@ -513,7 +515,10 @@ const FlhaDetails = () => {
       name: '',
       options: {
         filter: false,
-        customBodyRender: (value, tableMeta) => (
+        customBodyRender: (value,tableMeta) => {
+          console.log(tableMeta);
+
+          return (
           <>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
               <MoreVertIcon />
@@ -535,7 +540,7 @@ const FlhaDetails = () => {
               </MenuItem>
               <MenuItem onClick={handleClose}>
                 <Link
-                  href={`/app/pages/assesments/FlhaConfigHazard/${tableMeta.rowData[0]}`}
+                  href={`/app/pages/assesments/FlhaConfigHazard/${tableMeta.rowData[3]}`}
                 >
                   Hazards
 
@@ -543,17 +548,19 @@ const FlhaDetails = () => {
               </MenuItem>
             </Menu>
           </>
-        )
+          )
+        }
       }
     },
   ];
 
   function payloadHandler(e, payloadType) {
-    console.log(e.target.value);
-    const formPayload = JSON.parse(JSON.stringify(criticalForm));
+    console.log(e.target.value)
+    let formPayload = JSON.parse(JSON.stringify(criticalForm));
     formPayload[payloadType] = e.target.value;
-    console.log('criticalForm', formPayload);
+    console.log("criticalForm", formPayload);
     setCriticalForm(formPayload);
+
   }
 
   const options = {
@@ -574,10 +581,10 @@ const FlhaDetails = () => {
     page: 0,
   };
 
-
+  
   return (
     <div>
-      <PapperBlock title={`Job Title - ${taskName}`} icon="ion-ios-create-outline" desc="" color="primary">
+      <PapperBlock title={`Job Title - ${taskName}` }icon="ion-ios-create-outline" desc="" color="primary" >
         <Paper elevation={3}>
           <Box padding={3}>
             <Grid item xs={12}>
@@ -605,8 +612,8 @@ const FlhaDetails = () => {
                     multiline
                     rows="1"
                     label="Task identification"
-                    value={criticalForm.taskIdentification}
-                    onChange={(e) => payloadHandler(e, 'taskIdentification')}
+                    value= {criticalForm.taskIdentification}
+                    onChange={(e) => payloadHandler(e, "taskIdentification")}
                     // onChange={(e) => setCriticalForm({...criticalForm, taskIdentification:e.target.value})}
 
 
@@ -621,9 +628,9 @@ const FlhaDetails = () => {
                     rows="1"
                     label="Control"
                     className={classes.fullWidth}
-                    value={criticalForm.control}
+                    value= {criticalForm.control}
 
-                    onChange={(e) => payloadHandler(e, 'control')}
+                    onChange={(e) => payloadHandler(e, "control")}
                   />
                 </Grid>
                 <Grid item md={12} sm={12} xs={12}>

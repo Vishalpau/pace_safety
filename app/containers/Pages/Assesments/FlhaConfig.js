@@ -69,6 +69,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
+import { useDropzone } from 'react-dropzone';
 import MUIDataTable from 'mui-datatables';
 import api from '../../../utils/axios';
 import {
@@ -397,10 +398,10 @@ const FlhaDetails = () => {
   }, []);
 
 
-// for status
-const initialState = {
-  status: true,
-};
+  // for status
+  const initialState = {
+    status: true,
+  };
   const [statusChange, setstatusChange] = React.useState(initialState.status);
 
   const [fileName, setFilename] = React.useState('');
@@ -425,13 +426,13 @@ const initialState = {
     status: ""
   });
 
-  const fkCompanyId =    JSON.parse(localStorage.getItem('company')) !== null
-      ? JSON.parse(localStorage.getItem('company')).fkCompanyId
-      : null;
+  const fkCompanyId = JSON.parse(localStorage.getItem('company')) !== null
+    ? JSON.parse(localStorage.getItem('company')).fkCompanyId
+    : null;
   console.log('company', fkCompanyId);
-  const projectName =    JSON.parse(localStorage.getItem('projectName')) !== null
-      ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
-      : null;
+  const projectName = JSON.parse(localStorage.getItem('projectName')) !== null
+    ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    : null;
   console.log('project', projectName);
 
   const handleDepartment = (id, name) => {
@@ -476,7 +477,7 @@ const initialState = {
     setDropDownAr(res.data.data.results);
   };
 
-// for status api
+  // for status api
   const statusToggle = async (value, data) => {
     // console.log('vishal',value)
     const obj = {
@@ -488,8 +489,8 @@ const initialState = {
       fkDepartmentId: data[6],
       // jobTitleImage: data[2],
       status: value
-    };    
-  
+    };
+
     const res = await api.put(`api/v1/configflhas/jobtitles/${data[5]}/`, obj);
     setstatusChange(res.data.data.results.results);
   };
@@ -582,7 +583,7 @@ const initialState = {
         filter: false,
         customBodyRender: (value, tableMeta) => (
           <>
-            <Switch onChange={(e) => onInputChange(e, tableMeta.rowData)} checked="checked"/>
+            <Switch onChange={(e) => onInputChange(e, tableMeta.rowData)} checked="checked" />
           </>
         )
       }
@@ -598,42 +599,42 @@ const initialState = {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta) => {
-          console.log(tableMeta);
+          // console.log(tableMeta);
           const rowID = [tableMeta.tableData[tableMeta.rowIndex][5]];
           return (
-<>
-            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-              <MoreVertIcon />
-            </Button>
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
-  
-                <Link
-                  // href="/app/pages/assesments/FlhaConfigCriticalTask"
-                href={`/app/pages/assesments/flhaconfigcriticaltask/${rowID}`}
+            <>
+              <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                <MoreVertIcon />
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>
 
-                >
-                  Critical task
+                  <Link
+                    // href={"/app/pages/assesments/FlhaConfigCriticalTask"+tableMeta.rowData[5]}
+                    href={`/app/pages/assesments/flhaconfigcriticaltask/${rowID}`}
 
-                </Link>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Link
-                  href="/app/pages/assesments/flhaconfighazard"
-                >
-                  Hazards
+                  >
+                    Critical task
 
-                </Link>
-              </MenuItem>
-            </Menu>
-          </>
-)
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link
+                    href="/app/pages/assesments/flhaconfighazard"
+                  >
+                    Hazards
+
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </>
+          )
         }
       }
     },
@@ -659,6 +660,7 @@ const initialState = {
     selectableRowsHideCheckboxes: false,
     selectableRowsHeader: false,
     selectableRowsOnClick: false,
+    viewColumns: false,
     selectableRows: false,
     rowsPerPage: 10,
     page: 0,
@@ -698,7 +700,7 @@ const initialState = {
           <Box padding={3}>
             <Grid item xs={12}>
               <Typography variant="h6">
-<CheckOutlinedIcon className={classes.headingIcon} />New X-FLHA Job Titles</Typography>
+                <CheckOutlinedIcon className={classes.headingIcon} />New X-FLHA Job Titles</Typography>
               <Grid container spacing={3} className={classes.mttopThirty}>
                 <Grid item md={4} sm={4} xs={12}>
                   <TextField
@@ -733,14 +735,14 @@ const initialState = {
                       select
                       variant="outlined"
                       className={classes.formControl}
-                      
+
                     >
 
                       {dropDownAr.map((department) => (
                         <MenuItem
-key={department.id} value={department.id} onClick={(e) => {
-                          handleDepartment(department.id, department.departmentName);
-                        }}
+                          key={department.id} value={department.id} onClick={(e) => {
+                            handleDepartment(department.id, department.departmentName);
+                          }}
                         >
 
                           {department.departmentName}
@@ -757,10 +759,10 @@ key={department.id} value={department.id} onClick={(e) => {
                 >
                   <Dropzone className="dropzone" onDrop={acceptedFiles => handleNewFileUpload(acceptedFiles)}>
                     {({ getRootProps, getInputProps }) => (
-                        <div className="block-dropzone" {...getRootProps()}>
-                          <input onChange={handleNewFileUpload} {...getInputProps()} />
-                          <p>{fileName || ""}</p>
-                        </div>
+                      <div className="block-dropzone" {...getRootProps()}>
+                        <input onChange={handleNewFileUpload} {...getInputProps()} />
+                        <p>{fileName || ""}</p>
+                      </div>
                     )}
                   </Dropzone>
                   {/* <div {...getRootProps({ className: 'dropzone' })}>
