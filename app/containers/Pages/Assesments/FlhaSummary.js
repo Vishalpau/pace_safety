@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import { withStyles, makeStyles }  from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -73,7 +73,7 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-    formControl: {
+  formControl: {
     margin: '.5rem 0',
     width: '100%',
   },
@@ -83,8 +83,8 @@ const styles = theme => ({
   fullWidth: {
     width: '100%',
     margin: '.5rem 0',
-	'& td textHeight': {
-		padding: '11.5px 14px',
+    '& td textHeight': {
+      padding: '11.5px 14px',
     	borderRadius: '8px',
 	  },
   },
@@ -112,8 +112,8 @@ const styles = theme => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -121,14 +121,14 @@ const styles = theme => ({
       lineHeight: '0.5rem',
     },
   },
-  headerBackground: {    
-      backgroundColor: '#ffffff',
-      color: '#06425c',  
+  headerBackground: {
+    backgroundColor: '#ffffff',
+    color: '#06425c',
   },
   pTopandRight: {
     paddingLeft: '20px',
-	paddingRight: '20px',
-	marginTop: '13px',
+    paddingRight: '20px',
+    marginTop: '13px',
   },
   formControlTwo: {
     width: '100%',
@@ -138,18 +138,18 @@ const styles = theme => ({
   },
   widthSelect: {
     minWidth: '170px',
-	height: '58px',
+    height: '58px',
     borderRadius: '4px',
   },
   attachImg: {
     minWidth: '50px',
-	height: '30px',
+    height: '30px',
     borderRadius: '4px',
-	float: 'right'
+    float: 'right'
   },
   table: {
     minWidth: 600,
-  }, 
+  },
 });
 
 class SimpleTabs extends React.Component {
@@ -164,214 +164,235 @@ class SimpleTabs extends React.Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-	const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-  
+    const handleChange = (event) => {
+      setValue(event.target.value);
+    };
 
-return (
-<PapperBlock title="Summary" icon="ion-ios-game-controller-a-outline" desc="">
-<Grid container spacing={1}>	
-<Grid item md={9} xs={12}>
-	<Paper elevation={0} className={classes.pTopandRight}>
-		<Grid container spacing={3}>
-			<Grid item xs={6}>
-				<FormLabel component="legend">FLHA Number</FormLabel>
-				<Typography
-				variant="p"
-				gutterBottom
-				>
+
+    return (
+      <PapperBlock title="Summary" icon="ion-ios-game-controller-a-outline" desc="">
+        <Grid container spacing={1}>
+          <Grid item md={9} xs={12}>
+            <Paper elevation={0} className={classes.pTopandRight}>
+              <Grid container spacing={3}>
+                <Grid item xs={6}>
+                  <FormLabel component="legend">FLHA Number</FormLabel>
+                  <Typography
+                    variant="p"
+                    gutterBottom
+                  >
 				AT-125-254-252
-				</Typography>
-			</Grid>
-			<Grid item xs={6}>
-				<FormLabel component="legend">Status</FormLabel>
-				<Typography
-				variant="p"
-				gutterBottom
-				>
+
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormLabel component="legend">Status</FormLabel>
+                  <Typography
+                    variant="p"
+                    gutterBottom
+                  >
 				Planned
-				</Typography>
-			</Grid>
-			<Grid item xs={6}>
-				<FormLabel component="legend">Project</FormLabel>
-				<Typography>
+
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormLabel component="legend">Project</FormLabel>
+                  <Typography>
 				Multilevel information as per config design
-				</Typography>
-			</Grid>
-			<Grid item xs={6}>
-				<FormLabel component="legend">Reference</FormLabel>
-				<Typography>
+
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormLabel component="legend">Reference</FormLabel>
+                  <Typography>
 				Reference group | Reference number
-				</Typography>
-			</Grid>
 
-			<Grid item xs={12}>
-				<FormLabel component="legend">Job title</FormLabel>
-				<Typography>
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormLabel component="legend">Job title</FormLabel>
+                  <Typography>
 				This is my Action Tracker
-				</Typography>
-			</Grid>
 
-			<Grid item xs={12}>
-				<FormLabel component="legend">Job description</FormLabel>
-				<Typography>
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormLabel component="legend">Job description</FormLabel>
+                  <Typography>
 				Dummy content placed to show the width of text area Data here, Dummy content placed to show the width. Dummy content placed to show the width of text area Data here, Dummy content placed. Dummy content placed to show the width of text area Data here, Dummy content placed
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<FormLabel component="legend">Date</FormLabel>
-				<Typography>
+
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormLabel component="legend">Date</FormLabel>
+                  <Typography>
 				30-06-2021
-				</Typography>
-			</Grid>
-		
-		</Grid>
-		</Paper>
-			
-		<div className={classes.root}>
-			<AppBar position="static" className={classes.headerBackground}>
-				<Tabs value={value} onChange={this.handleChange}>
-					<Tab label="Initial revision" />
-					<Tab label="Revision 1.1" />
-					<Tab label="Revision 1.2" />
-				</Tabs>
-			</AppBar>
-			{value === 0 && 
-			<TabContainer className={classes.paddZero}>
-				<Addhazard />
-			</TabContainer>}
-			{value === 1 && <TabContainer>Item Two</TabContainer>}
-			{value === 2 && <TabContainer>Item Three</TabContainer>}
-			{value === 3 && <TabContainer>
-			</TabContainer>}
-		</div>
-		<Grid container spacing={1}>
-			<Grid item xs={6}>
-				<Typography>
+
+                  </Typography>
+                </Grid>
+
+              </Grid>
+            </Paper>
+
+            <div className={classes.root}>
+              <AppBar position="static" className={classes.headerBackground}>
+                <Tabs value={value} onChange={this.handleChange}>
+                  <Tab label="Initial revision" />
+                  <Tab label="Revision 1.1" />
+                  <Tab label="Revision 1.2" />
+                </Tabs>
+              </AppBar>
+              {value === 0
+			&& (
+			  <TabContainer className={classes.paddZero}>
+  <Addhazard />
+			  </TabContainer>
+			)}
+              {value === 1 && <TabContainer>Item Two</TabContainer>}
+              {value === 2 && <TabContainer>Item Three</TabContainer>}
+              {value === 3 && (
+                <TabContainer />
+              )}
+            </div>
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Typography>
 				Has the energy control being completed?
-				</Typography>
-				</Grid>
-				<Grid item xs={6}>
-				<Typography>
+
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>
 				Yes
-				</Typography>
-				</Grid>
-				<Grid item xs={6}>
-				<Typography>
+
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>
 				Has the audit check being done?
-				</Typography>
-				</Grid>
-				<Grid item xs={6}>
-				<Typography>
+
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>
 				Yes
-				</Typography>
-				</Grid>
-			</Grid>
-			<Grid item xs={12} className={classes.mttopThirty}>
-				<FormLabel component="legend">Actions</FormLabel>
-				
-				<Grid item xs={12}>
-				<Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-				<Link color="inherit" href="#">
-					Action ID
-				</Link>
-				<Link color="inherit" href="#">
-				Action title
-				</Link>
-				<Typography color="textPrimary">Due date</Typography>
-				<Typography color="textPrimary">Status</Typography>
-				</Breadcrumbs>
-				<Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-				<Link color="inherit" href="#">
-					Action ID
-				</Link>
-				<Link color="inherit" href="#">
-				Action title
-				</Link>
-				<Typography color="textPrimary">Due date</Typography>
-				<Typography color="textPrimary">Status</Typography>
-				</Breadcrumbs>
-				<Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-				<Link color="inherit" href="#">
-					Action ID
-				</Link>
-				<Link color="inherit" href="#">
-				Action title
-				</Link>
-				<Typography color="textPrimary">Due date</Typography>
-				<Typography color="textPrimary">Status</Typography>
-				</Breadcrumbs>
-				</Grid>
-		</Grid>
-	</Grid>
 
-	<Grid item md={3} xs={12}>
-		<Paper elevation={0}>
-		<div className={classes.root}>
-			<Box padding={1} bgcolor="background.paper">
-			<Typography variant="h6" gutterBottom>
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} className={classes.mttopThirty}>
+              <FormLabel component="legend">Actions</FormLabel>
+
+              <Grid item xs={12}>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                  <Link color="inherit" href="#">
+					Action ID
+
+                  </Link>
+                  <Link color="inherit" href="#">
+				Action title
+
+                  </Link>
+                  <Typography color="textPrimary">Due date</Typography>
+                  <Typography color="textPrimary">Status</Typography>
+                </Breadcrumbs>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                  <Link color="inherit" href="#">
+					Action ID
+
+                  </Link>
+                  <Link color="inherit" href="#">
+				Action title
+
+                  </Link>
+                  <Typography color="textPrimary">Due date</Typography>
+                  <Typography color="textPrimary">Status</Typography>
+                </Breadcrumbs>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                  <Link color="inherit" href="#">
+					Action ID
+
+                  </Link>
+                  <Link color="inherit" href="#">
+				Action title
+
+                  </Link>
+                  <Typography color="textPrimary">Due date</Typography>
+                  <Typography color="textPrimary">Status</Typography>
+                </Breadcrumbs>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item md={3} xs={12}>
+            <Paper elevation={0}>
+              <div className={classes.root}>
+                <Box padding={1} bgcolor="background.paper">
+                  <Typography variant="h6" gutterBottom>
 				Quick Actions
-			</Typography>
-			<Divider />
-			<List component="nav" aria-label="main mailbox folders">
-				<ListItem
-				button
-				>
-				<ListItemIcon>
-					<CommentIcon />
-				</ListItemIcon>
-				<Link
-					href="/app/pages/assesments/FlhaEdit"
-					variant="subtitle"
-				>
-					<ListItemText primary="Revise FLHA" />
-				</Link>
-				</ListItem>
-				<Divider />
-				<ListItem
-				button
-				>
-				<ListItemIcon>
-					<HistoryIcon />
-				</ListItemIcon>
-				<Link
-					href="/app/pages/assesments/AuditCheck"
-					variant="subtitle"
-				>
-					<ListItemText primary="Complete audit check" />
-				</Link>
-				</ListItem>
-				<ListItem
-                      button
-                    >
-                      <ListItemIcon>
-                        <CommentIcon />
-                      </ListItemIcon>
-                      <Link
-                        href="/app/pages/actions/comments"
-                        variant="subtitle"
-                      >
 
-                        <ListItemText primary="Comments" />
-                      </Link>
-                </ListItem>
-                    <Divider />
-                <ListItem
+                  </Typography>
+                  <Divider />
+                  <List component="nav" aria-label="main mailbox folders">
+                    <ListItem
                       button
                     >
                       <ListItemIcon>
-                        <HistoryIcon />
-                      </ListItemIcon>
+                  <CommentIcon />
+                </ListItemIcon>
                       <Link
-                        href="/app/pages/activity/activity"
-                        variant="subtitle"
-                      >
-                        <ListItemText primary="Activity History" />
-                      </Link>
+                  href="/app/pages/assesments/FlhaEdit"
+                  variant="subtitle"
+                >
+                  <ListItemText primary="Revise FLHA" />
+                </Link>
                     </ListItem>
-                <Divider />
-				{/* <ListItem
+                    <Divider />
+                    <ListItem
+                      button
+                    >
+                      <ListItemIcon>
+                  <HistoryIcon />
+                </ListItemIcon>
+                      <Link
+                  href="/app/pages/assesments/AuditCheck"
+                  variant="subtitle"
+                >
+                  <ListItemText primary="Complete audit check" />
+                </Link>
+                    </ListItem>
+                    <ListItem
+                      button
+                    >
+                      <ListItemIcon>
+                  <CommentIcon />
+                </ListItemIcon>
+                      <Link
+                  href="/app/pages/actions/comments"
+                  variant="subtitle"
+                >
+
+                  <ListItemText primary="Comments" />
+                </Link>
+                    </ListItem>
+                    <Divider />
+                    <ListItem
+                      button
+                    >
+                      <ListItemIcon>
+                  <HistoryIcon />
+                </ListItemIcon>
+                      <Link
+                  href="/app/pages/activity/activity"
+                  variant="subtitle"
+                >
+                  <ListItemText primary="Activity History" />
+                </Link>
+                    </ListItem>
+                    <Divider />
+                    {/* <ListItem
 				button
 				>
 				<ListItemIcon>
@@ -384,7 +405,7 @@ return (
 					<ListItemText primary="Isolation Control" />
 				</Link>
 				</ListItem>
-				<Divider /> 
+				<Divider />
 				<ListItem
 				button
 				>
@@ -398,52 +419,51 @@ return (
 					<ListItemText primary="Preventive Controls" />
 				</Link>
 				</ListItem>
-				<Divider />*/}
-				<ListItem>
-				<ListItemIcon>
-					<CloseIcon />
-				</ListItemIcon>
-				<Link
-					href="/app/pages/assesments/CloseOut"
-					variant="subtitle"
-				>
-					<ListItemText primary="Close out" />
-				</Link>
-				</ListItem>
-				<ListItem
-				button
-				>
-				<ListItemIcon>
-					<PrintIcon />
-				</ListItemIcon>
-				<Link
-					href=""
-					variant="subtitle"
-				>
-					<ListItemText primary="Print" />
-				</Link>
-				</ListItem>
-				<ListItem
-				button
-				>
-				<ListItemIcon>
-					<ShareIcon />
-				</ListItemIcon>
-				<Link
-					
-					variant="subtitle"
-					
-				>
-					<ListItemText disabled secondary="Share" />
-				</Link>
-				</ListItem>
-			</List>
-			</Box>
-		</div>
-		</Paper>
-	</Grid>
-</Grid>
-</PapperBlock>	  
+				<Divider /> */}
+                    <ListItem>
+                      <ListItemIcon>
+                  <CloseIcon />
+                </ListItemIcon>
+                      <Link
+                  href="/app/pages/assesments/CloseOut"
+                  variant="subtitle"
+                >
+                  <ListItemText primary="Close out" />
+                </Link>
+                    </ListItem>
+                    <ListItem
+                      button
+                    >
+                      <ListItemIcon>
+                  <PrintIcon />
+                </ListItemIcon>
+                      <Link
+                  href=""
+                  variant="subtitle"
+                >
+                  <ListItemText primary="Print" />
+                </Link>
+                    </ListItem>
+                    <ListItem
+                      button
+                    >
+                      <ListItemIcon>
+                  <ShareIcon />
+                </ListItemIcon>
+                      <Link
+
+                  variant="subtitle"
+                >
+                  <ListItemText disabled secondary="Share" />
+                </Link>
+                    </ListItem>
+                  </List>
+                </Box>
+              </div>
+            </Paper>
+          </Grid>
+        </Grid>
+      </PapperBlock>
     );
   }
 }

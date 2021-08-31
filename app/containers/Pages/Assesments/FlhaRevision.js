@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
-import { withStyles, makeStyles }  from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -127,12 +127,12 @@ bytes
               <Box padding={3} bgcolor="background.paper">
 
                 <Grid container spacing={3} className={classes.mToptewnty}>
-                <Grid item md={6} sm={6} xs={12}>
+                  <Grid item md={6} sm={6} xs={12}>
                     <FormControl
                       variant="outlined"
                       className={classes.formControl}
                     >
-                      
+
                       <InputLabel id="Reason for revision">Reason for revision</InputLabel>
                       <Select
                         id="revision-name"
@@ -141,7 +141,7 @@ bytes
                       >
                         <MenuItem value="Revision">One</MenuItem>
                       </Select>
-                      
+
                     </FormControl>
                   </Grid>
                   <Grid item md={6} sm={6} xs={12}>
@@ -149,7 +149,7 @@ bytes
                       variant="outlined"
                       className={classes.formControl}
                     >
-                      
+
                       <InputLabel id="Time of revision">Time of revision</InputLabel>
                       <Select
                         id="project-name"
@@ -158,12 +158,12 @@ bytes
                       >
                         <MenuItem value="Time of revision">Time of revision</MenuItem>
                       </Select>
-                      
+
                     </FormControl>
                   </Grid>
-                  
+
                   <Grid item xs={12}>
-                  <Typography variant="h6">Preventive controls</Typography>
+                    <Typography variant="h6">Preventive controls</Typography>
                     <Grid item xs={12}>
                       <TextField
                         multiline
@@ -173,8 +173,8 @@ bytes
                         className={classes.fullWidth}
                       />
                     </Grid>
-                  <TableContainer className={classes.mttopThirty}>
-                  <Table className={classes.table} aria-label="simple table">
+                    <TableContainer className={classes.mttopThirty}>
+                      <Table className={classes.table} aria-label="simple table">
                         <TableHead className={classes.tableHeading}>
                           <TableRow>
                             <TableCell align="left">Task identification</TableCell>
@@ -184,21 +184,21 @@ bytes
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow>
-                              <TableCell align="left">One every row</TableCell>
-                              <TableCell align="left"></TableCell>
-                              <TableCell align="left"></TableCell>
-                              <TableCell align="left"></TableCell>                              
-                            </TableRow>
+                          <TableRow>
+                            <TableCell align="left">One every row</TableCell>
+                            <TableCell align="left" />
+                            <TableCell align="left" />
+                            <TableCell align="left" />
+                          </TableRow>
                         </TableBody>
                       </Table>
-                  </TableContainer>
+                    </TableContainer>
                   </Grid>
-                  
+
                   <Grid item xs={12}>
                     <Typography variant="h6">Job visual confirmation</Typography>
                     <TableContainer className={classes.mttopThirty}>
-                    <Table className={classes.table} style={{ marginTop: '-1rem' }} aria-label="simple table">
+                      <Table className={classes.table} style={{ marginTop: '-1rem' }} aria-label="simple table">
                         <TableHead>
                           <TableRow>
                             <TableCell align="left" className={classes.tableRowColor}>Visual confirmation</TableCell>
@@ -207,78 +207,81 @@ bytes
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow>
-                              <TableCell align="left">Site pictures</TableCell>
-                              <TableCell align="left">
-                                <div className={classes.spacer}>
-                                  <FormControl component="fieldset">
-                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>                               
-                              </TableCell>
-                              <TableCell align="left"><a href="#">Upload</a></TableCell>                              
-                            </TableRow>
+                          <TableRow>
+                            <TableCell align="left">Site pictures</TableCell>
+                            <TableCell align="left">
+                              <div className={classes.spacer}>
+                                <FormControl component="fieldset">
+                                  <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                                  </RadioGroup>
+                                </FormControl>
+                              </div>
+                            </TableCell>
+                            <TableCell align="left"><a href="#">Upload</a></TableCell>
+                          </TableRow>
                         </TableBody>
                         <TableBody>
-                            <TableRow>
+                          <TableRow>
                             <TableCell align="left">Team pictures</TableCell>
                             <TableCell align="left">
-                                <div className={classes.spacer}>
-                                  <FormControl component="fieldset">
-                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>                               
-                              </TableCell>
-                              <TableCell align="left"><a href="#">Upload</a></TableCell>                              
-                            </TableRow>
+                              <div className={classes.spacer}>
+                                <FormControl component="fieldset">
+                                  <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                                  </RadioGroup>
+                                </FormControl>
+                              </div>
+                            </TableCell>
+                            <TableCell align="left"><a href="#">Upload</a></TableCell>
+                          </TableRow>
                         </TableBody>
                         <TableBody>
-                            <TableRow>
+                          <TableRow>
                             <TableCell align="left">Tools and tackles</TableCell>
                             <TableCell align="left">
-                                <div className={classes.spacer}>
-                                  <FormControl component="fieldset">
-                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>                               
-                              </TableCell>
-                              <TableCell align="left"><a><div {...getRootProps({ className: 'dropzone' })}>
-                                <input {...getInputProps()} />
-                                <p>Upload</p>
+                              <div className={classes.spacer}>
+                                <FormControl component="fieldset">
+                                  <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                                  </RadioGroup>
+                                </FormControl>
+                              </div>
+                            </TableCell>
+                            <TableCell align="left">
+                              <a>
+                                <div {...getRootProps({ className: 'dropzone' })}>
+                                  <input {...getInputProps()} />
+                                  <p>Upload</p>
                                 </div>
                                 <aside>
                                   {/* <h4>Files</h4> */}
                                   <ul>{files}</ul>
-                                </aside></a>
-                              </TableCell>                              
-                            </TableRow>
+                                </aside>
+                              </a>
+                            </TableCell>
+                          </TableRow>
                         </TableBody>
                         <TableBody>
-                            <TableRow>
-                              <TableCell align="left">Others</TableCell>
-                              <TableCell align="left"></TableCell>
-                              <TableCell align="left"><a href="#">Upload</a></TableCell>                              
-                            </TableRow>
+                          <TableRow>
+                            <TableCell align="left">Others</TableCell>
+                            <TableCell align="left" />
+                            <TableCell align="left"><a href="#">Upload</a></TableCell>
+                          </TableRow>
                         </TableBody>
                       </Table>
                     </TableContainer>
                   </Grid>
-                  
+
                   <Grid item xs={12}>
                     <FormLabel component="legend">Actions</FormLabel>
-                  
+
                     <Grid item xs={12} className={classes.formBox}>
                       <div {...getRootProps({ className: 'dropzone' })}>
                         <input {...getInputProps()} />

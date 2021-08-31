@@ -30,7 +30,7 @@ import Typography from '@material-ui/core/Typography';
 import Dropzone from 'react-dropzone'
 import Divider from '@material-ui/core/Divider';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useDropzone } from 'react-dropzone';
+
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -70,12 +70,12 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
 import MUIDataTable from 'mui-datatables';
-import api from "../../../utils/axios";
+import api from '../../../utils/axios';
 import {
   INITIAL_NOTIFICATION_FORM,
   SSO_URL,
   HEADER_AUTH,
-} from "../../../utils/constants";
+} from '../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -397,112 +397,110 @@ const FlhaDetails = () => {
   }, []);
 
 
-//for status
+// for status
 const initialState = {
   status: true,
-}
-const [statusChange, setstatusChange] = React.useState(initialState.status);
+};
+  const [statusChange, setstatusChange] = React.useState(initialState.status);
 
-  const [fileName, setFilename] = React.useState("")
+  const [fileName, setFilename] = React.useState('');
 
-  //for image upload
+  // for image upload
   const [file, setFiles] = React.useState({});
 
   const handleNewFileUpload = (files) => {
-    setFiles(files[0])
-    setFilename(files[0].name)
+    setFiles(files[0]);
+    setFilename(files[0].name);
   };
 
   // Initial forms.
   const [form, setForm] = React.useState({
-    fkCompanyId: "",
-    fkDeparmentName: "",
-    jobTitle: "",
-    projectName: "",
-    jobDetail: "",
-    fkDepartmentId: "",
-    jobTitleImage: "",
-    status:""
+    fkCompanyId: '',
+    fkDeparmentName: '',
+    jobTitle: '',
+    projectName: '',
+    jobDetail: '',
+    fkDepartmentId: '',
+    jobTitleImage: '',
+    status: ""
   });
 
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+  const fkCompanyId =    JSON.parse(localStorage.getItem('company')) !== null
+      ? JSON.parse(localStorage.getItem('company')).fkCompanyId
       : null;
-  console.log('company', fkCompanyId)
-  const projectName =
-    JSON.parse(localStorage.getItem("projectName")) !== null
-      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+  console.log('company', fkCompanyId);
+  const projectName =    JSON.parse(localStorage.getItem('projectName')) !== null
+      ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
       : null;
-  console.log('project', projectName)
+  console.log('project', projectName);
 
   const handleDepartment = (id, name) => {
-    setForm({ ...form, fkDepartmentId: id, fkDeparmentName: name })
-  }
-
-  const handelSubmit = async () => {
-    // // console.log('depFor', 
-    let formData = new FormData();    //formdata object
-
-    formData.append('fkCompanyId', JSON.parse(localStorage.getItem("company")).fkCompanyId);
-    formData.append('fkProjectId', JSON.parse(localStorage.getItem("projectName")).projectName.projectId);
-    formData.append('projectName', JSON.parse(localStorage.getItem("projectName")).projectName.projectName);
-    formData.append('createdBy', JSON.parse(localStorage.getItem("userDetails")).id);
-
-    formData.append('jobTitleImage',file);
-    formData.append('fkDeparmentName',form.fkDeparmentName);
-    formData.append('fkDepartmentId',form.fkDepartmentId);
-    formData.append('jobDetail',form.jobDetail);
-    formData.append('jobTitle',form.jobTitle);
-
-    let res = await api.post("api/v1/configflhas/jobtitles/", formData);
-    setForm({
-      fkCompanyId:"", 
-      fkDeparmentName: "",
-      jobTitle: "",
-      projectName: "",
-      jobDetail: "",
-      fkDepartmentId: "",
-      jobTitleImage: "",
-      status:""
-    })
-      dropDownHandle()
-      setRender(!render)
-      await jobTitleApiHandler()
+    setForm({ ...form, fkDepartmentId: id, fkDeparmentName: name });
   };
 
-  const [render, setRender] = React.useState(false)
+  const handelSubmit = async () => {
+    // // console.log('depFor',
+    const formData = new FormData(); // formdata object
+
+    formData.append('fkCompanyId', JSON.parse(localStorage.getItem('company')).fkCompanyId);
+    formData.append('fkProjectId', JSON.parse(localStorage.getItem('projectName')).projectName.projectId);
+    formData.append('projectName', JSON.parse(localStorage.getItem('projectName')).projectName.projectName);
+    formData.append('createdBy', JSON.parse(localStorage.getItem('userDetails')).id);
+
+    formData.append('jobTitleImage', file);
+    formData.append('fkDeparmentName', form.fkDeparmentName);
+    formData.append('fkDepartmentId', form.fkDepartmentId);
+    formData.append('jobDetail', form.jobDetail);
+    formData.append('jobTitle', form.jobTitle);
+
+    const res = await api.post('api/v1/configflhas/jobtitles/', formData);
+    setForm({
+      fkCompanyId: "",
+      fkDeparmentName: '',
+      jobTitle: '',
+      projectName: '',
+      jobDetail: '',
+      fkDepartmentId: '',
+      jobTitleImage: '',
+      status: ""
+    });
+    dropDownHandle();
+    setRender(!render);
+    await jobTitleApiHandler();
+  };
+
+  const [render, setRender] = React.useState(false);
 
   const dropDownHandle = async () => {
     const res = await api.get(`${SSO_URL}/api/v1/companies/${fkCompanyId}/departments/`);
     setDropDownAr(res.data.data.results);
-  }
+  };
 
-//for status api
+// for status api
   const statusToggle = async (value, data) => {
     // console.log('vishal',value)
-    let obj = {
+    const obj = {
       fkCompanyId: data[5],
       fkDeparmentName: data[1],
       jobTitle: data[0],
-      projectName: JSON.parse(localStorage.getItem("projectName")).projectName.projectName,
+      projectName: JSON.parse(localStorage.getItem('projectName')).projectName.projectName,
       jobDetail: data[3],
       fkDepartmentId: data[6],
       // jobTitleImage: data[2],
       status: value
-    }    
+    };    
   
     const res = await api.put(`api/v1/configflhas/jobtitles/${data[5]}/`, obj);
-    setstatusChange(res.data.data.results.results)
-  }
+    setstatusChange(res.data.data.results.results);
+  };
 
 
   const jobTitleApiHandler = async () => {
-    const res = await api.get("api/v1/configflhas/jobtitles/");
+    const res = await api.get('api/v1/configflhas/jobtitles/');
     // console.log("res ", res, res.data.data.results.results);
-    let data = [];
+    const data = [];
     res.data.data.results.results.map(jobTitle => {
-      let innerAr = [];
+      const innerAr = [];
       innerAr.push(jobTitle.jobTitle);
       innerAr.push(jobTitle.fkDeparmentName);
       innerAr.push(jobTitle.jobTitleImage);
@@ -510,7 +508,7 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
       innerAr.push(jobTitle.status);
       innerAr.push(jobTitle.id);
       innerAr.push(jobTitle.fkDepartmentId);
-      localStorage.setItem('fkJobId',jobTitle.id)
+      localStorage.setItem('fkJobId', jobTitle.id);
 
       // innerAr.push(jobTitle.projectName);
 
@@ -519,9 +517,9 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
     });
 
     await setDatAr(data);
-    console.log({updatedData111: data})
-    console.log({updatedData: dataAr})
-  }
+    console.log({ updatedData111: data });
+    console.log({ updatedData: dataAr });
+  };
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -538,14 +536,14 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
 
   const onInputChange = (e, data) => {
 
-    console.log('data',data)
-    let value = e.target.checked === true ? "Active" : "Inactive";
-    console.log('value',value)
+    console.log('data', data);
+    const value = e.target.checked === true ? 'Active' : 'Inactive';
+    console.log('value', value);
     setstatusChange({
-      ...initialState,status: value,
-    })
+      ...initialState, status: value,
+    });
     statusToggle(value, data);
-  }
+  };
 
   //   Data for the table view
   const columns = [
@@ -565,7 +563,7 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
       name: 'Image',
       options: {
         filter: false,
-        customBodyRender: (value,tableMeta) => (
+        customBodyRender: (value, tableMeta) => (
           <>
             <img src={tableMeta.rowData[2]} height={58} alt="" className={classes.mttopSix} />
           </>
@@ -584,14 +582,14 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
         filter: false,
         customBodyRender: (value, tableMeta) => (
           <>
-            <Switch onChange= {(e) => onInputChange(e, tableMeta.rowData)} checked='checked'/>
+            <Switch onChange={(e) => onInputChange(e, tableMeta.rowData)} checked="checked"/>
           </>
         )
       }
     },
     {
-      name:"fkDepartmentId",
-      options:{
+      name: "fkDepartmentId",
+      options: {
         display: false
       }
     },
@@ -599,10 +597,11 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
       name: '',
       options: {
         filter: false,
-        customBodyRender: (value, tableMeta ) => {
-          console.log(tableMeta)
-          const rowID= [tableMeta.tableData[tableMeta.rowIndex][5]]
-          return <>
+        customBodyRender: (value, tableMeta) => {
+          console.log(tableMeta);
+          const rowID = [tableMeta.tableData[tableMeta.rowIndex][5]];
+          return (
+<>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
               <MoreVertIcon />
             </Button>
@@ -634,16 +633,17 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
               </MenuItem>
             </Menu>
           </>
+)
         }
       }
     },
   ];
 
   function payloadHandler(e, payloadType) {
-    console.log(e.target.value)
-    let formPayload = JSON.parse(JSON.stringify(form));
+    console.log(e.target.value);
+    const formPayload = JSON.parse(JSON.stringify(form));
     formPayload[payloadType] = e.target.value;
-    console.log("form ", formPayload);
+    console.log('form ', formPayload);
     setForm(formPayload);
 
   }
@@ -676,8 +676,8 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
       bytes
     </li>
   ));
-  console.log({ dropDownAr: dropDownAr })
-  console.log({ dataAr: dataAr })
+  console.log({ dropDownAr });
+  console.log({ dataAr });
 
   return (
     <div>
@@ -697,7 +697,8 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
           </Box>
           <Box padding={3}>
             <Grid item xs={12}>
-              <Typography variant="h6"><CheckOutlinedIcon className={classes.headingIcon} />New X-FLHA Job Titles</Typography>
+              <Typography variant="h6">
+<CheckOutlinedIcon className={classes.headingIcon} />New X-FLHA Job Titles</Typography>
               <Grid container spacing={3} className={classes.mttopThirty}>
                 <Grid item md={4} sm={4} xs={12}>
                   <TextField
@@ -705,8 +706,8 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
                     id="immediate-actions"
                     multiline
                     rows="1"
-                    onChange={(e) => payloadHandler(e, "jobTitle")}
-                    value= {form.jobTitle}
+                    onChange={(e) => payloadHandler(e, 'jobTitle')}
+                    value={form.jobTitle}
                     label="titles"
                     className={classes.fullWidth}
                   />
@@ -736,9 +737,11 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
                     >
 
                       {dropDownAr.map((department) => (
-                        <MenuItem key={department.id} value={department.id} onClick={(e) => {
-                          handleDepartment(department.id, department.departmentName)
-                        }}>
+                        <MenuItem
+key={department.id} value={department.id} onClick={(e) => {
+                          handleDepartment(department.id, department.departmentName);
+                        }}
+                        >
 
                           {department.departmentName}
                         </MenuItem>
@@ -752,11 +755,11 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
                   xs={12}
                   className={classes.formBox}
                 >
-                  <Dropzone  className="dropzone" onDrop={acceptedFiles => handleNewFileUpload(acceptedFiles)}>
-                    {({getRootProps, getInputProps}) => (
-                        <div  className="block-dropzone" {...getRootProps()}>
+                  <Dropzone className="dropzone" onDrop={acceptedFiles => handleNewFileUpload(acceptedFiles)}>
+                    {({ getRootProps, getInputProps }) => (
+                        <div className="block-dropzone" {...getRootProps()}>
                           <input onChange={handleNewFileUpload} {...getInputProps()} />
-                          <p>{fileName ? fileName : ""}</p>
+                          <p>{fileName || ""}</p>
                         </div>
                     )}
                   </Dropzone>
@@ -777,7 +780,7 @@ const [statusChange, setstatusChange] = React.useState(initialState.status);
                     rows="1"
                     label="details"
                     className={classes.fullWidth}
-                    onChange={(e) => payloadHandler(e, "jobDetail")}
+                    onChange={(e) => payloadHandler(e, 'jobDetail')}
                     value={form.jobDetail}
                   />
                 </Grid>

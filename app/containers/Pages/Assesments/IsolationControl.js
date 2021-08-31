@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box'
+import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-    formControl: {
+  formControl: {
     margin: '.5rem 0',
     width: '100%',
   },
@@ -124,8 +124,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -133,14 +133,14 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: '0.5rem',
     },
   },
-  headerBackground: {    
-      backgroundColor: '#ffffff',
-      color: '#06425c',  
+  headerBackground: {
+    backgroundColor: '#ffffff',
+    color: '#06425c',
   },
   pTopandRight: {
     paddingLeft: '20px',
-	paddingRight: '20px',
-	marginTop: '13px',
+    paddingRight: '20px',
+    marginTop: '13px',
   },
   widthFl: {
     width: '250px',
@@ -153,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
   },
   widthSelect: {
     width: '150px',
-  }, 
+  },
 }));
 // Top 100 films as rated by IMDb users.
 const top100Films = [
@@ -189,9 +189,9 @@ const FlhaDetails = () => {
   };
   const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
   const onClick = () => setRadioUnplanned(true);
-  
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
- 
+
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
@@ -205,130 +205,140 @@ const FlhaDetails = () => {
             <Grid item md={9} xs={12}>
               <Box padding={3}>
                 <Grid container spacing={3}>
-					        <Grid item xs={12}>
+                  <Grid item xs={12}>
                     <Grid container spacing={3}>
                       <Grid item xs={12}><Typography variant="h6">Isolation Control</Typography></Grid>
                       <Grid item xs={12}>
                         <TableContainer>
-                        <Table className={classes.table} aria-label="simple table">
-                              <TableHead className={classes.tableHeading}>
-                                <TableRow>
-                                  <TableCell align="left">Sr. no.</TableCell>
-                                  <TableCell align="left">Isolation</TableCell>
-                                  <TableCell align="left">Tagging condition</TableCell>
-                                  <TableCell align="left">Verify</TableCell>
-                                  <TableCell align="left">Complate</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                <TableRow>
-                                  <TableCell align="left">1</TableCell>   
-                                  <TableCell align="left">Isolation</TableCell>
-                                  <TableCell align="left">Condition</TableCell>
-                                  <TableCell align="left"><ImageSearchIcon fontSize="large" /> Scanned</TableCell>
-                                  <TableCell align="left">
-                                    <Switch
-                                      checked={state.checkedB}
-                                      onChange={handleChange}
-                                      color="primary"
-                                      name="checkedB"
-                                      inputProps={{ 'aria-label': 'primary checkbox' }}
-                                    />  
-                                  </TableCell>                          
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">1</TableCell>   
-                                  <TableCell align="left">Isolation</TableCell>
-                                  <TableCell align="left">Condition</TableCell>
-                                  <TableCell align="left"><ImageSearchIcon fontSize="large" />Scanned</TableCell>
-                                  <TableCell align="left">
-                                    <Switch
-                                      checked={state.checkedB}
-                                      onChange={handleChange}
-                                      color="primary"
-                                      name="checkedB"
-                                      inputProps={{ 'aria-label': 'primary checkbox' }}
-                                    />  
-                                  </TableCell>                          
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">1</TableCell>   
-                                  <TableCell align="left">Isolation</TableCell>
-                                  <TableCell align="left">Condition</TableCell>
-                                  <TableCell align="left"><ImageSearchIcon fontSize="large" />Verified</TableCell>
-                                  <TableCell align="left">
-                                    <Switch
-                                      checked={state.checkedB}
-                                      onChange={handleChange}
-                                      color="primary"
-                                      name="checkedB"
-                                      inputProps={{ 'aria-label': 'primary checkbox' }}
-                                    />  
-                                  </TableCell>                          
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">1</TableCell>   
-                                  <TableCell align="left">Isolation</TableCell>
-                                  <TableCell align="left">Condition</TableCell>
-                                  <TableCell align="left"><ImageSearchIcon fontSize="large" /></TableCell>
-                                  <TableCell align="left">
-                                    <Switch
-                                      checked={state.checkedB}
-                                      onChange={handleChange}
-                                      color="primary"
-                                      name="checkedB"
-                                      inputProps={{ 'aria-label': 'primary checkbox' }}
-                                    />  
-                                  </TableCell>                          
-                                </TableRow>
-                              </TableBody>
-                            </Table>
+                          <Table className={classes.table} aria-label="simple table">
+                            <TableHead className={classes.tableHeading}>
+                              <TableRow>
+                                <TableCell align="left">Sr. no.</TableCell>
+                                <TableCell align="left">Isolation</TableCell>
+                                <TableCell align="left">Tagging condition</TableCell>
+                                <TableCell align="left">Verify</TableCell>
+                                <TableCell align="left">Complate</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="left">1</TableCell>
+                                <TableCell align="left">Isolation</TableCell>
+                                <TableCell align="left">Condition</TableCell>
+                                <TableCell align="left">
+                                  <ImageSearchIcon fontSize="large" />
+                                  {' '}
+Scanned
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Switch
+                  checked={state.checkedB}
+                  onChange={handleChange}
+                  color="primary"
+                  name="checkedB"
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">1</TableCell>
+                                <TableCell align="left">Isolation</TableCell>
+                                <TableCell align="left">Condition</TableCell>
+                                <TableCell align="left">
+                                  <ImageSearchIcon fontSize="large" />
+Scanned
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Switch
+                  checked={state.checkedB}
+                  onChange={handleChange}
+                  color="primary"
+                  name="checkedB"
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">1</TableCell>
+                                <TableCell align="left">Isolation</TableCell>
+                                <TableCell align="left">Condition</TableCell>
+                                <TableCell align="left">
+                                  <ImageSearchIcon fontSize="large" />
+Verified
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Switch
+                  checked={state.checkedB}
+                  onChange={handleChange}
+                  color="primary"
+                  name="checkedB"
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">1</TableCell>
+                                <TableCell align="left">Isolation</TableCell>
+                                <TableCell align="left">Condition</TableCell>
+                                <TableCell align="left"><ImageSearchIcon fontSize="large" /></TableCell>
+                                <TableCell align="left">
+                                  <Switch
+                  checked={state.checkedB}
+                  onChange={handleChange}
+                  color="primary"
+                  name="checkedB"
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
                           <Typography>Is the isolation complete?</Typography>
-                      </TableContainer>
-                    </Grid>
+                        </TableContainer>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
+              </Box>
+            </Grid>
+            <Grid item md={3} xs={12}>
+              <div className={classes.root}>
+                <Box padding={3} bgcolor="background.paper">
+                  <List component="nav" aria-label="main mailbox folders">
+                    <ListItem
+                      className={classes.borderCategory}
+                      button
+                    >
+                      <ListItemIcon>
+                        <DoubleArrowIcon />
+                      </ListItemIcon>
+                      <Link
+                        href="/app/pages/assesments/FlhaEdit"
+                        variant="subtitle"
+                      >
+                        <ListItemText primary="Job details" />
+                      </Link>
+                    </ListItem>
+                    <ListItem
+                      button
+                    >
+                      <ListItemIcon>
+                        <RemoveCircleOutlinedIcon />
+                      </ListItemIcon>
+                      <Link
+                        href="/app/pages/assesments/FlhaEdit"
+                        variant="subtitle"
+                      >
+                        <ListItemText primary="Preventive controls" />
+                      </Link>
+                    </ListItem>
+
+                  </List>
                 </Box>
-              </Grid>
-              <Grid item md={3} xs={12}>
-                  <div className={classes.root}>
-                    <Box padding={3} bgcolor="background.paper">
-                      <List component="nav" aria-label="main mailbox folders">
-                        <ListItem
-                            className={classes.borderCategory}
-                          button
-                        >
-                          <ListItemIcon>
-                            <DoubleArrowIcon />
-                          </ListItemIcon>
-                          <Link
-                            href="/app/pages/assesments/FlhaEdit"
-                            variant="subtitle"
-                          >
-                            <ListItemText primary="Job details" />
-                          </Link>
-                        </ListItem>
-                        <ListItem
-                          button
-                        >
-                          <ListItemIcon>
-                            <RemoveCircleOutlinedIcon />
-                          </ListItemIcon>
-                          <Link
-                            href="/app/pages/assesments/FlhaEdit"
-                            variant="subtitle"
-                          >
-                            <ListItemText primary="Preventive controls" />
-                          </Link>
-                        </ListItem>
-                        
-                      </List>
-                    </Box>
-                  </div>
-              </Grid>
-             </Grid> 
-          </Paper>
+              </div>
+            </Grid>
+          </Grid>
+        </Paper>
       </PapperBlock>
     </div>
   );

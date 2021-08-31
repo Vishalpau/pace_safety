@@ -534,13 +534,11 @@ const ConfigHazard = () => {
     statusToggle(value, data);
   }
 
-    //for remove icon
-    function handleRemoveHazard() {
-      hazardForm.splice(hazardForm.length-1,1);
-      setHazardForm(val => {
-        return [val, hazardForm]
-      })
-    };
+  //for remove icon
+  const handleRemoveEvidance = async (index) => {
+
+
+  };
 
 
   //   Data for the table view
@@ -738,8 +736,8 @@ const ConfigHazard = () => {
                     <IconButton
                       variant="contained"
                       color="primary"
-                      onClick={
-                        handleRemoveHazard
+                      onClick={() =>
+                        handleRemoveEvidance(index)
                       }
                     >
                       <DeleteForeverIcon />

@@ -26,10 +26,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Paper from '@material-ui/core/Paper';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
-import Divider from "@material-ui/core/Divider";
+import Divider from '@material-ui/core/Divider';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useDropzone } from 'react-dropzone';
-;
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -54,7 +53,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import classNames from "classnames";
+import classNames from 'classnames';
 import FindInPageOutlinedIcon from '@material-ui/icons/FindInPageOutlined';
 import { findAllByDisplayValue } from 'react-testing-library';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
@@ -64,9 +63,10 @@ import AddAlertOutlinedIcon from '@material-ui/icons/AddAlertOutlined';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import ControlCameraOutlinedIcon from '@material-ui/icons/ControlCameraOutlined';
 import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from '@material-ui/core/Tooltip';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -157,8 +157,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   popUpButton: {
-    paddingRight: "5px",
-    marginLeft: "16px",
+    paddingRight: '5px',
+    marginLeft: '16px',
     '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
     },
@@ -359,7 +359,10 @@ const FlhaDetails = () => {
         <Paper elevation={3}>
           <Box padding={3}>
             <Grid item xs={12}>
-              <Typography variant="h6"><CheckOutlinedIcon className={classes.headingIcon} />Add X-FLHA Job Titles</Typography>
+              <Typography variant="h6">
+                <CheckOutlinedIcon className={classes.headingIcon} />
+Add X-FLHA Job Titles
+              </Typography>
               <Grid container spacing={3} className={classes.mttopThirty}>
                 <Grid item md={4} sm={4} xs={12}>
                   <TextField

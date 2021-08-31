@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-    formControl: {
+  formControl: {
     margin: '.5rem 0',
     width: '100%',
   },
@@ -119,8 +119,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -128,14 +128,14 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: '0.5rem',
     },
   },
-  headerBackground: {    
-      backgroundColor: '#ffffff',
-      color: '#06425c',  
+  headerBackground: {
+    backgroundColor: '#ffffff',
+    color: '#06425c',
   },
   pTopandRight: {
     paddingLeft: '20px',
-	paddingRight: '20px',
-	marginTop: '13px',
+    paddingRight: '20px',
+    marginTop: '13px',
   },
   widthFl: {
     width: '250px',
@@ -148,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
   },
   widthSelect: {
     width: '150px',
-  }, 
+  },
 }));
 // Top 100 films as rated by IMDb users.
 const top100Films = [
@@ -186,160 +186,160 @@ const FlhaDetails = () => {
       <PapperBlock title="XFLHA - Energy Control" icon="ion-ios-create-outline" desc="" color="primary">
         <Paper elevation={3}>
           <Box padding={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}><Typography variant="h6">Identification of energy</Typography></Grid>
-            <Grid item xs={12}>
-              <TableContainer>
-                <Table className={classes.table} aria-label="simple table">
-                        <TableHead className={classes.tableHeading}>
-                        <TableRow>
-                            <TableCell align="left">Check</TableCell>
-                            <TableCell align="left">Energy present at my site</TableCell>
-                            <TableCell align="left">Control and isolation method</TableCell>
-                            <TableCell align="left">Camera</TableCell>
-                            <TableCell align="left">Snapshot</TableCell>
-                        </TableRow>
-                        </TableHead>
-                        <TableBody>
-                        <TableRow>
-                            <TableCell align="left">
-                            <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                            </TableCell>   
-                            <TableCell align="left">Electrical</TableCell>
-                            <TableCell align="left">
-                            <TextField
-                                variant="outlined"
-                                id="immediate-actions"
-                                multiline
-                                rows="1"
-                                label=""
-                                className={classes.fullWidth}
-                            />
-                            </TableCell>
-                            <TableCell align="left"><CameraAltIcon /></TableCell>
-                            <TableCell align="left"><VisibilityIcon /></TableCell>                          
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="left">
-                            <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                            </TableCell>   
-                            <TableCell align="left">Stored</TableCell>
-                            <TableCell align="left">
-                            <TextField
-                                variant="outlined"
-                                id="immediate-actions"
-                                multiline
-                                rows="1"
-                                label=""
-                                className={classes.fullWidth}
-                            />
-                            </TableCell>
-                            <TableCell align="left"><CameraAltIcon /></TableCell>
-                            <TableCell align="left"><VisibilityIcon /></TableCell>                          
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="left">
-                            <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                            </TableCell>   
-                            <TableCell align="left">Hydraulic</TableCell>
-                            <TableCell align="left">
-                            <TextField
-                                variant="outlined"
-                                id="immediate-actions"
-                                multiline
-                                rows="1"
-                                label=""
-                                className={classes.fullWidth}
-                            />
-                            </TableCell>
-                            <TableCell align="left"><CameraAltIcon /></TableCell>
-                            <TableCell align="left"><VisibilityIcon /></TableCell>                          
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="left">
-                            <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                            </TableCell>   
-                            <TableCell align="left">kinetic</TableCell>
-                            <TableCell align="left">
-                            <TextField
-                                variant="outlined"
-                                id="immediate-actions"
-                                multiline
-                                rows="1"
-                                label=""
-                                className={classes.fullWidth}
-                            />
-                            </TableCell>
-                            <TableCell align="left"><CameraAltIcon /></TableCell>
-                            <TableCell align="left"><VisibilityIcon /></TableCell>                          
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="left">
-                            <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                            </TableCell>   
-                            <TableCell align="left">Gravitational</TableCell>
-                            <TableCell align="left">
-                            <TextField
-                                variant="outlined"
-                                id="immediate-actions"
-                                multiline
-                                rows="1"
-                                label=""
-                                className={classes.fullWidth}
-                            />
-                            </TableCell>
-                            <TableCell align="left"><CameraAltIcon /></TableCell>
-                            <TableCell align="left"><VisibilityIcon /></TableCell>                          
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="left">
-                            <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                            </TableCell>   
-                            <TableCell align="left">Chemical</TableCell>
-                            <TableCell align="left">
-                            <TextField
-                                variant="outlined"
-                                id="immediate-actions"
-                                multiline
-                                rows="1"
-                                label=""
-                                className={classes.fullWidth}
-                            />
-                            </TableCell>
-                            <TableCell align="left"><CameraAltIcon /></TableCell>
-                            <TableCell align="left"><VisibilityIcon /></TableCell>                          
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="left">
-                            <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                            </TableCell>   
-                            <TableCell align="left">Radio active</TableCell>
-                            <TableCell align="left">
-                            <TextField
-                                variant="outlined"
-                                id="immediate-actions"
-                                multiline
-                                rows="1"
-                                label=""
-                                className={classes.fullWidth}
-                            />
-                            </TableCell>
-                            <TableCell align="left"><CameraAltIcon /></TableCell>
-                            <TableCell align="left"><VisibilityIcon /></TableCell>                          
-                        </TableRow>
-                        </TableBody>
-                    </Table>
+            <Grid container spacing={3}>
+              <Grid item xs={12}><Typography variant="h6">Identification of energy</Typography></Grid>
+              <Grid item xs={12}>
+                <TableContainer>
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableHead className={classes.tableHeading}>
+                      <TableRow>
+                        <TableCell align="left">Check</TableCell>
+                        <TableCell align="left">Energy present at my site</TableCell>
+                        <TableCell align="left">Control and isolation method</TableCell>
+                        <TableCell align="left">Camera</TableCell>
+                        <TableCell align="left">Snapshot</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="left">
+                          <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                        </TableCell>
+                        <TableCell align="left">Electrical</TableCell>
+                        <TableCell align="left">
+                          <TextField
+                            variant="outlined"
+                            id="immediate-actions"
+                            multiline
+                            rows="1"
+                            label=""
+                            className={classes.fullWidth}
+                          />
+                        </TableCell>
+                        <TableCell align="left"><CameraAltIcon /></TableCell>
+                        <TableCell align="left"><VisibilityIcon /></TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">
+                          <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                        </TableCell>
+                        <TableCell align="left">Stored</TableCell>
+                        <TableCell align="left">
+                          <TextField
+                            variant="outlined"
+                            id="immediate-actions"
+                            multiline
+                            rows="1"
+                            label=""
+                            className={classes.fullWidth}
+                          />
+                        </TableCell>
+                        <TableCell align="left"><CameraAltIcon /></TableCell>
+                        <TableCell align="left"><VisibilityIcon /></TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">
+                          <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                        </TableCell>
+                        <TableCell align="left">Hydraulic</TableCell>
+                        <TableCell align="left">
+                          <TextField
+                            variant="outlined"
+                            id="immediate-actions"
+                            multiline
+                            rows="1"
+                            label=""
+                            className={classes.fullWidth}
+                          />
+                        </TableCell>
+                        <TableCell align="left"><CameraAltIcon /></TableCell>
+                        <TableCell align="left"><VisibilityIcon /></TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">
+                          <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                        </TableCell>
+                        <TableCell align="left">kinetic</TableCell>
+                        <TableCell align="left">
+                          <TextField
+                            variant="outlined"
+                            id="immediate-actions"
+                            multiline
+                            rows="1"
+                            label=""
+                            className={classes.fullWidth}
+                          />
+                        </TableCell>
+                        <TableCell align="left"><CameraAltIcon /></TableCell>
+                        <TableCell align="left"><VisibilityIcon /></TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">
+                          <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                        </TableCell>
+                        <TableCell align="left">Gravitational</TableCell>
+                        <TableCell align="left">
+                          <TextField
+                            variant="outlined"
+                            id="immediate-actions"
+                            multiline
+                            rows="1"
+                            label=""
+                            className={classes.fullWidth}
+                          />
+                        </TableCell>
+                        <TableCell align="left"><CameraAltIcon /></TableCell>
+                        <TableCell align="left"><VisibilityIcon /></TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">
+                          <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                        </TableCell>
+                        <TableCell align="left">Chemical</TableCell>
+                        <TableCell align="left">
+                          <TextField
+                            variant="outlined"
+                            id="immediate-actions"
+                            multiline
+                            rows="1"
+                            label=""
+                            className={classes.fullWidth}
+                          />
+                        </TableCell>
+                        <TableCell align="left"><CameraAltIcon /></TableCell>
+                        <TableCell align="left"><VisibilityIcon /></TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell align="left">
+                          <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                        </TableCell>
+                        <TableCell align="left">Radio active</TableCell>
+                        <TableCell align="left">
+                          <TextField
+                            variant="outlined"
+                            id="immediate-actions"
+                            multiline
+                            rows="1"
+                            label=""
+                            className={classes.fullWidth}
+                          />
+                        </TableCell>
+                        <TableCell align="left"><CameraAltIcon /></TableCell>
+                        <TableCell align="left"><VisibilityIcon /></TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </TableContainer>
-            </Grid>
-            <Grid item md={12} xs={12}>
-            <Box marginTop={1}>
-                <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <Box marginTop={1}>
+                  <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
                 Submit
-                </Button>
-            </Box>
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-            </Grid>
-          </Box> 
+          </Box>
         </Paper>
       </PapperBlock>
     </div>

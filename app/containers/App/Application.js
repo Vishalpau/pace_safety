@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { PropTypes } from "prop-types";
-import { Switch, Route } from "react-router-dom";
-import { ThemeContext } from "./ThemeWrapper";
-import Dashboard from "../Templates/Dashboard";
+import React, { useContext } from 'react';
+import { PropTypes } from 'prop-types';
+import { Switch, Route } from 'react-router-dom';
+import { ThemeContext } from './ThemeWrapper';
+import Dashboard from '../Templates/Dashboard';
 import {
   PersonalDashboard,
   CrmDashboard,
@@ -137,7 +137,7 @@ import {
   FlhaConfig,
   FlhaConfigCriticalTask,
   FlhaConfigAdd,
-} from "../pageListAsync";
+} from '../pageListAsync';
 
 
 function Application(props) {
@@ -283,14 +283,18 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/evidence/"
           component={Evidence}
         />
-        <Route exact
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/evidence/:id"
           component={Evidence}
         />
-        <Route exact
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/"
           component={PersonalAndPpeDetails}
-        /><Route exact
+        />
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/:id"
           component={PersonalAndPpeDetails}
         />
@@ -317,7 +321,8 @@ function Application(props) {
           path="/app/incident-management/registration/investigation/worker-details/"
           component={WorkerDetails}
         />
-        <Route exact
+        <Route
+          exact
           path="/app/incident-management/registration/investigation/worker-details/:id"
           component={WorkerDetails}
         />

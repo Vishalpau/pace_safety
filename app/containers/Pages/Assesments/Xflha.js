@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    
+
   },
   inputRoot: {
     color: 'inherit',
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     border: '1px solid #ccc',
-    borderRadius : '5px',
+    borderRadius: '5px',
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px',
     textDecoration: 'underline',
     color: 'rgba(0, 0, 0, 0.87) !important'
-  },  
+  },
   spacerRight: {
     marginRight: '4px',
   },
@@ -169,39 +169,39 @@ function xflha() {
     setListToggle(true);
   };
 
-//   Data for the table view
-const columns = ['number', 'type', 'schedule', 'status', 'requestedby', 'datesubmitted', 'daterequired', 'dateapproved', 'approvedby'];
-const data = [
-  ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-];
-const options = {
-  filterType: 'dropdown',
-  responsive: 'vertical',
-  print: false,
-  filter: false,
-  scroll: true,
-  search: false,
-  download: false,
-  viewColumns: false,
-  selectableRowsHideCheckboxes: false,
-  selectableRowsHeader: false,
-  selectableRowsOnClick: false,
-  viewColumns: false,
-  selectableRows: false,
-  rowsPerPage: 10,
-  page: 0,
-};
+  //   Data for the table view
+  const columns = ['number', 'type', 'schedule', 'status', 'requestedby', 'datesubmitted', 'daterequired', 'dateapproved', 'approvedby'];
+  const data = [
+    ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
+    ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
+    ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
+    ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
+    ['AT-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
+  ];
+  const options = {
+    filterType: 'dropdown',
+    responsive: 'vertical',
+    print: false,
+    filter: false,
+    scroll: true,
+    search: false,
+    download: false,
+    viewColumns: false,
+    selectableRowsHideCheckboxes: false,
+    selectableRowsHeader: false,
+    selectableRowsOnClick: false,
+    viewColumns: false,
+    selectableRows: false,
+    rowsPerPage: 10,
+    page: 0,
+  };
 
   const classes = useStyles();
 
   return (
     <PapperBlock title="Field Level Hazard Assessment" icon="ion-md-list-box" desc="">
       {console.log('here')}
-      
+
       <Box>
         <div className={classes.root}>
           <AppBar position="static" color="transparent" className={classes.searchHeaderTop}>
@@ -222,36 +222,38 @@ const options = {
                 </Paper>
               </div>
               <Grid item xs={12}>
-              <div className="toggleViewButtons">
-                <Typography variant="caption" className={classes.toggleTitle} />
-                <Tooltip title="card" aria-label="card">
-                  <IconButton
-                    onClick={(e) => handelView(e)}
-                    aria-label="grid"
-                    className={classes.filterIcon}
-                  >
-                    <RecentActorsIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="list" aria-label="list">
-                  <IconButton
-                    aria-label="list"
-                    onClick={(e) => handelViewTabel(e)}
-                    className={classes.filterIcon}
-                  >
-                    <ListAltOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
+                <div className="toggleViewButtons">
+                  <Typography variant="caption" className={classes.toggleTitle} />
+                  <Tooltip title="card" aria-label="card">
+                    <IconButton
+                      onClick={(e) => handelView(e)}
+                      aria-label="grid"
+                      className={classes.filterIcon}
+                    >
+                      <RecentActorsIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="list" aria-label="list">
+                    <IconButton
+                      aria-label="list"
+                      onClick={(e) => handelViewTabel(e)}
+                      className={classes.filterIcon}
+                    >
+                      <ListAltOutlinedIcon />
+                    </IconButton>
+                  </Tooltip>
+                </div>
               </Grid>
               <Grid item xs={12}>
-              <div className={classes.rightSide}>
-                <Tooltip title="Create XFLHA" aria-label="new XFLHA">
-                  <Button size="medium" variant="contained" color="primary"  href="/app/pages/assesments/flhaadd">
-                    <ControlPointIcon className={classes.spacerRight} /> Create XFLHA
-                  </Button>
-                </Tooltip>
-              </div>
+                <div className={classes.rightSide}>
+                  <Tooltip title="Create XFLHA" aria-label="new XFLHA">
+                    <Button size="medium" variant="contained" color="primary" href="/app/pages/assesments/flhaadd">
+                      <ControlPointIcon className={classes.spacerRight} />
+                      {' '}
+Create XFLHA
+                    </Button>
+                  </Tooltip>
+                </div>
               </Grid>
             </Toolbar>
           </AppBar>
@@ -281,7 +283,7 @@ const options = {
                           </Typography>
                         </Grid>
 
-                        <Grid item  md={2} xs={12} className={classes.chipAction}>
+                        <Grid item md={2} xs={12} className={classes.chipAction}>
                           <Chip
                             avatar={<Avatar src="/images/pp_boy.svg" />}
                             label="Admin"
@@ -292,7 +294,7 @@ const options = {
                     </Grid>
 
                     <Grid item md={12} xs={12}>
-                    <Grid container spacing={3}>
+                      <Grid container spacing={3}>
                         <Grid item md={3} sm={6} xs={12}>
                           <Typography
                             display="inline"
@@ -348,7 +350,7 @@ const options = {
                             </span>
                           </Typography>
                         </Grid>
-                      
+
                       </Grid>
                     </Grid>
 
@@ -363,7 +365,7 @@ const options = {
                       </Typography>
 
                       <Typography
-                        
+
                         gutterBottom
                         className={classes.listingLabelValue}
                       >
@@ -381,7 +383,7 @@ const options = {
                         Location:
                       </Typography>
                       <Typography
-                        
+
                         className={classes.listingLabelValue}
                       >
                         Delhi
@@ -399,7 +401,7 @@ const options = {
                       </Typography>
 
                       <Typography
-                        
+
                         className={classes.listingLabelValue}
                       >
                         24 6 2021
@@ -417,13 +419,13 @@ const options = {
                       </Typography>
 
                       <Typography
-                        
+
                         className={classes.listingLabelValue}
                       >
                         Person
                       </Typography>
                     </Grid>
-                    
+
                   </Grid>
                 </CardContent>
                 <Divider />
@@ -446,7 +448,7 @@ const options = {
                       Comments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                      <Link href="#" className={classes.mLeft}>3</Link> 
+                        <Link href="#" className={classes.mLeft}>3</Link>
                       </Typography>
                     </Grid>
 
@@ -461,7 +463,7 @@ const options = {
                         Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                      <Link href="#" className={classes.mLeft}>3</Link>
+                        <Link href="#" className={classes.mLeft}>3</Link>
                       </Typography>
                     </Grid>
 
@@ -513,12 +515,7 @@ const options = {
                             />
                           </Grid>
                           <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              
-                            // display="inline"
-                            // color="textSecondary"
-                            // className={classes.listingLabelValue}
-                            >
+                            <Typography>
                             Work fell down in site
                               {/* {item[index]["incidentTitle"]} */}
                             </Typography>
@@ -531,7 +528,7 @@ const options = {
                       <Grid item xs={12}>
                         <div className={Incidents.statusRow}>
                           <Typography
-                            
+
                             display="inline"
                             className={classes.listingLabelName}
                           >
@@ -570,7 +567,7 @@ const options = {
 
                       <Grid item md={3} sm={6} xs={12}>
                         <Typography
-                          
+
                           gutterBottom
                           className={classes.listingLabelName}
                         >
@@ -588,7 +585,7 @@ const options = {
                       </Grid>
                       <Grid item md={3} sm={6} xs={12}>
                         <Typography
-                          
+
                           gutterBottom
                           className={classes.listingLabelName}
                         >
@@ -605,7 +602,7 @@ const options = {
 
                       <Grid item md={3} sm={6} xs={12}>
                         <Typography
-                          
+
                           gutterBottom
                           className={classes.listingLabelName}
                         >
@@ -623,7 +620,7 @@ const options = {
 
                       <Grid item md={3} sm={6} xs={12}>
                         <Typography
-                          
+
                           gutterBottom
                           className={classes.listingLabelName}
                         >
@@ -674,7 +671,7 @@ const options = {
                           Actions:
                         </Typography>
                         <Typography variant="body2" display="inline">
-                        <Link href="#" className={classes.mLeft}>3</Link>
+                          <Link href="#" className={classes.mLeft}>3</Link>
                         </Typography>
                       </Grid>
                       <Grid item md={3} sm={6} xs={12}>
@@ -688,7 +685,7 @@ const options = {
                         Evidences:
                         </Typography>
                         <Typography variant="body2" display="inline">
-                        <Link href="#" className={classes.mLeft}>3</Link>
+                          <Link href="#" className={classes.mLeft}>3</Link>
                         </Typography>
                       </Grid>
                       {/* <Grid item xs={6} md={3} lg={3}>
@@ -745,9 +742,9 @@ const options = {
               columns={columns}
               options={options}
             />
-            </Grid> 
-          )}
-          
+          </Grid>
+        )}
+
       </Box>
     </PapperBlock>
   );

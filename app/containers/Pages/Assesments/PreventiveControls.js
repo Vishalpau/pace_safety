@@ -24,7 +24,7 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
-import Divider from "@material-ui/core/Divider";
+import Divider from '@material-ui/core/Divider';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   spacer: {
     padding: '.75rem 0',
   },
-addButton: {
+  addButton: {
     '& .MuiButton-root': {
       marginTop: '9px',
       backgroundColor: '#ffffff',
@@ -94,7 +94,7 @@ addButton: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-    formControl: {
+  formControl: {
     margin: '.5rem 0',
     width: '100%',
   },
@@ -104,8 +104,8 @@ addButton: {
   fullWidth: {
     width: '100%',
     margin: '.5rem 0',
-	'& td textHeight': {
-		padding: '11.5px 14px',
+    '& td textHeight': {
+      padding: '11.5px 14px',
     	borderRadius: '8px',
 	  },
   },
@@ -133,8 +133,8 @@ addButton: {
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -142,9 +142,9 @@ addButton: {
       lineHeight: '0.5rem',
     },
   },
-  headerBackground: {    
+  headerBackground: {
     backgroundColor: '#ffffff',
-    color: '#06425c',  
+    color: '#06425c',
   },
   pTopandRight: {
     paddingLeft: '20px',
@@ -161,7 +161,7 @@ addButton: {
     minWidth: '170px',
 	  height: '58px',
     borderRadius: '4px',
-  }, 
+  },
 }));
 // Top 100 films as rated by IMDb users.
 const top100Films = [
@@ -197,9 +197,9 @@ const FlhaDetails = () => {
   };
   const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
   const onClick = () => setRadioUnplanned(true);
-  
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
- 
+
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path}
@@ -219,247 +219,254 @@ bytes
             <Grid item md={9} xs={12}>
               <Box padding={3}>
                 <Grid container spacing={3}>
-					        <Grid item xs={12}>
-					  
+                  <Grid item xs={12}>
+
                     <Grid container spacing={3}>
-                    <Grid item xs={12}><Typography variant="h6">Preventive controls</Typography>
-                  </Grid>
-                  
-				    <Grid item xs={12}>
-            
-				        <Grid item xs={12}>
-                  <TextField
-                    multiline
-                    variant="outlined"
-                    id="description"
-                    label="Task identification"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                  <TableContainer className={classes.mttopThirty}>
-                  <Table className={classes.table} aria-label="simple table">
-                        <TableHead className={classes.tableHeading}>
-                          <TableRow>
-                            <TableCell align="left" className={classes.widthFl}>Hazards</TableCell>
-                            <TableCell align="left">Controls</TableCell>
-                            <TableCell align="left">Risk after control</TableCell>
-							        <TableCell align="left"></TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
+                      <Grid item xs={12}>
+                        <Typography variant="h6">Preventive controls</Typography>
+                      </Grid>
+
+                      <Grid item xs={12}>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            multiline
+                            variant="outlined"
+                            id="description"
+                            label="Task identification"
+                            className={classes.fullWidth}
+                          />
+                        </Grid>
+                        <TableContainer className={classes.mttopThirty}>
+                          <Table className={classes.table} aria-label="simple table">
+                            <TableHead className={classes.tableHeading}>
+                              <TableRow>
+                                <TableCell align="left" className={classes.widthFl}>Hazards</TableCell>
+                                <TableCell align="left">Controls</TableCell>
+                                <TableCell align="left">Risk after control</TableCell>
+                                <TableCell align="left" />
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="left" className={classes.widthFl}>
+                                  <FormControl>
+                  <Select
+                                      id="revision-name"
+                                      labelId="revision-name-label"
+                                      label="Reason for revision"
+                                      className={classes.widthSelect}
+                                    >
+                                      <MenuItem value="Revision">One</MenuItem>
+                                    </Select>
+                </FormControl>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  multiline
+                  variant="outlined"
+                  id="description"
+
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <FormControl>
+                  <Select
+                                      id="revision-name"
+                                      labelId="revision-name-label"
+                                      label="Reason for revision"
+                                      className={classes.widthSelect}
+                                    >
+                                      <MenuItem value="Revision">One</MenuItem>
+                                    </Select>
+                </FormControl>
+                                </TableCell>
+                                <TableCell align="left"><DeleteIcon /></TableCell>
+                              </TableRow>
+
+                            </TableBody>
+                          </Table>
+                          <Typography>
+                            <AddIcon />
+                            {' '}
+Add new hazard
+                          </Typography>
+                        </TableContainer>
+                      </Grid>
+                      <Grid item md={12} xs={12}>
+                        <Grid item md={12} xs={12}>
+                          <Typography variant="caption" display="block" gutterBottom>
+              If the risk after controls are still greater than "Low", it is recommended to consider additional controls
+                          </Typography>
+                        </Grid>
+                        <Grid item md={12} xs={12}>
+                          <Typography variant="h6">
+                            <AddIcon />
+                            {' '}
+Add another task
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+
+                      <TableContainer className={classes.mttopThirty}>
+                        <Typography variant="h6">Job visual confirmation</Typography>
+
+                        <Table className={classes.table} aria-label="simple table">
+                          <TableHead className={classes.tableHeading}>
                             <TableRow>
-                              <TableCell align="left" className={classes.widthFl}>
-							  	<FormControl									
-									>
-									<Select
-										id="revision-name"
-										labelId="revision-name-label"
-										label="Reason for revision"
-										className={classes.widthSelect}
-									>
-										<MenuItem value="Revision">One</MenuItem>
-									</Select>
-								</FormControl>
-							  </TableCell>
-                              <TableCell align="left">
-								  <TextField
-									multiline
-									variant="outlined"
-									id="description"
-									
-									className={classes.fullWidth}
-								/>
-				  				</TableCell>
-                              <TableCell align="left">
-							  <FormControl									
-									>
-									<Select
-										id="revision-name"
-										labelId="revision-name-label"
-										label="Reason for revision"
-										className={classes.widthSelect}
-									>
-										<MenuItem value="Revision">One</MenuItem>
-									</Select>
-								</FormControl>
-								</TableCell>
-								<TableCell align="left"><DeleteIcon /></TableCell>                              
+                              <TableCell align="left" className={classes.tableRowColor}>Visual confirmation</TableCell>
+                              <TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
+                              <TableCell align="left" className={classes.tableRowColor}>Attachments</TableCell>
                             </TableRow>
-							
-                        </TableBody>
-                      </Table>
-                      <Typography><AddIcon /> Add new hazard</Typography>
-                  </TableContainer>
-                </Grid>
-            <Grid item md={12} xs={12}>
-            <Grid item md={12} xs={12}>
-              <Typography variant="caption" display="block" gutterBottom>
-              If the risk after controls are still greater than "Low", it is recommended to consider additional controls	
-              </Typography>
-            </Grid>
-            <Grid item md={12} xs={12}>	
-              <Typography variant="h6"><AddIcon /> Add another task</Typography>
-            </Grid>
-          </Grid>
-          </Grid>
-				<Grid item xs={12}>
-			
-				<TableContainer className={classes.mttopThirty}>
-        <Typography variant="h6">Job visual confirmation</Typography>
-				
-				<Table className={classes.table} aria-label="simple table">
-					<TableHead className={classes.tableHeading}>
-						<TableRow>
-							<TableCell align="left" className={classes.tableRowColor}>Visual confirmation</TableCell>
-							<TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
-							<TableCell align="left" className={classes.tableRowColor}>Attachments</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						<TableRow>
-						<TableCell align="left">Site pictures</TableCell>
-						<TableCell align="left">
-						<div className={classes.spacer}>
-							<FormControl component="fieldset">
-								<RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-								<FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-								<FormControlLabel value="No" control={<Radio />} label="No" />
-								<FormControlLabel value="No" control={<Radio />} label="No" />
-							</RadioGroup>
-							</FormControl>
-						</div>                               
-						</TableCell>
-						<TableCell align="left">
-							<input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-							<label htmlFor="icon-button-file">
-								<IconButton color="primary" aria-label="upload picture" component="span">
-									<AttachmentIcon />
-								</IconButton>
-							</label>
-						</TableCell>
-						</TableRow>
-						<TableRow>
-						<TableCell align="left">Team pictures</TableCell>
-						<TableCell align="left">
-						<div className={classes.spacer}>
-							<FormControl component="fieldset">
-								<RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-								<FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-								<FormControlLabel value="No" control={<Radio />} label="No" />
-								<FormControlLabel value="No" control={<Radio />} label="No" />
-							</RadioGroup>
-							</FormControl>
-						</div>                               
-						</TableCell>
-						<TableCell align="left">
-							<input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-							<label htmlFor="icon-button-file">
-								<IconButton color="primary" aria-label="upload picture" component="span">
-									<AttachmentIcon />
-								</IconButton>
-							</label>
-						</TableCell>
-						</TableRow>
-						<TableRow>
-						<TableCell align="left">Tools and tackles</TableCell>
-						<TableCell align="left">
-						<div className={classes.spacer}>
-							<FormControl component="fieldset">
-								<RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-								<FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-								<FormControlLabel value="No" control={<Radio />} label="No" />
-								<FormControlLabel value="No" control={<Radio />} label="No" />
-							</RadioGroup>
-							</FormControl>
-						</div>                               
-						</TableCell>
-						<TableCell align="left">
-							<input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-							<label htmlFor="icon-button-file">
-								<IconButton color="primary" aria-label="upload picture" component="span">
-									<AttachmentIcon />
-								</IconButton>
-							</label>
-						</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell align="left">Others</TableCell>
-							<TableCell align="left"></TableCell>
-							<TableCell align="left">
-							<input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-							<label htmlFor="icon-button-file">
-								<IconButton color="primary" aria-label="upload picture" component="span">
-									<AttachmentIcon />
-								</IconButton>
-							</label>
-						</TableCell>                              
-						</TableRow>
-					</TableBody>
-				</Table>
-        </TableContainer>
-			</Grid>
-      <Grid marginTop={4}>
-        <div className={classes.spacer}>
-            <FormControl component="fieldset">
-              <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-              <FormControlLabel value="Yes" control={<Radio />} label="I Accept &amp; Pledge" />
-            </RadioGroup>
-            </FormControl>
-          </div>
-          <Grid item xs={12}>
-          <img src={pledgebanner} alt="decoration" />
-          </Grid>
-          
-      </Grid>
-			<Grid marginTop={4} className={classes.mttopThirty}>
-              <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell align="left">Site pictures</TableCell>
+                              <TableCell align="left">
+                                <div className={classes.spacer}>
+                                  <FormControl component="fieldset">
+                                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                                    </RadioGroup>
+                                  </FormControl>
+                                </div>
+                              </TableCell>
+                              <TableCell align="left">
+                                <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
+                                <label htmlFor="icon-button-file">
+                                  <IconButton color="primary" aria-label="upload picture" component="span">
+                                    <AttachmentIcon />
+                                  </IconButton>
+                                </label>
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell align="left">Team pictures</TableCell>
+                              <TableCell align="left">
+                                <div className={classes.spacer}>
+                                  <FormControl component="fieldset">
+                                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                                    </RadioGroup>
+                                  </FormControl>
+                                </div>
+                              </TableCell>
+                              <TableCell align="left">
+                                <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
+                                <label htmlFor="icon-button-file">
+                                  <IconButton color="primary" aria-label="upload picture" component="span">
+                                    <AttachmentIcon />
+                                  </IconButton>
+                                </label>
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell align="left">Tools and tackles</TableCell>
+                              <TableCell align="left">
+                                <div className={classes.spacer}>
+                                  <FormControl component="fieldset">
+                                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                                    </RadioGroup>
+                                  </FormControl>
+                                </div>
+                              </TableCell>
+                              <TableCell align="left">
+                                <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
+                                <label htmlFor="icon-button-file">
+                                  <IconButton color="primary" aria-label="upload picture" component="span">
+                                    <AttachmentIcon />
+                                  </IconButton>
+                                </label>
+                              </TableCell>
+                            </TableRow>
+                            <TableRow>
+                              <TableCell align="left">Others</TableCell>
+                              <TableCell align="left" />
+                              <TableCell align="left">
+                                <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
+                                <label htmlFor="icon-button-file">
+                                  <IconButton color="primary" aria-label="upload picture" component="span">
+                                    <AttachmentIcon />
+                                  </IconButton>
+                                </label>
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Grid>
+                    <Grid marginTop={4}>
+                      <div className={classes.spacer}>
+                        <FormControl component="fieldset">
+                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                            <FormControlLabel value="Yes" control={<Radio />} label="I Accept &amp; Pledge" />
+                          </RadioGroup>
+                        </FormControl>
+                      </div>
+                      <Grid item xs={12}>
+                        <img src={pledgebanner} alt="decoration" />
+                      </Grid>
+
+                    </Grid>
+                    <Grid marginTop={4} className={classes.mttopThirty}>
+                      <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
               Submit
-              </Button>
-          </Grid>
-              </Grid>
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+              </Box>
+
             </Grid>
-              
-            </Box>
-        
-          </Grid>
             <Grid item md={3} xs={12}>
-                <div className={classes.root}>
-                  <Box padding={3} bgcolor="background.paper">
-                    <List component="nav" aria-label="main mailbox folders">
-                      <ListItem
-                          className={classes.borderCategory}
-                        button
+              <div className={classes.root}>
+                <Box padding={3} bgcolor="background.paper">
+                  <List component="nav" aria-label="main mailbox folders">
+                    <ListItem
+                      className={classes.borderCategory}
+                      button
+                    >
+                      <ListItemIcon>
+                        <DoubleArrowIcon />
+                      </ListItemIcon>
+                      <Link
+                        href="/app/pages/assesments/FlhaEdit"
+                        variant="subtitle"
                       >
-                        <ListItemIcon>
-                          <DoubleArrowIcon />
-                        </ListItemIcon>
-                        <Link
-                          href="/app/pages/assesments/FlhaEdit"
-                          variant="subtitle"
-                        >
-                          <ListItemText primary="Job details" />
-                        </Link>
-                      </ListItem>
-                      <ListItem
-                        button
+                        <ListItemText primary="Job details" />
+                      </Link>
+                    </ListItem>
+                    <ListItem
+                      button
+                    >
+                      <ListItemIcon>
+                        <RemoveCircleOutlinedIcon />
+                      </ListItemIcon>
+                      <Link
+                        href="/app/pages/assesments/FlhaEdit"
+                        variant="subtitle"
                       >
-                        <ListItemIcon>
-                          <RemoveCircleOutlinedIcon />
-                        </ListItemIcon>
-                        <Link
-                          href="/app/pages/assesments/FlhaEdit"
-                          variant="subtitle"
-                        >
-                          <ListItemText primary="Preventive controls" />
-                        </Link>
-                      </ListItem>
-                      
-                    </List>
-                  </Box>
-                </div>
+                        <ListItemText primary="Preventive controls" />
+                      </Link>
+                    </ListItem>
+
+                  </List>
+                </Box>
+              </div>
             </Grid>
           </Grid>
-          </Paper>
+        </Paper>
       </PapperBlock>
     </div>
   );

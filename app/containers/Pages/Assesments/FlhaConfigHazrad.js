@@ -27,10 +27,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Paper from '@material-ui/core/Paper';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
-import Divider from "@material-ui/core/Divider";
+import Divider from '@material-ui/core/Divider';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useDropzone } from 'react-dropzone';
-;
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -55,7 +54,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import classNames from "classnames";
+import classNames from 'classnames';
 import FindInPageOutlinedIcon from '@material-ui/icons/FindInPageOutlined';
 import { findAllByDisplayValue } from 'react-testing-library';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
@@ -65,10 +64,11 @@ import AddAlertOutlinedIcon from '@material-ui/icons/AddAlertOutlined';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import ControlCameraOutlinedIcon from '@material-ui/icons/ControlCameraOutlined';
 import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from '@material-ui/core/Tooltip';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -88,8 +88,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: '.2rem 0',
     boxShadow: 'inset 0px 0px 9px #dedede',
-	'& td textHeight': {
-		padding: '2.5px 5px',
+    '& td textHeight': {
+      padding: '2.5px 5px',
     	borderRadius: '8px',
 	  },
   },
@@ -119,8 +119,8 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialogTitle-root': {
       marginBottom: '5px !important',
     },
-  },  
-  ptopTwenty : {
+  },
+  ptopTwenty: {
     '& span': {
       paddingTop: '15px',
     }
@@ -159,13 +159,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   popUpButton: {
-    paddingRight: "5px",
-    marginLeft: "16px",
-    '& .MuiDialogActions-root, img':{
+    paddingRight: '5px',
+    marginLeft: '16px',
+    '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
-    },    
+    },
   },
-  
+
   spacerRight: {
     marginRight: '.75rem',
   },
@@ -228,8 +228,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -237,9 +237,9 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: '0.5rem',
     },
   },
-  headerBackground: {    
+  headerBackground: {
     backgroundColor: '#ffffff',
-    color: '#06425c',  
+    color: '#06425c',
   },
   pTopandRight: {
     paddingLeft: '20px',
@@ -267,7 +267,7 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: '100%',
-	width: '100%',
+    width: '100%',
   },
   plTen: {
     paddingLeft: '3px;',
@@ -279,7 +279,7 @@ const useStyles = makeStyles((theme) => ({
   },
   createHazardbox: {
     margin: '0px 0px 10px 0px',
-  }, 
+  },
   createHazardboxRight: {
     paddingLeft: '5px',
     float: 'right',
@@ -298,7 +298,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px;',
     fontFamily: 'Open Sans,sans-serif',
     fontWeight: '400;',
-  },  
+  },
   mToptewntySixteen: {
     marginTop: '16px',
   },
@@ -306,7 +306,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiInput-root': {
       height: '54px',
       boxShadow: 'inset 0px 0px 9px #dedede',
-   },
+    },
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -334,7 +334,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cellHeight: {
     '& td': {
-    padding: '16px 6px',
+      padding: '16px 6px',
     },
   },
   headingIcon: {
@@ -350,7 +350,7 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     padding: '3px',
     color: '#ffffff',
-}, 
+  },
 }));
 const ConfigHazard = () => {
   const classes = useStyles();
@@ -362,8 +362,8 @@ const ConfigHazard = () => {
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
- 
- const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -372,167 +372,178 @@ const ConfigHazard = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
+
   return (
     <div>
       <PapperBlock title="X-FLHA - Configuration" icon="ion-ios-create-outline" desc="" color="primary">
         <Paper elevation={3}>
-            <Box padding={3}>
-                <Grid item xs={12}>			
-                  <TableContainer className={classes.mttopTen}>
-					<Typography variant="h6"><CheckOutlinedIcon className={classes.headingIcon} />View Hazards</Typography>
-                  
-					  <Table className={classes.table} aria-label="simple table">
-						<TableHead className={classes.tableHeading}>
-						   <TableRow className={classes.cellHeight}>
-							<TableCell align="left" className={classes.tableRowColor}>Hazard</TableCell>
-							<TableCell align="left" className={classes.tableRowColor}>Image</TableCell>
-							<TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
-							<TableCell align="left" className={classes.tableRowColor}></TableCell>
-						  </TableRow>
-						</TableHead>
-						<TableBody>
-						  <TableRow className={classes.cellHeight}>
-							  <TableCell align="left">Chemical</TableCell>
-							  <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
-							  <TableCell align="left">
-								<Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
-							  </TableCell>
-							  <TableCell align="left">
-								<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-								<MoreVertIcon />
-							  </Button>
-							  <Menu
-								id="simple-menu"
-								anchorEl={anchorEl}
-								keepMounted
-								open={Boolean(anchorEl)}
-								onClose={handleClose}
-							  >
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigCriticalTaskAdd"
-									>
+          <Box padding={3}>
+            <Grid item xs={12}>
+              <TableContainer className={classes.mttopTen}>
+                <Typography variant="h6">
+                  <CheckOutlinedIcon className={classes.headingIcon} />
+View Hazards
+                </Typography>
+
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead className={classes.tableHeading}>
+                    <TableRow className={classes.cellHeight}>
+                      <TableCell align="left" className={classes.tableRowColor}>Hazard</TableCell>
+                      <TableCell align="left" className={classes.tableRowColor}>Image</TableCell>
+                      <TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
+                      <TableCell align="left" className={classes.tableRowColor} />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow className={classes.cellHeight}>
+                      <TableCell align="left">Chemical</TableCell>
+                      <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
+                      <TableCell align="left">
+                        <Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                          <MoreVertIcon />
+                        </Button>
+                        <Menu
+                          id="simple-menu"
+                          anchorEl={anchorEl}
+                          keepMounted
+                          open={Boolean(anchorEl)}
+                          onClose={handleClose}
+                        >
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigCriticalTaskAdd"
+                            >
 									Add Critical task
-									</Link>
-								</MenuItem>
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigHazardAdd"
-									>
+
+                            </Link>
+                          </MenuItem>
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigHazardAdd"
+                            >
 									Add Hazards
-									</Link>
-								</MenuItem>
-							  </Menu>
-							  </TableCell>
-						  </TableRow>
-						  <TableRow className={classes.cellHeight}>
-							  <TableCell align="left">Chemical</TableCell>
-							  <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
-							  <TableCell align="left">
-								<Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
-							  </TableCell>
-							  <TableCell align="left">
-								<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-								<MoreVertIcon />
-							  </Button>
-							  <Menu
-								id="simple-menu"
-								anchorEl={anchorEl}
-								keepMounted
-								open={Boolean(anchorEl)}
-								onClose={handleClose}
-							  >
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigAdd"
-									>
+
+                            </Link>
+                          </MenuItem>
+                        </Menu>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className={classes.cellHeight}>
+                      <TableCell align="left">Chemical</TableCell>
+                      <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
+                      <TableCell align="left">
+                        <Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                          <MoreVertIcon />
+                        </Button>
+                        <Menu
+                          id="simple-menu"
+                          anchorEl={anchorEl}
+                          keepMounted
+                          open={Boolean(anchorEl)}
+                          onClose={handleClose}
+                        >
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigAdd"
+                            >
 									Add Critical task
-									</Link>
-								</MenuItem>
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigAdd"
-									>
+
+                            </Link>
+                          </MenuItem>
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigAdd"
+                            >
 									Add Hazards
-									</Link>
-								</MenuItem>
-							  </Menu>
-							  </TableCell>
-						  </TableRow>
-						  <TableRow className={classes.cellHeight}>
-							  <TableCell align="left">Chemical</TableCell>
-							  <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
-							  <TableCell align="left">
-								<Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
-							  </TableCell>
-							  <TableCell align="left">
-								<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-								<MoreVertIcon />
-							  </Button>
-							  <Menu
-								id="simple-menu"
-								anchorEl={anchorEl}
-								keepMounted
-								open={Boolean(anchorEl)}
-								onClose={handleClose}
-							  >
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigAdd"
-									>
+
+                            </Link>
+                          </MenuItem>
+                        </Menu>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className={classes.cellHeight}>
+                      <TableCell align="left">Chemical</TableCell>
+                      <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
+                      <TableCell align="left">
+                        <Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                          <MoreVertIcon />
+                        </Button>
+                        <Menu
+                          id="simple-menu"
+                          anchorEl={anchorEl}
+                          keepMounted
+                          open={Boolean(anchorEl)}
+                          onClose={handleClose}
+                        >
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigAdd"
+                            >
 									Add Critical task
-									</Link>
-								</MenuItem>
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigAdd"
-									>
+
+                            </Link>
+                          </MenuItem>
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigAdd"
+                            >
 									Add Hazards
-									</Link>
-								</MenuItem>
-							  </Menu>
-							  </TableCell>
-						  </TableRow>
-						  <TableRow className={classes.cellHeight}>
-							  <TableCell align="left">Chemical</TableCell>
-							  <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
-							  <TableCell align="left">
-								<Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
-							  </TableCell>
-							  <TableCell align="left">
-								<Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-								<MoreVertIcon />
-							  </Button>
-							  <Menu
-								id="simple-menu"
-								anchorEl={anchorEl}
-								keepMounted
-								open={Boolean(anchorEl)}
-								onClose={handleClose}
-							  >
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigAdd"
-									>
+
+                            </Link>
+                          </MenuItem>
+                        </Menu>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow className={classes.cellHeight}>
+                      <TableCell align="left">Chemical</TableCell>
+                      <TableCell align="left"><img src={project} height={58} alt="" className={classes.mttopSix} /></TableCell>
+                      <TableCell align="left">
+                        <Switch inputProps={{ 'aria-label': 'primary checkbox' }} />
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                          <MoreVertIcon />
+                        </Button>
+                        <Menu
+                          id="simple-menu"
+                          anchorEl={anchorEl}
+                          keepMounted
+                          open={Boolean(anchorEl)}
+                          onClose={handleClose}
+                        >
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigAdd"
+                            >
 									Add Critical task
-									</Link>
-								</MenuItem>
-								<MenuItem onClick={handleClose}>
-									<Link
-									  href="/app/pages/assesments/FlhaConfigAdd"
-									>
+
+                            </Link>
+                          </MenuItem>
+                          <MenuItem onClick={handleClose}>
+                            <Link
+                              href="/app/pages/assesments/FlhaConfigAdd"
+                            >
 									Add Hazards
-									</Link>
-								</MenuItem>
-							  </Menu>
-							  </TableCell>
-						  </TableRow>
-						</TableBody>  
-					  </Table>
-                  </TableContainer>
-				</Grid>
-            </Box>
+
+                            </Link>
+                          </MenuItem>
+                        </Menu>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Box>
         </Paper>
       </PapperBlock>
     </div>

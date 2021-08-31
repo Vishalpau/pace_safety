@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-    formControl: {
+  formControl: {
     margin: '.5rem 0',
     width: '100%',
   },
@@ -123,8 +123,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -132,14 +132,14 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: '0.5rem',
     },
   },
-  headerBackground: {    
-      backgroundColor: '#ffffff',
-      color: '#06425c',  
+  headerBackground: {
+    backgroundColor: '#ffffff',
+    color: '#06425c',
   },
   pTopandRight: {
     paddingLeft: '20px',
-	paddingRight: '20px',
-	marginTop: '13px',
+    paddingRight: '20px',
+    marginTop: '13px',
   },
   widthFl: {
     width: '250px',
@@ -155,7 +155,7 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
-  }, 
+  },
 }));
 // Top 100 films as rated by IMDb users.
 const top100Films = [
@@ -191,7 +191,7 @@ const FlhaDetails = () => {
   };
   const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
   const onClick = () => setRadioUnplanned(true);
-  
+
   const [checked, setChecked] = React.useState(true);
 
   return (
@@ -202,7 +202,7 @@ const FlhaDetails = () => {
             <Grid item md={12} xs={12}>
               <Box padding={3}>
                 <Grid container spacing={3}>
-					        <Grid item xs={12}>
+                  <Grid item xs={12}>
                     <Grid container spacing={3}>
                       <Grid item md={6} sm={6} xs={12}>
                         <Autocomplete
@@ -215,243 +215,243 @@ const FlhaDetails = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <TableContainer>
-                        <Table className={classes.table} aria-label="simple table">
-                              <TableHead className={classes.tableHeading}>
-                                <TableRow>
-                                  <TableCell align="left">Check</TableCell>
-                                  <TableCell align="left">Control and isolation method</TableCell>
-                                  <TableCell align="left">Yes</TableCell>
-                                  <TableCell align="left">No</TableCell>
-                                  <TableCell align="left">Action</TableCell>
-                                  <TableCell align="left">Needs improvements (Specify)</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                <TableRow>
-                                  <TableCell align="left">1</TableCell>
-                                  <TableCell align="left">
-                                    Identification information complete 
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">2</TableCell>
-                                  <TableCell align="left">
+                          <Table className={classes.table} aria-label="simple table">
+                            <TableHead className={classes.tableHeading}>
+                              <TableRow>
+                                <TableCell align="left">Check</TableCell>
+                                <TableCell align="left">Control and isolation method</TableCell>
+                                <TableCell align="left">Yes</TableCell>
+                                <TableCell align="left">No</TableCell>
+                                <TableCell align="left">Action</TableCell>
+                                <TableCell align="left">Needs improvements (Specify)</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell align="left">1</TableCell>
+                                <TableCell align="left">
+                                    Identification information complete
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">2</TableCell>
+                                <TableCell align="left">
                                     Job described accuratly
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon fontSize="medium" /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">3</TableCell>
-                                  <TableCell align="left">
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon fontSize="medium" /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">3</TableCell>
+                                <TableCell align="left">
                                     Critical tasks identified
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">4</TableCell>
-                                  <TableCell align="left">
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">4</TableCell>
+                                <TableCell align="left">
                                   Applicable hazards identified
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">5</TableCell>
-                                  <TableCell align="left">
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">5</TableCell>
+                                <TableCell align="left">
                                   Controlled developed for hazards identified
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">6</TableCell>
-                                  <TableCell align="left">
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">6</TableCell>
+                                <TableCell align="left">
                                     All present earnings identified at the job site
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">7</TableCell>
-                                  <TableCell align="left">
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">7</TableCell>
+                                <TableCell align="left">
                                     Energies isolated or controlled
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">8</TableCell>
-                                  <TableCell align="left">
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">8</TableCell>
+                                <TableCell align="left">
                                     Re-assesment of hazards completed after pause and resart
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                                <TableRow>
-                                  <TableCell align="left">9</TableCell>
-                                  <TableCell align="left">
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell align="left">9</TableCell>
+                                <TableCell align="left">
                                     Agreement signed
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
-                                  </TableCell> 
-                                  <TableCell align="left"><OfflineBoltIcon /></TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>                         
-                                </TableRow>
-                              </TableBody>
-                            </Table>
-                      </TableContainer>
-                    </Grid>
-                    <Grid item md={12} xs={12}>
-                      <Box marginTop={1}>
-                            <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                </TableCell>
+                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                <TableCell align="left">
+                                  <TextField
+                  variant="outlined"
+                  id="immediate-actions"
+                  multiline
+                  rows="1"
+                  label=""
+                  className={classes.fullWidth}
+                />
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Grid>
+                      <Grid item md={12} xs={12}>
+                        <Box marginTop={1}>
+                          <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
                             Submit
-                            </Button>
+                          </Button>
                         </Box>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-                </Box>
-              </Grid>
-             </Grid> 
-          </Paper>
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
       </PapperBlock>
     </div>
   );

@@ -26,10 +26,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Paper from '@material-ui/core/Paper';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
-import Divider from "@material-ui/core/Divider";
+import Divider from '@material-ui/core/Divider';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useDropzone } from 'react-dropzone';
-;
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -54,7 +53,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import classNames from "classnames";
+import classNames from 'classnames';
 import FindInPageOutlinedIcon from '@material-ui/icons/FindInPageOutlined';
 import { findAllByDisplayValue } from 'react-testing-library';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
@@ -64,7 +63,8 @@ import AddAlertOutlinedIcon from '@material-ui/icons/AddAlertOutlined';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import ControlCameraOutlinedIcon from '@material-ui/icons/ControlCameraOutlined';
 import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -84,8 +84,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: '.2rem 0',
     boxShadow: 'inset 0px 0px 9px #dedede',
-	'& td textHeight': {
-		padding: '2.5px 5px',
+    '& td textHeight': {
+      padding: '2.5px 5px',
     	borderRadius: '8px',
 	  },
   },
@@ -115,8 +115,8 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialogTitle-root': {
       marginBottom: '5px !important',
     },
-  },  
-  ptopTwenty : {
+  },
+  ptopTwenty: {
     '& span': {
       paddingTop: '15px',
     }
@@ -155,13 +155,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   popUpButton: {
-    paddingRight: "5px",
-    marginLeft: "16px",
-    '& .MuiDialogActions-root, img':{
+    paddingRight: '5px',
+    marginLeft: '16px',
+    '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
-    },    
+    },
   },
-  
+
   spacerRight: {
     marginRight: '.75rem',
   },
@@ -224,8 +224,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -233,9 +233,9 @@ const useStyles = makeStyles((theme) => ({
       lineHeight: '0.5rem',
     },
   },
-  headerBackground: {    
+  headerBackground: {
     backgroundColor: '#ffffff',
-    color: '#06425c',  
+    color: '#06425c',
   },
   pTopandRight: {
     paddingLeft: '20px',
@@ -274,7 +274,7 @@ const useStyles = makeStyles((theme) => ({
   },
   createHazardbox: {
     margin: '0px 0px 10px 0px',
-  }, 
+  },
   createHazardboxRight: {
     paddingLeft: '5px',
     float: 'right',
@@ -293,7 +293,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px;',
     fontFamily: 'Open Sans,sans-serif',
     fontWeight: '400;',
-  },  
+  },
   mToptewntySixteen: {
     marginTop: '16px',
   },
@@ -301,7 +301,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiInput-root': {
       height: '54px',
       boxShadow: 'inset 0px 0px 9px #dedede',
-   },
+    },
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -329,7 +329,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cellHeight: {
     '& td': {
-    padding: '0px 6px',
+      padding: '0px 6px',
     },
   },
   headingIcon: {
@@ -345,15 +345,15 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     padding: '3px',
     color: '#ffffff',
-},
-attachImg: {
-  minWidth: '50px',
-  height: '40px',
-  borderRadius: '4px',
-  float: 'right',
-  marginTop: '2px',
-  marginRight: '20%',
-},  
+  },
+  attachImg: {
+    minWidth: '50px',
+    height: '40px',
+    borderRadius: '4px',
+    float: 'right',
+    marginTop: '2px',
+    marginRight: '20%',
+  },
 }));
 // Top 100 films as rated by IMDb users.
 const top100Films = [
@@ -389,9 +389,9 @@ const FlhaDetails = () => {
   };
   const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
   const onClick = () => setRadioUnplanned(true);
-  
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
- 
+
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path}
@@ -428,16 +428,16 @@ bytes
   const [state, setState] = React.useState({
     checkedA: true,
   });
-  
-  const [expanded, setExpanded] = React.useState('panel');
-  
 
-  const handleTwoChange = (panel) => (event, isExpanded ) => {
+  const [expanded, setExpanded] = React.useState('panel');
+
+
+  const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const [expanded1, setExpanded1] = React.useState(false);  
-  const handleOneChange = (panell) => (event, isExpanded1 ) => {
+  const [expanded1, setExpanded1] = React.useState(false);
+  const handleOneChange = (panell) => (event, isExpanded1) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
 
@@ -455,39 +455,41 @@ bytes
                       XFLHA
                     </Typography>
                   </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="h6">
-                  <DescriptionOutlinedIcon className={classes.headingIcon} /> Job information
-                  </Typography>
-                </Grid>
-                {/* <Grid item xs={12}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">
+                      <DescriptionOutlinedIcon className={classes.headingIcon} />
+                      {' '}
+Job information
+                    </Typography>
+                  </Grid>
+                  {/* <Grid item xs={12}>
                   <Button variant="outlined" onClick={handleClickOpen('paper')}>Select Job <FindInPageOutlinedIcon className={classes.plFive} /></Button>
                 </Grid> */}
-                <Grid item xs={10}>
-                <TextField
-                    multiline
-                    variant="outlined"
-                    rows="1"
-                    id="JobTitle"
-                    label="*Title"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item xs={2}><img src={project} height={58} alt="" className={classes.mttopSix} /></Grid>
-                <div>
-                  <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    scroll={scroll}
-                    aria-labelledby="scroll-dialog-title"
-                    aria-describedby="scroll-dialog-description"
-                    className={classes.jobTitle}
-                  >
-                    <DialogTitle id="scroll-dialog-title">Select job title</DialogTitle>
-                    <Box padding={2}>
-                    <Grid container spacing={3}>      
-                    
-                    {/* <Grid item md={6} sm={6} xs={12}>
+                  <Grid item xs={10}>
+                    <TextField
+                      multiline
+                      variant="outlined"
+                      rows="1"
+                      id="JobTitle"
+                      label="*Title"
+                      className={classes.fullWidth}
+                    />
+                  </Grid>
+                  <Grid item xs={2}><img src={project} height={58} alt="" className={classes.mttopSix} /></Grid>
+                  <div>
+                    <Dialog
+                      open={open}
+                      onClose={handleClose}
+                      scroll={scroll}
+                      aria-labelledby="scroll-dialog-title"
+                      aria-describedby="scroll-dialog-description"
+                      className={classes.jobTitle}
+                    >
+                      <DialogTitle id="scroll-dialog-title">Select job title</DialogTitle>
+                      <Box padding={2}>
+                        <Grid container spacing={3}>
+
+                          {/* <Grid item md={6} sm={6} xs={12}>
                       <Autocomplete
                         id="job-title"
                         className={classes.mtTen}
@@ -496,507 +498,540 @@ bytes
                         renderInput={(params) => <TextField {...params} label="Search job" variant="outlined" />}
                       />
                     </Grid> */}
-                            
-                    <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                    <Autocomplete
-                        id="department"
-                        className={classes.mtTen}
-                        options={top100Films}
-                        getOptionLabel={(option) => option.title}
-                        renderInput={(params) => <TextField {...params} label="department" variant="outlined" />}
-                      />
-                    </div>  
-                      </Grid>
-                    
-                    </Grid>
-                    </Box>    
-                    <DialogContent dividers={scroll === 'paper'}>
-                      <DialogContentText
-                        id="scroll-dialog-description"
-                        ref={descriptionElementRef}
-                        tabIndex={-1}
-                      >
-                      <Grid container spacing={3}>  
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                        <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                      </Grid>
-                      </DialogContentText>
-                    </DialogContent>
-                    <Box padding={3}>
-                      <Grid item md={12} sm={12} xs={12}>
+
+                          <Grid item md={6} sm={6} xs={12}>
+                            <div className={classes.spacer}>
+                              <Autocomplete
+                                id="department"
+                                className={classes.mtTen}
+                                options={top100Films}
+                                getOptionLabel={(option) => option.title}
+                                renderInput={(params) => <TextField {...params} label="department" variant="outlined" />}
+                              />
+                            </div>
+                          </Grid>
+
+                        </Grid>
+                      </Box>
+                      <DialogContent dividers={scroll === 'paper'}>
+                        <DialogContentText
+                          id="scroll-dialog-description"
+                          ref={descriptionElementRef}
+                          tabIndex={-1}
+                        >
+                          <Grid container spacing={3}>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
+                          </Grid>
+                        </DialogContentText>
+                      </DialogContent>
+                      <Box padding={3}>
+                        <Grid item md={12} sm={12} xs={12}>
                         Selected job project here
-                      </Grid>
-                    </Box>
-                    
-                    <Grid item md={6} sm={6} xs={12} className={classes.popUpButton}>
-                    <DialogActions>
-                      <Button onClick={handleClose} color="primary" variant="contained">
+                        </Grid>
+                      </Box>
+
+                      <Grid item md={6} sm={6} xs={12} className={classes.popUpButton}>
+                        <DialogActions>
+                          <Button onClick={handleClose} color="primary" variant="contained">
                         Select
-                      </Button>
-                      <Button onClick={handleClose} color="secondary" variant="contained">
+                          </Button>
+                          <Button onClick={handleClose} color="secondary" variant="contained">
                         Cancel
-                      </Button>
-                    </DialogActions>
-                    </Grid>
-                    
-                  </Dialog>                  
-                </div>
-                
-                <Grid item xs={12}>
-                  <TextField
-                    multiline
-                    variant="outlined"
-                    rows="2"
-                    id="description"
-                    label="*Details"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Divider className={classes.divider} />
-                <Grid item xs={12}>
-                <Box padding={0}>
-                  <Grid item sm={12} xs={12}>
-                    <Typography variant="h6"><ControlCameraOutlinedIcon className={classes.headingIcon} /> Preventive controls</Typography>
+                          </Button>
+                        </DialogActions>
+                      </Grid>
+
+                    </Dialog>
+                  </div>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      multiline
+                      variant="outlined"
+                      rows="2"
+                      id="description"
+                      label="*Details"
+                      className={classes.fullWidth}
+                    />
                   </Grid>
                   <Divider className={classes.divider} />
-                  <Grid item sm={12} xs={12} className={classes.mttopTen}>
-                  <Typography variant="h6"><AssignmentLateOutlinedIcon className={classes.headingIcon} /> Critical tasks</Typography>
-                  
-                  </Grid>
-                  
-                  <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
-                  <div>
-                  <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1bh-content"
-                      id="panel1bh-header"
-                      className={classes.headingColor}
-                    >
-                      <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Task#1 - "Task identification"</Typography>  
-                    </AccordionSummary>
-                    <AccordionDetails>
+                  <Grid item xs={12}>
+                    <Box padding={0}>
                       <Grid item sm={12} xs={12}>
-                        <TextField
-                          multiline
-                          variant="outlined"
-                          rows="1"
-                          id="description"
-                          label="*Task Identification"
-                          className={classes.fullWidth}
-                        />
+                        <Typography variant="h6">
+                          <ControlCameraOutlinedIcon className={classes.headingIcon} />
+                          {' '}
+Preventive controls
+                        </Typography>
                       </Grid>
-                      <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')}  defaultExpanded className={classes.childBackPaper}>
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel2bh-content"
-                            id="panel2bh-header"
-                            className={classes.headingColor}
+                      <Divider className={classes.divider} />
+                      <Grid item sm={12} xs={12} className={classes.mttopTen}>
+                        <Typography variant="h6">
+                          <AssignmentLateOutlinedIcon className={classes.headingIcon} />
+                          {' '}
+Critical tasks
+                        </Typography>
+
+                      </Grid>
+
+                      <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
+                        <div>
+                          <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel1bh-content"
+                              id="panel1bh-header"
+                              className={classes.headingColor}
                             >
-                              <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>                              
-                              <Typography className={classes.secondaryHeading}>
-                                <Fab 
-                                  color="secondary" 
-                                  size="small"
-                                  align="right"
-                                  height={30}
-                                  width={30} 
-                                  aria-label="remove" 
-                                  className={classNames(classes.button, classes.mRight)}>
-                                  <RemoveIcon />
-                                </Fab>
+                              <Typography className={classes.heading}>
+                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
+                                {' '}
+Task#1 - "Task identification"
                               </Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                          <Grid container spacing={0}>
-                            <Grid item sm={11} xs={8}>
-                              <FormControl
-                                  variant="outlined"
-                                  requirement
-                                  className={classes.formControl}
-                                >
-                                  <InputLabel id="demo-simple-select-label">
-                                    *Hazards
-                                  </InputLabel>
-                                  <Select
-                                    labelId="incident-type-label"
-                                    id="incident-type"
-                                    label="Incident Type"
-                                  >
-                                    <MenuItem>One</MenuItem>
-                                    <MenuItem>One</MenuItem>
-                                    <MenuItem>One</MenuItem>
-                                    <MenuItem>One</MenuItem>
-                                  </Select>
-                                </FormControl>
-                                <div className={classes.spacer}>
-                                  <FormControl component="fieldset">
-                                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>
-                            </Grid>
-                            <Grid item sm={1} xs={4}>
-                              <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
-                            </Grid>
-                            <Grid container spacing={2}>
+                            </AccordionSummary>
+                            <AccordionDetails>
                               <Grid item sm={12} xs={12}>
                                 <TextField
                                   multiline
                                   variant="outlined"
-                                  rows="3"
+                                  rows="1"
                                   id="description"
-                                  label="*Control"
+                                  label="*Task Identification"
                                   className={classes.fullWidth}
                                 />
-                                  <div className={classes.spacer}>
-                                    <FormControl component="fieldset">
-                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                      <FormControlLabel value="No" control={<Radio />} label="NA" />
-                                    </RadioGroup>
-                                    </FormControl>
-                                  </div>
-                                </Grid>
-                              </Grid>    
-                                <Grid container spacing={1}>
-                                  <Grid item md={4} sm={4} xs={12}>
-                                    <FormControl
-                                      variant="outlined"
-                                      requirement
-                                      className={classes.formControl}
+                              </Grid>
+                              <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
+                                <AccordionSummary
+                                  expandIcon={<ExpandMoreIcon />}
+                                  aria-controls="panel2bh-content"
+                                  id="panel2bh-header"
+                                  className={classes.headingColor}
+                                >
+                                  <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>
+                                  <Typography className={classes.secondaryHeading}>
+                                    <Fab
+                                      color="secondary"
+                                      size="small"
+                                      align="right"
+                                      height={30}
+                                      width={30}
+                                      aria-label="remove"
+                                      className={classNames(classes.button, classes.mRight)}
                                     >
-                                      <InputLabel id="demo-simple-select-label">
+                                      <RemoveIcon />
+                                    </Fab>
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Grid container spacing={0}>
+                                    <Grid item sm={11} xs={8}>
+                                      <FormControl
+                                        variant="outlined"
+                                        requirement
+                                        className={classes.formControl}
+                                      >
+                                        <InputLabel id="demo-simple-select-label">
+                                    *Hazards
+                                        </InputLabel>
+                                        <Select
+                                          labelId="incident-type-label"
+                                          id="incident-type"
+                                          label="Incident Type"
+                                        >
+                                          <MenuItem>One</MenuItem>
+                                          <MenuItem>One</MenuItem>
+                                          <MenuItem>One</MenuItem>
+                                          <MenuItem>One</MenuItem>
+                                        </Select>
+                                      </FormControl>
+                                      <div className={classes.spacer}>
+                                        <FormControl component="fieldset">
+                                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                            <FormControlLabel value="No" control={<Radio />} label="No" />
+                                          </RadioGroup>
+                                        </FormControl>
+                                      </div>
+                                    </Grid>
+                                    <Grid item sm={1} xs={4}>
+                                      <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
+                                    </Grid>
+                                    <Grid container spacing={2}>
+                                      <Grid item sm={12} xs={12}>
+                                        <TextField
+                                          multiline
+                                          variant="outlined"
+                                          rows="3"
+                                          id="description"
+                                          label="*Control"
+                                          className={classes.fullWidth}
+                                        />
+                                        <div className={classes.spacer}>
+                                          <FormControl component="fieldset">
+                                            <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                              <FormControlLabel value="No" control={<Radio />} label="No" />
+                                              <FormControlLabel value="No" control={<Radio />} label="NA" />
+                                            </RadioGroup>
+                                          </FormControl>
+                                        </div>
+                                      </Grid>
+                                    </Grid>
+                                    <Grid container spacing={1}>
+                                      <Grid item md={4} sm={4} xs={12}>
+                                        <FormControl
+                                          variant="outlined"
+                                          requirement
+                                          className={classes.formControl}
+                                        >
+                                          <InputLabel id="demo-simple-select-label">
                                         Risk Severity
-                                      </InputLabel>
-                                      <Select
-                                        labelId="incident-type-label"
-                                        id="incident-type"
-                                        label="Incident Type"
-                                      >
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                      </Select>
-                                    </FormControl>
-                                  </Grid>
-                                  <Grid item md={4} sm={4} xs={12}>
-                                    <FormControl
-                                      variant="outlined"
-                                      requirement
-                                      className={classes.formControl}
-                                    >
-                                      <InputLabel id="demo-simple-select-label">
+                                          </InputLabel>
+                                          <Select
+                                            labelId="incident-type-label"
+                                            id="incident-type"
+                                            label="Incident Type"
+                                          >
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                          </Select>
+                                        </FormControl>
+                                      </Grid>
+                                      <Grid item md={4} sm={4} xs={12}>
+                                        <FormControl
+                                          variant="outlined"
+                                          requirement
+                                          className={classes.formControl}
+                                        >
+                                          <InputLabel id="demo-simple-select-label">
                                         Risk Probability
-                                      </InputLabel>
-                                      <Select
-                                        labelId="incident-type-label"
-                                        id="incident-type"
-                                        label="Incident Type"
-                                      >
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                      </Select>
-                                    </FormControl>
-                                  </Grid>
-                                  <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>                
+                                          </InputLabel>
+                                          <Select
+                                            labelId="incident-type-label"
+                                            id="incident-type"
+                                            label="Incident Type"
+                                          >
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                          </Select>
+                                        </FormControl>
+                                      </Grid>
+                                      <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>
                                     50% Risk
+                                      </Grid>
+                                    </Grid>
                                   </Grid>
-                                </Grid>
-                              </Grid>                  
+                                </AccordionDetails>
+                              </Accordion>
+
+                              <Accordion expanded1={expanded1 === 'panell2'} onChange={handleOneChange('panell2')} className={classes.childBackPaper}>
+                                <AccordionSummary
+                                  expandIcon={<ExpandMoreIcon />}
+                                  aria-controls="panel2bh-content"
+                                  id="panel2bh-header"
+                                  className={classes.headingColor}
+                                >
+                                  <Typography className={classes.heading}>Hazardk#2 - "Hazard Name"</Typography>
+                                  <Typography className={classes.secondaryHeading}>
+                                    <Fab
+                                      color="secondary"
+                                      size="small"
+                                      align="right"
+                                      aria-label="remove"
+                                      className={classNames(classes.button, classes.mRight)}
+                                    >
+                                      <RemoveIcon />
+                                    </Fab>
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Grid container spacing={0}>
+                                    <Grid item sm={11} xs={8}>
+                                      <FormControl
+                                        variant="outlined"
+                                        requirement
+                                        className={classes.formControl}
+                                      >
+                                        <InputLabel id="demo-simple-select-label">
+                                    *Hazards
+                                        </InputLabel>
+                                        <Select
+                                          labelId="incident-type-label"
+                                          id="incident-type"
+                                          label="Incident Type"
+                                        >
+                                          <MenuItem>One</MenuItem>
+                                          <MenuItem>One</MenuItem>
+                                          <MenuItem>One</MenuItem>
+                                          <MenuItem>One</MenuItem>
+                                        </Select>
+                                      </FormControl>
+                                      <div className={classes.spacer}>
+                                        <FormControl component="fieldset">
+                                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                            <FormControlLabel value="No" control={<Radio />} label="No" />
+                                          </RadioGroup>
+                                        </FormControl>
+                                      </div>
+                                    </Grid>
+                                    <Grid item sm={1} xs={4}>
+                                      <img src={chemicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
+                                    </Grid>
+                                    <Grid container spacing={2}>
+                                      <Grid item sm={12} xs={12}>
+                                        <TextField
+                                          multiline
+                                          variant="outlined"
+                                          rows="3"
+                                          id="description"
+                                          label="*Control"
+                                          className={classes.fullWidth}
+                                        />
+                                        <div className={classes.spacer}>
+                                          <FormControl component="fieldset">
+                                            <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                              <FormControlLabel value="No" control={<Radio />} label="No" />
+                                              <FormControlLabel value="No" control={<Radio />} label="NA" />
+                                            </RadioGroup>
+                                          </FormControl>
+                                        </div>
+                                      </Grid>
+                                    </Grid>
+                                    <Grid container spacing={1}>
+                                      <Grid item md={4} sm={4} xs={12}>
+                                        <FormControl
+                                          variant="outlined"
+                                          requirement
+                                          className={classes.formControl}
+                                        >
+                                          <InputLabel id="demo-simple-select-label">
+                                        Risk Severity
+                                          </InputLabel>
+                                          <Select
+                                            labelId="incident-type-label"
+                                            id="incident-type"
+                                            label="Incident Type"
+                                          >
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                          </Select>
+                                        </FormControl>
+                                      </Grid>
+                                      <Grid item md={4} sm={4} xs={12}>
+                                        <FormControl
+                                          variant="outlined"
+                                          requirement
+                                          className={classes.formControl}
+                                        >
+                                          <InputLabel id="demo-simple-select-label">
+                                        Risk Probability
+                                          </InputLabel>
+                                          <Select
+                                            labelId="incident-type-label"
+                                            id="incident-type"
+                                            label="Incident Type"
+                                          >
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                            <MenuItem>One</MenuItem>
+                                          </Select>
+                                        </FormControl>
+                                      </Grid>
+                                      <Grid item md={4} sm={4} xs={12} className={classes.ratioColorred}>
+                                    90% Risk
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                </AccordionDetails>
+                              </Accordion>
+                              <Grid item xs={12} className={classes.createHazardbox}>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  startIcon={<AddCircleIcon />}
+                                  className={classes.button}
+                                >
+                                  Add new hazard
+                                </Button>
+                              </Grid>
                             </AccordionDetails>
-                        </Accordion>
-                        
-                        <Accordion expanded1={expanded1 === 'panell2'} onChange={handleOneChange('panell2')} className={classes.childBackPaper}>
+                          </Accordion>
+                          <Accordion expanded={expanded === 'panel2'} onChange={handleTwoChange('panel2')} className={classes.backPaper}>
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
                               aria-controls="panel2bh-content"
                               id="panel2bh-header"
                               className={classes.headingColor}
-                            > 
-                                <Typography className={classes.heading}>Hazardk#2 - "Hazard Name"</Typography>
-                                <Typography className={classes.secondaryHeading}>
-                                  <Fab 
-                                    color="secondary" 
-                                    size="small"
-                                    align="right" 
-                                    aria-label="remove" 
-                                    className={classNames(classes.button, classes.mRight)}>
-                                    <RemoveIcon />
-                                  </Fab>
+                            >
+                              <Typography className={classes.heading}>
+                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
+                                {' '}
+Task#2 - "Task identification"
+                                {' '}
+                              </Typography>
+
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Typography>
+                          Dummy content
+                              </Typography>
+                            </AccordionDetails>
+                          </Accordion>
+                          <Accordion expanded={expanded === 'panel3'} onChange={handleTwoChange('panel3')} className={classes.backPaper}>
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel3bh-content"
+                              id="panel3bh-header"
+                              className={classes.headingColor}
+                            >
+                              <Typography className={classes.heading}>
+                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
+                                {' '}
+Task#3 - "Task identification"
+                                {' '}
+                              </Typography>
+
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Typography>
+                          Dummy content
+                              </Typography>
+                            </AccordionDetails>
+                          </Accordion>
+                          <Accordion expanded={expanded === 'panel4'} onChange={handleTwoChange('panel4')} className={classes.backPaper}>
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel4bh-content"
+                              id="panel4bh-header"
+                              className={classes.headingColor}
+                            >
+                              <Typography className={classes.heading}>
+                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
+                                {' '}
+Task#4 - "Task identification"
+                                {' '}
                               </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                          <Grid container spacing={0}>
-                            <Grid item sm={11} xs={8}>
-                              <FormControl
-                                  variant="outlined"
-                                  requirement
-                                  className={classes.formControl}
-                                >
-                                  <InputLabel id="demo-simple-select-label">
-                                    *Hazards
-                                  </InputLabel>
-                                  <Select
-                                    labelId="incident-type-label"
-                                    id="incident-type"
-                                    label="Incident Type"
-                                  >
-                                    <MenuItem>One</MenuItem>
-                                    <MenuItem>One</MenuItem>
-                                    <MenuItem>One</MenuItem>
-                                    <MenuItem>One</MenuItem>
-                                  </Select>
-                                </FormControl>
-                                <div className={classes.spacer}>
-                                  <FormControl component="fieldset">
-                                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>
-                            </Grid>
-                            <Grid item sm={1} xs={4}>
-                              <img src={chemicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
-                            </Grid>
-                            <Grid container spacing={2}>
-                              <Grid item sm={12} xs={12}>
-                                <TextField
-                                  multiline
-                                  variant="outlined"
-                                  rows="3"
-                                  id="description"
-                                  label="*Control"
-                                  className={classes.fullWidth}
-                                />
+                              <Typography>
+                          Dummy content
+                              </Typography>
+                            </AccordionDetails>
+                          </Accordion>
+                        </div>
+
+                      </Grid>
+                      <Divider className={classes.divider} />
+                      <Grid item xs={12}>
+                        <TableContainer className={classes.mttopTen}>
+                          <Typography variant="h6">
+                            <CheckOutlinedIcon className={classes.headingIcon} />
+                            {' '}
+Job visual confirmation
+                          </Typography>
+
+                          <Table className={classes.table} aria-label="simple table">
+                            <TableHead className={classes.tableHeading}>
+                              <TableRow className={classes.cellHeight}>
+                                <TableCell align="left" className={classes.tableRowColor}>Visual confirmation</TableCell>
+                                <TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
+                                <TableCell align="left" className={classes.tableRowColor}>Attachments</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <TableRow className={classes.cellHeight}>
+                                <TableCell align="left">Site pictures</TableCell>
+                                <TableCell align="left">
                                   <div className={classes.spacer}>
                                     <FormControl component="fieldset">
                                       <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                                      <FormControlLabel value="No" control={<Radio />} label="NA" />
-                                    </RadioGroup>
+                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                        <FormControlLabel value="No" control={<Radio />} label="No" />
+                                        <FormControlLabel value="No" control={<Radio />} label="NA" />
+                                      </RadioGroup>
                                     </FormControl>
                                   </div>
-                                </Grid>
-                              </Grid>    
-                                <Grid container spacing={1}>
-                                  <Grid item md={4} sm={4} xs={12}>
-                                    <FormControl
-                                      variant="outlined"
-                                      requirement
-                                      className={classes.formControl}
-                                    >
-                                      <InputLabel id="demo-simple-select-label">
-                                        Risk Severity
-                                      </InputLabel>
-                                      <Select
-                                        labelId="incident-type-label"
-                                        id="incident-type"
-                                        label="Incident Type"
-                                      >
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                      </Select>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
+                                  <label htmlFor="icon-button-file">
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                      <AttachmentIcon />
+                                    </IconButton>
+                                  </label>
+                                  <img src={project} className={classes.attachImg} alt="decoration" height={40} />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow className={classes.cellHeight}>
+                                <TableCell align="left">Team pictures</TableCell>
+                                <TableCell align="left">
+                                  <div className={classes.spacer}>
+                                    <FormControl component="fieldset">
+                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                        <FormControlLabel value="No" control={<Radio />} label="No" />
+                                        <FormControlLabel value="No" control={<Radio />} label="NA" />
+                                      </RadioGroup>
                                     </FormControl>
-                                  </Grid>
-                                  <Grid item md={4} sm={4} xs={12}>
-                                    <FormControl
-                                      variant="outlined"
-                                      requirement
-                                      className={classes.formControl}
-                                    >
-                                      <InputLabel id="demo-simple-select-label">
-                                        Risk Probability
-                                      </InputLabel>
-                                      <Select
-                                        labelId="incident-type-label"
-                                        id="incident-type"
-                                        label="Incident Type"
-                                      >
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                        <MenuItem>One</MenuItem>
-                                      </Select>
+                                  </div>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
+                                  <label htmlFor="icon-button-file">
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                      <AttachmentIcon />
+                                    </IconButton>
+                                  </label>
+                                  <img src={project} className={classes.attachImg} alt="decoration" height={40} />
+                                </TableCell>
+                              </TableRow>
+                              <TableRow className={classes.cellHeight}>
+                                <TableCell align="left">Tools and tackles</TableCell>
+                                <TableCell align="left">
+                                  <div className={classes.spacer}>
+                                    <FormControl component="fieldset">
+                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                        <FormControlLabel value="No" control={<Radio />} label="No" />
+                                        <FormControlLabel value="No" control={<Radio />} label="NA" />
+                                      </RadioGroup>
                                     </FormControl>
-                                  </Grid>
-                                  <Grid item md={4} sm={4} xs={12} className={classes.ratioColorred}>                
-                                    90% Risk
-                                  </Grid>
-                                </Grid>
-                              </Grid>                  
-                            </AccordionDetails>
-                        </Accordion>
-                        <Grid item xs={12} className={classes.createHazardbox}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddCircleIcon />}
-                            className={classes.button}
-                              >
-                                  Add new hazard
-                            </Button>
-                        </Grid>
-                      </AccordionDetails>
-                    </Accordion>
-                    <Accordion expanded={expanded === 'panel2'} onChange={handleTwoChange('panel2')} className={classes.backPaper}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel2bh-content"
-                        id="panel2bh-header"
-                        className={classes.headingColor}
-                      >
-                        <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Task#2 - "Task identification" </Typography>
-                        
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography>
-                          Dummy content
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                    <Accordion expanded={expanded === 'panel3'} onChange={handleTwoChange('panel3')} className={classes.backPaper}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel3bh-content"
-                        id="panel3bh-header"
-                        className={classes.headingColor}
-                      >
-                        <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Task#3 - "Task identification" </Typography>
-                        
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography>
-                          Dummy content
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                    <Accordion expanded={expanded === 'panel4'} onChange={handleTwoChange('panel4')} className={classes.backPaper}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel4bh-content"
-                        id="panel4bh-header"
-                        className={classes.headingColor}
-                      >
-                        <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Task#4 - "Task identification" </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography>
-                          Dummy content
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                  </div>
+                                  </div>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
+                                  <label htmlFor="icon-button-file">
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                      <AttachmentIcon />
+                                    </IconButton>
+                                  </label>
+                                  <img src={project} className={classes.attachImg} alt="decoration" height={40} />
+                                </TableCell>
+                              </TableRow>
 
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Grid>
+                    </Box>
                   </Grid>
-                  <Divider className={classes.divider} />  
-                  <Grid item xs={12}>			
-                  <TableContainer className={classes.mttopTen}>
-                  <Typography variant="h6"><CheckOutlinedIcon className={classes.headingIcon} /> Job visual confirmation</Typography>
-                  
-                  <Table className={classes.table} aria-label="simple table">
-                    <TableHead className={classes.tableHeading}>
-                       <TableRow className={classes.cellHeight}>
-                        <TableCell align="left" className={classes.tableRowColor}>Visual confirmation</TableCell>
-                        <TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
-                        <TableCell align="left" className={classes.tableRowColor}>Attachments</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow className={classes.cellHeight}>
-                      <TableCell align="left">Site pictures</TableCell>
-                      <TableCell align="left">
-                      <div className={classes.spacer}>
-                        <FormControl component="fieldset">
-                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                          <FormControlLabel value="No" control={<Radio />} label="NA" />
-                        </RadioGroup>
-                        </FormControl>
-                      </div>                               
-                      </TableCell>
-                      <TableCell align="left">
-                        <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-                        <label htmlFor="icon-button-file">
-                          <IconButton color="primary" aria-label="upload picture" component="span">
-                            <AttachmentIcon />
-                          </IconButton>
-                        </label>
-                        <img src={project} className={classes.attachImg} alt="decoration" height={40} />
-                      </TableCell>
-                      </TableRow>
-                       <TableRow className={classes.cellHeight}>
-                      <TableCell align="left">Team pictures</TableCell>
-                      <TableCell align="left">
-                      <div className={classes.spacer}>
-                        <FormControl component="fieldset">
-                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                          <FormControlLabel value="No" control={<Radio />} label="NA" />
-                        </RadioGroup>
-                        </FormControl>
-                      </div>                               
-                      </TableCell>
-                      <TableCell align="left">
-                        <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-                        <label htmlFor="icon-button-file">
-                          <IconButton color="primary" aria-label="upload picture" component="span">
-                            <AttachmentIcon />
-                          </IconButton>
-                        </label>
-                        <img src={project} className={classes.attachImg} alt="decoration" height={40} />
-                      </TableCell>
-                      </TableRow>
-                       <TableRow className={classes.cellHeight}>
-                      <TableCell align="left">Tools and tackles</TableCell>
-                      <TableCell align="left">
-                      <div className={classes.spacer}>
-                        <FormControl component="fieldset">
-                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                          <FormControlLabel value="No" control={<Radio />} label="NA" />
-                        </RadioGroup>
-                        </FormControl>
-                      </div>                               
-                      </TableCell>
-                      <TableCell align="left">
-                        <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-                        <label htmlFor="icon-button-file">
-                          <IconButton color="primary" aria-label="upload picture" component="span">
-                            <AttachmentIcon />
-                          </IconButton>
-                        </label>
-                        <img src={project} className={classes.attachImg} alt="decoration" height={40} />
-                      </TableCell>
-                      </TableRow>
-                      
-                    </TableBody>
-                  </Table>
-                  </TableContainer>
-                </Grid>
-                </Box>
-                </Grid>
-                {/* <Grid item sm={6} xs={12}>
+                  {/* <Grid item sm={6} xs={12}>
                   <Typography variant="Body1" className={classes.labelColor}>Attach files</Typography>
                   <Grid item md={12} xs={12} className={classes.formBox}>
                     <div {...getRootProps({ className: 'dropzone' })}>
@@ -1021,7 +1056,7 @@ bytes
                       value={selectedDate}
                       onChange={handleDateChange}
                     />
-                    
+
                   </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item md={3} sm={3} xs={12}>
@@ -1036,9 +1071,9 @@ bytes
                         onChange={handleDateChange}
                       />
                     </div>
-                    
-                    </MuiPickersUtilsProvider>     
-                </Grid> 
+
+                    </MuiPickersUtilsProvider>
+                </Grid>
                 {/* <Grid item md={6} sm={6} xs={12}>
                   <div className={classes.spacer}>
                   <FormControl component="fieldset" display="inline">
@@ -1071,7 +1106,7 @@ bytes
                   <Typography variant="h6">
                   <NotificationsOutlinedIcon className={classes.headingIcon} /> Notification block
                   </Typography>
-                </Grid>  
+                </Grid>
                 <Grid item md={6} sm={6} xs={12}>
                   <FormControl
                       variant="outlined"
@@ -1124,7 +1159,7 @@ bytes
                     renderInput={(params) => <TextField {...params} label="Field Contractor" variant="outlined" />}
                   />
                   </div>
-                </Grid>                
+                </Grid>
                 <Grid item md={6} sm={6} xs={12}>
                   <div className={classes.spacer}>
                     <FormControl component="fieldset">
@@ -1195,7 +1230,7 @@ bytes
                     </Typography>
                   </Grid>
               </Grid>
-            
+
                 {/* <Grid marginTop={4}>
                   <div className={classes.spacer}>
                   <FormControlLabel
@@ -1213,7 +1248,7 @@ bytes
                     <Grid item xs={12}>
                     <img src={pledgebanner} alt="decoration" />
                     </Grid>
-                    
+
                 </Grid> */}
                 </Grid>
                 <Box marginTop={4}>
@@ -1224,10 +1259,10 @@ bytes
                   Cancel
                   </Button>
                 </Box>
-            </Box>
+              </Box>
             </Grid>
           </Grid>
-          </Paper>
+        </Paper>
       </PapperBlock>
     </div>
   );

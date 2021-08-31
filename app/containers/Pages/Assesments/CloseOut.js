@@ -24,7 +24,7 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
-import Divider from "@material-ui/core/Divider";
+import Divider from '@material-ui/core/Divider';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -133,9 +133,9 @@ const FlhaDetails = () => {
   };
   const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
   const onClick = () => setRadioUnplanned(true);
-  
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
- 
+
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path}
@@ -154,135 +154,135 @@ bytes
           <Grid container spacing={1}>
             <Grid item md={12} xs={12}>
               <Box padding={3}>
-                <Grid container spacing={3}>                  
+                <Grid container spacing={3}>
+                  <Grid item md={12} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Has a pre-use inspection of tools/equipment been completed?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Is a warning ribbon need?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Is the worker working alone?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid item md={12} xs={12}>
+                    <FormLabel component="legend">If yes, explain</FormLabel>
+                    <TextField
+                      variant="outlined"
+                      id="immediate-actions"
+                      multiline
+                      rows="4"
+                      label="Emergency Phone Number"
+                      className={classes.fullWidth}
+                    />
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Are all permit(s) closed out?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Are there Hazards remaining?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Was the area cleaned up at the end of job/shift?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Were there any incidents/injuries?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+
+                  <Grid item md={12} xs={12}>
+                    <FormLabel component="legend">If Yes, please provide details</FormLabel>
+                    <TextField
+                      variant="outlined"
+                      id="immediate-actions"
+                      multiline
+                      rows="4"
+                      label="Enter the details"
+                      className={classes.fullWidth}
+                    />
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={12}>
+                    <div className={classes.spacer}>
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend">Do you want to continue to creating an Incident?</FormLabel>
+                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                </Grid>
                 <Grid item md={12} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Has a pre-use inspection of tools/equipment been completed?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Is a warning ribbon need?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Is the worker working alone?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={12} xs={12}>
-                <FormLabel component="legend">If yes, explain</FormLabel>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="4"
-                    label="Emergency Phone Number"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Are all permit(s) closed out?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Are there Hazards remaining?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Was the area cleaned up at the end of job/shift?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Were there any incidents/injuries?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                
-                <Grid item md={12} xs={12}>
-                <FormLabel component="legend">If Yes, please provide details</FormLabel>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="4"
-                    label="Enter the details"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">Do you want to continue to creating an Incident?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-              </Grid>
-              <Grid item md={12} xs={12}>
-                <Box marginTop={4}>
-                  <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+                  <Box marginTop={4}>
+                    <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
                   Submit and confirm with an incident
-                  </Button>
-                </Box>
-                <Box marginTop={4}>
-                  <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+                    </Button>
+                  </Box>
+                  <Box marginTop={4}>
+                    <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
                   Submit
-                  </Button>
-                </Box>
+                    </Button>
+                  </Box>
                 </Grid>
               </Box>
             </Grid>
           </Grid>
-          </Paper>
+        </Paper>
       </PapperBlock>
     </div>
   );
