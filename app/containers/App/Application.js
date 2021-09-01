@@ -515,15 +515,18 @@ function Application(props) {
         {/* Observation Routes  */}
         {/* <Route path="/app/pages/summary" component={Summary} /> */}
         {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
-        <Route path="/app/pages/observations" component={Observations} />
-        <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction} />
-        <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
-        <Route path="/app/pages/observation-close-out" component={ObservationCloseOut} />
-        <Route path="/app/pages/observation-Summary/:id" component={ObservationSummary} />
-        <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
-        <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
-        <Route path="/app/pages/observation-observation-view" component={ObservationInitialNotificationView} />
-        <Route path="/app/pages/prints/:id" component={Prints} />
+        <Route path="/app/observations" component={Observations} />
+        {/* <Route path="/app/observationsearch/#{search-keyword}" component={Observations} /> */}
+        <Route path="/app/observations#table" component={Observations} />
+        <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />
+        <Route exact path="/app/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
+        <Route path="/app/observation-close-out" component={ObservationCloseOut} />
+        <Route path="/app/observation/details/:id" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#action-taking" component={ObservationSummary} />
+        <Route exact path="/app/observation-initial-notification" component={ObservationInitialNotification} />
+        <Route exact path="/app/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
+        <Route path="/app/observation-observation-view" component={ObservationInitialNotificationView} />
+        <Route path="/app/prints/:id" component={Prints} />
 
         {/* Aha Routes */}
 

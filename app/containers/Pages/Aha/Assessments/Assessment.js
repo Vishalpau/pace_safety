@@ -30,7 +30,7 @@ import Link from "@material-ui/core/Link";
 import Divider from "@material-ui/core/Divider";
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
-import ActionTracker from "./ActionTracker";
+import ActionTracker from "../ActionTracker";
 import { CircularProgress } from '@material-ui/core';
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
@@ -357,7 +357,7 @@ const Assessment = () => {
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
     }
     ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
-
+    delete ahaform['ahaAssessmentAttachment']
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
       ahaform

@@ -300,14 +300,14 @@ const ObservationInitialNotificationUpdate = () => {
       if (res1.status === 200) {
         await localStorage.setItem("update", "Done");
         history.push(
-          `/app/pages/observation-Summary/${id}`
+          `/app/observation/details/${id}`
         );
       }
     } 
   };
 
   const handleClose = async () => {
-    history.push(`/app/pages/observation-Summary/${id}`)
+    history.push(`/app/observation-Summary/${id}`)
     await localStorage.setItem("update", "Done");
   }
 

@@ -215,7 +215,7 @@ function ObservationCorrectiveAction() {
       localStorage.setItem('updateAction', "Done")
       localStorage.setItem("action" , "Done")
       history.push(
-        `/app/pages/observation-Summary/${localStorage.getItem(
+        `/app/observation/details/${localStorage.getItem(
           "fkobservationId"
         )}`
       );

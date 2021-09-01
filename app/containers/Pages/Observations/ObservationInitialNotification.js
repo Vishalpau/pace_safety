@@ -491,7 +491,7 @@ const ObservationInitialNotification = () => {
 
     }
 
-    history.push(`/app/pages/observation-Summary/${localStorage.getItem("fkobservationId")}`);
+    history.push(`/app/observation/details/${localStorage.getItem("fkobservationId")}`);
   };
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
@@ -1374,7 +1374,7 @@ const ObservationInitialNotification = () => {
                 size="medium"
                 className={classes.custmCancelBtn}
                 onClick={() => {
-                  history.push("/app/pages/observations");
+                  history.push("/app/observations");
                 }}
               >
                 CANCEL

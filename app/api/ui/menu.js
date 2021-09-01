@@ -875,7 +875,7 @@ module.exports = [
     key: "observations",
     name: "Observations",
     icon: 'ion-md-eye',
-    linkParent: '/app/pages/Observations',
+    linkParent: '/app/observations',
   },
   {
 

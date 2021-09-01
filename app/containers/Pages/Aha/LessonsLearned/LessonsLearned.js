@@ -14,6 +14,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import api from "../../../../utils/axios";
+import { useParams, useHistory } from "react-router";
+
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -98,6 +101,41 @@ const useStyles = makeStyles((theme) => ({
 
 const LessonsLearned = () => {
 
+  const [form, setForm] = useState({})
+  const [user, setUser] = useState({ name: "", badgeNumber: "" })
+  const history = useHistory()
+  const handelJobDetails = async () => {
+    // const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
+    const apiData = res.data.data.results
+
+    apiData["lessonLearntUserName"] = name
+    let user = JSON.parse(localStorage.getItem("userDetails"))
+    let name = user.id
+    setForm(apiData)
+  }
+
+  const handelUserName = () => {
+    let user = JSON.parse(localStorage.getItem("userDetails"))
+    setUser({ ...user, name: user.name, badgeNumber: user.badgeNo })
+  }
+
+  const radioDecide = ["Yes", "No"]
+
+  const handelSubmit = async () => {
+    delete form["ahaAssessmentAttachment"]
+    form["lessonLearntUserName"] = user.name
+    const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
+    history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
+  }
+
+  // const classes = useStyles();
+
+  useEffect(() => {
+    handelJobDetails()
+    handelUserName()
+  }, [])
+
   const classes = useStyles();
   return (
     <>
@@ -118,12 +156,133 @@ const LessonsLearned = () => {
                         <FormControl component="fieldset">
                             <FormLabel component="legend" className={classes.labelName}>Are there any lessons learned?</FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
-                            <FormControlLabel value="yes" className={classes.labelValue} control={<Radio />} label="Yes" />
-                            <FormControlLabel value="no" className={classes.labelValue} control={<Radio />} label="No" />
+                            {radioDecide.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            className={classes.labelValue}
+                            control={<Radio />}
+                            label={value}
+                            checked={form.anyLessonsLearnt == value}
+                            onChange={(e) =>
+                              setForm({ ...form, anyLessonsLearnt: e.target.value })
+                            }
+                          />
+                        ))}
+                           
                             </RadioGroup>
                         </FormControl>
                     </Grid>
-                    <Grid
+                    {form.anyLessonsLearnt == "Yes" ?
+                    <>
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                        className={classes.formBox}
+                      >
+                        <Typography variant="h6" className={classes.fildTitle}>
+                          Work Completion and Lessons Learned Discussion
+                        </Typography>
+
+                        <List margin="dense">
+                          <ListItem>
+                            <ListItemText
+                              primary="1. What, where and when?"
+                              className={classes.fildLableTitle}
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="2. How could the job have been improved?"
+                              className={classes.fildLableTitle}
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="3. Lessons Learned"
+                              className={classes.fildLableTitle}
+                            />
+                          </ListItem>
+                        </List>
+                      </Grid>
+
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                        className={classes.formBox}
+                      >
+                        <TextField
+                          label="Lessons Learned"
+                          margin="dense"
+                          name="lessonslearned"
+                          id="lessonslearned"
+                          multiline
+                          rows={4}
+                          defaultValue={form.lessonLearntDetails || ""}
+                          fullWidth
+                          variant="outlined"
+                          className={classes.formControl}
+                          onChange={(e) => setForm({ ...form, lessonLearntDetails: e.target.value })}
+                        />
+                      </Grid>
+
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                        margin="dense"
+                        className={classes.formLablBox}
+                      >
+                        <Typography variant="h6" className={classes.fildTitle}>Work Responsible Person (WRP)</Typography>
+                      </Grid>
+
+                      <Grid
+                        item
+                        md={6}
+                        xs={12}
+                        className={classes.formBox}
+                        margin="dense"
+                      >
+                      <TextField
+                            label="Name"
+                            margin="dense"
+                            name="name"
+                            id="name"
+                            // defaultValue=""
+                            fullWidth
+                            disabled
+                            variant="outlined"
+                            value={user.name}
+                            className={classes.formControl}
+                        />
+                        {/* <Typography className={classes.labelValue}>
+                          {user.name} {user.badgeNumber}
+                        </Typography> */}
+                      </Grid>
+                      <Grid
+                    item
+                    md={6}
+                    xs={12}
+                    className={classes.formBox}
+                    margin="dense"
+                    >
+                        <TextField
+                            label="Badge number"
+                            margin="dense"
+                            name="badgenumber"
+                            id="badgenumber"
+                            disabled
+                            // defaultValue=""
+                            value={user.badgeNumber}
+                            fullWidth
+                            variant="outlined"
+                            className={classes.formControl}
+                        />
+                    </Grid> 
+                    </>
+                    : null}
+                    {/* <Grid
                     item
                     md={12}
                     xs={12}
@@ -171,6 +330,7 @@ const LessonsLearned = () => {
                             fullWidth
                             variant="outlined"
                             className={classes.formControl}
+                            onChange={(e) => setForm({ ...form, lessonLearntDetails: e.target.value })}
                         />
                     </Grid>
                     <Grid
@@ -217,7 +377,7 @@ const LessonsLearned = () => {
                             variant="outlined"
                             className={classes.formControl}
                         />
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Grid>
 
@@ -226,7 +386,9 @@ const LessonsLearned = () => {
             md={12}
             xs={12}
             >
-                <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
+                <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
+                              onClick={(e) => handelSubmit()}
+>Submit</Button>
             </Grid>
         </Grid>
     </PapperBlock>

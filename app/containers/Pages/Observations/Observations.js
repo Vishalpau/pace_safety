@@ -160,10 +160,13 @@ function Observations(props) {
 
   const handelView = (e) => {
     setListToggle(false);
+    history.push(`/app/observations`)
+
   };
 
   const handelViewTabel = (e) => {
     setListToggle(true);
+    history.push(`/app/observations#table`)
   };
 
   const handlePush = async () => {
@@ -182,7 +185,7 @@ function Observations(props) {
         localStorage.removeItem('action')
       }
     history.push(
-      `/app/pages/observation-Summary/${id}`
+      `/app/observation/details/${id}`
     );
     
     
@@ -201,7 +204,7 @@ function Observations(props) {
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action")
     history.push(
-      '/app/pages/observation-initial-notification'
+      '/app/observation-initial-notification'
     );
   };
 
@@ -252,7 +255,7 @@ function Observations(props) {
     localStorage.setItem('fkobservationId', id)
     //console.log("Ashutosh")
     history.push(
-      `/app/pages/prints/${id}`
+      `/app/prints/${id}`
     );
   };
 
@@ -315,6 +318,11 @@ function Observations(props) {
 
     }
   }
+  const handleSearch = (e)=> {
+    // console.log(e.target.value)
+    setSeacrhIncident(e.target.value)
+    // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
+  }
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation()
@@ -345,7 +353,7 @@ function Observations(props) {
                         
                       }}
                       inputProps={{ 'aria-label': 'search' }}
-                      onChange={(e) => setSeacrhIncident(e.target.value)}
+                      onChange={(e) => handleSearch(e)}
                     />
                   </Paper>
                   <div className="toggleViewButtons">

@@ -98,6 +98,8 @@ const ObservationSummary = () => {
   const [observationInitialNotification, setObservationInitialNotification] = useState(true);
   const [observationCorrectiveAction, setObservationCorrectiveAction] = useState(false);
   const [observationCorrectiveActionView, setObservationCorrectiveActionView] = useState(false);
+  const { id } = useParams();
+  const history = useHistory();
   // const [observationCloseOut, setObservationCloseOut] = useState(false);
   // const [observationReview, setObservationReview] = useState(false);
 
@@ -115,6 +117,7 @@ const ObservationSummary = () => {
     setObservationInitialNotificationUpdate(false);
     setObservationCorrectiveActionView(false);
     setObservationInitialNotification(false)
+    history.push(`/app/observation/details/${id}#action-taking`)
   }
 
   // const handlePushUpdateInitialNotification = async () => {
@@ -122,9 +125,10 @@ const ObservationSummary = () => {
   //     '/app/pages/observation-initial-notification'
   //   );
   // };
-
-  const { id } = useParams();
-  const history = useHistory();
+  // if(observationInitialNotification == true) {
+  //   history.push(`/app/observation/details/${id}`)
+  // }
+  
   const [initialData , setInitialData] = useState({}); 
   if (id) {
     localStorage.setItem('fkobservationId', id);
@@ -154,7 +158,7 @@ const ObservationSummary = () => {
   const handlePrintPush = async () => {
     //console.log("Ashutosh")
     history.push(
-      `/app/pages/prints/${id}`
+      `/app/prints/${id}`
     );
   };
 
