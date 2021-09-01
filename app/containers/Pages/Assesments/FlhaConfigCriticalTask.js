@@ -368,9 +368,12 @@ const FlhaDetails = () => {
 
   const [task, setTask] = React.useState([]);
   React.useEffect(() => {
-    let jobIdName = document.URL.split('/')
-    setTaskName(jobIdName[jobIdName.length - 1])
 
+    let jobIdName = document.URL.split('/')
+    localStorage.setItem('fkJobId', jobIdName[jobIdName.length-1]);
+
+    setTaskName(jobIdName[jobIdName.length - 1])
+    console.log()
     criticalApiHandler();
   }, []);
 
@@ -595,7 +598,9 @@ const FlhaDetails = () => {
     page: 0,
   };
 
-
+  function dataHandler(data) {
+    console.log("data ",data)
+  }
   return (
     <div>
       <PapperBlock title={`Job Title - ${taskName}`} icon="ion-ios-create-outline" desc="" color="primary" >
@@ -613,7 +618,7 @@ const FlhaDetails = () => {
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                <FlhaConfigCriticalTaskAdd />
+                <FlhaConfigCriticalTaskAdd dataHandler={(data) => dataHandler(data)}/>
               </DialogContentText>
             </DialogContent>
             <DialogActions>

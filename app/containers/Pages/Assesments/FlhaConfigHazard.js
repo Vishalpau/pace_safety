@@ -77,7 +77,7 @@ import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import zIndex from '@material-ui/core/styles/zIndex';
 import { AlternateEmail } from '@material-ui/icons';
-import FlhaConfigHazard from './FlhaConfigHazard';
+import FlhaEditHazard from './FlhaEditHazard';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -401,6 +401,8 @@ const ConfigHazard = () => {
   const [hazardList, setHazardList] = React.useState([]);
   React.useEffect(() => {
     let jobIdName = document.URL.split('/')
+    localStorage.setItem('critcalTaskId', jobIdName[jobIdName.length-1]);
+
     setCriticalName(jobIdName[jobIdName.length - 1])
     hazardApiHandler();
   }, []);
@@ -414,17 +416,13 @@ const ConfigHazard = () => {
   //for image 
   const [fileName, setFilename] = React.useState("")
 
-  const [imageFile, setImageFiles] = React.useState({});
-
-
-
   function handleNewFileUpload(files, payloadType, index) {
+    console.log(files , "uploasdig")
     let hazrdformPayload = JSON.parse(JSON.stringify(hazardForm));
     hazrdformPayload[index][payloadType] = files[0];
     setHazardForm(hazrdformPayload);
+    setFilename(files[0].name)
   }
-
-  console.log(hazardForm, "vishal")
 
   //for status
   const initialState = {
@@ -484,23 +482,24 @@ const ConfigHazard = () => {
   const handelSubmit = async () => {
     const fkTaskId = localStorage.getItem('critcalTaskId')
     let formData = new FormData();    //formdata object
-    hazardForm.map(async (item, index) => {
+    // hazardForm.map(async (item, index) => {
 
       formData.append('fkCompanyId', JSON.parse(localStorage.getItem("company")).fkCompanyId);
       formData.append('fkProjectId', JSON.parse(localStorage.getItem("projectName")).projectName.projectId);
       formData.append('createdBy', JSON.parse(localStorage.getItem("userDetails")).id);
-      formData.append('hazard', item.hazard);
-      formData.append('hazardImage', item.hazardImage);
+      formData.append('hazard', hazardForm[0].hazard);
+      formData.append('hazardImage', hazardForm[0].hazardImage);
       formData.append('fkTaskId', fkTaskId)
 
       let res = await api.post(`api/v1/configflhas/criticaltasks/${fkTaskId}/hazards/`, formData);
+      setHazardForm([{
+        hazardImage : "",
+        hazard : ""
+      }]);
+      setFilename('')
       hazardApiHandler()
+    // })
 
-    })
-    setHazardForm([{
-      hazard: "",
-      hazardImage: ""
-    }]);
   };
 
   //for status
@@ -682,7 +681,7 @@ const ConfigHazard = () => {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  <FlhaConfigHazard />
+                  <FlhaEditHazard />
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -716,7 +715,6 @@ const ConfigHazard = () => {
               <Grid container spacing={3} className={classes.mttopThirty}>
                 {
                   hazardForm && hazardForm.length > 0 && hazardForm.map((val, index) => {
-
                     return <>
                       <Grid item md={5} sm={5} xs={12}>
                         <TextField
@@ -726,7 +724,7 @@ const ConfigHazard = () => {
                           rows="1"
                           label="Hazard"
                           className={classes.fullWidth}
-                          value={hazardForm.hazard}
+                          value={val.hazard}
                           // onChange={(e) => setCriticalForm({...criticalForm, hazard:e.target.value},index)}
 
                           onChange={(e) => payloadHandler(e, "hazard", index)}
@@ -743,7 +741,8 @@ const ConfigHazard = () => {
                         <Dropzone className="dropzone" onDrop={(file) => (handleNewFileUpload(file, "hazardImage", index))}  >
                           {({ getRootProps, getInputProps }) => (
                             <div className="block-dropzone" {...getRootProps()}>
-                              <input style={{ display: "block!important" }} onChange={(file) => handleNewFileUpload(file, "hazardImage", index)} {...getInputProps()} />
+                              <input id="data" style={{ display: "block!important" }} onChange={(file) => handleNewFileUpload(file, "hazardImage", index)} {...getInputProps()} />
+                              <span to="data">Upload</span>
                               <p>{fileName ? fileName : ""}</p>
                             </div>
                           )}
@@ -772,10 +771,8 @@ const ConfigHazard = () => {
                         </Grid>
                       ) : null}
                     </>
-
                   })
                 }
-
 
                 <Grid item md={12} sm={12} xs={12}>
                   <Button

@@ -39,10 +39,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import IconButton from '@material-ui/core/IconButton';
-import pledgebanner from 'dan-images/pledgebanner.jpg';
+import pledgebanner from 'dan-images/pledgebanner.png';
 import biologicalHazard from 'dan-images/biologicalHazard.png';
 import chemicalHazard from 'dan-images/chemicalHazard.png';
-import project from 'dan-images/project.jpg';
+import projectpj from 'dan-images/projectpj.png';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -89,10 +89,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: '.2rem 0',
     boxShadow: 'inset 0px 0px 9px #dedede',
-    '& td textHeight': {
-      padding: '2.5px 5px',
-      borderRadius: '8px',
-    },
+	'& td textHeight': {
+		padding: '2.5px 5px',
+    	borderRadius: '8px',
+	  },
   },
   spacer: {
     padding: '5px 0',
@@ -116,137 +116,6 @@ const useStyles = makeStyles((theme) => ({
       padding: '11px 12px',
     },
   },
-  jobTitle: {
-    '& .MuiDialogTitle-root': {
-      marginBottom: '5px !important',
-    },
-  },
-  ptopTwenty: {
-    '& span': {
-      paddingTop: '15px',
-    }
-  },
-  radioInline: {
-    flexDirection: 'row',
-  },
-  mrTen: {
-    marginRight: '15px',
-    width: '98%',
-    boxShadow: 'inset 0px 0px 9px #dedede',
-    '& .MuiFormControl-fullWidth': {
-      boxShadow: 'inset 0px 0px 9px #dedede',
-    },
-  },
-  borderCategory: {
-    borderLeft: '2px solid #06425c',
-  },
-  formBox: {
-    '& .dropzone': {
-      flex: '1',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      padding: '6px 10px',
-      borderWidth: '2px',
-      borderRadius: '2px',
-      borderColor: '#06425c',
-      borderStyle: 'dashed',
-      backgroundColor: '#fafafa',
-      color: '#bdbdbd',
-      outline: 'none',
-      transition: 'border .24s ease-in-out',
-      marginTop: '10px',
-      cursor: 'pointer',
-    },
-  },
-  popUpButton: {
-    paddingRight: "5px",
-    marginLeft: "16px",
-    '& .MuiDialogActions-root, img': {
-      justifyContent: 'flex-start',
-    },
-  },
-
-  spacerRight: {
-    marginRight: '.75rem',
-  },
-  mToptewnty: {
-    marginTop: '.75rem',
-  },
-  radioInline: {
-    flexDirection: 'row',
-  },
-  tableRowColor: {
-    backgroundColor: '#ffffff',
-  },
-  mttopThirty: {
-    paddingTop: '30px',
-  },
-  mttoptenn: {
-    marginTop: '10px',
-  },
-  mttopEight: {
-    marginTop: '8px',
-    marginLeft: '10px',
-  },
-  ratioColorgreen: {
-    backgroundColor: 'green',
-    padding: '16px!important',
-    height: '70%',
-    marginTop: '12px',
-    borderRadius: '5px',
-    color: '#ffffff'
-  },
-  ratioColorred: {
-    backgroundColor: 'red',
-    padding: '16px!important',
-    height: '70%',
-    marginTop: '12px',
-    borderRadius: '5px',
-    color: '#ffffff'
-  },
-  ratioColororange: {
-    backgroundColor: 'orange',
-    padding: '16px!important',
-    height: '70%',
-    marginTop: '12px',
-    borderRadius: '5px',
-    color: '#ffffff'
-  },
-  mttopBottomThirty: {
-    marginTop: '30px',
-    marginBottom: '30px',
-  },
-  mttopTen: {
-    paddingTop: '10px',
-  },
-  mttopSix: {
-    paddingTop: '6px',
-  },
-  curserPointer: {
-    cursor: 'Pointer',
-    textDecoration: 'underline',
-  },
-  paddZero: {
-    paddingLeft: '0px',
-    paddingRight: '0px',
-  },
-  tableHeading: {
-    '& tr th': {
-      backgroundColor: '#06425c',
-      color: '#ffffff',
-      lineHeight: '0.5rem',
-    },
-  },
-  headerBackground: {
-    backgroundColor: '#ffffff',
-    color: '#06425c',
-  },
-  pTopandRight: {
-    paddingLeft: '20px',
-    paddingRight: '20px',
-    marginTop: '13px',
-  },
   mbThirty: {
     marginBottom: '30px',
   },
@@ -258,36 +127,13 @@ const useStyles = makeStyles((theme) => ({
   },
   widthSelect: {
     minWidth: '170px',
-    height: '58px',
+	  height: '58px',
     borderRadius: '4px',
   },
   divider: {
-    margin: '15px 15px',
+	  margin: '15px 15px',
     width: '97.4%',
     boxShadow: '1px 2px 10px #d4d4d4',
-  },
-  table: {
-    minWidth: '100%',
-    width: '100%',
-  },
-  plTen: {
-    paddingLeft: '3px;',
-    height: '18px;',
-  },
-  plFive: {
-    paddingLeft: '5px;',
-    height: '22px;',
-  },
-  createHazardbox: {
-    margin: '0px 0px 10px 0px',
-  },
-  createHazardboxRight: {
-    paddingLeft: '5px',
-    float: 'right',
-    margin: '0px 16px 20px 20px',
-  },
-  mLeft: {
-    marginLeft: '10px',
   },
   mRight: {
     minHeight: '30px',
@@ -299,22 +145,29 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px;',
     fontFamily: 'Open Sans,sans-serif',
     fontWeight: '400;',
+  },  
+  mToptewntySixteen: {
+    marginTop: '16px',
+  },
+  heightDate: {
+    '& .MuiInput-root': {
+      height: '54px',
+      boxShadow: 'inset 0px 0px 9px #dedede',
+   },
   },
 }));
-const FlhaDetails = (props) => {
+const ConfigHazard = () => {
   const classes = useStyles();
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
   });
-  const [payload , setPayload] = React.useState({
-    taskIdentification : ""
-  })
+
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
+ 
+ const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -323,55 +176,37 @@ const FlhaDetails = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+//   Data for the table view
 
-  const fieldHandler=(e) => {
-    console.log("Value  ", e.target.value , e.target.id)
-    setPayload({
-      ...payload,
-     [e.target.id] : e.target.value
-    })
-  }
-
-  React.useEffect(() => {
-    console.log("payload " , payload ) ;
-    props.dataHandler(payload)
-  },[payload])
   return (
     <div>
-      <Paper elevation={3}>
-        <Box padding={3}>
-          <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item sm={12} xs={12}>
-                <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  id = "taskIdentification"
-                  label="Task identification"
-                  className={classes.fullWidth}
-                  onChange = {fieldHandler}
-                />
-              </Grid>
-              <Grid item sm={12} xs={12}>
-                <Grid item sm={12} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Control"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Box>
-      </Paper>
+        <Paper elevation={3}>
+			<Box padding={3}>
+                  <Grid item xs={12}>
+					<Grid container spacing={3}>
+						<Grid item md={8} sm={8} xs={12}>
+						  <TextField
+							variant="outlined"
+							id="immediate-actions"
+							multiline
+							rows="1"
+							label="Hazard"
+							className={classes.fullWidth}
+						  />
+						</Grid>
+						
+						<Grid item md={4} sm={4} xs={12}>
+						  <img src={projectpj} height={58} alt="" className={classes.mttopSix} />
+						</Grid>
+						<Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
+							<input accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
+						</Grid> 
+					</Grid>
+				</Grid>
+            </Box>
+        </Paper>
     </div>
   );
 };
 
-export default FlhaDetails;
+export default ConfigHazard;
