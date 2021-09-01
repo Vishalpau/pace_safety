@@ -114,7 +114,7 @@ const Summary = (props) => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
-  const [isComments,setIsComments] = useState(false);
+  const [isComments, setIsComments] = useState(false);
   const [isActivityHistory, setActivityHistory] = useState(false)
 
   const [formStatus, setFormStatus] = useState({
@@ -581,24 +581,24 @@ const Summary = (props) => {
       handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
     }
   }
-  const handleActivityHistory=()=>{
+  const handleActivityHistory = () => {
     setActivityHistory(true);
     setIsComments(false);
     setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false); 
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
   }
-  const handleComments=()=>{
+  const handleComments = () => {
     setActivityHistory(false);
     setIsComments(true);
     setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false);
-  
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
+
   }
 
   useEffect(() => {
@@ -621,168 +621,168 @@ const Summary = (props) => {
           title={`Incident Number: ${incidents.incidentNumber}`}
           icon="ion-md-list-box"
         >
-          {isComments || isActivityHistory?null:<>
-          <Box paddingBottom={1}>
-            <div className={Styles.incidents}>
-              {/* initital notificatin */}
-              <div className={Styles.item}>
-                <Button
-                  color={props.viewMode.viewMode.initialNotification ? "secondary" : "primary"}
-                  variant="contained"
-                  size="large"
-                  variant={
-                    initialNoticeficationStatus ? "contained" : "outlined"
-                  }
-                  endIcon={
-                    initialNoticeficationStatus ? (
-                      <CheckCircle />
-                    ) : (
-                      <AccessTime />
-                    )
-                  }
-                  className={classes.statusButton}
-                  onClick={(e) => {
-                    handleInitialNotificationView()
-                  }}
-                >
-                  Initial Notification
-                </Button>
-                <Typography className={Fonts.labelValue} display="block">
-                  {initialNoticeficationStatus ? "Done" : "Pending"}
-                </Typography>
-              </div>
+          {isComments || isActivityHistory ? null : <>
+            <Box paddingBottom={1}>
+              <div className={Styles.incidents}>
+                {/* initital notificatin */}
+                <div className={Styles.item}>
+                  <Button
+                    color={props.viewMode.viewMode.initialNotification ? "secondary" : "primary"}
+                    variant="contained"
+                    size="large"
+                    variant={
+                      initialNoticeficationStatus ? "contained" : "outlined"
+                    }
+                    endIcon={
+                      initialNoticeficationStatus ? (
+                        <CheckCircle />
+                      ) : (
+                        <AccessTime />
+                      )
+                    }
+                    className={classes.statusButton}
+                    onClick={(e) => {
+                      handleInitialNotificationView()
+                    }}
+                  >
+                    Initial Notification
+                  </Button>
+                  <Typography className={Fonts.labelValue} display="block">
+                    {initialNoticeficationStatus ? "Done" : "Pending"}
+                  </Typography>
+                </div>
 
-              {/* investigation */}
-              <div className={Styles.item}>
-                <Button
-                  color={props.viewMode.viewMode.investigation == true ? "secondary" : "primary"}
-                  variant="outlined"
-                  size="large"
-                  variant={investigationOverview ? "contained" : "outlined"}
-                  endIcon={
-                    investigationOverview ? <CheckCircle /> : <AccessTime />
-                  }
-                  className={classes.statusButton}
-                  onClick={(e) => handelInvestigationView()}
-                >
-                  Investigation
-                </Button>
-                <Typography className={Fonts.labelValue} display="block">
-                  {investigationOverview ? "Done" : "Pending"}
-                </Typography>
-              </div>
+                {/* investigation */}
+                <div className={Styles.item}>
+                  <Button
+                    color={props.viewMode.viewMode.investigation == true ? "secondary" : "primary"}
+                    variant="outlined"
+                    size="large"
+                    variant={investigationOverview ? "contained" : "outlined"}
+                    endIcon={
+                      investigationOverview ? <CheckCircle /> : <AccessTime />
+                    }
+                    className={classes.statusButton}
+                    onClick={(e) => handelInvestigationView()}
+                  >
+                    Investigation
+                  </Button>
+                  <Typography className={Fonts.labelValue} display="block">
+                    {investigationOverview ? "Done" : "Pending"}
+                  </Typography>
+                </div>
 
-              <div className={Styles.item}>
-                <Button
-                  color={props.viewMode.viewMode.evidence == true ? "secondary" : "primary"}
-                  variant={evidencesData ? "contained" : "outlined"}
-                  size="large"
-                  className={classes.statusButton}
-                  endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
-                  onClick={(e) => handelEvidenceView(e)}
-                >
-                  Evidence
-                </Button>
-                <Typography className={Fonts.labelValue} display="block">
-                  {evidencesData ? "Done" : "Pending"}
-                </Typography>
+                <div className={Styles.item}>
+                  <Button
+                    color={props.viewMode.viewMode.evidence == true ? "secondary" : "primary"}
+                    variant={evidencesData ? "contained" : "outlined"}
+                    size="large"
+                    className={classes.statusButton}
+                    endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
+                    onClick={(e) => handelEvidenceView(e)}
+                  >
+                    Evidence
+                  </Button>
+                  <Typography className={Fonts.labelValue} display="block">
+                    {evidencesData ? "Done" : "Pending"}
+                  </Typography>
+                </div>
+                <div className={Styles.item}>
+                  <Button
+                    color={props.viewMode.viewMode.rootcauseanalysis == true ? "secondary" : "primary"}
+                    variant={
+                      paceCauseData || rootCausesData || whyData
+                        ? "contained"
+                        : "outlined"
+                    }
+                    size="large"
+                    className={classes.statusButton}
+                    endIcon={
+                      paceCauseData || rootCausesData || whyData ? (
+                        <CheckCircle />
+                      ) : (
+                        <AccessTime />
+                      )
+                    }
+                    onClick={(e) => handelRootCauseAnalysisView()}
+                  >
+                    Root Cause & Analysis
+                  </Button>
+                  <Typography className={Fonts.labelValue} display="block">
+                    {paceCauseData || rootCausesData || whyData
+                      ? "Done"
+                      : "Pending"}
+                  </Typography>
+                </div>
+                <div className={Styles.item}>
+                  <Button
+                    color={props.viewMode.viewMode.closeout == true ? "secondary" : "primary"}
+                    variant={closeout ? "contained" : "outlined"}
+                    size="large"
+                    className={classes.statusButton}
+                    endIcon={closeout ? <CheckCircle /> : <AccessTime />}
+                    onClick={(e) => handleCloseOutOverView()
+                    }
+                  >
+                    Close out
+                  </Button>
+                  <Typography className={Fonts.labelValue} display="block">
+                    {closeout ? "Done" : "Pending"}
+                  </Typography>
+                </div>
+                <div className={Styles.item}>
+                  <Button
+                    color={props.viewMode.viewMode.lessionlearn == true ? "secondary" : "primary"}
+                    variant={lessionlearnData ? "contained" : "outlined"}
+                    size="large"
+                    className={classes.statusButton}
+                    endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
+                    onClick={(e) => handelLessionLearnedView()}
+                  >
+                    Lessons Learnt
+                  </Button>
+                  <Typography className={Fonts.labelValue} display="block">
+                    {lessionlearnData ? "Done" : "Pending"}
+                  </Typography>
+                </div>
               </div>
-              <div className={Styles.item}>
-                <Button
-                  color={props.viewMode.viewMode.rootcauseanalysis == true ? "secondary" : "primary"}
-                  variant={
-                    paceCauseData || rootCausesData || whyData
-                      ? "contained"
-                      : "outlined"
-                  }
-                  size="large"
-                  className={classes.statusButton}
-                  endIcon={
-                    paceCauseData || rootCausesData || whyData ? (
-                      <CheckCircle />
-                    ) : (
-                      <AccessTime />
-                    )
-                  }
-                  onClick={(e) => handelRootCauseAnalysisView()}
-                >
-                  Root Cause & Analysis
-                </Button>
-                <Typography className={Fonts.labelValue} display="block">
-                  {paceCauseData || rootCausesData || whyData
-                    ? "Done"
-                    : "Pending"}
-                </Typography>
-              </div>
-              <div className={Styles.item}>
-                <Button
-                  color={props.viewMode.viewMode.closeout == true ? "secondary" : "primary"}
-                  variant={closeout ? "contained" : "outlined"}
-                  size="large"
-                  className={classes.statusButton}
-                  endIcon={closeout ? <CheckCircle /> : <AccessTime />}
-                  onClick={(e) => handleCloseOutOverView()
-                  }
-                >
-                  Close out
-                </Button>
-                <Typography className={Fonts.labelValue} display="block">
-                  {closeout ? "Done" : "Pending"}
-                </Typography>
-              </div>
-              <div className={Styles.item}>
-                <Button
-                  color={props.viewMode.viewMode.lessionlearn == true ? "secondary" : "primary"}
-                  variant={lessionlearnData ? "contained" : "outlined"}
-                  size="large"
-                  className={classes.statusButton}
-                  endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
-                  onClick={(e) => handelLessionLearnedView()}
-                >
-                  Lessons Learnt
-                </Button>
-                <Typography className={Fonts.labelValue} display="block">
-                  {lessionlearnData ? "Done" : "Pending"}
-                </Typography>
-              </div>
-            </div>
-          </Box>
-         
-          <Divider /></>}
+            </Box>
+
+            <Divider /></>}
 
           <Box marginTop={4}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={9}>
                 {/* summary and part */}
                 {
-                isActivityHistory?<AhaSummary/>:
-                isComments?<Comments/>:
-                <>
-                  {(() => {
-                    if (
-                      props.viewMode.viewMode.initialNotification == true
-                    ) {
-                      return <IncidentDetailsSummary />;
-                    }
-                    if (props.viewMode.viewMode.investigation == true) {
-                      return <InvestigationSummary />;
-                    }
-                    if (props.viewMode.viewMode.evidence == true) {
-                      return <EvidenceSummary />;
-                    }
-                    if (props.viewMode.viewMode.rootcauseanalysis == true) {
-                      return <RootCauseAnalysisSummary />;
-                    }
-                    if (props.viewMode.viewMode.closeout == true) {
-                      return <CloseOut />;
-                    }
-                    if (props.viewMode.viewMode.lessionlearn == true) {
-                      return <LessionLearnSummary />;
-                    }
-                  })()}
-                </>
-}
-             </Grid>
+                  isActivityHistory ? <AhaSummary /> :
+                    isComments ? <Comments /> :
+                      <>
+                        {(() => {
+                          if (
+                            props.viewMode.viewMode.initialNotification == true
+                          ) {
+                            return <IncidentDetailsSummary />;
+                          }
+                          if (props.viewMode.viewMode.investigation == true) {
+                            return <InvestigationSummary />;
+                          }
+                          if (props.viewMode.viewMode.evidence == true) {
+                            return <EvidenceSummary />;
+                          }
+                          if (props.viewMode.viewMode.rootcauseanalysis == true) {
+                            return <RootCauseAnalysisSummary />;
+                          }
+                          if (props.viewMode.viewMode.closeout == true) {
+                            return <CloseOut />;
+                          }
+                          if (props.viewMode.viewMode.lessionlearn == true) {
+                            return <LessionLearnSummary />;
+                          }
+                        })()}
+                      </>
+                }
+              </Grid>
 
 
               {/* side bar    */}
@@ -903,16 +903,16 @@ const Summary = (props) => {
                         <ListItemText primary="Close Out" />
                       </ListItem>
 
-                      <ListItem 
-                      onClick={(e)=>handleComments()}
-                      button>
+                      <ListItem
+                        onClick={(e) => handleComments()}
+                        button>
                         <ListItemIcon>
                           <Comment />
                         </ListItemIcon>
                         <ListItemText primary="Comments" />
                       </ListItem>
 
-                      <ListItem button onClick={()=> handleActivityHistory()}>
+                      <ListItem button onClick={() => handleActivityHistory()}>
                         <ListItemIcon>
                           <History />
                         </ListItemIcon>

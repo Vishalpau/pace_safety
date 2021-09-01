@@ -153,6 +153,7 @@ import {
   JhaLessonsLearned,
   JhaApprovals,
   Comments,
+  JhaCloseOut,
 } from "../pageListAsync";
 
 
@@ -551,6 +552,7 @@ function Application(props) {
         <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />
         <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
         <Route path="/app/pages/jha/lessons-learned/lessons-learned" component={JhaLessonsLearned} />
+        <Route path="/app/pages/jha/close-out" component={JhaCloseOut} />
 
         <Route path="/app/pages/jha/assessments/project-details/:id" exact component={JhaJobDetails} />
         <Route path="/app/pages/jha/assessments/project-area-hazards/:id" exact component={JhaProjectAreaHazards} />

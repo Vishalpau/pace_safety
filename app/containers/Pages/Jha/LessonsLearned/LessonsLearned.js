@@ -129,6 +129,9 @@ const LessonsLearned = () => {
 
   const handelSubmit = async () => {
     delete form["jhaAssessmentAttachment"]
+    if (form["anyLessonsLearnt"] == null) {
+      form["anyLessonsLearnt"] = ""
+    }
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
     history.push(SUMMARY_FORM["Summary"])
   }

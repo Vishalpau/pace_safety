@@ -125,8 +125,11 @@ const Approvals = () => {
 
   const handelSubmit = async () => {
     delete form["jhaAssessmentAttachment"]
+    if (form["wrpApprovalUser"] == null) {
+      form["wrpApprovalUser"] = ""
+    }
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-    // history.push(SUMMARY_FORM["Summary"])
+    history.push(SUMMARY_FORM["Summary"])
   }
 
   useEffect(() => {
