@@ -19,3 +19,7 @@ export const LESSION_LEARNED_FORM = {
 export const SUMMARY_FORM = {
     "Summary": `/app/pages/jha/jha-summary`
 }
+
+export const CLOSE_OUT_FORM = {
+    "Close out": `/app/pages/jha/close-out`
+}

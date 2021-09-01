@@ -140,30 +140,43 @@ const ILink = withStyles({
 
 function Jha() {
   const [cardView, setCardView] = useState(true);
-  const [allAHAData, setAllAHAData] = useState([])
+  const [allJHAData, setAllJHAData] = useState([])
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
+  const [data, setData] = useState([]);
 
   const fetchData = async () => {
     const res = await api.get("/api/v1/jhas/")
     const result = res.data.data.results.results
-    await setAllAHAData(result)
+    await setAllJHAData(result)
     localStorage.removeItem("fkJHAId")
+    handelTableView(result)
   }
 
   // Function to toggle the view mode
-  const handleView = () => setCardView(!cardView);
-
+  const handleView = () => {
+    setCardView(true)
+    history.push(`/app/pages/jha/all_jha/`)
+  };
+  const handleTabelView = () => {
+    setCardView(false)
+    history.push(`/app/pages/jha/all_jha/_table`)
+  };
   //   Data for the table view
-  const columns = ['Name', 'Company', 'City', 'State'];
-
-  const data = [
-    ['Joe James', 'Test Corp', 'Yonkers', 'NY'],
-    ['John Walsh', 'Test Corp', 'Hartford', 'CT'],
-    ['Bob Herm', 'Test Corp', 'Tampa', 'FL'],
-    ['James Houston', 'Test Corp', 'Dallas', 'TX'],
-  ];
+  const columns = ['Jha number', 'Location', 'Created by', 'Created on'];
+  const handelTableView = (result) => {
+    const temp = []
+    result.map((value) => {
+      temp.push([
+        value.jhaNumber,
+        value.location,
+        value.createdBy,
+        value.createdAt
+      ])
+    })
+    setData(temp)
+  }
 
   const options = {
     filterType: 'dropdown',
@@ -173,11 +186,10 @@ function Jha() {
     page: 0,
   };
 
-  const handleSummaryPush = async () => {
-
-    history.push(
-      "/app/pages/jha/jha-summary/"
-    );
+  const handleSummaryPush = async (e, index) => {
+    const jhaId = allJHAData[index].id
+    localStorage.setItem("fkJHAId", jhaId)
+    history.push(`/app/pages/jha/jha-summary/${jhaId}`);
   };
 
   const handleNewJhaPush = async () => {
@@ -199,19 +211,23 @@ function Jha() {
               <Grid item xs={7} md={3}>
                 <div className={classes.search}>
                   <Paper>
-                    <div className={classes.searchIcon}>
-                      <SearchIcon />
-                    </div>
-                    <InputBase
-                      placeholder="Search…"
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
+                    {cardView ?
+                      <>
+                        <div className={classes.searchIcon}>
+                          <SearchIcon />
+                        </div>
+                        <InputBase
+                          placeholder="Search…"
+                          classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
 
-                      }}
-                      onChange={(e) => setSeacrhIncident(e.target.value)}
+                          }}
+                          onChange={(e) => setSeacrhIncident(e.target.value)}
 
-                    />
+                        />
+                      </>
+                      : null}
                   </Paper>
                 </div>
               </Grid>
@@ -228,7 +244,7 @@ function Jha() {
                   <IconButton
                     aria-label="grid"
                     className={classes.filterIcon}
-                    onClick={handleView}
+                    onClick={handleTabelView}
                   >
                     <ViewAgendaIcon />
                   </IconButton>
@@ -253,7 +269,7 @@ function Jha() {
       </div>
 
       {cardView ? (<>
-        {allAHAData.length > 0 && Object.entries(allAHAData).filter((item) => item[1]["jhaNumber"].includes(searchIncident.toUpperCase()) ||
+        {allJHAData.length > 0 && Object.entries(allJHAData).filter((item) => item[1]["jhaNumber"].includes(searchIncident.toUpperCase()) ||
           item[1]["description"].toLowerCase().includes(
             searchIncident.toLowerCase()
           )).map((item, index) => (
@@ -286,7 +302,7 @@ function Jha() {
                         >
                           Number:
                           <Link
-                            onClick={(e) => handleSummaryPush(e)}
+                            onClick={(e) => handleSummaryPush(e, index)}
                             variant="subtitle2"
                             className={Fonts.listingLabelValue}
                             style={{

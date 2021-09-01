@@ -18,7 +18,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
+  DateTimePicker,
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker
 } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import DateFnsUtils from '@date-io/date-fns';
@@ -29,6 +33,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
 import { useParams, useHistory } from 'react-router';
 import moment from "moment";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
@@ -107,6 +112,9 @@ const useStyles = makeStyles((theme) => ({
       marginTop: '8px',
     },
   },
+  loader: {
+    marginLeft: "20px"
+  },
   // });
 }));
 
@@ -145,7 +153,7 @@ const JobDetails = () => {
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
       "workArea": "",
       "location": "",
-      "jhaAssessmentDate": "2021-08-20",
+      "jhaAssessmentDate": null,
       "permitToPerform": "",
       "permitNumber": "",
       "jhaNumber": "",
@@ -158,15 +166,6 @@ const JobDetails = () => {
       "supervisorName": "",
       "emergencyNumber": "",
       "evacuationAssemblyPoint": "",
-      "wrpApprovalUser": "",
-      "wrpApprovalDateTime": null,
-      "picApprovalUser": "",
-      "picApprovalDateTime": "2021-08-20T09:01:02.938Z",
-      "signedUser": "",
-      "signedDateTime": "2021-08-20T09:01:02.938Z",
-      "anyLessonsLearnt": "",
-      "lessonLearntDetails": "",
-      "lessonLearntUserName": "",
       "jhaStatus": "",
       "jhaStage": "",
       "badgeNumber": "",
@@ -180,6 +179,8 @@ const JobDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [error, setError] = useState({})
+  const [loading, setLoading] = useState(false)
+  const [submitLoader, setSubmitLoader] = useState(false)
   const radioDecide = ["Yes", "No"]
 
   // fecth jha data
@@ -236,11 +237,13 @@ const JobDetails = () => {
   ];
 
   const handleSubmit = async (e) => {
+    setSubmitLoader(true)
     // const { error, isValid } = JobDetailsValidate(form);
     // await setError(error);
     // if (!isValid) {
     //   return "Data is not valid";
     // }
+    delete form["jhaAssessmentAttachment"]
     if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
@@ -269,6 +272,7 @@ const JobDetails = () => {
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
       }
     }
+    setSubmitLoader(false)
   }
 
   const [Teamform, setTeamForm] = useState([{
@@ -395,23 +399,23 @@ const JobDetails = () => {
               className={classes.formBox}
             >
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDateTimePicker
+                <KeyboardDatePicker
                   className={classes.formControl}
                   fullWidth
-                  label="Date & Time*"
-                  value={form.wrpApprovalDateTime}
+                  id="jha_assessment_date"
+                  label="Date"
+                  format="MM/dd/yyyy"
+                  value={form.jhaAssessmentDate}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      wrpApprovalDateTime: moment(e).toISOString(),
+                      jhaAssessmentDate: moment(e).format("YYYY-MM-DD"),
                     });
                   }}
-                  format="yyyy/MM/dd HH:mm"
-                  inputVariant="outlined"
-
                   inputVariant="outlined"
                   disableFuture="true"
                 />
+
               </MuiPickersUtilsProvider>
             </Grid>
 
@@ -657,7 +661,21 @@ const JobDetails = () => {
               xs={12}
               style={{ marginTop: '15px' }}
             >
-              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn} onClick={(e) => handleSubmit()}>Next</Button>
+              {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
             </Grid>
           </Grid>
         </Col>

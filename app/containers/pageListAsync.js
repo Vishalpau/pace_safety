@@ -726,3 +726,7 @@ export const JhaApprovals = loadable(() => import("./Pages/Jha/Approvals/Approva
 export const JhaLessonsLearned = loadable(() => import("./Pages/Jha/LessonsLearned/LessonsLearned"), {
   fallback: <Loading />,
 });
+
+export const JhaCloseOut = loadable(() => import("./Pages/Jha/CloseOut/CloseOut"), {
+  fallback: <Loading />,
+});
