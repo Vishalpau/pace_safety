@@ -70,7 +70,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
 import { useDropzone } from 'react-dropzone';
-import FlhaConfigAdd from './FlhaConfigAdd';
+import FlhaConfigEdit from './FlhaConfigEdit';
 
 import MUIDataTable from 'mui-datatables';
 import api from '../../../utils/axios';
@@ -455,6 +455,7 @@ const FlhaDetails = () => {
     formData.append('fkDepartmentId', form.fkDepartmentId);
     formData.append('jobDetail', form.jobDetail);
     formData.append('jobTitle', form.jobTitle);
+    // localStorage.setItem('fkJobId', jobTitle.id);
 
     const res = await api.post('api/v1/configflhas/jobtitles/', formData);
     setForm({
@@ -511,7 +512,9 @@ const FlhaDetails = () => {
       innerAr.push(jobTitle.status);
       innerAr.push(jobTitle.id);
       innerAr.push(jobTitle.fkDepartmentId);
-      localStorage.setItem('fkJobId', jobTitle.id);
+
+      // innerAr.push(jobTitle.projectName);
+
 
       data.push(innerAr);
     });
@@ -546,7 +549,7 @@ const FlhaDetails = () => {
   };
 
 
-  // for edit jobtitle
+  // third dialog
   const [ConfigOpen, setConfigOpen] = React.useState(false);
 
   function handleConfigClickOpen() {
@@ -610,7 +613,7 @@ const FlhaDetails = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta) => {
-          console.log(tableMeta);
+          // console.log(tableMeta);
           const rowID = [tableMeta.tableData[tableMeta.rowIndex][5]];
           return (
             <>
@@ -631,7 +634,6 @@ const FlhaDetails = () => {
                     href={`/app/pages/assesments/flhaconfigcriticaltask/${rowID}`}
 
                   >
-                    {console.log(tableMeta.rowData[5],"vishal")}
                     Critical task
 
                   </Link>
@@ -641,14 +643,6 @@ const FlhaDetails = () => {
                     Edit job title
                   </span>
                 </MenuItem>
-                {/* <MenuItem onClick={handleClose}>
-                  <Link
-                    href="/app/pages/assesments/flhaconfighazard"
-                  >
-                    Hazards
-
-                  </Link>
-                </MenuItem> */}
               </Menu>
             </>
           )
@@ -711,15 +705,15 @@ const FlhaDetails = () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                Edit X-FLHA Job Titles
+                Add X-FLHA Job Titles
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  <FlhaConfigAdd/>
+                  <FlhaConfigEdit />
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button color="primary" size="medium" variant="contained" className={classes.spacerRight} onClick={(e) => handelSubmit()}>
+                <Button color="primary" size="medium" variant="contained" className={classes.spacerRight}>
                   Save
                 </Button>
                 <Button onClick={handleConfigClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>
