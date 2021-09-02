@@ -182,8 +182,8 @@ function Jha() {
     filterType: 'dropdown',
     responsive: 'vertical',
     print: true,
-    rowsPerPage: 10,
-    page: 0,
+    rowsPerPage: 100,
+    page: 100,
   };
 
   const handleSummaryPush = async (e, index) => {
@@ -211,23 +211,17 @@ function Jha() {
               <Grid item xs={7} md={3}>
                 <div className={classes.search}>
                   <Paper>
-                    {cardView ?
-                      <>
-                        <div className={classes.searchIcon}>
-                          <SearchIcon />
-                        </div>
-                        <InputBase
-                          placeholder="Search…"
-                          classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-
-                          }}
-                          onChange={(e) => setSeacrhIncident(e.target.value)}
-
-                        />
-                      </>
-                      : null}
+                    <div className={classes.searchIcon}>
+                      <SearchIcon />
+                    </div>
+                    <InputBase
+                      placeholder="Search…"
+                      classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                      }}
+                      onChange={(e) => setSeacrhIncident(e.target.value)}
+                    />
                   </Paper>
                 </div>
               </Grid>
