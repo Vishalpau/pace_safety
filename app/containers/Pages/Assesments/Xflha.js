@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PapperBlock } from 'dan-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -19,7 +19,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -31,7 +31,10 @@ import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import classNames from 'classnames';
 import MUIDataTable from 'mui-datatables';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import api from "../../../utils/axios";
+import Fonts from "dan-styles/Fonts.scss";
+import moment from "moment";
+import { useHistory, useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -158,17 +161,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function xflha() {
+const ILink = withStyles({
+  root: {
+    display: "inline-block",
+    marginLeft: ".5rem",
+    color: "rgba(0, 0, 0, .85)",
+  },
+})(Link);
+
+function xflha(props) {
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
-
+  const [flhas, setFlhas] = useState([]);
+  const [showFlha, setShowFlha] = useState([]);
+  const [searchFlha, setSeacrhFlha] = useState("");
   const handelView = (e) => {
     setListToggle(false);
   };
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
-
+  const history = useHistory();
   //   Data for the table view
   const columns = ['number', 'type', 'schedule', 'status', 'requestedby', 'datesubmitted', 'daterequired', 'dateapproved', 'approvedby'];
   const data = [
@@ -197,6 +210,49 @@ function xflha() {
   };
 
   const classes = useStyles();
+
+  const fetchData = async () => {
+    console.log(props.projectName,"project")
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    // alert(fkCompanyId);
+    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    // alert(fkProjectId);
+    const res = await api.get("api/v1/flhas/list/");
+    console.log({res:res.data.data.results.results})
+    setFlhas(res.data.data.results.results)
+  
+   
+  };
+
+  const handelSearchFlha = async (e) => {
+    let allSeacrh = [];
+    if (e.target.value.length === 0) {
+      await setShowFlha([]);
+    } else {
+      await setSeacrhFlha(e.target.value.toLowerCase());
+      Object.entries(flhas).map((item) => {
+        if (item[1]["flhaNumber"].toLowerCase().includes(searchFlha)) {
+          allSeacrh.push([
+            item[1]["flhaNumber"],
+            item[1]["supervisor"],
+            item[1]["fieldContractor"],
+            // moment(item[1]["incidentReportedOn"]).format(
+            //   "Do MMMM YYYY, h:mm:ss a"
+            // ),
+            item[1]["meetingPoint"],
+          ]);
+        }
+      });
+      await setShowFlha(allSeacrh);
+    }
+  };
+
+  useEffect(() => {
+    console.log({props:props})
+    fetchData();
+  }, [props.projectName]);
+
 
   return (
     <PapperBlock title="Field Level Hazard Assessment" icon="ion-md-list-box" desc="">
@@ -264,9 +320,24 @@ Create XFLHA
 
 
             <div className="gridView">
-
+              {Object.entries(flhas)
+            .filter((searchText) => {
+              console.log(searchText, 'searchtext')
+              return (
+              
+                searchText[1]["jobTitle"]
+                  .toLowerCase()
+                  .includes(searchFlha.toLowerCase()) ||
+                searchText[1]["flhaNumber"].includes(
+                  searchFlha.toUpperCase()
+                )
+              );
+            })
+            .map((item, index) => (
               <Card variant="outlined" className={Incidents.card}>
                 {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
+
+
                 <CardContent>
                   <Grid container spacing={3}>
                     <Grid item md={12} xs={12}>
@@ -278,15 +349,14 @@ Create XFLHA
                           // color="textSecondary"
                           // className={classes.listingLabelValue}
                           >
-                            {/* {item[1]["incidentTitle"]} */}
-                            Exposure to dangerous chemicals or toxins
+                            {item[1]["jobTitle"]}
                           </Typography>
                         </Grid>
 
                         <Grid item md={2} xs={12} className={classes.chipAction}>
                           <Chip
                             avatar={<Avatar src="/images/pp_boy.svg" />}
-                            label="Admin"
+                            label={item[1]['username']}
                           // onDelete={handleDelete}
                           />
                         </Grid>
@@ -302,13 +372,13 @@ Create XFLHA
                           >
                           Number:
 
-                            <Link
-                              href="/app/pages/assesments/flhasummary"
-                              variant="h6"
-                              className={classes.mLeftfont}
+                            <ILink
+                              onClick={(e) => history.push(`/app/pages/assesments/flhasummary/${item[1].id}`)}
+                              variant="subtitle2"
+                              className={Fonts.listingLabelValue}
                             >
-                            D-182-252-36
-                            </Link>
+                              {item[1]["flhaNumber"]}
+                            </ILink>
                           </Typography>
                         </Grid>
 
@@ -332,7 +402,7 @@ Create XFLHA
                         <Grid item md={3} sm={6} xs={12}>
                           <Chip
                             variant="outlined"
-                            label="Initial Action"
+                            label={item[1]['flhaStatus']}
                             color="primary"
                             size="small"
                           />
@@ -346,7 +416,9 @@ Create XFLHA
                             {/* {item[1]["incidentNumber"]} */}
                             <i className="ion-ios-calendar-outline" />
                             <span className={Incidents.dateValue}>
-							              Date
+                            {moment(item[1]["dateTimeFlha"]).format(
+                              "Do MMMM YYYY, h:mm:ss a"
+                            )}
                             </span>
                           </Typography>
                         </Grid>
@@ -386,7 +458,7 @@ Create XFLHA
 
                         className={classes.listingLabelValue}
                       >
-                        Delhi
+                        {item[1]['location']}
                       </Typography>
                     </Grid>
 
@@ -404,7 +476,9 @@ Create XFLHA
 
                         className={classes.listingLabelValue}
                       >
-                        24 6 2021
+                         {moment(item[1]["createdAt"]).format(
+                            "Do MMMM YYYY, h:mm:ss a"
+                          )}
                       </Typography>
                     </Grid>
 
@@ -422,7 +496,7 @@ Create XFLHA
 
                         className={classes.listingLabelValue}
                       >
-                        Person
+                        {item[1]['username']}
                       </Typography>
                     </Grid>
 
@@ -448,7 +522,7 @@ Create XFLHA
                       Comments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <Link href="#" className={classes.mLeft}>3</Link>
+                        <Link href="#" className={classes.mLeft}>{item[1]["comments_count"]}</Link>
                       </Typography>
                     </Grid>
 
@@ -463,7 +537,7 @@ Create XFLHA
                         Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <Link href="#" className={classes.mLeft}>3</Link>
+                        <Link href="#" className={classes.mLeft}>{item[1]["attachment_count"]}</Link>
                       </Typography>
                     </Grid>
 
@@ -496,7 +570,7 @@ Create XFLHA
                   </Grid>
                 </CardActions>
               </Card>
-
+              ))}
             </div>
 
             <div className="gridView">
@@ -511,7 +585,7 @@ Create XFLHA
                           <Grid item xs={9} className={classes.chipAction}>
                             <Chip
                               avatar={<Avatar src="/images/pp_boy.svg" />}
-                              label="Admin"
+                              label={item[1]['username']}
                             />
                           </Grid>
                           <Grid item md={3} sm={6} xs={12}>
@@ -540,13 +614,13 @@ Create XFLHA
                               className={Incidents.incidentNumber}
                               style={{ textDecoration: 'underline' }}
                             >
-                            252-525-256
+                            {item[1]['flhaNumber']}
                             </Link>
                           </Typography>
 
                           <Chip
                             variant="outlined"
-                            label="Initial Action"
+                            label={item[1]['flhaStage']}
                             color="primary"
                             size="small"
                           />
@@ -731,14 +805,33 @@ Create XFLHA
                 </Card>
               ))}
             </div>
+         
           </div>
           // listview end
 
         ) : (
           <Grid component={Paper}>
             <MUIDataTable
-              title="Incidents List"
-              data={data}
+              title="FLHA's"
+              data={Object.entries(flhas).map((item) => [
+                
+                item[1]["flhaNumber"],
+                item[1]["jobTitle"],
+                'NA',
+                'NA',
+                'NA',
+                'NA',
+                'NA',
+                'NA',
+                'NA',
+                'NA',
+                // item[1]["incidentLocation"],
+                // moment(item[1]["incidentReportedOn"]).format(
+                //   "Do MMMM YYYY, h:mm:ss a"
+                // ),
+                // item[1]["incidentReportedByName"],
+                // item[1]["id"],
+              ])}
               columns={columns}
               options={options}
             />

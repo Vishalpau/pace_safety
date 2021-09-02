@@ -133,10 +133,20 @@ import {
   CheckList,
   ShowGroup,
   ShowCheckList,
+  Xflha,
+  FlhaSummary,
+  FlhaAdd,
+  FlhaEdit,
+  PreventiveControls,
+  IsolationControl,
+  EnergyControl,
+  AuditCheck,
+  AssessmentCloseOut,
   FlhaConfigHazard,
   FlhaConfig,
   FlhaConfigCriticalTask,
   FlhaConfigAdd,
+  SamplePage,
 } from '../pageListAsync';
 
 
@@ -531,6 +541,19 @@ function Application(props) {
         <Route path="/app/maps/map-searchbox" component={SearchMap} />
         <Route path="/app/maps/map-traffic" component={TrafficIndicator} />
         <Route path="/app/maps/street-view" component={StreetViewMap} />
+        {/* Xflha Routes  */}
+        <Route path="/app/pages/summary" component={Summary} />
+        <Route path="/app/pages/sample" component={SamplePage} />
+        <Route path="/app/pages/assesments/xflha" component={Xflha} />
+        <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
+        <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />
+        <Route path="/app/pages/assesments/IsolationControl" component={IsolationControl} />
+        <Route path="/app/pages/assesments/EnergyControl" component={EnergyControl} />
+        <Route path="/app/pages/assesments/flha/:id/close-out" component={AssessmentCloseOut} />
+        <Route path="/app/pages/assesments/AuditCheck" component={AuditCheck} />
+        <Route path="/app/pages/assesments/flha/:id/revise" component={FlhaEdit} />
+        <Route path="/app/pages/assesments/flhaadd" component={FlhaAdd} />
+
         {/* Xflha Config  */}
         <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />

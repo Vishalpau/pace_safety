@@ -53,7 +53,10 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Addhazard from './Addhazard';
+// import Addhazard from './Addhazard';
+import ViewHazard from './ViewHazard';
+import api from "../../../utils/axios";
+import moment from "moment";
 
 function TabContainer(props) {
   const { children } = props;
@@ -155,33 +158,63 @@ const styles = theme => ({
 class SimpleTabs extends React.Component {
   state = {
     value: 0,
+    flha: {},
+    criticalTasks:{},
+    visualConfirmations:{}
   };
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
 
+
+  componentDidMount(){
+    this.getFlhaDetails();
+    this.getPreventiveControls();
+    this.getJobVisualConfirmation();
+  }
+
+  getFlhaDetails = async() => {
+    const flhaNumber = this.props.match.params.id
+    const res = await api.get("api/v1/flhas/"+flhaNumber+"/");
+    console.log({flhares:res.data.data.results})
+    this.setState({flha: res.data.data.results})
+  }
+
+  getPreventiveControls = async() => {
+    const flhaId = this.props.match.params.id;
+    // this.props.match.params.id
+    const res = await api.get("api/v1/flhas/"+flhaId+"/criticaltasks/");
+    console.log({controls:res.data.data.results.tasks})
+    await this.setState({criticalTasks: res.data.data.results.tasks})
+    // return res.data.data.results
+  }
+
+  getJobVisualConfirmation = async() => {
+    const flhaId = this.props.match.params.id;
+    const res = await api.get("api/v1/flhas/"+flhaId+"/visualconfirmations/");
+    console.log({visualConfirmations:res.data.data.results})
+    await this.setState({visualConfirmations: res.data.data.results})
+  }
+
   render() {
     const { classes } = this.props;
-    const { value } = this.state;
+    const { value, flha, criticalTasks, visualConfirmations } = this.state;
     const handleChange = (event) => {
       setValue(event.target.value);
     };
 
 
     return (
-      <PapperBlock title="Summary" icon="ion-ios-game-controller-a-outline" desc="">
+      <PapperBlock title={'FLHA Number: '+flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
         <Grid container spacing={1}>
           <Grid item md={9} xs={12}>
             <Paper elevation={0} className={classes.pTopandRight}>
               <Grid container spacing={3}>
-                <Grid item xs={6}>
-                  <FormLabel component="legend">FLHA Number</FormLabel>
-                  <Typography
-                    variant="p"
-                    gutterBottom
-                  >
-				AT-125-254-252
+              <Grid item xs={6}>
+                  <FormLabel component="legend">Job title</FormLabel>
+                  <Typography>
+				{flha['jobTitle']}
 
                   </Typography>
                 </Grid>
@@ -191,45 +224,40 @@ class SimpleTabs extends React.Component {
                     variant="p"
                     gutterBottom
                   >
-				Planned
+                    {flha['status']}
 
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <FormLabel component="legend">Project</FormLabel>
                   <Typography>
-				Multilevel information as per config design
+                  {JSON.parse(localStorage.getItem("projectName")).projectName.projectName}
 
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <FormLabel component="legend">Reference</FormLabel>
                   <Typography>
-				Reference group | Reference number
+                    {flha['referenceGroup'] +'|'+ flha['referenceNumber']}
 
                   </Typography>
                 </Grid>
 
-                <Grid item xs={12}>
-                  <FormLabel component="legend">Job title</FormLabel>
-                  <Typography>
-				This is my Action Tracker
-
-                  </Typography>
-                </Grid>
+                
 
                 <Grid item xs={12}>
                   <FormLabel component="legend">Job description</FormLabel>
                   <Typography>
-				Dummy content placed to show the width of text area Data here, Dummy content placed to show the width. Dummy content placed to show the width of text area Data here, Dummy content placed. Dummy content placed to show the width of text area Data here, Dummy content placed
+                  {(flha['jobDetails']) ? flha['jobDetails'] : "NA"}
 
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <FormLabel component="legend">Date</FormLabel>
                   <Typography>
-				30-06-2021
-
+        {moment(this.state.flha.dateTimeFlha).format(
+              "Do MMMM YYYY, h:mm:ss a"
+            )}
                   </Typography>
                 </Grid>
 
@@ -247,7 +275,7 @@ class SimpleTabs extends React.Component {
               {value === 0
 			&& (
 			  <TabContainer className={classes.paddZero}>
-  <Addhazard />
+  <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations}/>
 			  </TabContainer>
 			)}
               {value === 1 && <TabContainer>Item Two</TabContainer>}
@@ -343,7 +371,7 @@ class SimpleTabs extends React.Component {
                   <CommentIcon />
                 </ListItemIcon>
                       <Link
-                  href="/app/pages/assesments/FlhaEdit"
+                  href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/revise"}
                   variant="subtitle"
                 >
                   <ListItemText primary="Revise FLHA" />
@@ -425,7 +453,8 @@ class SimpleTabs extends React.Component {
                   <CloseIcon />
                 </ListItemIcon>
                       <Link
-                  href="/app/pages/assesments/CloseOut"
+                      href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/close-out"}
+                  // href="/app/pages/assesments/CloseOut"
                   variant="subtitle"
                 >
                   <ListItemText primary="Close out" />
