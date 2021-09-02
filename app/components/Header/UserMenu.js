@@ -163,7 +163,7 @@ function UserMenu(props) {
           "csrftoken=Z4uAv7EMxWG5KCWNNzqdravi8eoUZcIB8OoGeJ4W1abx4i3zqhLwIzloVMcsFrr5",
       },
     };
-  
+
     axios(config)
       .then((response) => {
         if (response.status === 201) {
@@ -179,7 +179,7 @@ function UserMenu(props) {
       });
   };
   const getSubscriptions = async () => {
-    
+
     let subscriptionData = {}
     let data = await api
       .get(`${ACCOUNT_API_URL}api/v1/applications/`)
@@ -190,7 +190,7 @@ function UserMenu(props) {
 
       })
       .catch(function (error) {
-    
+
         localStorage.removeItem("access_token");
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
@@ -203,8 +203,8 @@ function UserMenu(props) {
 
 
   const getSubscribedApps = async () => {
-    const companyId = props.initialValues.companyDataList.fkCompanyId||JSON.parse(localStorage.getItem('company')).fkCompanyId
-    if(companyId){
+    const companyId = props.initialValues.companyDataList.fkCompanyId || JSON.parse(localStorage.getItem('company')).fkCompanyId
+    if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
@@ -213,17 +213,17 @@ function UserMenu(props) {
         setCompanyName(res.data.data.results.data.companies[0].companyName)
         // setSubscriptions(subscriptionData);
         return subscriptionData
-  
+
       })
         .catch(function (error) {
           localStorage.removeItem("access_token");
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
-    
+
         });
       await setApps(data.map(app => app.appId))
     }
-   
+
 
   }
   const handleClosea = (event) => {
@@ -430,11 +430,11 @@ function UserMenu(props) {
         className={classes.userControls}
         onClick={handleMenu("user-setting")}
       >
-        {isDesktop && companyLogoLink?<img className={classes.userLogo} src={companyLogoLink} />:<MenuItem style={{color:"white"}} color="white">{companyName}</MenuItem>}
+        {isDesktop && companyLogoLink ? <img className={classes.userLogo} src={companyLogoLink} /> : <MenuItem style={{ color: "white" }} color="white">{companyName}</MenuItem>}
         <Avatar
           alt={dummy.user.name}
           variant="circle"
-          src={userImageLink?userImageLink:dummy.user.avatar}
+          src={userImageLink ? userImageLink : dummy.user.avatar}
         />
       </Button>
       <Menu
@@ -451,7 +451,10 @@ function UserMenu(props) {
         open={openMenu === "user-setting"}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} component={Link} to={link.profile}>
+        <MenuItem
+          onClick={() =>
+            window.location.href = "https://dev-accounts-api.paceos.io/UserProfile"}
+        >
           My Profile
         </MenuItem>
         <MenuItem onClick={handleClose} component={Link} to={link.calendar}>
