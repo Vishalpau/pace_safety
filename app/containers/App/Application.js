@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { PropTypes } from "prop-types";
-import { Switch, Route } from "react-router-dom";
-import { ThemeContext } from "./ThemeWrapper";
-import Dashboard from "../Templates/Dashboard";
+import React, { useContext } from 'react';
+import { PropTypes } from 'prop-types';
+import { Switch, Route } from 'react-router-dom';
+import { ThemeContext } from './ThemeWrapper';
+import Dashboard from '../Templates/Dashboard';
 import {
   PersonalDashboard,
   CrmDashboard,
@@ -153,6 +153,22 @@ import {
   JhaLessonsLearned,
   JhaApprovals,
   Comments,
+  ShowGroup,
+  ShowCheckList,
+  Xflha,
+  FlhaSummary,
+  FlhaAdd,
+  FlhaEdit,
+  PreventiveControls,
+  IsolationControl,
+  EnergyControl,
+  AuditCheck,
+  AssessmentCloseOut,
+  FlhaConfigHazard,
+  FlhaConfig,
+  FlhaConfigCriticalTask,
+  FlhaConfigAdd,
+  SamplePage,
 } from "../pageListAsync";
 
 
@@ -301,14 +317,18 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/evidence/"
           component={Evidence}
         />
-        <Route exact
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/evidence/:id"
           component={Evidence}
         />
-        <Route exact
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/"
           component={PersonalAndPpeDetails}
-        /><Route exact
+        />
+        <Route
+          exact
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/:id"
           component={PersonalAndPpeDetails}
         />
@@ -335,7 +355,8 @@ function Application(props) {
           path="/app/incident-management/registration/investigation/worker-details/"
           component={WorkerDetails}
         />
-        <Route exact
+        <Route
+          exact
           path="/app/incident-management/registration/investigation/worker-details/:id"
           component={WorkerDetails}
         />
@@ -453,6 +474,7 @@ function Application(props) {
           component={Options}
         />
         <Route exact path="/app/:entity/comments/:id/" component={Comments} />
+
         {/* close out */}
         <Route
           exact
@@ -586,6 +608,25 @@ function Application(props) {
         <Route path="/app/maps/map-searchbox" component={SearchMap} />
         <Route path="/app/maps/map-traffic" component={TrafficIndicator} />
         <Route path="/app/maps/street-view" component={StreetViewMap} />
+        {/* Xflha Routes  */}
+        <Route path="/app/pages/summary" component={Summary} />
+        <Route path="/app/pages/sample" component={SamplePage} />
+        <Route path="/app/pages/assesments/xflha" component={Xflha} />
+        <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
+        <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />
+        <Route path="/app/pages/assesments/IsolationControl" component={IsolationControl} />
+        <Route path="/app/pages/assesments/EnergyControl" component={EnergyControl} />
+        <Route path="/app/pages/assesments/flha/:id/close-out" component={AssessmentCloseOut} />
+        <Route path="/app/pages/assesments/AuditCheck" component={AuditCheck} />
+        <Route path="/app/pages/assesments/flha/:id/revise" component={FlhaEdit} />
+        <Route path="/app/pages/assesments/flhaadd" component={FlhaAdd} />
+
+        {/* Xflha Config  */}
+        <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
+        <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
+        <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
+        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} />
+
         {/* Default */}
         <Route component={NotFound} />
         {/* Administrations */}
