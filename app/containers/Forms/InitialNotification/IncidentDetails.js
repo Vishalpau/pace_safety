@@ -572,7 +572,6 @@ const IncidentDetails = (props) => {
       }
     }
   };
-  console.log(fetchSelectBreakDownList)
 
   useEffect(() => {
     fetchContractorValue();
