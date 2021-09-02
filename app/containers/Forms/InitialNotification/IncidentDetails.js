@@ -591,11 +591,14 @@ useEffect(()=>{
       let selectId = select[i].id;
       let selectDepth = select[i].depth
       setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
+      await setIsLoading(true)
     }
     if (select!==null?select.length > 0:false) {
-      
+      if(projectData.projectName.breakdown.length === select.length){
+        setBreakdown1ListData([])
+      }else{
       for (var key in projectData.projectName.breakdown) {
-
+        
         if (key == select.length) {
           try {
             var config = {
@@ -626,6 +629,7 @@ useEffect(()=>{
           }
         }
       }
+    }
     } else {
       for (var key in projectData.projectName.breakdown) {
        
@@ -738,7 +742,7 @@ useEffect(()=>{
   useEffect(() => {
     // fetchListData();
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const select = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
+    const select = props.initialValues.breakDown.length>0? props.initialValues.breakDown: JSON.parse(localStorage.getItem('selectBreakDown'))
   
     if(select===null?select.length === 0:false){
       setBreakdown1ListData([])
