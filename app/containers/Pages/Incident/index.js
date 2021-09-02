@@ -56,6 +56,7 @@ import { List } from "immutable";
 import { connect } from "react-redux";
 import {tabViewMode} from '../../../redux/actions/initialDetails';
 import { useDispatch } from "react-redux";
+import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -210,9 +211,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
   };
 
   const handlePush = async () => {
-    history.push(
-      "/app/incident-management/registration/initial-notification/incident-details/"
-    );
+    history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
 
   useEffect(() => {
@@ -281,6 +280,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
   const options = {
     data: incidents,
     onRowsDelete: (rowsDeleted) => {
+      console.log(rowsDeleted)
       const idsToDelete = rowsDeleted.data.map(
         (d) => incidents[d.dataIndex].id
       );
@@ -329,6 +329,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                 <div className="toggleViewButtons">
                   <Tooltip title="List View">
                     <IconButton
+                    href="#table"
                       className={classes.filterIcon}
                       onClick={(e) => handelViewTabel(e)}
                     >
@@ -338,6 +339,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
 
                   <Tooltip title="Grid View">
                     <IconButton
+                     href="#grid"
                       aria-label="grid"
                       className={classes.filterIcon}
                       onClick={(e) => handelView(e)}
@@ -435,7 +437,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                           >
                             Number:
                             <ILink
-                              onClick={(e) => history.push(`/app/incident-management/registration/summary/summary/${item[1].id}`)}
+                              onClick={(e) => history.push(`/incident/details/${item[1].id}/`)}
                               variant="subtitle2"
                               className={Fonts.listingLabelValue}
                             >
@@ -542,7 +544,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                         className={Fonts.listingLabelName}
                         onClick={()=>history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                       >
-                        <MessageIcon fontSize="small /app/:entity/comments/:id/" /> Comments
+                        <MessageIcon fontSize="small" /> Comments
                       </Typography>
                       
                     </Grid>

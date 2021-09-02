@@ -228,19 +228,19 @@ const PeoplesAffected = () => {
 
           if (nextPath.propertyAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+              `${INITIAL_NOTIFICATION_FORM["Property affected"]}`
             );
           } else if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+              `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
             );
           } else {
             history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+              `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
             );
           }
         }
@@ -287,19 +287,19 @@ const PeoplesAffected = () => {
 
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            `${INITIAL_NOTIFICATION_FORM["Property affected"]}`
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+            `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
           );
         } else {
           history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
           );
         }
       }
@@ -727,9 +727,7 @@ const PeoplesAffected = () => {
                 <Button
                   onClick={() =>
                     history.push(
-                      `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-                        "fkincidentId"
-                      )}`
+                      `${INITIAL_NOTIFICATION_FORM['Incident details']}`
                     )
                   }
                   variant="contained"

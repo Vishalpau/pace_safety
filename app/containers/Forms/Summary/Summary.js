@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     padding: ".75rem 0",
   },
   statusButton: {
+    whiteSpace:"nowrap",
     borderRadius: 4,
     fontSize: 12,
   },
@@ -227,7 +228,7 @@ const Summary = (props) => {
   }
   const handleInitialNotificationView = () => {
     if (initialNoticeficationStatus === false) {
-      handelNaviagte(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+      handelNaviagte(`/incident/${id}/modify/`)
     } else {
       setInitialNotification(true);
       setInvestigation(false);
@@ -248,7 +249,7 @@ const Summary = (props) => {
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
-      handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
+      handelNaviagte(`/incident/${id}/investigation/new/`)
     } else {
       setInitialNotification(false);
       setInvestigation(true);
@@ -414,7 +415,7 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stage(s) close out")
       setMessageType("warning")
     } else if (!lessionlearnData) {
-      handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+      handelNaviagte(`/incident/${id}/lesson-learnt/new/`)
     }
     else {
       setInitialNotification(false);
@@ -444,7 +445,7 @@ const Summary = (props) => {
       setMessage(CLOSE_OUT_MESSAGE)
       setMessageType("warning")
     } else {
-      handelNaviagte(`/app/incident-management/registration/initial-notification/incident-details/${id}`)
+      handelNaviagte(`/incident/${id}/modify/`)
     }
   }
 
@@ -464,9 +465,9 @@ const Summary = (props) => {
     else {
 
       if (fkid) {
-        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/${fkid}`)
+        handelNaviagte(`incident/${id}/investigation/modify/`)
       } else {
-        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
+        handelNaviagte(`incident/${id}/investigation/modify/`)
       }
 
     }
@@ -547,7 +548,7 @@ const Summary = (props) => {
       setMessageType("warning")
     }
     else {
-      handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+      handelNaviagte(`/incident/${id}/lesson-learnt/new/`)
     }
   }
   const modifyCloseout = () => {
@@ -578,7 +579,7 @@ const Summary = (props) => {
       setMessageType("warning")
     }
     else {
-      handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
+      handelNaviagte(`/incident/${id}/close-out/new/`)
     }
   }
   const handleActivityHistory=()=>{
@@ -627,6 +628,7 @@ const Summary = (props) => {
               {/* initital notificatin */}
               <div className={Styles.item}>
                 <Button
+                href="#"
                   color={props.viewMode.viewMode.initialNotification ? "secondary" : "primary"}
                   variant="contained"
                   size="large"
@@ -655,6 +657,7 @@ const Summary = (props) => {
               {/* investigation */}
               <div className={Styles.item}>
                 <Button
+                href="#investigation"
                   color={props.viewMode.viewMode.investigation == true ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
@@ -674,6 +677,7 @@ const Summary = (props) => {
 
               <div className={Styles.item}>
                 <Button
+                href="#evidence"
                   color={props.viewMode.viewMode.evidence == true ? "secondary" : "primary"}
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
@@ -689,6 +693,7 @@ const Summary = (props) => {
               </div>
               <div className={Styles.item}>
                 <Button
+                href="#root-cause-analysis"
                   color={props.viewMode.viewMode.rootcauseanalysis == true ? "secondary" : "primary"}
                   variant={
                     paceCauseData || rootCausesData || whyData
@@ -716,6 +721,7 @@ const Summary = (props) => {
               </div>
               <div className={Styles.item}>
                 <Button
+                href='#close-out'
                   color={props.viewMode.viewMode.closeout == true ? "secondary" : "primary"}
                   variant={closeout ? "contained" : "outlined"}
                   size="large"
@@ -732,6 +738,7 @@ const Summary = (props) => {
               </div>
               <div className={Styles.item}>
                 <Button
+                href='#lessons-learnt'
                   color={props.viewMode.viewMode.lessionlearn == true ? "secondary" : "primary"}
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
@@ -827,7 +834,7 @@ const Summary = (props) => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) => modifyInvestigation()}>
+                          onClick={(e) => handelInvestigationView()}>
                           <ListItemIcon>
                             <Add />
                           </ListItemIcon>
@@ -876,7 +883,7 @@ const Summary = (props) => {
                       )}
                       {lessionlearnData ? (
                         <ListItemLink
-                          onClick={(e) => modifyLessonLearn()}
+                          onClick={(e) => handelNaviagte(`/incident/${id}/lesson-learnt/modify/`)}
                         >
                           <ListItemIcon>
                             <Edit />

@@ -116,7 +116,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "13px",
     paddingLeft: "0px",
     paddingRight: "0px",
-    color: "#ffffff",
+    color: "#ffffff !important" ,
+    opacity: 1,
     "& .MuiSvgIcon-root": {
       marginLeft: "4px",
       fontSize: "15px",
@@ -580,14 +581,14 @@ function Header(props) {
               clickable
               size="small"
               className={classesm.projectName}
-              disabled={projectDisable}
               
-              onClick={handleCompanyOpen}
+              disabled={projectDisable} 
+              
             >
               {projectData !== null
                 ? projectData.projectName.projectName
                 : null}
-              <EditIcon />
+             {projectDisable?null:<EditIcon onClick={handleCompanyOpen} />} 
             </IconButton>
 
             {/* company selections */}
@@ -722,110 +723,7 @@ function Header(props) {
           <Hidden smDown>
             {/* <Headerbox filterOpen={isPopUpOpen} handleClick={handleClick} setIsPopUpOpen={setIsPopUpOpen}/> */}
          
-      <div>
-        <IconButton
-          aria-describedby={id}
-          className={classes.filterIcon}
-          onClick={handleClick}
-          id='open'
-        >
-          <FilterListIcon fontSize="small" />
-        </IconButton>
-        <Popover
-          id={id}
-          open={filterOpen}
-          anchorEl={anchorEl}
-          getContentAnchorEl={null}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          PaperProps={{
-            style: {
-              width: 200,
-            },
-          }}
-        >
-          {isLoading ? (
-            <Box p={3}>
-              <Grid container spacing={2}>
-                
-                  {breakdown1ListData.length > 0
-                    ? breakdown1ListData.map((item, index) => (
-                      <Grid item xs={12}>
-                      <FormControl
-                        key={index}
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
-
-                        <InputLabel id="filter3-label">
-                          {item.breakdownLabel}
-                        </InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={item.selectValue}
-                          onChange={(e) => {
-                            handleBreakdown(e, index + 1,item.breakdownLabel);
-
-                          }}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          {item.breakdownValue.length
-                            ? item.breakdownValue.map(
-                              (selectValue, selectKey) => (
-                                <MenuItem
-                                  key={selectKey}
-                                  value={selectValue.id}
-                                >
-                                  {selectValue.name}
-                                </MenuItem>
-                              )
-                            )
-                            : null}
-                        </Select>
-                      </FormControl>
-                      </Grid>
-                    ))
-                    : null}
-                <Grid item md={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        disableElevation
-                        onClick={handleClose}
-                      >
-                        Apply
-                      </Button>
-                    </Grid>
-              </Grid>
-            </Box>
-          ) : null}
-        </Popover>
-      </div>
-      <Breadcrumbs
-        className={classes.projectBreadcrumbs}
-        separator={<NavigateNextIcon fontSize="small" />}
-      >
-
-        {breakDownData !== null
-          ? breakDownData.map(
-            (item, index) => (
-              <Chip size="small" label={item.name} key={index} />
-            )
-          )
-          : null}
-      </Breadcrumbs>
+   <Headerbox/>
     
           </Hidden>
         </div>

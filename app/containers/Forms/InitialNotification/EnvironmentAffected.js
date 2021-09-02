@@ -15,7 +15,7 @@ import moment from "moment";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
-import { INITIAL_NOTIFICATION_FORM } from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM, INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
 import FormSideBar from "../FormSideBar";
 import api from "../../../utils/axios";
@@ -152,7 +152,7 @@ const EnvironmentAffected = () => {
             temp
           );
           history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
           );
         } catch (error) {}
       }
@@ -179,9 +179,10 @@ const EnvironmentAffected = () => {
             temp
           );
           if (id) {
-            history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-            );
+           
+              history.push(
+                `${INITIAL_NOTIFICATION_FORM_NEW["Reporting and notification"]}`
+              );
           }
         } catch (error) {}
       }
@@ -244,19 +245,19 @@ const EnvironmentAffected = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     if (nextPath.equipmentAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+        `${INITIAL_NOTIFICATION_FORM['Equipment affected']}`
       );
     } else if (nextPath.propertyAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/property-affected/${id}`
+        `${INITIAL_NOTIFICATION_FORM['Property affected']}`
       );
     } else if (nextPath.personAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+        `${INITIAL_NOTIFICATION_FORM['People affected']}`
       );
     } else {
       history.push(
-        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+        `${INITIAL_NOTIFICATION_FORM['Incident details']}`
       );
     }
   };

@@ -209,71 +209,44 @@ function Application(props) {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
 
+          {/*Incident List  */}
+          <Route path="/incidents/" component={Incident} />
 
         {/* form initialNotification */}
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/environment-affected/"
+          path="/incident/:id/modify/environment-affected/"
           component={EnvironmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/environment-affected/:id"
-          component={EnvironmentAffected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/equipment-affected/:id"
+          path="/incident/:id/modify/equipment-affected/"
           component={EqiptmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/equipment-affected/"
-          component={EqiptmentAffected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/incident-details/"
+          path="/incident/new/"
           component={IncidentDetails}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/incident-details/:id"
+          path="/incident/:id/modify/"
           component={IncidentDetails}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/peoples-afftected/"
+          path="/incident/:id/modify/peoples-afftected/"
           component={PeoplesAfftected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/peoples-afftected/:id"
-          component={PeoplesAfftected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/property-affected/"
+          path="/incident/:id/modify/property-affected/"
           component={PropertyAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/property-affected/:id"
-          component={PropertyAffected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          path="/incident/:id/modify/reporting-and-notification/"
           component={ReportingAndNotification}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/reporting-and-notification/:id"
-          component={ReportingAndNotification}
-        />
-        <Route
-          path="/app/incident-management/registration/investigation/update-initial-details/:id"
-          component={UpdateIncidentDetails}
         />
         {/* form Evidence */}
         <Route
@@ -316,27 +289,27 @@ function Application(props) {
 
         {/* form investigation */}
         <Route
-          path="/app/incident-management/registration/investigation/action-taken/"
+          path="/incident/:id/investigation/:investigationId/action-taken/"
           component={ActionTaken}
         />
         <Route
-          path="/app/incident-management/registration/investigation/severity-consequences/"
+          path="/incident/:id/investigation/:investigationId/severity-consequences/:mode/"
           component={SeverityConsequences}
         />
         <Route
-          path="/app/incident-management/registration/investigation/event-details/"
+          path="/incident/:id/investigation/:investigationId/event-details/:mode/"
           component={EventDetails}
         />
         <Route
-          path="/app/incident-management/registration/investigation/investigation-overview/"
+          path="/incident/:id/investigation/:mode/"
           component={InvestigationOverview}
         />
         <Route
-          path="/app/incident-management/registration/investigation/worker-details/"
+          path="/incident/:id/investigation/:investigationId//worker-details/:mode/"
           component={WorkerDetails}
         />
         <Route exact
-          path="/app/incident-management/registration/investigation/worker-details/:id"
+          path="/incident/:id/investigation/:investigationId//worker-details/:mode/"
           component={WorkerDetails}
         />
 
@@ -422,20 +395,16 @@ function Application(props) {
 
         {/* summary */}
         <Route
-          path="/app/incident-management/registration/summary/summary/:id"
+          path="/incident/details/:id/"
           component={Summary}
         />
         {/* from leassionlearned */}
         <Route
           exact
-          path="/app/incident-management/registration/lession-learned/lession-learned/"
+          path="/incident/:id/lesson-learnt/:mode/"
           component={LessionLearned}
         />
-        <Route
-          exact
-          path="/app/incident-management/registration/lession-learned/lession-learned/:id"
-          component={LessionLearned}
-        />
+        
 
         {/* checklist */}
         <Route
@@ -456,7 +425,7 @@ function Application(props) {
         {/* close out */}
         <Route
           exact
-          path="/app/incident-management/registration/close-out/:id"
+          path="/incident/:id/close-out/:mode/"
           component={CloseOut}
         />
         {/* Ui Components */}
@@ -568,7 +537,7 @@ function Application(props) {
         <Route exact path="/app/pages" component={Parent} />
         <Route path="/app/pages/user-profile" component={Profile} />
         <Route path="/app/pages/blank-page" component={BlankPage} />
-        <Route path="/app/pages/incident" component={Incident} />
+        
         <Route path="/app/pages/photo-gallery" component={Photos} />
         <Route path="/app/pages/pricing" component={Pricing} />
         <Route path="/app/pages/not-found" component={NotFound} />

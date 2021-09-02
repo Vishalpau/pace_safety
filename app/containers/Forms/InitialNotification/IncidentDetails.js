@@ -235,23 +235,23 @@ const IncidentDetails = (props) => {
               // Decide on which path to go next.
               if (nextPath.personAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+                  `${INITIAL_NOTIFICATION_FORM['People affected']}`
                 );
               } else if (nextPath.propertyAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/property-affected/${id}`
+                  `${INITIAL_NOTIFICATION_FORM["Property affected"]}`
                 );
               } else if (nextPath.equipmentAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+                  `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
                 );
               } else if (nextPath.environmentAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+                  `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
                 );
               } else {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+                  `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
                 );
               }
             }
@@ -334,23 +334,23 @@ const IncidentDetails = (props) => {
                 // Decide on which path to go next.
                 if (nextPath.personAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
+                    `${INITIAL_NOTIFICATION_FORM['People affected']}`
                   );
                 } else if (nextPath.propertyAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
+                    `${INITIAL_NOTIFICATION_FORM["Property affected"]}`
                   );
                 } else if (nextPath.equipmentAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
+                    `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
                   );
                 } else if (nextPath.environmentAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
+                    `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
                   );
                 } else {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
+                    `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
                   );
                 }
               }
