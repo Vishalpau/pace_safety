@@ -1,19 +1,19 @@
-import { ErrorOutline } from "@material-ui/icons";
-import validator from "validator";
+import { ErrorOutline } from '@material-ui/icons';
+import validator from 'validator';
 
 function validate(data) {
   let isValid = true;
   const error = {};
-  
-  console.log(data)
 
-  if (data.jobTitle == "") {
-    error.jobTitle = "Please enter job title";
+  console.log(data);
+
+  if (data.jobTitle == '') {
+    error.jobTitle = 'Please enter job title';
     isValid = false;
   }
 
-  if (data.jobDetails=="") {
-    error.jobDetails = "Please enter job details";
+  if (data.jobDetails == '') {
+    error.jobDetails = 'Please enter job details';
     isValid = false;
   }
 
@@ -36,7 +36,7 @@ function validate(data) {
   //   error.incidentTitle = "Please enter job details";
   //   isValid = false;
   // }
-   return { error, isValid };
+  return { error, isValid };
 }
 
 export default validate;

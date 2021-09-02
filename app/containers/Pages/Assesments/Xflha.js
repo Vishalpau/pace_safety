@@ -31,10 +31,10 @@ import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import classNames from 'classnames';
 import MUIDataTable from 'mui-datatables';
 import Checkbox from '@material-ui/core/Checkbox';
-import api from "../../../utils/axios";
-import Fonts from "dan-styles/Fonts.scss";
-import moment from "moment";
-import { useHistory, useParams } from "react-router";
+import Fonts from 'dan-styles/Fonts.scss';
+import moment from 'moment';
+import { useHistory, useParams } from 'react-router';
+import api from '../../../utils/axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -163,9 +163,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ILink = withStyles({
   root: {
-    display: "inline-block",
-    marginLeft: ".5rem",
-    color: "rgba(0, 0, 0, .85)",
+    display: 'inline-block',
+    marginLeft: '.5rem',
+    color: 'rgba(0, 0, 0, .85)',
   },
 })(Link);
 
@@ -174,7 +174,7 @@ function xflha(props) {
   const [listToggle, setListToggle] = useState(false);
   const [flhas, setFlhas] = useState([]);
   const [showFlha, setShowFlha] = useState([]);
-  const [searchFlha, setSeacrhFlha] = useState("");
+  const [searchFlha, setSeacrhFlha] = useState('');
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -212,35 +212,33 @@ function xflha(props) {
   const classes = useStyles();
 
   const fetchData = async () => {
-    console.log(props.projectName,"project")
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    console.log(props.projectName, 'project');
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
     // alert(fkCompanyId);
-    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
+    const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
       .projectName.projectId;
     // alert(fkProjectId);
-    const res = await api.get("api/v1/flhas/list/");
-    console.log({res:res.data.data.results.results})
-    setFlhas(res.data.data.results.results)
-  
-   
+    const res = await api.get('api/v1/flhas/list/');
+    console.log({ res: res.data.data.results.results });
+    setFlhas(res.data.data.results.results);
   };
 
   const handelSearchFlha = async (e) => {
-    let allSeacrh = [];
+    const allSeacrh = [];
     if (e.target.value.length === 0) {
       await setShowFlha([]);
     } else {
       await setSeacrhFlha(e.target.value.toLowerCase());
       Object.entries(flhas).map((item) => {
-        if (item[1]["flhaNumber"].toLowerCase().includes(searchFlha)) {
+        if (item[1].flhaNumber.toLowerCase().includes(searchFlha)) {
           allSeacrh.push([
-            item[1]["flhaNumber"],
-            item[1]["supervisor"],
-            item[1]["fieldContractor"],
+            item[1].flhaNumber,
+            item[1].supervisor,
+            item[1].fieldContractor,
             // moment(item[1]["incidentReportedOn"]).format(
             //   "Do MMMM YYYY, h:mm:ss a"
             // ),
-            item[1]["meetingPoint"],
+            item[1].meetingPoint,
           ]);
         }
       });
@@ -249,7 +247,7 @@ function xflha(props) {
   };
 
   useEffect(() => {
-    console.log({props:props})
+    console.log({ props });
     fetchData();
   }, [props.projectName]);
 
@@ -321,256 +319,256 @@ Create XFLHA
 
             <div className="gridView">
               {Object.entries(flhas)
-            .filter((searchText) => {
-              console.log(searchText, 'searchtext')
-              return (
-              
-                searchText[1]["jobTitle"]
-                  .toLowerCase()
-                  .includes(searchFlha.toLowerCase()) ||
-                searchText[1]["flhaNumber"].includes(
+                .filter((searchText) => {
+                  console.log(searchText, 'searchtext');
+                  return (
+
+                    searchText[1].jobTitle
+                      .toLowerCase()
+                      .includes(searchFlha.toLowerCase())
+                || searchText[1].flhaNumber.includes(
                   searchFlha.toUpperCase()
                 )
-              );
-            })
-            .map((item, index) => (
-              <Card variant="outlined" className={Incidents.card}>
-                {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
+                  );
+                })
+                .map((item, index) => (
+                  <Card variant="outlined" className={Incidents.card}>
+                    {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
 
 
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item md={12} xs={12}>
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item md={10} xs={12}>
-                          <Typography
-                            variant="h6"
-                          // display="inline"
-                          // color="textSecondary"
-                          // className={classes.listingLabelValue}
-                          >
-                            {item[1]["jobTitle"]}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item md={2} xs={12} className={classes.chipAction}>
-                          <Chip
-                            avatar={<Avatar src="/images/pp_boy.svg" />}
-                            label={item[1]['username']}
-                          // onDelete={handleDelete}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item md={12} xs={12}>
+                    <CardContent>
                       <Grid container spacing={3}>
-                        <Grid item md={3} sm={6} xs={12}>
-                          <Typography
-                            display="inline"
-                            className={classes.listingLabelName}
-                          >
+                        <Grid item md={12} xs={12}>
+                          <Grid container spacing={3} alignItems="flex-start">
+                            <Grid item md={10} xs={12}>
+                              <Typography
+                                variant="h6"
+                                // display="inline"
+                                // color="textSecondary"
+                                // className={classes.listingLabelValue}
+                              >
+                                {item[1].jobTitle}
+                              </Typography>
+                            </Grid>
+
+                            <Grid item md={2} xs={12} className={classes.chipAction}>
+                              <Chip
+                                avatar={<Avatar src="/images/pp_boy.svg" />}
+                                label={item[1].username}
+                                // onDelete={handleDelete}
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+
+                        <Grid item md={12} xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                display="inline"
+                                className={classes.listingLabelName}
+                              >
                           Number:
 
-                            <ILink
-                              onClick={(e) => history.push(`/app/pages/assesments/flhasummary/${item[1].id}`)}
-                              variant="subtitle2"
-                              className={Fonts.listingLabelValue}
-                            >
-                              {item[1]["flhaNumber"]}
-                            </ILink>
-                          </Typography>
+                                <ILink
+                                  onClick={(e) => history.push(`/app/pages/assesments/flhasummary/${item[1].id}`)}
+                                  variant="subtitle2"
+                                  className={Fonts.listingLabelValue}
+                                >
+                                  {item[1].flhaNumber}
+                                </ILink>
+                              </Typography>
+                            </Grid>
+
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body1"
+                                gutterBottom
+                                display="inline"
+                                color="textSecondary"
+                                className={classes.listingLabelName}
+                              >
+                            Category:
+                              </Typography>
+                              <Typography
+                                display="inline"
+                                className={classNames(classes.listingLabelValue, classes.mLeft)}
+                              >
+                            XFLHA
+                              </Typography>
+                            </Grid>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Chip
+                                variant="outlined"
+                                label={item[1].flhaStatus}
+                                color="primary"
+                                size="small"
+                              />
+                            </Grid>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body1"
+                                // color="textSecondary"
+                                display="inline"
+                              >
+                                {/* {item[1]["incidentNumber"]} */}
+                                <i className="ion-ios-calendar-outline" />
+                                <span className={Incidents.dateValue}>
+                                  {moment(item[1].dateTimeFlha).format(
+                                    'Do MMMM YYYY, h:mm:ss a'
+                                  )}
+                                </span>
+                              </Typography>
+                            </Grid>
+
+                          </Grid>
                         </Grid>
 
                         <Grid item md={3} sm={6} xs={12}>
                           <Typography
                             variant="body1"
                             gutterBottom
-                            display="inline"
                             color="textSecondary"
                             className={classes.listingLabelName}
                           >
-                            Category:
+                        Type:
                           </Typography>
+
                           <Typography
-                            display="inline"
-                            className={classNames(classes.listingLabelValue, classes.mLeft)}
+
+                            gutterBottom
+                            className={classes.listingLabelValue}
                           >
-                            XFLHA
+                            {/* {item[1]["incidentReportedByName"]} */}
+                        Not found
                           </Typography>
-                        </Grid>
-                        <Grid item md={3} sm={6} xs={12}>
-                          <Chip
-                            variant="outlined"
-                            label={item[1]['flhaStatus']}
-                            color="primary"
-                            size="small"
-                          />
                         </Grid>
                         <Grid item md={3} sm={6} xs={12}>
                           <Typography
                             variant="body1"
-                            // color="textSecondary"
-                            display="inline"
+                            color="textSecondary"
+                            gutterBottom
+                            className={classes.listingLabelName}
                           >
-                            {/* {item[1]["incidentNumber"]} */}
-                            <i className="ion-ios-calendar-outline" />
-                            <span className={Incidents.dateValue}>
-                            {moment(item[1]["dateTimeFlha"]).format(
-                              "Do MMMM YYYY, h:mm:ss a"
+                        Location:
+                          </Typography>
+                          <Typography
+
+                            className={classes.listingLabelValue}
+                          >
+                            {item[1].location}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item md={3} sm={6} xs={12}>
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            gutterBottom
+                            className={classes.listingLabelName}
+                          >
+                        Created on:
+                          </Typography>
+
+                          <Typography
+
+                            className={classes.listingLabelValue}
+                          >
+                            {moment(item[1].createdAt).format(
+                              'Do MMMM YYYY, h:mm:ss a'
                             )}
-                            </span>
+                          </Typography>
+                        </Grid>
+
+                        <Grid item md={3} sm={6} xs={12}>
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            gutterBottom
+                            className={classes.listingLabelName}
+                          >
+                        Created by:
+                          </Typography>
+
+                          <Typography
+
+                            className={classes.listingLabelValue}
+                          >
+                            {item[1].username}
                           </Typography>
                         </Grid>
 
                       </Grid>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        gutterBottom
-                        color="textSecondary"
-                        className={classes.listingLabelName}
+                    </CardContent>
+                    <Divider />
+                    <CardActions className={Incidents.cardActions}>
+                      <Grid
+                        container
+                        spacing={2}
+                        justify="flex-end"
+                        alignItems="center"
                       >
-                        Type:
-                      </Typography>
-
-                      <Typography
-
-                        gutterBottom
-                        className={classes.listingLabelValue}
-                      >
-                        {/* {item[1]["incidentReportedByName"]} */}
-                        Not found
-                      </Typography>
-                    </Grid>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography
-
-                        className={classes.listingLabelValue}
-                      >
-                        {item[1]['location']}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Created on:
-                      </Typography>
-
-                      <Typography
-
-                        className={classes.listingLabelValue}
-                      >
-                         {moment(item[1]["createdAt"]).format(
-                            "Do MMMM YYYY, h:mm:ss a"
-                          )}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Created by:
-                      </Typography>
-
-                      <Typography
-
-                        className={classes.listingLabelValue}
-                      >
-                        {item[1]['username']}
-                      </Typography>
-                    </Grid>
-
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="flex-end"
-                    alignItems="center"
-                  >
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textSecondary"
-                        className={classes.mLeft}
-                      >
-                        <CommentIcon />
+                        <Grid item md={3} sm={6} xs={12}>
+                          <Typography
+                            variant="body1"
+                            display="inline"
+                            color="textSecondary"
+                            className={classes.mLeft}
+                          >
+                            <CommentIcon />
 
                       Comments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#" className={classes.mLeft}>{item[1]["comments_count"]}</Link>
-                      </Typography>
-                    </Grid>
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#" className={classes.mLeft}>{item[1].comments_count}</Link>
+                          </Typography>
+                        </Grid>
 
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textSecondary"
+                        <Grid item md={3} sm={6} xs={12}>
+                          <Typography
+                            variant="body1"
+                            display="inline"
+                            color="textSecondary"
 
-                      >
-                        <AttachmentIcon />
+                          >
+                            <AttachmentIcon />
                         Attachments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#" className={classes.mLeft}>{item[1]["attachment_count"]}</Link>
-                      </Typography>
-                    </Grid>
+                          </Typography>
+                          <Typography variant="body2" display="inline">
+                            <Link href="#" className={classes.mLeft}>{item[1].attachment_count}</Link>
+                          </Typography>
+                        </Grid>
 
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Button
-                        size="small"
-                        disabled
-                        variant="outlined"
-                        display="inline"
-                        color="textPrimary"
-                        startIcon={<Print />}
-                      >
+                        <Grid item md={3} sm={6} xs={12}>
+                          <Button
+                            size="small"
+                            disabled
+                            variant="outlined"
+                            display="inline"
+                            color="textPrimary"
+                            startIcon={<Print />}
+                          >
                         Print
-                      </Button>
-                    </Grid>
+                          </Button>
+                        </Grid>
 
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Button
-                        size="small"
-                        disabled
-                        variant="outlined"
-                        display="inline"
-                        color="textSecondary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
+                        <Grid item md={3} sm={6} xs={12}>
+                          <Button
+                            size="small"
+                            disabled
+                            variant="outlined"
+                            display="inline"
+                            color="textSecondary"
+                            startIcon={<Share />}
+                            className={Incidents.actionButton}
+                          >
                         Share
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>
-              ))}
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </CardActions>
+                  </Card>
+                ))}
             </div>
 
             <div className="gridView">
@@ -585,7 +583,7 @@ Create XFLHA
                           <Grid item xs={9} className={classes.chipAction}>
                             <Chip
                               avatar={<Avatar src="/images/pp_boy.svg" />}
-                              label={item[1]['username']}
+                              label={item[1].username}
                             />
                           </Grid>
                           <Grid item md={3} sm={6} xs={12}>
@@ -614,13 +612,13 @@ Create XFLHA
                               className={Incidents.incidentNumber}
                               style={{ textDecoration: 'underline' }}
                             >
-                            {item[1]['flhaNumber']}
+                              {item[1].flhaNumber}
                             </Link>
                           </Typography>
 
                           <Chip
                             variant="outlined"
-                            label={item[1]['flhaStage']}
+                            label={item[1].flhaStage}
                             color="primary"
                             size="small"
                           />
@@ -805,7 +803,7 @@ Create XFLHA
                 </Card>
               ))}
             </div>
-         
+
           </div>
           // listview end
 
@@ -814,9 +812,9 @@ Create XFLHA
             <MUIDataTable
               title="FLHA's"
               data={Object.entries(flhas).map((item) => [
-                
-                item[1]["flhaNumber"],
-                item[1]["jobTitle"],
+
+                item[1].flhaNumber,
+                item[1].jobTitle,
                 'NA',
                 'NA',
                 'NA',

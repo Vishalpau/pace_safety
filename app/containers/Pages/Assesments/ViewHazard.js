@@ -378,8 +378,8 @@ const FlhaDetails = (props) => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date('2014-08-18T21:11:54')
   );
-  const [criticalTasks, setCriticalTasks] = React.useState({})
-  const [visualConfirmationsm, setVisualConfirmations] = React.useState({})
+  const [criticalTasks, setCriticalTasks] = React.useState({});
+  const [visualConfirmationsm, setVisualConfirmations] = React.useState({});
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -418,11 +418,11 @@ bytes
 
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
-    console.log({props: props.criticalTasks})
-    setCriticalTasks(props.criticalTasks)
-    console.log({props2356: props.criticalTasks})
-    setVisualConfirmations(props.visualConfirmations)
-    console.log({props2356: props})
+    console.log({ props: props.criticalTasks });
+    setCriticalTasks(props.criticalTasks);
+    console.log({ props2356: props.criticalTasks });
+    setVisualConfirmations(props.visualConfirmations);
+    console.log({ props2356: props });
     // getJobVisualConfirmation()
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -432,7 +432,6 @@ bytes
     }
   }, [props.criticalTasks, props.visualConfirmations]);
 
-  
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -449,16 +448,16 @@ bytes
   const handleOneChange = (panell) => (event, isExpanded1) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
-  
+
   return (
-    
+
     <div>
 
       <Grid container spacing={1}>
         <Grid item sm={12} xs={12}>
           <Box padding={0}>
             <Grid container spacing={3}>
-              
+
               <Divider className={classes.divider} />
               <Grid item xs={12}>
                 <Box padding={0}>
@@ -479,93 +478,102 @@ Critical tasks
 
                   </Grid>
                   <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
-                  <div>
-                  {(props.criticalTasks.length > 0) ? 
-                      (props.criticalTasks.map((task)=>(
-                  <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1bh-content"
-                      id="panel1bh-header"
-                      className={classes.headingColor}
-                    >
-                      <Typography className={classes.heading}><MenuOpenOutlinedIcon className={classes.headingIcon} /> Task#1 - {task.taskIdentification}</Typography>  
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Grid item sm={12} xs={12}>
-                        <FormLabel component="legend" className={classes.mttoptenn}>Task Identification</FormLabel>
-                        <Typography>
-                        {task.taskIdentification}
-                        </Typography>
-                      </Grid>
-                      {(task.hazards.length > 0) ? 
-                      (task.hazards.map((hazard)=>(
-                      <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')}  defaultExpanded className={classes.childBackPaper}>
-                          <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel2bh-content"
-                            id="panel2bh-header"
-                            className={classes.headingColor}
+                    <div>
+                      {(props.criticalTasks.length > 0)
+                        ? (props.criticalTasks.map((task) => (
+                          <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              aria-controls="panel1bh-content"
+                              id="panel1bh-header"
+                              className={classes.headingColor}
                             >
-                              <Typography className={classes.heading}>Hazardk#1 - {hazard.hazards}</Typography>                              
-                              
-                          </AccordionSummary>
-                          <AccordionDetails>
-                          <Grid container spacing={0}>
-                            <Grid item sm={11} xs={8}>
-                              <FormLabel component="legend" className={classes.mttoptenn}>Hazards</FormLabel>
-                              <Typography>
-                              {hazard.hazards}
+                              <Typography className={classes.heading}>
+                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
+                                {' '}
+Task#1 -
+                                {' '}
+                                {task.taskIdentification}
                               </Typography>
-                            </Grid>
-                            <Grid item sm={11} xs={8}>
-                              <FormLabel component="legend" className={classes.mttoptenn}>Control</FormLabel>
-                              <Typography>
-                                {hazard.control}
-                              </Typography>
-                            </Grid>
-                            <Grid item sm={1} xs={4}>
-                              <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
-                            </Grid>
-                            <Grid container spacing={2}>
+                            </AccordionSummary>
+                            <AccordionDetails>
                               <Grid item sm={12} xs={12}>
                                 <FormLabel component="legend" className={classes.mttoptenn}>Task Identification</FormLabel>
                                 <Typography>
-                                {task.taskIdentification}
+                                  {task.taskIdentification}
                                 </Typography>
-                                </Grid>
-                              </Grid>    
-                                <Grid container spacing={1}>
-                                  <Grid item md={4} sm={4} xs={12}>
-                                    <FormLabel component="legend" className={classes.mttoptenn}>Risk Severity</FormLabel>
-                                    <Typography>
-                                      {hazard.riskSeverity}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item md={4} sm={4} xs={12}>
-                                  <FormLabel component="legend" className={classes.mttoptenn}>Risk Probability</FormLabel>
-                                    <Typography>
-                                    {hazard.riskProbability}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>                
-                                  {hazard.riskRatingLevel}
-                                  </Grid>
-                                </Grid>
-                              </Grid>                  
+                              </Grid>
+                              {(task.hazards.length > 0)
+                                ? (task.hazards.map((hazard) => (
+                                  <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
+                                    <AccordionSummary
+                                      expandIcon={<ExpandMoreIcon />}
+                                      aria-controls="panel2bh-content"
+                                      id="panel2bh-header"
+                                      className={classes.headingColor}
+                                    >
+                                      <Typography className={classes.heading}>
+Hazardk#1 -
+                                        {hazard.hazards}
+                                      </Typography>
+
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                      <Grid container spacing={0}>
+                                        <Grid item sm={11} xs={8}>
+                                          <FormLabel component="legend" className={classes.mttoptenn}>Hazards</FormLabel>
+                                          <Typography>
+                                            {hazard.hazards}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid item sm={11} xs={8}>
+                                          <FormLabel component="legend" className={classes.mttoptenn}>Control</FormLabel>
+                                          <Typography>
+                                            {hazard.control}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid item sm={1} xs={4}>
+                                          <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
+                                        </Grid>
+                                        <Grid container spacing={2}>
+                                          <Grid item sm={12} xs={12}>
+                                            <FormLabel component="legend" className={classes.mttoptenn}>Task Identification</FormLabel>
+                                            <Typography>
+                                              {task.taskIdentification}
+                                            </Typography>
+                                          </Grid>
+                                        </Grid>
+                                        <Grid container spacing={1}>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormLabel component="legend" className={classes.mttoptenn}>Risk Severity</FormLabel>
+                                            <Typography>
+                                              {hazard.riskSeverity}
+                                            </Typography>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormLabel component="legend" className={classes.mttoptenn}>Risk Probability</FormLabel>
+                                            <Typography>
+                                              {hazard.riskProbability}
+                                            </Typography>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>
+                                            {hazard.riskRatingLevel}
+                                          </Grid>
+                                        </Grid>
+                                      </Grid>
+                                    </AccordionDetails>
+                                  </Accordion>
+                                ))) : ''}
+
                             </AccordionDetails>
-                        </Accordion>
-                        ))) : ""} 
-                      
-                      </AccordionDetails>
-                    </Accordion>
-                   
-                   ))) : ""} 
-                  </div>
+                          </Accordion>
+
+                        ))) : ''}
+                    </div>
 
                   </Grid>
-                  <Divider className={classes.divider} /> 
-                 
+                  <Divider className={classes.divider} />
+
                   <Grid item xs={12}>
                     <TableContainer className={classes.mttopTen}>
                       <Typography variant="h6">
@@ -583,21 +591,21 @@ Job visual confirmation
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                        {(props.visualConfirmations.length > 0) ? 
-                      (props.visualConfirmations.map((visualConf)=>(
-                          <TableRow className={classes.cellHeight}>
-                            <TableCell align="left">{visualConf.visualConfirmationType}</TableCell>
-                            <TableCell align="left">
-                              <div className={classes.spacer}>
-                              {visualConf.visualConfirmationStatus}
-                                </div>
-                            </TableCell>
-                            <TableCell align="left">
-                              
-                              <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} />
-                            </TableCell>
-                          </TableRow>
-                        ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>} 
+                          {(props.visualConfirmations.length > 0)
+                            ? (props.visualConfirmations.map((visualConf) => (
+                              <TableRow className={classes.cellHeight}>
+                                <TableCell align="left">{visualConf.visualConfirmationType}</TableCell>
+                                <TableCell align="left">
+                                  <div className={classes.spacer}>
+                                    {visualConf.visualConfirmationStatus}
+                                  </div>
+                                </TableCell>
+                                <TableCell align="left">
+
+                                  <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} />
+                                </TableCell>
+                              </TableRow>
+                            ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>}
                         </TableBody>
                       </Table>
                     </TableContainer>

@@ -64,15 +64,15 @@ import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import ControlCameraOutlinedIcon from '@material-ui/icons/ControlCameraOutlined';
 import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
 import Tooltip from '@material-ui/core/Tooltip';
-import api from "../../../utils/axios";
 import { ContactSupportOutlined, CreateNewFolderSharp } from '@material-ui/icons';
-import validate from "../../Validator/jobFormValidation";
-import { useHistory, useParams } from "react-router";
+import { useHistory, useParams } from 'react-router';
+import api from '../../../utils/axios';
+import validate from '../../Validator/jobFormValidation';
 
 import {
   SSO_URL,
   HEADER_AUTH,
-} from "../../../utils/constants";
+} from '../../../utils/constants';
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: '.5rem 0',
@@ -381,8 +381,6 @@ const top100Films = [
 ];
 
 
-
-
 const FlhaDetails = (props) => {
   const classes = useStyles();
   const history = useHistory();
@@ -416,37 +414,41 @@ bytes
 
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState('paper');
-  const [jobTitles, setjobTitles] = React.useState([])
+  const [jobTitles, setjobTitles] = React.useState([]);
   const [jobForm, setJobForm] = React.useState({
-                'fkCompanyId':"", "fkProjectId":"", "jobTitle":"", "jobDetails":"", "location":"",
-                "supervisor": "",
-                "fieldContractor": "",
-                "firstAid": "",
-                "jhaReviewed": "",
-                "accessToJobProcedure": "",
-                "emergencyPhoneNumber": "",
-                "evacuationPoint": "",
-                "meetingPoint": "",
-                "department": "",
-                "permitToWork": "",
-                "permitToWorkNumber": "",
-                "dateTimeFlha": "",
-                "referenceGroup": "",
-                "referenceNumber": "",
-                "classification": "",
-              })
+    fkCompanyId: '',
+    fkProjectId: '',
+    jobTitle: '',
+    jobDetails: '',
+    location: '',
+    supervisor: '',
+    fieldContractor: '',
+    firstAid: '',
+    jhaReviewed: '',
+    accessToJobProcedure: '',
+    emergencyPhoneNumber: '',
+    evacuationPoint: '',
+    meetingPoint: '',
+    department: '',
+    permitToWork: '',
+    permitToWorkNumber: '',
+    dateTimeFlha: '',
+    referenceGroup: '',
+    referenceNumber: '',
+    classification: '',
+  });
   const [contractors, setContractors] = React.useState([]);
   const [supervisors, setSupervisors] = React.useState([]);
   const [hazardForm, setHazardForm] = React.useState([
     {
-      hazards: "",
-      riskSeverity: "",
-      riskProbability: "",
-      control: "",
-      hazardStatus: "",
-      controlStatus: "",
-      hazards: "",
-      control: "",
+      hazards: '',
+      riskSeverity: '',
+      riskProbability: '',
+      control: '',
+      hazardStatus: '',
+      controlStatus: '',
+      hazards: '',
+      control: '',
       // taskIdentification: "",
       // evidenceDocument: null,
       // status: "Active",
@@ -458,222 +460,213 @@ bytes
 
   const [taskForm, setTaskForm] = React.useState([
     {
-      taskIdentification: "",
-      riskRatingLevel: "",
-      rivisionReason: "",
+      taskIdentification: '',
+      riskRatingLevel: '',
+      rivisionReason: '',
       revisionTime: null,
-      version: "",
-      createdBy: "",
+      version: '',
+      createdBy: '',
       hazards: [
         {
-          hazards: "",
-          riskSeverity: "",
-          riskProbability: "",
-          control: "",
-          hazardStatus: "",
-          controlStatus: "",
+          hazards: '',
+          riskSeverity: '',
+          riskProbability: '',
+          control: '',
+          hazardStatus: '',
+          controlStatus: '',
         }
       ],
     },
   ]);
 
-  const [flha, setFlha] = React.useState("")
-  const [departments, setDepartments] = React.useState([])
-  const handleNewHazard = async(e, index) => {
-    const temp = [...taskForm]
-    temp[index].hazards.push({hazards: "",
-          riskSeverity: "",
-          riskProbability: "",
-          control: "",
-          hazardStatus: "",
-          controlStatus: "",})
-    console.log({temp:temp})
-    await setTaskForm(temp)
+  const [flha, setFlha] = React.useState('');
+  const [departments, setDepartments] = React.useState([]);
+  const handleNewHazard = async (e, index) => {
+    const temp = [...taskForm];
+    temp[index].hazards.push({
+      hazards: '',
+      riskSeverity: '',
+      riskProbability: '',
+      control: '',
+      hazardStatus: '',
+      controlStatus: '',
+    });
+    console.log({ temp });
+    await setTaskForm(temp);
   };
 
-  const handleJobFormChange = async(e, fieldname, autovalue=undefined) =>  {
-    console.log(jobForm)
+  const handleJobFormChange = async (e, fieldname, autovalue = undefined) => {
+    console.log(jobForm);
 
-    const temp = {...jobForm};
+    const temp = { ...jobForm };
     const { value } = e.target;
 
-    console.log({value: value})
-    if(autovalue != undefined){
-      temp[fieldname] = e.target.textContent
-    }
-    else{
+    console.log({ value });
+    if (autovalue != undefined) {
+      temp[fieldname] = e.target.textContent;
+    } else {
       temp[fieldname] = value;
     }
-    
-    
-    console.log({temp:temp})
+
+
+    console.log({ temp });
     await setJobForm(temp);
     // await console.log({jobForm: jobForm})
-  }
+  };
 
   const handleHazardForm = async (e, key, taskIndex, fieldname) => {
     // alert(12345678)
-    console.log(fieldname)
+    console.log(fieldname);
     const temp = [...taskForm];
-    console.log({tempform: temp})
+    console.log({ tempform: temp });
     const { value } = e.target;
-    if(key == undefined){
-      temp[taskIndex][fieldname] = value
-    }
-    else{
-      if(temp[taskIndex]['hazards'][key] == undefined){
-        temp[taskIndex]['hazards'][0] = [];
+    if (key == undefined) {
+      temp[taskIndex][fieldname] = value;
+    } else {
+      if (temp[taskIndex].hazards[key] == undefined) {
+        temp[taskIndex].hazards[0] = [];
         key = 0;
       }
-      temp[taskIndex]['hazards'][key][fieldname] = value
+      temp[taskIndex].hazards[key][fieldname] = value;
     }
-    
-    console.log({temp:temp})
+
+    console.log({ temp });
     await setTaskForm(temp);
   };
 
   const handleSelectedJobHazardFormTemp = async (tasks) => {
     // alert(234567)
-    console.log({hazardForm: hazardForm})
-    console.log({tasks:tasks})
-    const temp = []
-    
-    const temp1 = tasks.map((task, index) => {
+    console.log({ hazardForm });
+    console.log({ tasks });
+    const temp = [];
 
-      console.log({task: task})
-      temp[index] = task
+    const temp1 = tasks.map((task, index) => {
+      console.log({ task });
+      temp[index] = task;
       // temp[index]['taskIdentification'] = task['taskIdentification']
       // temp[index]['hazards'] = task['hazards']
-      return temp
-    })
+      return temp;
+    });
     // alert("Check temp")
-    console.log({temp1111: temp1})
-    console.log({temp222: temp})
+    console.log({ temp1111: temp1 });
+    console.log({ temp222: temp });
     await setTaskForm(temp);
-    console.log({taskForm12345678: taskForm})
+    console.log({ taskForm12345678: taskForm });
 
-    await setHazardForm(temp['hazards'])
-    console.log({hazardForm: hazardForm})
-    
+    await setHazardForm(temp.hazards);
+    console.log({ hazardForm });
   };
 
   const handleSelectedJobHazardForm = async (tasks) => {
     // alert(234567)
-    console.log({hazardForm: hazardForm})
-    console.log({tasks:tasks})
+    console.log({ hazardForm });
+    console.log({ tasks });
     // const temp = {}
-    const temp=[]
+    const temp = [];
     const temp1 = tasks.map((task, index) => {
-      console.log({task: task['hazards']})
-      
-      temp['taskIdentification'] = task['taskIdentification']
-      temp['hazards'] = task['hazards']
-      return temp
-    })
-    alert("Check temp")
-    console.log({temp1111: temp1})
-    
-    console.log({temp2222: temp})
-    await setTaskForm(temp);
-    console.log({taskForm12345678: taskForm})
-    console.log({taskForm12345678temp: temp})
+      console.log({ task: task.hazards });
 
-    await setHazardForm(temp1['hazards'])
-    console.log({hazardForm: hazardForm})
-    
+      temp.taskIdentification = task.taskIdentification;
+      temp.hazards = task.hazards;
+      return temp;
+    });
+    alert('Check temp');
+    console.log({ temp1111: temp1 });
+
+    console.log({ temp2222: temp });
+    await setTaskForm(temp);
+    console.log({ taskForm12345678: taskForm });
+    console.log({ taskForm12345678temp: temp });
+
+    await setHazardForm(temp1.hazards);
+    console.log({ hazardForm });
   };
 
 
-  const handleJobFormSubmit = async() => {
+  const handleJobFormSubmit = async () => {
     const { error, isValid } = validate(jobForm);
-    if(isValid){
-      await createFlha()
-    }
-    else{
+    if (isValid) {
+      await createFlha();
+    } else {
       await setError(error);
     }
-    
-    
-    
-  }
+  };
 
-  const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
+  const selectBreakdown = JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+    ? JSON.parse(localStorage.getItem('selectBreakDown'))
     : null;
-  let struct = "";
+  let struct = '';
   for (const i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-  const fkUserId = JSON.parse(localStorage.getItem("userDetails")).id;
+  const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+  const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+    .projectName.projectId;
+  const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
 
-  const createFlha = async() => {
-    
-    const data = {...jobForm}
-    console.log({jobform: data})
-    
-    data['fkCompanyId'] = fkCompanyId
-    data['fkProjectId'] = fkProjectId
-    data['fkProjectStructureIds'] = fkProjectStructureIds
-    data['createdBy'] = fkUserId
-    data['attachment'] = (acceptedFiles) ? acceptedFiles[0] : null
-    console.log({jobformUpdated: data})
-    
-    const formData = new FormData()
+  const createFlha = async () => {
+    const data = { ...jobForm };
+    console.log({ jobform: data });
+
+    data.fkCompanyId = fkCompanyId;
+    data.fkProjectId = fkProjectId;
+    data.fkProjectStructureIds = fkProjectStructureIds;
+    data.createdBy = fkUserId;
+    data.attachment = (acceptedFiles) ? acceptedFiles[0] : null;
+    console.log({ jobformUpdated: data });
+
+    const formData = new FormData();
     // formData.append(data)
-    console.log({formData: formData})
+    console.log({ formData });
 
-    for ( var key in data ) {
+    for (const key in data) {
       formData.append(key, data[key]);
     }
-    console.log({formData1111: formData})
+    console.log({ formData1111: formData });
     // return;
     // return;
     const res = await api.post(
       '/api/v1/flhas/',
       formData
     );
-    console.log(res.data.data.results.id)
-    await setFlha(res.data.data.results.id)
-    
-    await createCriticalTask(res.data.data.results.id)
-  }
+    console.log(res.data.data.results.id);
+    await setFlha(res.data.data.results.id);
 
-  const createCriticalTask = async(flha) => {
-    const data = taskForm
+    await createCriticalTask(res.data.data.results.id);
+  };
+
+  const createCriticalTask = async (flha) => {
+    const data = taskForm;
     // data['fkFlhaId'] = flha
-    console.log({data:data})
-    console.log(data[0])
-    const flhaData =  data.map((flhaDetail, index)=>{
-      console.log({flha: data})
-      data[index]['fkFlhaId'] = flha
-      data[index]['createdBy'] = fkUserId
-      if(data[index]['hazards'].length > 0){
-        data[index]['hazards'].map((dat, key)=>{
-          data[index]['hazards'][key]['status'] = 'Active'
-          data[index]['hazards'][key]['createdBy'] = fkUserId
-          data[index]['hazards'][key]['updatedBy'] = fkUserId
-        })
+    console.log({ data });
+    console.log(data[0]);
+    const flhaData = data.map((flhaDetail, index) => {
+      console.log({ flha: data });
+      data[index].fkFlhaId = flha;
+      data[index].createdBy = fkUserId;
+      if (data[index].hazards.length > 0) {
+        data[index].hazards.map((dat, key) => {
+          data[index].hazards[key].status = 'Active';
+          data[index].hazards[key].createdBy = fkUserId;
+          data[index].hazards[key].updatedBy = fkUserId;
+        });
       }
-      console.log({updatedData: data})
-    })
-    console.log({data:data})
+      console.log({ updatedData: data });
+    });
+    console.log({ data });
     const res = await api.post(
       `/api/v1/flhas/${flha}/criticaltasks/`,
       data
     );
-    console.log({criticalpost: res.data.data.results})
-    await createVisualConfirmation(flha)
-  }
+    console.log({ criticalpost: res.data.data.results });
+    await createVisualConfirmation(flha);
+  };
 
-  const createVisualConfirmation = async(flha) => {
-    history.push('/app/pages/assesments/xflha/')
+  const createVisualConfirmation = async (flha) => {
+    history.push('/app/pages/assesments/xflha/');
     // alert(flha)
-  }
+  };
 
   // const handleChangeHazardStatus = async(e, key, fieldname) => {
 
@@ -690,10 +683,9 @@ bytes
 
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
-    
-    getSupervisors()
-    getFieldContractors()
-    getDepartments()
+    getSupervisors();
+    getFieldContractors();
+    getDepartments();
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -702,63 +694,65 @@ bytes
     }
   }, [open]);
 
-  const getDepartments = async() => {
-
-    var config = {
-      method: "get",
+  const getDepartments = async () => {
+    const config = {
+      method: 'get',
       url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/departments/`,
       headers: HEADER_AUTH,
     };
     const res = await api(config);
 
-    console.log({departments :res.data.data.results})
-    setDepartments(res.data.data.results)
-  }
+    console.log({ departments: res.data.data.results });
+    setDepartments(res.data.data.results);
+  };
 
-  const handleDepartmentSelection = async(e, value) => {
-    getJobTitles(value.id)
-  }
+  const handleDepartmentSelection = async (e, value) => {
+    getJobTitles(value.id);
+  };
 
-  const getSupervisors = async() => {
-    const res = await api.get("api/v1/lists/2/value");
-    console.log({supervisor:res.data.data.results})
-    setSupervisors(res.data.data.results)
-  }
-  const getFieldContractors = async() => {
-    const res = await api.get("api/v1/lists/3/value");
-    console.log({fieldContractor:res.data.data.results})
-    setContractors(res.data.data.results)
-  }
-  const getJobTitles = async(id) => {
-    alert(234567)
-    const res = await api.get("api/v1/configflhas/department/"+id+"/jobtitles/");
-    console.log({jobtitles:res.data.data.results})
-    await setjobTitles(res.data.data.results)
-  }
+  const getSupervisors = async () => {
+    const res = await api.get('api/v1/lists/2/value');
+    console.log({ supervisor: res.data.data.results });
+    setSupervisors(res.data.data.results);
+  };
+  const getFieldContractors = async () => {
+    const res = await api.get('api/v1/lists/3/value');
+    console.log({ fieldContractor: res.data.data.results });
+    setContractors(res.data.data.results);
+  };
+  const getJobTitles = async (id) => {
+    alert(234567);
+    const res = await api.get('api/v1/configflhas/department/' + id + '/jobtitles/');
+    console.log({ jobtitles: res.data.data.results });
+    await setjobTitles(res.data.data.results);
+  };
 
-  const handleJobSelection = async(jobTitleId) => {
-    const res = await api.get("api/v1/configflhas/jobtitles/"+jobTitleId+"/");
-    const selectedJobTitle = res.data.data.results
-    console.log({jobtitleseleted:selectedJobTitle})
+  const handleJobSelection = async (jobTitleId) => {
+    const res = await api.get('api/v1/configflhas/jobtitles/' + jobTitleId + '/');
+    const selectedJobTitle = res.data.data.results;
+    console.log({ jobtitleseleted: selectedJobTitle });
 
-    const temp = {...jobForm};
+    const temp = { ...jobForm };
 
-    console.log({temp: temp})
+    console.log({ temp });
     // await setJobForm(temp);
 
     setJobForm(
       {
-        "jobTitle":selectedJobTitle.jobTitle, "jobDetails":selectedJobTitle.jobDetail,
-         "location": jobForm.location, "status": "Active", "dateTimeFlha":"", 
-         "permitToWork":jobForm.permitToWork,
-         "jobTitleImage": selectedJobTitle.jobTitleImage,
+        jobTitle: selectedJobTitle.jobTitle,
+        jobDetails: selectedJobTitle.jobDetail,
+        location: jobForm.location,
+        status: 'Active',
+        dateTimeFlha: '',
+        permitToWork: jobForm.permitToWork,
+        jobTitleImage: selectedJobTitle.jobTitleImage,
       }
     );
-    console.log({jobtitleseleted:jobForm})
-    await handleSelectedJobHazardFormTemp(selectedJobTitle.critical_tasks)
-    setOpen(false)
+    console.log({ jobtitleseleted: jobForm });
+    await handleSelectedJobHazardFormTemp(selectedJobTitle.critical_tasks);
+    setOpen(false);
     // setjobTitles(res.data.data.results.results)
-  }
+  };
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -771,70 +765,66 @@ bytes
     setExpanded(isExpanded ? panel : false);
   };
 
-  
+
   const [expanded1, setExpanded1] = React.useState(false);
   const handleOneChange = (panell) => (event, isExpanded1) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
 
-  
+
   const handleRiskChange = (e, key, taskIndex, fieldname) => {
-      console.log(e.nativeEvent.target.innerText)
-      const temp = [...taskForm];
-      const txt = e.nativeEvent.target.innerText
-      temp[taskIndex].hazards[key][fieldname] = e.target.value
-      // if(fieldname == "riskSeverity"){
-        var riskSeverity = ((temp[taskIndex].hazards[key]['riskSeverityValue'] == undefined || temp[taskIndex].hazards[key]['riskSeverityValue'] == "") ? 1 : temp[taskIndex].hazards[key]['riskSeverityValue'])
-      
-      // }
-      // else if(fieldname == "riskProbability"){
-        var riskProbability = ((temp[taskIndex].hazards[key]['riskProbabilityValue'] == undefined || temp[taskIndex].hazards[key]['riskProbabilityValue'] == "") ? 1 : temp[taskIndex].hazards[key]['riskProbabilityValue'])
-      // }
-      
-      
-      console.log({riskSeverity:riskSeverity})
-      console.log({riskSeverity:riskProbability})
-      const riskRating =  riskSeverity * riskProbability;
-      // alert(riskRating)
-      
-      if(fieldname == 'riskSeverityValue'){
-        alert('severity')
-        temp[taskIndex].hazards[key]['riskSeverity'] = txt
-      }
-      else{
-        alert('probability')
-        temp[taskIndex].hazards[key]['riskProbability'] = txt
-      }
+    console.log(e.nativeEvent.target.innerText);
+    const temp = [...taskForm];
+    const txt = e.nativeEvent.target.innerText;
+    temp[taskIndex].hazards[key][fieldname] = e.target.value;
+    // if(fieldname == "riskSeverity"){
+    const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverityValue == undefined || temp[taskIndex].hazards[key].riskSeverityValue == '') ? 1 : temp[taskIndex].hazards[key].riskSeverityValue);
 
-      if(riskRating >= 1 && riskRating <= 4){
-        // alert("low")
-        temp[taskIndex].hazards[key]['riskRatingLevel'] = "Low"
-        temp[taskIndex].hazards[key]['riskRatingColour'] = "#1EBD10"
-      }
-      else if(riskRating > 4 && riskRating <= 9){
-        // alert("medium")
-        temp[taskIndex].hazards[key]['riskRatingLevel'] = "Medium"
-        temp[taskIndex].hazards[key]['riskRatingColour'] = "#FFEB13"
-      }
-      else if(riskRating > 9 && riskRating <= 14){
-        // alert("serious")
-        temp[taskIndex].hazards[key]['riskRatingLevel'] = "Serious"
-        temp[taskIndex].hazards[key]['riskRatingColour'] = "#F3C539"
-      }
-      else{
-        // alert("high")
-        temp[taskIndex].hazards[key]['riskRatingLevel'] = "High"
-        temp[taskIndex].hazards[key]['riskRatingColour'] = "#FF0000"
-      }
+    // }
+    // else if(fieldname == "riskProbability"){
+    const riskProbability = ((temp[taskIndex].hazards[key].riskProbabilityValue == undefined || temp[taskIndex].hazards[key].riskProbabilityValue == '') ? 1 : temp[taskIndex].hazards[key].riskProbabilityValue);
+    // }
 
-      console.log({updated: temp})
-      setTaskForm(temp)
-  }
+
+    console.log({ riskSeverity });
+    console.log({ riskSeverity: riskProbability });
+    const riskRating = riskSeverity * riskProbability;
+    // alert(riskRating)
+
+    if (fieldname == 'riskSeverityValue') {
+      alert('severity');
+      temp[taskIndex].hazards[key].riskSeverity = txt;
+    } else {
+      alert('probability');
+      temp[taskIndex].hazards[key].riskProbability = txt;
+    }
+
+    if (riskRating >= 1 && riskRating <= 4) {
+      // alert("low")
+      temp[taskIndex].hazards[key].riskRatingLevel = 'Low';
+      temp[taskIndex].hazards[key].riskRatingColour = '#1EBD10';
+    } else if (riskRating > 4 && riskRating <= 9) {
+      // alert("medium")
+      temp[taskIndex].hazards[key].riskRatingLevel = 'Medium';
+      temp[taskIndex].hazards[key].riskRatingColour = '#FFEB13';
+    } else if (riskRating > 9 && riskRating <= 14) {
+      // alert("serious")
+      temp[taskIndex].hazards[key].riskRatingLevel = 'Serious';
+      temp[taskIndex].hazards[key].riskRatingColour = '#F3C539';
+    } else {
+      // alert("high")
+      temp[taskIndex].hazards[key].riskRatingLevel = 'High';
+      temp[taskIndex].hazards[key].riskRatingColour = '#FF0000';
+    }
+
+    console.log({ updated: temp });
+    setTaskForm(temp);
+  };
 
   const handleFileUpload = (e) => {
-    alert("changing file")
-    console.log(e.target.file)
-  }
+    alert('changing file');
+    console.log(e.target.file);
+  };
 
   return (
     <div>
@@ -847,7 +837,7 @@ bytes
                   <Grid item xs={12}>
                     <FormLabel component="legend">Project</FormLabel>
                     <Typography>
-                      {JSON.parse(localStorage.getItem("projectName")).projectName.projectName}
+                      {JSON.parse(localStorage.getItem('projectName')).projectName.projectName}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
@@ -872,7 +862,7 @@ Select Job
                       id="JobTitle"
                       label="*Title"
                       className={classes.fullWidth}
-                      onChange = {(e) => handleJobFormChange(e, 'jobTitle')}
+                      onChange={(e) => handleJobFormChange(e, 'jobTitle')}
                       value={jobForm.jobTitle}
                     />
                   </Grid>
@@ -898,7 +888,7 @@ Select Job
                                 options={departments}
                                 getOptionLabel={(option) => option.departmentName}
                                 renderInput={(params) => <TextField {...params} label="department" variant="outlined" />}
-                                onChange = {(e, value)=>handleDepartmentSelection(e, value)}
+                                onChange={(e, value) => handleDepartmentSelection(e, value)}
                               />
                             </div>
                           </Grid>
@@ -913,9 +903,9 @@ Select Job
                         >
                           <Grid container spacing={3}>
                             {(jobTitles.length > 0) ? jobTitles.map((jobTitle) => (
-                                <Grid item xs={3} onClick={()=>handleJobSelection(jobTitle.id)}><Tooltip title={jobTitle.jobTitle} placement="bottom"><img src={jobTitle.jobTitleImage} alt="decoration" /></Tooltip></Grid>
-                            )) : ""}
-                            </Grid>
+                              <Grid item xs={3} onClick={() => handleJobSelection(jobTitle.id)}><Tooltip title={jobTitle.jobTitle} placement="bottom"><img src={jobTitle.jobTitleImage} alt="decoration" /></Tooltip></Grid>
+                            )) : ''}
+                          </Grid>
                         </DialogContentText>
                       </DialogContent>
                       <Box padding={3}>
@@ -947,7 +937,7 @@ Select Job
                       id="description"
                       label="*Details"
                       className={classes.fullWidth}
-                      onChange = {(e)=>handleJobFormChange(e, 'jobDetails')}
+                      onChange={(e) => handleJobFormChange(e, 'jobDetails')}
                       value={jobForm.jobDetails}
                     />
                   </Grid>
@@ -973,209 +963,204 @@ Critical tasks
 
                       <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
                         <div>
-                        {taskForm.map((taskValue, taskIndex) => (
+                          {taskForm.map((taskValue, taskIndex) => (
                           // console.log({taskform: taskForm})
                           // console.log({taskvalue: taskValue})
-                          <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel1bh-content"
-                              id="panel1bh-header"
-                              className={classes.headingColor}
-                            >
-                              <Typography className={classes.heading}>
-                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
-                                {' '}
+                            <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                                className={classes.headingColor}
+                              >
+                                <Typography className={classes.heading}>
+                                  <MenuOpenOutlinedIcon className={classes.headingIcon} />
+                                  {' '}
 Task#1 - "Task identification"
-                              </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Grid item sm={12} xs={12}>
-                                <TextField
-                                  multiline
-                                  variant="outlined"
-                                  rows="1"
-                                  id="taskIdentification"
-                                  label="*Task Identification"
-                                  className={classes.fullWidth}
-                                  value={(taskValue.taskIdentification != undefined) ? taskValue.taskIdentification : ""}
-                                  onChange={(e) =>
-                                    handleHazardForm(e,null, taskIndex, "taskIdentification")
-                                  }
-                                />
-                              </Grid>
-                              {taskValue.hazards.map((item, index) => (
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Grid item sm={12} xs={12}>
+                                  <TextField
+                                    multiline
+                                    variant="outlined"
+                                    rows="1"
+                                    id="taskIdentification"
+                                    label="*Task Identification"
+                                    className={classes.fullWidth}
+                                    value={(taskValue.taskIdentification != undefined) ? taskValue.taskIdentification : ''}
+                                    onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
+                                    }
+                                  />
+                                </Grid>
+                                {taskValue.hazards.map((item, index) => (
                                 // console.log({item: item})
-                              <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
-                                <AccordionSummary
-                                  expandIcon={<ExpandMoreIcon />}
-                                  aria-controls="panel2bh-content"
-                                  id="panel2bh-header"
-                                  className={classes.headingColor}
-                                >
-                                  <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>
-                                  <Typography className={classes.secondaryHeading}>
-                                    <Fab
-                                      color="secondary"
-                                      size="small"
-                                      align="right"
-                                      height={30}
-                                      width={30}
-                                      aria-label="remove"
-                                      className={classNames(classes.button, classes.mRight)}
+                                  <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
+                                    <AccordionSummary
+                                      expandIcon={<ExpandMoreIcon />}
+                                      aria-controls="panel2bh-content"
+                                      id="panel2bh-header"
+                                      className={classes.headingColor}
                                     >
-                                      <RemoveIcon />
-                                    </Fab>
-                                  </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                  <Grid container spacing={0}>
-                                    <Grid item sm={11} xs={8}>
-                                      <FormControl
-                                        variant="outlined"
-                                        requirement
-                                        className={classes.formControl}
-                                      >
-                                        <InputLabel id="demo-simple-select-label">
+                                      <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>
+                                      <Typography className={classes.secondaryHeading}>
+                                        <Fab
+                                          color="secondary"
+                                          size="small"
+                                          align="right"
+                                          height={30}
+                                          width={30}
+                                          aria-label="remove"
+                                          className={classNames(classes.button, classes.mRight)}
+                                        >
+                                          <RemoveIcon />
+                                        </Fab>
+                                      </Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                      <Grid container spacing={0}>
+                                        <Grid item sm={11} xs={8}>
+                                          <FormControl
+                                            variant="outlined"
+                                            requirement
+                                            className={classes.formControl}
+                                          >
+                                            <InputLabel id="demo-simple-select-label">
                                     *Hazards
-                                        </InputLabel>
-                                        <TextField
-                                          multiline
-                                          variant="outlined"
-                                          rows="3"
-                                          id="hazards"
-                                          // label="*Hazards"
-                                          className={classes.fullWidth}
-                                          value={item.hazard}
-                                          onChange={(e) =>
-                                            handleHazardForm(e, index, taskIndex, "hazards")
-                                          }
-                                        />
-                                      </FormControl>
-                                      <div className={classes.spacer}>
-                                        <FormControl component="fieldset">
-                                        <FormLabel component="legend">
-                                          Hazard Status
-                                        </FormLabel>
-                                          <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e)=>handleHazardForm(e, index, taskIndex, 'hazardStatus')}>
-                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                                          </RadioGroup>
-                                        </FormControl>
-                                      </div>
-                                    </Grid>
-                                    <Grid item sm={1} xs={4}>
-                                      {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ""}
-                                    </Grid>
-                                    <Grid container spacing={2}>
-                                      <Grid item sm={12} xs={12}>
-                                        <TextField
-                                          multiline
-                                          variant="outlined"
-                                          rows="3"
-                                          id="description"
-                                          label="*Control"
-                                          className={classes.fullWidth}
-                                          value={item.control}
-                                          onChange={(e) =>
-                                            handleHazardForm(e, index,taskIndex,  "control")
-                                          }
-                                        />
-                                        <div className={classes.spacer}>
-                                          <FormControl component="fieldset">
-                                          <FormLabel component="legend">
-                                            Control Status
-                                          </FormLabel>
-                                            <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e)=>handleHazardForm(e, index,taskIndex,  'controlStatus')}>
-                                              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                              <FormControlLabel value="No" control={<Radio />} label="No" />
-                                              <FormControlLabel value="NA" control={<Radio />} label="NA" />
-                                            </RadioGroup>
+                                            </InputLabel>
+                                            <TextField
+                                              multiline
+                                              variant="outlined"
+                                              rows="3"
+                                              id="hazards"
+                                              // label="*Hazards"
+                                              className={classes.fullWidth}
+                                              value={item.hazard}
+                                              onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazards')
+                                              }
+                                            />
                                           </FormControl>
-                                        </div>
-                                      </Grid>
-                                    </Grid>
-                                    <Grid container spacing={1}>
-                                      <Grid item md={4} sm={4} xs={12}>
-                                        <FormControl
-                                          variant="outlined"
-                                          requirement
-                                          className={classes.formControl}
-                                        >
-                                          <InputLabel id="demo-simple-select-label">
+                                          <div className={classes.spacer}>
+                                            <FormControl component="fieldset">
+                                              <FormLabel component="legend">
+                                          Hazard Status
+                                              </FormLabel>
+                                              <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazardStatus')}>
+                                                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                                <FormControlLabel value="No" control={<Radio />} label="No" />
+                                              </RadioGroup>
+                                            </FormControl>
+                                          </div>
+                                        </Grid>
+                                        <Grid item sm={1} xs={4}>
+                                          {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                        </Grid>
+                                        <Grid container spacing={2}>
+                                          <Grid item sm={12} xs={12}>
+                                            <TextField
+                                              multiline
+                                              variant="outlined"
+                                              rows="3"
+                                              id="description"
+                                              label="*Control"
+                                              className={classes.fullWidth}
+                                              value={item.control}
+                                              onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
+                                              }
+                                            />
+                                            <div className={classes.spacer}>
+                                              <FormControl component="fieldset">
+                                                <FormLabel component="legend">
+                                            Control Status
+                                                </FormLabel>
+                                                <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
+                                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                                  <FormControlLabel value="No" control={<Radio />} label="No" />
+                                                  <FormControlLabel value="NA" control={<Radio />} label="NA" />
+                                                </RadioGroup>
+                                              </FormControl>
+                                            </div>
+                                          </Grid>
+                                        </Grid>
+                                        <Grid container spacing={1}>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormControl
+                                              variant="outlined"
+                                              requirement
+                                              className={classes.formControl}
+                                            >
+                                              <InputLabel id="demo-simple-select-label">
                                         Risk Severity
-                                          </InputLabel>
-                                          <Select
-                                            labelId="incident-type-label"
-                                            id="riskSeverityValue"
-                                            label="Risk Severity"
-                                            name="riskSeverityValue"
-                                            value={item.riskSeverityValue}
-                                            onChange={(e) =>
-                                              handleRiskChange(e, index,taskIndex, "riskSeverityValue")
-                                            }
-                                          >
+                                              </InputLabel>
+                                              <Select
+                                                labelId="incident-type-label"
+                                                id="riskSeverityValue"
+                                                label="Risk Severity"
+                                                name="riskSeverityValue"
+                                                value={item.riskSeverityValue}
+                                                onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskSeverityValue')
+                                                }
+                                              >
 
-                                            <MenuItem value={1}>Negligible</MenuItem>
-                                            <MenuItem value={2}>Minor</MenuItem>
-                                            <MenuItem value={3}>Moderate</MenuItem>
-                                            <MenuItem value={4}>Major/ Critical</MenuItem>
-                                            <MenuItem value={5}>Catastrophic</MenuItem>
-                                          </Select>
-                                        </FormControl>
-                                      </Grid>
-                                      <Grid item md={4} sm={4} xs={12}>
-                                        <FormControl
-                                          variant="outlined"
-                                          requirement
-                                          className={classes.formControl}
-                                        >
-                                          <InputLabel id="demo-simple-select-label">
+                                                <MenuItem value={1}>Negligible</MenuItem>
+                                                <MenuItem value={2}>Minor</MenuItem>
+                                                <MenuItem value={3}>Moderate</MenuItem>
+                                                <MenuItem value={4}>Major/ Critical</MenuItem>
+                                                <MenuItem value={5}>Catastrophic</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormControl
+                                              variant="outlined"
+                                              requirement
+                                              className={classes.formControl}
+                                            >
+                                              <InputLabel id="demo-simple-select-label">
                                         Risk Probability
-                                          </InputLabel>
-                                          <Select
-                                            labelId="incident-type-label"
-                                            id="riskProbabilityValue"
-                                            label="Risk Probability"
-                                            value={item.riskProbabilityValue}
-                                            onChange={(e) =>
-                                              handleRiskChange(e, index, taskIndex, "riskProbabilityValue")
-                                            }
-                                          >
-                                            <MenuItem value={1} selected={item.riskProbability == 1}>Improbable</MenuItem>
-                                            <MenuItem value={2} selected={item.riskProbability == 2}>Remote</MenuItem>
-                                            <MenuItem value={3} selected={item.riskProbability == 3}>Occasional</MenuItem>
-                                            <MenuItem value={4} selected={item.riskProbability == 4}>Probable</MenuItem>
-                                            <MenuItem value={5} selected={item.riskProbability == 5}>Frequent</MenuItem>
-                                          </Select>
-                                        </FormControl>
-                                      </Grid>
-                                      <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{backgroundColor:item.riskRatingColour}}>
+                                              </InputLabel>
+                                              <Select
+                                                labelId="incident-type-label"
+                                                id="riskProbabilityValue"
+                                                label="Risk Probability"
+                                                value={item.riskProbabilityValue}
+                                                onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskProbabilityValue')
+                                                }
+                                              >
+                                                <MenuItem value={1} selected={item.riskProbability == 1}>Improbable</MenuItem>
+                                                <MenuItem value={2} selected={item.riskProbability == 2}>Remote</MenuItem>
+                                                <MenuItem value={3} selected={item.riskProbability == 3}>Occasional</MenuItem>
+                                                <MenuItem value={4} selected={item.riskProbability == 4}>Probable</MenuItem>
+                                                <MenuItem value={5} selected={item.riskProbability == 5}>Frequent</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
                                             {item.riskRatingLevel}
+                                          </Grid>
+                                        </Grid>
                                       </Grid>
-                                    </Grid>
-                                  </Grid>
-                                </AccordionDetails>
-                              </Accordion>
-                              
-                              ))}
-                              
-                              <Grid item xs={12} className={classes.createHazardbox}>
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  startIcon={<AddCircleIcon />}
-                                  className={classes.button}
-                                  onClick={(e) => handleNewHazard(e, taskIndex)}
-                                >
+                                    </AccordionDetails>
+                                  </Accordion>
+
+                                ))}
+
+                                <Grid item xs={12} className={classes.createHazardbox}>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<AddCircleIcon />}
+                                    className={classes.button}
+                                    onClick={(e) => handleNewHazard(e, taskIndex)}
+                                  >
                                   Add new hazard
-                                </Button>
-                              </Grid>
-                            </AccordionDetails>
-                          </Accordion>
-                        
-                        ))}
-                          
+                                  </Button>
+                                </Grid>
+                              </AccordionDetails>
+                            </Accordion>
+
+                          ))}
+
                         </div>
 
                       </Grid>
@@ -1276,8 +1261,8 @@ Job visual confirmation
                   <Grid item sm={6} xs={12}>
                     <Typography variant="Body1" className={classes.labelColor}>Attach files</Typography>
                     <Grid item md={12} xs={12} className={classes.formBox}>
-                      <div {...getRootProps({ className: 'dropzone' }) } onDrop={(e)=>handleFileUpload(e)}>
-                        <input  onDrop={(e)=>handleFileUpload(e)} {...getInputProps()} />
+                      <div {...getRootProps({ className: 'dropzone' })} onDrop={(e) => handleFileUpload(e)}>
+                        <input onDrop={(e) => handleFileUpload(e)} {...getInputProps()} />
                         <p>Drag 'n' drop or click to select files</p>
                       </div>
                       <aside>
@@ -1296,7 +1281,7 @@ Job visual confirmation
                         id="date-picker-dialog"
                         format="yyyy-mm-dd"
                         value={selectedDate}
-                        onChange={(e)=>handleJobFormChange(e, 'dateTimeFlha')}
+                        onChange={(e) => handleJobFormChange(e, 'dateTimeFlha')}
                       />
 
                     </MuiPickersUtilsProvider>
@@ -1320,7 +1305,7 @@ Job visual confirmation
                     <div className={classes.spacer}>
                       <FormControl component="fieldset" display="inline">
                         <FormLabel component="legend">*Is permit to work done?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="permitToWork" name="permitToWork" value={jobForm.permitToWork} onChange={(e)=>handleJobFormChange(e, 'permitToWork')}>
+                        <RadioGroup className={classes.radioInline} aria-label="permitToWork" name="permitToWork" value={jobForm.permitToWork} onChange={(e) => handleJobFormChange(e, 'permitToWork')}>
                           <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="no" control={<Radio />} label="No" />
                           <FormControlLabel value="na" control={<Radio />} label="NA" />
@@ -1336,7 +1321,7 @@ Job visual confirmation
                       rows="1"
                       label="Enter permit number"
                       value={jobForm.permitNumber}
-                      onChange={(e)=>handleJobFormChange(e, 'permitNumber')}
+                      onChange={(e) => handleJobFormChange(e, 'permitNumber')}
                       className={classes.fullWidth}
                     />
                   </Grid>
@@ -1367,8 +1352,7 @@ Notification block
                         id="incident-type"
                         label="Reference Group"
                         value={jobForm.referenceGroup}
-                        onChange={(e) =>
-                          handleJobFormChange(e, "referenceGroup")
+                        onChange={(e) => handleJobFormChange(e, 'referenceGroup')
                         }
                       >
                         <MenuItem value="one">One</MenuItem>
@@ -1386,8 +1370,7 @@ Notification block
                       label="Reference Number"
                       className={classes.fullWidth}
                       value={jobForm.referenceNumber}
-                      onChange={(e) =>
-                        handleJobFormChange(e,"referenceNumber")
+                      onChange={(e) => handleJobFormChange(e, 'referenceNumber')
                       }
                     />
                   </Grid>
@@ -1400,8 +1383,7 @@ Notification block
                         getOptionLabel={(option) => option.inputValue}
                         renderInput={(params) => <TextField {...params} label="*Supervisor" variant="outlined" />}
                         value={jobForm.supervisor}
-                        onChange={(e, value) =>
-                          handleJobFormChange(e, "supervisor", value)
+                        onChange={(e, value) => handleJobFormChange(e, 'supervisor', value)
                         }
                       />
                     </div>
@@ -1415,8 +1397,7 @@ Notification block
                         getOptionLabel={(option) => option.inputValue}
                         renderInput={(params) => <TextField {...params} label="Field Contractor" variant="outlined" />}
                         value={jobForm.fieldContractor}
-                        onChange={(e, value) =>
-                          handleJobFormChange(e, value)
+                        onChange={(e, value) => handleJobFormChange(e, value)
                         }
                       />
                     </div>
@@ -1425,7 +1406,7 @@ Notification block
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">*Is a First Aid/Medical Aid present for your Shift?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="firstAid" name="firstAid" value={jobForm.firstAid} onChange={(e)=>handleJobFormChange(e, 'firstAid')}>
+                        <RadioGroup className={classes.radioInline} aria-label="firstAid" name="firstAid" value={jobForm.firstAid} onChange={(e) => handleJobFormChange(e, 'firstAid')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -1441,8 +1422,7 @@ Notification block
                       label="Emergency Phone Number"
                       className={classes.fullWidth}
                       value={jobForm.emergencyPhoneNumber}
-                      onChange={(e) =>
-                        handleJobFormChange(e, "emergencyPhoneNumber")
+                      onChange={(e) => handleJobFormChange(e, 'emergencyPhoneNumber')
                       }
                     />
                   </Grid>
@@ -1450,7 +1430,7 @@ Notification block
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">*Has the JHA been reviewed?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="jhaReviewed" name="jhaReviewed" value={jobForm.jhaReviewed} onChange={(e)=>handleJobFormChange(e, 'jhaReviewed')}>
+                        <RadioGroup className={classes.radioInline} aria-label="jhaReviewed" name="jhaReviewed" value={jobForm.jhaReviewed} onChange={(e) => handleJobFormChange(e, 'jhaReviewed')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -1466,8 +1446,7 @@ Notification block
                       label="Enter the evacuation/Assembly Point"
                       className={classes.fullWidth}
                       value={jobForm.evacuationPoint}
-                      onChange={(e) =>
-                        handleJobFormChange(e, "evacuationPoint")
+                      onChange={(e) => handleJobFormChange(e, 'evacuationPoint')
                       }
                     />
                   </Grid>
@@ -1475,7 +1454,7 @@ Notification block
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">*Do you have access to Job Procedure?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="accessToJobProcedure" name="accessToJobProcedure" value={jobForm.accessToJobProcedure} onChange={(e)=>handleJobFormChange(e, 'accessToJobProcedure')}>
+                        <RadioGroup className={classes.radioInline} aria-label="accessToJobProcedure" name="accessToJobProcedure" value={jobForm.accessToJobProcedure} onChange={(e) => handleJobFormChange(e, 'accessToJobProcedure')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -1490,8 +1469,8 @@ Notification block
                       rows="1"
                       label="Enter the location details"
                       className={classes.fullWidth}
-                      value={(jobForm.location) ? (jobForm.location) : ""}
-                      onChange = {(e) => handleJobFormChange(e, 'location')}
+                      value={(jobForm.location) ? (jobForm.location) : ''}
+                      onChange={(e) => handleJobFormChange(e, 'location')}
                     />
                   </Grid>
                   <Divider className={classes.divider} />
