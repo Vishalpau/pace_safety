@@ -160,7 +160,6 @@ function Observations(props) {
     setListToggle(false);
     history.push(`/app/observations`);
   };
-console.log(allInitialData)
   const handelViewTabel = (e) => {
     setListToggle(true);
     history.push(`/app/observations#table`);
@@ -175,7 +174,6 @@ console.log(allInitialData)
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
     localStorage.setItem("fkobservationId", id);
-    // console.log(allInitialData.isCorrectiveActionTaken)
     if (allInitialData[index].isCorrectiveActionTaken !== null) {
       localStorage.setItem("action", "Done");
     } else {
@@ -198,7 +196,6 @@ console.log(allInitialData)
     localStorage.removeItem("action");
     history.push("/app/observation-initial-notification");
   };
-  console.log(allInitialData)
   const columns = [
     {
       name: "Number",
@@ -272,7 +269,6 @@ console.log(allInitialData)
       props.projectName.projectId ||
       JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
     const res = await api.get("/api/v1/observations/");
-    console.log(res)
     const selectBreakdown =
       props.projectName.breakDown ||
       JSON.parse(localStorage.getItem("selectBreakDown")) !== null
@@ -299,7 +295,6 @@ console.log(allInitialData)
         (item) =>
           item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
       );
-      console.log("lll",newData);
       await setAllInitialData(newData);
 
       // const res = await api.get(`/api/v1/observations/`);
@@ -455,7 +450,7 @@ console.log(allInitialData)
                                 <Grid item md={3}>
                                   <Chip
                                     variant="outlined"
-                                    label={item[1]["isCorrectiveActionTaken"] == null ? "Initial Notification" : "Action Taken"}
+                                    label={item[1]["isCorrectiveActionTaken"] == null ? "Initial Notification" : "Action Tracking"}
                                     color="primary"
                                     size="small"
                                   />

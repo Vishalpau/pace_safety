@@ -44,6 +44,7 @@ import { Comments } from "../../pageListAsync";
 import Type from "../../../styles/components/Fonts.scss";
 import { connect } from 'react-redux'
 import Axios from 'axios'
+import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 
 import {
   access_token,
@@ -186,6 +187,7 @@ const ObservationInitialNotification = (props) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
 
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [breakdownData, setBreakDownData] = useState([])
@@ -194,7 +196,6 @@ const ObservationInitialNotification = (props) => {
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
-  const [selectDepthAndId, setSelectDepthAndId] = useState([])
   let filterSuperVisorId = []
   let filterSuperVisorBadgeNo = []
   const radioType = ["Risk", "Comments", "Positive behavior"];
@@ -228,7 +229,6 @@ const ObservationInitialNotification = (props) => {
   let filterReportedByBedgeID = []
   let filterSuperVisorName = []
   let filterDepartmentName = []
-
   const fetchSuperVisorName = () => {
     let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const config = {
@@ -321,7 +321,6 @@ const ObservationInitialNotification = (props) => {
         // window.location.href = {LOGIN_URL}
       });
   };
-  console.log(departmentName)
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
@@ -367,7 +366,6 @@ const ObservationInitialNotification = (props) => {
     vendor: "string",
     vendorReferenceId: "string",
   });
-  console.log(form.fkProjectStructureIds)
 
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([
@@ -446,6 +444,11 @@ const ObservationInitialNotification = (props) => {
   ]);
   // when click on submit button handleSubmit is called
   const handleSubmit = async () => {
+    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+      return depth;
+    }).join(':')
+    form["fkProjectStructureIds"] = fkProjectStructureId
 
     // if any error then this part is executed
     const { error, isValid } = InitialNotificationValidator(form);
@@ -722,10 +725,12 @@ const ObservationInitialNotification = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
+
     const projectData = JSON.parse(localStorage.getItem('projectName'));
 
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -738,7 +743,7 @@ const ObservationInitialNotification = (props) => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
@@ -757,7 +762,7 @@ const ObservationInitialNotification = (props) => {
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+            }${breakDown[key-1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -765,7 +770,7 @@ const ObservationInitialNotification = (props) => {
           .then(async (response) => {
 
             const result = response.data.data.results;
-            console.log({ fetchSelectBreakDownList: result })
+  
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
@@ -934,12 +939,7 @@ const ObservationInitialNotification = (props) => {
     await setIsLoading(true);
   };
   useEffect(() => {
-    if (id) {
-      fetchInitialiObservationData();
-      fetchCheckBoxData();
-      fetchSuperVisorName()
-      setFileShow(true)
-    }else{
+    
       fetchTags()
       fetchDepartment()
       fetchAttachment()
@@ -948,18 +948,8 @@ const ObservationInitialNotification = (props) => {
       fetchSuperVisorName()
       fetchReportedBy()
       PickList()
-      const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const select = props.initialValues.breakDown.length > 0 ? props.initialValues.breakDown
-      : JSON.parse(localStorage.getItem('selectBreakDown'))
-      console.log(select)
-
-    if (select === null ? select.length === 0 : false) {
-      setBreakdown1ListData([])
-      selectDepthAndId([])
-    }
-    fetchCallBack(select, projectData);
-      // clearTimeout(timer.current);
-    }
+     
+    
   }, [props.initialValues.breakDown]);
   
   return (
@@ -983,92 +973,27 @@ const ObservationInitialNotification = (props) => {
                 {project.projectName}
               </Typography>
             </Grid>
+
             {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-              <Grid item xs={6} key={key}>
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  {selectBdown.label}
-                </Typography>
-                <Typography className={Type.labelValue}>
-                  {selectBdown.name}
-                </Typography>
-              </Grid>
-            ) : selectBreakdown && selectBreakdown.map((selectBreakdown, key) =>
-              <Grid item xs={6} key={key}>
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  {selectBreakdown.label}
-                </Typography>
-                <Typography className={Type.labelValue}>
-                  {selectBreakdown.name}
-                </Typography>
-              </Grid>)}
-            {id ? null : breakdown1ListData ? breakdown1ListData.map((item, index) => (
-              <Grid item xs={6}>
-                <FormControl
-                  key={index}
-                  variant="outlined"
-                  fullWidth
-                  required={selectDepthAndId.length === 0 ? true : false}
-                  className={classes.formControl}
-                  error={error && error[`projectStructure`]}
-                >
-                  <InputLabel
-                    id={index}
+                <Grid item xs={3} key={key}>
+
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
                   >
-                    {item.breakdownLabel}
-                  </InputLabel>
-                  <Select
-                    labelId={item.breakdownLabel}
-                    // value={parseInt(item.selectValue)}
-                    onChange={(e) => {
-                      handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
-                    }}
-                    label="Phases"
-                    style={{ width: "100%" }}
-                  >
-                    {item.breakdownValue.length
-                      ? item.breakdownValue.map(
-                        (selectValue, selectKey) => (
-                          <MenuItem
-                            key={selectKey}
-                            value={selectValue.id}
-                            onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
-                          >
-                            {selectValue.name}
-                          </MenuItem>
-                        )
-                      )
-                      : null}
-                  </Select>
-                  {error && error.projectStructure && (
-                    <FormHelperText>{error.projectStructure}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-            )) : null}
+                    {selectBdown.label}
+                  </Typography>
 
 
-            {/* <Grid item md={12}>
-              <Typography
-                variant="h6"
-                gutterBottom
-                className={classes.labelName}
-              >
-                Unit
-              </Typography>
-              <Typography className={classes.labelValue}>
-                {selectBreakdown !== null ? selectBreakdown.length > 1 ? selectBreakdown[1].name : "-" : "-"}
-              </Typography>
-            </Grid> */}
+                  <Typography className={Type.labelValue}>
+                    {selectBdown.name}
+                  </Typography>
+                </Grid>
+              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId}/>
+}
+            
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Location*"

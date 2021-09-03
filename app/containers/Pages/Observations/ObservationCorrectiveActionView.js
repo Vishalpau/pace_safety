@@ -141,8 +141,7 @@ const ObservationCorrectiveActionView = () => {
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
-console.log(projectId)
-console.log(fkCompanyId)
+
   const fetchInitialiObservation = async () => {
     // const response = await api.get('/api/v1/observations/${id}/')
     const res = await api.get(`/api/v1/observations/${id}/`);

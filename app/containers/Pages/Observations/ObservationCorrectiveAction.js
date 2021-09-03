@@ -119,6 +119,19 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 100px)',
     textAlign: 'right',
   },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+    display: 'inline-flex',
+  },
+  buttonProgress: {
+    // color: "green",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 function ObservationCorrectiveAction() {
@@ -134,6 +147,7 @@ function ObservationCorrectiveAction() {
   const [reportedByName , setReportedByName] = useState([]);
   const [submitLoader , setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
+  const [loading, setLoading] = useState(false)
   let filterReportedByName = []
 
   const [comment , setComment] = useState({
@@ -166,7 +180,7 @@ function ObservationCorrectiveAction() {
     if(comment.comment === ""){
       setError({ comment: "Please enter comment" });
     }else{
-      await setSubmitLoader(true)
+      await setLoading(true)
       const res1 = await api.post(`/api/v1/comments/`,comment);
     if (res1.status === 201) {
       let data = new FormData();
@@ -263,11 +277,8 @@ function ObservationCorrectiveAction() {
     await setIsLoading(true);
   }
   const handleAction = async  (e) => {
-    console.log(e.target.value)
     let value = e.target.value
-    let temp = { ...form}
-    temp.isCorrectiveActionTaken = value
-    setForm(temp)
+   
       if(value === "Yes"){
          setActionOpen(true)
       }else{
@@ -590,7 +601,7 @@ temp.reviewedById = value.id
           md={12}
           xs={12}
         >
-        {submitLoader == false ?
+        {/* {submitLoader == false ?
                 <Button
                   variant="outlined"
                   onClick={(e) => handleSubmit()}
@@ -604,7 +615,19 @@ temp.reviewedById = value.id
                 <IconButton className={classes.loader} disabled>
                   <CircularProgress color="secondary" />
                 </IconButton>
-              }
+              } */}
+              <div className={classes.loadingWrapper}>
+        <Button
+          variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                  disabled={loading}
+        >
+          Submit
+        </Button>
+        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+      </div>
           {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
           onClick={() => handleSubmit()}>Submit</Button> */}
         </Grid> 

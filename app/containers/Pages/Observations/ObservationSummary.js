@@ -129,8 +129,7 @@ const ObservationSummary = () => {
     setActivity(false)
     history.push(`/app/observation/details/${id}#action-taking`)
   }
-  console.log(comment)
-  console.log(observationCorrectiveAction)
+ 
   const handleComments = (e) => {
     setObservationInitialNotification(false);
     setObservationInitialNotificationUpdate(false);
@@ -141,6 +140,8 @@ const ObservationSummary = () => {
 
     
   };
+
+  
    const handleActivity = (e) => {
     setObservationInitialNotification(false);
     setObservationInitialNotificationUpdate(false);
