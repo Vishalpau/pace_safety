@@ -778,6 +778,10 @@ export const AssessmentCloseOut = loadable(() => import("./Pages/Assesments/Clos
   fallback: <Loading />,
 });
 
+export const PrintFlha = loadable(() => import("./Pages/Assesments/PrintFlha"), {
+  fallback: <Loading />,
+});
+
 // XFLHA Config
 export const FlhaConfig = loadable(() => import("./pages/assesments/FlhaConfig"), {
   fallback: <Loading />,

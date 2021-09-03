@@ -4,7 +4,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import PaceLogo from 'dan-images/paceLogoWhite.png';
 import moment from 'moment';
-import api from "../../utils/axios";
+import api from '../../../utils/axios';
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,12 +21,12 @@ const PrintFlha = React.forwardRef((props, ref) => {
   const [initialData , setInitialData] = useState({})
   const [actionTakenData, setActionTakenData] = useState([])
   const [tagData,setTagData] = useState([])
-  const [isLoading , setIsLoading] = useState(false)
+  const [isLoading , setIsLoading] = useState(true)
   const [catagoryData,setCatagoryData] = useState([])
 
   const fetchInitialiObservation = async () => {
 
-    const res = await api.get(`/api/v1/observations/${localStorage.getItem('fkobservationId')}/`);
+    const res = await api.get(`/api/v1/flhas/${props.match.params.id}/`);
     console.log(res)
     const result = res.data.data.results
     await setInitialData(result)
@@ -43,12 +43,12 @@ const PrintFlha = React.forwardRef((props, ref) => {
     let ActionToCause = {}
     const allActionTrackerData = await api_action.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 
+    // const newData = allActionTracker.filter(
+    //   (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 
       
-      )
-      let sorting = newData.sort((a, b) => a.id - b.id)
-    await setActionTakenData(sorting)
+    //   )
+    //   let sorting = newData.sort((a, b) => a.id - b.id)
+    await setActionTakenData(allActionTracker)
     // await setIsLoading(true);
 
   }
@@ -61,25 +61,25 @@ const PrintFlha = React.forwardRef((props, ref) => {
 
   };
 
-  const fetchCatagories = async () => {
-    const response = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`)
-    if(response.status === 200) {
-      const tags = response.data.data.results.results
-    console.log(tags)
-    let sorting = tags.sort((a, b) => a.id - b.id);
-    await setCatagoryData(sorting);
-    await setIsLoading(true);
-    }
+//   const fetchCatagories = async () => {
+//     const response = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`)
+//     if(response.status === 200) {
+//       const tags = response.data.data.results.results
+//     console.log(tags)
+//     let sorting = tags.sort((a, b) => a.id - b.id);
+//     await setCatagoryData(sorting);
+//     await setIsLoading(true);
+//     }
     
 
-  }
-  console.log(actionTakenData)
-  console.log(catagoryData[4])
+//   }
+//   console.log(actionTakenData)
+//   console.log(catagoryData[4])
   useEffect(() => {
     fetchInitialiObservation()
     fetchactionTrackerData()
     fetchTags()
-    fetchCatagories()
+    // fetchCatagories()
 },[])
 
   const classes = useStyles();
@@ -101,17 +101,17 @@ const PrintFlha = React.forwardRef((props, ref) => {
                 <tbody>
                     <tr>
                         <td rowspan="3" style={{width: '150px'}}></td>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)' }}><label style={{ display: 'inline-block', fontSize: '20px', }} > Name: </label><span style={{lineHeight: '30px' }}> {initialData.reportedByName}</span> </td>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)' }}><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Badge#:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>(CCZIV Issued)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}>{initialData["reportedByBadgeId"]}</span> </td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)' }}><label style={{ display: 'inline-block', fontSize: '20px', }} > Name: </label><span style={{lineHeight: '30px' }}> {initialData.supervisor}</span> </td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)' }}><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Badge#:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>(CCZIV Issued)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}>{initialData["flhaNumber"]}</span> </td>
                         
                     </tr>
                     <tr>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}}><label style={{ display: 'inline-block', fontSize: '20px', }} > Department: </label><span style={{lineHeight: '30px' }}> {initialData.reportedByDepartment}</span></td>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}}><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Date:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>(MM-DD-YY)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}> {moment(initialData["observedAt"]).format("MM-DD-YY")}</span> </td>                      
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}}><label style={{ display: 'inline-block', fontSize: '20px', }} > Department: </label><span style={{lineHeight: '30px' }}> {initialData.supervisor}</span></td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}}><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Date:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>(MM-DD-YY)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}> {moment(initialData["createdAt"]).format("MM-DD-YY")}</span> </td>                      
                     </tr>
                     <tr>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}} ><label style={{ display: 'inline-block', fontSize: '20px', }} > Foreman#:</label><span style={{lineHeight: '30px' }}> {initialData.supervisorName}</span></td>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}} ><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Time:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>HH:MM (AM/PM)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}> {moment(initialData["observedAt"]).format("HH:MM A")}</span> </td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}} ><label style={{ display: 'inline-block', fontSize: '20px', }} > Foreman#:</label><span style={{lineHeight: '30px' }}> {initialData.supervisor}</span></td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}} ><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Time:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>HH:MM (AM/PM)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}> {moment(initialData["createdAt"]).format("HH:MM A")}</span> </td>
                     </tr>
                 </tbody>
             </table>
@@ -121,7 +121,7 @@ const PrintFlha = React.forwardRef((props, ref) => {
                 <tbody>
                     <tr>
                         <td rowspan="4" style={{width: '150px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>OBSERVATION <p>Please write clearly.</p></td>
-                        <td rowspan="4" style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)', height: '152px', }}> {initialData.observationDetails} </td>
+                        <td rowspan="4" style={{ borderBottom: '1px solid #000', padding: '15px 15px', width: 'calc(100% - 150px)', height: '152px', }}> {initialData.jobDetails} </td>
                     </tr>
                     {/* <tr>
                         <td  style={{ borderBottom: '1px solid #000', padding: '20px 15px', width: 'calc(100% - 150px)' }}> </td>
@@ -192,10 +192,10 @@ const PrintFlha = React.forwardRef((props, ref) => {
                             <tbody>
                               <tr>
                                 <td rowspan="3" style={{width: '122px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>If Applicable <p>(X)</p></td>
-                                <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>Near Miss</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.nearMiss === "Yes" ? <CheckIcon /> : null} </span></label></td>
+                                <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>Near Miss</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.firstAid === "Yes" ? <CheckIcon /> : null} </span></label></td>
                               </tr>
                               <tr>
-                                <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Stop work authority</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.stopWork === "Yes" ? <CheckIcon /> : null}</span></label></td>
+                                <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Stop work authority</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.firstAid === "Yes" ? <CheckIcon /> : null}</span></label></td>
                               </tr>
                             </tbody>
                           </table>
@@ -267,7 +267,7 @@ const PrintFlha = React.forwardRef((props, ref) => {
 
                     <tr>
                       <td rowspan="4" style={{width: '122px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>CATEGORIES <p>(X) all that apply.</p></td>
-                      {tagData.slice(0,4).map((value, index) => ( <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> {value.tagName}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{value.tagName === catagoryData[index].observationTag  ? <CheckIcon /> : null} </span></label></td>
+                      {/* {tagData.slice(0,4).map((value, index) => ( <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> {value.tagName}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{value.tagName === catagoryData[index].observationTag  ? <CheckIcon /> : null} </span></label></td> */}
 ))}
                       {/* <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> {tagData[0].tagName}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
                       <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Working at heights</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
@@ -275,7 +275,7 @@ const PrintFlha = React.forwardRef((props, ref) => {
                       <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Equipment</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td> */}
                     </tr>
                     <tr>
-                    {tagData.slice(4,8).map((value, index) => ( <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> {tagData[index+4].tagName}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{tagData[index+4].tagName === catagoryData[index+4].observationTag ?  <CheckIcon /> : null} </span></label></td>
+                    {/* {tagData.slice(4,8).map((value, index) => ( <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> {tagData[index+4].tagName}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{tagData[index+4].tagName === catagoryData[index+4].observationTag ?  <CheckIcon /> : null} </span></label></td> */}
 ))}
                     {/* <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Body Positioning</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
                       <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Health/Hygiene</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
@@ -284,7 +284,7 @@ const PrintFlha = React.forwardRef((props, ref) => {
                     </tr>
                     <tr>
                     {/* {catagoryData.slice(8).map((value, index) => (              */}
-                               <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Others </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{catagoryData.length > 7 ? catagoryData[8].observationTag !== "" ? <CheckIcon /> : null : null} </span> </label></td>
+                               {/* <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Others </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{catagoryData.length > 7 ? catagoryData[8].observationTag !== "" ? <CheckIcon /> : null : null} </span> </label></td> */}
 {/* ))} */}
                       {/* <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{catagoryData[8].observationTag}</span></label></td> */}
                       {/* <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> General safety</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
@@ -311,18 +311,18 @@ const PrintFlha = React.forwardRef((props, ref) => {
                     <tr>
                       <td rowspan="4" style={{width: '145px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>CONFIRMATION <p>(X) As Applicable.</p></td>
                       <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Confirm if you discussed/intervened on the observation:</span> </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.isSituationAddressed === "Yes" ? <CheckIcon /> : null} </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}> {initialData.isSituationAddressed === "No" || initialData.isSituationAddressed === "" ? <CheckIcon /> : null}</span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.firstAid === "Yes" ? <CheckIcon /> : null} </span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}> {initialData.firstAid === "No" || initialData.jobDetails === "" ? <CheckIcon /> : null}</span></label></td>
                     </tr>
                     <tr>
                       <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Confirm if you need to escalate the issue (Safety/Management)</span> </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.isNotifiedToSupervisor === "Yes" ? <CheckIcon /> : null} </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.isNotifiedToSupervisor === "No" || initialData.personRecognition === "" ? <CheckIcon /> : null}</span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.firstAid === "Yes" ? <CheckIcon /> : null} </span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.firstAid === "No" || initialData.jobDetails === "" ? <CheckIcon /> : null}</span></label></td>
                     </tr>
                     <tr>
                       <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> Confirm if you nominate for employee recognition</span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.personRecognition === "Yes" ? <CheckIcon /> : null}  </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.personRecognition === "No" || initialData.personRecognition === ""? <CheckIcon /> : null}  </span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.firstAid === "Yes" ? <CheckIcon /> : null}  </span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 15px 5px 15px', maxWidth: 'calc(100% - 150px)', width: '88px' }}><label style={{ float: 'left', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{initialData.firstAid === "No" || initialData.jobDetails === ""? <CheckIcon /> : null}  </span></label></td>
                     </tr>
                 </tbody>
               </table>

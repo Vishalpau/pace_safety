@@ -188,7 +188,7 @@ class SimpleTabs extends React.Component {
     const flhaId = this.props.match.params.id;
     // this.props.match.params.id
     if(value != undefined){
-      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/?revision='+value);
+      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/?version='+value);
     }
     else{
       var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
