@@ -189,19 +189,19 @@ const PropertyAffected = () => {
       );
       // If api success
       if (status === 201 ||status === 200) {
-        if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
-          );
-        } else {
-          history.push(
-            `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
-          );
-        }
+          if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/incident/${id}/modify/equipment-affected/`
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/incident/${id}/modify/environment-affected/`
+            );
+          } else {
+            history.push(
+              `/incident/${id}/modify/reporting-and-notification/`
+            );
+          }
       }
       // If no is selected on form.
     } else {
@@ -231,15 +231,15 @@ const PropertyAffected = () => {
 
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
-          `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
+          `/incident/${id}/modify/equipment-affected/`
         );
       } else if (nextPath.environmentAffect === "Yes") {
         history.push(
-          `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
+          `/incident/${id}/modify/environment-affected/`
         );
       } else {
         history.push(
-          `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
+          `/incident/${id}/modify/reporting-and-notification/`
         );
       }
     }
@@ -289,13 +289,13 @@ const PropertyAffected = () => {
   // handle go back
   const handleBack = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
-   if (nextPath.personAffect === "Yes") {
+    if (nextPath.personAffect === "Yes") {
       history.push(
-        `${INITIAL_NOTIFICATION_FORM['People affected']}`
+        `/incident/${id}/modify/peoples-afftected/`
       );
     } else {
       history.push(
-        `${INITIAL_NOTIFICATION_FORM['Incident details']}`
+        `/incident/${id}/modify/`
       );
     }
   };

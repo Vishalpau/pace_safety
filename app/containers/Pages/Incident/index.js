@@ -195,10 +195,11 @@ const fkProjectStructureIds = struct.slice(0, -1);
   if(fkProjectStructureIds){
     const newData = res.data.data.results.results.filter(
       (item) =>
-        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds ===fkProjectStructureIds
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds.includes(fkProjectStructureIds)
 
     );
     await setIncidents(newData);
+    
   }else{
     const newData = res.data.data.results.results.filter(
       (item) =>
@@ -276,7 +277,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
       },
     },
   ];
-
+ 
   const options = {
     data: incidents,
     onRowsDelete: (rowsDeleted) => {
@@ -293,6 +294,11 @@ const fkProjectStructureIds = struct.slice(0, -1);
     filterType: "dropdown",
     responsive: "stacked",
     rowsPerPage: 10,
+    print : false,
+    search: false,
+    filter: false,
+    viewColumns: false,
+    download :false
   };
 
   const classes = useStyles();
@@ -584,7 +590,17 @@ const fkProjectStructureIds = struct.slice(0, -1);
 
         <div className="listView">
           <MUIDataTable
-            data={Object.entries(incidents).map((item) => [
+            data={Object.entries(incidents).filter((searchText) => {
+              return (
+              
+                searchText[1]["incidentTitle"]
+                  .toLowerCase()
+                  .includes(searchIncident.toLowerCase()) ||
+                searchText[1]["incidentNumber"].includes(
+                  searchIncident.toUpperCase()
+                )
+              );
+            }).map((item) => [
               item[1]["incidentNumber"],
               item[1]["incidentReportedByName"],
               item[1]["incidentLocation"],

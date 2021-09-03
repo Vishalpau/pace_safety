@@ -289,29 +289,30 @@ function Application(props) {
 
         {/* form investigation */}
         <Route
-          path="/incident/:id/investigation/:investigationId/action-taken/"
+          path="/app/incident-management/registration/investigation/action-taken/"
           component={ActionTaken}
         />
         <Route
-          path="/incident/:id/investigation/:investigationId/severity-consequences/:mode/"
+          path="/app/incident-management/registration/investigation/severity-consequences/"
           component={SeverityConsequences}
         />
         <Route
-          path="/incident/:id/investigation/:investigationId/event-details/:mode/"
+          path="/app/incident-management/registration/investigation/event-details/"
           component={EventDetails}
         />
         <Route
-          path="/incident/:id/investigation/:mode/"
+          path="/app/incident-management/registration/investigation/investigation-overview/"
           component={InvestigationOverview}
         />
         <Route
-          path="/incident/:id/investigation/:investigationId//worker-details/:mode/"
+          path="/app/incident-management/registration/investigation/worker-details/"
           component={WorkerDetails}
         />
         <Route exact
-          path="/incident/:id/investigation/:investigationId//worker-details/:mode/"
+          path="/app/incident-management/registration/investigation/worker-details/:id"
           component={WorkerDetails}
         />
+
 
 
         {/* form root cause analysis */}

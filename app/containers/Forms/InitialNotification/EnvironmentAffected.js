@@ -152,7 +152,7 @@ const EnvironmentAffected = () => {
             temp
           );
           history.push(
-            `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
+            `/incident/${id}/modify/reporting-and-notification/`
           );
         } catch (error) {}
       }
@@ -180,9 +180,9 @@ const EnvironmentAffected = () => {
           );
           if (id) {
            
-              history.push(
-                `${INITIAL_NOTIFICATION_FORM_NEW["Reporting and notification"]}`
-              );
+            history.push(
+              `/incident/${id}/modify/reporting-and-notification/`
+            );
           }
         } catch (error) {}
       }
@@ -245,19 +245,19 @@ const EnvironmentAffected = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     if (nextPath.equipmentAffect === "Yes") {
       history.push(
-        `${INITIAL_NOTIFICATION_FORM['Equipment affected']}`
+        `/incident/${id}/modify/equipment-affected/`
       );
     } else if (nextPath.propertyAffect === "Yes") {
       history.push(
-        `${INITIAL_NOTIFICATION_FORM['Property affected']}`
+        `/incident/${id}/modify/property-affected/`
       );
     } else if (nextPath.personAffect === "Yes") {
       history.push(
-        `${INITIAL_NOTIFICATION_FORM['People affected']}`
+        `/incident/${id}/modify/peoples-afftected/`
       );
     } else {
       history.push(
-        `${INITIAL_NOTIFICATION_FORM['Incident details']}`
+        `/incident/${id}/modify/`
       );
     }
   };

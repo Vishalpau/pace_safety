@@ -228,19 +228,19 @@ const PeoplesAffected = () => {
 
           if (nextPath.propertyAffect === "Yes") {
             history.push(
-              `${INITIAL_NOTIFICATION_FORM["Property affected"]}`
+              `/incident/${id}/modify/property-affected/`
             );
           } else if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
+              `/incident/${id}/modify/equipment-affected/`
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
-              `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
+              `/incident/${id}/modify/environment-affected/`
             );
           } else {
             history.push(
-              `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
+              `/incident/${id}/modify/reporting-and-notification/`
             );
           }
         }
@@ -287,19 +287,19 @@ const PeoplesAffected = () => {
 
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            `${INITIAL_NOTIFICATION_FORM["Property affected"]}`
+            `/incident/${id}/modify/property-affected/`
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            `${INITIAL_NOTIFICATION_FORM["Equipment affected"]}`
+            `/incident/${id}/modify/equipment-affected/`
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
-            `${INITIAL_NOTIFICATION_FORM["Environment impact"]}`
+            `/incident/${id}/modify/environment-affected/`
           );
         } else {
           history.push(
-            `${INITIAL_NOTIFICATION_FORM["Reporting and notification"]}`
+            `/incident/${id}/modify/reporting-and-notification/`
           );
         }
       }
@@ -727,7 +727,7 @@ const PeoplesAffected = () => {
                 <Button
                   onClick={() =>
                     history.push(
-                      `${INITIAL_NOTIFICATION_FORM['Incident details']}`
+                      `/incident/${id}/modify/`
                     )
                   }
                   variant="contained"

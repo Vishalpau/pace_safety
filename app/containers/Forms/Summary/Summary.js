@@ -249,7 +249,7 @@ const Summary = (props) => {
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
-      handelNaviagte(`/incident/${id}/investigation/new/`)
+      handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
     } else {
       setInitialNotification(false);
       setInvestigation(true);
@@ -465,9 +465,9 @@ const Summary = (props) => {
     else {
 
       if (fkid) {
-        handelNaviagte(`incident/${id}/investigation/modify/`)
+        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/${fkid}`)
       } else {
-        handelNaviagte(`incident/${id}/investigation/modify/`)
+        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
       }
 
     }
@@ -911,6 +911,7 @@ const Summary = (props) => {
                       </ListItem>
 
                       <ListItem 
+                      href='/#comment'
                       onClick={(e)=>handleComments()}
                       button>
                         <ListItemIcon>
@@ -919,7 +920,7 @@ const Summary = (props) => {
                         <ListItemText primary="Comments" />
                       </ListItem>
 
-                      <ListItem button onClick={()=> handleActivityHistory()}>
+                      <ListItem href='/#activity' button onClick={()=> handleActivityHistory()}>
                         <ListItemIcon>
                           <History />
                         </ListItemIcon>

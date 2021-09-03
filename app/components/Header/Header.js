@@ -282,9 +282,7 @@ function Header(props) {
   const handleProjectName = async (key) => {
     let selectBreakDown=[]
     let data = projectListData[key];
-    await dispatch(projectName(data));
     
-    await dispatch(breakDownDetails(selectBreakDown))
     // await setIsPopUpOpen(true)
     setProjectOpen(false);
     setCompanyOpen(false);
@@ -294,6 +292,9 @@ function Header(props) {
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
+    await dispatch(projectName(data));
+    
+    await dispatch(breakDownDetails(selectBreakDown))
     document.getElementById("open").click()
     // documentElementById("open").click()
     // setAnchorEl(event.currentTarget);
@@ -373,10 +374,10 @@ function Header(props) {
     setBreakdown1ListData(temp)
     if (selectBreakDown.filter(filterItem => filterItem.depth === `${index}L`).length > 0) {
       const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
-      const removeBreakDownList = breakdown1ListData.slice(0, index + 1)
-      removeBreakDownList[index][`selectValue`] = "";
+      temp = breakdown1ListData.slice(0, index)
+      // removeBreakDownList[index][`selectValue`] = "";
 
-      await setBreakdown1ListData(removeBreakDownList)
+      // await setBreakdown1ListData(removeBreakDownList)
 
       let name = breakdown1ListData[index - 1].breakdownValue.map(
         async (item) => {
@@ -441,7 +442,7 @@ function Header(props) {
             if (response.status === 200) {
 
               if (
-                breakdown1ListData.filter(
+                temp.filter(
                   (item) =>
                     item.breakdownLabel ===
                     projectData.projectName.breakdown[index].structure[0].name
@@ -450,7 +451,7 @@ function Header(props) {
                 return;
               } else {
                 setBreakdown1ListData([
-                  ...breakdown1ListData,
+                  ...temp,
                   {
                     breakdownLabel:
                       projectData.projectName.breakdown[index].structure[0]
