@@ -180,11 +180,11 @@ const EqiptmentAffected = () => {
         );
         if (nextPath.environmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            `/incident/${id}/modify/environment-affected/`
           );
         } else {
           history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            `/incident/${id}/modify/reporting-and-notification/`
           );
         }
       }
@@ -210,15 +210,16 @@ const EqiptmentAffected = () => {
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-      if (nextPath.environmentAffect === "Yes") {
-        history.push(
-          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-        );
-      } else {
-        history.push(
-          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-        );
-      }
+  
+        if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/incident/${id}/modify/environment-affected/`
+          );
+        } else {
+          history.push(
+            `/incident/${id}/modify/reporting-and-notification/`
+          );
+        }
     }
   }
   };
@@ -272,17 +273,17 @@ const EqiptmentAffected = () => {
   // handle go back
   const handleBack = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
-    if (nextPath.propertyAffect === "Yes") {
+     if (nextPath.propertyAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/property-affected/${id}`
+        `/incident/${id}/modify/property-affected/`
       );
     } else if (nextPath.personAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+        `/incident/${id}/modify/peoples-afftected/`
       );
     } else {
       history.push(
-        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+        `/incident/${id}/modify/`
       );
     }
   };

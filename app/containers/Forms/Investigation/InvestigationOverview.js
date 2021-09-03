@@ -215,7 +215,7 @@ const InvestigationOverview = () => {
                     labelId="unit-name-label"
                     id="unit-name"
                     label=" Actual severity & consequences"
-                    value={form.actualSeverityLevel || false}
+                    value={form.actualSeverityLevel || ""}
                   >
                     {severityValues.current.map((selectValues) => (
                       <MenuItem
@@ -242,7 +242,7 @@ const InvestigationOverview = () => {
                     labelId="unit-name-label"
                     id="unit-name"
                     label="Potential severity & consequences"
-                    value={form.potentialSeverityLevel || false}
+                    value={form.potentialSeverityLevel || ""}
                   >
                     {severityValues.current.map((selectValues) => (
                       <MenuItem

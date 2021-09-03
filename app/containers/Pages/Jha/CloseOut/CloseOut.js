@@ -15,35 +15,31 @@ import TextField from "@material-ui/core/TextField";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import IconButton from "@material-ui/core/IconButton";
 import moment from "moment";
-import TextButton from "../../CommonComponents/TextButton";
+import TextButton from "../../../CommonComponents/TextButton";
 import {
     MuiPickersUtilsProvider,
     KeyboardDateTimePicker,
 } from "@material-ui/pickers";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory, useParams } from "react-router";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
-import { LESSION_LEARNED_FORM } from "../../../utils/constants";
 
-import FormSideBar from "../FormSideBar";
+import FormSideBar from "../../../Forms/FormSideBar";
 import {
     LOGIN_URL,
     access_token,
     ACCOUNT_API_URL,
     HEADER_AUTH,
-    CLOSE_OUT_FORM,
     SUMMERY_FORM
-} from "../../../utils/constants";
-import api from "../../../utils/axios";
-import Type from "../../../styles/components/Fonts.scss";
-import "../../../styles/custom.css";
+} from "../../../../utils/constants";
+import api from "../../../../utils/axios";
+import Type from "../../../../styles/components/Fonts.scss";
+import "../../../../styles/custom.css";
+import { handelJhaId, checkValue } from "../Utils/checkValue"
 
-import { useDispatch } from "react-redux";
-import { tabViewMode } from "../../../redux/actions/initialDetails";
+import { CLOSE_OUT_FORM } from "../Utils/constants"
 
 
 function Alert(props) {
@@ -66,10 +62,10 @@ const CloseOut = () => {
     const classes = useStyles();
     const history = useHistory();
     const { id } = useParams();
-    const dispatch = useDispatch();
-    const [incidentsListData, setIncidentsListdata] = useState([]);
+    // const dispatch = useDispatch();
+    const [jhaListData, setJhaListdata] = useState([]);
     const [userList, setUserList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState({})
     const [form, setForm] = useState({
         reviewedBy: 0,
@@ -88,21 +84,12 @@ const CloseOut = () => {
     const [messageType, setMessageType] = useState("");
 
     // fetch incident data
-    const fetchIncidentsData = async () => {
-        const res = await api.get(
-            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-        );
-        if (res.status === 200) {
-            const result = res.data.data.results;
-
-            if (Object.entries(result).length > 0) {
-                let temp = { ...form }
-                temp = result
-                await setForm(result)
-                await setIncidentsListdata(result);
-                await setIsLoading(true)
-            }
-        }
+    const fetchJhaData = async () => {
+        const jhaId = handelJhaId()
+        const res = await api.get(`/api/v1/jhas/${jhaId}/`)
+        const result = res.data.data.results;
+        setJhaListdata(result)
+        console.log(result)
 
     };
     // handle close snackbar
@@ -112,6 +99,7 @@ const CloseOut = () => {
         }
         setOpen(false);
     };
+
     const handleCloseDate = (e) => {
         if (new Date(e) > new Date(form.reviewDate)) {
             setForm({ ...form, closeDate: moment(e).toISOString() });
@@ -123,7 +111,7 @@ const CloseOut = () => {
             let errorMessage = "Closed date cannot be prior to reviewed date"
             error.closeDate = errorMessage
             setError(error);
-            
+
         }
     }
 
@@ -165,11 +153,11 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
-        const temp = incidentsListData;
-        temp.reviewedBy = form.reviewedBy || incidentsListData.reviewedBy;
-        temp.reviewDate = form.reviewDate || incidentsListData.reviewDate;
-        temp.closedBy = form.closedBy || incidentsListData.closedBy;
-        temp.closeDate = form.closeDate || incidentsListData.closeDate;
+        const temp = jhaListData;
+        temp.reviewedBy = form.reviewedBy || jhaListData.reviewedBy;
+        temp.reviewDate = form.reviewDate || jhaListData.reviewDate;
+        temp.closedBy = form.closedBy || jhaListData.closedBy;
+        temp.closeDate = form.closeDate || jhaListData.closeDate;
         temp.updatedAt = new Date().toISOString();
         temp.updatedBy = parseInt(userId)
 
@@ -184,7 +172,7 @@ const CloseOut = () => {
                         initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
                         , closeout: true
                     }
-                    dispatch(tabViewMode(viewMode));
+                    // dispatch(tabViewMode(viewMode));
                     history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
                 }
             }
@@ -200,7 +188,7 @@ const CloseOut = () => {
 
     useEffect(() => {
         fetchUserList();
-        fetchIncidentsData();
+        fetchJhaData();
     }, []);
     const isDesktop = useMediaQuery("(min-width:992px)");
     return (
@@ -208,92 +196,53 @@ const CloseOut = () => {
             {isLoading ? (
                 <Grid container spacing={3}>
                     <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
+
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident number
+                                Jha number
                             </Typography>
 
                             <Typography varint="body1" className={Type.labelValue}>
-                                {incidentsListData.incidentNumber
-                                    ? incidentsListData.incidentNumber
-                                    : "-"}
+                                {checkValue(jhaListData.jhaNumber)}
                             </Typography>
                         </Grid>
 
+
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident occured on
+                                Jha assessment data
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {moment(incidentsListData.incidentOccuredOn).format(
-                                    "Do MMMM YYYY, h:mm:ss a"
+                                {moment(jhaListData.jhaAssessmentDate).format(
+                                    "Do MMMM YYYY"
                                 )}
                             </Typography>
                         </Grid>
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident reported on
+                                Job title
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {moment(incidentsListData.incidentReportedOn).format(
-                                    "Do MMMM YYYY, h:mm:ss a"
-                                )}
+                                {checkValue(jhaListData.jobTitle)}
                             </Typography>
                         </Grid>
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Reported by
+                                Job description
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {incidentsListData.incidentReportedByName
-                                    ? incidentsListData.incidentReportedByName
-                                    : "-"}
+                                {checkValue(jhaListData.description)}
                             </Typography>
                         </Grid>
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident type
+                                Job location
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {incidentsListData.incidentType
-                                    ? incidentsListData.incidentType
-                                    : "-"}{" "}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident title
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {incidentsListData.incidentTitle
-                                    ? incidentsListData.incidentTitle
-                                    : "-"}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident description
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {incidentsListData.incidentDetails
-                                    ? incidentsListData.incidentDetails
-                                    : "-"}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident location
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {incidentsListData.incidentLocation
-                                    ? incidentsListData.incidentLocation
-                                    : "-"}
+                                {checkValue(jhaListData.location)}
                             </Typography>
                         </Grid>
 
@@ -360,7 +309,7 @@ const CloseOut = () => {
                                         "aria-label": "change date",
                                     }}
                                     disableFuture
-                                    InputProps={{ readOnly: true }}
+
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
@@ -420,7 +369,7 @@ const CloseOut = () => {
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
-                                    InputProps={{ readOnly: true }}
+
                                     disableFuture
                                 />
                             </MuiPickersUtilsProvider>

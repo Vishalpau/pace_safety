@@ -15,6 +15,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Link from '@material-ui/core/Link';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -72,6 +73,10 @@ const BasicCauseAndAction = () => {
   const [incidentDetail, setIncidentDetail] = useState({});
 
   const [data, setData] = useState([]);
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
   const history = useHistory();
 
   const putId = useRef("");
@@ -118,14 +123,34 @@ const BasicCauseAndAction = () => {
         let actionTracker = allActionTrackerData.data.data.results.results;
         const temp = [];
         actionTracker.map((value) => {
-          let actionTrackerId = value.actionNumber;
-          temp.push(actionTrackerId);
+          const tempAction = {}
+          let actionTrackerId = value.id;
+          let actionTrackerNumber = value.actionNumber
+          tempAction["number"] = actionTrackerNumber
+          tempAction["id"] = actionTrackerId
+          temp.push(tempAction);
         });
         apiData[key]["action"] = temp;
+      } else {
+        apiData[key]["action"] = [];
       }
     }
     await setData(apiData);
   };
+
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+  }
 
   function ListItemLink(props) {
     return (
@@ -158,6 +183,7 @@ const BasicCauseAndAction = () => {
   const handelCallback = async () => {
     await handelShowData();
     await fetchIncidentDetails();
+    await handelActionLink();
   };
 
   useEffect(() => {
@@ -225,9 +251,11 @@ const BasicCauseAndAction = () => {
                     <TableCell align="right">
                       <Typography>
                         {value.action != undefined && value.action.map((actionId) => (
-                          <ActionTrack actionID={actionId}>
-                            {actionId}
-                          </ActionTrack>
+                          <Link display="block"
+                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
+                          >
+                            {actionId.number}
+                          </Link>
                         ))}
                       </Typography>
                     </TableCell>

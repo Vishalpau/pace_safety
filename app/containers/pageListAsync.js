@@ -727,6 +727,10 @@ export const JhaLessonsLearned = loadable(() => import("./Pages/Jha/LessonsLearn
   fallback: <Loading />,
 });
 
+export const JhaCloseOut = loadable(() => import("./Pages/Jha/CloseOut/CloseOut"), {
+  fallback: <Loading />,
+});
+
 export const ShowGroup = loadable(() =>
   import("./Pages/CheckList/ShowGroups"), {
   fallback: <Loading />,

@@ -122,6 +122,19 @@ const useStyles = makeStyles((theme) => ({
       border: 'none',
     },
   },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+    display: 'inline-flex',
+  },
+  buttonProgress: {
+    // color: "green",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 // });
 }));
 
@@ -155,6 +168,7 @@ const ObservationInitialNotificationUpdate = () => {
     checkedF: true,
     checkedG: true,
   });
+  const [loading, setLoading] = useState(false);
 
   // const handleChange = (event) => {
   //   setState({ ...state, [event.target.name]: event.target.checked });
@@ -238,7 +252,7 @@ const ObservationInitialNotificationUpdate = () => {
     if (!isValid) {
       return "Data is not valid";
     }
-    await setSubmitLoader(true)
+    await setLoading(true)
     
     let data = new FormData();
       data.append("fkCompanyId", initialData.fkCompanyId),
@@ -300,14 +314,14 @@ const ObservationInitialNotificationUpdate = () => {
       if (res1.status === 200) {
         await localStorage.setItem("update", "Done");
         history.push(
-          `/app/pages/observation-Summary/${id}`
+          `/app/observation/details/${id}`
         );
       }
     } 
   };
 
   const handleClose = async () => {
-    history.push(`/app/pages/observation-Summary/${id}`)
+    history.push(`/app/observation-Summary/${id}`)
     await localStorage.setItem("update", "Done");
   }
 
@@ -631,7 +645,7 @@ const ObservationInitialNotificationUpdate = () => {
             md={12}
             xs={12}
           >
-          {submitLoader == false ?
+          {/* {submitLoader == false ?
                 <Button
                   variant="outlined"
                   onClick={(e) => handleSubmit()}
@@ -645,7 +659,19 @@ const ObservationInitialNotificationUpdate = () => {
                 <IconButton className={classes.loader} disabled>
                   <CircularProgress color="secondary" />
                 </IconButton>
-              }
+              } */}
+              <div className={classes.loadingWrapper}>
+        <Button
+          variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                  disabled={loading}
+        >
+          Submit
+        </Button>
+        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+      </div>
             {/* <Button
                 variant="outlined"
                 size="medium"

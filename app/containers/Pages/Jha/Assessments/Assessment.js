@@ -33,13 +33,17 @@ import Select from '@material-ui/core/Select';
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import axios from "axios";
 
 import api from "../../../../utils/axios";
 import { handelJhaId } from "../Utils/checkValue"
 import { JHA_FORM } from "../Utils/constants"
 import FormSideBar from '../../../Forms/FormSideBar';
 import ActionTracker from "../../../Forms/ActionTracker";
-
+import { PickListData } from "../Utils/checkValue"
+import { result } from 'lodash';
+import { SUMMARY_FORM } from "../Utils/constants"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -188,11 +192,13 @@ const Assessment = () => {
   const [document, setDocument] = useState([])
   const [jobDetails, setJobDetails] = useState({})
   const [loading, setLoading] = useState(false)
+  const [submitLoader, setSubmitLoader] = useState(false)
   const [additinalJobDetails, setAdditionalJobDetails] = useState({
     additionalRemarks: "",
     humanPerformanceAspects: [],
     workStopCondition: [],
   })
+  const [risk, setRisk] = useState([])
 
   const handelCheckList = async () => {
     const tempPerformance = {}
@@ -200,7 +206,7 @@ const Assessment = () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const apiData = res.data.data.results.results
-    setForm(apiData)
+
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
     const specificPerformance = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
@@ -223,7 +229,38 @@ const Assessment = () => {
 
     setPerformance(tempPerformance)
     setDocument(apiCondition)
+    handelActionTracker(apiData);
   }
+
+  const handelActionTracker = async (apiData) => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    for (let key in apiData) {
+      const allActionTrackerData = await api_action.get(
+        `api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A${apiData[key]["id"]
+        }`
+      );
+      if (allActionTrackerData.data.data.results.results.length > 0) {
+        let actionTracker = allActionTrackerData.data.data.results.results;
+        const temp = [];
+        actionTracker.map((value) => {
+          const tempAction = {}
+          let actionTrackerId = value.actionNumber;
+          let actionTrackerTitle = value.actionTitle
+          tempAction["trackerID"] = actionTrackerId
+          tempAction["tarckerTitle"] = actionTrackerTitle
+          temp.push(tempAction);
+        });
+        apiData[key]["action"] = temp;
+      } else {
+        apiData[key]["action"] = [];
+      }
+    }
+    setForm(apiData)
+  };
 
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
@@ -294,15 +331,18 @@ const Assessment = () => {
   }
 
   const handelNext = async () => {
+    setSubmitLoader(true)
     for (let obj in form) {
       const res = await api.put(`/api/v1/jhas/${form[obj]["fkJhaId"]}/jobhazards/${form[obj]["id"]}/`, form[obj])
     }
+    delete jobDetails["jhaAssessmentAttachment"]
     jobDetails["humanPerformanceAspects"] = additinalJobDetails.humanPerformanceAspects.toString()
     jobDetails["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     jobDetails["additionalRemarks"] = additinalJobDetails.additionalRemarks
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jobDetails)
 
     handelNavigate("next")
+    setSubmitLoader(false)
   }
 
   const handelChecked = (value) => {
@@ -313,16 +353,23 @@ const Assessment = () => {
 
   const classes = useStyles();
 
+  const handelCallBack = async () => {
+    await setLoading(true)
+    await handelCheckList()
+    await handelJobDetails()
+    PickListData(78).then(function (results) {
+      setRisk(results)
+    });
+    await setLoading(false)
+  }
+
   useEffect(() => {
-    setLoading(true)
-    handelCheckList()
-    handelJobDetails()
-    setLoading(false)
+    handelCallBack()
   }, [])
 
   return (
     <PapperBlock title="Assessments" icon="ion-md-list-box">
-      {console.log(additinalJobDetails)}
+      {/* {console.log(form.Assessment)} */}
       {loading == false ?
         <Row>
           <Col md={9}>
@@ -369,12 +416,12 @@ const Assessment = () => {
                                 label="Risk"
                                 value={form[index]["risk"]}
                               >
-                                {selectValues.map((value) => (
+                                {risk.map((value) => (
                                   <MenuItem
-                                    value={value}
-                                    onClick={(e) => handelRiskAndControl("risk", index, value)}
+                                    value={value.value}
+                                    onClick={(e) => handelRiskAndControl("risk", index, value.value)}
                                   >
-                                    {value}
+                                    {value.label}
                                   </MenuItem>
                                 ))}
                               </Select>
@@ -402,6 +449,13 @@ const Assessment = () => {
                               actionContext="jha:hazard"
                               enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
                             />
+                          </Grid>
+                          <Grid item xs={6} className={classes.createHazardbox}>
+                            {form[index]["action"].length > 0
+                              &&
+                              form[index]["action"].map((value) => (
+                                <a style={{ marginLeft: "20px" }}>{value.trackerID}</a>
+                              ))}
                           </Grid>
                         </Grid>
                       </AccordionDetails>
@@ -496,15 +550,21 @@ const Assessment = () => {
                 >
                   Previous
                 </Button>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                  onClick={(e) => handelNext()}
-                >
-                  Next
-                </Button>
+                {submitLoader == false ?
+                  <Button
+                    variant="outlined"
+                    onClick={(e) => handelNext()}
+                    className={classes.custmSubmitBtn}
+                    style={{ marginLeft: "10px" }}
+                  >
+
+                    Next
+                  </Button>
+                  :
+                  <IconButton className={classes.loader} disabled>
+                    <CircularProgress color="secondary" />
+                  </IconButton>
+                }
               </Grid>
             </Grid>
           </Col>
@@ -519,7 +579,7 @@ const Assessment = () => {
         :
         <p>Loading....</p>
       }
-    </PapperBlock>
+    </PapperBlock >
   );
 };
 

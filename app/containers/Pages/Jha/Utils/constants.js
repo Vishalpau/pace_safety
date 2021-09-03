@@ -8,3 +8,18 @@ export const JHA_FORM = {
     "Documents & Notifications": `/app/pages/Jha/assessments/DocumentsNotifications/`
 }
 
+export const APPROVAL_FORM = {
+    "Approval": `/app/pages/jha/approvals/approvals`
+}
+
+export const LESSION_LEARNED_FORM = {
+    "Lession Learned": `/app/pages/jha/lessons-learned/lessons-learned`
+}
+
+export const SUMMARY_FORM = {
+    "Summary": `/app/pages/jha/jha-summary`
+}
+
+export const CLOSE_OUT_FORM = {
+    "Close out": `/app/pages/jha/close-out`
+}

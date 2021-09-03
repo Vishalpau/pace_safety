@@ -153,6 +153,7 @@ import {
   JhaLessonsLearned,
   JhaApprovals,
   Comments,
+  JhaCloseOut,
   ShowGroup,
   ShowCheckList,
   Xflha,
@@ -225,71 +226,44 @@ function Application(props) {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
 
+          {/*Incident List  */}
+          <Route path="/incidents/" component={Incident} />
 
         {/* form initialNotification */}
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/environment-affected/"
+          path="/incident/:id/modify/environment-affected/"
           component={EnvironmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/environment-affected/:id"
-          component={EnvironmentAffected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/equipment-affected/:id"
+          path="/incident/:id/modify/equipment-affected/"
           component={EqiptmentAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/equipment-affected/"
-          component={EqiptmentAffected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/incident-details/"
+          path="/incident/new/"
           component={IncidentDetails}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/incident-details/:id"
+          path="/incident/:id/modify/"
           component={IncidentDetails}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/peoples-afftected/"
+          path="/incident/:id/modify/peoples-afftected/"
           component={PeoplesAfftected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/peoples-afftected/:id"
-          component={PeoplesAfftected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/property-affected/"
+          path="/incident/:id/modify/property-affected/"
           component={PropertyAffected}
         />
         <Route
           exact
-          path="/app/incident-management/registration/initial-notification/property-affected/:id"
-          component={PropertyAffected}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/reporting-and-notification/"
+          path="/incident/:id/modify/reporting-and-notification/"
           component={ReportingAndNotification}
-        />
-        <Route
-          exact
-          path="/app/incident-management/registration/initial-notification/reporting-and-notification/:id"
-          component={ReportingAndNotification}
-        />
-        <Route
-          path="/app/incident-management/registration/investigation/update-initial-details/:id"
-          component={UpdateIncidentDetails}
         />
         {/* form Evidence */}
         <Route
@@ -360,6 +334,7 @@ function Application(props) {
           path="/app/incident-management/registration/investigation/worker-details/:id"
           component={WorkerDetails}
         />
+
 
 
         {/* form root cause analysis */}
@@ -443,20 +418,16 @@ function Application(props) {
 
         {/* summary */}
         <Route
-          path="/app/incident-management/registration/summary/summary/:id"
+          path="/incident/details/:id/"
           component={Summary}
         />
         {/* from leassionlearned */}
         <Route
           exact
-          path="/app/incident-management/registration/lession-learned/lession-learned/"
+          path="/incident/:id/lesson-learnt/:mode/"
           component={LessionLearned}
         />
-        <Route
-          exact
-          path="/app/incident-management/registration/lession-learned/lession-learned/:id"
-          component={LessionLearned}
-        />
+        
 
         {/* checklist */}
         <Route
@@ -478,7 +449,7 @@ function Application(props) {
         {/* close out */}
         <Route
           exact
-          path="/app/incident-management/registration/close-out/:id"
+          path="/incident/:id/close-out/:mode/"
           component={CloseOut}
         />
         {/* Ui Components */}
@@ -537,15 +508,21 @@ function Application(props) {
         {/* Observation Routes  */}
         {/* <Route path="/app/pages/summary" component={Summary} /> */}
         {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
-        <Route path="/app/pages/observations" component={Observations} />
-        <Route exact path="/app/pages/observation-corrective-action" component={ObservationCorrectiveAction} />
-        <Route exact path="/app/pages/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
-        <Route path="/app/pages/observation-close-out" component={ObservationCloseOut} />
-        <Route path="/app/pages/observation-Summary/:id" component={ObservationSummary} />
-        <Route exact path="/app/pages/observation-initial-notification" component={ObservationInitialNotification} />
-        <Route exact path="/app/pages/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
-        <Route path="/app/pages/observation-observation-view" component={ObservationInitialNotificationView} />
-        <Route path="/app/pages/prints/:id" component={Prints} />
+        <Route path="/app/observations" component={Observations} />
+        {/* <Route path="/app/observationsearch/#{search-keyword}" component={Observations} /> */}
+        <Route path="/app/observations#table" component={Observations} />
+        <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />
+        <Route exact path="/app/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
+        <Route path="/app/observation-close-out" component={ObservationCloseOut} />
+        <Route path="/app/observation/details/:id" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#action-taking" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#comments" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#activity" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#modify" component={ObservationSummary} />
+        <Route exact path="/app/observation-initial-notification" component={ObservationInitialNotification} />
+        <Route exact path="/app/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
+        <Route path="/app/observation-observation-view" component={ObservationInitialNotificationView} />
+        <Route path="/app/prints/:id" component={Prints} />
 
         {/* Aha Routes */}
 
@@ -565,14 +542,15 @@ function Application(props) {
 
         {/* Jha  */}
 
-        <Route path="/app/pages/jha" exact component={Jha} />
-        <Route path="/app/pages/jha/jha-summary" exact component={JhaSummary} />
-        <Route path="/app/pages/jha/assessments/project-details" exact component={JhaJobDetails} />
-        <Route path="/app/pages/jha/assessments/project-area-hazards" exact component={JhaProjectAreaHazards} />
-        <Route path="/app/pages/jha/assessments/assessment" exact component={JhaAssessment} />
-        <Route path="/app/pages/jha/assessments/DocumentsNotifications" exact component={JhaDocumentNotification} />
-        <Route path="/app/pages/jha/approvals/approvals" exact component={JhaApprovals} />
-        <Route path="/app/pages/jha/lessons-learned/lessons-learned" exact component={JhaLessonsLearned} />
+        <Route path="/app/pages/jha/all_jha" component={Jha} />
+        <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
+        <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
+        <Route path="/app/pages/jha/assessments/project-area-hazards" component={JhaProjectAreaHazards} />
+        <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessment} />
+        <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />
+        <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
+        <Route path="/app/pages/jha/lessons-learned/lessons-learned" component={JhaLessonsLearned} />
+        <Route path="/app/pages/jha/close-out" component={JhaCloseOut} />
 
         <Route path="/app/pages/jha/assessments/project-details/:id" exact component={JhaJobDetails} />
         <Route path="/app/pages/jha/assessments/project-area-hazards/:id" exact component={JhaProjectAreaHazards} />
@@ -594,7 +572,7 @@ function Application(props) {
         <Route exact path="/app/pages" component={Parent} />
         <Route path="/app/pages/user-profile" component={Profile} />
         <Route path="/app/pages/blank-page" component={BlankPage} />
-        <Route path="/app/pages/incident" component={Incident} />
+        
         <Route path="/app/pages/photo-gallery" component={Photos} />
         <Route path="/app/pages/pricing" component={Pricing} />
         <Route path="/app/pages/not-found" component={NotFound} />

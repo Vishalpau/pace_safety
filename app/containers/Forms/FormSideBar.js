@@ -43,7 +43,8 @@ export const FormSideBar = (props) => {
   let linkBreak = Object.keys(props.listOfItems).indexOf(props.selectedItem);
   const classes = useStyles();
   const history = useHistory();
-  const handelNavigate = (value) => {
+  const handelNavigate = (value, key) => {
+    console.log(value,key)
     history.push(value)
   }
 
@@ -78,7 +79,7 @@ export const FormSideBar = (props) => {
                 <ListItemIcon className={classes.icon}>
                   <CheckIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary={<a onClick={(e) => handelNavigate(value)}>{key}</a>} />
+                <ListItemText primary={<a onClick={(e) => handelNavigate(value,key)}>{key}</a>} />
                 {/* <a href={value}>{key}</a> */}
               </ListItem>
             )

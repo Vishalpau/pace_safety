@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useRef , useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -57,7 +57,12 @@ export default function AlertDialog({open, setOpen,documentUrl}) {
   const handleClickOpen = () => {
     setOpen(true);
   };
-
+  let doc = documentUrl.split('-')
+    let document = doc[doc.length - 1]
+    let extension = document.split('.')
+    let lastname = extension[extension.length - 1]
+    let uname = lastname.toLowerCase()
+  
   const handleClose = () => {
     setOpen(false);
   };
@@ -93,6 +98,8 @@ export default function AlertDialog({open, setOpen,documentUrl}) {
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
               <Grid container spacing={3}>
+                
+                {uname == "docx" || "pptx" || "doc" || "ppt" || "xls" || "xlsx" ? null :
                 <Grid item xs={12} md={6}>
                   <Button
                     startIcon={<VisibilityIcon />}
@@ -105,7 +112,8 @@ export default function AlertDialog({open, setOpen,documentUrl}) {
                   >
                     View Attachment
                   </Button>
-                </Grid>
+                  </Grid>}
+                
                 <Grid item xs={12} md={6}>
                   <Button
                     startIcon={<GetAppIcon />}

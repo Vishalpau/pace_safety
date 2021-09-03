@@ -119,6 +119,19 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 100px)',
     textAlign: 'right',
   },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+    display: 'inline-flex',
+  },
+  buttonProgress: {
+    // color: "green",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 function ObservationCorrectiveAction() {
@@ -133,6 +146,8 @@ function ObservationCorrectiveAction() {
   const [error, setError] = useState({ comment: "" , reviewedOn : ""});
   const [reportedByName , setReportedByName] = useState([]);
   const [submitLoader , setSubmitLoader] = useState(false);
+  const [updatePage, setUpdatePage] = useState(false)
+  const [loading, setLoading] = useState(false)
   let filterReportedByName = []
 
   const [comment , setComment] = useState({
@@ -165,7 +180,7 @@ function ObservationCorrectiveAction() {
     if(comment.comment === ""){
       setError({ comment: "Please enter comment" });
     }else{
-      await setSubmitLoader(true)
+      await setLoading(true)
       const res1 = await api.post(`/api/v1/comments/`,comment);
     if (res1.status === 201) {
       let data = new FormData();
@@ -215,7 +230,7 @@ function ObservationCorrectiveAction() {
       localStorage.setItem('updateAction', "Done")
       localStorage.setItem("action" , "Done")
       history.push(
-        `/app/pages/observation-Summary/${localStorage.getItem(
+        `/app/observation/details/${localStorage.getItem(
           "fkobservationId"
         )}`
       );
@@ -223,14 +238,25 @@ function ObservationCorrectiveAction() {
     }
     }
     
-    
-    
-    
   }
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
     
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
+    
     const result = res.data.data.results;
+    if(result.isCorrectiveActionTaken == null){
+      result.isCorrectiveActionTaken = "Yes"
+    }
     if(result.isCorrectiveActionTaken === "Yes"){
       await setActionOpen(true);
     }
@@ -250,8 +276,10 @@ function ObservationCorrectiveAction() {
     
     await setIsLoading(true);
   }
-  const handleAction =  (e) => {
-      if(e.target.value === "Yes"){
+  const handleAction = async  (e) => {
+    let value = e.target.value
+   
+      if(value === "Yes"){
          setActionOpen(true)
       }else{
         setActionOpen(false)
@@ -349,7 +377,7 @@ temp.reviewedById = value.id
       fetchReportedBy()
     }
     
-  },[])
+  },[updatePage])
   const classes = useStyles();
   return (
     <>{isLoading ? 
@@ -359,7 +387,7 @@ temp.reviewedById = value.id
                     Observation Title
           </Typography>
           <Typography className={classes.labelValue}>
-                    {form.observationTitle}
+                    {form.observationTitle ? form.observationTitle : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -367,7 +395,7 @@ temp.reviewedById = value.id
                     Observation Type
           </Typography>
           <Typography className={classes.labelValue}>
-                  {form.observationType}
+                  {form.observationType ? form.observationType : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -375,7 +403,7 @@ temp.reviewedById = value.id
                     Observation Description
           </Typography>
           <Typography className={classes.labelValue}>
-          {form.observationDetails}
+          {form.observationDetails ? form.observationDetails : "-"}
           </Typography>
         </Grid>
         <Grid item md={8}>
@@ -385,7 +413,7 @@ temp.reviewedById = value.id
             {/* <span className={classes.updateLink}><Link to="">Update</Link></span> */}
           </Typography>
           <Typography className={classes.labelValue}>
-                    {form.assigneeName}
+                    {form.assigneeName ? form.assigneeName : "-"}
           </Typography>
         </Grid>
         <Grid
@@ -446,9 +474,9 @@ temp.reviewedById = value.id
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
+                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
                 //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
-                href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
+                // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
                                 // enitityReferenceId={action.enitityReferenceId}
                                 // actionId={action.id}
@@ -479,7 +507,8 @@ temp.reviewedById = value.id
           <ActionTracker
                                 actionContext="Obsevations"
                                 enitityReferenceId={id}
-                                actionTitle = ""
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
                               >add</ActionTracker>
           </Typography></>):null}
         </Grid>
@@ -529,6 +558,8 @@ temp.reviewedById = value.id
               className={classes.formControl}
               fullWidth
               label="Reviewed on*"
+              minDate = {form.observedAt}
+              maxDate = {new Date()}
               value={form.reviewedOn ? form.reviewedOn : null}
               // onChange={handleDateChange}
               error={error.reviewedOn}
@@ -570,7 +601,7 @@ temp.reviewedById = value.id
           md={12}
           xs={12}
         >
-        {submitLoader == false ?
+        {/* {submitLoader == false ?
                 <Button
                   variant="outlined"
                   onClick={(e) => handleSubmit()}
@@ -584,7 +615,19 @@ temp.reviewedById = value.id
                 <IconButton className={classes.loader} disabled>
                   <CircularProgress color="secondary" />
                 </IconButton>
-              }
+              } */}
+              <div className={classes.loadingWrapper}>
+        <Button
+          variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                  disabled={loading}
+        >
+          Submit
+        </Button>
+        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+      </div>
           {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
           onClick={() => handleSubmit()}>Submit</Button> */}
         </Grid> 

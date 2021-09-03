@@ -842,11 +842,11 @@ module.exports = [
     linkParent: '/',
   },
   {
-    key: 'Incidents',
-    name: 'Incidents',
-    icon: 'ion-md-warning',
+    key: "incident-management",
+    name: "Incident Management",
+    icon: "ion-md-warning",
     multilevel: false,
-    linkParent: '/app/pages/incident/',
+    linkParent: "/incidents/",
   },
   {
     key: "assessments",
@@ -867,7 +867,7 @@ module.exports = [
       {
         key: 'jha',
         name: 'JHA',
-        linkParent: "/app/pages/jha",
+        linkParent: "/app/pages/jha/all_jha",
       },
     ],
   },
@@ -875,7 +875,7 @@ module.exports = [
     key: "observations",
     name: "Observations",
     icon: 'ion-md-eye',
-    linkParent: '/app/pages/Observations',
+    linkParent: '/app/observations',
   },
   {
 
