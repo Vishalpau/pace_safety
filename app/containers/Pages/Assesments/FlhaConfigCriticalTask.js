@@ -422,7 +422,7 @@ const FlhaDetails = () => {
       fkCompanyId: "",
       fkJobId: "",
       fkProjectId: "",
-      taskIdentification: ""
+      
     })
 
     criticalApiHandler()
@@ -493,8 +493,11 @@ const FlhaDetails = () => {
 
   // second dialog
   const [CttaskOpen, setCttaskOpen] = React.useState(false);
+  const [ editPayload , setEditPayloadData] = React.useState([]) ;
 
-  function handleCttaskClickOpen() {
+  function handleCttaskClickOpen(tableMeta) {
+    console.log("tableMeta ",tableMeta) ;
+    setEditPayloadData(tableMeta.rowData)
     setCttaskOpen(true);
   }
 
@@ -505,6 +508,20 @@ const FlhaDetails = () => {
     setOpen(false);
   }
   
+  // for edit
+  const [ criticalPayload , setCriticalPayload] = React.useState({}) ;
+  function dataHandler(data) {
+    setCriticalPayload(data) ;
+  }
+
+  const payloadSubmitHandler = async () => {
+    let fkJobId = localStorage.getItem('fkJobId')
+    console.log(fkJobId,'aaaaa')
+    criticalPayload["fkJobId"]=fkJobId
+    let res = await api.put(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/${editPayload[editPayload.length-1]}/`, criticalPayload) ;
+    handleCttaskClose()
+    criticalApiHandler()
+  }
 
   //   Data for the table view
   const columns = [
@@ -536,8 +553,7 @@ const FlhaDetails = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta) => {
-          console.log(tableMeta);
-
+  
           return (
             <>
               <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -551,7 +567,7 @@ const FlhaDetails = () => {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>
-                  <span variant="outlined" color="primary" onClick={handleCttaskClickOpen}>
+                  <span variant="outlined" color="primary" onClick={() => handleCttaskClickOpen(tableMeta)}>
                     Edit Critical Task
                   </span>
                 </MenuItem>
@@ -598,9 +614,7 @@ const FlhaDetails = () => {
     page: 0,
   };
 
-  function dataHandler(data) {
-    console.log("data ",data)
-  }
+
   return (
     <div>
       <PapperBlock title={`Job Title - ${taskName}`} icon="ion-ios-create-outline" desc="" color="primary" >
@@ -618,11 +632,11 @@ const FlhaDetails = () => {
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                <FlhaConfigCriticalTaskAdd dataHandler={(data) => dataHandler(data)}/>
+                <FlhaConfigCriticalTaskAdd dataHandler={(data) => dataHandler(data)} editPayload={editPayload}/>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button color="primary" size="medium" variant="contained" className={classes.spacerRight}>
+              <Button color="primary" size="medium" variant="contained" onClick={payloadSubmitHandler} className={classes.spacerRight}>
                 Save
               </Button>
               <Button onClick={handleCttaskClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>

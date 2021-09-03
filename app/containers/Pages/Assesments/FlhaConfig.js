@@ -385,7 +385,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const FlhaDetails = () => {
+const FlhaDetails = (props) => {
   const classes = useStyles();
   const [state, setState] = React.useState({
     checkedA: true,
@@ -490,7 +490,6 @@ const FlhaDetails = () => {
       projectName: JSON.parse(localStorage.getItem('projectName')).projectName.projectName,
       jobDetail: data[3],
       fkDepartmentId: data[6],
-      // jobTitleImage: data[2],
       status: value
     };
 
@@ -551,14 +550,61 @@ const FlhaDetails = () => {
 
   // third dialog
   const [ConfigOpen, setConfigOpen] = React.useState(false);
+  const [ editPayload , setEditPayloadData] = React.useState([]) ;
 
-  function handleConfigClickOpen() {
+  function handleConfigClickOpen(tableMeta) {
+    setEditPayloadData(tableMeta.rowData)
     setConfigOpen(true);
   }
 
   function handleConfigClose() {
     setConfigOpen(false);
   }
+
+//for edit
+const [ hazardPayload , setCriticalPayload] = React.useState({}) ;
+function dataHandler(data) {
+  setCriticalPayload(data) ;
+}
+
+const hazardEditSubmitHandler = async () => {
+  console.log({submithazard: payload})
+    const formData = new FormData();
+
+    formData.append('fkDeparmentName', payload.fkDeparmentName);
+    formData.append('jobTitle', payload.jobTitle);
+    formData.append('jobDetail', payload.jobDetail);
+    formData.append('jobTitleImage', payload.jobTitleImage);
+    formData.append('fkDepartmentId', payload.fkDepartmentId);
+
+  let res = await api.put(`api/v1/configflhas/jobtitles/${editPayload[editPayload.length-2]}/`,formData) ;
+  handleFlhaClose()
+  jobTitleApiHandler()
+
+}
+
+const [payload, setPayload] = React.useState({
+  fkDeparmentName:   "" ,
+  jobTitle: "" ,
+  jobDetail:  "" ,
+  jobTitleImage:  "" ,
+  fkDepartmentId:  "" ,
+})
+const handleFieldChange = async(e, fieldname) => {
+  const temp = {...payload}
+  // alert(fieldname)
+  if(fieldname == "jobTitleImage"){
+    console.log({event: e})
+    temp['jobTitleImage'] = e[0];
+  }
+  else {
+    temp[fieldname] = e.target.value
+  }
+  console.log('jobTitleImage',temp)
+  await setPayload(temp);    
+  console.log({payload: payload})
+}
+
 
   //   Data for the table view
   const columns = [
@@ -614,36 +660,36 @@ const FlhaDetails = () => {
         filter: false,
         customBodyRender: (value, tableMeta) => {
           // console.log(tableMeta);
-          const rowID = [tableMeta.tableData[tableMeta.rowIndex][5]];
+          // const rowID = [tableMeta.tableData[tableMeta.rowIndex][5]];
           return (
             <>
               <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
                 <MoreVertIcon />
               </Button>
-              <Menu
+              {/* <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleClose}> */}
 
                   <Link
                     // href={"/app/pages/assesments/FlhaConfigCriticalTask"+tableMeta.rowData[5]}
-                    href={`/app/pages/assesments/flhaconfigcriticaltask/${rowID}`}
+                    href={`/app/pages/assesments/flhaconfigcriticaltask/${tableMeta.rowData[5]}`}
 
                   >
                     Critical task
 
                   </Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <span variant="outlined" color="primary" onClick={handleConfigClickOpen}>
+                {/* </MenuItem> */}
+                {/* <MenuItem onClick={handleClose}> */}
+                  <span variant="outlined" color="primary" onClick={() => handleConfigClickOpen(tableMeta)}>
                     Edit job title
                   </span>
-                </MenuItem>
-              </Menu>
+                {/* </MenuItem> */}
+              {/* </Menu> */}
             </>
           )
         }
@@ -705,15 +751,16 @@ const FlhaDetails = () => {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
-                Add X-FLHA Job Titles
+                Update X-FLHA Job Titles
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  <FlhaConfigEdit />
+                  {console.log(editPayload,"kkkkk")}
+                  <FlhaConfigEdit onChangeField={(e, fieldname) => handleFieldChange(e, fieldname)} editpayload={payload} dataHandler={(data) => dataHandler(data)} editPayload={editPayload}/>
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button color="primary" size="medium" variant="contained" className={classes.spacerRight}>
+                <Button onClick={hazardEditSubmitHandler} color="primary" size="medium" variant="contained" className={classes.spacerRight}>
                   Save
                 </Button>
                 <Button onClick={handleConfigClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>

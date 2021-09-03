@@ -254,9 +254,51 @@ const useStyles = makeStyles((theme) => ({
     color: '#ffffff',
 }, 
 }));
-const FlhaDetails = () => {
+const FlhaDetails = (props) => {
   const classes = useStyles();
  
+  const [payload , setPayload] = React.useState({
+    fkCompanyId: "",
+    fkDeparmentName: '',
+    jobTitle: '',
+    projectName: '',
+    jobDetail: '',
+    fkDepartmentId: '',
+    jobTitleImage: '',
+    status: ""
+  })
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  React.useEffect(() => {
+   console.log("editPayload ",props.editPayload) ;
+   setPayload({
+    fkDeparmentName:  props.editPayload[1] ? props.editPayload[1] : "" ,
+    jobTitle: props.editPayload[0] ? props.editPayload[0] : "" ,
+    jobDetail:  props.editPayload[3] ? props.editPayload[3] : "" ,
+    jobTitleImage: props.editPayload[2] ? props.editPayload[2] : "" ,
+    fkDepartmentId: props.editPayload[6] ? props.editPayload[6] : "" ,
+
+   }) ;
+ },[]) ;
+
+ React.useEffect(() => {
+  console.log("payload " , payload  ) ;
+ },[payload])
+
+
+ const fieldHandler=(e) => {
+  console.log("Value  ", e.target.value , e.target.id)
+  setPayload({
+    ...payload,
+   [e.target.id] : e.target.value
+  })
+}
+
+React.useEffect(() => {
+  props.dataHandler(payload)
+},[payload])
+
   return (
     <div>
         <Paper elevation={3}>
@@ -266,13 +308,18 @@ const FlhaDetails = () => {
 						<Grid item md={12} sm={12} xs={12}>
 						  <TextField
 							variant="outlined"
-							id="immediate-actions"
+							id="jobTitle"
 							multiline
 							rows="1"
 							label="titles"
 							className={classes.fullWidth}
+              onChange = {fieldHandler}
+              value = {props.editPayload[0]}
 						  />
 						</Grid>
+            {/* {console.log("payload.fkDeparmentName ", props)} */}
+
+            {/* {console.log("payload.fkDeparmentName ", payload.fkDeparmentName)} */}
 						<Grid item md={12} sm={12} xs={12}>
 						  <FormControl
 							  variant="outlined"
@@ -284,27 +331,36 @@ const FlhaDetails = () => {
 							  </InputLabel>
 							  <Select
 								labelId="incident-type-label"
-								id="department"
+								id="fkDeparmentName"
 								label="department"
+                Select
+                onChange = {fieldHandler}
+                value = {props.editPayload[1]}
 							  >
-								<MenuItem>One</MenuItem>
+								<MenuItem>BMD</MenuItem>
 								<MenuItem>One</MenuItem>
 								<MenuItem>One</MenuItem>
 								<MenuItem>One</MenuItem>
 							  </Select>
 							</FormControl>
 						</Grid>
+            <Grid item md={4} sm={4} xs={12}>
+                <img src={payload.jobTitleImage} height={58} alt="" className={classes.mttopSix} />
+              </Grid>
 						<Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
-							<input accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
+
+							<input src={props.editPayload[2]} accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
 						</Grid>	
 						<Grid item md={12} sm={12} xs={12}>
 						  <TextField
 							variant="outlined"
-							id="immediate-actions"
+							id="jobDetail"
 							multiline
 							rows="1"
 							label="details"
 							className={classes.fullWidth}
+              onChange = {fieldHandler}
+              value = {props.editPayload[3]}
 						  />
 						</Grid>
 				</Grid>

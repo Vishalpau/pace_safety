@@ -30,7 +30,9 @@ import Typography from '@material-ui/core/Typography';
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useDropzone } from 'react-dropzone';
-;
+import Dropzone from 'react-dropzone'
+
+  ;
 import TableContainer from '@material-ui/core/TableContainer';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -89,10 +91,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: '.2rem 0',
     boxShadow: 'inset 0px 0px 9px #dedede',
-	'& td textHeight': {
-		padding: '2.5px 5px',
-    	borderRadius: '8px',
-	  },
+    '& td textHeight': {
+      padding: '2.5px 5px',
+      borderRadius: '8px',
+    },
   },
   spacer: {
     padding: '5px 0',
@@ -127,11 +129,11 @@ const useStyles = makeStyles((theme) => ({
   },
   widthSelect: {
     minWidth: '170px',
-	  height: '58px',
+    height: '58px',
     borderRadius: '4px',
   },
   divider: {
-	  margin: '15px 15px',
+    margin: '15px 15px',
     width: '97.4%',
     boxShadow: '1px 2px 10px #d4d4d4',
   },
@@ -145,7 +147,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px;',
     fontFamily: 'Open Sans,sans-serif',
     fontWeight: '400;',
-  },  
+  },
   mToptewntySixteen: {
     marginTop: '16px',
   },
@@ -153,22 +155,42 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiInput-root': {
       height: '54px',
       boxShadow: 'inset 0px 0px 9px #dedede',
-   },
+    },
   },
 }));
-const ConfigHazard = () => {
+const ConfigHazard = (props) => {
   const classes = useStyles();
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
   });
 
+  const [payload, setPayload] = React.useState({
+    hazard: "",
+    hazardImage: "",
+  })
+
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
- 
- const [anchorEl, setAnchorEl] = React.useState(null);
 
+  //for image
+  // const [fileName, setFilename] = React.useState("")
+  // const handleNewFileUpload = (e,files) => {
+  //   console.log(e.target.files,"kk")
+  //   setFilename(e.target.files);
+  // };
+
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  React.useEffect(() => {
+    console.log("editPayload ", props.editPayload);
+    setPayload({
+      hazard: props.editPayload[0] ? props.editPayload[0] : "",
+      hazardImage: props.editPayload[1] ? props.editPayload[1] : "",
+    });
+  }, []);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -176,35 +198,87 @@ const ConfigHazard = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-//   Data for the table view
+
+  const fieldHandler = (e) => {
+    console.log("Value  ", e.target.value, e.target.id)
+    setPayload({
+      ...payload,
+      [e.target.id]: e.target.value
+    })
+  }
+
+  React.useEffect(() => {
+    props.dataHandler(payload)
+  }, [payload])
+
+
+  const [fileName, setFilename] = React.useState('');
+
+  // for image upload
+  const [file, setFiles] = React.useState({});
+
+  const handleNewFileUpload = (files) => {
+    console.log(files, 'aaaaaaaa')
+
+    const temp = { ...payload }
+    temp['hazardImage'] = files[0]
+    setPayload(temp)
+    console.log(temp, 'aaaaaaaa')
+    setFiles(files[0]);
+    // setFilename(files[0].name);
+  };
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
+  const files = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path}
+      {' '}
+      -
+      {file.size}
+      {' '}
+      bytes
+    </li>
+  ));
+
+  //   Data for the table view
 
   return (
     <div>
-        <Paper elevation={3}>
-			<Box padding={3}>
-                  <Grid item xs={12}>
-					<Grid container spacing={3}>
-						<Grid item md={8} sm={8} xs={12}>
-						  <TextField
-							variant="outlined"
-							id="immediate-actions"
-							multiline
-							rows="1"
-							label="Hazard"
-							className={classes.fullWidth}
-						  />
-						</Grid>
-						
-						<Grid item md={4} sm={4} xs={12}>
-						  <img src={projectpj} height={58} alt="" className={classes.mttopSix} />
-						</Grid>
-						<Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
-							<input accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
-						</Grid> 
-					</Grid>
-				</Grid>
-            </Box>
-        </Paper>
+      <Paper elevation={3}>
+        <Box padding={3}>
+          <Grid item xs={12}>
+            <Grid container spacing={3}>
+              <Grid item md={8} sm={8} xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="hazard"
+                  multiline
+                  rows="1"
+                  label="Hazard"
+                  className={classes.fullWidth}
+                  onChange={(e) => props.onChangeField(e, 'hazard')}
+                  defaultValue={props.editPayload[0] || ""}
+                />
+              </Grid>
+                {console.log("payload.fkDeparmentName ", props.editPayload[0])}
+              <Grid item md={4} sm={4} xs={12}>
+                <img src={props.editPayload[1]} height={58} alt="" className={classes.mttopSix} />
+              </Grid>
+              <Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
+                <Dropzone className="dropzone" onDrop={(e) => props.onChangeField(e, 'hazardImage')}>
+                  {({ getRootProps, getInputProps }) => (
+                    <div className="block-dropzone" {...getRootProps()}>
+                      <input onChange={(e) => props.onChangeField(e, 'hazardImage')} {...getInputProps()} />
+                      <p>{fileName || ""}</p>
+                    </div>
+                  )}
+                </Dropzone>
+                {/* <input accept="image/*" className={classes.input} id="hazardImage" name="avatar" type="file" onChange={(e)=>props.onChangeField(e, 'hazardImage')}/> */}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
     </div>
   );
 };

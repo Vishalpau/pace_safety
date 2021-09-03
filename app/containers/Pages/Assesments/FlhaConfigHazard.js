@@ -385,7 +385,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const ConfigHazard = () => {
+const ConfigHazard = (props) => {
 
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -394,7 +394,6 @@ const ConfigHazard = () => {
   });
 
   //list view
-  // const [hazardList, hazardList] = React.useState([]);
   const [criticalName, setCriticalName] = React.useState(" ");
 
   // critical task name on header
@@ -539,13 +538,59 @@ const ConfigHazard = () => {
 
   //for edit
   const [open, setOpen] = React.useState(false);
+  const [ editPayload , setEditPayloadData] = React.useState([]) ;
 
-  function handleFlhaClickOpen() {
+  function handleFlhaClickOpen(tableMeta) {
+    setEditPayloadData(tableMeta.rowData)
     setOpen(true);
   }
 
   function handleFlhaClose() {
     setOpen(false);
+  }
+//////////////////////////
+  const [payload, setPayload] = React.useState({
+   
+  })
+  const handleFieldChange = async(e, fieldname) => {
+    const temp = {...payload}
+    // alert(fieldname)
+    if(fieldname == "hazardImage"){
+      console.log({event: e})
+      temp['hazardImage'] = e[0];
+    }
+    else {
+      temp[fieldname] = e.target.value
+    }
+    console.log('hazardImage',temp)
+    await setPayload(temp);    
+    console.log({payload: payload})
+  }
+
+  // for edit
+  const [ hazardPayload , setCriticalPayload] = React.useState({}) ;
+  function dataHandler(data) {
+    setCriticalPayload(data) ;
+  }
+  const hazardEditSubmitHandler = async () => {
+    console.log({submithazard: payload})
+    let fkTaskId = localStorage.getItem('critcalTaskId')
+    const formData = new FormData();
+    formData.append('fkTaskId', fkTaskId);
+    formData.append('hazard', payload.hazard);
+    console.log(payload.hazardImage, "aaaaaa")
+    if(payload.hazardImage!==undefined){
+      formData.append('hazardImage', payload.hazardImage);
+    }
+    
+    
+
+    // hazardPayload["fkTaskId"]=fkTaskId
+
+    let res = await api.put(`api/v1/configflhas/criticaltasks/${fkTaskId}/hazards/${editPayload[editPayload.length-1]}/`, formData) ;
+    handleFlhaClose()
+    hazardApiHandler()
+
   }
 
   //   Data for the table view
@@ -583,32 +628,35 @@ const ConfigHazard = () => {
       name: '',
       options: {
         filter: false,
-        customBodyRender: (value) => (
+        customBodyRender: (value,tableMeta) => (
           <>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
               <MoreVertIcon />
             </Button>
-            <Menu
+            {/* <Menu
               id="simple-menu"
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleClose}> */}
                 <Link
                   href="/app/pages/assesments/FlhaConfigCriticalTask"
                 >
                   Critical task
 
                 </Link>
-              </MenuItem>
+              {/* </MenuItem>
               <MenuItem onClick={handleClose}>
-                <span variant="outlined" color="primary" onClick={handleFlhaClickOpen}>
+                <span variant="outlined" color="primary" onClick={() => handleFlhaClickOpen(tableMeta)}>
                   Edit Hazards
                 </span>
               </MenuItem>
-            </Menu>
+            </Menu> */}
+            <span variant="outlined" color="primary" onClick={() => handleFlhaClickOpen(tableMeta)}>
+                  Edit Hazards
+                </span>
           </>
         )
       }
@@ -657,6 +705,7 @@ const ConfigHazard = () => {
     </li>
   ));
 
+
   function payloadHandler(e, payloadType, index) {
     let hazrdformPayload = JSON.parse(JSON.stringify(hazardForm));
     hazrdformPayload[index][payloadType] = e.target.value;
@@ -681,11 +730,11 @@ const ConfigHazard = () => {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  <FlhaEditHazard />
+                  <FlhaEditHazard onChangeField={(e, fieldname) => handleFieldChange(e, fieldname)} dataHandler={(data) => dataHandler(data)} editPayload={editPayload}/>
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleFlhaClose} color="primary" size="medium" variant="contained" className={classes.spacerRight}>
+                <Button onClick={hazardEditSubmitHandler} color="primary" size="medium" variant="contained" className={classes.spacerRight}>
                   Save
                 </Button>
                 <Button onClick={handleFlhaClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>
