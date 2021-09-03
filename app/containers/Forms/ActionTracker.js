@@ -20,6 +20,15 @@ import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import FlashOnIcon from "@material-ui/icons/FlashOn";
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -77,6 +86,7 @@ export default function ActionTracker(props) {
     vendor: "string",
     vendorReferenceId: "string",
   });
+  const [reportedByName, setReportedByName] = useState([]);
 
 
   let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
@@ -94,12 +104,41 @@ export default function ActionTracker(props) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({ actionTitle: "" });
 
+  const fetchReportedBy = () => {
+    let filterReportedByName = []
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+    const config = {
+      method: "get",
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+    axios(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const result = response.data.data.results[0].users;
+
+          let user = [];
+          user = result;
+          for (var i in result) {
+            filterReportedByName.push(result[i]);
+          }
+          setReportedByName(filterReportedByName);
+        }
+      })
+      .catch((error) => {
+      });
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = async () => {
-    console.log(props)
     await setError({ actionTitle: "" });
     await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
     await setOpen(false);
@@ -126,6 +165,7 @@ export default function ActionTracker(props) {
 
   useEffect(() => {
     handelUpdate()
+    fetchReportedBy()
   }, [])
 
   return (
@@ -138,7 +178,7 @@ export default function ActionTracker(props) {
       >
         <FlashOnIcon />
       </button>
-
+      {/* {console.log(reportedByName)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
         <IconButton
@@ -167,24 +207,21 @@ export default function ActionTracker(props) {
             </Grid>
 
             {/* assigen */}
-            <Grid item xs={12}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="project-name-label">Assignee</InputLabel>
-                <Select
-                  id="project-name"
-                  labelId="project-name-label"
-                  label="RCA recommended"
-                >
-                  {user.map((selectValues) => (
-                    <MenuItem
-                      value={selectValues}
-                      onClick={(e) => setForm({ ...form, assignTo: 0 })}
-                    >
-                      {selectValues}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <Grid item md={12}>
+              <Autocomplete
+                id="combo-box-demo"
+                options={reportedByName}
+                className={classes.mT30}
+                getOptionLabel={(option) => option.name}
+                onChange={(e, option) =>
+                  setForm({
+                    ...form,
+                    assignTo: option.id,
+                  })
+                }
+                renderInput={(params) => <TextField {...params}
+                  label="Assignee" variant="outlined" />}
+              />
             </Grid>
 
             {/* due date */}

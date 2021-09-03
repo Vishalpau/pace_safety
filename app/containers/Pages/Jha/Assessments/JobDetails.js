@@ -4,7 +4,7 @@ import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
-  Grid, Typography, TextField, Button, Select,
+  Grid, Typography, TextField, Button, Select, FormHelperText,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -36,6 +36,7 @@ import moment from "moment";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from 'react-redux'
 import Axios from 'axios'
+
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
@@ -210,18 +211,22 @@ const JobDetails = (props) => {
   // fecth jha data
   const fetchJhaData = async () => {
     const jhaId = handelJhaId()
-    const res = await api.get(`/api/v1/jhas/${jhaId}/`)
-    const result = res.data.data.results;
-    await setForm(result)
-    await fetchBreakDownData(result.fkProjectStructureIds)
+    if (jhaId !== null) {
+      const res = await api.get(`/api/v1/jhas/${jhaId}/`)
+      const result = res.data.data.results;
+      await setForm(result)
+      await fetchBreakDownData(result.fkProjectStructureIds)
+    }
   }
 
   // fetching jha team data
   const fetchTeamData = async () => {
     const jhaId = handelJhaId()
-    const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
-    const result = res.data.data.results.results
-    await setTeamForm(result)
+    if (jhaId !== null) {
+      const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
+      const result = res.data.data.results.results
+      await setTeamForm(result)
+    }
   }
 
   // for phase and unit
@@ -479,21 +484,22 @@ const JobDetails = (props) => {
       return depth;
     }).join(':')
 
-    if (headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
+    if (headerSelectValue !== null && headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
       form["workArea"] = headerSelectValue[headerSelectValue.length - 1]["name"]
-    } else if (pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
+    } else if (pageSlectValue !== null && pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
       form["workArea"] = pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["name"]
     }
     form["fkProjectStructureIds"] = fkProjectStructureId
   }
 
   const handleSubmit = async (e) => {
-    setSubmitLoader(true)
-    // const { error, isValid } = JobDetailsValidate(form);
-    // await setError(error);
-    // if (!isValid) {
-    //   return "Data is not valid";
-    // }
+    // setSubmitLoader(true)
+    const { error, isValid } = JobDetailsValidate(form);
+    console.log(error)
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
 
     handelProjectData()
     delete form["jhaAssessmentAttachment"]
@@ -594,7 +600,7 @@ const JobDetails = (props) => {
 
 
             {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-              <Grid item xs={3} key={key}>
+              <Grid item xs={4} key={key}>
                 <Typography
                   variant="h6"
                   className={Type.labelName}
@@ -609,7 +615,7 @@ const JobDetails = (props) => {
                 </Typography>
               </Grid>
             ) : selectBreakdown && selectBreakdown.map((selectBreakdown, key) =>
-              <Grid item xs={3} key={key}>
+              <Grid item xs={4} key={key}>
 
                 <Typography
                   variant="h6"
@@ -626,7 +632,7 @@ const JobDetails = (props) => {
               </Grid>)}
 
             {id ? null : breakdown1ListData ? breakdown1ListData.map((item, index) => (
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <FormControl
                   key={index}
                   variant="outlined"
@@ -685,6 +691,8 @@ const JobDetails = (props) => {
                 name="jobtitle"
                 id="jobtitle"
                 value={form.jobTitle ? form.jobTitle : ""}
+                error={error.jobTitle}
+                helperText={error.jobTitle ? error.jobTitle : ""}
                 fullWidth
                 onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
                 variant="outlined"
@@ -705,8 +713,8 @@ const JobDetails = (props) => {
                 id="worklocation"
                 defaultValue=""
                 value={form.location ? form.location : ""}
-                // error={error.location}
-                // helperText={error.location ? error.location : ""}
+                error={error.location}
+                helperText={error.location ? error.location : ""}
                 fullWidth
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 variant="outlined"
@@ -752,7 +760,9 @@ const JobDetails = (props) => {
               <FormControl
                 component="fieldset"
               >
-                <FormLabel component="legend">
+                <FormLabel
+                  error={error.permitToPerform}
+                  component="legend">
                   Permit to Work
                 </FormLabel>
                 <RadioGroup
@@ -772,6 +782,9 @@ const JobDetails = (props) => {
                   ))}
                 </RadioGroup>
               </FormControl>
+              {error && error.permitToPerform && (
+                <FormHelperText style={{ color: "red" }}>{error.permitToPerform}</FormHelperText>
+              )}
             </Grid>
 
             {/* scope work */}
@@ -788,6 +801,8 @@ const JobDetails = (props) => {
                 multiline
                 rows={4}
                 value={form.description ? form.description : ""}
+                error={error.description}
+                helperText={error.description ? error.description : ""}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 fullWidth
                 variant="outlined"

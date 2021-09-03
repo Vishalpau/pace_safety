@@ -6,13 +6,18 @@ function JobDetailsValidate(data) {
     const error = {};
     let isValid = true;
 
-    if (validator.isEmpty(data.description.toString())) {
-        error.description = "Please enter description";
+    if (validator.isEmpty(data.jobTitle.toString())) {
+        error.jobTitle = "Please enter the job title";
         isValid = false;
     }
 
     if (validator.isEmpty(data.location.toString())) {
         error.location = "Please enter the work location";
+        isValid = false;
+    }
+
+    if (validator.isEmpty(data.description.toString())) {
+        error.description = "Please enter description";
         isValid = false;
     }
 

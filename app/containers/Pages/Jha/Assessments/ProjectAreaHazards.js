@@ -211,9 +211,9 @@ const ProjectAreaHazards = () => {
 
   const handelRemove = async (e, index) => {
     if (otherHazards.length > 1) {
-      if (otherHazards[index].id !== undefined) {
-        const res = await api.delete(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[index]["id"]}/`);
-      }
+      // if (otherHazards[index].id !== undefined) {
+      //   const res = await api.delete(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[index]["id"]}/`);
+      // }
       let temp = otherHazards;
       let newData = otherHazards.filter((item, key) => key !== index);
       await setOtherHazards(newData);
@@ -280,23 +280,22 @@ const ProjectAreaHazards = () => {
   }
 
   const handleSubmit = async (e) => {
-    setSubmitLoader(TramRounded)
-    for (let i = 0; i < form.length; i++) {
-      let decidePost = handelCheckPost(form[i]["fkChecklistId"], form[i]["hazard"])
-      if (decidePost !== true) {
-        const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
-      }
-    }
+    setSubmitLoader(true)
 
-    for (let i = 0; i < otherHazards.length; i++) {
-      if (otherHazards[i]["hazard"] != "") {
-        if (otherHazards[i]["id"] == undefined) {
-          const resOther = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, otherHazards[i])
-        } else {
-          const resOther = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[i]["id"]}/`, otherHazards[i])
-        }
+
+    let hazardNew = []
+    let hazardUpdate = []
+
+    form.map((value) => {
+      if (form["id"] == undefined) {
+        hazardNew.push(value)
+      } else {
+        hazardUpdate.push(value)
       }
-    }
+    })
+
+    const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew)
+    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate)
 
     handelNavigate("next")
     setSubmitLoader(false)
