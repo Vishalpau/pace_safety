@@ -586,13 +586,12 @@ const InvestigationOverview = () => {
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel
-                    shrink={true}
                   >
-                    {form.rcaRecommended !== '' && 'RCA recommended'}
+                    RCA recommended
                   </InputLabel>
                   <Select
                     label="RCA recommended"
-                    value={handelDeaultValue(form.rcaRecommended) || false}
+                    value={form.rcaRecommended || ""}
                   >
                     {RCAOPTION.map((selectValues) => (
                       <MenuItem

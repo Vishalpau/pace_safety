@@ -15,6 +15,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Link from '@material-ui/core/Link';
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
@@ -122,10 +123,16 @@ const BasicCauseAndAction = () => {
         let actionTracker = allActionTrackerData.data.data.results.results;
         const temp = [];
         actionTracker.map((value) => {
-          let actionTrackerId = value.actionNumber;
-          temp.push(actionTrackerId);
+          const tempAction = {}
+          let actionTrackerId = value.id;
+          let actionTrackerNumber = value.actionNumber
+          tempAction["number"] = actionTrackerNumber
+          tempAction["id"] = actionTrackerId
+          temp.push(tempAction);
         });
         apiData[key]["action"] = temp;
+      } else {
+        apiData[key]["action"] = [];
       }
     }
     await setData(apiData);
@@ -143,7 +150,6 @@ const BasicCauseAndAction = () => {
         : null;
 
     setProjectData({ projectId: projectId, companyId: fkCompanyId })
-
   }
 
   function ListItemLink(props) {
@@ -245,16 +251,11 @@ const BasicCauseAndAction = () => {
                     <TableCell align="right">
                       <Typography>
                         {value.action != undefined && value.action.map((actionId) => (
-                          <a
-                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId}`}
+                          <Link display="block"
+                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
                           >
-                            {actionId}
-                          </a>
-                          // <ActionTrack
-                          //   href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId}`}
-                          //   actionID={actionId}>
-                          //   {actionId}
-                          // </ActionTrack>
+                            {actionId.number}
+                          </Link>
                         ))}
                       </Typography>
                     </TableCell>
