@@ -78,7 +78,7 @@ const IncidentDetails = (props) => {
   const [selectValue, setSelectValue] = useState([])
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
-  const [fetchSelectBreakDownList, setFetchSelectBreakDownList]= useState([])
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -267,22 +267,22 @@ const IncidentDetails = (props) => {
         }
       } else {
         // Create case if id is not null and means it is an add new registration case.
-        const { error, isValid } = validate(form,selectDepthAndId);
+        const { error, isValid } = validate(form, selectDepthAndId);
         await setError(error);
         if (selectDepthAndId.length === 0) {
           // alert("Please select Level of phase.")
           setIsNext(true);
         } else {
           if (isValid === true) {
-                const uniqueProjectStructure = [... new Set(selectDepthAndId)]
-                let fkProjectStructureId = uniqueProjectStructure.map(depth => {     
-                  return depth;    
-                 }).join(':')
+            const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+            let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+              return depth;
+            }).join(':')
             const formData = {
               fkCompanyId: parseInt(fkCompanyId),
               fkProjectId: parseInt(project.projectId),
 
-              fkProjectStructureIds:fkProjectStructureId.toString(),
+              fkProjectStructureIds: fkProjectStructureId.toString(),
 
               incidentNumber: "",
               incidentType: form.incidentType,
@@ -481,7 +481,7 @@ const IncidentDetails = (props) => {
           setForm(temp);
           fetchBreakDownData(temp.fkProjectStructureIds)
           await fetchBreakDownData(result.fkProjectStructureIds)
-          await setIsLoading(true);
+          
         }
 
         // const user = localStorage.getItem({})
@@ -498,7 +498,7 @@ const IncidentDetails = (props) => {
         if (result.isPersonAffected !== "Yes") {
           hideAffect.push("People affected");
         }
-       
+
       } catch (error) {
         setIsNext(true);
         setMessage("Something went worng!");
@@ -527,12 +527,12 @@ const IncidentDetails = (props) => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label:projectData.projectName.breakdown[key].structure[0].name },
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                 ];
                 setFetchSelectBreakDownList(selectBreakDown)
               }
@@ -560,7 +560,7 @@ const IncidentDetails = (props) => {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label:projectData.projectName.breakdown[key].structure[0].name },
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                 ];
                 setFetchSelectBreakDownList(selectBreakDown)
               }
@@ -626,8 +626,25 @@ useEffect(()=>{
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
-              <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId}/>
-              
+              {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
+                <Grid item xs={3} key={key}>
+
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
+                  >
+                    {selectBdown.label}
+                  </Typography>
+
+
+                  <Typography className={Type.labelValue}>
+                    {selectBdown.name}
+                  </Typography>
+                </Grid>
+              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId}/>
+}
               {/* Unit Name */}
 
               {/* Incident Type */}

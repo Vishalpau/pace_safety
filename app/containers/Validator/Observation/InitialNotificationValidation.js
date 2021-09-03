@@ -39,6 +39,7 @@ function InitialNotificationValidator(data) {
 //     error.supervisorByBadgeId = "Only numbers allowed in supervisor's badge number";
 //     isValid = false;
 //  }
+
 if(data.isSituationAddressed === "Yes") {
   if(validator.isEmpty(data.actionTaken.toString())){
     error.actionTaken = "Please enter describe the actions taken";
@@ -53,7 +54,7 @@ if(data.isSituationAddressed === "Yes") {
 }
 
 if (validator.isEmpty(data.acceptAndPledge.toString())) {
-  error.acceptAndPledge = "Please tick accept and pledge";
+  error.acceptAndPledge = "Please check the Accept & Pledge";
   isValid = false;
 }
 

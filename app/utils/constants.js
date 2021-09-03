@@ -97,6 +97,11 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
+export const DETAILS = {
+  "RCA Details":
+    "/app/incident-management/registration/root-cause-analysis/details/",
+}
+
 export const SUMMERY_FORM = {
   Summary: "/incident/details/",
 };

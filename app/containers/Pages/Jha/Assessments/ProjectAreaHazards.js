@@ -131,14 +131,38 @@ const ProjectAreaHazards = () => {
   const [selectedOptions, setSelectedOption] = useState({})
   const [fetchOption, setFetchedOptions] = useState([])
   const [submitLoader, setSubmitLoader] = useState(false)
+  const [otherHazards, setOtherHazards] = useState([
+    {
+      "hazard": "",
+      "risk": "",
+      "control": "",
+      "humanPerformanceAspects": "string",
+      "status": "Active",
+      "createdBy": 0,
+      "fkJhaId": localStorage.getItem("fkJHAId")
+    }
+  ])
+
   const history = useHistory()
 
   const handelUpdate = async () => {
     const temp = {}
+    const otherNoId = []
+    const tempForm = []
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const apiData = res.data.data.results.results
-    setForm(apiData)
+    apiData.map((value) => {
+      if (value.fkChecklistId !== 0) {
+        tempForm.push(value)
+      } else {
+        otherNoId.push(value)
+      }
+    })
+    setForm(tempForm)
+    if (otherNoId.length > 0) {
+      setOtherHazards(otherNoId)
+    }
     setFetchedOptions(apiData)
     apiData.map((value) => {
       if (value.hazard in temp) {
@@ -154,7 +178,7 @@ const ProjectAreaHazards = () => {
     const temp = {}
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
-    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
+    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/1/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
@@ -170,6 +194,38 @@ const ProjectAreaHazards = () => {
     })
     setCheckListGroups(temp)
   }
+
+  const handleAdd = (e) => {
+    if (Object.keys(otherHazards).length < 100) {
+      setOtherHazards([...otherHazards, {
+        "hazard": "",
+        "risk": "",
+        "control": "",
+        "humanPerformanceAspects": "string",
+        "status": "Active",
+        "createdBy": 0,
+        "fkJhaId": localStorage.getItem("fkJHAId")
+      }]);
+    }
+  };
+
+  const handelRemove = async (e, index) => {
+    if (otherHazards.length > 1) {
+      if (otherHazards[index].id !== undefined) {
+        const res = await api.delete(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[index]["id"]}/`);
+      }
+      let temp = otherHazards;
+      let newData = otherHazards.filter((item, key) => key !== index);
+      await setOtherHazards(newData);
+    };
+  }
+
+  const handleOtherHazards = (e, key) => {
+    const temp = [...otherHazards];
+    const value = e.target.value;
+    temp[key]["hazard"] = value;
+    setOtherHazards(temp);
+  };
 
   const handlePhysicalHazards = async (e, checkListId, hazard_value) => {
     let temp = [...form]
@@ -231,6 +287,17 @@ const ProjectAreaHazards = () => {
         const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
       }
     }
+
+    for (let i = 0; i < otherHazards.length; i++) {
+      if (otherHazards[i]["hazard"] != "") {
+        if (otherHazards[i]["id"] == undefined) {
+          const resOther = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, otherHazards[i])
+        } else {
+          const resOther = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[i]["id"]}/`, otherHazards[i])
+        }
+      }
+    }
+
     handelNavigate("next")
     setSubmitLoader(false)
   }
@@ -274,32 +341,42 @@ const ProjectAreaHazards = () => {
               <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
             </Grid>
 
-            <Grid
-              item
-              md={6}
-              xs={11}
-              className={classes.createHazardbox}
-            >
-              <TextField
-                label="Other Hazards"
-                margin="dense"
-                name="otherhazards"
-                id="otherhazards"
-                defaultValue=""
-                fullWidth
-                variant="outlined"
-                className={classes.formControl}
-              />
+            {otherHazards.map((value, index) => (
+              <>
+                <Grid
+                  item
+                  md={6}
+                  xs={11}
+                  className={classes.createHazardbox}
+                >
+                  <TextField
+                    label="Other Hazards"
+                    margin="dense"
+                    name="otherhazards"
+                    id="otherhazards"
+                    defaultValue=""
+                    fullWidth
+                    variant="outlined"
+                    value={otherHazards[index].hazard || ""}
+                    className={classes.formControl}
+                    onChange={(e) => handleOtherHazards(e, index)}
+                  />
 
-            </Grid>
-            <Grid item md={1} className={classes.createHazardbox}>
-              <IconButton
-                variant="contained"
-                color="primary"
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            </Grid>
+                </Grid>
+                {otherHazards.length > 1 ?
+                  <Grid item md={1} className={classes.createHazardbox}>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => handelRemove(e, index)}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>
+                  : null}
+              </>
+            ))}
+
 
             <Grid item md={12} className={classes.createHazardbox}>
               <Button
@@ -307,6 +384,7 @@ const ProjectAreaHazards = () => {
                 color="primary"
                 startIcon={<AddCircleIcon />}
                 className={classes.button}
+                onClick={(e) => handleAdd()}
               >
                 Add
               </Button>

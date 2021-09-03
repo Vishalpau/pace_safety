@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     padding: ".75rem 0",
   },
   statusButton: {
-    whiteSpace:"nowrap",
+    whiteSpace: "nowrap",
     borderRadius: 4,
     fontSize: 12,
   },
@@ -115,7 +115,7 @@ const Summary = (props) => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
-  const [isComments,setIsComments] = useState(false);
+  const [isComments, setIsComments] = useState(false);
   const [isActivityHistory, setActivityHistory] = useState(false)
 
   const [formStatus, setFormStatus] = useState({
@@ -373,7 +373,7 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stage Root and Cause Analysis")
       setMessageType("warning")
     } else if (!closeout) {
-      handelNaviagte(`/app/incident-management/registration/close-out/${id}`)
+      handelNaviagte(`/incident/${id}/close-out/new/`)
     }
     else {
       let viewMode = {
@@ -582,24 +582,24 @@ const Summary = (props) => {
       handelNaviagte(`/incident/${id}/close-out/new/`)
     }
   }
-  const handleActivityHistory=()=>{
+  const handleActivityHistory = () => {
     setActivityHistory(true);
     setIsComments(false);
     setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false); 
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
   }
-  const handleComments=()=>{
+  const handleComments = () => {
     setActivityHistory(false);
     setIsComments(true);
     setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false);
-  
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
+
   }
 
   useEffect(() => {
@@ -674,6 +674,7 @@ const Summary = (props) => {
                   {investigationOverview ? "Done" : "Pending"}
                 </Typography>
               </div>
+            
 
               <div className={Styles.item}>
                 <Button
@@ -757,197 +758,197 @@ const Summary = (props) => {
          
           <Divider /></>}
 
-          <Box marginTop={4}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={9}>
-                {/* summary and part */}
-                {
-                isActivityHistory?<AhaSummary/>:
-                isComments?<Comments/>:
-                <>
-                  {(() => {
-                    if (
-                      props.viewMode.viewMode.initialNotification == true
-                    ) {
-                      return <IncidentDetailsSummary />;
-                    }
-                    if (props.viewMode.viewMode.investigation == true) {
-                      return <InvestigationSummary />;
-                    }
-                    if (props.viewMode.viewMode.evidence == true) {
-                      return <EvidenceSummary />;
-                    }
-                    if (props.viewMode.viewMode.rootcauseanalysis == true) {
-                      return <RootCauseAnalysisSummary />;
-                    }
-                    if (props.viewMode.viewMode.closeout == true) {
-                      return <CloseOut />;
-                    }
-                    if (props.viewMode.viewMode.lessionlearn == true) {
-                      return <LessionLearnSummary />;
-                    }
-                  })()}
-                </>
-}
-             </Grid>
+<Box marginTop={4}>
+  <Grid container spacing={3}>
+    <Grid item xs={12} md={9}>
+      {/* summary and part */}
+      {
+        isActivityHistory ? <AhaSummary /> :
+          isComments ? <Comments /> :
+            <>
+              {(() => {
+                if (
+                  props.viewMode.viewMode.initialNotification == true
+                ) {
+                  return <IncidentDetailsSummary />;
+                }
+                if (props.viewMode.viewMode.investigation == true) {
+                  return <InvestigationSummary />;
+                }
+                if (props.viewMode.viewMode.evidence == true) {
+                  return <EvidenceSummary />;
+                }
+                if (props.viewMode.viewMode.rootcauseanalysis == true) {
+                  return <RootCauseAnalysisSummary />;
+                }
+                if (props.viewMode.viewMode.closeout == true) {
+                  return <CloseOut />;
+                }
+                if (props.viewMode.viewMode.lessionlearn == true) {
+                  return <LessionLearnSummary />;
+                }
+              })()}
+            </>
+      }
+    </Grid>
 
 
-              {/* side bar    */}
-              {isDesktop && (
-                <Grid item xs={12} md={3}>
-                  <Paper>
-                    <List
-                      dense
-                      subheader={
-                        <ListSubheader component="div">Actions</ListSubheader>
-                      }
-                    >
-                      <Snackbar
-                        open={open}
-                        autoHideDuration={6000}
-                        onClose={handleClose}
-                      >
-                        <Alert onClose={handleClose} severity={messageType}>
-                          {message}
-                        </Alert>
-                      </Snackbar>
-                      <ListItemLink button
-                      >
-                        <ListItemIcon>
-                          <Edit />
-                        </ListItemIcon>
-                        <ListItemText
+    {/* side bar    */}
+    {isDesktop && (
+      <Grid item xs={12} md={3}>
+        <Paper>
+          <List
+            dense
+            subheader={
+              <ListSubheader component="div">Actions</ListSubheader>
+            }
+          >
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+            >
+              <Alert onClose={handleClose} severity={messageType}>
+                {message}
+              </Alert>
+            </Snackbar>
+            <ListItemLink button
+            >
+              <ListItemIcon>
+                <Edit />
+              </ListItemIcon>
+              <ListItemText
 
-                          onClick={(e) => modifyInitialDetails()}
-                          primary="Modify Notification" />
-                      </ListItemLink>
+                onClick={(e) => modifyInitialDetails()}
+                primary="Modify Notification" />
+            </ListItemLink>
 
-                      {investigationOverview ? (
-                        <ListItemLink
-                          // onClick = {(e)=>handelNaviagte()}
-                          onClick={(e) => modifyInvestigation(id)}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify Investigation" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink
-                          onClick={(e) => handelInvestigationView()}>
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
+            {investigationOverview ? (
+              <ListItemLink
+                // onClick = {(e)=>handelNaviagte()}
+                onClick={(e) => modifyInvestigation(id)}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Investigation" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink
+                onClick={(e) => handelInvestigationView()}>
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
 
-                          <ListItemText primary="Add Investigation" />
-                        </ListItemLink>
-                      )}
+                <ListItemText primary="Add Investigation" />
+              </ListItemLink>
+            )}
 
-                      {evidencesData ? (
-                        <ListItemLink
-                          onClick={(e) => modifyEvidence(id)}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify Evidence" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink
-                          onClick={(e) => modifyEvidence(id)}>
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
+            {evidencesData ? (
+              <ListItemLink
+                onClick={(e) => modifyEvidence(id)}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Evidence" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink
+                onClick={(e) => modifyEvidence(id)}>
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
 
-                          <ListItemText primary="Add Evidence" />
-                        </ListItemLink>
-                      )}
-                      {paceCauseData || rootCausesData || whyData ? (
-                        <ListItemLink
-                          onClick={(e) => modifyRootCauseAnalysis()}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify RCA" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink
-                          onClick={(e) => modifyRootCauseAnalysis()}
-                        >
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
-                          <ListItemText primary="Perform RCA" />
-                        </ListItemLink>
-                      )}
-                      {lessionlearnData ? (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte(`/incident/${id}/lesson-learnt/modify/`)}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify Lessons Learnt" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink button
-                          onClick={(e) => modifyLessonLearn()}
-                        >
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
-                          <ListItemText primary="Add Lessons Learnt" />
-                        </ListItemLink>
-                      )}
+                <ListItemText primary="Add Evidence" />
+              </ListItemLink>
+            )}
+            {paceCauseData || rootCausesData || whyData ? (
+              <ListItemLink
+                onClick={(e) => modifyRootCauseAnalysis()}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify RCA" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink
+                onClick={(e) => modifyRootCauseAnalysis()}
+              >
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+                <ListItemText primary="Perform RCA" />
+              </ListItemLink>
+            )}
+            {lessionlearnData ? (
+              <ListItemLink
+                onClick={(e) => handelNaviagte(`/incident/${id}/lesson-learnt/modify/`)}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Lessons Learnt" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink button
+                onClick={(e) => modifyLessonLearn()}
+              >
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+                <ListItemText primary="Add Lessons Learnt" />
+              </ListItemLink>
+            )}
 
-                      <ListItem
-                        onClick={(e) => modifyCloseout()}
-                        button divider>
-                        <ListItemIcon>
-                          <Close />
-                        </ListItemIcon>
-                        <ListItemText primary="Close Out" />
-                      </ListItem>
+            <ListItem
+              onClick={(e) => modifyCloseout()}
+              button divider>
+              <ListItemIcon>
+                <Close />
+              </ListItemIcon>
+              <ListItemText primary="Close Out" />
+            </ListItem>
 
-                      <ListItem 
-                      href='/#comment'
-                      onClick={(e)=>handleComments()}
-                      button>
-                        <ListItemIcon>
-                          <Comment />
-                        </ListItemIcon>
-                        <ListItemText primary="Comments" />
-                      </ListItem>
+            <ListItem
+              href='/#comment'
+              onClick={(e) => handleComments()}
+              button>
+              <ListItemIcon>
+                <Comment />
+              </ListItemIcon>
+              <ListItemText primary="Comments" />
+            </ListItem>
 
-                      <ListItem href='/#activity' button onClick={()=> handleActivityHistory()}>
-                        <ListItemIcon>
-                          <History />
-                        </ListItemIcon>
-                        <ListItemText primary="Activity History" />
-                      </ListItem>
-                    </List>
-                    <Divider />
-                    <List dense>
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Print />
-                        </ListItemIcon>
-                        <ListItemText primary="Print" />
-                      </ListItem>
+            <ListItem href='/#activity' button onClick={() => handleActivityHistory()}>
+              <ListItemIcon>
+                <History />
+              </ListItemIcon>
+              <ListItemText primary="Activity History" />
+            </ListItem>
+          </List>
+          <Divider />
+          <List dense>
+            <ListItem button>
+              <ListItemIcon>
+                <Print />
+              </ListItemIcon>
+              <ListItemText primary="Print" />
+            </ListItem>
 
-                    </List>
-                  </Paper>
-                </Grid>
-              )}
+          </List>
+        </Paper>
+      </Grid>
+    )}
 
-            </Grid>
+  </Grid>
 
-          </Box>
-        </PapperBlock>
+</Box>
+        </PapperBlock >
       ) : (
-        <h1> Loading...</h1>
-      )}
+  <h1> Loading...</h1>
+)}
     </>
   );
 };

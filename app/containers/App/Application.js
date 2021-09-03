@@ -153,6 +153,7 @@ import {
   JhaLessonsLearned,
   JhaApprovals,
   Comments,
+  JhaCloseOut,
 } from "../pageListAsync";
 
 
@@ -498,25 +499,30 @@ function Application(props) {
         {/* Aha Routes */}
 
         <Route path="/app/pages/aha" exact component={Aha} />
-        <Route path="/app/pages/aha/aha-summary" exact component={AhaSummary} />
+        <Route path="/app/pages/aha/aha-summary/:id" exact component={AhaSummary} />
         <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
         <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetails} />
+        <Route path="/app/pages/aha/assessments/project-details/:id" exact component={ProjectDetails} />
         <Route path="/app/pages/aha/assessments/project-area-hazards" exact component={ProjectAreaHazards} />
+        <Route path="/app/pages/aha/assessments/project-area-hazards/:id" exact component={ProjectAreaHazards} />
         <Route path="/app/pages/aha/assessments/assessment" exact component={Assessment} />
+        <Route path="/app/pages/aha/assessments/assessment/:id" exact component={Assessment} />
         <Route path="/app/pages/aha/assessments/DocumentsNotifications" exact component={DocumentNotification} />
+        <Route path="/app/pages/aha/assessments/DocumentsNotifications/:id" exact component={DocumentNotification} />
         <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
         <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
 
         {/* Jha  */}
 
-        <Route path="/app/pages/jha" exact component={Jha} />
-        <Route path="/app/pages/jha/jha-summary" exact component={JhaSummary} />
-        <Route path="/app/pages/jha/assessments/project-details" exact component={JhaJobDetails} />
-        <Route path="/app/pages/jha/assessments/project-area-hazards" exact component={JhaProjectAreaHazards} />
-        <Route path="/app/pages/jha/assessments/assessment" exact component={JhaAssessment} />
-        <Route path="/app/pages/jha/assessments/DocumentsNotifications" exact component={JhaDocumentNotification} />
-        <Route path="/app/pages/jha/approvals/approvals" exact component={JhaApprovals} />
-        <Route path="/app/pages/jha/lessons-learned/lessons-learned" exact component={JhaLessonsLearned} />
+        <Route path="/app/pages/jha/all_jha" component={Jha} />
+        <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
+        <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
+        <Route path="/app/pages/jha/assessments/project-area-hazards" component={JhaProjectAreaHazards} />
+        <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessment} />
+        <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />
+        <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
+        <Route path="/app/pages/jha/lessons-learned/lessons-learned" component={JhaLessonsLearned} />
+        <Route path="/app/pages/jha/close-out" component={JhaCloseOut} />
 
         <Route path="/app/pages/jha/assessments/project-details/:id" exact component={JhaJobDetails} />
         <Route path="/app/pages/jha/assessments/project-area-hazards/:id" exact component={JhaProjectAreaHazards} />

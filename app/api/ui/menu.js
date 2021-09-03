@@ -867,7 +867,7 @@ module.exports = [
       {
         key: 'jha',
         name: 'JHA',
-        linkParent: "/app/pages/jha",
+        linkParent: "/app/pages/jha/all_jha",
       },
     ],
   },

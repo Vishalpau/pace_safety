@@ -27,6 +27,8 @@ import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 import { handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
+import ActionTrack from "../ActionTrack";
+
 import { checkValue } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
@@ -70,14 +72,18 @@ const BasicCauseAndAction = () => {
   const [incidentDetail, setIncidentDetail] = useState({});
 
   const [data, setData] = useState([]);
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
   const history = useHistory();
 
   const putId = useRef("");
   let id = useRef();
   const [actionData, setActionData] = useState({});
+  const [updatePage, setUpdatePage] = useState(false)
 
   const handelShowData = async () => {
-    console.log("here");
     let tempApiData = [];
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
       HAZARDIOUS_CONDITION_SUB_TYPES
@@ -109,15 +115,14 @@ const BasicCauseAndAction = () => {
     });
     for (let key in apiData) {
       const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${
-          apiData[key]["id"]
+        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {
         let actionTracker = allActionTrackerData.data.data.results.results;
         const temp = [];
         actionTracker.map((value) => {
-          let actionTrackerId = value.id;
+          let actionTrackerId = value.actionNumber;
           temp.push(actionTrackerId);
         });
         apiData[key]["action"] = temp;
@@ -125,6 +130,21 @@ const BasicCauseAndAction = () => {
     }
     await setData(apiData);
   };
+
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+
+  }
 
   function ListItemLink(props) {
     return (
@@ -157,11 +177,12 @@ const BasicCauseAndAction = () => {
   const handelCallback = async () => {
     await handelShowData();
     await fetchIncidentDetails();
+    await handelActionLink();
   };
 
   useEffect(() => {
-    handelCallback();
-  }, []);
+    handelCallback()
+  }, [updatePage]);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
@@ -202,32 +223,46 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Box>
 
-            <TableContainer component="div">
-              <Table className={classes.table}>
-                <TableBody>
-                  {data.map((value) => (
-                    <TableRow>
-                      <TableCell align="left" style={{ width: 160 }}>
-                        {handelConvert(value.rcaSubType)}
-                      </TableCell>
-                      <TableCell align="left">
-                        <span>{value.rcaRemark}</span>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography>
-                          {value.action != undefined &&
-                            value.action.map((actionId) => <p>{actionId}</p>)}
-                        </Typography>
-                        <ActionTracker
-                          actionContext="incidents:Pacacuase"
-                          enitityReferenceId={`${putId.current}:${value.id}`}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Table className={classes.table}>
+              <TableBody>
+                {data.map((value) => (
+                  <TableRow>
+                    <TableCell align="left" style={{ width: 160 }}>
+                      {handelConvert(value.rcaSubType)}
+                    </TableCell>
+                    <TableCell align="left">
+                      <span>{value.rcaRemark}</span>
+                    </TableCell>
+                    <TableCell align="right">
+
+                      <ActionTracker
+                        actionContext="incidents:Pacacuase"
+                        enitityReferenceId={`${putId.current}:${value.id}`}
+                        setUpdatePage={setUpdatePage}
+                        updatePage={updatePage}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography>
+                        {value.action != undefined && value.action.map((actionId) => (
+                          <a
+                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId}`}
+                          >
+                            {actionId}
+                          </a>
+                          // <ActionTrack
+                          //   href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId}`}
+                          //   actionID={actionId}>
+                          //   {actionId}
+                          // </ActionTrack>
+                        ))}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+              </TableBody>
+            </Table>
             {data.length == 0 ? (
               <Grid container item md={9}>
                 <Typography variant="h8">No option(s) selected</Typography>

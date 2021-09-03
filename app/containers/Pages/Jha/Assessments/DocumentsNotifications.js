@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, Component, useRef } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import {
   Grid, Typography, TextField, Button
@@ -14,6 +14,11 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
+import Snackbar from "@material-ui/core/Snackbar";
+import { useParams, useHistory } from 'react-router';
+import FormControl from '@material-ui/core/FormControl';
+import Box from "@material-ui/core/Box";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -22,9 +27,20 @@ import MUIDataTable from 'mui-datatables';
 
 import { useDropzone } from 'react-dropzone';
 import DeleteIcon from '@material-ui/icons/Delete';
+import MuiAlert from "@material-ui/lab/Alert";
 
 import FormSideBar from '../../../Forms/FormSideBar';
-import { JHA_FORM } from "../Utils/constants"
+import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
+import api from "../../../../utils/axios";
+import { handelJhaId } from "../Utils/checkValue"
+import { handelFileName } from "../../../../utils/CheckerValue";
+import Attachment from "../../../../containers/Attachment/Attachment";
+import {
+  HEADER_AUTH,
+  SSO_URL,
+} from "../../../../utils/constants";
+import { from } from 'form-data';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -124,34 +140,149 @@ const useStyles = makeStyles((theme) => ({
 
 const DocumentNotification = () => {
 
+  const [form, setForm] = useState({})
+  const [notificationSentValue, setNotificationSentValue] = useState([]);
+  const history = useHistory()
+
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+  const [open, setOpen] = useState(false);
+  const [messageType, setMessageType] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitLoader, setSubmitLoader] = useState(false)
+  const ref = useRef();
+
+  const handelJobDetails = async () => {
+    const jhaId = handelJhaId()
+    const res = await api.get(`/api/v1/jhas/${jhaId}/`)
+    const apiData = res.data.data.results
+    apiData["notifyTo"] == null ? apiData["notifyTo"] = "" : apiData["notifyTo"] = apiData["notifyTo"]
+    setForm(apiData)
+
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    var config = {
+      method: "get",
+      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/`,
+      headers: HEADER_AUTH,
+    };
+    const notify = await api(config);
+    if (notify.status === 200) {
+      console.log(notify.data.data.results)
+      const result = notify.data.data.results;
+      setNotificationSentValue(result);
+    }
+
+  }
+
+  let fileTypeError =
+    "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
+  let fielSizeError = "Size less than 25Mb allowed";
+  const handleFile = async (e) => {
+    let acceptFileTypes = [
+      "pdf",
+      "png",
+      "jpeg",
+      "jpg",
+      "xls",
+      "xlsx",
+      "doc",
+      "word",
+      "ppt",
+    ];
+    let file = e.target.files[0].name.split(".");
+
+    if (
+      acceptFileTypes.includes(file[file.length - 1]) &&
+      e.target.files[0].size < 25670647
+    ) {
+      const temp = { ...form };
+      temp.jhaAssessmentAttachment = e.target.files[0];
+      await setForm(temp);
+    } else {
+      ref.current.value = "";
+      !acceptFileTypes.includes(file[file.length - 1])
+        ? await setMessage(fileTypeError)
+        : await setMessage(`${fielSizeError}`);
+      await setMessageType("error");
+      await setOpen(true);
+    }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenError(false)
+      return;
+    }
+    setOpen(false);
+  };
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-  const files = acceptedFiles.map(file => (
-    <>
-      <li key={file.path}>
-        {file.path}
-        {' '}
-        -
-        {file.size}
-        {' '}
-        bytes
-      </li>
-      <IconButton
-        variant="contained"
-        color="primary"
-      >
-        <DeleteForeverIcon />
-      </IconButton>
-    </>
-  ));
+  const handelNavigate = (navigateType) => {
+    if (navigateType == "next") {
+      history.push("/app/pages/jha/jha-summary")
+    } else if (navigateType == "previous") {
+      history.push("/app/pages/Jha/assessments/assessment")
+    }
+  }
+
+  const handelNotifyTo = async (e, value) => {
+    if (e.target.checked == false) {
+      let newData = form.notifyTo.filter((item) => item !== value);
+      setForm({
+        ...form,
+        notifyTo: newData
+      });
+    } else {
+      setForm({
+        ...form,
+        notifyTo: [...form.notifyTo, value]
+      });
+    }
+  };
+
+  const handelNext = async () => {
+    setSubmitLoader(true)
+    if (typeof form.jhaAssessmentAttachment == "object" && form.jhaAssessmentAttachment != null) {
+      let data = new FormData();
+      data.append("fkCompanyId", form.fkCompanyId);
+      data.append("fkProjectId", form.fkProjectId);
+      data.append("location", form.location);
+      data.append("jhaAssessmentDate", form.jhaAssessmentDate);
+      data.append("permitToPerform", form.permitToPerform);
+      data.append("jobTitle", form.jobTitle);
+      data.append("description", form.description);
+      data.append("classification", form.classification);
+      data.append("workHours", form.workHours);
+      data.append("notifyTo", form.notifyTo.toString())
+      data.append("link", form.link)
+      data.append("jhaAssessmentAttachment", form.jhaAssessmentAttachment)
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data)
+    }
+    else {
+      delete form["jhaAssessmentAttachment"]
+      form["notifyTo"] = form.notifyTo.toString()
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+    }
+    history.push(SUMMARY_FORM["Summary"])
+    localStorage.setItem("Jha Status", JSON.stringify({ "assessment": "done" }))
+    setSubmitLoader(false)
+  }
+
+  useEffect(() => {
+    handelJobDetails()
+  }, [])
 
   const classes = useStyles();
   return (
-    <PapperBlock title="Document And Notifcation" icon="ion-md-list-box">
+    <PapperBlock title="Document And Notification" icon="ion-md-list-box">
+      {/* {console.log(form)} */}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
@@ -164,22 +295,34 @@ const DocumentNotification = () => {
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Risk assessment supporting documents
               </Typography>
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.fileUploadFileDetails}
-              >
-                <h4>Files</h4>
-                <ul>{files}</ul>
 
-                {/* <DeleteIcon /> */}
+              <Grid item xs={12} md={6}>
+                <input
+                  id="selectFile"
+                  type="file"
+                  className={classes.fullWidth}
+                  name="file"
+                  ref={ref}
+                  accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                  // style={{
+                  //   color:
+                  //     typeof form.attachments === "string" && "transparent",
+                  // }}
+                  onChange={(e) => {
+                    handleFile(e);
+                  }}
+                />
+                <Typography title={handelFileName(form.jhaAssessmentAttachment)}>
+                  {form.jhaAssessmentAttachment != "" &&
+                    typeof form.jhaAssessmentAttachment == "string" ? (
+                    <Attachment value={form.jhaAssessmentAttachment} />
+                  ) : (
+                    <p />
+                  )}
+                </Typography>
               </Grid>
-              <div {...getRootProps({ className: 'dropzone' })}>
-                <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
-              </div>
             </Grid>
+
             <Grid
               item
               md={12}
@@ -187,48 +330,35 @@ const DocumentNotification = () => {
             >
               <TextField
                 label="Link"
-                margin="dense"
+                name="link"
                 name="link"
                 id="link"
-                defaultValue=""
+                value={form.link != null ? form.link : ""}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
+                onChange={(e) => setForm({
+                  ...form,
+                  link: e.target.value
+                })}
               />
             </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.formBox}
-            >
-              <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-              <FormGroup row>
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
+
+            <Grid item md={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Notifications to be sent to</FormLabel>
+                <FormGroup>
+                  {notificationSentValue.map((value, index) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value.roleName} />}
+                      label={value.roleName}
+                      checked={form.notifyTo && form.notifyTo !== null && form.notifyTo == value.id}
+                      onChange={async (e) => handelNotifyTo(e, value.id)}
                     />
-                  )}
-                  label="Manager"
-                />
-                <FormControlLabel
-                  className={classes.labelValue}
-                  control={(
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      name="checkedI"
-                      onChange={handleChange}
-                    />
-                  )}
-                  label="Supervisor"
-                />
-              </FormGroup>
+                  ))}
+                </FormGroup>
+              </FormControl>
+              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
             </Grid>
 
             <Grid
@@ -236,7 +366,29 @@ const DocumentNotification = () => {
               md={12}
               xs={12}
             >
-              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
+              <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmSubmitBtn}
+                onClick={(e) => handelNavigate("previous")}
+              >
+                Previous
+              </Button>
+              {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handelNext()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Submit
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
             </Grid>
           </Grid>
         </Col >
@@ -248,6 +400,11 @@ const DocumentNotification = () => {
           />
         </Col>
       </Row>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={messageType}>
+          {message}
+        </Alert>
+      </Snackbar>
     </PapperBlock>
   );
 };
