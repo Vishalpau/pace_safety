@@ -17,7 +17,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import api from "../../../../utils/axios";
 import { useParams, useHistory } from "react-router";
 
-
+import { CircularProgress } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -103,6 +104,8 @@ const LessonsLearned = () => {
 
   const [form, setForm] = useState({})
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
+  const [submitLoader , setSubmitLoader] = useState(false);
+
   const history = useHistory()
   const handelJobDetails = async () => {
     // const jhaId = handelJhaId()
@@ -125,6 +128,7 @@ const LessonsLearned = () => {
   const handelSubmit = async () => {
     delete form["ahaAssessmentAttachment"]
     form["lessonLearntUserName"] = user.name
+    await setSubmitLoader(true)
     const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
     history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
   }
@@ -386,9 +390,21 @@ const LessonsLearned = () => {
             md={12}
             xs={12}
             >
-                <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
-                              onClick={(e) => handelSubmit()}
->Submit</Button>
+                {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handelSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
             </Grid>
         </Grid>
     </PapperBlock>

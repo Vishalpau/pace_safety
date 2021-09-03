@@ -7,6 +7,8 @@ import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import { useParams, useHistory } from "react-router";
 import api from "../../../../utils/axios";
 import ActionTracker from "../ActionTracker";
+import { CircularProgress } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +77,8 @@ const useStyles = makeStyles((theme) => ({
 const Approvals = () => {
   const [form, setForm] = useState({});
   const history = useHistory();
+  const [submitLoader , setSubmitLoader] = useState(false);
+
   const handelJobDetails = async () => {
     // const jhaId = handelJhaId()
     const res = await api.get(
@@ -105,6 +109,7 @@ const Approvals = () => {
 
   const handelSubmit = async () => {
     delete form["ahaAssessmentAttachment"];
+    await setSubmitLoader(true)
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,
       form
@@ -190,14 +195,29 @@ const Approvals = () => {
           </Grid>
 
           <Grid item md={12} xs={12}>
-            <Button
+          {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handelSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
+            {/* <Button
               variant="outlined"
               size="medium"
               className={classes.custmSubmitBtn}
               onClick={(e) => handelSubmit()}
             >
               Submit
-            </Button>
+            </Button> */}
           </Grid>
         </Grid>
       </PapperBlock>

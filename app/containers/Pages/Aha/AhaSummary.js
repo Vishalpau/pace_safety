@@ -213,70 +213,144 @@ function AhaSummary() {
     const result = res.data.data.results.results;
     await setTeamForm(result);
   };
-
   const fetchBreakDownData = async (projectBreakdown) => {
-    const projectData = JSON.parse(localStorage.getItem("projectName"));
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
 
     let selectBreakDown = [];
-    const breakDown = projectBreakdown.split(":");
+    const breakDown = projectBreakdown.split(':');
     for (var key in breakDown) {
-      if (breakDown[key].slice(0, 2) === "1L") {
+      if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[0].structure[0].url
-          }`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
           headers: HEADER_AUTH,
         };
 
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
+            console.log(result)
 
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                 ];
+                // setFetchSelectBreakDownList(selectBreakDown)
               }
             });
           })
           .catch((error) => {
+
             setIsNext(true);
           });
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[key].structure[0].url
-          }${breakDown[key - 1].slice(-1)}`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].slice(-1)}`,
           headers: HEADER_AUTH,
         };
 
         await api(config)
           .then(async (response) => {
-            const result = response.data.data.results;
 
+            const result = response.data.data.results;
+            // console.log({ fetchSelectBreakDownList: result })
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
+
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                 ];
+                console.log(selectBreakDown)
+                // setFetchSelectBreakDownList(selectBreakDown)
               }
             });
+
+
           })
           .catch((error) => {
-            console.log(error);
-            // setIsNext(true);
+            console.log(error)
+            setIsNext(true);
           });
       }
+      await setProjectSturcturedData(selectBreakDown);
     }
-    // dispatch(breakDownDetails(selectBreakDown));
-    await setProjectSturcturedData(selectBreakDown);
-    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
+  
+
+  // const fetchBreakDownData = async (projectBreakdown) => {
+  //   const projectData = JSON.parse(localStorage.getItem("projectName"));
+
+  //   let selectBreakDown = [];
+  //   const breakDown = projectBreakdown.split(":");
+  //   for (var key in breakDown) {
+  //     if (breakDown[key].slice(0, 2) === "1L") {
+  //       var config = {
+  //         method: "get",
+  //         url: `${SSO_URL}/${
+  //           projectData.projectName.breakdown[0].structure[0].url
+  //         }`,
+  //         headers: HEADER_AUTH,
+  //       };
+
+  //       await api(config)
+  //         .then(async (response) => {
+  //           const result = response.data.data.results;
+  //           console.log(result);
+
+  //           result.map((item) => {
+  //             if (breakDown[key].slice(2) == item.id) {
+  //               selectBreakDown = [
+  //                 ...selectBreakDown,
+  //                 { depth: item.depth, id: item.id, name: item.name },
+  //               ];
+  //             }
+  //           });
+  //         })
+  //         .catch((error) => {
+  //           setIsNext(true);
+  //         });
+  //     } else {
+  //       var config = {
+  //         method: "get",
+  //         url: `${SSO_URL}/${
+  //           projectData.projectName.breakdown[key].structure[0].url
+  //         }${breakDown[key - 1].slice(-1)}`,
+  //         headers: HEADER_AUTH,
+  //       };
+
+  //       await api(config)
+  //         .then(async (response) => {
+  //           const result = response.data.data.results;
+  //           console.log(result)
+
+  //           const res = result.map((item, index) => {
+  //             if (parseInt(breakDown[key].slice(2)) == item.id) {
+  //               selectBreakDown = [
+  //                 ...selectBreakDown,
+  //                 { depth: item.depth, id: item.id, name: item.name },
+  //               ];
+  //             }
+  //           });
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //           // setIsNext(true);
+  //         });
+  //     }
+  //   }
+    // dispatch(breakDownDetails(selectBreakDown));
+  //   console.log(selectBreakDown)
+
+  //   await setProjectSturcturedData(selectBreakDown);
+  //   // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
+  // };
+  console.log(projectSturcturedData)
   const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
     const res = await api.get(
@@ -382,7 +456,7 @@ function AhaSummary() {
                 setAssessments(false);
                 setApprovals(false);
                 setLessonsLearned(true);
-                setSummary(false);
+                // setSummary(false);
               }}
             >
               Lessons Learned

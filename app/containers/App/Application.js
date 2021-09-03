@@ -523,6 +523,9 @@ function Application(props) {
         <Route path="/app/observation-close-out" component={ObservationCloseOut} />
         <Route path="/app/observation/details/:id" component={ObservationSummary} />
         <Route path="/app/observation/details/:id#action-taking" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#comments" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#activity" component={ObservationSummary} />
+        <Route path="/app/observation/details/:id#modify" component={ObservationSummary} />
         <Route exact path="/app/observation-initial-notification" component={ObservationInitialNotification} />
         <Route exact path="/app/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
         <Route path="/app/observation-observation-view" component={ObservationInitialNotificationView} />

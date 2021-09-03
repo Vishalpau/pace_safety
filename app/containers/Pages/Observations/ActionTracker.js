@@ -147,7 +147,7 @@ export default function ActionTracker(props) {
   };
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null })
+    await setForm({ ...form, actionTitle: ""  , plannedEndDate: null })
     await setOpen(false);
   };
   const handelSubmit = async () => {
@@ -167,6 +167,7 @@ export default function ActionTracker(props) {
         await setError({ actionTitle: "" });
         await setForm({ ...form,actionTitle : "",assignTo : "",severity : "", plannedEndDate: null })
         await setOpen(false);
+        await props.setUpdatePage(!props.updatePage)
 
       }
     }
@@ -182,7 +183,7 @@ export default function ActionTracker(props) {
   const fetchReportedBy = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -256,7 +257,7 @@ export default function ActionTracker(props) {
             setError({ actionTitle: "" });
           }}
         >
-          <CloseIcon />
+          <CloseIcon onClick={handleClose}/>
         </IconButton>
         <DialogContent className={classes.dialogContent}>
           {/* action title */}

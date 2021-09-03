@@ -61,6 +61,7 @@ export const Attachment = ({ value }) => {
         );
     } else if (
         extension[1].toLowerCase() === "word" ||
+        extension[1].toLowerCase() === "docx" ||
         extension[1].toLowerCase() === "doc"
     ) {
         return (
@@ -69,7 +70,7 @@ export const Attachment = ({ value }) => {
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
-    } else if (extension[1].toLowerCase() === "ppt") {
+    } else if (extension[1].toLowerCase() === "pptx" || extension[1].toLowerCase() === "ppt") {
         return (
             <IconButton>
                 <Icon path={mdiFilePowerpoint} size={1} onClick={() => setOpen(true)} />

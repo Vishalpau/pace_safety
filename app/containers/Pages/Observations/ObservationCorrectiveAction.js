@@ -133,6 +133,7 @@ function ObservationCorrectiveAction() {
   const [error, setError] = useState({ comment: "" , reviewedOn : ""});
   const [reportedByName , setReportedByName] = useState([]);
   const [submitLoader , setSubmitLoader] = useState(false);
+  const [updatePage, setUpdatePage] = useState(false)
   let filterReportedByName = []
 
   const [comment , setComment] = useState({
@@ -223,14 +224,25 @@ function ObservationCorrectiveAction() {
     }
     }
     
-    
-    
-    
   }
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
     
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
+    
     const result = res.data.data.results;
+    if(result.isCorrectiveActionTaken == null){
+      result.isCorrectiveActionTaken = "Yes"
+    }
     if(result.isCorrectiveActionTaken === "Yes"){
       await setActionOpen(true);
     }
@@ -250,8 +262,13 @@ function ObservationCorrectiveAction() {
     
     await setIsLoading(true);
   }
-  const handleAction =  (e) => {
-      if(e.target.value === "Yes"){
+  const handleAction = async  (e) => {
+    console.log(e.target.value)
+    let value = e.target.value
+    let temp = { ...form}
+    temp.isCorrectiveActionTaken = value
+    setForm(temp)
+      if(value === "Yes"){
          setActionOpen(true)
       }else{
         setActionOpen(false)
@@ -349,7 +366,7 @@ temp.reviewedById = value.id
       fetchReportedBy()
     }
     
-  },[])
+  },[updatePage])
   const classes = useStyles();
   return (
     <>{isLoading ? 
@@ -359,7 +376,7 @@ temp.reviewedById = value.id
                     Observation Title
           </Typography>
           <Typography className={classes.labelValue}>
-                    {form.observationTitle}
+                    {form.observationTitle ? form.observationTitle : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -367,7 +384,7 @@ temp.reviewedById = value.id
                     Observation Type
           </Typography>
           <Typography className={classes.labelValue}>
-                  {form.observationType}
+                  {form.observationType ? form.observationType : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -375,7 +392,7 @@ temp.reviewedById = value.id
                     Observation Description
           </Typography>
           <Typography className={classes.labelValue}>
-          {form.observationDetails}
+          {form.observationDetails ? form.observationDetails : "-"}
           </Typography>
         </Grid>
         <Grid item md={8}>
@@ -385,7 +402,7 @@ temp.reviewedById = value.id
             {/* <span className={classes.updateLink}><Link to="">Update</Link></span> */}
           </Typography>
           <Typography className={classes.labelValue}>
-                    {form.assigneeName}
+                    {form.assigneeName ? form.assigneeName : "-"}
           </Typography>
         </Grid>
         <Grid
@@ -446,9 +463,9 @@ temp.reviewedById = value.id
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
+                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
                 //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
-                href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
+                // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
                                 // enitityReferenceId={action.enitityReferenceId}
                                 // actionId={action.id}
@@ -479,7 +496,8 @@ temp.reviewedById = value.id
           <ActionTracker
                                 actionContext="Obsevations"
                                 enitityReferenceId={id}
-                                actionTitle = ""
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
                               >add</ActionTracker>
           </Typography></>):null}
         </Grid>
@@ -529,6 +547,8 @@ temp.reviewedById = value.id
               className={classes.formControl}
               fullWidth
               label="Reviewed on*"
+              minDate = {form.observedAt}
+              maxDate = {new Date()}
               value={form.reviewedOn ? form.reviewedOn : null}
               // onChange={handleDateChange}
               error={error.reviewedOn}

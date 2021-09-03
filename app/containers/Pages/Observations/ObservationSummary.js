@@ -60,9 +60,10 @@ import ObservationCorrectiveActionView from './ObservationCorrectiveActionView';
 // import ObservationCloseOut from './ObservationCloseOut';
 // import ObservationReview from './ObservationReview';
 
+import { Comments } from "../../pageListAsync";
 
 
-
+import AhaSummary from "../../../containers/Activity/Activity";
 // import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -98,6 +99,8 @@ const ObservationSummary = () => {
   const [observationInitialNotification, setObservationInitialNotification] = useState(true);
   const [observationCorrectiveAction, setObservationCorrectiveAction] = useState(false);
   const [observationCorrectiveActionView, setObservationCorrectiveActionView] = useState(false);
+  const [comment , setComment] = useState(false)
+  const [activity , setActivity] = useState(false)
   const { id } = useParams();
   const history = useHistory();
   // const [observationCloseOut, setObservationCloseOut] = useState(false);
@@ -109,25 +112,45 @@ const ObservationSummary = () => {
     setObservationInitialNotification(true);
     setObservationInitialNotificationUpdate(false);
     setObservationCorrectiveAction(false);
+    setComment(false)
+    setActivity(false)
+    history.push(`/app/observation/details/${id}#modify`)
+
     
   };
+ 
 
   const handleActionUpdate = (e) => {
     setObservationCorrectiveAction(true);
     setObservationInitialNotificationUpdate(false);
     setObservationCorrectiveActionView(false);
     setObservationInitialNotification(false)
+    setComment(false)
+    setActivity(false)
     history.push(`/app/observation/details/${id}#action-taking`)
   }
+  console.log(comment)
+  console.log(observationCorrectiveAction)
+  const handleComments = (e) => {
+    setObservationInitialNotification(false);
+    setObservationInitialNotificationUpdate(false);
+    setObservationCorrectiveAction(false);
+    setComment(true)
+    setActivity(false);
+    history.push(`/app/observation/details/${id}#comments`)
 
-  // const handlePushUpdateInitialNotification = async () => {
-  //   history.push(
-  //     '/app/pages/observation-initial-notification'
-  //   );
-  // };
-  // if(observationInitialNotification == true) {
-  //   history.push(`/app/observation/details/${id}`)
-  // }
+    
+  };
+   const handleActivity = (e) => {
+    setObservationInitialNotification(false);
+    setObservationInitialNotificationUpdate(false);
+    setObservationCorrectiveAction(false);
+    setComment(false)
+    setActivity(true)
+    history.push(`/app/observation/details/${id}#activity`)
+
+    
+  };
   
   const [initialData , setInitialData] = useState({}); 
   if (id) {
@@ -145,6 +168,8 @@ const ObservationSummary = () => {
   const handleActionButtonClick = (action) => {
     setObservationInitialNotification(false);
     setObservationCorrectiveAction(true);
+    setComment(false);
+    setActivity(false);
     setObservationInitialNotificationUpdate(true)
     if(localStorage.getItem("action") === "Done"){
       setObservationCorrectiveActionView(true)
@@ -208,6 +233,8 @@ const ObservationSummary = () => {
                   setObservationInitialNotification(true);
                   setObservationCorrectiveAction(false);
                   setObservationInitialNotificationUpdate(true)
+                  setComment(false)
+                  setActivity(false)
                   // setObservationReview(false);
                   // setObservationCloseOut(false);
                 }}
@@ -250,6 +277,12 @@ const ObservationSummary = () => {
               {/* summary and part */}
               <>
                 {(() => {
+                  if(comment === true) {
+                    return (<Comments/>)
+                  }
+                  if(activity === true) {
+                    return (<AhaSummary/>)
+                  }
                   if (
                     observationInitialNotification === true
                       && (observationCorrectiveAction === false
@@ -262,6 +295,7 @@ const ObservationSummary = () => {
                   if (observationCorrectiveAction === true || (observationInitialNotification === false )) {
                     return (observationCorrectiveActionView === true ?  <ObservationCorrectiveActionView /> : <ObservationCorrectiveAction />);
                   }
+                  
                   // if (observationReview == true) {
                   //   return <ObservationReview />;
                   // }
@@ -305,14 +339,14 @@ const ObservationSummary = () => {
                   </ListItem>
                   )}
 
-                  <ListItem button>
+                  <ListItem button onClick={(e) => handleComments(e)}>
                     <ListItemIcon>
                       <Comment />
                     </ListItemIcon>
                     <ListItemText primary="Comments" />
                   </ListItem>
 
-                  <ListItem button>
+                  <ListItem button onClick={(e) => handleActivity(e)}>
                     <ListItemIcon>
                       <History />
                     </ListItemIcon>
