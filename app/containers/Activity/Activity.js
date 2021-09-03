@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -35,6 +35,8 @@ import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 // import projectpj from 'dan-images/projectpj.png';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import Pagination from '@material-ui/lab/Pagination';
+import api from '../../utils/axios';
+import moment from 'moment';
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -139,6 +141,7 @@ function AhaSummary() {
     //const [summary, setSummary] = useState(false);
     const history = useHistory();
     const [expanded, setExpanded] = React.useState(false);
+    const [isActivityHistoryData, setActivityHistoryData] = useState([])
 
 
     const handleNewAhaPush = async () => {
@@ -177,6 +180,21 @@ function AhaSummary() {
     const handleExpand = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
+    const fetchActivityHistoryData = ()=>{
+          
+          api.get(`api/v1/core/useractivities/incidents/123/`)
+          .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            const data = response.data.data.results
+            setActivityHistoryData(data)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
+    useEffect(()=>{
+        fetchActivityHistoryData();
+    },[])
 
     const classes = useStyles();
     return (
@@ -191,10 +209,11 @@ function AhaSummary() {
                             </Grid>
                         </Box>
                         <React.Fragment>
-                            <Timeline align="alternate">
-                                <TimelineItem>
+                            <Timeline align="">
+                                {isActivityHistoryData.map((activity,key)=>
+                                <TimelineItem key={key}>
                                     <TimelineOppositeContent className={classes.maxWdtwohun}>
-                                        <Typography color="textSecondary">August, 18, 11:15 AM</Typography>
+                                        <Typography color="textSecondary">{moment(activity.dateTime).format('MMMM, DD, HH:mm A')}</Typography>
                                     </TimelineOppositeContent>
                                     <TimelineSeparator>
                                         <TimelineDot color="primary" />
@@ -203,89 +222,11 @@ function AhaSummary() {
                                     <TimelineContent>
                                         <Typography>
                                             {/* <Avatar alt="Remy Sharp" src={projectpj} className={classes.AvatarWd} /> */}
-                                            User name</Typography>
-                                        <Typography color="textSecondary">In progress | Dummy text | Dummy text</Typography>
+                                            {activity.userName}</Typography>
+                                        <Typography color="textSecondary">{activity.action}|{activity.displayMessage}</Typography>
                                     </TimelineContent>
                                 </TimelineItem>
-
-                                <TimelineItem>
-                                    <TimelineOppositeContent>
-                                        <Typography>
-                                            {/* <Avatar alt="Remy Sharp" src={projectpj} className={classes.AvatarWd} /> */}
-                                            User name</Typography>
-                                        <Typography color="textSecondary">In progress</Typography>
-                                    </TimelineOppositeContent>
-                                    <TimelineSeparator>
-                                        <TimelineDot color="seceondary" />
-                                        <TimelineConnector />
-                                    </TimelineSeparator>
-                                    <TimelineContent className={classes.maxWdtwohun}>
-                                        <Typography color="textSecondary">August, 18, 11:15 AM</Typography>
-                                    </TimelineContent>
-                                </TimelineItem>
-                                <TimelineItem>
-                                    <TimelineOppositeContent className={classes.maxWdtwohun}>
-                                        <Typography color="textSecondary">August, 18, 11:15 AM</Typography>
-                                    </TimelineOppositeContent>
-                                    <TimelineSeparator>
-                                        <TimelineDot color="primary" />
-                                        <TimelineConnector />
-                                    </TimelineSeparator>
-                                    <TimelineContent>
-                                        <Typography>
-                                            {/* <Avatar alt="Remy Sharp" src={projectpj} className={classes.AvatarWd} /> */}
-                                            User name</Typography>
-                                        <Typography color="textSecondary">In progress</Typography>
-                                    </TimelineContent>
-                                </TimelineItem>
-
-                                <TimelineItem>
-                                    <TimelineOppositeContent>
-                                        <Typography>
-                                            {/* <Avatar alt="Remy Sharp" src={projectpj} className={classes.AvatarWd} /> */}
-                                            User name</Typography>
-                                        <Typography color="textSecondary">In progress</Typography>
-                                    </TimelineOppositeContent>
-                                    <TimelineSeparator>
-                                        <TimelineDot color="seceondary" />
-                                        <TimelineConnector />
-                                    </TimelineSeparator>
-                                    <TimelineContent className={classes.maxWdtwohun}>
-                                        <Typography color="textSecondary">August, 18, 11:15 AM</Typography>
-                                    </TimelineContent>
-                                </TimelineItem>
-                                <TimelineItem>
-                                    <TimelineOppositeContent className={classes.maxWdtwohun}>
-                                        <Typography color="textSecondary">August, 18, 11:15 AM</Typography>
-                                    </TimelineOppositeContent>
-                                    <TimelineSeparator>
-                                        <TimelineDot color="primary" />
-                                        <TimelineConnector />
-                                    </TimelineSeparator>
-                                    <TimelineContent>
-                                        <Typography>
-                                            {/* <Avatar alt="Remy Sharp" src={projectpj} className={classes.AvatarWd} /> */}
-                                            User name</Typography>
-                                        <Typography color="textSecondary">In progress</Typography>
-                                    </TimelineContent>
-                                </TimelineItem>
-
-                                <TimelineItem>
-                                    <TimelineOppositeContent>
-                                        <Typography>
-                                            {/* <Avatar alt="Remy Sharp" src={projectpj} className={classes.AvatarWd} /> */}
-                                            User name</Typography>
-                                        <Typography color="textSecondary">In progress</Typography>
-                                    </TimelineOppositeContent>
-                                    <TimelineSeparator>
-                                        <TimelineDot color="secondary" />
-                                        <TimelineConnector />
-                                    </TimelineSeparator>
-                                    <TimelineContent className={classes.maxWdtwohun}>
-                                        <Typography color="textSecondary">August, 18, 11:15 AM</Typography>
-                                    </TimelineContent>
-                                </TimelineItem>
-
+                                )}
                             </Timeline>
                         </React.Fragment>
                     </Paper>

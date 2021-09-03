@@ -690,23 +690,23 @@ const ReportingAndNotification = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     if (nextPath.environmentAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+        `/incident/${id}/modify/environment-affected/`
       );
     } else if (nextPath.equipmentAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+        `/incident/${id}/modify/equipment-affected/`
       );
     } else if (nextPath.propertyAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/property-affected/${id}`
+        `/incident/${id}/modify/property-affected/`
       );
     } else if (nextPath.personAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+        `/incident/${id}/modify/peoples-afftected/`
       );
     } else {
       history.push(
-        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+        `/incident/${id}/modify/`
       );
     }
   };

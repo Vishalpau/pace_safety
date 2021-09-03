@@ -41,6 +41,7 @@ import Axios from 'axios'
 // redux
 import { connect } from 'react-redux'
 import { breakDownDetails, levelBDownDetails } from "../../../redux/actions/initialDetails";
+import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -235,23 +236,23 @@ const IncidentDetails = (props) => {
               // Decide on which path to go next.
               if (nextPath.personAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+                  `/incident/${id}/modify/peoples-afftected/`
                 );
               } else if (nextPath.propertyAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/property-affected/${id}`
+                  `/incident/${id}/modify/property-affected/`
                 );
               } else if (nextPath.equipmentAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+                  `/incident/${id}/modify/equipment-affected/`
                 );
               } else if (nextPath.environmentAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+                  `/incident/${id}/modify/peoples-afftected/`
                 );
               } else {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+                  `/incident/${id}/modify/reporting-and-notification/`
                 );
               }
             }
@@ -334,23 +335,23 @@ const IncidentDetails = (props) => {
                 // Decide on which path to go next.
                 if (nextPath.personAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
+                    `/incident/${res.data.data.results.id}/modify/peoples-afftected/`
                   );
                 } else if (nextPath.propertyAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
+                    `/incident/${res.data.data.results.id}/modify/property-affected/`
                   );
                 } else if (nextPath.equipmentAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
+                    `/incident/${res.data.data.results.id}/modify/equipment-affected/`
                   );
                 } else if (nextPath.environmentAffect === "Yes") {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
+                    `/incident/${res.data.data.results.id}/modify/peoples-afftected/`
                   );
                 } else {
                   history.push(
-                    `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
+                    `/incident/${res.data.data.results.id}/modify/reporting-and-notification/`
                   );
                 }
               }
@@ -479,8 +480,8 @@ const IncidentDetails = (props) => {
           temp = result;
           setForm(temp);
           fetchBreakDownData(temp.fkProjectStructureIds)
-          // await fetchBreakDownData(result.fkProjectStructureIds)
-          // await setIsLoading(true);
+          await fetchBreakDownData(result.fkProjectStructureIds)
+          
         }
 
         // const user = localStorage.getItem({})
@@ -508,10 +509,12 @@ const IncidentDetails = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
+
     const projectData = JSON.parse(localStorage.getItem('projectName'));
 
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -524,7 +527,7 @@ const IncidentDetails = (props) => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
@@ -543,7 +546,7 @@ const IncidentDetails = (props) => {
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+            }${breakDown[key-1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -551,7 +554,7 @@ const IncidentDetails = (props) => {
           .then(async (response) => {
 
             const result = response.data.data.results;
-            console.log({ fetchSelectBreakDownList: result })
+  
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
@@ -573,150 +576,17 @@ const IncidentDetails = (props) => {
     }
   };
 
-  useEffect(() => {
-    fetchContractorValue();
-    fetchIncidentTypeValue();
-    fetchSubContractorValue();
-    fetchPersonAffectValue();
-    fetchPropertiesValue();
-    fetchEquipmentAffectValue();
-    fetchEnviornmentAffectValue();
-    fetchIncidentsData();
-  }, [])
 
-  // fetch breakdown Data
-  const fetchCallBack = async (select, projectData) => {
-    for (var i in select) {
-      let selectId = select[i].id;
-      let selectDepth = select[i].depth
-      setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
-    }
-    if (select !== null ? select.length > 0 : false) {
-
-      for (var key in projectData.projectName.breakdown) {
-
-        if (key == select.length) {
-          try {
-            var config = {
-              method: "get",
-              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-                }${select[key - 1].id}`,
-              headers: HEADER_AUTH,
-            };
-
-            await Axios(config)
-              .then(async (response) => {
-
-                await setBreakdown1ListData([
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[key].structure[0].name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: "",
-                    index: key
-                  },
-                ]);
-                await setIsLoading(true);
-              })
-              .catch(function (error) {
-              });
-          } catch (err) {
-            ;
-          }
-        }
-      }
-    } else {
-      for (var key in projectData.projectName.breakdown) {
-
-        if (key == 0) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-              }`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(async (response) => {
-
-              await setBreakdown1ListData([
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[0].structure[0].name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: "",
-                  index: 0
-                },
-              ]);
-              await setIsLoading(true);
-            })
-            .catch(function (error) {
-            });
-        }
-      }
-    }
-  };
-
-  const handleBreakdown = async (e, index, label) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    setBreakdown1ListData(temp)
-    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
-      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      if (breakDownValue.length > 0) {
-        const removeBreakDownList = temp.slice(0, index - 1)
-        temp = removeBreakDownList
-      } else {
-        const removeBreakDownList = temp.slice(0, index)
-        temp = removeBreakDownList
-      }
-
-
-    }
-    if (projectData.projectName.breakdown.length !== index) {
-      for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-              }${value}`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(function (response) {
-              if (response.status === 200) {
-
-                if (
-                  temp.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[key].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  setBreakdown1ListData([
-                    ...temp,
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[index].structure[0]
-                          .name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: value,
-                      index: index
-                    },
-                  ]);
-                }
-              }
-            })
-            .catch(function (error) {
-
-            });
-        }
-      }
-    } else {
-    }
-  };
+useEffect(()=>{
+  fetchContractorValue();
+  fetchIncidentTypeValue();
+  fetchSubContractorValue();
+  fetchPersonAffectValue();
+  fetchPropertiesValue();
+  fetchEquipmentAffectValue();
+  fetchEnviornmentAffectValue();
+  fetchIncidentsData();
+},[])
 
 
   //  set state for hide sidebar
@@ -729,23 +599,7 @@ const IncidentDetails = (props) => {
       setHideAffect(newHideAffect);
     }
   };
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...selectDepthAndId, `${depth}${id}`]
-    setSelectDepthAndId([... new Set(newData)])
-  }
-
-  useEffect(() => {
-    // fetchListData();
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const select = props.initialValues.breakDown || JSON.parse(localStorage.getItem('selectBreakDown'))
-
-    if (select === null ? select.length === 0 : false) {
-      setBreakdown1ListData([])
-      selectDepthAndId([])
-    }
-    fetchCallBack(select, projectData);
-  }, [props.initialValues.breakDown]);
-
+  
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
@@ -753,9 +607,10 @@ const IncidentDetails = (props) => {
       {isLoading ? (
         <Row>
           <Col md={9}>
-            <Grid container spacing={3}>
+            <Grid container spacing={3}>        
+
               {/* Project Name */}
-              <Grid item xs={6}>
+              <Grid item xs={3}>
 
                 <Typography
                   variant="h6"
@@ -771,9 +626,8 @@ const IncidentDetails = (props) => {
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
-
               {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-                <Grid item xs={6} key={key}>
+                <Grid item xs={3} key={key}>
 
                   <Typography
                     variant="h6"
@@ -789,70 +643,8 @@ const IncidentDetails = (props) => {
                     {selectBdown.name}
                   </Typography>
                 </Grid>
-              ) : selectBreakdown && selectBreakdown.map((selectBreakdown, key) =>
-                <Grid item xs={6} key={key}>
-
-                  <Typography
-                    variant="h6"
-                    className={Type.labelName}
-                    gutterBottom
-                    id="project-name-label"
-                  >
-                    {selectBreakdown.label}
-                  </Typography>
-
-
-                  <Typography className={Type.labelValue}>
-                    {selectBreakdown.name}
-                  </Typography>
-                </Grid>)}
-
-              {id ? null : breakdown1ListData ? breakdown1ListData.map((item, index) => (
-                <Grid item xs={6}>
-                  <FormControl
-                    key={index}
-                    variant="outlined"
-                    required={selectDepthAndId.length === 0 ? true : false}
-                    className={classes.formControl}
-                    error={error && error[`projectStructure`]}
-                  >
-                    <InputLabel id="filter3-label">
-                      {item.breakdownLabel}
-                    </InputLabel>
-                    <Select
-                      labelId="filter3-label"
-                      id="filter3"
-                      // value={parseInt(item.selectValue) }
-                      onChange={(e) => {
-                        handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
-
-                      }}
-                      label="Phases"
-                      style={{ width: "100%" }}
-                    >
-                      {item.breakdownValue.length
-                        ? item.breakdownValue.map(
-                          (selectValue, selectKey) => (
-                            <MenuItem
-                              key={selectKey}
-                              value={selectValue.id}
-
-                              onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
-                            >
-                              {selectValue.name}
-                            </MenuItem>
-                          )
-                        )
-                        : null}
-                    </Select>
-                    {error && error.projectStructure && (
-                      <FormHelperText>{error.projectStructure}</FormHelperText>
-                    )}
-                  </FormControl>
-
-                </Grid>
-              )) : null}
-
+              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId}/>
+}
               {/* Unit Name */}
 
               {/* Incident Type */}
@@ -910,6 +702,7 @@ const IncidentDetails = (props) => {
                         incidentOccuredOn: moment(e).toISOString(),
                       });
                     }}
+                    InputProps={{ readOnly: true }}
                     format="yyyy/MM/dd HH:mm"
                     inputVariant="outlined"
                     disableFuture="true"
