@@ -150,119 +150,7 @@ const ProjectDetails = () => {
   const fkProjectStructureIds = struct.slice(0, -1);
 
   const areaName = [
-    'P1 - WA1',
-     'P1 - WA2',
-  
-    
-    
-  ];
-
-  const reportedBy = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'reportedBy',
-      label: 'Reported By',
-    },
-    {
-      value: 'reportedBy1',
-      label: 'Reported By 1',
-    },
-    {
-      value: 'reportedBy2',
-      label: 'Reported By 2',
-    },
-    {
-      value: 'reportedBy3',
-      label: 'Reported By 3',
-    },
-    {
-      value: 'reportedBy4',
-      label: 'Reported By 4',
-    },
-  ];
-
-  const supervisorName = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'supervisorName',
-      label: 'Supervisor Name',
-    },
-    {
-      value: 'supervisorName1',
-      label: 'Supervisor Name 1',
-    },
-    {
-      value: 'supervisorName2',
-      label: 'Supervisor Name 2',
-    },
-    {
-      value: 'supervisorName3',
-      label: 'Supervisor Name 3',
-    },
-    {
-      value: 'supervisorName4',
-      label: 'Supervisor Name 4',
-    },
-  ];
-
-  const assignee = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'assignee',
-      label: 'Assignee',
-    },
-    {
-      value: 'assignee1',
-      label: 'Assignee 1',
-    },
-    {
-      value: 'assignee2',
-      label: 'Assignee 2',
-    },
-    {
-      value: 'assignee3',
-      label: 'Assignee 3',
-    },
-    {
-      value: 'assignee4',
-      label: 'Assignee 4',
-    },
-  ];
-
-  const assigneeDepartment = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'assigneeDepartment',
-      label: 'Assignee Department',
-    },
-    {
-      value: 'assigneeDepartment1',
-      label: 'Assignee Department 1',
-    },
-    {
-      value: 'assigneeDepartment2',
-      label: 'Assignee Department 2',
-    },
-    {
-      value: 'assigneeDepartment3',
-      label: 'Assignee Department 3',
-    },
-    {
-      value: 'assigneeDepartment4',
-      label: 'Assignee Department 4',
-    },
+    'Area1',
   ];
 
   const [state, setState] = React.useState({
@@ -383,9 +271,9 @@ bytes
       "additionalRemarks": "",
       "classification": "string",
       "wrpApprovalUser": "",
-      "wrpApprovalDateTime": "2021-08-17T09:55:30.900000Z",
+      "wrpApprovalDateTime": null,
       "picApprovalUser": "",
-      "picApprovalDateTime": "2021-08-17T09:55:30.900000Z",
+      "picApprovalDateTime": null,
       "signedUser": "",
       "signedDateTime": "2021-08-17T09:55:30.900000Z",
       "anyLessonsLearnt": "",
@@ -413,6 +301,7 @@ bytes
     }
     await setSubmitLoader(true);
     if(form.id){
+      delete form["ahaAssessmentAttachment"]
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,form)
       for (let i = 0; i < Teamform.length; i++) {
         if(Teamform[i].id){

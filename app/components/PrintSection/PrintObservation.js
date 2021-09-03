@@ -7,6 +7,15 @@ import moment from 'moment';
 import api from "../../utils/axios";
 import axios from "axios";
 
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../utils/constants";
+
 const useStyles = makeStyles((theme) => ({
   whitePaper: {
     background: '#FFF',
@@ -23,6 +32,7 @@ const PrintObservation = React.forwardRef((props, ref) => {
   const [tagData,setTagData] = useState([])
   const [isLoading , setIsLoading] = useState(false)
   const [catagoryData,setCatagoryData] = useState([])
+  const [projectSturcturedData ,setProjectSturcturedData] = useState([])
 
   const fetchInitialiObservation = async () => {
 
@@ -30,6 +40,7 @@ const PrintObservation = React.forwardRef((props, ref) => {
     console.log(res)
     const result = res.data.data.results
     await setInitialData(result)
+    await fetchBreakDownData(result.fkProjectStructureIds)
     // await setIsLoading(true)
     // handelActionTracker()
 
@@ -73,7 +84,76 @@ const PrintObservation = React.forwardRef((props, ref) => {
     
 
   }
-  console.log(actionTakenData)
+
+  const fetchBreakDownData = async (projectBreakdown) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+   
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
+          headers: HEADER_AUTH,
+        };
+       
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name },
+                ];
+              }
+            });
+          })
+          .catch((error) => {
+            
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key-1].slice(-1)}`,
+          headers: HEADER_AUTH,
+        };
+       
+        await api(config)
+          .then(async (response) => {
+          
+            const result = response.data.data.results;
+           
+            const res=result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+               
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name },
+                ];
+              }
+            });
+
+          
+          })
+          .catch((error) => {
+            console.log(error)
+            // setIsNext(true);
+          });
+      }
+    }
+    // dispatch(breakDownDetails(selectBreakDown));
+    await setProjectSturcturedData(selectBreakDown)    
+    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
+  };
+  console.log(projectSturcturedData)
   console.log(catagoryData[4])
   useEffect(() => {
     fetchInitialiObservation()
@@ -102,7 +182,7 @@ const PrintObservation = React.forwardRef((props, ref) => {
                     <tr>
                         <td rowspan="3" style={{width: '150px'}}></td>
                         <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)' }}><label style={{ display: 'inline-block', fontSize: '20px', }} > Name: </label><span style={{lineHeight: '30px' }}> {initialData.reportedByName}</span> </td>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)' }}><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Badge#:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>(CCZIV Issued)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}>{initialData["reportedByBadgeId"]}</span> </td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)' }}><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Badge#:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>(CCZIV Issued)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}>{initialData["reportedByBadgeId"] == "null" ? "" : initialData["reportedByBadgeId"]}</span> </td>
                         
                     </tr>
                     <tr>
@@ -111,7 +191,7 @@ const PrintObservation = React.forwardRef((props, ref) => {
                     </tr>
                     <tr>
                         <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}} ><label style={{ display: 'inline-block', fontSize: '20px', }} > Foreman#:</label><span style={{lineHeight: '30px' }}> {initialData.supervisorName}</span></td>
-                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}} ><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Time:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>HH:MM (AM/PM)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}> {moment(initialData["observedAt"]).format("HH:MM A")}</span> </td>
+                        <td  style={{ borderBottom: '1px solid #000', padding: '5px 15px', width: 'calc(100% - 150px)'}} ><label style={{ display: 'inline-block', width: '88px', fontSize: '20px' }} > Time:<span style={{fontSize: '11px', color: '#ccc', lineHeight: '20px', display: 'block' }}>HH:MM (AM/PM)</span></label><span style={{ verticalAlign: 'top', lineHeight: '30px' }}> {moment(initialData["observedAt"]).format("hh:mm A")}</span> </td>
                     </tr>
                 </tbody>
             </table>
@@ -242,23 +322,20 @@ const PrintObservation = React.forwardRef((props, ref) => {
 
                     <tr>
                       <td rowspan="3" style={{width: '122px', border: '1px solid #000', marginRight: '10px', transform: 'rotate(270deg)', textAlign: 'center', writingMode: 'rl', verticalAlign: 'middle', padding: '0px' }}>LOCATION <p>(X) On only</p></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{initialData.location}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}><CheckIcon /> </span></label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}> </td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{projectSturcturedData[0] ? projectSturcturedData[0].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[0] ? <CheckIcon />  : null}</span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{projectSturcturedData[1] ? projectSturcturedData[1].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[1] ? <CheckIcon />  : null} </span></label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{projectSturcturedData[2] ? projectSturcturedData[2].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[2] ? <CheckIcon />  : null}</span></label> </td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{projectSturcturedData[3] ? projectSturcturedData[3].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[3] ? <CheckIcon />  : null} </span> </label></td>
                     </tr>
                     <tr>
-                    <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span> </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
+                    <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{projectSturcturedData[3] ? projectSturcturedData[3].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[3] ? <CheckIcon />  : null}  </span> </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{projectSturcturedData[3] ? projectSturcturedData[3].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[3] ? <CheckIcon />  : null}  </span>  </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{projectSturcturedData[3] ? projectSturcturedData[3].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[3] ? <CheckIcon />  : null}  </span>  </label></td>
+                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> {projectSturcturedData[3] ? projectSturcturedData[3].name : null}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}>{projectSturcturedData[3] ? <CheckIcon />  : null} </span>  </label></td>
                     </tr>
                     <tr>
-                    <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
-                      <td  style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}> </span>  </label></td>
-                    </tr>
+                    <td colSpan = "4" style={{ border: '1px solid #000', padding: '5px 1px 5px 5px', maxWidth: 'calc(100% - 150px)', width: '245px' }}><label style={{ float: 'right', height: '50px'  }}><span style={{ float: 'left', padding: '16px 3px 16px 0px',}}>{initialData.location}</span> <span style={{ padding: '15px', border: '1px solid #000', width: '50px', height: '50px', display: 'inline-block' }}> <CheckIcon />    </span>  </label></td>
+                                          </tr>
 
                 </tbody>
             </table>
