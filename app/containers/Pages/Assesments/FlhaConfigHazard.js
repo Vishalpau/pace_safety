@@ -582,10 +582,6 @@ const ConfigHazard = (props) => {
     if(payload.hazardImage!==undefined){
       formData.append('hazardImage', payload.hazardImage);
     }
-    
-    
-
-    // hazardPayload["fkTaskId"]=fkTaskId
 
     let res = await api.put(`api/v1/configflhas/criticaltasks/${fkTaskId}/hazards/${editPayload[editPayload.length-1]}/`, formData) ;
     handleFlhaClose()

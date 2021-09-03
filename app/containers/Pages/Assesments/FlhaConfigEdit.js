@@ -314,7 +314,7 @@ React.useEffect(() => {
 							label="titles"
 							className={classes.fullWidth}
               onChange = {fieldHandler}
-              value = {props.editPayload[0]}
+              defaultValue={props.editPayload[0] || ""}
 						  />
 						</Grid>
             {/* {console.log("payload.fkDeparmentName ", props)} */}
