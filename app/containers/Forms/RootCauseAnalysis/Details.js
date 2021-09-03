@@ -20,7 +20,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, FIVEWHYHIDE, PACEHIDE, ROOTHIDE, DETAILS } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import { RCAOPTION } from "../../../utils/constants";
@@ -28,6 +28,7 @@ import Type from "../../../styles/components/Fonts.scss";
 import { FormHelperText } from "@material-ui/core";
 import { PassThrough } from "stream";
 import { checkValue } from "../../../utils/CheckerValue";
+import { from } from "form-data";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -70,8 +71,8 @@ const Details = () => {
   let [hideArray, setHideArray] = useState([]);
   let [investigationData, setInvestigationData] = useState({});
   let [rcaDisable, setRcaDisable] = useState("");
-
   // get data for put
+
   const handelUpdateCheck = async () => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -86,7 +87,6 @@ const Details = () => {
       `/api/v1/incidents/${incidentId}/causeanalysis/`
     );
     let allApiData = previousData.data.data.results[0];
-
     // fetching data from
 
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
@@ -99,11 +99,13 @@ const Details = () => {
         rcaRecommended: allApiData.rcaRecommended,
       });
       setRcaDisable(allApiData.rcaRecommended);
-      await handelRcaRecommended("a", allApiData.rcaRecommended);
+      await handelRcaRecommended(allApiData.rcaRecommended);
       putId.current = incidentId;
       checkPost.current = false;
     }
   };
+
+
 
   const handelInvestigationData = async () => {
     let investigationpreviousData = await api.get(
@@ -111,19 +113,21 @@ const Details = () => {
     );
     let investigationApiData = investigationpreviousData.data.data.results[0];
     if (investigationApiData != null) {
-      // if (investigationApiData.rcaRecommended != "") {
-      //   setForm({
-      //     ...form,
-      //     rcaRecommended: investigationApiData.rcaRecommended,
-      //   });
-      //   await handelRcaRecommended("a", investigationApiData.rcaRecommended);
-      // }
       setInvestigationData({
         rcaRecommended: investigationApiData.rcaRecommended,
         startData: investigationApiData.srartDate,
         endDate: investigationApiData.endDate,
         classification: investigationApiData.classification,
       });
+    }
+    if (localStorage.getItem("rcaRecommended") == `No${localStorage.getItem("fkincidentId")}`
+      &&
+      investigationApiData.rcaRecommended != "") {
+      setForm({
+        ...form,
+        rcaRecommended: investigationApiData.rcaRecommended,
+      });
+      handelRcaRecommended(investigationApiData.rcaRecommended);
     }
   };
 
@@ -141,31 +145,18 @@ const Details = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
-  const handelRcaRecommended = (e, value) => {
+  const handelRcaRecommended = async (value) => {
     if (value == "Five why analysis") {
-      setHideArray([
-        "Hazardous acts",
-        "Hazardous conditions",
-        "Corrective actions",
-        "Basic cause",
-        "PACE Management control",
-        "Preventive actions",
-        "Additional information",
-        "Cause analysis",
-      ]);
+      await setHideArray(FIVEWHYHIDE);
+      localStorage.setItem("deleteForm", FIVEWHYHIDE)
     } else if (value == "PACE cause analysis") {
-      setHideArray(["Cause analysis", "Five Why analysis"]);
+      await setHideArray(PACEHIDE);
+      localStorage.setItem("deleteForm", PACEHIDE)
     } else if (value == "Cause analysis") {
-      setHideArray([
-        "Hazardous acts",
-        "Hazardous conditions",
-        "Corrective actions",
-        "Basic cause",
-        "PACE Management control",
-        "Preventive actions",
-        "Additional information",
-        "Five Why analysis",
-      ]);
+      await setHideArray(ROOTHIDE);
+      localStorage.setItem("deleteForm", ROOTHIDE)
+    } else {
+      localStorage.setItem("deleteForm", [])
     }
     setForm({ ...form, rcaRecommended: value });
   };
@@ -208,7 +199,6 @@ const Details = () => {
           "/app/incident-management/registration/root-cause-analysis/hazardious-acts/"
         );
       } else if (form.rcaRecommended == "Cause analysis") {
-        console.log("here");
         history.push(
           "/app/incident-management/registration/root-cause-analysis/root-cause-analysis/"
         );
@@ -233,20 +223,28 @@ const Details = () => {
 
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
+    localStorage.setItem("details", true)
+    localStorage.setItem("rcaRecommended", `Yes${localStorage.getItem("fkincidentId")}`)
   };
 
+
+
+  const handelCallBack = async () => {
+    await handelUpdateCheck();
+    await fetchIncidentData();
+    await setHideArray(localStorage.getItem("deleteForm"));
+    await handelInvestigationData();
+  }
+
   useEffect(() => {
-    handelUpdateCheck();
-    fetchIncidentData();
-    setHideArray(hideArray || localStorage.getItem("deleteForm"));
-    handelInvestigationData();
+    handelCallBack()
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {console.log(investigationData.rcaRecommended)}
+      {console.log(form.rcaRecommended)}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
@@ -319,13 +317,13 @@ const Details = () => {
                   id="project-name"
                   labelId="project-name-label"
                   label="RCA recommended"
-                  value={form.rcaRecommended !== "" ? form.rcaRecommended : checkValue(investigationData.rcaRecommended)}
+                  value={form.rcaRecommended || ""}
                   disabled={rcaDisable != "" ? true : false}
                 >
                   {RCAOPTION.map((selectValues) => (
                     <MenuItem
                       value={selectValues}
-                      onClick={(e) => handelRcaRecommended(e, selectValues)}
+                      onClick={(e) => handelRcaRecommended(selectValues)}
                     >
                       {selectValues}
                     </MenuItem>
@@ -444,11 +442,20 @@ const Details = () => {
         </Col>
         {isDesktop && (
           <Col md={3}>
-            <FormSideBar
-              deleteForm={hideArray}
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"RCA Details"}
-            />
+            {form.rcaRecommended !== "" ?
+              <FormSideBar
+                deleteForm={hideArray || []}
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"RCA Details"}
+              />
+              :
+              <FormSideBar
+                deleteForm={hideArray || []}
+                listOfItems={DETAILS}
+                selectedItem={"RCA Details"}
+              />
+            }
+
           </Col>
         )}
       </Row>

@@ -849,65 +849,36 @@ module.exports = [
     linkParent: '/app/pages/incident/',
   },
   {
-    key: 'assessments',
-    name: 'Assessments',
-    icon: 'ion-ios-clipboard',
-    multilevel: false,
-    linkParent: '/app/pages/blank-page/',
+    key: "assessments",
+    name: "Assessments",
+    icon: "ion-ios-clipboard",
+    multilevel: true,
+    child: [
+      {
+        key: 'flha',
+        name: 'FLHA',
+        linkParent: "/app/pages/assesments/xflha",
+      },
+      {
+        key: 'aha',
+        name: 'AHA',
+        linkParent: '/app/pages/aha',
+      },
+      {
+        key: 'jha',
+        name: 'JHA',
+        linkParent: "/app/pages/jha",
+      },
+    ],
   },
   {
-    key: 'observations',
-    name: 'Observations',
+    key: "observations",
+    name: "Observations",
     icon: 'ion-md-eye',
-    multilevel: false,
     linkParent: '/app/pages/Observations',
   },
   {
-    key: 'inspections',
-    name: 'Compliances',
-    icon: 'ion-ios-checkbox',
-    multilevel: false,
-    linkParent: '/app/charts/area-filled-charts',
-  },
-  {
-    key: 'menu_levels',
-    name: 'Assessment',
-    multilevel: true,
-    icon: 'ion-ios-menu-outline',
-    child: [
-      {
-        key: 'FLHA',
-        name: 'FLHA',
-        link: '/app/pages/assesments/xflha',
-      },
-      {
-        key: 'AHA',
-        name: 'AHA',
-        link: '/app/pages/jha/',
-      },
-      {
-        key: 'JHA',
-        name: 'JHA',
-        link: '/app/pages/jha/jha',
-      },
 
-    ],
-  },
-  // {
-  //   key: 'level_2',
-  //   keyParent: 'menu_levels',
-  //   name: 'Administration',
-  //   child: [
-  //     {
-  //       key: 'level_3',
-  //       name: 'X-FLHA Job titles',
-  //       link: '/app/pages/assesments/FlhaConfig',
-  //     },
-  //   ]
-  // },
-
-
-  {
     key: 'administration',
     name: 'Administration',
     multilevel: true,

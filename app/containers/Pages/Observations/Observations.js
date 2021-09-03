@@ -56,6 +56,9 @@ import { List } from 'immutable';
 import { useHistory, useParams } from 'react-router';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import { connect } from "react-redux";
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -146,12 +149,14 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function Observations() {
+function Observations(props) {
   const [listToggle, setListToggle] = useState(false);
   const history = useHistory();
   const [allInitialData , setAllInitialData] = useState([])
   const [isLoading , setIsLoading] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
+  const [projectListData, setProjectListData] = useState([]);
+  const [projectDisable, setProjectDisable] = useState(false);
 
   const handelView = (e) => {
     setListToggle(false);
@@ -241,20 +246,80 @@ function Observations() {
     rowsPerPage: 10,
     page: 0,
   };
-  const fetchInitialiObservation = async () => {
 
-    const res = await api.get(`/api/v1/observations/`);
-    const result = res.data.data.results.results
-    await setAllInitialData(result)
+  const handlePrintPush = async (index) => {
+    const id = allInitialData[index].id
+    localStorage.setItem('fkobservationId', id)
+    //console.log("Ashutosh")
+    history.push(
+      `/app/pages/prints/${id}`
+    );
+  };
+
+  const handleProjectList = () => {
+    try {
+      const company = JSON.parse(localStorage.getItem("company"));
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      const data = userDetails.companies.map((item) => {
+        if (item.companyId === parseInt(company.fkCompanyId)) {
+          setProjectDisable(item.projects.length > 1);
+          return setProjectListData(item.projects);
+        }
+      });
+      const filterData = userDetails.companies.filter(
+        (item) => item.companyId === parseInt(company.fkCompanyId)
+      );
+      let projectLength = filterData[0].projects.length <= 1;
+     
+      setProjectDisable(projectLength);
+    } catch (error) {}
+  };
+
+  const fetchInitialiObservation = async () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const res = await api.get("/api/v1/observations/");
+    const selectBreakdown =props.projectName.breakDown ||
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
+  if(fkProjectStructureIds){
+    const newData = res.data.data.results.results.filter(
+      (item) =>
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds ===fkProjectStructureIds
+
+    );
+    await setAllInitialData(newData);
+    await setIsLoading(true)
+
+  }else{
+    const newData = res.data.data.results.results.filter(
+      (item) =>
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId 
+
+    );
+    await setAllInitialData(newData);
+
+    // const res = await api.get(`/api/v1/observations/`);
+    // const result = res.data.data.results.results
+    // await setAllInitialData(result)
     await setIsLoading(true)
     handelActionTracker()
 
+    }
   }
-
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation()
-},[])
+    handleProjectList()
+},[props.projectName])
 
   return (
     <PapperBlock title="Observations" icon="ion-md-list-box" desc="">
@@ -322,7 +387,7 @@ function Observations() {
           <>
           {/* {allInitialData.map((data,index) => ( */}
             <div className="gridView">
-            {allInitialData.length > 0  &&Object.entries(allInitialData).filter((item) => item[1]["observationNumber"].includes(searchIncident.toUpperCase()) ||
+            {allInitialData.length > 0  && Object.entries(allInitialData).filter((item) => item[1]["observationNumber"].includes(searchIncident.toUpperCase()) ||
             item[1]["observationDetails"].toLowerCase().includes(
                       searchIncident.toLowerCase()
                     ) ).map((item, index) => (
@@ -507,15 +572,17 @@ function Observations() {
                     </Grid>
 
                     <Grid item xs={6} md={3}>
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Print />}
-                        className={classes.actionButton}
-                      >
-                            Print
-                      </Button>
+                    <Button
+                  //disabled
+                  size="small"
+                  color="primary"
+                  startIcon={<Print />}
+                  className={Incidents.actionButton}
+                  onClick={() => handlePrintPush(index)}
+                >
+                  Print
+                </Button>
+                           
 
                       <Button
                         disabled
@@ -563,4 +630,14 @@ function Observations() {
   );
 }
 
-export default Observations;
+const mapStateToProps = state => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state
+
+  }
+}
+
+export default connect(mapStateToProps,null)(Observations)
+
+

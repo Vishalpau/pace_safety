@@ -72,11 +72,15 @@ const HazardiousCondition = () => {
   const [incidentDetail, setIncidentDetail] = useState({});
   const [paceCauseDelete, setPaceCauseDelete] = useState()
   const [nextButton, setNextButton] = useState(false)
+  const [paceCauseRemark, setPaceCauseRemark] = useState()
+  const [allPaceCause, setAllPaceCause] = useState({})
 
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempData = {}
     let paceCauseid = []
+    let paceCauseRmk = []
+    let allFetchPaceCause = {}
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
@@ -93,7 +97,9 @@ const HazardiousCondition = () => {
           } else {
             tempData[value.rcaSubType] = [value.rcaRemark]
           }
+          paceCauseRmk.push(value.rcaRemark)
           paceCauseid.push(value.id)
+          allFetchPaceCause[value.id] = value.rcaRemark
         }
       })
       setForm({
@@ -125,6 +131,7 @@ const HazardiousCondition = () => {
         },
       });
       setPaceCauseDelete(paceCauseid)
+      setAllPaceCause(allFetchPaceCause)
     }
   }
 
@@ -238,11 +245,22 @@ const HazardiousCondition = () => {
   };
 
   const handelDelete = async () => {
+
+    let currentRemark = [].concat.apply([], [
+      form.warningSystem.rcaRemark,
+      form.energyTypes.rcaRemark,
+      form.tools.rcaRemark,
+      form.safetyitems.rcaRemark,
+      form.others.rcaRemark,
+    ])
+
     if (paceCauseDelete !== undefined && paceCauseDelete.length > 0) {
-      for (let key in paceCauseDelete) {
-        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${paceCauseDelete[key]}/`)
-        if (delPaceCause.status == 200) {
-          console.log("deleted")
+      for (let key in allPaceCause) {
+        if (!currentRemark.includes(allPaceCause[key])) {
+          let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${key}/`)
+          if (delPaceCause.status == 200) {
+            console.log("deleted")
+          }
         }
       }
     }
@@ -257,18 +275,18 @@ const HazardiousCondition = () => {
   }
 
   const handelApiCall = async () => {
-    console.log(form)
     let tempData = []
+    let lastRemark = Object.values(allPaceCause)
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
-        if (value !== "") {
+        if (!lastRemark.includes(value) && value !== "") {
           let temp = {
             createdBy: "0",
             fkIncidentId: putId.current,
             rcaRemark: value,
             rcaSubType: api_data["rcaSubType"],
-            rcaType: "Basic",
+            rcaType: "Immediate",
             remarkType: api_data["remarkType"],
             status: "Active",
           };

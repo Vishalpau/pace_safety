@@ -54,6 +54,8 @@ import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
 
 import { connect } from "react-redux";
+import {tabViewMode} from '../../../redux/actions/initialDetails';
+import { useDispatch } from "react-redux";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -156,6 +158,7 @@ function BlankPage(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -173,13 +176,12 @@ for (const i in selectBreakdown) {
 }
 const fkProjectStructureIds = struct.slice(0, -1);
   
-console.log(props.projectName)
+
   const fetchData = async () => {
-    console.log(props.projectName.breakDown,"breakdown")
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-    const res = await api.get("api/v1/incidents/");
+    const res = await api.get("api/v1/incidents/list/");
     const selectBreakdown =props.projectName.breakDown
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -416,14 +418,14 @@ console.log(props.projectName)
                             justifyContent={isDesktop ? "flex-end" : null}
                           >
                             <Chip
-                              avatar={<Avatar src="/images/pp_boy.svg" />}
-                              label="Admin"
+                              avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
+                              label={item[1]["username"]?item[1]["username"]:"Admin"}
                             />
                           </Box>
                         </Grid>
                       </Grid>
                     </Grid>
-
+                  
                     <Grid item xs={12}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={3}>
@@ -532,64 +534,42 @@ console.log(props.projectName)
                 </CardContent>
                 <Divider />
                 <CardActions className={Incidents.cardActions}>
-                  <Grid container spacing={2} alignItems="center">
+                  <Grid container spacing={2} justifyContent='space-between' alignItems="center">
                     <Grid item xs={6} md={3}>
                       <Typography
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
+                        onClick={()=>history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                       >
-                        <MessageIcon fontSize="small" /> Comments:
+                        <MessageIcon fontSize="small /app/:entity/comments/:id/" /> Comments
                       </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
-                      </Typography>
+                      
                     </Grid>
 
+                   
                     <Grid item xs={6} md={3}>
                       <Typography
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
                       >
-                        <BuildIcon fontSize="small" /> Actions:
+                        <AttachmentIcon fontSize="small" /> Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} md={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Fonts.listingLabelName}
-                      >
-                        <AttachmentIcon fontSize="small" /> Evidences:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
+                        <ILink href="#">{item[1]["attachment_count"]}</ILink>
                       </Typography>
                     </Grid>
 
                     <Grid item xs={6} md={3}>
                       <Button
-                        disabled
+                        // disabled
                         size="small"
                         color="primary"
                         startIcon={<Print />}
                         className={Incidents.actionButton}
                       >
                         Print
-                      </Button>
-
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
-                        Share
                       </Button>
                     </Grid>
                   </Grid>

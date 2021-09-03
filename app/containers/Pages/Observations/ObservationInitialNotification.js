@@ -31,9 +31,13 @@ import Avatar from "@material-ui/core/Avatar";
 
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import axios from "axios";
-// import Attachment from "../../App/Attachment/Attachment";
+import Attachment from "../../Attachment/Attachment";
 // import PickListData from "../../../utils/Picklist/InitialPicklist";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import { CircularProgress } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+
+
 
 
 import {
@@ -144,7 +148,7 @@ const ObservationInitialNotification = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({});
-  const [addressSituation, setAddressSituation] = useState(true);
+  const [addressSituation, setAddressSituation] = useState(false);
   const [tagData, setTagData] = useState([]);
   const [fileShow, setFileShow] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -157,6 +161,9 @@ const ObservationInitialNotification = () => {
   const [departmentName , setDepartmentName] = useState([])
   const [shiftType, setShiftType] = useState([]);
   const [superVisorId , setSuperVisorId] = useState('')
+  const [notificationSentValue , setNotificationSentValue] = useState([])
+  const [notifyToList, setNotifyToList] = useState([]);
+  const [submitLoader , setSubmitLoader] = useState(false);
   let filterSuperVisorId = []
   let filterSuperVisorBadgeNo = []
   const radioType = ["Risk", "Comments", "Positive behavior"];
@@ -185,7 +192,6 @@ const ObservationInitialNotification = () => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-  
   let filterReportedByName = []
   let filterReportedById = []
   let filterReportedByBedgeID = []
@@ -209,11 +215,11 @@ const ObservationInitialNotification = () => {
           user = result
           
             for (var i in result) {
-              filterSuperVisorName.push(result[i].name);
-              filterSuperVisorBadgeNo.push(result[i].badgeNo);
+              filterSuperVisorName.push(result[i]);
+              // filterSuperVisorBadgeNo.push(result[i].badgeNo);
             }
             let id = result[0].id;
-            setForm({...form,notifyTo:id})
+            setForm({...form,supervisorId:id})
             setSuperVisorBadgeNo(filterSuperVisorBadgeNo)
           setSuperVisorName(filterSuperVisorName);
         }
@@ -236,9 +242,9 @@ const ObservationInitialNotification = () => {
           let user = [];
           user = result;
           for (var i in result) {
-            filterReportedByName.push(result[i].name);
-            filterReportedById.push(result[i].id);
-            filterReportedByBedgeID.push(result[i].badgeNo);
+            filterReportedByName.push(result[i]);
+            // filterReportedById.push(result[i].id);
+            // filterReportedByBedgeID.push(result[i].badgeNo);
           }
           setReportedByName(filterReportedByName);
           setReportedById(filterReportedById);
@@ -283,7 +289,6 @@ const ObservationInitialNotification = () => {
         // window.location.href = {LOGIN_URL}
       });
   };
-
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
@@ -319,6 +324,7 @@ const ObservationInitialNotification = () => {
     supervisorByBadgeId: "",
     supervisorName: "",
     supervisorDepartment: "",
+    supervisorId : "",
     notifyTo : "",
     attachment: "",
     status: "Active",
@@ -412,6 +418,7 @@ const ObservationInitialNotification = () => {
     if (!isValid) {
       return "Data is not valid";
     }
+    await setSubmitLoader(true)
      // we are convert form into FormData
     let data = new FormData();
       data.append("fkCompanyId", form.fkCompanyId),
@@ -457,6 +464,7 @@ const ObservationInitialNotification = () => {
     }
     data.append("supervisorByBadgeId", form.supervisorByBadgeId),
       data.append("supervisorName", form.supervisorName),
+      data.append("supervisorId", form.supervisorId),
       data.append("notifyTo", form.notifyTo),
       data.append("supervisorDepartment", form.supervisorDepartment);
     if (form.attachment !== null && typeof form.attachment !== "string") {
@@ -479,8 +487,10 @@ const ObservationInitialNotification = () => {
     for (let i = 0; i < catagory.length; i++) {
       catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
       catagory[i]["fkTagId"] = tagData[i].id;
-      const res = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory[i]);
+      const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory[i]);
+
     }
+
     history.push(`/app/pages/observation-Summary/${localStorage.getItem("fkobservationId")}`);
   };
 
@@ -503,12 +513,12 @@ const ObservationInitialNotification = () => {
     }
     setOpen(false);
   };
-
+  
   // this function when user upload the file
   const handleFile = async (e) => {
     let TempPpeData = { ...form };
     // if user file size is grater than 5 MB then that goes to else part
-    if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 5)) {
+    if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
       TempPpeData.attachment = e.target.files[0];
       await setForm(TempPpeData);
     } else {
@@ -516,40 +526,33 @@ const ObservationInitialNotification = () => {
       await setOpen(true);
     }
   };
-
+  
   const handleAssignee = async (e,value) => {
     let tempData = { ...form };
-    tempData.assigneeName = value;
-    if (value === "Viraj Kaulkar") {
-      tempData.assigneeId = reportedById[0];
-    }
-    if (value === "Vani Surekha") {
-      tempData.assigneeId = reportedById[1];
-    }
-    if (value === "Jwi kumar") {
-      tempData.assigneeId = reportedById[2];
-    }if (value === "Vani") {
-      tempData.assigneeId = reportedById[3];
-    } 
-    if (value === "Amol") {
-      tempData.assigneeId = reportedById[4];
-    }
+    tempData.assigneeName = value.name;
+    
+      tempData.assigneeId = value.id;
+
     setForm(tempData);
   }
-
+  
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
       {file.path} 
     </li>
   ));
-
-  const handelAddressSituationYes = (e) => {
-    if (e.target.value == "Yes") {
-      setAddressSituation(true);
-    } else {
-      setForm({...form,actionTaken:""})
-      setAddressSituation(false);
+  
+  const handelAddressSituationYes = async (e) => {
+    let tempData = { ...form}
+    tempData.isSituationAddressed = e.target.value
+    if (e.target.value === "Yes") {
+      await setAddressSituation(true);
+    } else if(e.target.value === "No") {
+      tempData.actionTaken = ""
+      
+      await setAddressSituation(false);
+      await setForm(tempData);
     }
   };
   const handleOther = (e) => {
@@ -571,65 +574,47 @@ const ObservationInitialNotification = () => {
 
   const handleReportedBy = (e, value) => {
     let tempData = { ...form };
-    tempData.reportedByName = value;
-    if (tempData.reportedByName === "Viraj Kaulkar") {
-      if(reportedByBadgeId[0] !== null){
-        tempData.reportedByBadgeId = reportedByBadgeId[0];
-      }else{
-        tempData.reportedByBadgeId = "";
-      }
-      tempData.reportedById = reportedById[0];
-    }
-    if (tempData.reportedByName === "Vani Surekha") {
-      if(reportedByBadgeId[1] !== null){
-        tempData.reportedByBadgeId = reportedByBadgeId[1];
-      }else{
-        tempData.reportedByBadgeId = "";
-      }
-      tempData.reportedById = reportedById[1];
-    }
-    if (tempData.reportedByName === "Jwi kumar") {
-      if(reportedByBadgeId[2] !== null){
-        tempData.reportedByBadgeId = reportedByBadgeId[2];
-      }else{
-        tempData.reportedByBadgeId = "";
-      }
-      tempData.reportedById = reportedById[2];
-    }
-    if (tempData.reportedByName === "Vani") {
-      if(reportedByBadgeId[3] !== null){
-        tempData.reportedByBadgeId = reportedByBadgeId[3];
-      }else{
-        tempData.reportedByBadgeId = "";
-      }
-      tempData.reportedById = reportedById[3];
-    }
-    if (tempData.reportedByName === "Amol") {
-      if(reportedByBadgeId[4] !== null){
-        tempData.reportedByBadgeId = reportedByBadgeId[4];
-      }else{
-        tempData.reportedByBadgeId = "";
-      }
-      tempData.reportedById = reportedById[4];
-    }
+    tempData.reportedByName = value.name;
+   
+        tempData.reportedByBadgeId = value.badgeNo;
+      
     setForm(tempData);
   };
-
   const handleFileName = (value) => {
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
     return fileName;
   };
 
-  const handleSuperVisior = (e) => {
+  const handleSuperVisior = (e,value) => {
     let tempData = { ...form };
-      tempData.supervisorName = e.target.value
-      if(e.target.value === "Vani"){
-        tempData.supervisorByBadgeId = superVisorBadgeNo[0]
-      }
+      tempData.supervisorName = value.name
+        tempData.supervisorByBadgeId = value.badgeNo
+     
        setForm(tempData)
   
   }
+
+  const handleNotify = async (value, index ,e) => {
+    if (e.target.checked === true) {
+      let temp = [...notifyToList];
+     
+      temp.push(value)
+      let uniq = [...new Set(temp)];
+      setNotifyToList(uniq)
+     
+      setForm({...form , notifyTo : temp.toString()});
+    } else {
+      let temp = [...notifyToList];
+      
+        let newData = temp.filter((item) => item !== value);
+      
+      setNotifyToList(newData);
+      setForm({...form , notifyTo : newData.toString()});
+
+    }
+    
+  };
 
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
@@ -651,7 +636,7 @@ const ObservationInitialNotification = () => {
       let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
       var config = {
         method: 'get',
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/`,
         headers: HEADER_AUTH
       };
       const res = await api(config)
@@ -662,7 +647,6 @@ const ObservationInitialNotification = () => {
     } catch (error) {
     }
   }
-
 
   const fetchTags = async () => {
     const res = await api.get(`/api/v1/tags/`);
@@ -686,32 +670,32 @@ const ObservationInitialNotification = () => {
     );
     const result = attachment.data.data.results[0];
     let ar = result.attachment;
-    let onlyImage_url = ar.replace("https://", "");
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
-    let imageArray = image_url.split("/");
-    let image_name = imageArray[imageArray.length - 1];
-    saveAs(image_url, image_name);
-    await setAttachment(image_name)
+    // let onlyImage_url = ar.replace("https://", "");
+    // let image_url = "http://cors.digiqt.com/" + onlyImage_url;
+    // let imageArray = image_url.split("/");
+    // let image_name = imageArray[imageArray.length - 1];
+    // saveAs(image_url, image_name);
+    await setAttachment(ar)
   };
+
   const classes = useStyles();
 
   const PickList = async () => {
     setShiftType(await PickListData(47));
     await setIsLoading(true);
   };
-
   useEffect(() => {
     if (id) {
       fetchInitialiObservationData();
       fetchCheckBoxData();
-      fetchNotificationSent()
       fetchSuperVisorName()
       setFileShow(true)
     }else{
       fetchTags()
       fetchDepartment()
-      // fetchAttachment()
+      fetchAttachment()
       setIsLoading(true);
+      fetchNotificationSent()
       fetchSuperVisorName()
       fetchReportedBy()
       PickList()
@@ -747,10 +731,10 @@ const ObservationInitialNotification = () => {
                 Unit
               </Typography>
               <Typography className={classes.labelValue}>
-                {selectBreakdown[1].name}
+                {selectBreakdown !== null ? selectBreakdown.length > 1 ? selectBreakdown[1].name : "-" : "-"}
               </Typography>
             </Grid>
-            <Grid item md={12} xs={12} className={classes.formBox}>
+            <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Location*"
                 name="location"
@@ -770,12 +754,13 @@ const ObservationInitialNotification = () => {
                 }}
               />
             </Grid>
+            
             <Grid item md={6} xs={12} className={classes.formBox}>
               <Autocomplete
                 id="combo-box-demo"
                 options={reportedByName}
                 className={classes.mT30}
-                getOptionLabel={(option) => option}
+                getOptionLabel={(option) => option.name}
                 defaultValue={form.reportedByName}
                 onChange={(e, value) => {
                   handleReportedBy(e, value);
@@ -785,10 +770,31 @@ const ObservationInitialNotification = () => {
                     {...params}
                     label="Observed by*"
                     variant="outlined"
+                    error={error.reportedByName}
+                helperText={error.reportedByName ? error.reportedByName : ""}
                   />
                 )}
               />
             </Grid>
+            <Grid
+            item
+            md={6}
+            xs={12}
+            className={classes.formBox}
+          >
+            <Autocomplete
+                id="observerdepartment"
+                options={departmentName}
+                className={classes.mT30}
+                
+                getOptionLabel={(option) => option}
+                onChange={(e , value) => {
+                  setForm({...form,reportedByDepartment:value})
+                }}
+                renderInput={(params) => <TextField {...params} label="Observer Department*" error={error.reportedByDepartment}
+                helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} variant="outlined" />}
+            />
+          </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Observer's Badge Number"
@@ -820,12 +826,13 @@ const ObservationInitialNotification = () => {
                 select
                 fullWidth
                 variant="outlined"
-                onChange={(e) => {
-                  handleSuperVisior(e)}}
+                // onChange={(e) => {
+                //   handleSuperVisior(e)}}
               >
                 {superVisorName.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
+                  <MenuItem key={option} value={option.name}
+                  onClick={(e) => handleSuperVisior(e,option)}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -916,8 +923,8 @@ const ObservationInitialNotification = () => {
                 }}
               >
                 {shiftType.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
+                  <MenuItem key={option} value={option.value}>
+                    {option.label}
                   </MenuItem>
                 ))}
               </TextField>
@@ -1024,18 +1031,22 @@ const ObservationInitialNotification = () => {
               <>
                 <Grid item md={12} xs={12} className={classes.formBox}>
                   <TextField
-                    label="Describe the actions taken"
+                    label="Describe the actions taken*"
                     // margin="dense"
                     name="actionstaken"
                     id="actionstaken"
                     multiline
                     rows={4}
+                    error={error.actionTaken}
+                helperText={
+                  error.actionTaken ? error.actionTaken : ""
+                }
                     defaultValue={form.actionTaken}
                     fullWidth
                     variant="outlined"
                     className={classes.formControl}
                     onChange={(e) => {
-                      setForm({ ...form, actionTaken: e.target.value });
+                      setForm({ ...form, actionTaken: e.target.value });
                     }}
                   />
                 </Grid>
@@ -1175,6 +1186,28 @@ const ObservationInitialNotification = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
+            {notificationSentValue.map((value,index) =>(
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBox}
+          >
+            <FormGroup>
+              <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="notify"
+                    onChange={(e) => {handleNotify(value.id,index , e)}}
+                  />
+                )}
+                label={`Do you want to Notify the ${value.roleName}`}
+              />
+            </FormGroup>
+          </Grid>))}
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
@@ -1215,7 +1248,7 @@ const ObservationInitialNotification = () => {
                 id="combo-box-demo"
                 options={reportedByName}
                 className={classes.mT30}
-                getOptionLabel={(option) => option}
+                getOptionLabel={(option) => option.name}
                 onChange={(e, value) => {handleAssignee(e, value)}
                   }
                 renderInput={(params) => (
@@ -1258,7 +1291,7 @@ const ObservationInitialNotification = () => {
               <input
                     type="file"
                     id="attachment"
-                      accept=".png, .jpg"
+                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                       onChange={(e) => {
                         handleFile(e);
                       }}
@@ -1271,7 +1304,7 @@ const ObservationInitialNotification = () => {
                 onClose={handleClose}
               >
                 <Alert onClose={handleClose} severity="error">
-                  The file you are attaching is bigger than the 5mb.
+                  The file you are attaching is bigger than the 25mb.
                 </Alert>
               </Snackbar>
             
@@ -1279,19 +1312,24 @@ const ObservationInitialNotification = () => {
               <FormGroup className={classes.customCheckBoxList}>
                 <FormControlLabel
                   className={classes.labelValue}
+                // helperText={
+                //   error.acceptAndPledge ? error.acceptAndPledge : ""
+                // }
                   control={
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                       checkedIcon={<CheckBoxIcon fontSize="small" />}
+                      error={error.acceptAndPledge}
                       name="checkedI"
                       onChange={(e) => {
                         handlePledge(e);
                       }}
                     />
                   }
-                  label="I Accept & Pledge"
+                  label="I Accept & Pledge*"
                 />
               </FormGroup>
+              <p style={{color: "red"}}>{error.acceptAndPledge}</p>
             </Grid>
 
             <Grid item md={12} xs={12} className={classes.formBBanner}>
@@ -1302,15 +1340,35 @@ const ObservationInitialNotification = () => {
                 src={FormObservationbanner}
               />
             </Grid>
+            {/* {attachment ===
+                              null ? null : typeof attachment ===
+                                "string" ? (
+                                <Attachment value={attachment} />
+                              ) : null} */}
             <Grid item md={12} xs={12}>
-              <Button
+            {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+               Submit
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
+              {/* <Button
                 variant="outlined"
                 size="medium"
                 className={classes.custmSubmitBtn}
                 onClick={() => handleSubmit()}
               >
                 Submit
-              </Button>
+              </Button> */}
               <Button
                 variant="outlined"
                 size="medium"
@@ -1319,7 +1377,7 @@ const ObservationInitialNotification = () => {
                   history.push("/app/pages/observations");
                 }}
               >
-                Cancle
+                CANCEL
               </Button>
             </Grid>
           </Grid>

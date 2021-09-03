@@ -22,7 +22,7 @@ export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 export const API_URL = "https://dev-safety-api.paceos.io/";
 export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
 export const access_token = localStorage.getItem("access_token");
-
+export const API_VERSION = "api/v1/"
 export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/";
 
 // Header authenticatuon
@@ -50,7 +50,9 @@ export const INITIAL_NOTIFICATION_FORM = {
 };
 
 export const EVIDENCE_FORM = {
-  Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem("fkincidentId")}`,
+  Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
   "Activity details": `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
     "fkincidentId"
   )}`,
@@ -98,6 +100,11 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
   "Five Why analysis":
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
+
+export const DETAILS = {
+  "RCA Details":
+    "/app/incident-management/registration/root-cause-analysis/details/",
+}
 
 export const SUMMERY_FORM = {
   Summary: "/app/incident-management/registration/summary/summary/",
@@ -161,6 +168,34 @@ export const PACE_MANAGEMENT_CONTROL_SUB_TYPES = [
   "Compilance",
   "Engagement",
 ];
+
+// hide array 
+
+export const FIVEWHYHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Cause analysis",
+]
+
+export const PACEHIDE = [
+  "Cause analysis", "Five Why analysis"
+]
+
+export const ROOTHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Five Why analysis"
+]
 
 // option in root cause and anlysis
 
@@ -279,19 +314,22 @@ export const PERSONALWELNESSFACTORS = [
 ];
 
 export const LEADERSHIP = [
-  "Lack of  Leadership engagement",
-  "Lack of  supervision in field",
-  "Incompetent field supervision",
-  "Supervision failure to manage change",
-  "Lack of enforcement",
+  "Work Package Incomplete",
+  "Work Package Not Available",
+  "Fighting or Being Bullied at Work Place",
+  "Under the Influence of Drug or Alcohol",
+  "Physical or Mental Stress",
+  "Complacent Behavior(Worker / Supervisor)",
+  "Intentional Harmfully Act",
 ];
 
 export const PROCESSES = [
-  "Poor engineering processes",
-  "Poor supply management / purchasing process",
-  "Poor preventive maintenance Processes",
-  "Lack of proper tools / equipment / material for the job",
-  "Lack of policies, standards and guidelines",
+  "Poor Posture",
+  "Poor Lifting Techniques",
+  "Repetitious Movements",
+  "Over Reaching",
+  "No or Improper Securing Devices Used",
+  "Wrong Loading- Lifting or Improper Placement Techniques Used",
 ];
 
 export const OTHERISSUES = [
@@ -353,3 +391,11 @@ export const ENGAGEMENT = [
   "Poor reward and recognition",
   "Delay / withholding information",
 ];
+
+// AHA Route
+export const AHA = {
+  "Project Details": "/app/pages/aha/assessments/project-details",
+  "Project Area Hazards": "/app/pages/aha/assessments/project-area-hazards",
+  Assessment: "/app/pages/aha/assessments/assessment",
+  "Documents & Notifications": "/app/pages/aha/assessments/DocumentsNotifications"
+}

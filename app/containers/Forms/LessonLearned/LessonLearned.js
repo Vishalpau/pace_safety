@@ -32,12 +32,18 @@ import {
   access_token,
   ACCOUNT_API_URL,
   LESSION_LEARNED_FORM,
+  SUMMERY_FORM
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 
 import Attachment from "../../Attachment/Attachment";
+
+// redux
+
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -67,6 +73,7 @@ const LessionLearned = () => {
   const history = useHistory();
   const ref = useRef();
   const { id } = useParams();
+  const dispatch = useDispatch();
   const [error, setError] = useState({});
   const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
   const [learningList, setLearningList] = useState([]);
@@ -220,12 +227,9 @@ const LessionLearned = () => {
           initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
 
         }
-        localStorage.setItem("viewMode",JSON.stringify(viewMode))
-        history.push(
-          `/app/incident-management/registration/close-out/${localStorage.getItem(
-            "fkincidentId"
-          )}`
-        );
+        dispatch(tabViewMode(viewMode));
+        history.push(`${SUMMERY_FORM['Summary']}${id}/`);
+        
       }
     }
   };

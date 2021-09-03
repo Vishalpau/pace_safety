@@ -55,12 +55,16 @@ import EditIcon from "@material-ui/icons/Edit";
 
 import Headerbox from "./headerbox";
 
-import { connect } from "react-redux";
+import { useParams } from "react-router";
 
 // redux
-
+import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
-import { projectName, breakDownDetails } from "../../redux/actions/initialDetails";
+import { projectName, breakDownDetails, levelBDownDetails  } from "../../redux/actions/initialDetails";
+import Topbar from "./Topbar";
+
+import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
+import Axios from "axios";
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -146,7 +150,14 @@ function Header(props) {
   const [projectOpen, setProjectOpen] = React.useState(false);
   const [projectListData, setProjectListData] = useState([]);
   const [projectDisable, setProjectDisable] = useState(false);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false)
+  
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const {fkid}  = useParams();
   const dispatch = useDispatch();
+
+  const [selectBreakDown, setSelectBreakDown] = useState([]);
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
 
@@ -232,6 +243,7 @@ function Header(props) {
     localStorage.setItem("projectName", JSON.stringify(props.initialValues));
   }
   const projectData = JSON.parse(localStorage.getItem("projectName"));
+  const breakDownData = JSON.parse(localStorage.getItem("selectBreakDown"))
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -254,9 +266,7 @@ function Header(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   //Project selections
   const handleProjectOpen = () => {
     setProjectOpen(true);
@@ -272,14 +282,20 @@ function Header(props) {
     let selectBreakDown=[]
     let data = projectListData[key];
     await dispatch(projectName(data));
+    
+    await dispatch(breakDownDetails(selectBreakDown))
+    // await setIsPopUpOpen(true)
+    setProjectOpen(false);
+    setCompanyOpen(false);
+   
+    localStorage.setItem("projectName", JSON.stringify(data));
     localStorage.setItem(
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
-    await dispatch(breakDownDetails([]))
-    localStorage.setItem("projectName", JSON.stringify(data));
-    setProjectOpen(false);
-    setCompanyOpen(false);
+    document.getElementById("open").click()
+    // documentElementById("open").click()
+    // setAnchorEl(event.currentTarget);
   };
 
   const handleProjectList = () => {
@@ -340,9 +356,192 @@ function Header(props) {
     },
   }))(MuiDialogActions);
 
+
+  const classesm = useStyles();
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const filterOpen = Boolean(anchorEl);
   const id = filterOpen ? "simple-popover" : undefined;
-  const classesm = useStyles();
+
+  const handleBreakdown = async (e, index, label) => {
+    const value = e.target.value;
+    let temp = [...breakdown1ListData]
+    temp[index - 1][`selectValue`] = value;
+    setBreakdown1ListData(temp)
+    if (selectBreakDown.filter(filterItem => filterItem.depth === `${index}L`).length > 0) {
+      const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
+      const removeBreakDownList = breakdown1ListData.slice(0, index + 1)
+      removeBreakDownList[index][`selectValue`] = "";
+
+      await setBreakdown1ListData(removeBreakDownList)
+
+      let name = breakdown1ListData[index - 1].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            setSelectBreakDown([
+              ...removeSelectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name,label:label },
+            ]);
+            dispatch(breakDownDetails([
+              ...removeSelectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name,label:label },
+            ]))
+            localStorage.setItem(
+              "selectBreakDown",
+              JSON.stringify([
+                ...removeSelectBreakDown,
+                { depth: item.depth, id: item.id, name: item.name,label:label },
+              ])
+            );
+            return;
+          }
+
+        }
+      );
+    } else {
+      let name = breakdown1ListData[index - 1].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            await setSelectBreakDown([
+              ...selectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name,label:label },
+            ]);
+            dispatch(breakDownDetails([
+              ...selectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name,label:label },
+            ]))
+            localStorage.setItem(
+              "selectBreakDown",
+              JSON.stringify([
+                ...selectBreakDown,
+                { depth: item.depth, id: item.id, name: item.name,label:label },
+              ])
+            );
+            return;
+          }
+
+        }
+      );
+    }
+
+    if(projectData.projectName.breakdown.length !== index){
+    for (var key in projectData.projectName.breakdown) {
+      if (key == index) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${value}`,
+          headers: HEADER_AUTH,
+        };
+        await Axios(config)
+          .then(function (response) {
+            if (response.status === 200) {
+
+              if (
+                breakdown1ListData.filter(
+                  (item) =>
+                    item.breakdownLabel ===
+                    projectData.projectName.breakdown[index].structure[0].name
+                ).length > 0
+              ) {
+                return;
+              } else {
+                setBreakdown1ListData([
+                  ...breakdown1ListData,
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[index].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: value
+                  },
+                ]);
+                dispatch(levelBDownDetails([
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[index].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: value,
+                    index:index
+                  },
+                ]))
+              }
+            }
+          })
+          .catch(function (error) {
+
+          });
+      }
+    }
+  }else{
+    dispatch(levelBDownDetails([
+    ]))
+  }
+  };
+
+  const fetchCallBack = async () => {
+    setSelectBreakDown([])
+    for (var key in projectData.projectName.breakdown) {
+
+      if (key == 0) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+        await Axios(config)
+          .then(async(response)=> {
+              
+            await setBreakdown1ListData([
+              {
+                breakdownLabel:
+                  projectData.projectName.breakdown[0].structure[0].name,
+                breakdownValue: response.data.data.results,
+                selectValue: "",
+                index:0
+              },
+            ]);
+            if(JSON.parse(localStorage.getItem("selectBreakDown"))){
+              await dispatch(levelBDownDetails([]))
+            }else{
+              await dispatch(levelBDownDetails([
+                {
+                  breakdownLabel:
+                    projectData.projectName.breakdown[0].structure[0]
+                      .name,
+                  breakdownValue: response.data.data.results,
+                  selectValue: "",
+                  index:0
+                },
+              ]))
+            }
+            
+            setIsLoading(true);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    }
+  };
+
+  const fetchIncidentData = async()=>{
+   
+    const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
+        const result = res.data.data.results;
+      
+  }
+  useEffect(() => {
+      fetchCallBack();
+      if(fkid){
+        fetchIncidentData();
+      }
+      
+  }, [props.initialValues.projectName]);
 
   useEffect(() => {
     handleProjectList();
@@ -382,7 +581,7 @@ function Header(props) {
               size="small"
               className={classesm.projectName}
               disabled={projectDisable}
-              //label=""
+              
               onClick={handleCompanyOpen}
             >
               {projectData !== null
@@ -465,7 +664,9 @@ function Header(props) {
                             className={classesm.cardContentBox}
                             key={index}
                           >
-                            <Card onClick={() => handleProjectName(index)}>
+                            <Card onClick={() => {
+                            
+                              handleProjectName(index)}}>
                               <CardActionArea
                                 className={classesm.cardActionAreaBox}
                               >
@@ -519,16 +720,117 @@ function Header(props) {
             </Dialog>
           </div>
           <Hidden smDown>
-            <Headerbox />
+            {/* <Headerbox filterOpen={isPopUpOpen} handleClick={handleClick} setIsPopUpOpen={setIsPopUpOpen}/> */}
+         
+      <div>
+        <IconButton
+          aria-describedby={id}
+          className={classes.filterIcon}
+          onClick={handleClick}
+          id='open'
+        >
+          <FilterListIcon fontSize="small" />
+        </IconButton>
+        <Popover
+          id={id}
+          open={filterOpen}
+          anchorEl={anchorEl}
+          getContentAnchorEl={null}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          PaperProps={{
+            style: {
+              width: 200,
+            },
+          }}
+        >
+          {isLoading ? (
+            <Box p={3}>
+              <Grid container spacing={2}>
+                
+                  {breakdown1ListData.length > 0
+                    ? breakdown1ListData.map((item, index) => (
+                      <Grid item xs={12}>
+                      <FormControl
+                        key={index}
+                        variant="outlined"
+                        size="small"
+                        fullWidth={true}
+                        className={classes.filterSelect}
+                      >
+
+                        <InputLabel id="filter3-label">
+                          {item.breakdownLabel}
+                        </InputLabel>
+                        <Select
+                          labelId="filter3-label"
+                          id="filter3"
+                          value={item.selectValue}
+                          onChange={(e) => {
+                            handleBreakdown(e, index + 1,item.breakdownLabel);
+
+                          }}
+                          label="Phases"
+                          style={{ width: "100%" }}
+                        >
+                          {item.breakdownValue.length
+                            ? item.breakdownValue.map(
+                              (selectValue, selectKey) => (
+                                <MenuItem
+                                  key={selectKey}
+                                  value={selectValue.id}
+                                >
+                                  {selectValue.name}
+                                </MenuItem>
+                              )
+                            )
+                            : null}
+                        </Select>
+                      </FormControl>
+                      </Grid>
+                    ))
+                    : null}
+                <Grid item md={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        disableElevation
+                        onClick={handleClose}
+                      >
+                        Apply
+                      </Button>
+                    </Grid>
+              </Grid>
+            </Box>
+          ) : null}
+        </Popover>
+      </div>
+      <Breadcrumbs
+        className={classes.projectBreadcrumbs}
+        separator={<NavigateNextIcon fontSize="small" />}
+      >
+
+        {breakDownData !== null
+          ? breakDownData.map(
+            (item, index) => (
+              <Chip size="small" label={item.name} key={index} />
+            )
+          )
+          : null}
+      </Breadcrumbs>
+    
           </Hidden>
         </div>
 
-        {/* <Tooltip title="Turn Dark/Light" placement="bottom">
-          <IconButton className={classes.button} onClick={() => turnMode(mode)}>
-            <i className="ion-ios-bulb-outline" />
-          </IconButton>
-        </Tooltip> */}
-
+      
         <UserMenu />
       </Toolbar>
     </AppBar>

@@ -78,10 +78,19 @@ export default function ActionTracker(props) {
     vendorReferenceId: "string",
   });
 
+
   let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
   const api = axios.create({
     baseURL: API_URL_ACTION_TRACKER,
   });
+
+  const handelUpdate = async () => {
+    if (props.actionID !== undefined && props.actionID !== undefined) {
+      const res = await api.get(`/api/v1/actions/${props.actionID}/`)
+      console.log(res.data.data.results)
+    }
+  }
+
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({ actionTitle: "" });
 
@@ -90,9 +99,11 @@ export default function ActionTracker(props) {
   };
 
   const handleClose = async () => {
+    console.log(props)
     await setError({ actionTitle: "" });
     await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
     await setOpen(false);
+    await props.setUpdatePage(!props.updatePage)
   };
 
   const handelSubmit = async () => {
@@ -104,6 +115,7 @@ export default function ActionTracker(props) {
         await setError({ actionTitle: "" });
         await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
         await setOpen(false);
+        await props.setUpdatePage(!props.updatePage)
       }
     }
   };
@@ -111,6 +123,10 @@ export default function ActionTracker(props) {
   let user = ["user1", "user2", "user3", "user4"];
   let severity = ["Normal", "Critical", "Blocker"];
   const classes = useStyles();
+
+  useEffect(() => {
+    handelUpdate()
+  }, [])
 
   return (
     <>
@@ -180,7 +196,7 @@ export default function ActionTracker(props) {
                   format="dd/MM/yyyy"
                   inputVariant="outlined"
                   value={form.plannedEndDate}
-                  disableFuture={true}
+                  disablePast={true}
                   onChange={(e) => {
                     setForm({
                       ...form,

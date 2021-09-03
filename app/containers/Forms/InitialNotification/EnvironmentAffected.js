@@ -124,6 +124,9 @@ const EnvironmentAffected = () => {
   };
 
   const handleNext = async () => {
+
+    // if close out 
+    if(!incidentsListData.closeDate){
     // check condition id is defined or env data not less than 0 other wise post data
     if (environmentListData.length > 0) {
       const { error, isValid } = EnvironmentValidate(form);
@@ -183,6 +186,7 @@ const EnvironmentAffected = () => {
         } catch (error) {}
       }
     }
+  }
   };
 
   const fetchWaterBodyAffectedValue = async () => {

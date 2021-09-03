@@ -37,6 +37,10 @@ import AlertMessage from "./Alert";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
+    "& .MuiInputLabel-outlined": {
+      right: "20px",
+      lineHeight: "1.2",
+    },
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -146,62 +150,62 @@ const PeoplesAffected = () => {
 
   // Next button click event handling.
   const handleNext = async () => {
-    // Next path handlings.
-    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+    if (!incidentsListData.closeDate) {
+      // Next path handlings.
+      const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
-    // This is the condition when Yes is clicked on the form.
-    if (personAffect === "Yes") {
-      // Validate the form.
-      const { error, isValid } = PeopleValidate(form);
+      // This is the condition when Yes is clicked on the form.
+      if (personAffect === "Yes") {
+        // Validate the form.
+        const { error, isValid } = PeopleValidate(form);
 
-      // End the function exeution if isvalid is false.
-      setError(error);
+        // End the function exeution if isvalid is false.
+        setError(error);
 
-      // Loop over all the people added and hit them with the help of the Post API.
-      // We don't have single API.
+        // Loop over all the people added and hit them with the help of the Post API.
+        // We don't have single API.
 
-      if (isValid) {
-       
+        if (isValid) {
           for (var i = 0; i < form.length; i++) {
-            if(form[i].id){
+            if (form[i].id) {
               try {
-              const res = await api.put(
-                `api/v1/incidents/${localStorage.getItem(
-                  "fkincidentId"
-                )}/people/${form[i].id}/`,
-                {
-                  personType: form[i].personType,
-                  personDepartment: form[i].personDepartment,
-                  personName: form[i].personName,
-                  personIdentification: form[i].personIdentification,
-                  personMedicalCare: form[i].personMedicalCare,
-                  workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-                  locationAssessmentCenter: form[i].locationAssessmentCenter,
-                  createdBy: parseInt(userId),
-                  fkIncidentId: localStorage.getItem("fkincidentId"),
-                }
-              );
-              }catch(error){}
-            }else{
-              try{
-              const res = await api.post(
-                `api/v1/incidents/${localStorage.getItem(
-                  "fkincidentId"
-                )}/people/`,
-                {
-                  personType: form[i].personType,
-                  personDepartment: form[i].personDepartment,
-                  personName: form[i].personName,
-                  personIdentification: form[i].personIdentification,
-                  personMedicalCare: form[i].personMedicalCare,
-                  workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-                  locationAssessmentCenter: form[i].locationAssessmentCenter,
-                  createdBy: parseInt(userId),
-                  fkIncidentId: localStorage.getItem("fkincidentId"),
-                }
-              );
-              }catch(error){}
-            } 
+                const res = await api.put(
+                  `api/v1/incidents/${localStorage.getItem(
+                    "fkincidentId"
+                  )}/people/${form[i].id}/`,
+                  {
+                    personType: form[i].personType,
+                    personDepartment: form[i].personDepartment,
+                    personName: form[i].personName,
+                    personIdentification: form[i].personIdentification,
+                    personMedicalCare: form[i].personMedicalCare,
+                    workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                    locationAssessmentCenter: form[i].locationAssessmentCenter,
+                    createdBy: parseInt(userId),
+                    fkIncidentId: localStorage.getItem("fkincidentId"),
+                  }
+                );
+              } catch (error) {}
+            } else {
+              try {
+                const res = await api.post(
+                  `api/v1/incidents/${localStorage.getItem(
+                    "fkincidentId"
+                  )}/people/`,
+                  {
+                    personType: form[i].personType,
+                    personDepartment: form[i].personDepartment,
+                    personName: form[i].personName,
+                    personIdentification: form[i].personIdentification,
+                    personMedicalCare: form[i].personMedicalCare,
+                    workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                    locationAssessmentCenter: form[i].locationAssessmentCenter,
+                    createdBy: parseInt(userId),
+                    fkIncidentId: localStorage.getItem("fkincidentId"),
+                  }
+                );
+              } catch (error) {}
+            }
           }
 
           // We have hit the API to create person Affected.
@@ -211,6 +215,62 @@ const PeoplesAffected = () => {
             personAffect || incidentsListData.isPersonDetailsAvailable;
           temp.updatedAt = new Date().toISOString();
           try {
+            const res = await api.put(
+              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+              temp
+            );
+          } catch (error) {
+            setMessage("Something went worng!");
+            setMessageType("error");
+            setOpen(true);
+          }
+          // check condition id
+
+          if (nextPath.propertyAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            );
+          } else if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            );
+          } else {
+            history.push(
+              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            );
+          }
+        }
+
+        // Case when form has No option selected.
+      } else {
+        // delete existing data if user select NO or N/A
+        try {
+          if (peopleData.length > 0) {
+            const temp = peopleData;
+            for (var i = 0; i < peopleData.length; i++) {
+              const res = await api.delete(
+                `api/v1/incidents/${id}/people/${temp[i].id}/`
+              );
+            }
+          }
+        } catch (error) {
+          setMessage("Network error!");
+          setMessageType("error");
+          setOpen(true);
+        }
+
+        // When no is selected we just have to send the comment and yes/no flag to API via put request.
+        const temp = incidentsListData;
+        temp.isPersonDetailsAvailable =
+          personAffect || incidentsListData.isPersonDetailsAvailable;
+        temp.updatedAt = new Date().toISOString();
+        temp.personAffectedComments =
+          personAffectedComments || incidentsListData.personAffectedComments;
+        try {
           const res = await api.put(
             `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
             temp
@@ -220,7 +280,10 @@ const PeoplesAffected = () => {
           setMessageType("error");
           setOpen(true);
         }
-        // check condition id
+
+        // Case when id is available. Update case. Redirect user to specific page.
+        // Here if we see, we are redirecting user to urls with /id/ in the end.
+        // Therefore, next page will get the input from the id and pre-fill the details.
 
         if (nextPath.propertyAffect === "Yes") {
           history.push(
@@ -240,87 +303,27 @@ const PeoplesAffected = () => {
           );
         }
       }
-
-      // Case when form has No option selected.
-    } else {
-      // delete existing data if user select NO or N/A
-      try {
-        if (peopleData.length > 0) {
-          const temp = peopleData;
-          for (var i = 0; i < peopleData.length; i++) {
-            const res = await api.delete(
-              `api/v1/incidents/${id}/people/${temp[i].id}/`
-            );
-          }
-        }
-      } catch (error) {
-        setMessage("Network error!");
-        setMessageType("error");
-        setOpen(true);
-      }
-
-      // When no is selected we just have to send the comment and yes/no flag to API via put request.
-      const temp = incidentsListData;
-      temp.isPersonDetailsAvailable =
-        personAffect || incidentsListData.isPersonDetailsAvailable;
-      temp.updatedAt = new Date().toISOString();
-      temp.personAffectedComments =
-        personAffectedComments || incidentsListData.personAffectedComments;
-      try {
-        const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-      } catch (error) {
-        setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
-      }
-
-      // Case when id is available. Update case. Redirect user to specific page.
-      // Here if we see, we are redirecting user to urls with /id/ in the end.
-      // Therefore, next page will get the input from the id and pre-fill the details.
-
-      if (nextPath.propertyAffect === "Yes") {
-        history.push(
-          `/app/incident-management/registration/initial-notification/property-affected/${id}`
-        );
-      } else if (nextPath.equipmentAffect === "Yes") {
-        history.push(
-          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-        );
-      } else if (nextPath.environmentAffect === "Yes") {
-        history.push(
-          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-        );
-      } else {
-        history.push(
-          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-        );
-      }
     }
   };
 
   // hablde Remove
 
   const handleRemove = async (key) => {
-    
     // this condition for delete
-    if(form[key].id){
+    if (form[key].id) {
       const res = await api.delete(
         `api/v1/incidents/${id}/people/${form[key].id}/`
       );
-      if(res.status === 200){
+      if (res.status === 200) {
         const temp = form;
         const newData = temp.filter((item, index) => index !== key);
         await setForm(newData);
       }
-    }else{
+    } else {
       const temp = form;
-    const newData = temp.filter((item, index) => index !== key);
-    await setForm(newData);
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
     }
-    
   };
 
   // State for the error defination.

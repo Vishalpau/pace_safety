@@ -27,6 +27,8 @@ import InitialNotificationValidator from "../../Validator/Observation/InitialNot
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import axios from "axios";
+import { CircularProgress } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 
 import {
   access_token,
@@ -167,6 +169,8 @@ const ObservationInitialNotificationUpdate = () => {
   const [tagData , setTagData] = useState([])
   const [reportedByName , setReportedByName] = useState([]);
   const [departmentName , setDepartmentName] = useState([])
+  const [submitLoader , setSubmitLoader] = useState(false);
+  const [projectSturcturedData , setProjectSturcturedData] = useState([])
   let filterReportedByName = []
   let filterDepartmentName = []
 
@@ -234,6 +238,7 @@ const ObservationInitialNotificationUpdate = () => {
     if (!isValid) {
       return "Data is not valid";
     }
+    await setSubmitLoader(true)
     
     let data = new FormData();
       data.append("fkCompanyId", initialData.fkCompanyId),
@@ -309,15 +314,17 @@ const ObservationInitialNotificationUpdate = () => {
   const fetchCheckBoxData = async () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)
     const tags = response.data.data.results.results
-    await setCatagory(tags);
+    let sorting = tags.sort((a, b) => a.id - b.id)
+
+    await setCatagory(sorting);
     await setIsLoading(true);
     
   }
-
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
     await setInitialData(result)
+    await fetchBreakDownData(result.fkProjectStructureIds)
     // await setIsLoading(true);
 
   }
@@ -389,6 +396,75 @@ const ObservationInitialNotificationUpdate = () => {
       });
   };
 
+  const fetchBreakDownData = async (projectBreakdown) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+   
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
+          headers: HEADER_AUTH,
+        };
+       
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name },
+                ];
+              }
+            });
+          })
+          .catch((error) => {
+            
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key-1].slice(-1)}`,
+          headers: HEADER_AUTH,
+        };
+       
+        await api(config)
+          .then(async (response) => {
+          
+            const result = response.data.data.results;
+           
+            const res=result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+               
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name },
+                ];
+              }
+            });
+
+          
+          })
+          .catch((error) => {
+            console.log(error)
+            // setIsNext(true);
+          });
+      }
+    }
+    // dispatch(breakDownDetails(selectBreakDown));
+    await setProjectSturcturedData(selectBreakDown)    
+    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
+  };
+
   useEffect(() => {
     
       fetchInitialiObservation();
@@ -439,7 +515,7 @@ const ObservationInitialNotificationUpdate = () => {
                 Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {selectBreakdown[0].name} - {selectBreakdown[1].name} - {selectBreakdown[2].name} 
+            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null} - {projectSturcturedData[1] ? projectSturcturedData[1].name : null} - {projectSturcturedData[2] ? projectSturcturedData[2].name : null} 
             </Typography>
           </Grid>
           <Grid
@@ -448,15 +524,17 @@ const ObservationInitialNotificationUpdate = () => {
             xs={12}
             className={classes.formBox}
           >
+          
             <TextField
               label="Location*"
               //margin="dense"
               name="location"
               id="location"
-              value={initialData.location !== undefined ? initialData.location : null}
+              shrink={initialData.location !== null ? true : false}
+              value={initialData.location  ? initialData.location : ""}
               fullWidth
-              // error={error.location}
-              // helperText={error.location ? error.location : ""}
+              error={error ? error.location : null}
+              helperText={error ? error.location ? error.location : "" : ""}
               variant="outlined"
               className={classes.formControl}
               onChange={(e) => {
@@ -467,6 +545,7 @@ const ObservationInitialNotificationUpdate = () => {
                 }}
             />
           </Grid>
+          
           <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
                 Categories
@@ -507,7 +586,7 @@ const ObservationInitialNotificationUpdate = () => {
               <Autocomplete
                 id="combo-box-demo"
                 options={reportedByName}
-                value={initialData.assigneeName ? initialData.assigneeName :null}
+                value={initialData.assigneeName ? initialData.assigneeName :""}
                 className={classes.mT30}
                 getOptionLabel={(option) => option}
                 onChange={(e, value) => {
@@ -526,6 +605,7 @@ const ObservationInitialNotificationUpdate = () => {
               />
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
+            
               <TextField
                 label="Assignee Department"
                 // margin="dense"
@@ -533,7 +613,7 @@ const ObservationInitialNotificationUpdate = () => {
                 id="assigneedepartment"
                 select
                 fullWidth
-                value={initialData.departmentName ? initialData.departmentName : null}
+                value={initialData.departmentName ? initialData.departmentName : ""}
                 variant="outlined"
                 onChange={(e) => {
                   setInitialData({ ...initialData, departmentName: e.target.value });
@@ -551,14 +631,29 @@ const ObservationInitialNotificationUpdate = () => {
             md={12}
             xs={12}
           >
-            <Button
+          {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+               Submit
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
+            {/* <Button
                 variant="outlined"
                 size="medium"
                 className={classes.custmSubmitBtn}
                 onClick={() => handleSubmit()}
               >
                 Submit
-              </Button>
+              </Button> */}
             <Button variant="outlined" size="medium" className={classes.custmCancelBtn} 
                         onClick={() => handleClose()}
 >Cancel</Button>
