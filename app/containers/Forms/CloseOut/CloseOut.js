@@ -360,7 +360,7 @@ const CloseOut = () => {
                                         "aria-label": "change date",
                                     }}
                                     disableFuture
-
+                                    InputProps={{ readOnly: true }}
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
@@ -420,7 +420,7 @@ const CloseOut = () => {
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
-
+                                    InputProps={{ readOnly: true }}
                                     disableFuture
                                 />
                             </MuiPickersUtilsProvider>

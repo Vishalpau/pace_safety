@@ -842,11 +842,11 @@ module.exports = [
     linkParent: "/",
   },
   {
-    key: "Incidents",
-    name: "Incidents",
+    key: "incident-management",
+    name: "Incident Management",
     icon: "ion-md-warning",
     multilevel: false,
-    linkParent: "/app/pages/incident/",
+    linkParent: "/incidents/",
   },
   {
     key: "assessments",

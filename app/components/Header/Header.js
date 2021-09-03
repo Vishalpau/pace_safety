@@ -116,7 +116,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "13px",
     paddingLeft: "0px",
     paddingRight: "0px",
-    color: "#ffffff",
+    color: "#ffffff !important" ,
+    opacity: 1,
     "& .MuiSvgIcon-root": {
       marginLeft: "4px",
       fontSize: "15px",
@@ -281,9 +282,7 @@ function Header(props) {
   const handleProjectName = async (key) => {
     let selectBreakDown = []
     let data = projectListData[key];
-    await dispatch(projectName(data));
-
-    await dispatch(breakDownDetails(selectBreakDown))
+    
     // await setIsPopUpOpen(true)
     setProjectOpen(false);
     setCompanyOpen(false);
@@ -293,6 +292,9 @@ function Header(props) {
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
+    await dispatch(projectName(data));
+    
+    await dispatch(breakDownDetails(selectBreakDown))
     document.getElementById("open").click()
     // documentElementById("open").click()
     // setAnchorEl(event.currentTarget);
@@ -372,10 +374,10 @@ function Header(props) {
     setBreakdown1ListData(temp)
     if (selectBreakDown.filter(filterItem => filterItem.depth === `${index}L`).length > 0) {
       const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
-      const removeBreakDownList = breakdown1ListData.slice(0, index + 1)
-      removeBreakDownList[index][`selectValue`] = "";
+      temp = breakdown1ListData.slice(0, index)
+      // removeBreakDownList[index][`selectValue`] = "";
 
-      await setBreakdown1ListData(removeBreakDownList)
+      // await setBreakdown1ListData(removeBreakDownList)
 
       let name = breakdown1ListData[index - 1].breakdownValue.map(
         async (item) => {
@@ -426,51 +428,50 @@ function Header(props) {
       );
     }
 
-    if (projectData.projectName.breakdown.length !== index) {
-      for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-              }${value}`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(function (response) {
-              if (response.status === 200) {
+    if(projectData.projectName.breakdown.length !== index){
+    for (var key in projectData.projectName.breakdown) {
+      if (key == index) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${value}`,
+          headers: HEADER_AUTH,
+        };
+        await Axios(config)
+          .then(function (response) {
+            if (response.status === 200) {
 
-                if (
-                  breakdown1ListData.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[index].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  setBreakdown1ListData([
-                    ...breakdown1ListData,
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[index].structure[0]
-                          .name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: value
-                    },
-                  ]);
-                  dispatch(levelBDownDetails([
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[index].structure[0]
-                          .name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: value,
-                      index: index
-                    },
-                  ]))
-                }
+              if (
+                temp.filter(
+                  (item) =>
+                    item.breakdownLabel ===
+                    projectData.projectName.breakdown[index].structure[0].name
+                ).length > 0
+              ) {
+                return;
+              } else {
+                setBreakdown1ListData([
+                  ...temp,
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[index].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: value
+                  },
+                ]);
+                dispatch(levelBDownDetails([
+                  {
+                    breakdownLabel:
+                      projectData.projectName.breakdown[index].structure[0]
+                        .name,
+                    breakdownValue: response.data.data.results,
+                    selectValue: value,
+                    index:index
+                  },
+                ]))
               }
-            })
+          }})
             .catch(function (error) {
 
             });
@@ -580,14 +581,14 @@ function Header(props) {
               clickable
               size="small"
               className={classesm.projectName}
-              disabled={projectDisable}
-
-              onClick={handleCompanyOpen}
+              
+              disabled={projectDisable} 
+              
             >
               {projectData !== null
                 ? projectData.projectName.projectName
                 : null}
-              <EditIcon />
+             {projectDisable?null:<EditIcon onClick={handleCompanyOpen} />} 
             </IconButton>
 
             {/* company selections */}

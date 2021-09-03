@@ -228,19 +228,19 @@ const PeoplesAffected = () => {
 
           if (nextPath.propertyAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/property-affected/${id}`
+              `/incident/${id}/modify/property-affected/`
             );
           } else if (nextPath.equipmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+              `/incident/${id}/modify/equipment-affected/`
             );
           } else if (nextPath.environmentAffect === "Yes") {
             history.push(
-              `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+              `/incident/${id}/modify/environment-affected/`
             );
           } else {
             history.push(
-              `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+              `/incident/${id}/modify/reporting-and-notification/`
             );
           }
         }
@@ -287,19 +287,19 @@ const PeoplesAffected = () => {
 
         if (nextPath.propertyAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/property-affected/${id}`
+            `/incident/${id}/modify/property-affected/`
           );
         } else if (nextPath.equipmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+            `/incident/${id}/modify/equipment-affected/`
           );
         } else if (nextPath.environmentAffect === "Yes") {
           history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+            `/incident/${id}/modify/environment-affected/`
           );
         } else {
           history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+            `/incident/${id}/modify/reporting-and-notification/`
           );
         }
       }
@@ -727,9 +727,7 @@ const PeoplesAffected = () => {
                 <Button
                   onClick={() =>
                     history.push(
-                      `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-                        "fkincidentId"
-                      )}`
+                      `/incident/${id}/modify/`
                     )
                   }
                   variant="contained"
