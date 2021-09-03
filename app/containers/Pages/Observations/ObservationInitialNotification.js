@@ -29,16 +29,22 @@ import InitialNotificationValidator from "../../Validator/Observation/InitialNot
 import FormObservationbanner from "dan-images/addFormObservationbanner.jpg";
 import Avatar from "@material-ui/core/Avatar";
 
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import axios from "axios";
 import Attachment from "../../Attachment/Attachment";
 // import PickListData from "../../../utils/Picklist/InitialPicklist";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import { Comments } from "../../pageListAsync";
 
 
-
+import Type from "../../../styles/components/Fonts.scss";
+import { connect } from 'react-redux'
+import Axios from 'axios'
+import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 
 import {
   access_token,
@@ -134,13 +140,27 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
   },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+    display: 'inline-flex',
+  },
+  buttonProgress: {
+    // color: "green",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const ObservationInitialNotification = () => {
+const filter = createFilterOptions();
+const ObservationInitialNotification = (props) => {
   // class ObservationInitialNotification extends Component {
   // All states are define here. 
   const { id } = useParams();
@@ -164,6 +184,18 @@ const ObservationInitialNotification = () => {
   const [notificationSentValue , setNotificationSentValue] = useState([])
   const [notifyToList, setNotifyToList] = useState([]);
   const [submitLoader , setSubmitLoader] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const timer = React.useRef();
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
+
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [breakdownData, setBreakDownData] = useState([])
+  const [selectValue, setSelectValue] = useState([])
+  const [value, setValue] = React.useState(null);
+
+  const [selectBreakDown, setSelectBreakDown] = useState([]);
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   let filterSuperVisorId = []
   let filterSuperVisorBadgeNo = []
   const radioType = ["Risk", "Comments", "Positive behavior"];
@@ -197,7 +229,6 @@ const ObservationInitialNotification = () => {
   let filterReportedByBedgeID = []
   let filterSuperVisorName = []
   let filterDepartmentName = []
-
   const fetchSuperVisorName = () => {
     let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const config = {
@@ -229,7 +260,7 @@ const ObservationInitialNotification = () => {
   const fetchReportedBy = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -279,7 +310,8 @@ const ObservationInitialNotification = () => {
             // filterReportedById.push(result[i].id);
           }
           // setReportedByName(filterReportedByName);
-          setDepartmentName(filterDepartmentName);
+          // setDepartmentName([...filterDepartmentName , {name : "other"}]);
+          setDepartmentName([...filterDepartmentName , "Others"])
         }
         // else{
         //   window.location.href = {LOGIN_URL}
@@ -301,7 +333,7 @@ const ObservationInitialNotification = () => {
     personRecognition: "",
     observationTitle: "",
     observationDetails: "",
-    isSituationAddressed: "",
+    isSituationAddressed: "Yes",
     isNotifiedToSupervisor: "",
     actionTaken: "",
     location: "",
@@ -334,6 +366,7 @@ const ObservationInitialNotification = () => {
     vendor: "string",
     vendorReferenceId: "string",
   });
+
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([
     {
@@ -411,6 +444,11 @@ const ObservationInitialNotification = () => {
   ]);
   // when click on submit button handleSubmit is called
   const handleSubmit = async () => {
+    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+      return depth;
+    }).join(':')
+    form["fkProjectStructureIds"] = fkProjectStructureId
 
     // if any error then this part is executed
     const { error, isValid } = InitialNotificationValidator(form);
@@ -418,7 +456,7 @@ const ObservationInitialNotification = () => {
     if (!isValid) {
       return "Data is not valid";
     }
-    await setSubmitLoader(true)
+    await handleButtonClick()
      // we are convert form into FormData
     let data = new FormData();
       data.append("fkCompanyId", form.fkCompanyId),
@@ -491,7 +529,7 @@ const ObservationInitialNotification = () => {
 
     }
 
-    history.push(`/app/pages/observation-Summary/${localStorage.getItem("fkobservationId")}`);
+    history.push(`/app/observation/details/${localStorage.getItem("fkobservationId")}`);
   };
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
@@ -512,6 +550,13 @@ const ObservationInitialNotification = () => {
       return;
     }
     setOpen(false);
+  };
+
+  const handleButtonClick = () => {
+    if (!loading) {
+      setLoading(true);
+      
+    }
   };
   
   // this function when user upload the file
@@ -546,7 +591,7 @@ const ObservationInitialNotification = () => {
   const handelAddressSituationYes = async (e) => {
     let tempData = { ...form}
     tempData.isSituationAddressed = e.target.value
-    if (e.target.value === "Yes") {
+    if (tempData.isSituationAddressed === "Yes") {
       await setAddressSituation(true);
     } else if(e.target.value === "No") {
       tempData.actionTaken = ""
@@ -628,6 +673,7 @@ const ObservationInitialNotification = () => {
       await setRiskObservation(false);
     }
     await setForm(result);
+    await fetchBreakDownData(result.fkProjectStructureIds);
   };
 
   const fetchNotificationSent = async () => {
@@ -678,6 +724,214 @@ const ObservationInitialNotification = () => {
     await setAttachment(ar)
   };
 
+  const fetchBreakDownData = async (projectBreakdown) => {
+
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            await setIsLoading(true);
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                ];
+                setFetchSelectBreakDownList(selectBreakDown)
+              }
+            });
+          })
+          .catch((error) => {
+
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key-1].substring(2)}`,
+          headers: HEADER_AUTH,
+        };
+
+        await api(config)
+          .then(async (response) => {
+
+            const result = response.data.data.results;
+  
+            const res = result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                ];
+                setFetchSelectBreakDownList(selectBreakDown)
+              }
+            });
+
+
+          })
+          .catch((error) => {
+            console.log(error)
+            setIsNext(true);
+          });
+      }
+    }
+  };
+
+  const handleBreakdown = async (e, index, label) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const value = e.target.value;
+    let temp = [...breakdown1ListData]
+    setSelectBreakDown(temp)
+    setBreakdown1ListData(temp)
+    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
+      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
+      if (breakDownValue.length > 0) {
+        const removeBreakDownList = temp.slice(0, index - 1)
+        temp = removeBreakDownList
+      } else {
+        const removeBreakDownList = temp.slice(0, index)
+        temp = removeBreakDownList
+      }
+    }
+    if (projectData.projectName.breakdown.length !== index) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+              }${value}`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(function (response) {
+              if (response.status === 200) {
+
+                if (
+                  temp.filter(
+                    (item) =>
+                      item.breakdownLabel ===
+                      projectData.projectName.breakdown[key].structure[0].name
+                  ).length > 0
+                ) {
+                  return;
+                } else {
+                  setBreakdown1ListData([
+                    ...temp,
+                    {
+                      breakdownLabel:
+                        projectData.projectName.breakdown[index].structure[0]
+                          .name,
+                      breakdownValue: response.data.data.results,
+                      selectValue: value,
+                      index: index
+                    },
+                  ]);
+                }
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    } else {
+    }
+  };
+
+  const fetchCallBack = async (select, projectData) => {
+    for (var i in select) {
+      let selectId = select[i].id;
+      let selectDepth = select[i].depth
+      setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
+
+    }
+    if (select !== null ? select.length > 0 : false) {
+      if (projectData.projectName.breakdown.length === select.length) {
+        setBreakdown1ListData([])
+      } else {
+        for (var key in projectData.projectName.breakdown) {
+          if (key == select.length) {
+            try {
+              var config = {
+                method: "get",
+                url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                  }${select[key - 1].id}`,
+                headers: HEADER_AUTH,
+              };
+
+              await Axios(config)
+                .then(async (response) => {
+
+                  await setBreakdown1ListData([
+                    {
+                      breakdownLabel:
+                        projectData.projectName.breakdown[key].structure[0].name,
+                      breakdownValue: response.data.data.results,
+                      selectValue: "",
+                      index: key
+                    },
+                  ]);
+                })
+                .catch(function (error) {
+                });
+            } catch (err) {
+              ;
+            }
+          }
+        }
+      }
+    } else {
+      for (var key in projectData.projectName.breakdown) {
+
+        if (key == 0) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+              }`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(async (response) => {
+
+              await setBreakdown1ListData([
+                {
+                  breakdownLabel:
+                    projectData.projectName.breakdown[0].structure[0].name,
+                  breakdownValue: response.data.data.results,
+                  selectValue: "",
+                  index: 0
+                },
+              ]);
+            })
+            .catch(function (error) {
+            });
+        }
+      }
+    }
+  }
+
+  const handleDepthAndId = (depth, id) => {
+    let newData = [...selectDepthAndId, `${depth}${id}`]
+    console.log(newData)
+    setSelectDepthAndId([... new Set(newData)])
+  }
+
+
   const classes = useStyles();
 
   const PickList = async () => {
@@ -685,12 +939,7 @@ const ObservationInitialNotification = () => {
     await setIsLoading(true);
   };
   useEffect(() => {
-    if (id) {
-      fetchInitialiObservationData();
-      fetchCheckBoxData();
-      fetchSuperVisorName()
-      setFileShow(true)
-    }else{
+    
       fetchTags()
       fetchDepartment()
       fetchAttachment()
@@ -699,8 +948,10 @@ const ObservationInitialNotification = () => {
       fetchSuperVisorName()
       fetchReportedBy()
       PickList()
-    }
-  }, []);
+     
+    
+  }, [props.initialValues.breakDown]);
+  
   return (
     <>
       <PapperBlock
@@ -722,18 +973,27 @@ const ObservationInitialNotification = () => {
                 {project.projectName}
               </Typography>
             </Grid>
-            <Grid item md={12}>
-              <Typography
-                variant="h6"
-                gutterBottom
-                className={classes.labelName}
-              >
-                Unit
-              </Typography>
-              <Typography className={classes.labelValue}>
-                {selectBreakdown !== null ? selectBreakdown.length > 1 ? selectBreakdown[1].name : "-" : "-"}
-              </Typography>
-            </Grid>
+
+            {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
+                <Grid item xs={3} key={key}>
+
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
+                  >
+                    {selectBdown.label}
+                  </Typography>
+
+
+                  <Typography className={Type.labelValue}>
+                    {selectBdown.name}
+                  </Typography>
+                </Grid>
+              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId}/>
+}
+            
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Location*"
@@ -782,6 +1042,7 @@ const ObservationInitialNotification = () => {
             xs={12}
             className={classes.formBox}
           >
+         
             <Autocomplete
                 id="observerdepartment"
                 options={departmentName}
@@ -862,7 +1123,6 @@ const ObservationInitialNotification = () => {
             <Grid item md={6} xs={12} className={classes.formBox}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
-                  value={selectedDate}
                   label="Date & Time*"
                   defaultValue={form.observedAt}
                   disabled={form.id ? true : false}
@@ -875,33 +1135,17 @@ const ObservationInitialNotification = () => {
                   fullWidth
                   disableFuture={true}
                   inputVariant="outlined"
+                  InputProps={{ readOnly: true }}
+                  KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
                   onChange={(e) => {
                     setForm({
                       ...form,
                       observedAt: moment(e).toISOString(),
                     });
                   }}
-                  mask={[
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    "/",
-                    /\d/,
-                    /\d/,
-                    "/",
-                    /\d/,
-                    /\d/,
-                    " ",
-                    /\d/,
-                    /\d/,
-                    ":",
-                    /\d/,
-                    /\d/,
-                    " ",
-                    /a|p/i,
-                    "M",
-                  ]}
+                 
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -1004,7 +1248,7 @@ const ObservationInitialNotification = () => {
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
                 <FormLabel className={classes.labelName} component="legend">
-                  Did you address the situation?
+                  Did you address the situation?*
                 </FormLabel>
                 <RadioGroup
                   row
@@ -1027,7 +1271,7 @@ const ObservationInitialNotification = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            {addressSituation == true ? (
+            {form.isSituationAddressed == "Yes" ? (
               <>
                 <Grid item md={12} xs={12} className={classes.formBox}>
                   <TextField
@@ -1345,36 +1589,27 @@ const ObservationInitialNotification = () => {
                                 "string" ? (
                                 <Attachment value={attachment} />
                               ) : null} */}
-            <Grid item md={12} xs={12}>
-            {submitLoader == false ?
-                <Button
-                  variant="outlined"
+            <Grid item xs={12}>
+            {/* {submitLoader == false ? */}
+            <div className={classes.loadingWrapper}>
+        <Button
+          variant="outlined"
                   onClick={(e) => handleSubmit()}
                   className={classes.custmSubmitBtn}
                   style={{ marginLeft: "10px" }}
-                >
-
-               Submit
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
-              {/* <Button
-                variant="outlined"
-                size="medium"
-                className={classes.custmSubmitBtn}
-                onClick={() => handleSubmit()}
-              >
-                Submit
-              </Button> */}
+                  disabled={loading}
+        >
+          Submit
+        </Button>
+        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+      </div>
+                
               <Button
                 variant="outlined"
                 size="medium"
                 className={classes.custmCancelBtn}
                 onClick={() => {
-                  history.push("/app/pages/observations");
+                  history.push("/app/observations");
                 }}
               >
                 CANCEL
@@ -1389,4 +1624,9 @@ const ObservationInitialNotification = () => {
   );
 };
 
-export default ObservationInitialNotification;
+const observationDetailsInit  = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(ObservationInitialNotification);
+
+
+export default observationDetailsInit;

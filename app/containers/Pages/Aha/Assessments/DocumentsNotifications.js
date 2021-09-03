@@ -139,6 +139,7 @@ const useStyles = makeStyles((theme) => ({
 const DocumentNotification = () => {
   const history = useHistory();
   const attachmentName = useRef("")
+  const [isLoading , setIsLoading] = useState(false);
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -161,8 +162,14 @@ const DocumentNotification = () => {
       data.append("assessmentDate" , ahaform.assessmentDate),
       data.append("permitToPerahaform" ,  ahaform.permitToPerahaform),
       data.append("permitNumber" , ahaform.permitNumber),
-      data.append("ahaNumber" , ahaform.ahaNumber),
-      data.append("ahaAssessmentAttachment" , ahaform.ahaAssessmentAttachment)
+      data.append("ahaNumber" , ahaform.ahaNumber)
+      if (
+        ahaform.ahaAssessmentAttachment !== null &&
+        typeof ahaform.ahaAssessmentAttachment !== "string"
+      ) {
+        data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
+      }
+      // data.append("ahaAssessmentAttachment" , ahaform.ahaAssessmentAttachment)
       data.append("description" ,  ahaform.description),
       data.append("workStopCondition" , ahaform.workStopCondition),
       data.append("department" , ahaform.department),
@@ -172,9 +179,7 @@ const DocumentNotification = () => {
       data.append("notifyTo",ahaform.notifyTo),
       data.append("permitToPerform",ahaform.permitToPerform),
       data.append("wrpApprovalUser", ahaform.wrpApprovalUser),
-      data.append("wrpApprovalDateTime" , ahaform.wrpApprovalDateTime),
       data.append("picApprovalUser" , ahaform.picApprovalUser),
-      data.append("picApprovalDateTime", ahaform.picApprovalDateTime),
       data.append("signedUser" , ahaform.signedUser),
       data.append("signedDateTime" , ahaform.signedDateTime),
       data.append("anyLessonsLearnt" ,ahaform.anyLessonsLearnt),
@@ -258,7 +263,15 @@ const [notifyToList,setNotifyToList] = useState([]);
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const result = res.data.data.results;
+    console.log(result)
+    if(result.ahaAssessmentAttachment !== null ) {
+      const fileName = result.ahaAssessmentAttachment.split('/')
+      const fn = fileName[fileName.length - 1]
+      attachmentName.current = fn
+    }
+    
     await setAHAForm(result);
+    await setIsLoading(true)
   };
 
   console.log(ahaform)
@@ -272,6 +285,7 @@ const [notifyToList,setNotifyToList] = useState([]);
   return (
     <>
                 <PapperBlock title="Documents & Notifications" icon="ion-md-list-box">
+                {isLoading ? (
 
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
@@ -311,7 +325,7 @@ const [notifyToList,setNotifyToList] = useState([]);
             margin="dense"
             name="link"
             id="link"
-            defaultValue=""
+            value = {ahaform.link !== "null" ? ahaform.link : ""}
             fullWidth
             variant="outlined"
             className={classes.formControl}
@@ -335,6 +349,7 @@ const [notifyToList,setNotifyToList] = useState([]);
                 name="checkedI"
                 // onChange={handleChange}
                 // onChange={}
+                checked ={ahaform.notifyTo !== null ? ahaform.notifyTo.includes(value) : ""}
                 onChange={(e) => handleNotification(e , value)}
                 />
             )}
@@ -390,7 +405,7 @@ const [notifyToList,setNotifyToList] = useState([]);
                 selectedItem="Documents & Notifications"
               />
 </Grid>
-    </Grid>
+    </Grid> ): (<h1>Loading...</h1>)}
     </PapperBlock>
     </>
   );

@@ -145,21 +145,39 @@ const ProjectAreaHazards = () => {
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
 
-  const [others , setOther] = useState([
-    {"hazard": "Others",
-    "risk": "",
-    "severity": "",
-    "probability": "",
-    "riskRating": "",
-    "control": "",
-    "residualRisk": "",
-    "approveToImplement": "",
-    "monitor": "",
-    "status": "Active",
-    "createdBy": parseInt(userId),
-    "fkAhaId": localStorage.getItem("fkAHAId"),}
+      const [otherHazards, setOtherHazards] = useState([
+        {
+          "hazard": "",
+          "risk": "",
+          "severity": "",
+          "probability": "",
+          "riskRating": "",
+          "control": "",
+          "residualRisk": "",
+          "approveToImplement": "",
+          "monitor": "",
+          "status": "Active",
+          "createdBy": parseInt(userId),
+          "fkAhaId": localStorage.getItem("fkAHAId")
+        }
+      ])
+
+
+  // const [others , setOther] = useState([
+  //   {"hazard": "",
+  //   "risk": "",
+  //   "severity": "",
+  //   "probability": "",
+  //   "riskRating": "",
+  //   "control": "",
+  //   "residualRisk": "",
+  //   "approveToImplement": "",
+  //   "monitor": "",
+  //   "status": "Active",
+  //   "createdBy": parseInt(userId),
+  //   "fkAhaId": localStorage.getItem("fkAHAId"),}
   
-  ]);
+  // ]);
 
   const [checkGroups , setCheckListGroups] = useState([])
   const checkList = async () => {
@@ -221,41 +239,55 @@ const ProjectAreaHazards = () => {
 
   
  
-  const handleOthers = async (e , key) => {
-    const temp = [...others];
+  const handleOtherHazards = async (e , key) => {
+    const temp = [...otherHazards];
     const value = e.target.value;
-    temp[key]["risk"] = value;
-    setOther(temp);
+    temp[key]["hazard"] = value;
+    setOtherHazards(temp);
 
   }
-  const handelRemove = async (e, index) => {
-    for (let i = 0; i < form.length; i++){
-      if(form[i].hazard === "Others"){
-        const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[index].id}/`)
 
-      }
-    }
+  // const handelRemove = async (e, index) => {
+  //   if (others.length > 1) {
+  //     if (others[index].id !== undefined) {
+  //       const res = await api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${others[index]["id"]}/`);
+  //     }
+  //     let temp = others;
+  //     let newData = others.filter((item, key) => key !== index);
+  //     await setOthers(newData);
+  //   };
+  // }
 
-    if (others.length > 1) {
-      if (others[index].id !== undefined) {
-        // const res = await api.delete(
-        //   `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
-        // );
 
-      }
+  // const handelRemove = async (e, index) => {
+  //   for (let i = 0; i < form.length; i++){
+  //     if(form[i].hazard === "Others"){
+  //       const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[index].id}/`)
 
-      let temp = others;
-      let newData = others.filter((item, key) => key !== index);
+  //     }
+  //   }
+
+  //   if (others.length > 1) {
+  //     if (others[index].id !== undefined) {
+  //       // const res = await api.delete(
+  //       //   `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
+  //       // );
+
+  //     }
+
+  //     let temp = others;
+  //     let newData = others.filter((item, key) => key !== index);
       
-      await setOther(newData);
+  //     await setOther(newData);
     
-  };
+  // };
 
-  }
+  // }
 
   const handleAdd = (e) => {
-    if (Object.keys(others).length < 100) {
-      setOther([...others, {"hazard": "Others",
+    if (Object.keys(otherHazards).length < 100) {
+      setOtherHazards([...otherHazards, {
+        "hazard": "",
       "risk": "",
       "severity": "",
       "probability": "",
@@ -266,9 +298,38 @@ const ProjectAreaHazards = () => {
       "monitor": "",
       "status": "Active",
       "createdBy": parseInt(userId),
-      "fkAhaId": localStorage.getItem("fkAHAId"),}]);
+      "fkAhaId": localStorage.getItem("fkAHAId")
+      }]);
     }
   };
+
+  const handelRemove = async (e, index) => {
+    if (otherHazards.length > 1) {
+      if (otherHazards[index].id !== undefined) {
+        const res = await api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${otherHazards[index]["id"]}/`);
+      }
+      let temp = otherHazards;
+      let newData = otherHazards.filter((item, key) => key !== index);
+      await setOtherHazards(newData);
+    };
+  }
+
+  // const handleAdd = (e) => {
+  //   if (Object.keys(others).length < 100) {
+  //     setOther([...others, {"hazard": "",
+  //     "risk": "",
+  //     "severity": "",
+  //     "probability": "",
+  //     "riskRating": "",
+  //     "control": "",
+  //     "residualRisk": "",
+  //     "approveToImplement": "",
+  //     "monitor": "",
+  //     "status": "Active",
+  //     "createdBy": parseInt(userId),
+  //     "fkAhaId": localStorage.getItem("fkAHAId"),}]);
+  //   }
+  // };
 
   
 
@@ -276,27 +337,37 @@ const ProjectAreaHazards = () => {
 
   const handleSubmit = async (e) => {
     await setSubmitLoader(true)
-    // for(let i = 0; i < form.length; i++){
-    //   if(form[i].id){
-    //     // const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
+    for(let i = 0; i < form.length; i++){
+      if(form[i].id){
+        const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
       
-    //   }else{
-        
-    //   }
-    // } 
-    const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, form)
+      }else{
+        const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,form[i])
+        // const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
+
+            // const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, form)
+
+      }
+    } 
 
     // }
-    // for(let j = 0; j < others.length; j++){
-    //   if(others[j]['risk'] !== null){
-    //     const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,others[j])
-    //   }
-    // }
+    for (let i = 0; i < otherHazards.length; i++) {
+      if (otherHazards[i]["hazard"] != "") {
+        console.log('123')
+        if (otherHazards[i]["id"] == undefined) {
+          
+          const resOther = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`, otherHazards[i])
+        } else {
+          const resOther = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${otherHazards[i]["id"]}/`, otherHazards[i])
+        }
+      }
+    }
+   
     history.push("/app/pages/aha/assessments/assessment")
 
   }
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
+ console.log(otherHazards)
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path}
@@ -357,9 +428,24 @@ bytes
   const handelUpdate = async () => {
     const temp = {}
     // const jhaId = handelJhaId()
+    const otherNoId = []
+    const tempForm = []
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
     const apiData = res.data.data.results.results
-    setForm(apiData)
+    apiData.map((value) => {
+          if (value.fkChecklistId !== 0) {
+            tempForm.push(value)
+          } else {
+            otherNoId.push(value)
+          }
+        })
+        setForm(tempForm)
+      
+    // setForm(apiData)
+    console.log(otherNoId)
+    if (otherNoId.length > 0) {
+      setOtherHazards(otherNoId)
+    }
     apiData.map((value) => {
       if (value.hazard in temp) {
         temp[value.hazard].push(value.risk)
@@ -369,6 +455,35 @@ bytes
     })
     setSelectedOption(temp)
   }
+
+  // const handelUpdate = async () => {
+  //   const temp = {}
+  //   const otherNoId = []
+  //   const tempForm = []
+  //   const jhaId = handelJhaId()
+  //   const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
+  //   const apiData = res.data.data.results.results
+  //   apiData.map((value) => {
+  //     if (value.fkChecklistId !== 0) {
+  //       tempForm.push(value)
+  //     } else {
+  //       otherNoId.push(value)
+  //     }
+  //   })
+  //   setForm(tempForm)
+  //   if (otherNoId.length > 0) {
+  //     setOtherHazards(otherNoId)
+  //   }
+  //   setFetchedOptions(apiData)
+  //   apiData.map((value) => {
+  //     if (value.hazard in temp) {
+  //       temp[value.hazard].push(value.risk)
+  //     } else {
+  //       temp[value.hazard] = [value.risk]
+  //     }
+  //   })
+  //   setSelectedOption(temp)
+  // }
 
 
   const fetchHzardsData = async () => {
@@ -446,7 +561,7 @@ bytes
               </Grid>
             ))}
             
-        {/* <Grid
+        <Grid
         item
         md={12}
         xs={12}
@@ -455,7 +570,7 @@ bytes
         >
         <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
         </Grid>
-        {others.map((value,index ) => (<>
+        {/* {others.map((value,index ) => (<>
 
         <Grid
         item
@@ -487,7 +602,42 @@ bytes
             </IconButton>
         </Grid>):null }
 
-        </> ))}
+        </> ))} */}
+
+        {otherHazards.map((value, index) => (
+              <>
+                <Grid
+                  item
+                  md={6}
+                  xs={11}
+                  className={classes.createHazardbox}
+                >
+                  <TextField
+                    label="Other Hazards"
+                    margin="dense"
+                    name="otherhazards"
+                    id="otherhazards"
+                    fullWidth
+                    variant="outlined"
+                    value={otherHazards[index].hazard || ""}
+                    className={classes.formControl}
+                    onChange={(e) => handleOtherHazards(e, index)}
+                  />
+
+                </Grid>
+                {otherHazards.length > 1 ?
+                  <Grid item md={1} className={classes.createHazardbox}>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => handelRemove(e, index)}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>
+                  : null}
+              </>
+            ))}
 
         
         <Grid item md={12} className={classes.createHazardbox}>
@@ -500,7 +650,7 @@ bytes
             >
                 Add
             </Button>
-        </Grid> */}
+        </Grid>
         <Grid item xs={12}>
                 <Button
                   variant="contained"
