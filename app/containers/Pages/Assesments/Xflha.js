@@ -414,7 +414,7 @@ Create XFLHA
                                 {/* {item[1]["incidentNumber"]} */}
                                 <i className="ion-ios-calendar-outline" />
                                 <span className={Incidents.dateValue}>
-                                  {moment(item[1].dateTimeFlha).format(
+                                  {moment(item[1].createdAt).format(
                                     'Do MMMM YYYY, h:mm:ss a'
                                   )}
                                 </span>
