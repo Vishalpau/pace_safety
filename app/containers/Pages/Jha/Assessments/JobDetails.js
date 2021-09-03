@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
@@ -18,7 +18,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
+  DateTimePicker,
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker
 } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import DateFnsUtils from '@date-io/date-fns';
@@ -29,12 +33,23 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { Col, Row } from "react-grid-system";
 import { useParams, useHistory } from 'react-router';
 import moment from "moment";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { connect } from 'react-redux'
+import Axios from 'axios'
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
 import api from "../../../../utils/axios";
 import { handelJhaId } from "../Utils/checkValue"
+import {
+  INITIAL_NOTIFICATION_FORM,
+  SSO_URL,
+  HEADER_AUTH,
+} from "../../../../utils/constants";
+import Type from "../../../../styles/components/Fonts.scss";
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -107,10 +122,13 @@ const useStyles = makeStyles((theme) => ({
       marginTop: '8px',
     },
   },
+  loader: {
+    marginLeft: "20px"
+  },
   // });
 }));
 
-const JobDetails = () => {
+const JobDetails = (props) => {
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -145,7 +163,7 @@ const JobDetails = () => {
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
       "workArea": "",
       "location": "",
-      "jhaAssessmentDate": "2021-08-20",
+      "jhaAssessmentDate": null,
       "permitToPerform": "",
       "permitNumber": "",
       "jhaNumber": "",
@@ -158,15 +176,6 @@ const JobDetails = () => {
       "supervisorName": "",
       "emergencyNumber": "",
       "evacuationAssemblyPoint": "",
-      "wrpApprovalUser": "",
-      "wrpApprovalDateTime": null,
-      "picApprovalUser": "",
-      "picApprovalDateTime": "2021-08-20T09:01:02.938Z",
-      "signedUser": "",
-      "signedDateTime": "2021-08-20T09:01:02.938Z",
-      "anyLessonsLearnt": "",
-      "lessonLearntDetails": "",
-      "lessonLearntUserName": "",
       "jhaStatus": "",
       "jhaStage": "",
       "badgeNumber": "",
@@ -177,9 +186,25 @@ const JobDetails = () => {
       "vendorReferenceId": ""
     }
   )
+
   const { id } = useParams();
   const history = useHistory();
   const [error, setError] = useState({})
+  const [loading, setLoading] = useState(false)
+  const [submitLoader, setSubmitLoader] = useState(false)
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [breakdownData, setBreakDownData] = useState([])
+
+  // getting breakdown values form header
+  const [headerSelectValue, setHeaderSelectValue] = useState([])
+  // getting breakdown value form page
+  const [pageSlectValue, setPageSelectValue] = useState([])
+
+  const [selectValue, setSelectValue] = useState([])
+
+  const [selectBreakDown, setSelectBreakDown] = useState([]);
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
+  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const radioDecide = ["Yes", "No"]
 
   // fecth jha data
@@ -187,8 +212,8 @@ const JobDetails = () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const result = res.data.data.results;
-    console.log(result)
     await setForm(result)
+    await fetchBreakDownData(result.fkProjectStructureIds)
   }
 
   // fetching jha team data
@@ -196,12 +221,225 @@ const JobDetails = () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const result = res.data.data.results.results
-    console.log(result)
     await setTeamForm(result)
-    console.log(result)
   }
 
-  // fetching company deatils
+  // for phase and unit
+
+  const fetchBreakDownData = async (projectBreakdown) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                ];
+                setFetchSelectBreakDownList(selectBreakDown)
+              }
+            });
+          })
+          .catch((error) => {
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].slice(-1)}`,
+          headers: HEADER_AUTH,
+        };
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            const res = result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                ];
+                setFetchSelectBreakDownList(selectBreakDown)
+              }
+            });
+          })
+          .catch((error) => {
+            setIsNext(true);
+          });
+      }
+    }
+  };
+
+  const handleBreakdown = async (e, index, label) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const value = e.target.value;
+    let temp = [...breakdown1ListData]
+    setSelectBreakDown(temp)
+    setBreakdown1ListData(temp)
+    pageSlectValue.length == 0
+    setPageSelectValue(temp)
+    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
+      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
+      if (breakDownValue.length > 0) {
+        const removeBreakDownList = temp.slice(0, index - 1)
+        temp = removeBreakDownList
+      } else {
+        const removeBreakDownList = temp.slice(0, index)
+        temp = removeBreakDownList
+      }
+    }
+    if (projectData.projectName.breakdown.length !== index) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+              }${value}`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(function (response) {
+              if (response.status === 200) {
+
+                if (
+                  temp.filter(
+                    (item) =>
+                      item.breakdownLabel ===
+                      projectData.projectName.breakdown[key].structure[0].name
+                  ).length > 0
+                ) {
+                  return;
+                } else {
+                  setBreakdown1ListData([
+                    ...temp,
+                    {
+                      breakdownLabel:
+                        projectData.projectName.breakdown[index].structure[0]
+                          .name,
+                      breakdownValue: response.data.data.results,
+                      selectValue: value,
+                      index: index
+                    },
+                  ]);
+                }
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    } else {
+    }
+  };
+
+  const fetchCallBack = async (select, projectData) => {
+    let fecthArray = []
+    for (var i in select) {
+      let selectId = select[i].id;
+      let selectDepth = select[i].depth
+      // setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
+      fecthArray.push(`${selectDepth}${selectId}`)
+    }
+    setHeaderSelectValue(select)
+    setSelectDepthAndId(fecthArray)
+    if (select !== null ? select.length > 0 : false) {
+      if (projectData.projectName.breakdown.length === select.length) {
+        setBreakdown1ListData([])
+      } else {
+        for (var key in projectData.projectName.breakdown) {
+          if (key == select.length) {
+            try {
+              var config = {
+                method: "get",
+                url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                  }${select[key - 1].id}`,
+                headers: HEADER_AUTH,
+              };
+
+              await Axios(config)
+                .then(async (response) => {
+
+                  await setBreakdown1ListData([
+                    {
+                      breakdownLabel:
+                        projectData.projectName.breakdown[key].structure[0].name,
+                      breakdownValue: response.data.data.results,
+                      selectValue: "",
+                      index: key
+                    },
+                  ]);
+                })
+                .catch(function (error) {
+                });
+            } catch (err) {
+              ;
+            }
+          }
+        }
+      }
+    } else {
+      for (var key in projectData.projectName.breakdown) {
+
+        if (key == 0) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+              }`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(async (response) => {
+
+              await setBreakdown1ListData([
+                {
+                  breakdownLabel:
+                    projectData.projectName.breakdown[0].structure[0].name,
+                  breakdownValue: response.data.data.results,
+                  selectValue: "",
+                  index: 0
+                },
+              ]);
+            })
+            .catch(function (error) {
+            });
+        }
+      }
+    }
+  }
+
+  const handleDepthAndId = (depth, id) => {
+    let newData = [...selectDepthAndId, `${depth}${id}`]
+    setSelectDepthAndId([... new Set(newData)])
+  }
+
+  useEffect(() => {
+    // fetchListData();
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const select = props.initialValues.breakDown.length > 0 ? props.initialValues.breakDown
+      : JSON.parse(localStorage.getItem('selectBreakDown'))
+
+    if (select !== null ? select.length === 0 : false) {
+      setBreakdown1ListData([])
+      selectDepthAndId([])
+    }
+    fetchCallBack(select, projectData);
+  }, [props.initialValues.breakDown]);
+
+  // for phase and unit end
 
   const areaName = [
     'P1 - WA1',
@@ -235,12 +473,30 @@ const JobDetails = () => {
     },
   ];
 
+  const handelProjectData = () => {
+    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+      return depth;
+    }).join(':')
+
+    if (headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
+      form["workArea"] = headerSelectValue[headerSelectValue.length - 1]["name"]
+    } else if (pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
+      form["workArea"] = pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["name"]
+    }
+    form["fkProjectStructureIds"] = fkProjectStructureId
+  }
+
   const handleSubmit = async (e) => {
+    setSubmitLoader(true)
     // const { error, isValid } = JobDetailsValidate(form);
     // await setError(error);
     // if (!isValid) {
     //   return "Data is not valid";
     // }
+
+    handelProjectData()
+    delete form["jhaAssessmentAttachment"]
     if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
@@ -269,6 +525,7 @@ const JobDetails = () => {
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
       }
     }
+    setSubmitLoader(false)
   }
 
   const [Teamform, setTeamForm] = useState([{
@@ -277,8 +534,6 @@ const JobDetails = () => {
     "createdBy": parseInt(userId),
     "fkJHAId": 0
   }]);
-
-  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -333,18 +588,90 @@ const JobDetails = () => {
                 Project
               </Typography>
               <Typography className={classes.labelValue}>
-                A23-ERT1236 - NTPC
+                {project.projectName}
               </Typography>
             </Grid>
 
-            <Grid item md={12}>
-              <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Unit
-              </Typography>
-              <Typography className={classes.labelValue}>
-                A23-ERT1236 - NTPC
-              </Typography>
-            </Grid>
+
+            {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
+              <Grid item xs={3} key={key}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                  id="project-name-label"
+                >
+                  {selectBdown.label}
+                </Typography>
+
+                <Typography className={Type.labelValue}>
+                  {selectBdown.name}
+                </Typography>
+              </Grid>
+            ) : selectBreakdown && selectBreakdown.map((selectBreakdown, key) =>
+              <Grid item xs={3} key={key}>
+
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                  id="project-name-label"
+                >
+                  {selectBreakdown.label}
+                </Typography>
+
+                <Typography className={Type.labelValue}>
+                  {selectBreakdown.name}
+                </Typography>
+              </Grid>)}
+
+            {id ? null : breakdown1ListData ? breakdown1ListData.map((item, index) => (
+              <Grid item xs={3}>
+                <FormControl
+                  key={index}
+                  variant="outlined"
+                  fullWidth
+                  required={selectDepthAndId.length === 0 ? true : false}
+                  className={classes.formControl}
+                  error={error && error[`projectStructure`]}
+                >
+                  <InputLabel
+                    id={index}
+                  >
+                    {item.breakdownLabel}
+                  </InputLabel>
+                  <Select
+                    labelId={item.breakdownLabel}
+                    // value={parseInt(item.selectValue)}
+                    onChange={(e) => {
+                      handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
+
+                    }}
+                    label="Phases"
+                    style={{ width: "100%" }}
+                  >
+                    {item.breakdownValue.length
+                      ? item.breakdownValue.map(
+                        (selectValue, selectKey) => (
+                          <MenuItem
+                            key={selectKey}
+                            value={selectValue.id}
+
+                            onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
+                          >
+                            {selectValue.name}
+                          </MenuItem>
+                        )
+                      )
+                      : null}
+                  </Select>
+                  {error && error.projectStructure && (
+                    <FormHelperText>{error.projectStructure}</FormHelperText>
+                  )}
+                </FormControl>
+
+              </Grid>
+            )) : null}
 
             {/* job title */}
             <Grid
@@ -395,23 +722,23 @@ const JobDetails = () => {
               className={classes.formBox}
             >
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDateTimePicker
+                <KeyboardDatePicker
                   className={classes.formControl}
                   fullWidth
-                  label="Date & Time*"
-                  value={form.wrpApprovalDateTime}
+                  id="jha_assessment_date"
+                  label="Date"
+                  format="MM/dd/yyyy"
+                  value={form.jhaAssessmentDate}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      wrpApprovalDateTime: moment(e).toISOString(),
+                      jhaAssessmentDate: moment(e).format("YYYY-MM-DD"),
                     });
                   }}
-                  format="yyyy/MM/dd HH:mm"
-                  inputVariant="outlined"
-
                   inputVariant="outlined"
                   disableFuture="true"
                 />
+
               </MuiPickersUtilsProvider>
             </Grid>
 
@@ -657,7 +984,21 @@ const JobDetails = () => {
               xs={12}
               style={{ marginTop: '15px' }}
             >
-              <Button variant="outlined" size="medium" className={classes.custmSubmitBtn} onClick={(e) => handleSubmit()}>Next</Button>
+              {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Next
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
             </Grid>
           </Grid>
         </Col>
@@ -669,8 +1010,12 @@ const JobDetails = () => {
           />
         </Col>
       </Row>
-    </PapperBlock>
+    </PapperBlock >
   );
 };
 
-export default JobDetails;
+const JhaDetailsInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(JobDetails);
+
+export default JhaDetailsInit;

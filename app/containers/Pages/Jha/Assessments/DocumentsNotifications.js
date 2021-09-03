@@ -18,6 +18,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { useParams, useHistory } from 'react-router';
 import FormControl from '@material-ui/core/FormControl';
 import Box from "@material-ui/core/Box";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -149,6 +150,7 @@ const DocumentNotification = () => {
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState("");
   const [message, setMessage] = useState("");
+  const [submitLoader, setSubmitLoader] = useState(false)
   const ref = useRef();
 
   const handelJobDetails = async () => {
@@ -246,6 +248,7 @@ const DocumentNotification = () => {
   };
 
   const handelNext = async () => {
+    setSubmitLoader(true)
     if (typeof form.jhaAssessmentAttachment == "object" && form.jhaAssessmentAttachment != null) {
       let data = new FormData();
       data.append("fkCompanyId", form.fkCompanyId);
@@ -269,6 +272,7 @@ const DocumentNotification = () => {
     }
     history.push(SUMMARY_FORM["Summary"])
     localStorage.setItem("Jha Status", JSON.stringify({ "assessment": "done" }))
+    setSubmitLoader(false)
   }
 
   useEffect(() => {
@@ -370,14 +374,21 @@ const DocumentNotification = () => {
               >
                 Previous
               </Button>
-              <Button
-                variant="outlined"
-                size="medium"
-                className={classes.custmSubmitBtn}
-                style={{ marginLeft: "10px" }}
-                onClick={(e) => handelNext()}
-              >
-                Submit</Button>
+              {submitLoader == false ?
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handelNext()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                >
+
+                  Submit
+                </Button>
+                :
+                <IconButton className={classes.loader} disabled>
+                  <CircularProgress color="secondary" />
+                </IconButton>
+              }
             </Grid>
           </Grid>
         </Col >

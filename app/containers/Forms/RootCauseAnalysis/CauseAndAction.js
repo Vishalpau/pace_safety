@@ -72,6 +72,10 @@ const BasicCauseAndAction = () => {
   const [incidentDetail, setIncidentDetail] = useState({});
 
   const [data, setData] = useState([]);
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
   const history = useHistory();
 
   const putId = useRef("");
@@ -127,6 +131,21 @@ const BasicCauseAndAction = () => {
     await setData(apiData);
   };
 
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+
+  }
+
   function ListItemLink(props) {
     return (
       <ListItem className={classes.titleLink} button component="a" {...props} />
@@ -158,6 +177,7 @@ const BasicCauseAndAction = () => {
   const handelCallback = async () => {
     await handelShowData();
     await fetchIncidentDetails();
+    await handelActionLink();
   };
 
   useEffect(() => {
@@ -225,9 +245,16 @@ const BasicCauseAndAction = () => {
                     <TableCell align="right">
                       <Typography>
                         {value.action != undefined && value.action.map((actionId) => (
-                          <ActionTrack actionID={actionId}>
+                          <a
+                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId}`}
+                          >
                             {actionId}
-                          </ActionTrack>
+                          </a>
+                          // <ActionTrack
+                          //   href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId}`}
+                          //   actionID={actionId}>
+                          //   {actionId}
+                          // </ActionTrack>
                         ))}
                       </Typography>
                     </TableCell>
