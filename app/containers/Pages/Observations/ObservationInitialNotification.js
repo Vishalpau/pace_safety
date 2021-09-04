@@ -197,6 +197,7 @@ const ObservationInitialNotification = (props) => {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   let filterSuperVisorId = []
+  console.log(selectDepthAndId)
   let filterSuperVisorBadgeNo = []
   const radioType = ["Risk", "Comments", "Positive behavior"];
   const radioSituation = ["Yes", "No"];
@@ -449,7 +450,15 @@ const ObservationInitialNotification = (props) => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
+    if(form["observationType"] === "Positive behavior"){
+      form['stopWork'] = ""
+      form['nearMiss'] = ""
+    }else if(form["observationType"] === "Risk"){
+      form['personRecognition'] = ""
+    }else if(form["observationType"] === "Comments"){
+      form['personRecognition'] = ""
 
+    }
     // if any error then this part is executed
     const { error, isValid } = InitialNotificationValidator(form);
     await setError(error);
@@ -1185,12 +1194,7 @@ const ObservationInitialNotification = (props) => {
                   aria-label="gender"
                   name="gender1"
                   defaultValue={form.observationType}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      observationType: e.target.value,
-                    });
-                  }}
+                  
                 >
                   {radioType.map((value) => (
                     <FormControlLabel
@@ -1198,6 +1202,12 @@ const ObservationInitialNotification = (props) => {
                       className={classes.labelValue}
                       control={<Radio />}
                       label={value}
+                      onClick={(e) => {
+                    setForm({
+                      ...form,
+                      observationType: e.target.value,
+                    });
+                  }}
                     />
                   ))}
                 </RadioGroup>
@@ -1207,7 +1217,135 @@ const ObservationInitialNotification = (props) => {
                                   </FormHelperText>
                                 )}
               </FormControl>
+            </Grid>{console.log(form.observationType)}
+                  {  form['observationType'] === "Risk"  && <>
+            <Grid item md={6} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Stop Work
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.stopWork}
+                  onChange={(e) => {
+                    setForm({ ...form, stopWork: e.target.value });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
             </Grid>
+            <Grid item md={6} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Near Miss
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.nearMiss}
+                  onChange={(e) => {
+                    setForm({ ...form, nearMiss: e.target.value });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid> </> }
+            { form['observationType'] === "Comments"   && <>
+            <Grid item md={6} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Stop Work
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.stopWork}
+                  onChange={(e) => {
+                    setForm({ ...form, stopWork: e.target.value });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item md={6} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Near Miss
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.nearMiss}
+                  onChange={(e) => {
+                    setForm({ ...form, nearMiss: e.target.value });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid> </> }
+            {form.observationType === "Positive behavior" &&
+            <Grid item md={6} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Is this an Employee Recognition?
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.personRecognition}
+                  onChange={(e) => {
+                    setForm({ ...form, personRecognition: e.target.value });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid>}
             <Grid item md={12} xs={12} className={classes.formBox}>
               <TextField
                 label="Short title"
@@ -1326,56 +1464,7 @@ const ObservationInitialNotification = (props) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Stop Work
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.stopWork}
-                  onChange={(e) => {
-                    setForm({ ...form, stopWork: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Near Miss
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.nearMiss}
-                  onChange={(e) => {
-                    setForm({ ...form, nearMiss: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
+            
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
@@ -1405,31 +1494,7 @@ const ObservationInitialNotification = (props) => {
               </FormControl>
             </Grid>
 
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Is this an Employee Recognition?
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.personRecognition}
-                  onChange={(e) => {
-                    setForm({ ...form, personRecognition: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
+            
             {notificationSentValue.map((value,index) =>(
             <Grid
             item
