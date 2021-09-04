@@ -182,7 +182,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-    const res = await api.get("api/v1/incidents/list/");
+    const res = await api.get("api/v1/incidents/");
     const selectBreakdown =props.projectName.breakDown
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -455,7 +455,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                         <Grid item xs={12} md={3}>
                           <Chip
                             variant="outlined"
-                            label="Initial Notification"
+                            label={`Initial Notification${index}`}
                             color="primary"
                             size="small"
                           />

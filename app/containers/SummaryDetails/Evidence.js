@@ -240,15 +240,11 @@ const EvidenceSummary = () => {
                                 {value.evidenceCheck !== "Yes" ? (
                                   "-"
                                 ) : value.evidenceDocument ? (
-                                  <Tooltip
-                                    title={handelFileName(
-                                      value.evidenceDocument
-                                    )}
-                                  >
+                                  
                                     <Attachment
                                       value={value.evidenceDocument}
                                     />
-                                  </Tooltip>
+                                
                                 ) : (
                                   "-"
                                 )}

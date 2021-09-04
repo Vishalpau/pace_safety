@@ -271,7 +271,7 @@ const Summary = (props) => {
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stage investigation")
+      setMessage("Please complete the previous pending stage Investigation")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
@@ -292,16 +292,16 @@ const Summary = (props) => {
   const handelRootCauseAnalysisView = () => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Initial Notification, Investigation & Evidance")
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation & Evidence")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Investigation & Evidance")
+      setMessage("Please complete the previous pending stages Investigation & Evidence")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stage Evidance")
+      setMessage("Please complete the previous pending stage Evidence")
       setMessageType("warning")
     } else if (rcaRecommendedValue.current == "PACE cause analysis") {
       if (paceCauseData == undefined) {
@@ -355,16 +355,16 @@ const Summary = (props) => {
   const handleCloseOutOverView = async => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidance & Root and Cause Analysis")
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence & Root and Cause Analysis")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Investigation, Evidance & Root and Cause Analysis")
+      setMessage("Please complete the previous pending stages Investigation, Evidence & Root and Cause Analysis")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Evidance & Root and Cause Analysis")
+      setMessage("Please complete the previous pending stages Evidence & Root and Cause Analysis")
       setMessageType("warning")
 
     } else if (!paceCauseData && !rootCausesData && !whyData) {
@@ -394,16 +394,16 @@ const Summary = (props) => {
   const handelLessionLearnedView = () => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidance, Root Cause Analysis & Close Out")
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
     }
     else if (investigationOverview == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Investigation, Evidance, Root Cause Analysis & Close Out")
+      setMessage("Please complete the previous pending stages Investigation, Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
       setOpen(true);
-      setMessage("Please complete the previous pending stages Evidance, Root Cause Analysis & Close Out")
+      setMessage("Please complete the previous pending stages Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
     } else if (!paceCauseData && !rootCausesData && !whyData) {
       setOpen(true);

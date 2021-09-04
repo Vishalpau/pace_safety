@@ -142,6 +142,10 @@ const IncidentDetails = (props) => {
 
   // Function called on next button click.
   const handelNext = async (e) => {
+    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+            let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+              return depth;
+            }).join(':')
     // Create case if id is not null and means it is an update case.
     if (isNext) {
       setIsNext(false);
@@ -165,7 +169,7 @@ const IncidentDetails = (props) => {
           id: parseInt(id),
           fkCompanyId: incidentsListData.fkCompanyId,
           fkProjectId: incidentsListData.fkProjectId,
-          fkProjectStructureIds: incidentsListData.fkProjectStructureIds,
+          fkProjectStructureIds: fkProjectStructureId.toString()||incidentsListData.fkProjectStructureIds,
           incidentNumber: incidentsListData.incidentNumber,
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -274,10 +278,7 @@ const IncidentDetails = (props) => {
           setIsNext(true);
         } else {
           if (isValid === true) {
-            const uniqueProjectStructure = [... new Set(selectDepthAndId)]
-            let fkProjectStructureId = uniqueProjectStructure.map(depth => {
-              return depth;
-            }).join(':')
+            
             const formData = {
               fkCompanyId: parseInt(fkCompanyId),
               fkProjectId: parseInt(project.projectId),
@@ -396,7 +397,7 @@ const IncidentDetails = (props) => {
       setOpen(true);
     }
   };
-
+  
   // get data sub-contractor value for dropdown
   const fetchSubContractorValue = async () => {
     try {
@@ -481,7 +482,7 @@ const IncidentDetails = (props) => {
           setForm(temp);
           fetchBreakDownData(temp.fkProjectStructureIds)
           await fetchBreakDownData(result.fkProjectStructureIds)
-          
+
         }
 
         // const user = localStorage.getItem({})
@@ -508,13 +509,64 @@ const IncidentDetails = (props) => {
     }
   };
 
+  const handleBreakdown = async (e, index, label, selectvalue) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    
+    const value = e.target.value;
+    
+    const temp = [...fetchSelectBreakDownList]
+    temp[index-1]["selectValue"].id = value
+    let removeTemp = temp.slice(0, index)
+    await setFetchSelectBreakDownList(removeTemp)
+    if (projectData.projectName.breakdown.length !== index) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+              }${value}`,
+            headers: HEADER_AUTH,
+          };
+          
+          await Axios(config)
+            .then(function (response) {
+              if (response.status === 200) {
+
+                if (
+                  removeTemp.filter(
+                    (item) =>
+                      item.breakdownLabel ===
+                      projectData.projectName.breakdown[index].structure[0].name
+                  ).length > 0
+                ) {
+                  return;
+                } else {
+                  setFetchSelectBreakDownList([
+                    ...removeTemp,
+                    {
+                      breakDownLabel: projectData.projectName.breakdown[index].structure[0].name,
+                      selectValue: {id:value},
+                      breakDownData: response.data.data.results
+                    },
+                  ]);
+                }
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    } 
+  };
+
   const fetchBreakDownData = async (projectBreakdown) => {
 
     const projectData = JSON.parse(localStorage.getItem('projectName'));
 
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
-    
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -530,13 +582,19 @@ const IncidentDetails = (props) => {
             await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
                 ];
-                setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
+            setFetchSelectBreakDownList(selectBreakDown)
           })
           .catch((error) => {
 
@@ -546,7 +604,7 @@ const IncidentDetails = (props) => {
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key-1].substring(2)}`,
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -554,18 +612,22 @@ const IncidentDetails = (props) => {
           .then(async (response) => {
 
             const result = response.data.data.results;
-  
+
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
-                setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
-
+            setFetchSelectBreakDownList(selectBreakDown)
 
           })
           .catch((error) => {
@@ -576,17 +638,20 @@ const IncidentDetails = (props) => {
     }
   };
 
-
-useEffect(()=>{
-  fetchContractorValue();
-  fetchIncidentTypeValue();
-  fetchSubContractorValue();
-  fetchPersonAffectValue();
-  fetchPropertiesValue();
-  fetchEquipmentAffectValue();
-  fetchEnviornmentAffectValue();
-  fetchIncidentsData();
-},[])
+  const handleDepthAndId = (depth, id) => {
+    let newData = [...selectDepthAndId, `${depth}${id}`]
+    setSelectDepthAndId([... new Set(newData)])
+  }
+  useEffect(() => {
+    fetchContractorValue();
+    fetchIncidentTypeValue();
+    fetchSubContractorValue();
+    fetchPersonAffectValue();
+    fetchPropertiesValue();
+    fetchEquipmentAffectValue();
+    fetchEnviornmentAffectValue();
+    fetchIncidentsData();
+  }, [])
 
 
   //  set state for hide sidebar
@@ -599,7 +664,7 @@ useEffect(()=>{
       setHideAffect(newHideAffect);
     }
   };
-  
+
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
@@ -607,7 +672,7 @@ useEffect(()=>{
       {isLoading ? (
         <Row>
           <Col md={9}>
-            <Grid container spacing={3}>        
+            <Grid container spacing={3}>
 
               {/* Project Name */}
               <Grid item xs={3}>
@@ -626,25 +691,43 @@ useEffect(()=>{
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
-              {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-                <Grid item xs={3} key={key}>
-
-                  <Typography
-                    variant="h6"
-                    className={Type.labelName}
-                    gutterBottom
-                    id="project-name-label"
+              {id ? fetchSelectBreakDownList.map((data, key) => <Grid item xs={3} md={3} key={key}>
+                <FormControl
+                  error={error.incidentType}
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="demo-simple-select-label">
+                    {data.breakDownLabel}
+                  </InputLabel>
+                  <Select
+                    labelId="incident-type-label"
+                    id="incident-type"
+                    label="Incident type"
+                    value={data.selectValue.id || ""}
+                    onChange={(e) => {
+                      handleBreakdown(e, key + 1, data.breakDownLabel, data.selectValue);
+                    }}
                   >
-                    {selectBdown.label}
-                  </Typography>
+                    {data.breakDownData.length !== 0
+                      ? data.breakDownData.map((selectvalues, index) => (
+                        <MenuItem key={index} 
+                        onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                        value={selectvalues.id}>
+                          {selectvalues.structureName}
+                        </MenuItem>
+                      ))
+                      : null}
+                  </Select>
+                  {error && error.incidentType && (
+                    <FormHelperText>{error.incidentType}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
 
-
-                  <Typography className={Type.labelValue}>
-                    {selectBdown.name}
-                  </Typography>
-                </Grid>
-              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId}/>
-}
+              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
+              }
               {/* Unit Name */}
 
               {/* Incident Type */}
