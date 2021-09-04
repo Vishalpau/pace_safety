@@ -835,11 +835,11 @@ module.exports = [
   //   ]
   // },
   {
-    key: "home",
-    name: "Home",
-    icon: "ion-ios-home",
+    key: 'home',
+    name: 'Home',
+    icon: 'ion-ios-home',
     multilevel: false,
-    linkParent: "/",
+    linkParent: '/',
   },
   {
     key: "incident-management",
@@ -857,7 +857,7 @@ module.exports = [
       {
         key: 'flha',
         name: 'FLHA',
-        linkParent: "/app/pages/blank-page/",
+        linkParent: "/app/pages/assesments/xflha",
       },
       {
         key: 'aha',
@@ -875,7 +875,7 @@ module.exports = [
     key: "observations",
     name: "Observations",
     icon: 'ion-md-eye',
-    linkParent: '/app/pages/Observations',
+    linkParent: '/app/observations',
   },
   {
 
@@ -892,12 +892,12 @@ module.exports = [
       {
         key: 'check_lists',
         name: 'Check Lists',
-        linkParent: '#',
+        linkParent: '/app/checkList/checkList',
       },
       {
         key: 'xflha_setting',
         name: 'X-FLHA Setting',
-        linkParent: '#',
+        linkParent: '/app/pages/assesments/FlhaConfig',
       },
       {
         key: 'setting',
@@ -906,6 +906,7 @@ module.exports = [
       },
     ],
   },
+
   // {
   //   key: "menu-level",
   //   name: "Incident",

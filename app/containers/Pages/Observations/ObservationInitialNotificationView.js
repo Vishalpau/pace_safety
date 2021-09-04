@@ -343,7 +343,7 @@ bytes
               Observation Title
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.observationTitle}
+                    {initialData.observationTitle ? initialData.observationTitle : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -351,7 +351,7 @@ bytes
             Observation Type
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.observationType}
+                    {initialData.observationType ? initialData.observationType : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -359,7 +359,7 @@ bytes
               Observation Description
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.observationDetails}
+                    {initialData.observationDetails ? initialData.observationDetails : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -376,7 +376,7 @@ bytes
               Observed By
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData.reportedByName},{initialData.reportedByBadgeId}
+            {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : ""}
           </Typography>
         </Grid>
         <Grid item md={6}>
@@ -384,7 +384,7 @@ bytes
               Observer Department
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData.reportedByDepartment}
+            {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
           </Typography>
         </Grid>
         <Grid item md={6}>
@@ -422,7 +422,7 @@ bytes
               Supervisor details
           </Typography>
           <Typography className={classes.labelValue}>
-                   {initialData.supervisorName},{initialData.supervisorByBadgeId}
+                   {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" ? "" : initialData.supervisorByBadgeId}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -430,7 +430,7 @@ bytes
             Location
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.location}
+                    {initialData.location ? initialData.location : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -438,7 +438,7 @@ bytes
           Classification
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.observationClassification}
+                    {initialData.observationClassification ? initialData.observationClassification : "-"}
           </Typography>
         </Grid>
         {/* <Grid item md={12}>
@@ -454,7 +454,7 @@ bytes
             Stop Work
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.stopWork}
+                    {initialData.stopWork ? initialData.stopWork : "-" }
           </Typography>
         </Grid>
         <Grid item md={6}>
@@ -462,7 +462,7 @@ bytes
             Near Miss
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData.nearMiss}
+            {initialData.nearMiss ? initialData.nearMiss : "-"}
           </Typography>
         </Grid>
           {initialData.personRecognition !== "" ?
@@ -471,7 +471,7 @@ bytes
             Recognition
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.personRecognition}
+                    {initialData.personRecognition ? initialData.personRecognition : "-"}
           </Typography>
         </Grid> : null}
         <Grid item md={12}>
@@ -489,7 +489,7 @@ bytes
             Notification sent to Safety Management
           </Typography>
           <Typography className={classes.labelValue}>
-          {initialData.isNotifiedToSupervisor}
+          {initialData.isNotifiedToSupervisor ? initialData.isNotifiedToSupervisor : "-"}
           
           </Typography>
         </Grid>
@@ -515,7 +515,7 @@ bytes
             Assignee
           </Typography>
           <Typography className={classes.labelValue}>
-           {initialData.assigneeName}
+           {initialData.assigneeName ? initialData.assigneeName : "-"}
           </Typography>
         </Grid>
         {/* <Grid item md={12}>

@@ -24,6 +24,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import { useHistory, useParams } from "react-router";
+import Link from '@material-ui/core/Link';
+import axios from "axios";
 
 // Styles
 import api from "../../utils/axios";
@@ -52,12 +54,17 @@ const RootCauseAnalysisSummary = () => {
   const [fiveWhy, setFiveWhy] = useState([]);
   const [causeanalysis, setCauseAnalysis] = useState([]);
   const [pacecauses, setPaceCauses] = useState([]);
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [additionalDetails, setAdditonalDetails] = useState([]);
   const [additionalRcaSubType, setAdditionalRcaSubType] = useState([
     "managementControl",
     "reasonsSupportAbove",
   ]);
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
+
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -94,14 +101,6 @@ const RootCauseAnalysisSummary = () => {
       `/api/v1/incidents/${fkid}/pacecauses/`
     );
     let paceData = allPaceCauses.data.data.results;
-    if (
-      typeof paceData[0] !== "undefined" &&
-      paceData[0].rcaSubType === "regionSupportAbove"
-    ) {
-      await setPaceCauses(paceData.reverse());
-    } else {
-      await setPaceCauses(paceData);
-    }
     let temp = [];
     paceData.map((value) => {
       if (additionalRcaSubType.includes(value.rcaSubType)) {
@@ -109,7 +108,52 @@ const RootCauseAnalysisSummary = () => {
       }
     });
     setAdditonalDetails(temp);
+    handelActionTracker(paceData)
   };
+
+  const handelActionTracker = async (apiData) => {
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    let incidentID = localStorage.getItem("fkincidentId")
+    for (let key in apiData) {
+      const allActionTrackerData = await api_action.get(
+        `api/v1/actions/?enitityReferenceId__startswith=${incidentID}%3A${apiData[key]["id"]
+        }`
+      );
+      if (allActionTrackerData.data.data.results.results.length > 0) {
+        let actionTracker = allActionTrackerData.data.data.results.results;
+        const temp = [];
+        actionTracker.map((value) => {
+          const tempAction = {}
+          let actionTrackerId = value.id;
+          let actionTrackerNumber = value.actionNumber
+          tempAction["number"] = actionTrackerNumber
+          tempAction["id"] = actionTrackerId
+          temp.push(tempAction);
+        });
+        apiData[key]["action"] = temp;
+      } else {
+        apiData[key]["action"] = [];
+      }
+    }
+    await setPaceCauses(apiData);
+  };
+
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+  }
 
   const handelConvert = (value) => {
     let wordArray = value.split(/(?=[A-Z])/);
@@ -145,6 +189,7 @@ const RootCauseAnalysisSummary = () => {
     fetchFiveWhyData();
     fetchCauseAnalysiseData();
     fetchPaceCausesData();
+    handelActionLink()
   }, []);
 
   const classes = useStyles();
@@ -357,7 +402,15 @@ const RootCauseAnalysisSummary = () => {
                           <TableCell className={classes.tabelBorder}>
                             {handelStringToArray(pc.rcaRemark)}
                           </TableCell>
-                          <TableCell className={classes.tabelBorder}>Action num</TableCell>
+                          <TableCell className={classes.tabelBorder}>
+                            {pc.action != undefined && pc.action.map((actionId) => (
+                              <Link display="block"
+                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
+                              >
+                                {actionId.number}
+                              </Link>
+                            ))}
+                          </TableCell>
                         </TableRow>
                       ) : null
                     )}

@@ -382,8 +382,15 @@ const EventDetails = () => {
             <Grid container item xs={12} md={9} spacing={3}>
               {/* activity */}
               <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Activity*</InputLabel>
+                <FormControl
+                  error={
+                    error && error.activity
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Activity</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -414,8 +421,15 @@ const EventDetails = () => {
 
               {/* job task */}
               <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Job task*</InputLabel>
+                <FormControl
+                  error={
+                    error && error.jobTask
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Job task</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -607,8 +621,15 @@ const EventDetails = () => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Fluid type*</InputLabel>
+                <FormControl
+                  error={
+                    error && error.spillsFluidType
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Fluid type</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
