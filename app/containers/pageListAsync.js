@@ -643,6 +643,47 @@ export const ShowCheckList = loadable(() =>
   import("./Pages/CheckList/ShowCheckList"), {
   fallback: <Loading />,
 });
+// XFLHA
+
+export const Xflha = loadable(() => import("./Pages/Assesments/Xflha"), {
+  fallback: <Loading />,
+});
+
+export const FlhaSummary = loadable(() => import("./Pages/Assesments/FlhaSummary"), {
+  fallback: <Loading />,
+});
+
+export const PreventiveControls = loadable(() => import("./Pages/Assesments/PreventiveControls"), {
+  fallback: <Loading />,
+});
+
+export const FlhaAdd = loadable(() => import("./Pages/Assesments/FlhaAdd"), {
+  fallback: <Loading />,
+});
+
+export const FlhaEdit = loadable(() => import("./Pages/Assesments/FlhaEdit"), {
+  fallback: <Loading />,
+});
+
+export const FlhaRevision = loadable(() => import("./Pages/Assesments/FlhaRevision"), {
+  fallback: <Loading />,
+});
+
+export const IsolationControl = loadable(() => import("./Pages/Assesments/IsolationControl"), {
+  fallback: <Loading />,
+});
+
+export const EnergyControl = loadable(() => import("./Pages/Assesments/EnergyControl"), {
+  fallback: <Loading />,
+});
+
+export const AuditCheck = loadable(() => import("./Pages/Assesments/AuditCheck"), {
+  fallback: <Loading />,
+});
+
+export const AssessmentCloseOut = loadable(() => import("./Pages/Assesments/CloseOut"), {
+  fallback: <Loading />,
+});
 
 // XFLHA Config
 export const FlhaConfig = loadable(() => import("./pages/assesments/FlhaConfig"), {

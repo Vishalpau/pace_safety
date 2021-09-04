@@ -64,7 +64,9 @@ import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import ControlCameraOutlinedIcon from '@material-ui/icons/ControlCameraOutlined';
 import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import { CreateNewFolderSharp } from '@material-ui/icons';
+import { useHistory, useParams } from 'react-router';
+import api from '../../../utils/axios';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -161,7 +163,6 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'flex-start',
     },
   },
-
   spacerRight: {
     marginRight: '.75rem',
   },
@@ -373,8 +374,9 @@ const top100Films = [
   { title: 'Inception', year: 2010 },
   { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
 ];
-const FlhaDetails = () => {
+const FlhaEdit = (props) => {
   const classes = useStyles();
+  const history = useHistory();
   const [selectedDate, setSelectedDate] = React.useState(
     new Date('2014-08-18T21:11:54')
   );
@@ -405,6 +407,243 @@ bytes
 
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState('paper');
+  const [jobTitles, setjobTitles] = React.useState([]);
+  const [jobForm, setJobForm] = React.useState({
+    fkCompanyId: '',
+    fkProjectId: '',
+    jobTitle: '',
+    jobDetails: '',
+    location: '',
+    supervisor: '',
+    fieldContractor: '',
+    firstAid: '',
+    jhaReviewed: '',
+    accessToJobProcedure: '',
+    emergencyPhoneNumber: '',
+    evacuationPoint: '',
+    meetingPoint: '',
+    department: '',
+    permitToWork: '',
+    permitToWorkNumber: '',
+    dateTimeFlha: null,
+    referenceGroup: '',
+    referenceNumber: '',
+    classification: '',
+  });
+  const [hazardForm, setHazardForm] = React.useState([
+    {
+      hazards: '',
+      riskSeverity: '',
+      riskProbability: '',
+      control: '',
+      hazardStatus: '',
+      controlStatus: '',
+      hazards: '',
+      control: '',
+      // taskIdentification: "",
+      // evidenceDocument: null,
+      // status: "Active",
+      // createdBy: parseInt(userId),
+      // updatedBy: parseInt(userId),
+      // fkIncidentId: localStorage.getItem(""),
+    },
+  ]);
+
+  const [taskForm, setTaskForm] = React.useState([
+    {
+      taskIdentification: '',
+      riskRatingLevel: '',
+      rivisionReason: '',
+      revisionTime: null,
+      version: '',
+      createdBy: '',
+      hazards: [
+        {
+          hazards: '',
+          riskSeverity: '',
+          riskProbability: '',
+          control: '',
+          hazardStatus: '',
+          controlStatus: '',
+        }
+      ],
+    },
+  ]);
+
+  const [flha, setFlha] = React.useState('');
+  const [flhaDetails, setFlhaDetails] = React.useState({});
+  const [criticalTasks, setCriticalTasks] = React.useState([]);
+
+  const handleNewHazard = async (e, index) => {
+    const temp = [...taskForm];
+    temp[index].hazards.push({
+      hazards: '',
+      riskSeverity: '',
+      riskProbability: '',
+      control: '',
+      hazardStatus: '',
+      controlStatus: '',
+    });
+    console.log({ temp });
+    await setTaskForm(temp);
+  };
+
+  const handleJobFormChange = async (e, fieldname) => {
+    console.log(jobForm);
+
+    const temp = { ...jobForm };
+    const { value } = e.target;
+
+    console.log({ value });
+    temp[fieldname] = value;
+
+    console.log({ temp });
+    await setJobForm(temp);
+  };
+
+  const handleRiskChange = (e, key, taskIndex, fieldname) => {
+    const temp = [...taskForm];
+    temp[taskIndex].hazards[key][fieldname] = e.target.value;
+
+    const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverity == undefined || temp[taskIndex].hazards[key].riskSeverity == '') ? 1 : temp[taskIndex].hazards[key].riskSeverity);
+    const riskProbability = ((temp[taskIndex].hazards[key].riskProbability == undefined || temp[taskIndex].hazards[key].riskProbability == '') ? 1 : temp[taskIndex].hazards[key].riskProbability);
+    console.log({ riskSeverity });
+    console.log({ riskSeverity: riskProbability });
+    const riskRating = riskSeverity * riskProbability;
+    // alert(riskRating)
+
+    if (riskRating >= 1 && riskRating <= 4) {
+      // alert("low")
+      temp[taskIndex].hazards[key].riskRating = 'Low';
+      temp[taskIndex].hazards[key].riskRatingColour = '#1EBD10';
+    } else if (riskRating > 4 && riskRating <= 9) {
+      // alert("medium")
+      temp[taskIndex].hazards[key].riskRating = 'Medium';
+      temp[taskIndex].hazards[key].riskRatingColour = '#FFEB13';
+    } else if (riskRating > 9 && riskRating <= 14) {
+      // alert("serious")
+      temp[taskIndex].hazards[key].riskRating = 'Serious';
+      temp[taskIndex].hazards[key].riskRatingColour = '#F3C539';
+    } else {
+      // alert("high")
+      temp[taskIndex].hazards[key].riskRating = 'High';
+      temp[taskIndex].hazards[key].riskRatingColour = '#FF0000';
+    }
+
+    console.log({ updated: temp });
+    setTaskForm(temp);
+  };
+
+
+  const handleHazardForm = async (e, key, taskIndex, fieldname) => {
+    console.log(fieldname);
+    const temp = [...taskForm];
+    // const hazardTemp = [...hazardForm]
+    const { value } = e.target;
+
+    if (key == undefined) {
+      temp[taskIndex][fieldname] = value;
+    } else {
+      if (temp[taskIndex].hazards[key] == undefined) {
+        temp[taskIndex].hazards[0] = [];
+        key = 0;
+      }
+      temp[taskIndex].hazards[key][fieldname] = value;
+    }
+
+    // console.log({hazard:hazardTemp})
+    console.log({ temp });
+    await setTaskForm(temp);
+  };
+
+  const handleSelectedJobHazardForm = async (tasks) => {
+    // alert("In setting up form")
+    console.log({ hazardForm });
+    console.log({ tasks });
+    // const temp = {}
+    const temp = [];
+    const temp1 = tasks.map((task, index) => {
+      console.log({ task: task.hazards });
+      temp[index] = {};
+      temp[index].taskIdentifications = task.taskIdentification;
+      temp[index].hazards = task.hazards;
+      return temp;
+    });
+    console.log({ temp });
+    console.log({ temp1 });
+
+    await setTaskForm(temp);
+    console.log({ taskForm });
+
+    await setHazardForm(temp1.hazards);
+    console.log({ hazardForm });
+  };
+
+
+  const handleJobFormSubmit = async () => {
+    await createCriticalTask(props.match.params.id);
+  };
+
+  const selectBreakdown = JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+    ? JSON.parse(localStorage.getItem('selectBreakDown'))
+    : null;
+  let struct = '';
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+  const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+    .projectName.projectId;
+  const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
+
+  // const createFlha = async() => {
+  //   const flhaId = props.match.params.id
+  //   const data = [...taskForm]
+  //   // data['fkCompanyId'] = fkCompanyId
+  //   // data['fkProjectId'] = fkProjectId
+  //   // data['fkProjectStructureIds'] = fkProjectStructureIds
+  //   // data['createdBy'] = fkUserId
+  //   console.log({jobform: data})
+  //   const res = await api.post(
+  //     '/api/v1/flhas/'+flhaId+'/criticaltasks/',
+  //     taskForm
+  //   );
+  //   console.log(res.data.data.results.id)
+  //   await setFlha(res.data.data.results.id)
+
+  //   await createCriticalTask(res.data.data.results.id)
+  // }
+
+  const createCriticalTask = async (flha) => {
+    const data = taskForm;
+    console.log({ 'in submit': data });
+    // data['fkFlhaId'] = flha
+
+    const flhaData = data.map((flhaDetail, index) => {
+      console.log({ flha: data });
+      data[index].fkFlhaId = flha;
+      data[index].createdBy = fkUserId;
+      console.log({ updatedData: data });
+    });
+    console.log({ data });
+    const res = await api.post(
+      `/api/v1/flhas/${flha}/criticaltasks/`,
+      taskForm
+    );
+    history.push('/app/pages/assesments/flhasummary/' + props.match.params.id);
+    console.log({ criticalpost: res.data.data.results });
+
+    // await createVisualConfirmation(flha)
+  };
+
+  // const createVisualConfirmation = async(flha) => {
+  //   alert(flha)
+  // }
+
+  // const handleChangeHazardStatus = async(e, key, fieldname) => {
+
+  // }
 
   const handleClickOpen = (scrollType) => () => {
     setOpen(true);
@@ -417,13 +656,45 @@ bytes
 
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
+    getFlhaDetails(props.match.params.id);
+    getPreventiveControls(props.match.params.id);
+  }, []);
+
+  const getFlhaDetails = async (flhaId) => {
+    const flhaNumber = flhaId;
+    const res = await api.get('api/v1/flhas/' + flhaNumber + '/');
+
+    await setFlhaDetails(res.data.data.results);
+    console.log({ flhares: res.data.data.results });
+    console.log({ flhastate: flhaDetails });
+  };
+
+  const getPreventiveControls = async (flhaId) => {
+    const res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
+
+    await setCriticalTasks(res.data.data.results.tasks);
+
+
+    await handleSelectedJobHazardForm(res.data.data.results.tasks);
+
+    console.log({ controres: res.data.data.results.tasks });
+    console.log({ controls: criticalTasks });
+  };
+
+
+  const handleJobSelection = async (jobTitleId) => {
+    const res = await api.get('api/v1/configflhas/jobtitles/' + jobTitleId + '/');
+    const selectedJobTitle = res.data.data.results;
+    console.log({ jobtitleseleted: selectedJobTitle });
+    setJobForm(
+      {
+        jobTitle: selectedJobTitle.jobTitle, jobDetails: selectedJobTitle.jobDetail,
       }
-    }
-  }, [open]);
+    );
+    await handleSelectedJobHazardForm(selectedJobTitle.critical_tasks);
+    setOpen(false);
+    // setjobTitles(res.data.data.results.results)
+  };
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -436,10 +707,14 @@ bytes
     setExpanded(isExpanded ? panel : false);
   };
 
+
   const [expanded1, setExpanded1] = React.useState(false);
   const handleOneChange = (panell) => (event, isExpanded1) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
+
+
+  // console.log({flharender: flhaDetails})
 
   return (
     <div>
@@ -462,105 +737,20 @@ bytes
 Job information
                     </Typography>
                   </Grid>
-                  {/* <Grid item xs={12}>
-                  <Button variant="outlined" onClick={handleClickOpen('paper')}>Select Job <FindInPageOutlinedIcon className={classes.plFive} /></Button>
-                </Grid> */}
+
                   <Grid item xs={10}>
-                    <TextField
-                      multiline
-                      variant="outlined"
-                      rows="1"
-                      id="JobTitle"
-                      label="*Title"
-                      className={classes.fullWidth}
-                    />
+                    <Typography variant="h6" />
+                    <FormLabel component="legend">Job Title</FormLabel>
+                    <Typography>
+                    JobTitle data here
+                    </Typography>
                   </Grid>
                   <Grid item xs={2}><img src={project} height={58} alt="" className={classes.mttopSix} /></Grid>
-                  <div>
-                    <Dialog
-                      open={open}
-                      onClose={handleClose}
-                      scroll={scroll}
-                      aria-labelledby="scroll-dialog-title"
-                      aria-describedby="scroll-dialog-description"
-                      className={classes.jobTitle}
-                    >
-                      <DialogTitle id="scroll-dialog-title">Select job title</DialogTitle>
-                      <Box padding={2}>
-                        <Grid container spacing={3}>
-
-                          {/* <Grid item md={6} sm={6} xs={12}>
-                      <Autocomplete
-                        id="job-title"
-                        className={classes.mtTen}
-                        options={top100Films}
-                        getOptionLabel={(option) => option.title}
-                        renderInput={(params) => <TextField {...params} label="Search job" variant="outlined" />}
-                      />
-                    </Grid> */}
-
-                          <Grid item md={6} sm={6} xs={12}>
-                            <div className={classes.spacer}>
-                              <Autocomplete
-                                id="department"
-                                className={classes.mtTen}
-                                options={top100Films}
-                                getOptionLabel={(option) => option.title}
-                                renderInput={(params) => <TextField {...params} label="department" variant="outlined" />}
-                              />
-                            </div>
-                          </Grid>
-
-                        </Grid>
-                      </Box>
-                      <DialogContent dividers={scroll === 'paper'}>
-                        <DialogContentText
-                          id="scroll-dialog-description"
-                          ref={descriptionElementRef}
-                          tabIndex={-1}
-                        >
-                          <Grid container spacing={3}>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                            <Grid item xs={3}><Tooltip title="Task#1 - Job details" placement="bottom"><img src={project} alt="decoration" /></Tooltip></Grid>
-                          </Grid>
-                        </DialogContentText>
-                      </DialogContent>
-                      <Box padding={3}>
-                        <Grid item md={12} sm={12} xs={12}>
-                        Selected job project here
-                        </Grid>
-                      </Box>
-
-                      <Grid item md={6} sm={6} xs={12} className={classes.popUpButton}>
-                        <DialogActions>
-                          <Button onClick={handleClose} color="primary" variant="contained">
-                        Select
-                          </Button>
-                          <Button onClick={handleClose} color="secondary" variant="contained">
-                        Cancel
-                          </Button>
-                        </DialogActions>
-                      </Grid>
-
-                    </Dialog>
-                  </div>
-
                   <Grid item xs={12}>
-                    <TextField
-                      multiline
-                      variant="outlined"
-                      rows="2"
-                      id="description"
-                      label="*Details"
-                      className={classes.fullWidth}
-                    />
+                    <FormLabel component="legend">Description</FormLabel>
+                    <Typography>Duumy content here for description so need a text here. Duumy content here for description so need a text here Duumy content here for description so need a text here. Duumy content here for description so need a text here.</Typography>
                   </Grid>
+                  <Divider className={classes.divider} />
                   <Divider className={classes.divider} />
                   <Grid item xs={12}>
                     <Box padding={0}>
@@ -583,676 +773,218 @@ Critical tasks
 
                       <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
                         <div>
-                          <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel1bh-content"
-                              id="panel1bh-header"
-                              className={classes.headingColor}
-                            >
-                              <Typography className={classes.heading}>
-                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
-                                {' '}
+                          {taskForm.map((taskValue, taskIndex) => (
+                          // console.log({taskvalue: taskValue})
+                            <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                                className={classes.headingColor}
+                              >
+                                <Typography className={classes.heading}>
+                                  <MenuOpenOutlinedIcon className={classes.headingIcon} />
+                                  {' '}
 Task#1 - "Task identification"
-                              </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Grid item sm={12} xs={12}>
-                                <TextField
-                                  multiline
-                                  variant="outlined"
-                                  rows="1"
-                                  id="description"
-                                  label="*Task Identification"
-                                  className={classes.fullWidth}
-                                />
-                              </Grid>
-                              <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
-                                <AccordionSummary
-                                  expandIcon={<ExpandMoreIcon />}
-                                  aria-controls="panel2bh-content"
-                                  id="panel2bh-header"
-                                  className={classes.headingColor}
-                                >
-                                  <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>
-                                  <Typography className={classes.secondaryHeading}>
-                                    <Fab
-                                      color="secondary"
-                                      size="small"
-                                      align="right"
-                                      height={30}
-                                      width={30}
-                                      aria-label="remove"
-                                      className={classNames(classes.button, classes.mRight)}
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Grid item sm={12} xs={12}>
+                                  <TextField
+                                    multiline
+                                    variant="outlined"
+                                    rows="1"
+                                    id="taskIdentification"
+                                    label="*Task Identification"
+                                    className={classes.fullWidth}
+                                    value={(taskValue.taskIdentifications != undefined) ? taskValue.taskIdentifications : ''}
+                                    onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
+                                    }
+                                  />
+                                </Grid>
+                                {taskValue.hazards.map((item, index) => (
+                                // console.log({item: item})
+                                  <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
+                                    <AccordionSummary
+                                      expandIcon={<ExpandMoreIcon />}
+                                      aria-controls="panel2bh-content"
+                                      id="panel2bh-header"
+                                      className={classes.headingColor}
                                     >
-                                      <RemoveIcon />
-                                    </Fab>
-                                  </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                  <Grid container spacing={0}>
-                                    <Grid item sm={11} xs={8}>
-                                      <FormControl
-                                        variant="outlined"
-                                        requirement
-                                        className={classes.formControl}
-                                      >
-                                        <InputLabel id="demo-simple-select-label">
+                                      <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>
+                                      <Typography className={classes.secondaryHeading}>
+                                        <Fab
+                                          color="secondary"
+                                          size="small"
+                                          align="right"
+                                          height={30}
+                                          width={30}
+                                          aria-label="remove"
+                                          className={classNames(classes.button, classes.mRight)}
+                                        >
+                                          <RemoveIcon />
+                                        </Fab>
+                                      </Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                      <Grid container spacing={0}>
+                                        <Grid item sm={11} xs={8}>
+                                          <FormControl
+                                            variant="outlined"
+                                            requirement
+                                            className={classes.formControl}
+                                          >
+                                            <InputLabel id="demo-simple-select-label">
                                     *Hazards
-                                        </InputLabel>
-                                        <Select
-                                          labelId="incident-type-label"
-                                          id="incident-type"
-                                          label="Incident Type"
-                                        >
-                                          <MenuItem>One</MenuItem>
-                                          <MenuItem>One</MenuItem>
-                                          <MenuItem>One</MenuItem>
-                                          <MenuItem>One</MenuItem>
-                                        </Select>
-                                      </FormControl>
-                                      <div className={classes.spacer}>
-                                        <FormControl component="fieldset">
-                                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                                          </RadioGroup>
-                                        </FormControl>
-                                      </div>
-                                    </Grid>
-                                    <Grid item sm={1} xs={4}>
-                                      <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
-                                    </Grid>
-                                    <Grid container spacing={2}>
-                                      <Grid item sm={12} xs={12}>
-                                        <TextField
-                                          multiline
-                                          variant="outlined"
-                                          rows="3"
-                                          id="description"
-                                          label="*Control"
-                                          className={classes.fullWidth}
-                                        />
-                                        <div className={classes.spacer}>
-                                          <FormControl component="fieldset">
-                                            <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                              <FormControlLabel value="No" control={<Radio />} label="No" />
-                                              <FormControlLabel value="No" control={<Radio />} label="NA" />
-                                            </RadioGroup>
+                                            </InputLabel>
+                                            <TextField
+                                              multiline
+                                              variant="outlined"
+                                              rows="3"
+                                              id="hazards"
+                                              // label="*Hazards"
+                                              className={classes.fullWidth}
+                                              value={item.hazards}
+                                              onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazards')
+                                              }
+                                            />
                                           </FormControl>
-                                        </div>
-                                      </Grid>
-                                    </Grid>
-                                    <Grid container spacing={1}>
-                                      <Grid item md={4} sm={4} xs={12}>
-                                        <FormControl
-                                          variant="outlined"
-                                          requirement
-                                          className={classes.formControl}
-                                        >
-                                          <InputLabel id="demo-simple-select-label">
+                                          <div className={classes.spacer}>
+                                            <FormControl component="fieldset">
+                                              <FormLabel component="legend">
+                                          Hazard Status
+                                              </FormLabel>
+                                              <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazardStatus')}>
+                                                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                                <FormControlLabel value="No" control={<Radio />} label="No" />
+                                              </RadioGroup>
+                                            </FormControl>
+                                          </div>
+                                        </Grid>
+                                        <Grid item sm={1} xs={4}>
+                                          <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
+                                        </Grid>
+                                        <Grid container spacing={2}>
+                                          <Grid item sm={12} xs={12}>
+                                            <TextField
+                                              multiline
+                                              variant="outlined"
+                                              rows="3"
+                                              id="description"
+                                              label="*Control"
+                                              className={classes.fullWidth}
+                                              value={item.control}
+                                              onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
+                                              }
+                                            />
+                                            <div className={classes.spacer}>
+                                              <FormControl component="fieldset">
+                                                <FormLabel component="legend">
+                                            Control Status
+                                                </FormLabel>
+                                                <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
+                                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                                  <FormControlLabel value="No" control={<Radio />} label="No" />
+                                                  <FormControlLabel value="No" control={<Radio />} label="NA" />
+                                                </RadioGroup>
+                                              </FormControl>
+                                            </div>
+                                          </Grid>
+                                        </Grid>
+                                        <Grid container spacing={1}>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormControl
+                                              variant="outlined"
+                                              requirement
+                                              className={classes.formControl}
+                                            >
+                                              <InputLabel id="demo-simple-select-label">
                                         Risk Severity
-                                          </InputLabel>
-                                          <Select
-                                            labelId="incident-type-label"
-                                            id="incident-type"
-                                            label="Incident Type"
-                                          >
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                          </Select>
-                                        </FormControl>
-                                      </Grid>
-                                      <Grid item md={4} sm={4} xs={12}>
-                                        <FormControl
-                                          variant="outlined"
-                                          requirement
-                                          className={classes.formControl}
-                                        >
-                                          <InputLabel id="demo-simple-select-label">
+                                              </InputLabel>
+                                              <Select
+                                                labelId="incident-type-label"
+                                                id="riskSeverity"
+                                                label="Risk Severity"
+                                                value={item.riskSeverity}
+                                                onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskSeverity')
+                                                }
+                                              >
+                                                <MenuItem value={1}>Negligible</MenuItem>
+                                                <MenuItem value={2}>Minor</MenuItem>
+                                                <MenuItem value={3}>Moderate</MenuItem>
+                                                <MenuItem value={4}>Major/ Critical</MenuItem>
+                                                <MenuItem value={5}>Catastrophic</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormControl
+                                              variant="outlined"
+                                              requirement
+                                              className={classes.formControl}
+                                            >
+                                              <InputLabel id="demo-simple-select-label">
                                         Risk Probability
-                                          </InputLabel>
-                                          <Select
-                                            labelId="incident-type-label"
-                                            id="incident-type"
-                                            label="Incident Type"
-                                          >
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                          </Select>
-                                        </FormControl>
+                                              </InputLabel>
+                                              <Select
+                                                labelId="incident-type-label"
+                                                id="riskProbability"
+                                                label="Risk Probability"
+                                                value={item.riskProbability}
+                                                onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskProbability')
+                                                }
+                                              >
+                                                <MenuItem value={1} selected={item.riskProbability == 1}>Improbable</MenuItem>
+                                                <MenuItem value={2} selected={item.riskProbability == 2}>Remote</MenuItem>
+                                                <MenuItem value={3} selected={item.riskProbability == 3}>Occasional</MenuItem>
+                                                <MenuItem value={4} selected={item.riskProbability == 4}>Probable</MenuItem>
+                                                <MenuItem value={5} selected={item.riskProbability == 5}>Frequent</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
+                                            {item.riskRating}
+                                          </Grid>
+                                        </Grid>
                                       </Grid>
-                                      <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>
-                                    50% Risk
-                                      </Grid>
-                                    </Grid>
-                                  </Grid>
-                                </AccordionDetails>
-                              </Accordion>
+                                    </AccordionDetails>
+                                  </Accordion>
 
-                              <Accordion expanded1={expanded1 === 'panell2'} onChange={handleOneChange('panell2')} className={classes.childBackPaper}>
-                                <AccordionSummary
-                                  expandIcon={<ExpandMoreIcon />}
-                                  aria-controls="panel2bh-content"
-                                  id="panel2bh-header"
-                                  className={classes.headingColor}
-                                >
-                                  <Typography className={classes.heading}>Hazardk#2 - "Hazard Name"</Typography>
-                                  <Typography className={classes.secondaryHeading}>
-                                    <Fab
-                                      color="secondary"
-                                      size="small"
-                                      align="right"
-                                      aria-label="remove"
-                                      className={classNames(classes.button, classes.mRight)}
-                                    >
-                                      <RemoveIcon />
-                                    </Fab>
-                                  </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                  <Grid container spacing={0}>
-                                    <Grid item sm={11} xs={8}>
-                                      <FormControl
-                                        variant="outlined"
-                                        requirement
-                                        className={classes.formControl}
-                                      >
-                                        <InputLabel id="demo-simple-select-label">
-                                    *Hazards
-                                        </InputLabel>
-                                        <Select
-                                          labelId="incident-type-label"
-                                          id="incident-type"
-                                          label="Incident Type"
-                                        >
-                                          <MenuItem>One</MenuItem>
-                                          <MenuItem>One</MenuItem>
-                                          <MenuItem>One</MenuItem>
-                                          <MenuItem>One</MenuItem>
-                                        </Select>
-                                      </FormControl>
-                                      <div className={classes.spacer}>
-                                        <FormControl component="fieldset">
-                                          <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                                          </RadioGroup>
-                                        </FormControl>
-                                      </div>
-                                    </Grid>
-                                    <Grid item sm={1} xs={4}>
-                                      <img src={chemicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
-                                    </Grid>
-                                    <Grid container spacing={2}>
-                                      <Grid item sm={12} xs={12}>
-                                        <TextField
-                                          multiline
-                                          variant="outlined"
-                                          rows="3"
-                                          id="description"
-                                          label="*Control"
-                                          className={classes.fullWidth}
-                                        />
-                                        <div className={classes.spacer}>
-                                          <FormControl component="fieldset">
-                                            <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                              <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                              <FormControlLabel value="No" control={<Radio />} label="No" />
-                                              <FormControlLabel value="No" control={<Radio />} label="NA" />
-                                            </RadioGroup>
-                                          </FormControl>
-                                        </div>
-                                      </Grid>
-                                    </Grid>
-                                    <Grid container spacing={1}>
-                                      <Grid item md={4} sm={4} xs={12}>
-                                        <FormControl
-                                          variant="outlined"
-                                          requirement
-                                          className={classes.formControl}
-                                        >
-                                          <InputLabel id="demo-simple-select-label">
-                                        Risk Severity
-                                          </InputLabel>
-                                          <Select
-                                            labelId="incident-type-label"
-                                            id="incident-type"
-                                            label="Incident Type"
-                                          >
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                          </Select>
-                                        </FormControl>
-                                      </Grid>
-                                      <Grid item md={4} sm={4} xs={12}>
-                                        <FormControl
-                                          variant="outlined"
-                                          requirement
-                                          className={classes.formControl}
-                                        >
-                                          <InputLabel id="demo-simple-select-label">
-                                        Risk Probability
-                                          </InputLabel>
-                                          <Select
-                                            labelId="incident-type-label"
-                                            id="incident-type"
-                                            label="Incident Type"
-                                          >
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                            <MenuItem>One</MenuItem>
-                                          </Select>
-                                        </FormControl>
-                                      </Grid>
-                                      <Grid item md={4} sm={4} xs={12} className={classes.ratioColorred}>
-                                    90% Risk
-                                      </Grid>
-                                    </Grid>
-                                  </Grid>
-                                </AccordionDetails>
-                              </Accordion>
-                              <Grid item xs={12} className={classes.createHazardbox}>
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  startIcon={<AddCircleIcon />}
-                                  className={classes.button}
-                                >
+                                ))}
+
+                                <Grid item xs={12} className={classes.createHazardbox}>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<AddCircleIcon />}
+                                    className={classes.button}
+                                    onClick={(e) => handleNewHazard(e, taskIndex)}
+                                  >
                                   Add new hazard
-                                </Button>
-                              </Grid>
-                            </AccordionDetails>
-                          </Accordion>
-                          <Accordion expanded={expanded === 'panel2'} onChange={handleTwoChange('panel2')} className={classes.backPaper}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel2bh-content"
-                              id="panel2bh-header"
-                              className={classes.headingColor}
-                            >
-                              <Typography className={classes.heading}>
-                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
-                                {' '}
-Task#2 - "Task identification"
-                                {' '}
-                              </Typography>
+                                  </Button>
+                                </Grid>
+                              </AccordionDetails>
+                            </Accordion>
 
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Typography>
-                          Dummy content
-                              </Typography>
-                            </AccordionDetails>
-                          </Accordion>
-                          <Accordion expanded={expanded === 'panel3'} onChange={handleTwoChange('panel3')} className={classes.backPaper}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel3bh-content"
-                              id="panel3bh-header"
-                              className={classes.headingColor}
-                            >
-                              <Typography className={classes.heading}>
-                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
-                                {' '}
-Task#3 - "Task identification"
-                                {' '}
-                              </Typography>
+                          ))}
 
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Typography>
-                          Dummy content
-                              </Typography>
-                            </AccordionDetails>
-                          </Accordion>
-                          <Accordion expanded={expanded === 'panel4'} onChange={handleTwoChange('panel4')} className={classes.backPaper}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel4bh-content"
-                              id="panel4bh-header"
-                              className={classes.headingColor}
-                            >
-                              <Typography className={classes.heading}>
-                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
-                                {' '}
-Task#4 - "Task identification"
-                                {' '}
-                              </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Typography>
-                          Dummy content
-                              </Typography>
-                            </AccordionDetails>
-                          </Accordion>
                         </div>
 
                       </Grid>
                       <Divider className={classes.divider} />
-                      <Grid item xs={12}>
-                        <TableContainer className={classes.mttopTen}>
-                          <Typography variant="h6">
-                            <CheckOutlinedIcon className={classes.headingIcon} />
-                            {' '}
-Job visual confirmation
-                          </Typography>
 
-                          <Table className={classes.table} aria-label="simple table">
-                            <TableHead className={classes.tableHeading}>
-                              <TableRow className={classes.cellHeight}>
-                                <TableCell align="left" className={classes.tableRowColor}>Visual confirmation</TableCell>
-                                <TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
-                                <TableCell align="left" className={classes.tableRowColor}>Attachments</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              <TableRow className={classes.cellHeight}>
-                                <TableCell align="left">Site pictures</TableCell>
-                                <TableCell align="left">
-                                  <div className={classes.spacer}>
-                                    <FormControl component="fieldset">
-                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                                        <FormControlLabel value="No" control={<Radio />} label="NA" />
-                                      </RadioGroup>
-                                    </FormControl>
-                                  </div>
-                                </TableCell>
-                                <TableCell align="left">
-                                  <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-                                  <label htmlFor="icon-button-file">
-                                    <IconButton color="primary" aria-label="upload picture" component="span">
-                                      <AttachmentIcon />
-                                    </IconButton>
-                                  </label>
-                                  <img src={project} className={classes.attachImg} alt="decoration" height={40} />
-                                </TableCell>
-                              </TableRow>
-                              <TableRow className={classes.cellHeight}>
-                                <TableCell align="left">Team pictures</TableCell>
-                                <TableCell align="left">
-                                  <div className={classes.spacer}>
-                                    <FormControl component="fieldset">
-                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                                        <FormControlLabel value="No" control={<Radio />} label="NA" />
-                                      </RadioGroup>
-                                    </FormControl>
-                                  </div>
-                                </TableCell>
-                                <TableCell align="left">
-                                  <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-                                  <label htmlFor="icon-button-file">
-                                    <IconButton color="primary" aria-label="upload picture" component="span">
-                                      <AttachmentIcon />
-                                    </IconButton>
-                                  </label>
-                                  <img src={project} className={classes.attachImg} alt="decoration" height={40} />
-                                </TableCell>
-                              </TableRow>
-                              <TableRow className={classes.cellHeight}>
-                                <TableCell align="left">Tools and tackles</TableCell>
-                                <TableCell align="left">
-                                  <div className={classes.spacer}>
-                                    <FormControl component="fieldset">
-                                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                                        <FormControlLabel value="No" control={<Radio />} label="NA" />
-                                      </RadioGroup>
-                                    </FormControl>
-                                  </div>
-                                </TableCell>
-                                <TableCell align="left">
-                                  <input accept="image/*" className={classes.inputTab} id="icon-button-file" name="avatar" type="file" />
-                                  <label htmlFor="icon-button-file">
-                                    <IconButton color="primary" aria-label="upload picture" component="span">
-                                      <AttachmentIcon />
-                                    </IconButton>
-                                  </label>
-                                  <img src={project} className={classes.attachImg} alt="decoration" height={40} />
-                                </TableCell>
-                              </TableRow>
-
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </Grid>
                     </Box>
                   </Grid>
-                  {/* <Grid item sm={6} xs={12}>
-                  <Typography variant="Body1" className={classes.labelColor}>Attach files</Typography>
-                  <Grid item md={12} xs={12} className={classes.formBox}>
-                    <div {...getRootProps({ className: 'dropzone' })}>
-                      <input {...getInputProps()} />
-                      <p>Drag 'n' drop or click to select files</p>
-                    </div>
-                    <aside>
-                       <h4>Files</h4>
-                      <ul>{files}</ul>
-                    </aside>
-                  </Grid>
-                </Grid>
-                <Grid item md={3} sm={3} xs={12}>
-                <Typography variant="Body1" className={classes.labelColor}>Date</Typography>
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                      className={classNames(classes.formControl, classes.heightDate)}
-                      variant="outlined"
-                      required
-                      id="date-picker-dialog"
-                      format="dd/mm/yyyy"
-                      value={selectedDate}
-                      onChange={handleDateChange}
-                    />
 
-                  </MuiPickersUtilsProvider>
-                </Grid>
-                <Grid item md={3} sm={3} xs={12}>
-                <Typography variant="Body1" className={classes.labelColor}>Time</Typography>
-                  <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <div className="picker">
-                      <TimePicker
-                        variant="outlined"
-                        required
-                        value={selectedDate}
-                        className={classNames(classes.formControl, classes.heightDate)}
-                        onChange={handleDateChange}
-                      />
-                    </div>
+                  <Divider className={classes.divider} />
 
-                    </MuiPickersUtilsProvider>
                 </Grid>
-                {/* <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                  <FormControl component="fieldset" display="inline">
-                    <FormLabel component="legend">*Is permit to work done?</FormLabel>
-                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                      <FormControlLabel value="Critical" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="Normal" control={<Radio />} label="No" />
-                      <FormControlLabel value="Blocker" control={<Radio />} label="NA" />
-                    </RadioGroup>
-                  </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Enter permit number"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                {/* <Grid item md={6} sm={6} xs={12} className={classes.ptopTwenty}>
-                  <Typography variant="Body1">
-                    Validate
-                  </Typography>
-                </Grid> *
-                <Divider className={classes.divider} />
-                <Grid item md={12} sm={12} xs={12}>
-                  <Typography variant="h6">
-                  <NotificationsOutlinedIcon className={classes.headingIcon} /> Notification block
-                  </Typography>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <FormControl
-                      variant="outlined"
-                      requirement
-                      className={classes.fullWidth}
-                    >
-                      <InputLabel id="demo-simple-select-label">
-                        Reference Group
-                      </InputLabel>
-                      <Select
-                        labelId="incident-type-label"
-                        id="incident-type"
-                        label="Reference Group"
-                      >
-                        <MenuItem>One</MenuItem>
-                        <MenuItem>One</MenuItem>
-                        <MenuItem>One</MenuItem>
-                        <MenuItem>One</MenuItem>
-                      </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Reference Number"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                <div className={classes.spacer}>
-                  <Autocomplete
-                    id="combo-box-demo"
-                    className={classes.mtTen}
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    renderInput={(params) => <TextField {...params} label="*Supervisor" variant="outlined" />}
-                  />
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                <div className={classes.spacer}>
-                  <Autocomplete
-                    id="combo-box-demo"
-                    className={classes.mRTen}
-                    options={top100Films}
-                    getOptionLabel={(option) => option.title}
-                    renderInput={(params) => <TextField {...params} label="Field Contractor" variant="outlined" />}
-                  />
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">*Is a First Aid/Medical Aid present for your Shift?</FormLabel>
-                      <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                      </RadioGroup>
-                    </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Emergency Phone Number"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">*Has the JHA been reviewed?</FormLabel>
-                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                    </RadioGroup>
-                  </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Enter the evacuation/Assembly Point"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <div className={classes.spacer}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">*Do you have access to Job Procedure?</FormLabel>
-                    <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                    </RadioGroup>
-                  </FormControl>
-                  </div>
-                </Grid>
-                <Grid item md={6} sm={6} xs={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="1"
-                    label="Enter the location details"
-                    className={classes.fullWidth}
-                  />
-                </Grid>
-                <Divider className={classes.divider} />
-                <Grid item md={12} sm={12} xs={12}>
-                  <Typography variant="h6">
-                  <AddAlertOutlinedIcon className={classes.headingIcon} /> Additional information
-                    </Typography>
-                  </Grid>
-              </Grid>
 
-                {/* <Grid marginTop={4}>
-                  <div className={classes.spacer}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.checkedA}
-                        onChange={handleChange}
-                        name="checked"
-                        color="primary"
-                      />
-                    }
-                    label="I accept &amp; pledge"
-                  />
-                    </div>
-                    <Grid item xs={12}>
-                    <img src={pledgebanner} alt="decoration" />
-                    </Grid>
-
-                </Grid> */}
-                </Grid>
                 <Box marginTop={4}>
                   <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+                  Save
+                  </Button>
+                  <Button size="medium" variant="contained" color="primary" className={classes.spacerRight} onClick={handleJobFormSubmit}>
                   Submit
                   </Button>
                   <Button size="medium" variant="contained" color="secondary" className={classes.spacerRight}>
@@ -1268,4 +1000,4 @@ Job visual confirmation
   );
 };
 
-export default FlhaDetails;
+export default FlhaEdit;

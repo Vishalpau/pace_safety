@@ -34,7 +34,8 @@ import BookIcon from '@material-ui/icons/Book';
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import RemoveCircleOutlinedIcon from '@material-ui/icons/RemoveCircleOutlined';
 import { useDropzone } from 'react-dropzone';
-
+import { useHistory, useParams } from 'react-router';
+import api from '../../../utils/axios';
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: '.5rem 0',
@@ -117,7 +118,8 @@ const top100Films = [
   { title: 'Inception', year: 2010 },
   { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
 ];
-const FlhaDetails = () => {
+const CloseOut = (props) => {
+  const history = useHistory();
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(
     new Date('2014-08-18T21:11:54')
@@ -146,7 +148,73 @@ const FlhaDetails = () => {
 bytes
     </li>
   ));
+  const [jobForm, setJobForm] = React.useState({
+    preUseInspection: '',
+    warningRibbon: '',
+    workerWorking: '',
+    workerRemarks: '',
+    permitClosedOut: '',
+    hazardsRemaining: '',
+    endOfJob: '',
+    anyIncidents: '',
+    jobCompletionRemarks: '',
+    creatingIncident: '',
+    jobTitle: '',
+    jobDetails: '',
+    fkCompanyId: '',
+    fkProjectId: ''
+  });
 
+  React.useEffect(() => {
+    setFlhaDetails();
+  }, [open]);
+
+  const setFlhaDetails = async () => {
+    const { id } = props.match.params;
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId;
+    const temp = { ...jobForm };
+    temp.fkCompanyId = fkCompanyId;
+    temp.fkProjectId = fkProjectId;
+
+    const res = await api.get(
+      '/api/v1/flhas/' + id + '/'
+    );
+
+    const flha = res.data.data.results;
+    temp.jobTitle = flha.jobTitle;
+    temp.jobDetails = flha.jobDetails;
+    console.log({ temp });
+    console.log({ res: res.data.data.results });
+    await setJobForm(temp);
+    console.log({ jobForm });
+  };
+
+  const handleJobFormChange = async (e, fieldname) => {
+    console.log(jobForm);
+
+    const temp = { ...jobForm };
+    const { value } = e.target;
+
+    console.log({ value });
+    temp[fieldname] = value;
+
+
+    console.log({ temp });
+    await setJobForm(temp);
+    // await console.log({jobForm: jobForm})
+  };
+
+  const handleFormSubmit = async () => {
+    const { id } = props.match.params;
+    console.log({ jobForm });
+    const res = await api.put(
+      '/api/v1/flhas/' + id + '/',
+      jobForm
+    );
+    console.log(res.data);
+    history.push('/app/pages/assesments/flhasummary/' + id);
+  };
   return (
     <div>
       <PapperBlock title="XFLHA - Close Out" icon="ion-ios-create-outline" desc="" color="primary">
@@ -159,7 +227,7 @@ bytes
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Has a pre-use inspection of tools/equipment been completed?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="preUseInspection" name="preUseInspection" value={jobForm.preUseInspection} onChange={(e) => handleJobFormChange(e, 'preUseInspection')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -170,7 +238,7 @@ bytes
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Is a warning ribbon need?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="warningRibbon" name="warningRibbon" value={jobForm.warningRibbon} onChange={(e) => handleJobFormChange(e, 'warningRibbon')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -181,7 +249,7 @@ bytes
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Is the worker working alone?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="workerWorking" name="workerWorking" value={jobForm.workerWorking} onChange={(e) => handleJobFormChange(e, 'workerWorking')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -197,13 +265,15 @@ bytes
                       rows="4"
                       label="Emergency Phone Number"
                       className={classes.fullWidth}
+                      value={jobForm.workerRemarks}
+                      onChange={(e) => handleJobFormChange(e, 'workerRemarks')}
                     />
                   </Grid>
                   <Grid item md={6} sm={6} xs={12}>
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Are all permit(s) closed out?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="permitClosedOut" name="permitClosedOut" value={jobForm.permitClosedOut} onChange={(e) => handleJobFormChange(e, 'permitClosedOut')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -214,7 +284,7 @@ bytes
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Are there Hazards remaining?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="hazardsRemaining" name="hazardsRemaining" value={jobForm.hazardsRemaining} onChange={(e) => handleJobFormChange(e, 'hazardsRemaining')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -225,7 +295,7 @@ bytes
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Was the area cleaned up at the end of job/shift?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="endOfJob" name="endOfJob" value={jobForm.endOfJob} onChange={(e) => handleJobFormChange(e, 'endOfJob')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -236,7 +306,7 @@ bytes
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Were there any incidents/injuries?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="anyIncidents" name="anyIncidents" value={jobForm.anyIncidents} onChange={(e) => handleJobFormChange(e, 'anyIncidents')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -248,10 +318,12 @@ bytes
                     <FormLabel component="legend">If Yes, please provide details</FormLabel>
                     <TextField
                       variant="outlined"
-                      id="immediate-actions"
+                      id="jobCompletionRemarks"
                       multiline
                       rows="4"
                       label="Enter the details"
+                      value={jobForm.jobCompletionRemarks}
+                      onChange={(e) => handleJobFormChange(e, 'jobCompletionRemarks')}
                       className={classes.fullWidth}
                     />
                   </Grid>
@@ -259,7 +331,7 @@ bytes
                     <div className={classes.spacer}>
                       <FormControl component="fieldset">
                         <FormLabel component="legend">Do you want to continue to creating an Incident?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+                        <RadioGroup className={classes.radioInline} aria-label="creatingIncident" name="creatingIncident" value={jobForm.creatingIncident} onChange={(e) => handleJobFormChange(e, 'creatingIncident')}>
                           <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                           <FormControlLabel value="No" control={<Radio />} label="No" />
                         </RadioGroup>
@@ -269,12 +341,19 @@ bytes
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <Box marginTop={4}>
+                    <Button size="medium" variant="outlined" color="primary" className={classes.spacerRight}>
+                  Acknowledge
+                    </Button>
+                  </Box>
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <Box marginTop={4}>
                     <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
                   Submit and confirm with an incident
                     </Button>
                   </Box>
                   <Box marginTop={4}>
-                    <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+                    <Button size="medium" variant="contained" color="primary" onClick={() => handleFormSubmit()} className={classes.spacerRight}>
                   Submit
                     </Button>
                   </Box>
@@ -288,4 +367,4 @@ bytes
   );
 };
 
-export default FlhaDetails;
+export default CloseOut;
