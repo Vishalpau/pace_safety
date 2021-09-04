@@ -730,3 +730,71 @@ export const JhaLessonsLearned = loadable(() => import("./Pages/Jha/LessonsLearn
 export const JhaCloseOut = loadable(() => import("./Pages/Jha/CloseOut/CloseOut"), {
   fallback: <Loading />,
 });
+
+export const ShowGroup = loadable(() =>
+  import("./Pages/CheckList/ShowGroups"), {
+  fallback: <Loading />,
+});
+
+export const ShowCheckList = loadable(() =>
+  import("./Pages/CheckList/ShowCheckList"), {
+  fallback: <Loading />,
+});
+// XFLHA
+
+export const Xflha = loadable(() => import("./Pages/Assesments/Xflha"), {
+  fallback: <Loading />,
+});
+
+export const FlhaSummary = loadable(() => import("./Pages/Assesments/FlhaSummary"), {
+  fallback: <Loading />,
+});
+
+export const PreventiveControls = loadable(() => import("./Pages/Assesments/PreventiveControls"), {
+  fallback: <Loading />,
+});
+
+export const FlhaAdd = loadable(() => import("./Pages/Assesments/FlhaAdd"), {
+  fallback: <Loading />,
+});
+
+export const FlhaEdit = loadable(() => import("./Pages/Assesments/FlhaEdit"), {
+  fallback: <Loading />,
+});
+
+export const FlhaRevision = loadable(() => import("./Pages/Assesments/FlhaRevision"), {
+  fallback: <Loading />,
+});
+
+export const IsolationControl = loadable(() => import("./Pages/Assesments/IsolationControl"), {
+  fallback: <Loading />,
+});
+
+export const EnergyControl = loadable(() => import("./Pages/Assesments/EnergyControl"), {
+  fallback: <Loading />,
+});
+
+export const AuditCheck = loadable(() => import("./Pages/Assesments/AuditCheck"), {
+  fallback: <Loading />,
+});
+
+export const AssessmentCloseOut = loadable(() => import("./Pages/Assesments/CloseOut"), {
+  fallback: <Loading />,
+});
+
+// XFLHA Config
+export const FlhaConfig = loadable(() => import("./pages/assesments/FlhaConfig"), {
+  fallback: <Loading />,
+});
+
+export const FlhaConfigAdd = loadable(() => import("./pages/assesments/FlhaConfigAdd"), {
+  fallback: <Loading />,
+});
+
+export const FlhaConfigCriticalTask = loadable(() => import("./pages/assesments/FlhaConfigCriticalTask"), {
+  fallback: <Loading />,
+});
+
+export const FlhaConfigHazard = loadable(() => import("./pages/assesments/FlhaConfigHazard"), {
+  fallback: <Loading />,
+});
