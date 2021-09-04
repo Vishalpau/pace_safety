@@ -281,7 +281,22 @@ const ProjectAreaHazards = () => {
 
   const handleSubmit = async (e) => {
     setSubmitLoader(true)
+    // for (let i = 0; i < form.length; i++) {
+    //   let decidePost = handelCheckPost(form[i]["fkChecklistId"], form[i]["hazard"])
+    //   if (decidePost !== true) {
+    //     const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
+    //   }
+    // }
 
+    // for (let i = 0; i < otherHazards.length; i++) {
+    //   if (otherHazards[i]["hazard"] != "") {
+    //     if (otherHazards[i]["id"] == undefined) {
+    //       const resOther = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, otherHazards[i])
+    //     } else {
+    //       const resOther = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[i]["id"]}/`, otherHazards[i])
+    //     }
+    //   }
+    // }
 
     let hazardNew = []
     let hazardUpdate = []
