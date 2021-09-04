@@ -71,7 +71,7 @@ const CloseOutSummary = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const handelLessionLearnt = (e, value) => {
+    const handelCloseOut = (e, value) => {
         if (value == "modify") {
             history.push(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
         } else if (value == "add") {
@@ -105,11 +105,11 @@ const CloseOutSummary = () => {
             {!isDesktop && (
                 <Grid item xs={12}>
                     {incidents.closeDate ?
-                        <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelLessionLearnt(e, "modify")}>
+                        <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelCloseOut(e, "modify")}>
                             Modify Close out
                         </Button>
                         :
-                        <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelLessionLearnt(e, "add")}>
+                        <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelCloseOut(e, "add")}>
                             Add Close out
                         </Button>
                     }
