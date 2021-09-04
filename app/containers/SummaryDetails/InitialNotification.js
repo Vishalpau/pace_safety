@@ -933,11 +933,9 @@ const IncidentDetailsSummary = () => {
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                <Tooltip
-                                  title={handelFileName(value.evidenceDocument)}
-                                >
+                               
                                   <Attachment value={value.evidenceDocument} />
-                                </Tooltip>
+                              
                               </Typography>
                             </Grid>
                           ) : null}
