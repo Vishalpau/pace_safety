@@ -443,6 +443,7 @@ const FlhaDetails = (props) => {
 
   const handelSubmit = async () => {
     // // console.log('depFor',
+    // debugger
     const formData = new FormData(); // formdata object
 
     formData.append('fkCompanyId', JSON.parse(localStorage.getItem('company')).fkCompanyId);
@@ -455,6 +456,8 @@ const FlhaDetails = (props) => {
     formData.append('fkDepartmentId', form.fkDepartmentId);
     formData.append('jobDetail', form.jobDetail);
     formData.append('jobTitle', form.jobTitle);
+
+   
     // localStorage.setItem('fkJobId', jobTitle.id);
 
     const res = await api.post('api/v1/configflhas/jobtitles/', formData);
@@ -568,6 +571,7 @@ function dataHandler(data) {
 }
 
 const hazardEditSubmitHandler = async () => {
+  // debugger
   console.log({submithazard: payload})
     const formData = new FormData();
 
@@ -577,7 +581,7 @@ const hazardEditSubmitHandler = async () => {
     formData.append('jobTitleImage', payload.jobTitleImage);
     formData.append('fkDepartmentId', payload.fkDepartmentId);
 
-  let res = await api.put(`api/v1/configflhas/jobtitles/${editPayload[editPayload.length-2]}/`,formData) ;
+  let res = await api.put(`api/v1/configflhas/jobtitles/${editPayload[editPayload.length-2]}/`, formData) ;
   handleFlhaClose()
   jobTitleApiHandler()
 
@@ -737,7 +741,7 @@ const handleFieldChange = async(e, fieldname) => {
   ));
   console.log({ dropDownAr });
   console.log({ dataAr });
-
+console.log("test",form.jobTitle);
   return (
     <div>
       <PapperBlock title="X-FLHA - Job Titles" icon="ion-ios-create-outline" desc="" color="primary">

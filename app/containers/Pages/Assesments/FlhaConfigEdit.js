@@ -67,6 +67,12 @@ import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutline
 import Tooltip from "@material-ui/core/Tooltip";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
+import api from '../../../utils/axios';
+import {
+  INITIAL_NOTIFICATION_FORM,
+  SSO_URL,
+  HEADER_AUTH,
+} from '../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -86,10 +92,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: '.2rem 0',
     boxShadow: 'inset 0px 0px 9px #dedede',
-	'& td textHeight': {
-		padding: '2.5px 5px',
-    	borderRadius: '8px',
-	  },
+    '& td textHeight': {
+      padding: '2.5px 5px',
+      borderRadius: '8px',
+    },
   },
   spacer: {
     padding: '5px 0',
@@ -117,8 +123,8 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialogTitle-root': {
       marginBottom: '5px !important',
     },
-  },  
-  ptopTwenty : {
+  },
+  ptopTwenty: {
     '& span': {
       paddingTop: '15px',
     }
@@ -159,11 +165,11 @@ const useStyles = makeStyles((theme) => ({
   popUpButton: {
     paddingRight: "5px",
     marginLeft: "16px",
-    '& .MuiDialogActions-root, img':{
+    '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
-    },    
+    },
   },
-  
+
   spacerRight: {
     marginRight: '.75rem',
   },
@@ -226,8 +232,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -252,12 +258,12 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     padding: '3px',
     color: '#ffffff',
-}, 
+  },
 }));
 const FlhaDetails = (props) => {
   const classes = useStyles();
- 
-  const [payload , setPayload] = React.useState({
+
+  const [payload, setPayload] = React.useState({
     fkCompanyId: "",
     fkDeparmentName: '',
     jobTitle: '',
@@ -270,103 +276,132 @@ const FlhaDetails = (props) => {
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [dropDownAr, setDropDownAr] = React.useState([]);
+
   React.useEffect(() => {
-   console.log("editPayload ",props.editPayload) ;
-   setPayload({
-    fkDeparmentName:  props.editPayload[1] ? props.editPayload[1] : "" ,
-    jobTitle: props.editPayload[0] ? props.editPayload[0] : "" ,
-    jobDetail:  props.editPayload[3] ? props.editPayload[3] : "" ,
-    jobTitleImage: props.editPayload[2] ? props.editPayload[2] : "" ,
-    fkDepartmentId: props.editPayload[6] ? props.editPayload[6] : "" ,
+    console.log("editPayload ", props.editPayload);
+    setPayload({
+      fkDeparmentName: props.editPayload[1] ? props.editPayload[1] : "",
+      jobTitle: props.editPayload[0] ? props.editPayload[0] : "",
+      jobDetail: props.editPayload[3] ? props.editPayload[3] : "",
+      jobTitleImage: props.editPayload[2] ? props.editPayload[2] : "",
+      fkDepartmentId: props.editPayload[6] ? props.editPayload[6] : "",
 
-   }) ;
- },[]) ;
+    });
+  }, []);
 
- React.useEffect(() => {
-  console.log("payload " , payload  ) ;
- },[payload])
+  React.useEffect(() => {
+    console.log("payload ", payload);
+  }, [payload])
 
 
- const fieldHandler=(e) => {
-  console.log("Value  ", e.target.value , e.target.id)
-  setPayload({
-    ...payload,
-   [e.target.id] : e.target.value
-  })
-}
+  const fieldHandler = (e) => {
+    //  debugger
+    console.log("Value  ", e.target.value, e.target.id)
+    setPayload({
+      ...payload,
+      [e.target.id]: e.target.value
+    })
+  }
 
-React.useEffect(() => {
-  props.dataHandler(payload)
-},[payload])
+  const dropDownHandle = async () => {
+    let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    const res = await api.get(`${SSO_URL}/api/v1/companies/${fkCompanyId}/departments/`);
+    setDropDownAr(res.data.data.results);
+  };
+
+  React.useEffect(() => {
+    // jobTitleApiHandler();
+    dropDownHandle();
+  }, []);
+
+  React.useEffect(() => {
+    props.dataHandler(payload)
+  }, [payload])
+
+  const handleDepartment = (id, name) => {
+    setPayload({ ...payload, fkDepartmentId: id, fkDeparmentName: name });
+  };
 
   return (
     <div>
-        <Paper elevation={3}>
-            <Box padding={3}>
-                  <Grid item xs={12}>
-					<Grid container spacing={3}>  
-						<Grid item md={12} sm={12} xs={12}>
-						  <TextField
-							variant="outlined"
-							id="jobTitle"
-							multiline
-							rows="1"
-							label="titles"
-							className={classes.fullWidth}
-              onChange = {fieldHandler}
-              defaultValue={props.editPayload[0] || ""}
-						  />
-						</Grid>
-            {/* {console.log("payload.fkDeparmentName ", props)} */}
+      <Paper elevation={3}>
+        <Box padding={3}>
+          <Grid item xs={12}>
+            <Grid container spacing={3}>
+              <Grid item md={12} sm={12} xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="jobTitle"
+                  multiline
+                  rows="1"
+                  label="titles"
+                  className={classes.fullWidth}
+                  onChange={fieldHandler}
+                  defaultValue={props.editPayload[0] || ""}
+                />
+              </Grid>
+              {/* {console.log("payload.fkDeparmentName ", props)} */}
 
-            {/* {console.log("payload.fkDeparmentName ", payload.fkDeparmentName)} */}
-						<Grid item md={12} sm={12} xs={12}>
-						  <FormControl
-							  variant="outlined"
-							  requirement
-							  className={classes.fullWidth}
-							>
-							  <InputLabel id="department-label">
-								department
-							  </InputLabel>
-							  <Select
-								labelId="incident-type-label"
-								id="fkDeparmentName"
-								label="department"
-                Select
-                onChange = {fieldHandler}
-                value = {props.editPayload[1]}
-							  >
-								<MenuItem>BMD</MenuItem>
+              {console.log("payload.fkDeparmentName ", props.editPayload[1])}
+              <Grid item md={12} sm={12} xs={12}>
+                <FormControl
+                  variant="outlined"
+                  requirement
+                  className={classes.fullWidth}
+                >
+                  <InputLabel id="department-label">
+                    department
+                  </InputLabel>
+                  <Select
+                    labelId="incident-type-label"
+                    id="fkDeparmentName"
+                    label="department"
+                    Select
+                    onChange={fieldHandler}
+                    defaultValue={props.editPayload[1]}
+                  >
+                    {dropDownAr.map((department) => (
+                      <MenuItem
+                        key={department.id} value={props.editPayload[1]} onClick={(e) => {
+                          handleDepartment(department.id, department.departmentName);
+                        }}
+                      >
+
+                        {department.departmentName}
+                      </MenuItem>
+                    ))}
+                    {/* <MenuItem>BMD</MenuItem>
 								<MenuItem>One</MenuItem>
 								<MenuItem>One</MenuItem>
-								<MenuItem>One</MenuItem>
-							  </Select>
-							</FormControl>
-						</Grid>
-            <Grid item md={4} sm={4} xs={12}>
+								<MenuItem>One</MenuItem> */}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={4} sm={4} xs={12}>
                 <img src={payload.jobTitleImage} height={58} alt="" className={classes.mttopSix} />
               </Grid>
-						<Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
+              <Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
 
-							<input src={props.editPayload[2]} accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
-						</Grid>	
-						<Grid item md={12} sm={12} xs={12}>
-						  <TextField
-							variant="outlined"
-							id="jobDetail"
-							multiline
-							rows="1"
-							label="details"
-							className={classes.fullWidth}
-              onChange = {fieldHandler}
-              value = {props.editPayload[3]}
-						  />
-						</Grid>
-				</Grid>
-				</Grid>
-            </Box>
-        </Paper>
+                <input src={props.editPayload[2]} accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
+              </Grid>
+              <Grid item md={12} sm={12} xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="jobDetail"
+                  multiline
+                  rows="1"
+                  label="details"
+                  className={classes.fullWidth}
+                  onChange={fieldHandler}
+                  defaultValue={props.editPayload[3] || ""}
+
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
     </div>
   );
 };
