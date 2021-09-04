@@ -129,7 +129,7 @@ const PropertyAffected = () => {
 
   // On next click event capture.
   const handleNext = async () => {
-    
+    if(!incidentsListData.closeDate){
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
     // If property data there then don't do anything as we are doing put request on each change.
@@ -189,19 +189,19 @@ const PropertyAffected = () => {
       );
       // If api success
       if (status === 201 ||status === 200) {
-        if (nextPath.equipmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
-          );
-        } else if (nextPath.environmentAffect === "Yes") {
-          history.push(
-            `/app/incident-management/registration/initial-notification/environment-affected/${id}`
-          );
-        } else {
-          history.push(
-            `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
-          );
-        }
+          if (nextPath.equipmentAffect === "Yes") {
+            history.push(
+              `/incident/${id}/modify/equipment-affected/`
+            );
+          } else if (nextPath.environmentAffect === "Yes") {
+            history.push(
+              `/incident/${id}/modify/environment-affected/`
+            );
+          } else {
+            history.push(
+              `/incident/${id}/modify/reporting-and-notification/`
+            );
+          }
       }
       // If no is selected on form.
     } else {
@@ -231,18 +231,19 @@ const PropertyAffected = () => {
 
       if (nextPath.equipmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+          `/incident/${id}/modify/equipment-affected/`
         );
       } else if (nextPath.environmentAffect === "Yes") {
         history.push(
-          `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+          `/incident/${id}/modify/environment-affected/`
         );
       } else {
         history.push(
-          `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+          `/incident/${id}/modify/reporting-and-notification/`
         );
       }
     }
+  }
   };
 
   // get peoperty affetct value radio type
@@ -290,11 +291,11 @@ const PropertyAffected = () => {
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     if (nextPath.personAffect === "Yes") {
       history.push(
-        `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+        `/incident/${id}/modify/peoples-afftected/`
       );
     } else {
       history.push(
-        `/app/incident-management/registration/initial-notification/incident-details/${id}`
+        `/incident/${id}/modify/`
       );
     }
   };

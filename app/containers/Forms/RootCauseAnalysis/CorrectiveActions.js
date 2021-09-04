@@ -17,11 +17,15 @@ import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, MANAGEMENTCONTROL, SUMMERY_FORM, LESSION_LEARNED_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, MANAGEMENTCONTROL, SUMMERY_FORM, CLOSE_OUT_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation";
 import Type from "../../../styles/components/Fonts.scss";
 import { handelApiValue } from "../../../utils/CheckerValue"
+
+// redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -73,8 +77,10 @@ const CorrectiveAction = () => {
   const history = useHistory();
   const updateIds = useRef();
   const checkPost = useRef();
-  const [paceCauseDelete, setPaceCauseDelete] = useState()
-  const [nextButton, setNextButton] = useState(false)
+  const [paceCauseDelete, setPaceCauseDelete] = useState();
+  const [nextButton, setNextButton] = useState(false);
+
+  const dispatch = useDispatch()
 
 
   const setRemark = (value) => {
@@ -176,14 +182,18 @@ const CorrectiveAction = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
-      history.push(`${LESSION_LEARNED_FORM["Lessons learnt"]}${putId.current}`)
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+
+      }
+      dispatch(tabViewMode(viewMode))
+      history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
     } else if (navigateType == "previous") {
       history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Preventive actions"]}${putId.current}`)
     }
   }
 
   const handelApiCall = async () => {
-    console.log(form)
     let tempData = []
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
@@ -204,6 +214,7 @@ const CorrectiveAction = () => {
     })
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
     if (res.status == 200) {
+      console.log("here")
       handelNavigate("next")
     }
   }
@@ -296,7 +307,7 @@ const CorrectiveAction = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={(e) => handelPrevious(e)}
+                onClick={(e) => handelNavigate("previous")}
               >
                 Previous
               </Button>

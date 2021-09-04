@@ -39,6 +39,19 @@ import { saveAs } from 'file-saver';
 import { initial } from 'lodash';
 import axios from "axios";
 import Attachment from "../../Attachment/Attachment";
+import { useDispatch } from "react-redux";
+
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../utils/constants";
+
+import { breakDownDetails } from "../../../redux/actions/initialDetails";
+
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -128,6 +141,10 @@ const ObservationInitialNotificationView = () => {
   const [initialData , setInitialData] = useState({}); 
   const [tagsData , setTagsData] = useState([])
   const [actionTakenData ,setActionTakenData] = useState([])
+  const [projectSturcturedData , setProjectSturcturedData] = useState([])
+  const [isLoading , setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const project =
   JSON.parse(localStorage.getItem("projectName")) !== null
@@ -137,13 +154,21 @@ const ObservationInitialNotificationView = () => {
   JSON.parse(localStorage.getItem("selectBreakDown")) !== null
     ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
+  const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).name
+    : null;
+  const userBadgeNo = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).badgeNo
+    : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
     await setInitialData(result)
+    await setIsLoading(true)
+
+    await fetchBreakDownData(result.fkProjectStructureIds)
 
   }
-
   const fetchTags = async () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)
     const tags = response.data.data.results.results
@@ -151,6 +176,75 @@ const ObservationInitialNotificationView = () => {
   }
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
+  const fetchBreakDownData = async (projectBreakdown) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+   
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
+          headers: HEADER_AUTH,
+        };
+       
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name },
+                ];
+              }
+            });
+          })
+          .catch((error) => {
+            
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key-1].slice(-1)}`,
+          headers: HEADER_AUTH,
+        };
+       
+        await api(config)
+          .then(async (response) => {
+          
+            const result = response.data.data.results;
+           
+            const res=result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+               
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name },
+                ];
+              }
+            });
+
+          
+          })
+          .catch((error) => {
+            console.log(error)
+            // setIsNext(true);
+          });
+      }
+    }
+    // dispatch(breakDownDetails(selectBreakDown));
+    await setProjectSturcturedData(selectBreakDown)    
+    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
@@ -193,6 +287,14 @@ bytes
     handleClose()
   };
 
+  const handelFileName = (value) => {
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1].split('-');
+    const lastNameArray = fileName[fileName.length - 1]
+    // const lastName = fileName.split("-");
+    return lastNameArray;
+  };
+
   const [positiveObservation, setPositiveObservation] = useState(false);
 
   const handelPositivObservation = (e) => {
@@ -229,17 +331,19 @@ bytes
         fetchInitialiObservation();
         fetchTags();
         fetchactionTrackerData()
+        
       }
   },[])
   return (
     <>
+    {isLoading ? (<>
       <Grid container spacing={3} className={classes.observationNewSection}>
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
               Observation Title
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.observationTitle}
+                    {initialData.observationTitle ? initialData.observationTitle : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -247,7 +351,7 @@ bytes
             Observation Type
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.observationType}
+                    {initialData.observationType ? initialData.observationType : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -255,7 +359,7 @@ bytes
               Observation Description
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.observationDetails}
+                    {initialData.observationDetails ? initialData.observationDetails : "-"}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -264,7 +368,7 @@ bytes
           </Typography>
           <Typography className={classes.labelValue}>
             
-            {project.projectName} - {selectBreakdown[0].name} - {selectBreakdown[1].name} - {selectBreakdown[2].name} 
+            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null} - {projectSturcturedData[1] ? projectSturcturedData[1].name : null} - {projectSturcturedData[2] ? projectSturcturedData[2].name : null} 
           </Typography>
         </Grid>
         <Grid item md={6}>
@@ -272,7 +376,15 @@ bytes
               Observed By
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData.reportedByName},{initialData.reportedByBadgeId}
+            {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : ""}
+          </Typography>
+        </Grid>
+        <Grid item md={6}>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Observer Department
+          </Typography>
+          <Typography className={classes.labelValue}>
+            {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
           </Typography>
         </Grid>
         <Grid item md={6}>
@@ -290,25 +402,27 @@ bytes
               Submited by
           </Typography>
           <Typography className={classes.labelValue}>
-          {initialData.reportedByName}
+          {userName} , {userBadgeNo}
             {/* {initialData.observedAt} */}
           </Typography>
         </Grid>
 
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Shift
+                    Submited on
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.shift ? initialData.shift : "-"}
+          {moment(initialData["createdAt"]).format(
+            "Do MMMM YYYY, h:mm:ss a"
+          )}
           </Typography>
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
               Supervisor details
           </Typography>
           <Typography className={classes.labelValue}>
-                   {initialData.supervisorName},{initialData.supervisorByBadgeId}
+                   {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" ? "" : initialData.supervisorByBadgeId}
           </Typography>
         </Grid>
         <Grid item md={12}>
@@ -316,7 +430,15 @@ bytes
             Location
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.location}
+                    {initialData.location ? initialData.location : "-"}
+          </Typography>
+        </Grid>
+        <Grid item md={12}>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+          Classification
+          </Typography>
+          <Typography className={classes.labelValue}>
+                    {initialData.observationClassification ? initialData.observationClassification : "-"}
           </Typography>
         </Grid>
         {/* <Grid item md={12}>
@@ -332,7 +454,7 @@ bytes
             Stop Work
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.stopWork}
+                    {initialData.stopWork ? initialData.stopWork : "-" }
           </Typography>
         </Grid>
         <Grid item md={6}>
@@ -340,7 +462,7 @@ bytes
             Near Miss
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData.nearMiss}
+            {initialData.nearMiss ? initialData.nearMiss : "-"}
           </Typography>
         </Grid>
           {initialData.personRecognition !== "" ?
@@ -349,7 +471,7 @@ bytes
             Recognition
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.personRecognition}
+                    {initialData.personRecognition ? initialData.personRecognition : "-"}
           </Typography>
         </Grid> : null}
         <Grid item md={12}>
@@ -367,13 +489,13 @@ bytes
             Notification sent to Safety Management
           </Typography>
           <Typography className={classes.labelValue}>
-          {initialData.isNotifiedToSupervisor}
+          {initialData.isNotifiedToSupervisor ? initialData.isNotifiedToSupervisor : "-"}
           
           </Typography>
         </Grid>
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Category
+          Categories
           </Typography>
           {/* {tagsData.} */}
           {tagsData.map((tag , index) => (
@@ -393,7 +515,7 @@ bytes
             Assignee
           </Typography>
           <Typography className={classes.labelValue}>
-           {initialData.assigneeName}
+           {initialData.assigneeName ? initialData.assigneeName : "-"}
           </Typography>
         </Grid>
         {/* <Grid item md={12}>
@@ -410,7 +532,12 @@ bytes
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Attachments
           </Typography>
-          <Typography className={classes.labelValue}>
+          {initialData.attachment ? (
+          <Typography className={classes.labelValue} 
+          title={handelFileName(
+            initialData.attachment)
+          }
+                                    >
           {/* <Attachment value={initialData.attachment}/> */}
           {initialData.attachment ===
                               null ? null : typeof initialData.attachment ===
@@ -424,7 +551,7 @@ bytes
                                     }>
             <ImageIcon />
           </Avatar> */}
-          </Typography>
+          </Typography>):("-")}
         </Grid>
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -497,6 +624,7 @@ bytes
           </DialogContentText>
         </DialogContent>
       </Dialog>
+     </>) : (<h1>Loading...</h1>)}
     </>
   );
 };

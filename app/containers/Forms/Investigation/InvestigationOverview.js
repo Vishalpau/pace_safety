@@ -215,20 +215,19 @@ const InvestigationOverview = () => {
                     labelId="unit-name-label"
                     id="unit-name"
                     label=" Actual severity & consequences"
-                    value={form.actualSeverityLevel || false}
+                    value={form.actualSeverityLevel || ""}
                   >
                     {severityValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
-                          console.log("here");
                           setForm({
                             ...form,
-                            actualSeverityLevel: selectValues,
+                            actualSeverityLevel: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -243,19 +242,19 @@ const InvestigationOverview = () => {
                     labelId="unit-name-label"
                     id="unit-name"
                     label="Potential severity & consequences"
-                    value={form.potentialSeverityLevel || false}
+                    value={form.potentialSeverityLevel || ""}
                   >
                     {severityValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            potentialSeverityLevel: selectValues,
+                            potentialSeverityLevel: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>

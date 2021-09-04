@@ -35,10 +35,13 @@ import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
+import Axios from 'axios'
+
 
 // redux
-
-import { breakDownDetails } from "../../../redux/actions/initialDetails";
+import { connect } from 'react-redux'
+import { breakDownDetails, levelBDownDetails } from "../../../redux/actions/initialDetails";
+import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -56,12 +59,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IncidentDetails = () => {
+const IncidentDetails = (props) => {
   // Props definations.
   const classes = useStyles();
   const [error, setError] = useState({});
-  const selectValues = [1, 2, 3, 4];
-  const companyName = ["ABC Ltd", "XYZ steel", "ABA power", "XDA works"];
   const [incidentsListData, setIncidentsListdata] = useState({
     incidentOccuredOn: null,
   });
@@ -73,6 +74,11 @@ const IncidentDetails = () => {
   const [eqiptmentAffectValue, setEquipmentAffectValue] = useState([]);
   const [environmentAffectValue, setEnvironmentAffectValue] = useState([]);
   const [isNext, setIsNext] = useState(true);
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [selectValue, setSelectValue] = useState([])
+
+  const [selectBreakDown, setSelectBreakDown] = useState([]);
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -83,6 +89,7 @@ const IncidentDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [hideAffect, setHideAffect] = useState([]);
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
 
   const [nextPath, setNextPath] = useState({
     personAffect: "",
@@ -126,7 +133,7 @@ const IncidentDetails = () => {
   const selectBreakdown =
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
+      : [];
   let struct = "";
   for (const i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -135,6 +142,10 @@ const IncidentDetails = () => {
 
   // Function called on next button click.
   const handelNext = async (e) => {
+    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+            let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+              return depth;
+            }).join(':')
     // Create case if id is not null and means it is an update case.
     if (isNext) {
       setIsNext(false);
@@ -158,7 +169,7 @@ const IncidentDetails = () => {
           id: parseInt(id),
           fkCompanyId: incidentsListData.fkCompanyId,
           fkProjectId: incidentsListData.fkProjectId,
-          fkProjectStructureIds: incidentsListData.fkProjectStructureIds,
+          fkProjectStructureIds: fkProjectStructureId.toString()||incidentsListData.fkProjectStructureIds,
           incidentNumber: incidentsListData.incidentNumber,
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -229,23 +240,23 @@ const IncidentDetails = () => {
               // Decide on which path to go next.
               if (nextPath.personAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/peoples-afftected/${id}`
+                  `/incident/${id}/modify/peoples-afftected/`
                 );
               } else if (nextPath.propertyAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/property-affected/${id}`
+                  `/incident/${id}/modify/property-affected/`
                 );
               } else if (nextPath.equipmentAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/equipment-affected/${id}`
+                  `/incident/${id}/modify/equipment-affected/`
                 );
               } else if (nextPath.environmentAffect === "Yes") {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/environment-affected/${id}`
+                  `/incident/${id}/modify/peoples-afftected/`
                 );
               } else {
                 history.push(
-                  `/app/incident-management/registration/initial-notification/reporting-and-notification/${id}`
+                  `/incident/${id}/modify/reporting-and-notification/`
                 );
               }
             }
@@ -260,96 +271,100 @@ const IncidentDetails = () => {
         }
       } else {
         // Create case if id is not null and means it is an add new registration case.
-        const { error, isValid } = validate(form);
+        const { error, isValid } = validate(form, selectDepthAndId);
         await setError(error);
-
-        if (isValid === true) {
-          const formData = {
-            fkCompanyId: parseInt(fkCompanyId),
-            fkProjectId: parseInt(project.projectId),
-
-            fkProjectStructureIds:
-              fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-
-            incidentNumber: "",
-            incidentType: form.incidentType,
-            incidentTitle: form.incidentTitle,
-            incidentDetails: form.incidentDetails,
-            immediateActionsTaken: form.immediateActionsTaken,
-            incidentOccuredOn: form.incidentOccuredOn,
-            isPersonAffected: form.isPersonAffected,
-            isPersonDetailsAvailable: "No",
-            personAffectedComments: "",
-            isPropertyDamaged: form.isPropertyDamaged,
-            isPropertyDamagedAvailable: "No",
-            propertyDamagedComments: "",
-            isEquipmentDamaged: form.isEquipmentDamaged,
-            isEquipmentDamagedAvailable: "No",
-            equipmentDamagedComments: "",
-            isEnviromentalImpacted: form.isEnviromentalImpacted,
-            enviromentalImpactComments: "",
-            supervisorByName: "",
-            supervisorById: 0,
-            incidentReportedOn: new Date().toISOString(),
-            incidentReportedByName: userName,
-            incidentReportedById: 0,
-            reasonLateReporting: "",
-            notificationComments: "",
-            reviewedBy: 0,
-            reviewDate: null,
-            closedBy: 0,
-            closeDate: null,
-            status: "Active",
-            incidentLocation: form.incidentLocation,
-            assignTo: 0,
-            createdBy: parseInt(userId),
-            updatedBy: userId,
-            source: "Web",
-            vendor: "string",
-            vendorReferenceId: "string",
-            contractor: form.contractor,
-            subContractor: form.subContractor,
-          };
-          // sent post api
-          try {
-            const res = await api.post("/api/v1/incidents/", formData);
-            if (res.status === 201) {
-              const fkincidentId = res.data.data.results.id;
-              localStorage.setItem("fkincidentId", fkincidentId);
-              localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
-              localStorage.setItem("nextPath", JSON.stringify(nextPath));
-
-              // Decide on which path to go next.
-              if (nextPath.personAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/peoples-afftected/${fkincidentId}`
-                );
-              } else if (nextPath.propertyAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/property-affected/${fkincidentId}`
-                );
-              } else if (nextPath.equipmentAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/equipment-affected/${fkincidentId}`
-                );
-              } else if (nextPath.environmentAffect === "Yes") {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/environment-affected/${fkincidentId}`
-                );
-              } else {
-                history.push(
-                  `/app/incident-management/registration/initial-notification/reporting-and-notification/${fkincidentId}`
-                );
-              }
-            }
-          } catch (error) {
-            setIsNext(true);
-            setMessage("Something went worng!");
-            setMessageType("error");
-            setOpen(true);
-          }
-        } else {
+        if (selectDepthAndId.length === 0) {
+          // alert("Please select Level of phase.")
           setIsNext(true);
+        } else {
+          if (isValid === true) {
+            
+            const formData = {
+              fkCompanyId: parseInt(fkCompanyId),
+              fkProjectId: parseInt(project.projectId),
+
+              fkProjectStructureIds: fkProjectStructureId.toString(),
+
+              incidentNumber: "",
+              incidentType: form.incidentType,
+              incidentTitle: form.incidentTitle,
+              incidentDetails: form.incidentDetails,
+              immediateActionsTaken: form.immediateActionsTaken,
+              incidentOccuredOn: form.incidentOccuredOn,
+              isPersonAffected: form.isPersonAffected,
+              isPersonDetailsAvailable: "No",
+              personAffectedComments: "",
+              isPropertyDamaged: form.isPropertyDamaged,
+              isPropertyDamagedAvailable: "No",
+              propertyDamagedComments: "",
+              isEquipmentDamaged: form.isEquipmentDamaged,
+              isEquipmentDamagedAvailable: "No",
+              equipmentDamagedComments: "",
+              isEnviromentalImpacted: form.isEnviromentalImpacted,
+              enviromentalImpactComments: "",
+              supervisorByName: "",
+              supervisorById: 0,
+              incidentReportedOn: new Date().toISOString(),
+              incidentReportedByName: userName,
+              incidentReportedById: 0,
+              reasonLateReporting: "",
+              notificationComments: "",
+              reviewedBy: 0,
+              reviewDate: null,
+              closedBy: 0,
+              closeDate: null,
+              status: "Active",
+              incidentLocation: form.incidentLocation,
+              assignTo: 0,
+              createdBy: parseInt(userId),
+              updatedBy: userId,
+              source: "Web",
+              vendor: "string",
+              vendorReferenceId: "string",
+              contractor: form.contractor,
+              subContractor: form.subContractor,
+            };
+            // sent post api
+            try {
+              const res = await api.post("/api/v1/incidents/", formData);
+              if (res.status === 201) {
+                const fkincidentId = res.data.data.results.id;
+                localStorage.setItem("fkincidentId", fkincidentId);
+                localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
+                localStorage.setItem("nextPath", JSON.stringify(nextPath));
+
+                // Decide on which path to go next.
+                if (nextPath.personAffect === "Yes") {
+                  history.push(
+                    `/incident/${res.data.data.results.id}/modify/peoples-afftected/`
+                  );
+                } else if (nextPath.propertyAffect === "Yes") {
+                  history.push(
+                    `/incident/${res.data.data.results.id}/modify/property-affected/`
+                  );
+                } else if (nextPath.equipmentAffect === "Yes") {
+                  history.push(
+                    `/incident/${res.data.data.results.id}/modify/equipment-affected/`
+                  );
+                } else if (nextPath.environmentAffect === "Yes") {
+                  history.push(
+                    `/incident/${res.data.data.results.id}/modify/peoples-afftected/`
+                  );
+                } else {
+                  history.push(
+                    `/incident/${res.data.data.results.id}/modify/reporting-and-notification/`
+                  );
+                }
+              }
+            } catch (error) {
+              setIsNext(true);
+              setMessage("Something went worng!");
+              setMessageType("error");
+              setOpen(true);
+            }
+          } else {
+            setIsNext(true);
+          }
         }
       }
     }
@@ -382,7 +397,7 @@ const IncidentDetails = () => {
       setOpen(true);
     }
   };
-
+  
   // get data sub-contractor value for dropdown
   const fetchSubContractorValue = async () => {
     try {
@@ -465,12 +480,15 @@ const IncidentDetails = () => {
           let temp = { ...form };
           temp = result;
           setForm(temp);
+          fetchBreakDownData(temp.fkProjectStructureIds)
+          await fetchBreakDownData(result.fkProjectStructureIds)
+
         }
 
         // const user = localStorage.getItem({})
         // set right sidebar value
         if (result.isEnviromentalImpacted !== "Yes") {
-          hideAffect.push("Enviroment Impact");
+          hideAffect.push("Environment impact");
         }
         if (result.isEquipmentDamaged !== "Yes") {
           hideAffect.push("Equipment affected");
@@ -481,8 +499,7 @@ const IncidentDetails = () => {
         if (result.isPersonAffected !== "Yes") {
           hideAffect.push("People affected");
         }
-        await setIsLoading(true);
-        await fetchBreakDownData(result.fkProjectStructureIds);
+
       } catch (error) {
         setIsNext(true);
         setMessage("Something went worng!");
@@ -491,12 +508,65 @@ const IncidentDetails = () => {
       }
     }
   };
-  // fetchBreakdownData
+
+  const handleBreakdown = async (e, index, label, selectvalue) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    
+    const value = e.target.value;
+    
+    const temp = [...fetchSelectBreakDownList]
+    temp[index-1]["selectValue"].id = value
+    let removeTemp = temp.slice(0, index)
+    await setFetchSelectBreakDownList(removeTemp)
+    if (projectData.projectName.breakdown.length !== index) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+              }${value}`,
+            headers: HEADER_AUTH,
+          };
+          
+          await Axios(config)
+            .then(function (response) {
+              if (response.status === 200) {
+
+                if (
+                  removeTemp.filter(
+                    (item) =>
+                      item.breakdownLabel ===
+                      projectData.projectName.breakdown[index].structure[0].name
+                  ).length > 0
+                ) {
+                  return;
+                } else {
+                  setFetchSelectBreakDownList([
+                    ...removeTemp,
+                    {
+                      breakDownLabel: projectData.projectName.breakdown[index].structure[0].name,
+                      selectValue: {id:value},
+                      breakDownData: response.data.data.results
+                    },
+                  ]);
+                }
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    } 
+  };
+
   const fetchBreakDownData = async (projectBreakdown) => {
+
     const projectData = JSON.parse(localStorage.getItem('projectName'));
 
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -509,15 +579,22 @@ const IncidentDetails = () => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
                 ];
+
               }
             });
+            setFetchSelectBreakDownList(selectBreakDown)
           })
           .catch((error) => {
 
@@ -527,7 +604,7 @@ const IncidentDetails = () => {
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -541,11 +618,16 @@ const IncidentDetails = () => {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
+
               }
             });
-
+            setFetchSelectBreakDownList(selectBreakDown)
 
           })
           .catch((error) => {
@@ -554,10 +636,23 @@ const IncidentDetails = () => {
           });
       }
     }
-    dispatch(breakDownDetails(selectBreakDown));
-
-    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
+
+  const handleDepthAndId = (depth, id) => {
+    let newData = [...selectDepthAndId, `${depth}${id}`]
+    setSelectDepthAndId([... new Set(newData)])
+  }
+  useEffect(() => {
+    fetchContractorValue();
+    fetchIncidentTypeValue();
+    fetchSubContractorValue();
+    fetchPersonAffectValue();
+    fetchPropertiesValue();
+    fetchEquipmentAffectValue();
+    fetchEnviornmentAffectValue();
+    fetchIncidentsData();
+  }, [])
+
 
   //  set state for hide sidebar
   const handleHideAffect = (e, name, key) => {
@@ -570,18 +665,6 @@ const IncidentDetails = () => {
     }
   };
 
-  useEffect(() => {
-    // fetchListData();
-    fetchContractorValue();
-    fetchIncidentTypeValue();
-    fetchSubContractorValue();
-    fetchPersonAffectValue();
-    fetchPropertiesValue();
-    fetchEquipmentAffectValue();
-    fetchEnviornmentAffectValue();
-    fetchIncidentsData();
-  }, []);
-
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
@@ -590,8 +673,10 @@ const IncidentDetails = () => {
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
+
               {/* Project Name */}
-              <Grid item xs={12}>
+              <Grid item xs={3}>
+
                 <Typography
                   variant="h6"
                   className={Type.labelName}
@@ -600,10 +685,49 @@ const IncidentDetails = () => {
                 >
                   Project name
                 </Typography>
+
+
                 <Typography className={Type.labelValue}>
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
+              {id ? fetchSelectBreakDownList.map((data, key) => <Grid item xs={3} md={3} key={key}>
+                <FormControl
+                  error={error.incidentType}
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="demo-simple-select-label">
+                    {data.breakDownLabel}
+                  </InputLabel>
+                  <Select
+                    labelId="incident-type-label"
+                    id="incident-type"
+                    label="Incident type"
+                    value={data.selectValue.id || ""}
+                    onChange={(e) => {
+                      handleBreakdown(e, key + 1, data.breakDownLabel, data.selectValue);
+                    }}
+                  >
+                    {data.breakDownData.length !== 0
+                      ? data.breakDownData.map((selectvalues, index) => (
+                        <MenuItem key={index} 
+                        onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                        value={selectvalues.id}>
+                          {selectvalues.structureName}
+                        </MenuItem>
+                      ))
+                      : null}
+                  </Select>
+                  {error && error.incidentType && (
+                    <FormHelperText>{error.incidentType}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+
+              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
+              }
               {/* Unit Name */}
 
               {/* Incident Type */}
@@ -651,7 +775,6 @@ const IncidentDetails = () => {
                     required
                     className={classes.formControl}
                     label="Incident date & time"
-                    error={error.incidentOccuredOn}
                     helperText={
                       error.incidentOccuredOn ? error.incidentOccuredOn : null
                     }
@@ -662,6 +785,7 @@ const IncidentDetails = () => {
                         incidentOccuredOn: moment(e).toISOString(),
                       });
                     }}
+                    InputProps={{ readOnly: true }}
                     format="yyyy/MM/dd HH:mm"
                     inputVariant="outlined"
                     disableFuture="true"
@@ -998,7 +1122,7 @@ const IncidentDetails = () => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Enviroment Impact",
+                        "Environment impact",
                         "environmentAffect"
                       );
                       setNextPath({
@@ -1058,4 +1182,9 @@ const IncidentDetails = () => {
     </PapperBlock>
   );
 };
-export default IncidentDetails;
+
+const IncidentDetailsInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(IncidentDetails);
+
+export default IncidentDetailsInit;

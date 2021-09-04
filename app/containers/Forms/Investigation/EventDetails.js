@@ -126,8 +126,11 @@ const EventDetails = () => {
       }
 
       // Weather data
-      if (eventId.current !== "") {
-        const weather = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/weatherconditions/`);
+      if (eventId.current != "") {
+        const weather = await api.get(
+          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          }/events/${eventId.current}/weatherconditions/`
+        );
         const weatherData = weather.data.data.results;
         if (typeof weatherData !== "undefined") {
           setWeather(weatherData);
@@ -135,10 +138,9 @@ const EventDetails = () => {
             weatherId.current.push(value.id);
           });
         }
-
-        // event data
         const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
         const costData = cost.data.data.results
+        console.log(costData)
         if (costData.length !== 0) {
           setOverAllCost(costData)
           costData.map((value) => {
@@ -156,8 +158,7 @@ const EventDetails = () => {
           setOverAllCost(tempCostData)
         }
       }
-
-
+      // event data
     }
     localStorage.setItem("WorkerPost", "done");
   };
@@ -318,7 +319,7 @@ const EventDetails = () => {
 
         // cost api call put
         if (form.isCostIncurred == "Yes") {
-          if (overAllCost.length > 0 && !isNaN(overAllCostId.current[0])) {
+          if (overAllCost.length > 0) {
             let costObject = overAllCost;
             for (let keys in costObject) {
               if (costObject[keys].costType !== "" && costObject[keys].costAmount !== "" && costObject[keys].casualFactor !== "") {
@@ -381,8 +382,15 @@ const EventDetails = () => {
             <Grid container item xs={12} md={9} spacing={3}>
               {/* activity */}
               <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Activity*</InputLabel>
+                <FormControl
+                  error={
+                    error && error.activity
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Activity</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -391,15 +399,15 @@ const EventDetails = () => {
                   >
                     {activityListValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            activity: selectValues,
+                            activity: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -413,8 +421,15 @@ const EventDetails = () => {
 
               {/* job task */}
               <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Job task*</InputLabel>
+                <FormControl
+                  error={
+                    error && error.jobTask
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Job task</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -423,15 +438,15 @@ const EventDetails = () => {
                   >
                     {jobTaskValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            jobTask: selectValues,
+                            jobTask: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -481,10 +496,10 @@ const EventDetails = () => {
                       >
                         {weatherValues.current.map((selectValues) => (
                           <MenuItem
-                            value={selectValues}
-                            onClick={(e) => handelWeather(e, index, selectValues)}
+                            value={selectValues.value}
+                            onClick={(e) => handelWeather(e, index, selectValues.value)}
                           >
-                            {selectValues}
+                            {selectValues.label}
                           </MenuItem>
                         ))}
                       </Select>
@@ -544,15 +559,15 @@ const EventDetails = () => {
                   >
                     {lightningValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            lighting: selectValues,
+                            lighting: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -606,8 +621,15 @@ const EventDetails = () => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">Fluid type*</InputLabel>
+                <FormControl
+                  error={
+                    error && error.spillsFluidType
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Fluid type</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -616,15 +638,15 @@ const EventDetails = () => {
                   >
                     {fluidTypeValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            spillsFluidType: selectValues,
+                            spillsFluidType: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -771,14 +793,14 @@ const EventDetails = () => {
                             >
                               {costTypeValues.current.map((selectValues) => (
                                 <MenuItem
-                                  value={selectValues}
+                                  value={selectValues.value}
                                   onClick={async (e) => {
                                     const temp = [...overAllCost];
-                                    temp[index]["costType"] = selectValues;
+                                    temp[index]["costType"] = selectValues.value;
                                     await setOverAllCost(temp);
                                   }}
                                 >
-                                  {selectValues}
+                                  {selectValues.label}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -831,14 +853,14 @@ const EventDetails = () => {
                               {casualFactorTypeValues.current.map(
                                 (selectValues) => (
                                   <MenuItem
-                                    value={selectValues}
+                                    value={selectValues.value}
                                     onClick={async (e) => {
                                       const temp = [...overAllCost];
-                                      temp[index]["casualFactor"] = selectValues;
+                                      temp[index]["casualFactor"] = selectValues.value;
                                       await setOverAllCost(temp);
                                     }}
                                   >
-                                    {selectValues}
+                                    {selectValues.label}
                                   </MenuItem>
                                 )
                               )}

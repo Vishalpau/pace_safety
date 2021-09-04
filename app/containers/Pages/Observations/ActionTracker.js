@@ -99,7 +99,7 @@ export default function ActionTracker(props) {
     parentId: 0,
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
-    actionTitle: "",
+    actionTitle: props.actionTitle,
     actionDetail: "string",
     actionCategory: "string",
     actionShedule: "string",
@@ -147,25 +147,32 @@ export default function ActionTracker(props) {
   };
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null })
+    await setForm({ ...form, actionTitle: ""  , plannedEndDate: null })
     await setOpen(false);
   };
   const handelSubmit = async () => {
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
+      
     } else {
+      if(form.actionTitle.length > 255){
+        setError({ actionTitle: "Please enter less than 255 character" });
+
+      }
+      else{
       let res = await api.post(`api/v1/actions/`, form);
       if (res.status == 201) {
         let actionId = res.data.data.results.actionNumber
         localStorage.setItem("actionId" , actionId)
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null })
+        await setForm({ ...form,actionTitle : "",assignTo : "",severity : "", plannedEndDate: null })
         await setOpen(false);
+        await props.setUpdatePage(!props.updatePage)
 
       }
     }
   };
-
+  }
   let actionId = props.actionId;
   let actionDetail = props.actionData
   let severity = ["Normal", "Critical", "Blocker"];
@@ -176,10 +183,9 @@ export default function ActionTracker(props) {
   const fetchReportedBy = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
       },
     };
     axios(config)
@@ -189,7 +195,7 @@ export default function ActionTracker(props) {
           let user = [];
           user = result;
           for (var i in result) {
-            filterReportedByName.push(result[i].name);
+            filterReportedByName.push(result[i]);
           }
           setReportedByName(filterReportedByName);
         }
@@ -251,7 +257,7 @@ export default function ActionTracker(props) {
             setError({ actionTitle: "" });
           }}
         >
-          <CloseIcon />
+          <CloseIcon onClick={handleClose}/>
         </IconButton>
         <DialogContent className={classes.dialogContent}>
           {/* action title */}
@@ -280,11 +286,11 @@ export default function ActionTracker(props) {
                 id="combo-box-demo"
                 options={reportedByName}
                 className={classes.mT30}
-                getOptionLabel={(option) => option}
-                onChange={(e,value) => 
+                getOptionLabel={(option) => option.name}
+                onChange={(e,option) => 
                   setForm({
                     ...form,
-                    assignTo: 0,
+                    assignTo: option.id,
                   })
                 }
                 renderInput={(params) => <TextField {...params}
@@ -299,7 +305,7 @@ export default function ActionTracker(props) {
             <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
               <KeyboardDatePicker
                 className={classes.formControl}
-                label="due date"
+                label="Due date"
                 format="dd/MM/yyyy"
                 inputVariant="outlined"
                 value={form.plannedEndDate}

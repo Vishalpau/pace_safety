@@ -14,9 +14,8 @@ import { Col, Row } from "react-grid-system";
 
 import api from "../../../utils/axios";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
+import { CLOSE_OUT_FORM } from "../../../utils/constants";
 import { checkValue } from "../../../utils/CheckerValue";
-import { LESSION_LEARNED_FORM } from "../../../utils/constants";
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -36,9 +35,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const WhyAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
@@ -60,7 +63,9 @@ const WhyAnalysis = () => {
 
   const updateIds = useRef();
   const checkPost = useRef();
+  const dispatch = useDispatch();
   const [investigationData, setInvestigationData] = useState({})
+  const [fkid, setFkid] = useState("")
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiData = {};
@@ -73,6 +78,7 @@ const WhyAnalysis = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
 
+      setFkid(incidentId)
     let previousData = await api.get(
       `/api/v1/incidents/${incidentId}/fivewhy/`
     );
@@ -166,23 +172,15 @@ const WhyAnalysis = () => {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
-        history.push(
-          `${LESSION_LEARNED_FORM["Lessons learnt"]}${localStorage.getItem(
-            "fkincidentId"
-          )}`
-        );
+        dispatch(tabViewMode(viewMode))
+        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
-        history.push(
-          `${LESSION_LEARNED_FORM["Lessons learnt"]}${localStorage.getItem(
-            "fkincidentId"
-          )}`
-        );
+        dispatch(tabViewMode(viewMode))
+        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       }
     }
     localStorage.setItem("RootCause", "Done");

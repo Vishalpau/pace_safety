@@ -29,6 +29,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { useHistory, useParams } from "react-router";
 
 import { Link } from "react-router-dom";
+import { SSO_URL } from "../../utils/constants";
 
 // Styles
 import Fonts from "dan-styles/Fonts.scss";
@@ -89,6 +90,7 @@ const IncidentDetailsSummary = () => {
   const [enviornmentData, setEnviornmentData] = useState([]);
   const [equipmentData, setEquipmentData] = useState([]);
   const [reportsData, setReportsData] = useState([]);
+  const [notifyToList, setNotifyToList] = useState([])
   const [expanded, setExpanded] = React.useState(false);
 
   const [evidence, setEvidence] = useState([]);
@@ -147,17 +149,49 @@ const IncidentDetailsSummary = () => {
 
   const fetchReportsData = async () => {
     const response = await api.get(`api/v1/incidents/${fkid}/reports/`);
-    await setReportsData(response.data.data.results);
+    if(response.status === 200){
+      await setReportsData(response.data.data.results);
+      fetchNotificationSent(response.data.data.results[0].notifyTo)
+    }
+    
   };
 
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${fkid}/evidences/`);
     if (allEvidence.status === 200) {
       await setEvidence(allEvidence.data.data.results);
+      
     }
-
-    // await setIsLoding(true);
   };
+
+   // fetch value noticefication sent
+  const fetchNotificationSent = async (data) => {
+  
+     let notifyList = data.split(',')
+    try {
+      let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+      let projectId = JSON.parse(localStorage.getItem("projectName"))
+        .projectName.projectId;
+     
+      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,);
+      
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        data =[]
+        const newData = result.map(item=> {
+          console.log(notifyList.includes(item.id.toString()))
+          if(notifyList.includes(item.id.toString())){
+            return item.roleName
+          }
+          
+        })
+        console.log({notifyList: newData})
+        setNotifyToList(newData)
+        // setNotificationSentValue(result);
+      }
+    } catch (error) {}
+  };
+
   useEffect(() => {
     fetchIncidentData();
     fetchPeopleAffectData();
@@ -194,7 +228,7 @@ const IncidentDetailsSummary = () => {
       )}
       <Grid item xs={12}>
         <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-          Incident overview
+          Incident title
         </Typography>
         <Typography
           className={classNames(classes.incidentTitle, Fonts.labelValue)}
@@ -763,6 +797,22 @@ const IncidentDetailsSummary = () => {
                       ))
                     : null}
                 </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    className={Fonts.labelName}
+                  >
+                    Notify to
+                  </Typography>
+                  {notifyToList.length !== 0
+                    ? notifyToList.map((notify, key) => (
+                        <Typography className={Fonts.labelValue} key={key}>
+                          {notify}
+                        </Typography>
+                      ))
+                    : "-"}
+                </Grid>
                 <Grid item xs={12} md={12}>
                   <Typography
                     variant="h6"
@@ -883,11 +933,9 @@ const IncidentDetailsSummary = () => {
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                <Tooltip
-                                  title={handelFileName(value.evidenceDocument)}
-                                >
+                               
                                   <Attachment value={value.evidenceDocument} />
-                                </Tooltip>
+                              
                               </Typography>
                             </Grid>
                           ) : null}

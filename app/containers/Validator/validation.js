@@ -1,11 +1,14 @@
 import { ErrorOutline } from "@material-ui/icons";
 import validator from "validator";
 
-function validate(data) {
+function validate(data,projectStructure) {
   let isValid = true;
   const error = {};
   
-
+  if(projectStructure?projectStructure.length===0:false){
+    error.projectStructure = "Please select stage of project";
+    isValid = false;
+  }
 
   if (validator.isEmpty(data.incidentType)) {
     error.incidentType = "Please select incident type";

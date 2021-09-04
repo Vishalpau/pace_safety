@@ -54,6 +54,9 @@ import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
 
 import { connect } from "react-redux";
+import {tabViewMode} from '../../../redux/actions/initialDetails';
+import { useDispatch } from "react-redux";
+import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -156,6 +159,7 @@ function BlankPage(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -173,9 +177,8 @@ for (const i in selectBreakdown) {
 }
 const fkProjectStructureIds = struct.slice(0, -1);
   
-console.log(props.projectName)
+
   const fetchData = async () => {
-    console.log(props.projectName.breakDown,"breakdown")
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -192,10 +195,11 @@ console.log(props.projectName)
   if(fkProjectStructureIds){
     const newData = res.data.data.results.results.filter(
       (item) =>
-        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds ===fkProjectStructureIds
+        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds.includes(fkProjectStructureIds)
 
     );
     await setIncidents(newData);
+    
   }else{
     const newData = res.data.data.results.results.filter(
       (item) =>
@@ -208,9 +212,7 @@ console.log(props.projectName)
   };
 
   const handlePush = async () => {
-    history.push(
-      "/app/incident-management/registration/initial-notification/incident-details/"
-    );
+    history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
 
   useEffect(() => {
@@ -275,10 +277,11 @@ console.log(props.projectName)
       },
     },
   ];
-
+ 
   const options = {
     data: incidents,
     onRowsDelete: (rowsDeleted) => {
+      console.log(rowsDeleted)
       const idsToDelete = rowsDeleted.data.map(
         (d) => incidents[d.dataIndex].id
       );
@@ -291,6 +294,11 @@ console.log(props.projectName)
     filterType: "dropdown",
     responsive: "stacked",
     rowsPerPage: 10,
+    print : false,
+    search: false,
+    filter: false,
+    viewColumns: false,
+    download :false
   };
 
   const classes = useStyles();
@@ -327,6 +335,7 @@ console.log(props.projectName)
                 <div className="toggleViewButtons">
                   <Tooltip title="List View">
                     <IconButton
+                    href="#table"
                       className={classes.filterIcon}
                       onClick={(e) => handelViewTabel(e)}
                     >
@@ -336,6 +345,7 @@ console.log(props.projectName)
 
                   <Tooltip title="Grid View">
                     <IconButton
+                     href="#grid"
                       aria-label="grid"
                       className={classes.filterIcon}
                       onClick={(e) => handelView(e)}
@@ -416,14 +426,14 @@ console.log(props.projectName)
                             justifyContent={isDesktop ? "flex-end" : null}
                           >
                             <Chip
-                              avatar={<Avatar src="/images/pp_boy.svg" />}
-                              label="Admin"
+                              avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
+                              label={item[1]["username"]?item[1]["username"]:"Admin"}
                             />
                           </Box>
                         </Grid>
                       </Grid>
                     </Grid>
-
+                  
                     <Grid item xs={12}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={3}>
@@ -433,7 +443,7 @@ console.log(props.projectName)
                           >
                             Number:
                             <ILink
-                              onClick={(e) => history.push(`/app/incident-management/registration/summary/summary/${item[1].id}`)}
+                              onClick={(e) => history.push(`/incident/details/${item[1].id}/`)}
                               variant="subtitle2"
                               className={Fonts.listingLabelValue}
                             >
@@ -445,7 +455,7 @@ console.log(props.projectName)
                         <Grid item xs={12} md={3}>
                           <Chip
                             variant="outlined"
-                            label="Initial Notification"
+                            label={`Initial Notification${index}`}
                             color="primary"
                             size="small"
                           />
@@ -532,64 +542,42 @@ console.log(props.projectName)
                 </CardContent>
                 <Divider />
                 <CardActions className={Incidents.cardActions}>
-                  <Grid container spacing={2} alignItems="center">
+                  <Grid container spacing={2} justifyContent='space-between' alignItems="center">
                     <Grid item xs={6} md={3}>
                       <Typography
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
+                        onClick={()=>history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                       >
-                        <MessageIcon fontSize="small" /> Comments:
+                        <MessageIcon fontSize="small" /> Comments
                       </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
-                      </Typography>
+                      
                     </Grid>
 
+                   
                     <Grid item xs={6} md={3}>
                       <Typography
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
                       >
-                        <BuildIcon fontSize="small" /> Actions:
+                        <AttachmentIcon fontSize="small" /> Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} md={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Fonts.listingLabelName}
-                      >
-                        <AttachmentIcon fontSize="small" /> Evidences:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">3</ILink>
+                        <ILink href="#">{item[1]["attachment_count"]}</ILink>
                       </Typography>
                     </Grid>
 
                     <Grid item xs={6} md={3}>
                       <Button
-                        disabled
+                        // disabled
                         size="small"
                         color="primary"
                         startIcon={<Print />}
                         className={Incidents.actionButton}
                       >
                         Print
-                      </Button>
-
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
-                        Share
                       </Button>
                     </Grid>
                   </Grid>
@@ -602,7 +590,17 @@ console.log(props.projectName)
 
         <div className="listView">
           <MUIDataTable
-            data={Object.entries(incidents).map((item) => [
+            data={Object.entries(incidents).filter((searchText) => {
+              return (
+              
+                searchText[1]["incidentTitle"]
+                  .toLowerCase()
+                  .includes(searchIncident.toLowerCase()) ||
+                searchText[1]["incidentNumber"].includes(
+                  searchIncident.toUpperCase()
+                )
+              );
+            }).map((item) => [
               item[1]["incidentNumber"],
               item[1]["incidentReportedByName"],
               item[1]["incidentLocation"],

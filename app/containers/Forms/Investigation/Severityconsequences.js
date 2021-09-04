@@ -178,10 +178,16 @@ const InvestigationOverview = () => {
     }
     localStorage.setItem("WorkerDataFetched", "Yes");
     localStorage.removeItem("WorkerPost");
+    let rcaDecide = localStorage.getItem("rcaRecommended")
+    let incidentId = localStorage.getItem("fkincidentId")
+    if (rcaDecide == null || rcaDecide !== `Yes${incidentId}`) {
+      localStorage.setItem("rcaRecommended", `No${incidentId}`)
+    }
   };
 
   const handelDeaultValue = (value) => {
-    return typeof value !== "undefined" ? value : "";
+    let newValue = value !== undefined ? value : "";
+    return newValue
   };
 
   const radioDecide = ["Yes", "No"];
@@ -200,19 +206,19 @@ const InvestigationOverview = () => {
   };
 
   const handelClassification = async (value) => {
-    if (value == classificationValues.current[0] || value == classificationValues.current[1]) {
+    if (value == classificationValues.current[0].value || value == classificationValues.current[1].value) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "PACE cause analysis",
       });
-    } else if (value == classificationValues.current[2]) {
+    } else if (value == classificationValues.current[2].value) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "Cause analysis",
       });
-    } else if (value == classificationValues.current[3]) {
+    } else if (value == classificationValues.current[3].value) {
       await setForm({
         ...form,
         classification: value,
@@ -220,7 +226,6 @@ const InvestigationOverview = () => {
       });
     }
   }
-
 
   useEffect(() => {
     handelCall();
@@ -254,15 +259,15 @@ const InvestigationOverview = () => {
                   >
                     {healthAndSafetyValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            healthSafetyActual: selectValues,
+                            healthSafetyActual: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -282,15 +287,15 @@ const InvestigationOverview = () => {
                   >
                     {healthAndSafetyValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            healthSafetyPotential: selectValues,
+                            healthSafetyPotential: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -311,15 +316,15 @@ const InvestigationOverview = () => {
                   >
                     {environmentValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            environmentActual: selectValues,
+                            environmentActual: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -339,15 +344,15 @@ const InvestigationOverview = () => {
                   >
                     {environmentValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            environmentPotential: selectValues,
+                            environmentPotential: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -368,15 +373,15 @@ const InvestigationOverview = () => {
                   >
                     {regulationValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            regulatoryActual: selectValues,
+                            regulatoryActual: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -396,15 +401,15 @@ const InvestigationOverview = () => {
                   >
                     {regulationValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            regulatoryPotential: selectValues,
+                            regulatoryPotential: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -425,15 +430,15 @@ const InvestigationOverview = () => {
                   >
                     {reputaionValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            reputationActual: selectValues,
+                            reputationActual: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -453,15 +458,15 @@ const InvestigationOverview = () => {
                   >
                     {reputaionValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            reputationPotential: selectValues,
+                            reputationPotential: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -482,15 +487,15 @@ const InvestigationOverview = () => {
                   >
                     {financialValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            financialActual: selectValues,
+                            financialActual: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -510,15 +515,15 @@ const InvestigationOverview = () => {
                   >
                     {financialValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            financialPotential: selectValues,
+                            financialPotential: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -541,15 +546,15 @@ const InvestigationOverview = () => {
                   >
                     {highestImpactReceptor.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
+                        value={selectValues.value}
                         onClick={(e) => {
                           setForm({
                             ...form,
-                            highestPotentialImpactReceptor: selectValues,
+                            highestPotentialImpactReceptor: selectValues.value,
                           });
                         }}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -568,10 +573,10 @@ const InvestigationOverview = () => {
                   >
                     {classificationValues.current.map((selectValues) => (
                       <MenuItem
-                        value={selectValues}
-                        onClick={(e) => handelClassification(selectValues)}
+                        value={selectValues.value}
+                        onClick={(e) => handelClassification(selectValues.value)}
                       >
-                        {selectValues}
+                        {selectValues.label}
                       </MenuItem>
                     ))}
                   </Select>
@@ -580,12 +585,13 @@ const InvestigationOverview = () => {
 
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="unit-name-label" shrink={form.rcaRecommended !== null ? true : false}>RCA recommended</InputLabel>
+                  <InputLabel
+                  >
+                    RCA recommended
+                  </InputLabel>
                   <Select
-                    labelId="unit-name-label"
-                    id="unit-name"
-                    label="Rca recommended"
-                    value={handelDeaultValue(form.rcaRecommended)}
+                    label="RCA recommended"
+                    value={form.rcaRecommended || ""}
                   >
                     {RCAOPTION.map((selectValues) => (
                       <MenuItem

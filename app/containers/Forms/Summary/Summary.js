@@ -34,6 +34,10 @@ import Type from "dan-styles/Typography.scss";
 import Fonts from "dan-styles/Fonts.scss";
 import api from "../../../utils/axios";
 
+
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
 import IncidentDetails from "../InitialNotification/IncidentDetails";
 import IncidentDetailsSummary from "../../SummaryDetails/InitialNotification";
 import InvestigationSummary from "../../SummaryDetails/Investigation";
@@ -46,7 +50,15 @@ import {
   EvidenceStatus,
   RootCauseAnalysisStatus,
   LessionLearnedStatus
-} from "../../../utils/FormStatus"
+} from "../../../utils/FormStatus";
+
+// redux connect
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+import CloseOut from "../../SummaryDetails/CloseOut";
+import { Comments } from "../../pageListAsync";
+import AhaSummary from "../../../containers/Activity/Activity";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -62,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     padding: ".75rem 0",
   },
   statusButton: {
+    whiteSpace: "nowrap",
     borderRadius: 4,
     fontSize: 12,
   },
@@ -72,8 +85,10 @@ const useStyles = makeStyles((theme) => ({
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
-
-const Summary = () => {
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+const Summary = (props) => {
   const [incidents, setIncidents] = useState([]);
   const [initialNotification, setInitialNotification] = useState(false);
   const [investigationOverview, setInvestigationOverview] = useState({});
@@ -86,12 +101,22 @@ const Summary = () => {
   const [rootcauseanalysis, setRootCauseAnalysis] = useState(false);
   const [lessionlearnData, setLessionLearnData] = useState({});
   const [lessionlearn, setLessionlearn] = useState(false);
+  const [closeout, setCloseout] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [initialNoticeficationStatus, setInitialNotificationStatus] = useState(
     false
   );
   const rootCauseStatus = useRef(false);
-  const rcaRecommendedValue = useRef("")
+  const rcaRecommendedValue = useRef("");
+
+  const CLOSE_OUT_MESSAGE = "Incident is closed out. can't be modified! "
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+
+  const [isComments, setIsComments] = useState(false);
+  const [isActivityHistory, setActivityHistory] = useState(false)
 
   const [formStatus, setFormStatus] = useState({
     initialNotificationCheck: "",
@@ -103,6 +128,8 @@ const Summary = () => {
 
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
+
   if (id) {
     localStorage.setItem("fkincidentId", id);
   }
@@ -110,7 +137,10 @@ const Summary = () => {
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/`);
     await setIncidents(allIncidents.data.data.results);
-    await setIsLoading(true);
+    if (allIncidents.data.data.results.closeDate) {
+      setCloseout(true)
+    }
+
   };
   const fetchReportData = async () => {
     const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
@@ -143,8 +173,12 @@ const Summary = () => {
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
+
+
     let rcaRecommended = previousData.data.data.results[0].rcaRecommended
     rcaRecommendedValue.current = rcaRecommended
+
+
   }
 
   const rootCauseAnalysisCheck = async () => {
@@ -162,21 +196,21 @@ const Summary = () => {
     await setRootCausesData(rootCauseData);
 
     let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
+    if (whyAnalysis.status === 200) {
+      await setIsLoading(true)
+    }
     let whyAnalysisData = whyAnalysis.data.data.results[0];
     await setWhyData(whyAnalysisData);
 
   };
 
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+
   const classes = useStyles();
 
   const CheckFormStatus = async () => {
@@ -192,9 +226,29 @@ const Summary = () => {
   const handelNaviagte = (value) => {
     history.push(value)
   }
+  const handleInitialNotificationView = () => {
+    if (initialNoticeficationStatus === false) {
+      handelNaviagte(`/incident/${id}/modify/`)
+    } else {
+      setInitialNotification(true);
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false);
+      let viewMode = {
+        initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+      }
+      dispatch(tabViewMode(viewMode))
+    }
+  }
 
   const handelInvestigationView = () => {
-    if (investigationOverview == undefined) {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stage Initial Notification")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
       handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
     } else {
       setInitialNotification(false);
@@ -204,17 +258,23 @@ const Summary = () => {
       setLessionlearn(false);
       let viewMode = {
         initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
-
       }
-      localStorage.setItem("viewMode", JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode))
     }
   }
 
   const handelEvidenceView = (e) => {
-    if (evidencesData === undefined) {
-      handelNaviagte(
-        `/app/incident-management/registration/evidence/evidence/${id}`
-      );
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification & Investigation")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stage Investigation")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
+      handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
     } else {
       setInitialNotification(false);
       setInvestigation(false);
@@ -225,12 +285,25 @@ const Summary = () => {
         initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
 
       }
-      localStorage.setItem("viewMode", JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode))
     }
   }
 
   const handelRootCauseAnalysisView = () => {
-    if (rcaRecommendedValue.current == "PACE cause analysis") {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation & Evidence")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Investigation & Evidence")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stage Evidence")
+      setMessageType("warning")
+    } else if (rcaRecommendedValue.current == "PACE cause analysis") {
       if (paceCauseData == undefined) {
         handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
       } else {
@@ -243,7 +316,7 @@ const Summary = () => {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Cause analysis") {
       if (rootCausesData == undefined) {
@@ -258,7 +331,7 @@ const Summary = () => {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
       }
     } else if (rcaRecommendedValue.current == "Five why analysis") {
       if (whyData == undefined) {
@@ -273,46 +346,261 @@ const Summary = () => {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode))
       }
     } else {
       handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
     }
   }
+  const handleCloseOutOverView = async => {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence & Root and Cause Analysis")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Investigation, Evidence & Root and Cause Analysis")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Evidence & Root and Cause Analysis")
+      setMessageType("warning")
+
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
+
+      setOpen(true);
+      setMessage("Please complete the previous pending stage Root and Cause Analysis")
+      setMessageType("warning")
+    } else if (!closeout) {
+      handelNaviagte(`/incident/${id}/close-out/new/`)
+    }
+    else {
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false,
+        closeout: true
+
+      }
+      dispatch(tabViewMode(viewMode))
+      setInitialNotification(false);
+      setInvestigation(false);
+      setEvidence(false);
+      setRootCauseAnalysis(false);
+      setLessionlearn(false);
+      setCloseout(true)
+    }
+  }
 
   const handelLessionLearnedView = () => {
-    if (lessionlearnData == undefined) {
-      handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
-    } else {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence, Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Investigation, Evidence, Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    } else if (evidencesData == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Evidence, Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    }
+    else if (!closeout) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stage(s) close out")
+      setMessageType("warning")
+    } else if (!lessionlearnData) {
+      handelNaviagte(`/incident/${id}/lesson-learnt/new/`)
+    }
+    else {
       setInitialNotification(false);
       setInvestigation(false);
       setEvidence(false);
       setRootCauseAnalysis(false);
       setLessionlearn(true);
-
       let viewMode = {
         initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
 
       }
-      localStorage.setItem("viewMode", JSON.stringify(viewMode))
+      dispatch(tabViewMode(viewMode))
     }
-  };
-  const handelInitialNoticeficationView = () => {
+  }
 
-    setInitialNotification(true);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      // setOpenwarning(false)
+      return;
+    }
+    setOpen(false);
+  };
+
+  const modifyInitialDetails = () => {
+    if (closeout) {
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    } else {
+      handelNaviagte(`/incident/${id}/modify/`)
+    }
+  }
+
+  const modifyInvestigation = (fkid) => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stage Initial Notification")
+      setMessageType("warning")
+    }
+    else {
+
+      if (fkid) {
+        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/${fkid}`)
+      } else {
+        handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
+      }
+
+    }
+  }
+  const modifyEvidence = (fkid) => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification & Investigation")
+      setMessageType("warning")
+    }
+    else if (investigationOverview == undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Investigation")
+      setMessageType("warning")
+    }
+    else {
+      handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
+    }
+  }
+  const modifyRootCauseAnalysis = () => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation & Evidence")
+      setMessageType("warning")
+    }
+    else if (investigationOverview === undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Investigation and Evidence")
+      setMessageType("warning")
+    } else if (evidencesData === undefined) {
+
+      setOpen(true);
+      setMessage("Please complete the previous pending stage Evidence")
+      setMessageType("warning")
+    }
+    else {
+      handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)
+    }
+  }
+  const modifyLessonLearn = () => {
+    if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence, Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    }
+    else if (investigationOverview === undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Investigation, Evidence, Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    } else if (evidencesData === undefined) {
+
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Evidence, Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
+
+      setOpen(true);
+      setMessage("Please complete the previous pending stages  Root Cause Analysis & Close Out")
+      setMessageType("warning")
+    }
+    else if (!closeout) {
+
+      setOpen(true);
+      setMessage("Please complete the previous pending stage Close Out")
+      setMessageType("warning")
+    }
+    else {
+      handelNaviagte(`/incident/${id}/lesson-learnt/new/`)
+    }
+  }
+  const modifyCloseout = () => {
+    if (closeout) {
+
+      setOpen(true);
+      setMessage(CLOSE_OUT_MESSAGE)
+      setMessageType("warning")
+    }
+    else if (initialNoticeficationStatus === false) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence and Root Cause & Analysis")
+      setMessageType("warning")
+    }
+    else if (investigationOverview === undefined) {
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Investigation, Evidence and Root Cause & Analysis")
+      setMessageType("warning")
+    } else if (evidencesData === undefined) {
+
+      setOpen(true);
+      setMessage("Please complete the previous pending stages Evidence and Root Cause & Analysis")
+      setMessageType("warning")
+    } else if (!paceCauseData && !rootCausesData && !whyData) {
+
+      setOpen(true);
+      setMessage("Please complete the previous pending stage  Root Cause & Analysis")
+      setMessageType("warning")
+    }
+    else {
+      handelNaviagte(`/incident/${id}/close-out/new/`)
+    }
+  }
+  const handleActivityHistory = () => {
+    setActivityHistory(true);
+    setIsComments(false);
+    setInitialNotification(false);
+    setInvestigation(false);
+    setEvidence(false);
+    setRootCauseAnalysis(false);
+    setLessionlearn(false);
+  }
+  const handleComments = () => {
+    setActivityHistory(false);
+    setIsComments(true);
+    setInitialNotification(false);
     setInvestigation(false);
     setEvidence(false);
     setRootCauseAnalysis(false);
     setLessionlearn(false);
 
-    let viewMode = {
-      initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
-
-    }
-    localStorage.setItem("viewMode", JSON.stringify(viewMode))
-
-  };
-
+  }
 
   useEffect(() => {
     fetchIncidentData();
@@ -334,16 +622,14 @@ const Summary = () => {
           title={`Incident Number: ${incidents.incidentNumber}`}
           icon="ion-md-list-box"
         >
+          {isComments || isActivityHistory?null:<>
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
               {/* initital notificatin */}
               <div className={Styles.item}>
                 <Button
-                  color={
-                    JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).initialNotification
-                      ? "secondary"
-                      : "primary"
-                  }
+                href="#"
+                  color={props.viewMode.viewMode.initialNotification ? "secondary" : "primary"}
                   variant="contained"
                   size="large"
                   variant={
@@ -358,8 +644,7 @@ const Summary = () => {
                   }
                   className={classes.statusButton}
                   onClick={(e) => {
-                    handelInitialNoticeficationView()
-
+                    handleInitialNotificationView()
                   }}
                 >
                   Initial Notification
@@ -372,7 +657,8 @@ const Summary = () => {
               {/* investigation */}
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).investigation ? "secondary" : "primary"}
+                href="#investigation"
+                  color={props.viewMode.viewMode.investigation == true ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
                   variant={investigationOverview ? "contained" : "outlined"}
@@ -388,10 +674,12 @@ const Summary = () => {
                   {investigationOverview ? "Done" : "Pending"}
                 </Typography>
               </div>
+            
 
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).evidence ? "secondary" : "primary"}
+                href="#evidence"
+                  color={props.viewMode.viewMode.evidence == true ? "secondary" : "primary"}
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -406,7 +694,8 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis ? "secondary" : "primary"}
+                href="#root-cause-analysis"
+                  color={props.viewMode.viewMode.rootcauseanalysis == true ? "secondary" : "primary"}
                   variant={
                     paceCauseData || rootCausesData || whyData
                       ? "contained"
@@ -433,7 +722,25 @@ const Summary = () => {
               </div>
               <div className={Styles.item}>
                 <Button
-                  color={JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).lessionlearn ? "secondary" : "primary"}
+                href='#close-out'
+                  color={props.viewMode.viewMode.closeout == true ? "secondary" : "primary"}
+                  variant={closeout ? "contained" : "outlined"}
+                  size="large"
+                  className={classes.statusButton}
+                  endIcon={closeout ? <CheckCircle /> : <AccessTime />}
+                  onClick={(e) => handleCloseOutOverView()
+                  }
+                >
+                  Close out
+                </Button>
+                <Typography className={Fonts.labelValue} display="block">
+                  {closeout ? "Done" : "Pending"}
+                </Typography>
+              </div>
+              <div className={Styles.item}>
+                <Button
+                href='#lessons-learnt'
+                  color={props.viewMode.viewMode.lessionlearn == true ? "secondary" : "primary"}
                   variant={lessionlearnData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
@@ -448,186 +755,209 @@ const Summary = () => {
               </div>
             </div>
           </Box>
+         
+          <Divider /></>}
+
+<Box marginTop={4}>
+  <Grid container spacing={3}>
+    <Grid item xs={12} md={9}>
+      {/* summary and part */}
+      {
+        isActivityHistory ? <AhaSummary /> :
+          isComments ? <Comments /> :
+            <>
+              {(() => {
+                if (
+                  props.viewMode.viewMode.initialNotification == true
+                ) {
+                  return <IncidentDetailsSummary />;
+                }
+                if (props.viewMode.viewMode.investigation == true) {
+                  return <InvestigationSummary />;
+                }
+                if (props.viewMode.viewMode.evidence == true) {
+                  return <EvidenceSummary />;
+                }
+                if (props.viewMode.viewMode.rootcauseanalysis == true) {
+                  return <RootCauseAnalysisSummary />;
+                }
+                if (props.viewMode.viewMode.closeout == true) {
+                  return <CloseOut />;
+                }
+                if (props.viewMode.viewMode.lessionlearn == true) {
+                  return <LessionLearnSummary />;
+                }
+              })()}
+            </>
+      }
+    </Grid>
+
+
+    {/* side bar    */}
+    {isDesktop && (
+      <Grid item xs={12} md={3}>
+        <Paper>
+          <List
+            dense
+            subheader={
+              <ListSubheader component="div">Actions</ListSubheader>
+            }
+          >
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+            >
+              <Alert onClose={handleClose} severity={messageType}>
+                {message}
+              </Alert>
+            </Snackbar>
+            <ListItemLink button
+            >
+              <ListItemIcon>
+                <Edit />
+              </ListItemIcon>
+              <ListItemText
+
+                onClick={(e) => modifyInitialDetails()}
+                primary="Modify Notification" />
+            </ListItemLink>
+
+            {investigationOverview ? (
+              <ListItemLink
+                // onClick = {(e)=>handelNaviagte()}
+                onClick={(e) => modifyInvestigation(id)}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Investigation" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink
+                onClick={(e) => handelInvestigationView()}>
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+
+                <ListItemText primary="Add Investigation" />
+              </ListItemLink>
+            )}
+
+            {evidencesData ? (
+              <ListItemLink
+                onClick={(e) => modifyEvidence(id)}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Evidence" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink
+                onClick={(e) => modifyEvidence(id)}>
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+
+                <ListItemText primary="Add Evidence" />
+              </ListItemLink>
+            )}
+            {paceCauseData || rootCausesData || whyData ? (
+              <ListItemLink
+                onClick={(e) => modifyRootCauseAnalysis()}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify RCA" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink
+                onClick={(e) => modifyRootCauseAnalysis()}
+              >
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+                <ListItemText primary="Perform RCA" />
+              </ListItemLink>
+            )}
+            {lessionlearnData ? (
+              <ListItemLink
+                onClick={(e) => handelNaviagte(`/incident/${id}/lesson-learnt/modify/`)}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <ListItemText primary="Modify Lessons Learnt" />
+              </ListItemLink>
+            ) : (
+              <ListItemLink button
+                onClick={(e) => modifyLessonLearn()}
+              >
+                <ListItemIcon>
+                  <Add />
+                </ListItemIcon>
+                <ListItemText primary="Add Lessons Learnt" />
+              </ListItemLink>
+            )}
+
+            <ListItem
+              onClick={(e) => modifyCloseout()}
+              button divider>
+              <ListItemIcon>
+                <Close />
+              </ListItemIcon>
+              <ListItemText primary="Close Out" />
+            </ListItem>
+
+            <ListItem
+              href='/#comment'
+              onClick={(e) => handleComments()}
+              button>
+              <ListItemIcon>
+                <Comment />
+              </ListItemIcon>
+              <ListItemText primary="Comments" />
+            </ListItem>
+
+            <ListItem href='/#activity' button onClick={() => handleActivityHistory()}>
+              <ListItemIcon>
+                <History />
+              </ListItemIcon>
+              <ListItemText primary="Activity History" />
+            </ListItem>
+          </List>
           <Divider />
+          <List dense>
+            <ListItem button>
+              <ListItemIcon>
+                <Print />
+              </ListItemIcon>
+              <ListItemText primary="Print" />
+            </ListItem>
 
-          <Box marginTop={4}>
-            <Row>
-              <Col md={9}>
-                <Grid item xs={12}>
-                  {/* summary and part */}
-                  <>
-                    {(() => {
-                      if (
-                        JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).initialNotification
+          </List>
+        </Paper>
+      </Grid>
+    )}
 
-                      ) {
-                        return <IncidentDetailsSummary />;
-                      }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).investigation) {
-                        return <InvestigationSummary />;
-                      }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).evidence) {
-                        return <EvidenceSummary />;
-                      }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).rootcauseanalysis) {
-                        return <RootCauseAnalysisSummary />;
-                      }
-                      if (JSON.parse(localStorage.getItem("viewMode")) === null ? null : JSON.parse(localStorage.getItem("viewMode")).lessionlearn) {
-                        return <LessionLearnSummary />;
-                      }
-                    })()}
-                  </>
-                </Grid>
-              </Col>
+  </Grid>
 
-              {/* side bar    */}
-              {isDesktop && (
-                <Grid item xs={12} md={3}>
-                  <Paper>
-                    <List
-                      dense
-                      subheader={
-                        <ListSubheader component="div">Actions</ListSubheader>
-                      }
-                    >
-                      <ListItemLink
-                      >
-                        <ListItemIcon>
-                          <Edit />
-                        </ListItemIcon>
-                        <ListItemText
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/initial-notification/incident-details/${id}`)}
-                          primary="Modify Notification" />
-                      </ListItemLink>
-
-                      {investigationOverview ? (
-                        <ListItemLink
-                          // onClick = {(e)=>handelNaviagte()}
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/${id}`)}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify Investigation" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte("/app/incident-management/registration/investigation/investigation-overview/")}>
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
-
-                          <ListItemText primary="Add Investigation" />
-                        </ListItemLink>
-                      )}
-
-                      {evidencesData ? (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify Evidence" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte("/app/incident-management/registration/evidence/evidence/")}>
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
-
-                          <ListItemText primary="Add Evidence" />
-                        </ListItemLink>
-                      )}
-                      {paceCauseData || rootCausesData || whyData ? (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify RCA" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`)}
-                        >
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
-                          <ListItemText primary="Perform RCA" />
-                        </ListItemLink>
-                      )}
-                      {lessionlearnData ? (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)}
-                        >
-                          <ListItemIcon>
-                            <Edit />
-                          </ListItemIcon>
-                          <ListItemText primary="Modify Lessons Learnt" />
-                        </ListItemLink>
-                      ) : (
-                        <ListItemLink
-                          onClick={(e) => handelNaviagte(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)}
-                        >
-                          <ListItemIcon>
-                            <Add />
-                          </ListItemIcon>
-                          <ListItemText primary="Add Lessons Learnt" />
-                        </ListItemLink>
-                      )}
-
-                      <ListItem
-                        onClick={() => history.push(`/app/incident-management/registration/close-out/${id}`)}
-                        button divider>
-                        <ListItemIcon>
-                          <Close />
-                        </ListItemIcon>
-                        <ListItemText primary="Close Out" />
-                      </ListItem>
-
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Comment />
-                        </ListItemIcon>
-                        <ListItemText primary="Comments" />
-                      </ListItem>
-
-                      <ListItem button>
-                        <ListItemIcon>
-                          <History />
-                        </ListItemIcon>
-                        <ListItemText primary="Activity History" />
-                      </ListItem>
-                    </List>
-                    <Divider />
-                    <List dense>
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Print />
-                        </ListItemIcon>
-                        <ListItemText primary="Print" />
-                      </ListItem>
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Share />
-                        </ListItemIcon>
-                        <ListItemText primary="Share" />
-                      </ListItem>
-                    </List>
-                  </Paper>
-                </Grid>
-              )}
-            </Row>
-          </Box>
-        </PapperBlock>
+</Box>
+        </PapperBlock >
       ) : (
-        <h1> Loading...</h1>
-      )}
+  <h1> Loading...</h1>
+)}
     </>
   );
 };
+const mapStateToProps = state => {
+  return {
+    viewMode: state.getIn(["InitialDetailsReducer"]),
 
-export default Summary;
+  }
+}
+
+export default connect(mapStateToProps, null)(Summary);
+// export default Summary;

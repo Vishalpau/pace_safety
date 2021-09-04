@@ -22,35 +22,36 @@ export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 export const API_URL = "https://dev-safety-api.paceos.io/";
 export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
 export const access_token = localStorage.getItem("access_token");
-
+export const API_VERSION = "api/v1/"
 export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/";
 
 // Header authenticatuon
 export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
 
+const fkincidentId =  localStorage.getItem("fkincidentId")
+
 export const INITIAL_NOTIFICATION_FORM = {
-  "Incident details": `/app/incident-management/registration/initial-notification/incident-details/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
-  "People affected": `/app/incident-management/registration/initial-notification/peoples-afftected/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
-  "Property affected": `/app/incident-management/registration/initial-notification/property-affected/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
-  "Equipment affected": `/app/incident-management/registration/initial-notification/equipment-affected/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
-  "Environment impact": `/app/incident-management/registration/initial-notification/environment-affected/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
-  "Reporting and notification": `/app/incident-management/registration/initial-notification/reporting-and-notification/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
+  "Incident details": `/incident/${fkincidentId}/modify/`,
+  "People affected": `/incident/${fkincidentId}/modify/peoples-afftected/`,
+  "Property affected": `/incident/${fkincidentId}/modify/property-affected/`,
+  "Equipment affected": `/incident/${fkincidentId}/modify/equipment-affected/`,
+  "Environment impact": `/incident/${fkincidentId}/modify/environment-affected/`,
+  "Reporting and notification": `/incident/${fkincidentId}/modify/reporting-and-notification/`,
+};
+
+export const INITIAL_NOTIFICATION_FORM_NEW = {
+  "Incident details": `/incident/new/`,
+  "People affected": `/incident/${fkincidentId}/peoples-afftected/new/`,
+  "Property affected": `/incident/${fkincidentId}/property-affected/new/`,
+  "Equipment affected": `/incident/${fkincidentId}/equipment-affected/new/`,
+  "Environment impact": `/incident/${fkincidentId}/environment-affected/new/`,
+  "Reporting and notification": `/incident/${fkincidentId}/reporting-and-notification/new/`,
 };
 
 export const EVIDENCE_FORM = {
-  Evidences: `/app/incident-management/registration/evidence/evidence/${localStorage.getItem("fkincidentId")}`,
+  "Evidences": `/app/incident-management/registration/evidence/evidence/${localStorage.getItem(
+    "fkincidentId"
+  )}`,
   "Activity details": `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
     "fkincidentId"
   )}`,
@@ -63,17 +64,14 @@ export const EVIDENCE_FORM = {
 };
 
 export const INVESTIGATION_FORM = {
-  "Investigation overview":
-    "/app/incident-management/registration/investigation/investigation-overview/",
+  "Investigation overview":`/incident/${fkincidentId}/investigation/new/investigation/`,
   "Severity consequences":
-    "/app/incident-management/registration/investigation/severity-consequences/",
-  "Worker details": `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem(
-    "fkincidentId"
-  )}`,
+    "/incident/${fkincidentId}/investigation/new/investigation/severity-consequences/",
+  "Worker details": `/incident/${fkincidentId}/investigation/new/investigation/worker-details/0/`,
   "Event details":
-    "/app/incident-management/registration/investigation/event-details/",
+    `/incident/${fkincidentId}/investigation/new/investigation/event-details/`,
   "Action taken":
-    "/app/incident-management/registration/investigation/action-taken/",
+    `/incident/${fkincidentId}/investigation/new/investigation/action-taken/`,
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
@@ -99,8 +97,13 @@ export const ROOT_CAUSE_ANALYSIS_FORM = {
     "/app/incident-management/registration/root-cause-analysis/why-analysis/",
 };
 
+export const DETAILS = {
+  "RCA Details":
+    "/app/incident-management/registration/root-cause-analysis/details/",
+}
+
 export const SUMMERY_FORM = {
-  Summary: "/app/incident-management/registration/summary/summary/",
+  Summary: "/incident/details/",
 };
 
 export const LESSION_LEARNED_FORM = {
@@ -161,6 +164,34 @@ export const PACE_MANAGEMENT_CONTROL_SUB_TYPES = [
   "Compilance",
   "Engagement",
 ];
+
+// hide array 
+
+export const FIVEWHYHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Cause analysis",
+]
+
+export const PACEHIDE = [
+  "Cause analysis", "Five Why analysis"
+]
+
+export const ROOTHIDE = [
+  "Hazardous acts",
+  "Hazardous conditions",
+  "Corrective actions",
+  "Basic cause",
+  "Management control",
+  "Preventive actions",
+  "Additional information",
+  "Five Why analysis"
+]
 
 // option in root cause and anlysis
 
@@ -279,19 +310,22 @@ export const PERSONALWELNESSFACTORS = [
 ];
 
 export const LEADERSHIP = [
-  "Lack of  Leadership engagement",
-  "Lack of  supervision in field",
-  "Incompetent field supervision",
-  "Supervision failure to manage change",
-  "Lack of enforcement",
+  "Work Package Incomplete",
+  "Work Package Not Available",
+  "Fighting or Being Bullied at Work Place",
+  "Under the Influence of Drug or Alcohol",
+  "Physical or Mental Stress",
+  "Complacent Behavior(Worker / Supervisor)",
+  "Intentional Harmfully Act",
 ];
 
 export const PROCESSES = [
-  "Poor engineering processes",
-  "Poor supply management / purchasing process",
-  "Poor preventive maintenance Processes",
-  "Lack of proper tools / equipment / material for the job",
-  "Lack of policies, standards and guidelines",
+  "Poor Posture",
+  "Poor Lifting Techniques",
+  "Repetitious Movements",
+  "Over Reaching",
+  "No or Improper Securing Devices Used",
+  "Wrong Loading- Lifting or Improper Placement Techniques Used",
 ];
 
 export const OTHERISSUES = [
@@ -353,3 +387,11 @@ export const ENGAGEMENT = [
   "Poor reward and recognition",
   "Delay / withholding information",
 ];
+
+// AHA Route
+export const AHA = {
+  "Project Details": "/app/pages/aha/assessments/project-details",
+  "Project Area Hazards": "/app/pages/aha/assessments/project-area-hazards",
+  Assessment: "/app/pages/aha/assessments/assessment",
+  "Documents & Notifications": "/app/pages/aha/assessments/DocumentsNotifications"
+}

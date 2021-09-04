@@ -38,6 +38,16 @@ import TableRow from "@material-ui/core/TableRow";
 import ActionTracker from "./ActionTracker";
 import ActionTrackerUpdate from "./ActionTrackerUpdate";
 
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+  ACTIONS_CLIENT_ID,
+} from "../../../utils/constants";
+
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -119,7 +129,19 @@ const ObservationCorrectiveActionView = () => {
   const [comments , setComments] = useState([]);
   const [isLoading , setIsLoading] = useState(false);
   
+  
   const [actionTakenData , setActionTakenData] = useState([]);
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
   const fetchInitialiObservation = async () => {
     // const response = await api.get('/api/v1/observations/${id}/')
     const res = await api.get(`/api/v1/observations/${id}/`);
@@ -127,7 +149,6 @@ const ObservationCorrectiveActionView = () => {
     await setInitialData(result)
 
   }
-
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
   const handleDateChange = (date) => {
@@ -162,15 +183,10 @@ bytes
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
     const result = res.data.data.results.results
-    console.log(result);
     // await setComments(result[3])
     await setComment(result[result.length -1] )
-    await setIsLoading(true)
+    // await setIsLoading(true)
   }
-
-  
-  console.log(comments)
-  console.log(comment)
 
   const fetchactionTrackerData = async () =>{
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
@@ -185,11 +201,11 @@ bytes
       
       )
       let sorting = newData.sort((a, b) => a.id - b.id)
+    
     await setActionTakenData(sorting)
     await setIsLoading(true);
 
   }
-  console.log(actionTakenData)
   useEffect(() => {
       if(id){
         fetchInitialiObservation();
@@ -207,7 +223,7 @@ bytes
           Are there any corrective actions to be taken?
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.isCorrectiveActionTaken}
+                    {initialData.isCorrectiveActionTaken ? initialData.isCorrectiveActionTaken : ""}
           </Typography>
         </Grid>
 
@@ -257,16 +273,21 @@ bytes
                         </TableCell>
             </TableRow></TableHead>
             <TableBody>
-            {actionTakenData.map((action) => (<>
+            {actionTakenData.map((action , index) => (<>
               <TableRow>
                 <TableCell style={{ width:50}}>
                 
-                <Link
+                <a
+                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
+                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
+                // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
                                 // enitityReferenceId={action.enitityReferenceId}
                                 // actionId={action.id}
                                 // actionData = {action}
-                              >{action.actionNumber}</Link>
+                                // onClick = {() => {handleActionTracker(action)}}
+                                target="_blank"
+                              >{action.actionNumber}</a>
                 
                 </TableCell>
                 <TableCell style={{ width:50}}>

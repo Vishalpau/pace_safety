@@ -17,8 +17,12 @@ import { PapperBlock } from "dan-components";
 import { useHistory, useParams } from "react-router";
 
 import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM, EVIDENCE_FORM } from "../../../utils/constants";
+import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -34,6 +38,7 @@ const ActionTaken = () => {
   const history = useHistory();
   const putId = useRef("");
   const investigationId = useRef("");
+  const dispatch = useDispatch();
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -73,13 +78,13 @@ const ActionTaken = () => {
 
       }
       localStorage.setItem("viewMode", JSON.stringify(viewMode))
-      history.push(`${EVIDENCE_FORM["Evidences"]}`
-      );
+      dispatch(tabViewMode(viewMode));
+      history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
+      
     }
   };
 
   useEffect(() => {
-    console.log(EVIDENCE_FORM["Evidences"])
     handelUpdateCheck();
   }, []);
 
@@ -96,11 +101,11 @@ const ActionTaken = () => {
                 variant="outlined"
                 id="filled-basic"
                 label="Pre-event mitigation"
-                value={form.preEventMitigations}
-                placeholder="Pre-event mitigation"
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                value={form.preEventMitigations != undefined ? form.preEventMitigations : ""}
+                // placeholder="Pre-event mitigation"
+                // InputLabelProps={{
+                //   shrink: true,
+                // }}
                 onChange={(e) => {
                   setForm({
                     ...form,

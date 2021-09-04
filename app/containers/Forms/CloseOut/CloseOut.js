@@ -27,6 +27,7 @@ import { useHistory, useParams } from "react-router";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
+import { LESSION_LEARNED_FORM } from "../../../utils/constants";
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -34,13 +35,16 @@ import {
     access_token,
     ACCOUNT_API_URL,
     HEADER_AUTH,
-    CLOSE_OUT_FORM
+    CLOSE_OUT_FORM,
+    SUMMERY_FORM
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 
-import Attachment from "../../Attachment/Attachment";
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -62,14 +66,16 @@ const CloseOut = () => {
     const classes = useStyles();
     const history = useHistory();
     const { id } = useParams();
+    const dispatch = useDispatch();
     const [incidentsListData, setIncidentsListdata] = useState([]);
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState({})
     const [form, setForm] = useState({
-        reviewedBy:0,
-        reviewDate:null,
-        closedBy:0,
-        closeDate:null
+        reviewedBy: 0,
+        reviewDate: null,
+        closedBy: 0,
+        closeDate: null
     })
 
     const userId =
@@ -77,32 +83,69 @@ const CloseOut = () => {
             ? JSON.parse(localStorage.getItem("userDetails")).id
             : null;
 
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
 
     // fetch incident data
     const fetchIncidentsData = async () => {
         const res = await api.get(
             `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
         );
-        if(res.status === 200){
+        if (res.status === 200) {
             const result = res.data.data.results;
-           
-            if(Object.entries(result).length>0){
-                let temp = {...form}
-                temp=result
+
+            if (Object.entries(result).length > 0) {
+                let temp = { ...form }
+                temp = result
                 await setForm(result)
                 await setIncidentsListdata(result);
-            await setIsLoading(true)
-            }          
-       }
-        
+                await setIsLoading(true)
+            }
+        }
+
     };
+    // handle close snackbar
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpen(false);
+    };
+    const handleCloseDate = (e) => {
+        if (new Date(e) > new Date(form.reviewDate)) {
+            setForm({ ...form, closeDate: moment(e).toISOString() });
+            error.closeDate = ""
+            setError(error);
+        }
+        else {
+            setForm({ ...form, closeDate: null })
+            let errorMessage = "Closed date cannot be prior to reviewed date"
+            error.closeDate = errorMessage
+            setError(error);
+            
+        }
+    }
+
+    const handleReviewDate = (e) => {
+        if (new Date(e) < new Date()) {
+            setForm({ ...form, reviewDate: moment(e).toISOString() });
+            error.reviewDate = ""
+            setError(error)
+        }
+        else {
+            setForm({ ...form, reviewDate: null })
+            error.reviewDate = "Invalid date-time selected"
+            setError(error);
+        }
+    }
 
     //   fetch user data
 
     const fetchUserList = async () => {
         var config = {
             method: 'get',
-            url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+            url: `${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
@@ -110,7 +153,7 @@ const CloseOut = () => {
 
         axios(config)
             .then(function (response) {
-               
+
                 if (response.status === 200) {
                     const result = response.data.data.results[0].users
                     setUserList(result)
@@ -121,31 +164,39 @@ const CloseOut = () => {
             });
     }
 
-    const handleNext = async()=>{
+    const handleNext = async () => {
         const temp = incidentsListData;
-        temp.reviewedBy =form.reviewedBy || incidentsListData.reviewedBy;
-        temp.reviewDate =form.reviewDate || incidentsListData.reviewDate;
-        temp.closedBy =form.closedBy || incidentsListData.closedBy;
-        temp.closeDate =form.closeDate || incidentsListData.closeDate;
+        temp.reviewedBy = form.reviewedBy || incidentsListData.reviewedBy;
+        temp.reviewDate = form.reviewDate || incidentsListData.reviewDate;
+        temp.closedBy = form.closedBy || incidentsListData.closedBy;
+        temp.closeDate = form.closeDate || incidentsListData.closeDate;
         temp.updatedAt = new Date().toISOString();
         temp.updatedBy = parseInt(userId)
-        
+
         try {
-          const res = await api.put(
-            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-            temp
-          );
-          if(res.status===200){
-              history.push(`/app/incident-management/registration/summary/summary/${id}`)
-          }
+            if (new Date(form.closeDate) > new Date(form.reviewDate)) {
+                const res = await api.put(
+                    `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+                    temp
+                );
+                if (res.status === 200) {
+                    let viewMode = {
+                        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+                        , closeout: true
+                    }
+                    dispatch(tabViewMode(viewMode));
+                    history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
+                }
+            }
+            else {
+                setForm({ ...form, closeDate: null })
+                let errorMessage = "Closed date cannot be prior to reviewed date"
+                setError(errorMessage)
+            }
         } catch (error) {
-          console.log(error)
+            console.log(error)
         }
     }
-
-
-
-
 
     useEffect(() => {
         fetchUserList();
@@ -266,8 +317,75 @@ const CloseOut = () => {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Reviewed by"
-                                    value={form.reviewedBy||""}
-                                    onChange={(e)=> setForm({...form, reviewedBy:e.target.value})}
+                                    value={form.reviewedBy || ""}
+                                    onChange={(e) => setForm({ ...form, reviewedBy: e.target.value })}
+
+                                >
+                                    {userList.map((selectValues, index) => (
+                                        <MenuItem
+                                            value={selectValues.id}
+                                            key={index}
+                                        >
+                                            {selectValues.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+
+                            </FormControl>
+                        </Grid>
+                        <Snackbar
+                            open={open}
+                            autoHideDuration={6000}
+                            onClose={handleClose}
+                        >
+                            <Alert onClose={handleClose} severity={messageType}>
+                                {message}
+                            </Alert>
+                        </Snackbar>
+                        <Grid item xs={12} md={6}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    error={error.reviewDate}
+                                    helperText={
+                                        error.reviewDate ? error.reviewDate : null
+                                    }
+                                    className={classes.formControl}
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Reviewed on"
+                                    value={form.reviewDate || null}
+                                    onChange={(e) => handleReviewDate(e)}
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    disableFuture
+                                    InputProps={{ readOnly: true }}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="h6" gutterBottom>
+                                Action item close out
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <FormControl
+                                variant="outlined"
+
+                                className={classes.formControl}
+
+
+                            >
+                                <InputLabel id="demo-simple-select-label">
+                                    Closed by
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Closed by"
+                                    value={form.closedBy || ""}
+                                    onChange={(e) => setForm({ ...form, closedBy: e.target.value })}
 
                                 >
                                     {userList.map((selectValues, index) => (
@@ -286,76 +404,23 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
-                                    id="date-picker-dialog"
+                                    error={error.closeDate}
+                                    helperText={
+                                        error.closeDate ? error.closeDate : null
+                                    }
+                                    value={form.closeDate || null}
+                                    onChange={(e) => handleCloseDate(e)}
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
-                                    label="Reviewed on"
-                                    value={form.reviewDate||null}
-                                    onChange={(e)=> setForm({...form, reviewDate:moment(e).toISOString()})}
-                                    KeyboardButtonProps={{
-                                        "aria-label": "change date",
-                                    }}
-                                    disableFuture
-
-                                />
-                            </MuiPickersUtilsProvider>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" gutterBottom>
-                                Action item close out
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <FormControl
-                                variant="outlined"
-                                
-                                className={classes.formControl}
-
-
-                            >
-                                <InputLabel id="demo-simple-select-label">
-                                    Closed by
-                                </InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    label="Closed by"
-                                    value={form.closedBy||""}
-                                    onChange={(e)=> setForm({...form, closedBy:e.target.value})}
-
-                                >
-                                    {userList.map((selectValues, index) => (
-                                        <MenuItem
-                                            value={selectValues.id}
-                                            key={index}
-                                        >
-                                            {selectValues.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDateTimePicker
-                                className={classes.formControl}
-                              
-                                value={form.closeDate||null}
-                                onChange={(e)=> setForm({...form, closeDate:moment(e).toISOString()})}
-                                
-                                format="yyyy/MM/dd HH:mm"
-                                inputVariant="outlined"
-                                   
                                     id="date-picker-dialog"
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     label="Closed on"
-                                   
+
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
-                                   
+                                    InputProps={{ readOnly: true }}
                                     disableFuture
                                 />
                             </MuiPickersUtilsProvider>

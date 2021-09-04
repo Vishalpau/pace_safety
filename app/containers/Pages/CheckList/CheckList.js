@@ -10,11 +10,9 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-
+import { useHistory, useParams } from "react-router";
 
 import api from "../../../utils/axios"
-
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
     },
     tabelBorder: {
         width: 110,
-        border: '1px solid black'
     },
     paper: {
         position: 'absolute',
@@ -42,38 +39,25 @@ const useStyles = makeStyles((theme) => ({
 
 function CheckList() {
 
-    const [checkList, setCheckList] = useState([])
-
-
-    const [modelOpen, setModelOpen] = useState(false)
-    const [hasGroup, setHasGroup] = useState()
-    const [groupsId, setGroupId] = useState({})
-
-    const handleOpen = (value) => {
-        setModelOpen(true)
-        setHasGroup(value)
-    }
-
-    const handleClose = () => {
-        setModelOpen(false)
-    }
-
-    const handelCheckListData = async () => {
+    const [chekListData, setCheckListData] = useState([])
+    const history = useHistory();
+    const handelCheckList = async () => {
         const temp = {}
-        let res = await api.get("api/v1/core/checklist/")
-        let checkListData = res.data.data.results
-        checkListData.map((value) => {
+        const res = await api.get("api/v1/core/checklists/")
+        const result = res.data.data.results
+        result.map((value) => {
             if (value.hasGroup == "Yes") {
-                value.checklistGroups.map((group, index) => {
-                    if (value.checklistId in temp) {
-                        temp[value.checklistId].push(group.checklistgroupId)
+                value.checklistGroups.map((groupValue) => {
+                    if (temp[value.checklistId] in temp) {
+                        temp[value.checklistId].push(groupValue.checklistgroupId)
                     } else {
-                        temp[value.checklistId] = [group.checklistgroupId]
+                        temp[value.checklistId] = [groupValue.checklistgroupId]
                     }
                 })
             }
         })
-        setCheckList(checkListData)
+        setCheckListData(result)
+
     }
 
     const getModalStyle = () => {
@@ -84,11 +68,31 @@ function CheckList() {
         };
     }
 
+    const [open, setOpen] = useState(false)
+    const [hagGroup, setHasGroup] = useState()
+    const [checklistId, setCheckListID] = useState("")
+
+    const handleOpen = (value, groupId) => {
+        setOpen(true)
+        setHasGroup(value)
+        setCheckListID(groupId)
+    }
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handelNavigate = (value) => {
+        if (value == "groups") {
+            history.push(`/app/pages/groups/${checklistId}`)
+        } else if (value == "options") {
+            history.push(`/app/pages/options/${checklistId}`)
+        }
+
+    }
+
     useEffect(() => {
-        handelCheckListData()
+        handelCheckList()
     }, [])
-
-
 
     const classes = useStyles();
     return (
@@ -99,22 +103,22 @@ function CheckList() {
                         <TableCell className={classes.tabelBorder}>Sr.</TableCell>
                         <TableCell className={classes.tabelBorder}>List name</TableCell>
                         <TableCell className={classes.tabelBorder}>List type</TableCell>
-                        <TableCell className={classes.tabelBorder}>List lable</TableCell>
+                        <TableCell className={classes.tabelBorder}>List label</TableCell>
                         <TableCell className={classes.tabelBorder}>Select</TableCell>
                         <TableCell className={classes.tabelBorder}>Has group?</TableCell>
                         <TableCell className={classes.tabelBorder}>Status</TableCell>
                         <TableCell className={classes.tabelBorder}>Actions</TableCell>
                     </TableRow>
-                    {checkList.map((value) => (
+                    {chekListData.map((value) => (
                         <TableRow>
                             <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
                             <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell>
                             <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
                             <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
-                            <TableCell className={classes.tabelBorder}>{value.checkListSelectType}</TableCell>
+                            <TableCell className={classes.tabelBorder}>0</TableCell>
                             <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
-                            <TableCell className={classes.tabelBorder}></TableCell>
-                            <TableCell className={classes.tabelBorder}><i className="ion-ios-more" onClick={(e) => handleOpen(value.hasGroup)} /></TableCell>
+                            <TableCell className={classes.tabelBorder}>0</TableCell>
+                            <TableCell className={classes.tabelBorder}><i className="ion-ios-more" onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} /></TableCell>
                         </TableRow>
                     ))}
 
@@ -122,7 +126,6 @@ function CheckList() {
                 </TableBody>
             </Table>
 
-            {/* dialg */}
             <Grid
                 container
                 alignItems="center"
@@ -132,12 +135,19 @@ function CheckList() {
                 <Modal
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
-                    open={modelOpen}
+                    open={open}
                     onClose={(e) => handleClose()}
                 >
                     <div style={getModalStyle()} className={classes.paper}>
-                        {hasGroup == "Yes" ? <Button >Groups</Button> : null}
-                        <Button>Check List</Button>
+                        {hagGroup == "Yes" ?
+                            <Typography variant="h6" id="modal-title">
+                                <Button onClick={(e) => handelNavigate("groups")}>Group</Button>
+                            </Typography> :
+                            null
+                        }
+                        <Typography variant="subtitle1" id="simple-modal-description">
+                            <Button onClick={(e) => handelNavigate("options")}>Options</Button>
+                        </Typography>
                     </div>
                 </Modal>
             </Grid>

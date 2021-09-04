@@ -63,15 +63,17 @@ const PaceManagementControl = () => {
   })
   const [incidentDetail, setIncidentDetail] = useState({});
   const [nextButton, setNextButton] = useState(false)
-  const paceCauseDelete = useRef([])
+  const [paceCauseDelete, setPaceCauseDelete] = useState()
   const history = useHistory();
   const putId = useRef("")
   const [optionBasicCause, setOptionBasicCause] = useState([])
+  const [allPaceCause, setAllPaceCause] = useState({})
 
 
   const handelUpdateCheck = async () => {
     let tempData = {}
     let paceCauseid = []
+    let allFetchPaceCause = {}
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
@@ -89,6 +91,7 @@ const PaceManagementControl = () => {
             tempData[value.rcaSubType] = [value.rcaRemark]
           }
           paceCauseid.push(value.id)
+          allFetchPaceCause[value.id] = value.rcaRemark
         }
       })
       setForm({
@@ -114,7 +117,8 @@ const PaceManagementControl = () => {
           rcaRemark: handelApiValue(tempData["Engagement"]),
         },
       })
-      paceCauseDelete.current = paceCauseid
+      setPaceCauseDelete(paceCauseid)
+      setAllPaceCause(allFetchPaceCause)
     }
   }
 
@@ -154,9 +158,10 @@ const PaceManagementControl = () => {
 
     let OptionWithSubType =
       handelOptionDispay("Human factors", "personal", checkValue(tempApiData["personal"])).concat
-        (handelOptionDispay("Human factors", "wellnessFactors", checkValue(tempApiData["wellnessFactors"]))).concat
+        (handelOptionDispay("Human factors", "wellness factors", checkValue(tempApiData["wellnessFactors"]))).concat
         (handelOptionDispay("Jobfactors", "leadership", checkValue(tempApiData["leadership"]))).concat
-        (handelOptionDispay("Jobfactors", "processes", checkValue(tempApiData["processes"])))
+        (handelOptionDispay("Jobfactors", "processes", checkValue(tempApiData["processes"]))).concat
+        (handelOptionDispay("Jobfactors", "other issuses", checkValue(tempApiData["otherIssues"])))
     setOptionBasicCause(OptionWithSubType)
   };
 
@@ -253,13 +258,21 @@ const PaceManagementControl = () => {
   };
 
   const handelDelete = async () => {
-    if (paceCauseDelete.current.length > 0) {
-      paceCauseDelete.current.map(async (value) => {
-        let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${value}/`)
-        if (delPaceCause.status == 200) {
-          console.log("deleted")
+    let currentRemark = [].concat.apply([], [
+      form.ProActiveManagement.rcaRemark,
+      form.Assessments.rcaRemark,
+      form.Compilance.rcaRemark,
+      form.Engagement.rcaRemark,
+    ])
+    if (paceCauseDelete !== undefined && paceCauseDelete.length > 0) {
+      for (let key in allPaceCause) {
+        if (!currentRemark.includes(allPaceCause[key])) {
+          let delPaceCause = await api.delete(`api/v1/incidents/${putId.current}/pacecauses/${key}/`)
+          if (delPaceCause.status == 200) {
+            console.log("deleted")
+          }
         }
-      })
+      }
     }
   }
 
@@ -289,19 +302,22 @@ const PaceManagementControl = () => {
   const handelApiCall = async () => {
     let nextPageLink = 0;
     let tempData = []
+    let lastRemark = Object.values(allPaceCause)
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
-        let temp = {
-          createdBy: "0",
-          fkIncidentId: putId.current,
-          rcaRemark: value,
-          rcaSubType: api_data["rcaSubType"],
-          rcaType: "PACE Managemnt control",
-          remarkType: api_data["remarkType"],
-          status: "Active",
-        };
-        tempData.push(temp);
+        if (!lastRemark.includes(value) && value !== "") {
+          let temp = {
+            createdBy: "0",
+            fkIncidentId: putId.current,
+            rcaRemark: value,
+            rcaSubType: api_data["rcaSubType"],
+            rcaType: "PACE Managemnt control",
+            remarkType: api_data["remarkType"],
+            status: "Active",
+          };
+          tempData.push(temp);
+        }
       })
     })
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
