@@ -157,7 +157,7 @@ const DocumentNotification = () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const apiData = res.data.data.results
-    apiData["notifyTo"] == null ? apiData["notifyTo"] = "" : apiData["notifyTo"] = apiData["notifyTo"]
+    apiData["notifyTo"] == null ? apiData["notifyTo"] = "" : apiData["notifyTo"] = apiData["notifyTo"].split(',')
     setForm(apiData)
 
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -352,8 +352,8 @@ const DocumentNotification = () => {
                     <FormControlLabel
                       control={<Checkbox name={value.roleName} />}
                       label={value.roleName}
-                      checked={form.notifyTo && form.notifyTo !== null && form.notifyTo == value.id}
-                      onChange={async (e) => handelNotifyTo(e, value.id)}
+                      checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
+                      onChange={async (e) => handelNotifyTo(e, value.id.toString())}
                     />
                   ))}
                 </FormGroup>

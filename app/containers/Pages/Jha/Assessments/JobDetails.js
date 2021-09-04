@@ -200,7 +200,7 @@ const JobDetails = (props) => {
   // getting breakdown value form page
   const [pageSlectValue, setPageSelectValue] = useState([])
 
-  const [selectValue, setSelectValue] = useState([])
+  const [isNext, setIsNext] = useState([])
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
@@ -224,6 +224,7 @@ const JobDetails = (props) => {
     if (jhaId !== null) {
       const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
       const result = res.data.data.results.results
+      console.log(result)
       await setTeamForm(result)
     }
   }
@@ -322,19 +323,17 @@ const JobDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
-
-    if (headerSelectValue !== null && headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
+    if (headerSelectValue !== null && headerSelectValue[headerSelectValue.length - 1] !== undefined && headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
       form["workArea"] = headerSelectValue[headerSelectValue.length - 1]["name"]
-    } else if (pageSlectValue !== null && pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
+    } else if (pageSlectValue !== null && pageSlectValue[pageSlectValue.length - 1] !== undefined && pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
       form["workArea"] = pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["name"]
     }
     form["fkProjectStructureIds"] = fkProjectStructureId
   }
 
   const handleSubmit = async (e) => {
-    // setSubmitLoader(true)
+    setSubmitLoader(true)
     const { error, isValid } = JobDetailsValidate(form);
-    console.log(error)
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
