@@ -57,6 +57,7 @@ import { connect } from "react-redux";
 import {tabViewMode} from '../../../redux/actions/initialDetails';
 import { useDispatch } from "react-redux";
 import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
+import Pagination from '@material-ui/lab/Pagination';
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -276,6 +277,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
         },
       },
     },
+    
   ];
  
   const options = {
@@ -584,6 +586,9 @@ const fkProjectStructureIds = struct.slice(0, -1);
                 </CardActions>
               </Card>
             ))}
+            <div  marginTop={2}>
+      <Pagination count={10} />
+    </div>
         </div>
       ) : (
         // listview end
