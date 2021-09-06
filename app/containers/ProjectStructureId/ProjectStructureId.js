@@ -58,7 +58,7 @@ const ProjectStructure = (props) => {
 
   // const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [lenghtBreaddown, setLengthBreakDown] = useState(0)
-
+  const [label, setLabel] = useState([])
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -82,7 +82,7 @@ const ProjectStructure = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-  const fetchleafNodeData = async (projectData, id, index, selectVal) => {
+  const fetchleafNodeData = async (projectData, id, index, selectVal, selectName) => {
 
     var config = {
       method: "get",
@@ -108,6 +108,7 @@ const ProjectStructure = (props) => {
       })
       .catch(function (error) {
       });
+    props.setWorkArea(selectName)
   }
 
   // fetch breakdown Data
@@ -126,7 +127,7 @@ const ProjectStructure = (props) => {
     if (select !== null ? select.length > 0 : false) {
 
       if (projectData.projectName.breakdown.length === select.length) {
-        fetchleafNodeData(projectData, select[select.length - 2].id, select.length - 1, select[select.length - 1].id);
+        fetchleafNodeData(projectData, select[select.length - 2].id, select.length - 1, select[select.length - 1].id, select[select.length - 1].name);
       } else {
 
         for (var key in projectData.projectName.breakdown) {
@@ -277,6 +278,7 @@ const ProjectStructure = (props) => {
     await fetchCallBack(select, projectData);
 
   }
+
   useEffect(() => {
     // fetchListData();
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -296,7 +298,6 @@ const ProjectStructure = (props) => {
 
     {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
       <Grid item xs={3} key={key}>
-
         <Typography
           variant="h6"
           className={Type.labelName}
@@ -305,8 +306,6 @@ const ProjectStructure = (props) => {
         >
           {selectBreakdow.label}
         </Typography>
-
-
         <Typography className={Type.labelValue}>
           {selectBreakdow.name}
         </Typography>
@@ -327,9 +326,7 @@ const ProjectStructure = (props) => {
             labelId="filter3-label"
             id="filter3"
             value={item.selectValue || ""}
-            onChange={(e) => {
-              // handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
-            }}
+            // onChange={(e) => props.setWorkArea(item.selectValue)}
             label="Phases"
             style={{ width: "100%" }}
           >
@@ -339,7 +336,10 @@ const ProjectStructure = (props) => {
                   <MenuItem
                     key={selectKey}
                     value={selectValue.id}
-                    onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
+                    onClick={async (e) => {
+                      await handleDepthAndId(selectValue.depth, selectValue.id);
+                      await props.setWorkArea([selectValue.name])
+                    }}
                   >
                     {selectValue.name}
                   </MenuItem>
@@ -368,10 +368,8 @@ const ProjectStructure = (props) => {
           <Select
             labelId="filter3-label"
             id="filter3"
-
             onChange={(e) => {
               handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
-
             }}
             label="Phases"
             style={{ width: "100%" }}
@@ -383,7 +381,10 @@ const ProjectStructure = (props) => {
                     key={selectKey}
                     value={selectValue.id}
 
-                    onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
+                    onClick={async (e) => {
+                      await handleDepthAndId(selectValue.depth, selectValue.id);
+                      await props.setWorkArea(selectValue.name)
+                    }}
                   >
                     {selectValue.name}
                   </MenuItem>
