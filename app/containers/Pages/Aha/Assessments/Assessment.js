@@ -353,16 +353,16 @@ const Assessment = () => {
 
   const handleSubmit = async (e) => {
     await setSubmitLoader(true);
-    for (let i = 0; i <form.length; i++){
-      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
-    }
+    
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`,form)
+    
     ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     delete ahaform['ahaAssessmentAttachment']
-    const res = await api.put(
+    const res1 = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
       ahaform
     );
-    if (res.status === 200) {
+    if (res1.status === 200) {
       history.push("/app/pages/aha/assessments/DocumentsNotifications/");
     }
   };
@@ -395,7 +395,7 @@ const Assessment = () => {
   //   }
     
   // };
-
+console.log("66666666",form)
   const handleWorkStopCondition = (value,e) => {
     if (e.target.checked == false) {
       let newData = additinalJobDetails.workStopCondition.filter((item) => item !== value);

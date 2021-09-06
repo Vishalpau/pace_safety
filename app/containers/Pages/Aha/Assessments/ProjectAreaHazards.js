@@ -206,10 +206,10 @@ const ProjectAreaHazards = () => {
     if(e.target.checked == false){
       temp.map((ahaValue,index) => {
         if(ahaValue['hazard'] === value){
-          if(temp[index].id){
-            const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
+          // if(temp[index].id){
+          //   const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
 
-          }
+          // }
 
          temp.splice(index, 1);
          
@@ -233,6 +233,7 @@ const ProjectAreaHazards = () => {
       "createdBy": parseInt(userId),
       "fkAhaId": localStorage.getItem("fkAHAId"),})
     }
+    console.log("5555",temp)
     setForm(temp)
     
   };
@@ -306,7 +307,6 @@ const ProjectAreaHazards = () => {
   const handelRemove = async (e, index) => {
     if (otherHazards.length > 1) {
       if (otherHazards[index].id !== undefined) {
-        const res = await api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${otherHazards[index]["id"]}/`);
       }
       let temp = otherHazards;
       let newData = otherHazards.filter((item, key) => key !== index);
@@ -333,24 +333,41 @@ const ProjectAreaHazards = () => {
 
   
 
- 
+ const [formId , setFormId] = useState([])
 
   const handleSubmit = async (e) => {
     await setSubmitLoader(true)
-    for(let i = 0; i < form.length; i++){
-      if(form[i].id){
-        const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
+    // for(let i = 0; i < form.length; i++){
+    //   if(form[i].id){
+        // const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
       
-      }else{
-        const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,form[i])
+      // }else{
+        // const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,form)
         // const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
-
-            // const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, form)
-
-      }
-    } 
-
+    // for (let i = 0; i <form.length; i++){
+    //   if (form[i].id){
+    //     await setFormId(form[i])
+    //   }else{
+    //     await setForm(form[i])
+    //   }
     // }
+    let hazardNew = []
+      let hazardUpdate = []
+    form.map((value) => {
+      if (value["id"] == undefined) {
+        hazardNew.push(value)
+      } else {
+        hazardUpdate.push(value)
+      }
+    })
+
+    console.log(hazardNew, hazardUpdate)
+
+    if (hazardUpdate.length > 0) {
+      const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
+    }
+    const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
+ 
     for (let i = 0; i < otherHazards.length; i++) {
       if (otherHazards[i]["hazard"] != "") {
         console.log('123')
@@ -366,8 +383,8 @@ const ProjectAreaHazards = () => {
     history.push("/app/pages/aha/assessments/assessment")
 
   }
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
- console.log(otherHazards)
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path}
@@ -424,6 +441,8 @@ bytes
     }
   }
 
+  
+
 
   const handelUpdate = async () => {
     const temp = {}
@@ -455,7 +474,7 @@ bytes
     })
     setSelectedOption(temp)
   }
-
+console.log(form)
   // const handelUpdate = async () => {
   //   const temp = {}
   //   const otherNoId = []
