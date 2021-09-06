@@ -262,7 +262,7 @@ const AdditionalDetails = () => {
                             helperText={value.error ? value.error : null}
                             multiline
                             rows="4"
-                            defaultValue={value.answer}
+                            value={value.answer||""}
                             onChange={(e) => {
                               handleRadioData(e, value.questionCode);
                             }}
