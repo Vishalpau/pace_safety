@@ -22,6 +22,8 @@ function EventDetailsCostValidate(data) {
                     errorCost[`costAmount${[i]}`] = `Please enter upto 12 digits in cost amount`;
                 }
             }
+        } else if (data[i].costType.toString().length > 0 || data[i].casualFactor.toString().length) {
+            errorCost[`costAmount${[i]}`] = `please enter cost amount`;
         }
     }
     return { errorCost };

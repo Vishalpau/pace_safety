@@ -49,8 +49,7 @@ import {
   HEADER_AUTH,
 } from "../../../../utils/constants";
 import Type from "../../../../styles/components/Fonts.scss";
-
-
+import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -201,7 +200,7 @@ const JobDetails = (props) => {
   // getting breakdown value form page
   const [pageSlectValue, setPageSelectValue] = useState([])
 
-  const [selectValue, setSelectValue] = useState([])
+  const [isNext, setIsNext] = useState([])
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
@@ -225,11 +224,10 @@ const JobDetails = (props) => {
     if (jhaId !== null) {
       const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
       const result = res.data.data.results.results
+      console.log(result)
       await setTeamForm(result)
     }
   }
-
-  // for phase and unit
 
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -246,7 +244,7 @@ const JobDetails = (props) => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
@@ -264,7 +262,7 @@ const JobDetails = (props) => {
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
         await api(config)
@@ -272,7 +270,6 @@ const JobDetails = (props) => {
             const result = response.data.data.results;
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-
                 selectBreakDown = [
                   ...selectBreakDown,
                   { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
@@ -282,169 +279,12 @@ const JobDetails = (props) => {
             });
           })
           .catch((error) => {
+            console.log(error)
             setIsNext(true);
           });
       }
     }
   };
-
-  const handleBreakdown = async (e, index, label) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    setSelectBreakDown(temp)
-    setBreakdown1ListData(temp)
-    pageSlectValue.length == 0
-    setPageSelectValue(temp)
-    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
-      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      if (breakDownValue.length > 0) {
-        const removeBreakDownList = temp.slice(0, index - 1)
-        temp = removeBreakDownList
-      } else {
-        const removeBreakDownList = temp.slice(0, index)
-        temp = removeBreakDownList
-      }
-    }
-    if (projectData.projectName.breakdown.length !== index) {
-      for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-              }${value}`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(function (response) {
-              if (response.status === 200) {
-
-                if (
-                  temp.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[key].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  setBreakdown1ListData([
-                    ...temp,
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[index].structure[0]
-                          .name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: value,
-                      index: index
-                    },
-                  ]);
-                }
-              }
-            })
-            .catch(function (error) {
-
-            });
-        }
-      }
-    } else {
-    }
-  };
-
-  const fetchCallBack = async (select, projectData) => {
-    let fecthArray = []
-    for (var i in select) {
-      let selectId = select[i].id;
-      let selectDepth = select[i].depth
-      // setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
-      fecthArray.push(`${selectDepth}${selectId}`)
-    }
-    setHeaderSelectValue(select)
-    setSelectDepthAndId(fecthArray)
-    if (select !== null ? select.length > 0 : false) {
-      if (projectData.projectName.breakdown.length === select.length) {
-        setBreakdown1ListData([])
-      } else {
-        for (var key in projectData.projectName.breakdown) {
-          if (key == select.length) {
-            try {
-              var config = {
-                method: "get",
-                url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-                  }${select[key - 1].id}`,
-                headers: HEADER_AUTH,
-              };
-
-              await Axios(config)
-                .then(async (response) => {
-
-                  await setBreakdown1ListData([
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[key].structure[0].name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: "",
-                      index: key
-                    },
-                  ]);
-                })
-                .catch(function (error) {
-                });
-            } catch (err) {
-              ;
-            }
-          }
-        }
-      }
-    } else {
-      for (var key in projectData.projectName.breakdown) {
-
-        if (key == 0) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-              }`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(async (response) => {
-
-              await setBreakdown1ListData([
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[0].structure[0].name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: "",
-                  index: 0
-                },
-              ]);
-            })
-            .catch(function (error) {
-            });
-        }
-      }
-    }
-  }
-
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...selectDepthAndId, `${depth}${id}`]
-    setSelectDepthAndId([... new Set(newData)])
-  }
-
-  useEffect(() => {
-    // fetchListData();
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const select = props.initialValues.breakDown.length > 0 ? props.initialValues.breakDown
-      : JSON.parse(localStorage.getItem('selectBreakDown'))
-
-    if (select !== null ? select.length === 0 : false) {
-      setBreakdown1ListData([])
-      selectDepthAndId([])
-    }
-    fetchCallBack(select, projectData);
-  }, [props.initialValues.breakDown]);
-
-  // for phase and unit end
 
   const areaName = [
     'P1 - WA1',
@@ -483,19 +323,17 @@ const JobDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
-
-    if (headerSelectValue !== null && headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
+    if (headerSelectValue !== null && headerSelectValue[headerSelectValue.length - 1] !== undefined && headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
       form["workArea"] = headerSelectValue[headerSelectValue.length - 1]["name"]
-    } else if (pageSlectValue !== null && pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
+    } else if (pageSlectValue !== null && pageSlectValue[pageSlectValue.length - 1] !== undefined && pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
       form["workArea"] = pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["name"]
     }
     form["fkProjectStructureIds"] = fkProjectStructureId
   }
 
   const handleSubmit = async (e) => {
-    // setSubmitLoader(true)
+    setSubmitLoader(true)
     const { error, isValid } = JobDetailsValidate(form);
-    console.log(error)
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -598,9 +436,8 @@ const JobDetails = (props) => {
               </Typography>
             </Grid>
 
-
             {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-              <Grid item xs={4} key={key}>
+              <Grid item xs={3} key={key}>
                 <Typography
                   variant="h6"
                   className={Type.labelName}
@@ -609,75 +446,12 @@ const JobDetails = (props) => {
                 >
                   {selectBdown.label}
                 </Typography>
-
                 <Typography className={Type.labelValue}>
                   {selectBdown.name}
                 </Typography>
               </Grid>
-            ) : selectBreakdown && selectBreakdown.map((selectBreakdown, key) =>
-              <Grid item xs={4} key={key}>
-
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  {selectBreakdown.label}
-                </Typography>
-
-                <Typography className={Type.labelValue}>
-                  {selectBreakdown.name}
-                </Typography>
-              </Grid>)}
-
-            {id ? null : breakdown1ListData ? breakdown1ListData.map((item, index) => (
-              <Grid item xs={4}>
-                <FormControl
-                  key={index}
-                  variant="outlined"
-                  fullWidth
-                  required={selectDepthAndId.length === 0 ? true : false}
-                  className={classes.formControl}
-                  error={error && error[`projectStructure`]}
-                >
-                  <InputLabel
-                    id={index}
-                  >
-                    {item.breakdownLabel}
-                  </InputLabel>
-                  <Select
-                    labelId={item.breakdownLabel}
-                    // value={parseInt(item.selectValue)}
-                    onChange={(e) => {
-                      handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
-
-                    }}
-                    label="Phases"
-                    style={{ width: "100%" }}
-                  >
-                    {item.breakdownValue.length
-                      ? item.breakdownValue.map(
-                        (selectValue, selectKey) => (
-                          <MenuItem
-                            key={selectKey}
-                            value={selectValue.id}
-
-                            onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
-                          >
-                            {selectValue.name}
-                          </MenuItem>
-                        )
-                      )
-                      : null}
-                  </Select>
-                  {error && error.projectStructure && (
-                    <FormHelperText>{error.projectStructure}</FormHelperText>
-                  )}
-                </FormControl>
-
-              </Grid>
-            )) : null}
+            ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
+            }
 
             {/* job title */}
             <Grid

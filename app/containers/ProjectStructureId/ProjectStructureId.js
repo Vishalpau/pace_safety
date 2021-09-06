@@ -329,8 +329,7 @@ const ProjectStructure = (props) => {
             id="filter3"
             value={item.selectValue || ""}
             onChange={(e) => {
-              // handleBreakdown(e, parseInt(item.index)+ 1, item.breakdownLabel, item.selectValue)
-
+              // handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
             }}
             label="Phases"
             style={{ width: "100%" }}
@@ -341,8 +340,7 @@ const ProjectStructure = (props) => {
                   <MenuItem
                     key={selectKey}
                     value={selectValue.id}
-
-                  onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
+                    onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
                   >
                     {selectValue.name}
                   </MenuItem>
@@ -386,7 +384,7 @@ const ProjectStructure = (props) => {
                     key={selectKey}
                     value={selectValue.id}
 
-                  onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
+                    onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
                   >
                     {selectValue.name}
                   </MenuItem>
