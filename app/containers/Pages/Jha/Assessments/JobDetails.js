@@ -222,7 +222,7 @@ const JobDetails = (props) => {
     const jhaId = handelJhaId()
     if (jhaId !== null) {
       const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
-      const result = res.data.data.results.results
+      const result = res.data.data.results
       await setTeamForm(result)
     }
   }
@@ -421,7 +421,7 @@ const JobDetails = (props) => {
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
-            {console.log(workArea, '----')}
+            {/* {console.log(form)} */}
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Project
@@ -430,27 +430,6 @@ const JobDetails = (props) => {
                 {project.projectName}
               </Typography>
             </Grid>
-
-            {/* {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-              <Grid item xs={3} key={key}>
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  {selectBdown.label}
-                </Typography>
-                <Typography className={Type.labelValue}>
-                  {selectBdown.name}
-                </Typography>
-              </Grid>
-            ) : <ProjectStructureInit
-              selectDepthAndId={selectDepthAndId}
-              setSelectDepthAndId={setSelectDepthAndId}
-              setWorkArea={setWorkArea}
-            />
-            } */}
 
             {id ?
               fetchSelectBreakDownList.map((data, key) =>
