@@ -150,7 +150,7 @@ const PeoplesAffected = () => {
 
   // Next button click event handling.
   const handleNext = async () => {
-    if (!incidentsListData.closeDate) {
+   
       // Next path handlings.
       const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
@@ -303,7 +303,7 @@ const PeoplesAffected = () => {
           );
         }
       }
-    }
+    
   };
 
   // hablde Remove

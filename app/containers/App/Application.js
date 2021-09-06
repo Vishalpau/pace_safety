@@ -142,6 +142,7 @@ import {
   DocumentNotification,
   Approvals,
   LessonsLearned,
+  AhaCloseOut,
   Prints,
   Setting,
   Jha,
@@ -539,6 +540,8 @@ function Application(props) {
         <Route path="/app/pages/aha/assessments/DocumentsNotifications/:id" exact component={DocumentNotification} />
         <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
         <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
+        <Route path="/app/pages/aha/close-out" component={AhaCloseOut} />
+
 
         {/* Jha  */}
 

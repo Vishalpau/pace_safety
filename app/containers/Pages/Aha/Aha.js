@@ -139,30 +139,57 @@ const ILink = withStyles({
 
 function Aha() {
   const [cardView, setCardView] = useState(true);
+  const [tableView, setTableView] = useState(false);
   const [allAHAData , setAllAHAData] = useState([])
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
+  const [data, setData] = useState([])
 
   // Function to toggle the view mode
-  const handleView = () => setCardView(!cardView);
-
+  const handleView = () => {
+    setCardView(true);}
+  const handleTabelView = () => {
+    setCardView(false);}
   //   Data for the table view
-  const columns = ['Name', 'Company', 'City', 'State'];
+  // const columns = ['Aha number', 'Location', 'Created by', 'Created on'];
 
-  const data = [
-    ['Joe James', 'Test Corp', 'Yonkers', 'NY'],
-    ['John Walsh', 'Test Corp', 'Hartford', 'CT'],
-    ['Bob Herm', 'Test Corp', 'Tampa', 'FL'],
-    ['James Houston', 'Test Corp', 'Dallas', 'TX'],
+
+  const columns = [
+    {
+      name: "Aha number",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: "Location",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: "Created by",
+      options: {
+        filter: false,
+      },
+    },
+    {
+      name: "Created on",
+      options: {
+        filter: true,
+      },
+    },
+    
   ];
+  
 
   const options = {
-    filterType: 'dropdown',
-    responsive: 'vertical',
-    print: true,
-    rowsPerPage: 10,
-    page: 0,
+    print : false,
+    search: false,
+    filter: false,
+    viewColumns: false,
+    download :false
   };
 
   const handleSummaryPush = async (index) => {
@@ -188,6 +215,23 @@ function Aha() {
     const result = res.data.data.results.results
     
     await setAllAHAData(result)
+    await handelTableView(result)
+  }
+
+  const handelTableView = (result) => {
+    const temp = []
+    result.filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
+    item[1]["description"].toLowerCase().includes(
+              searchIncident.toLowerCase()
+            ) ).map((item, index)=> {
+      temp.push([
+        item[1]["ahaNumber"],
+        item[1]['location'],
+        item[1]['createdBy'],
+        item[1]['createdAt']
+      ])
+    })
+    setData(temp)
   }
   
   console.log(allAHAData);
@@ -229,7 +273,7 @@ function Aha() {
                 <div className="toggleViewButtons">
                   <IconButton
                     className={classes.filterIcon}
-                    onClick={handleView}
+                    onClick={handleTabelView}
                   >
                     <FormatListBulleted />
                   </IconButton>
@@ -450,7 +494,27 @@ function Aha() {
        : (
         <MUIDataTable
           title="Incidents List"
-          data={data}
+          
+
+                    data={Object.entries(allAHAData).filter(
+                      (item) => {return (
+                         
+                        item[1]["description"]
+                          .toLowerCase()
+                          .includes(searchIncident.toLowerCase()) ||
+                          item[1]["ahaNumber"].toLowerCase().includes(
+                            searchIncident.toLowerCase()
+                          
+                        )
+                      )}
+                        
+                    ).map((item) => [
+                      item[1]["ahaNumber"],
+                      item[1]["location"],
+                      item[1]["username"],
+                      item[1]["createdAt"],
+                ])}
+                
           columns={columns}
           options={options}
         />

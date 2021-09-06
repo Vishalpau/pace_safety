@@ -378,6 +378,14 @@ const [notifyToList,setNotifyToList] = useState([]);
         md={12}
         xs={12}
         >
+        <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => history.goBack()}
+                >
+                  Previous
+                </Button>
         {submitLoader == false ?
                 <Button
                   variant="contained"

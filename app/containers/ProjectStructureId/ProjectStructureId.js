@@ -284,7 +284,8 @@ const ProjectStructure = (props) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     const localSelect = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
     const select = props.initialValues.breakDown.length > 0 ? props.initialValues.breakDown : localSelect
-
+    let breakdownLength = projectData.projectName.breakdown.length
+    props.setLevelLenght(breakdownLength)
     if (select.length === 0 ? true : false) {
 
       setStateBreakDown(select, projectData)
@@ -317,7 +318,7 @@ const ProjectStructure = (props) => {
           variant="outlined"
           required
           className={classes.formControl}
-          error={error && error[`projectStructure`]}
+          error={props.error && props.error[`projectStructure`]}
         >
           <InputLabel id="filter3-label">
             {item.breakdownLabel}
@@ -360,7 +361,7 @@ const ProjectStructure = (props) => {
           variant="outlined"
           required
           className={classes.formControl}
-          error={error && error[`projectStructure`]}
+          error={props.error && props.error[`projectStructure`]}
         >
           <InputLabel id="filter3-label">
             {item.breakdownLabel}
@@ -392,8 +393,8 @@ const ProjectStructure = (props) => {
               )
               : null}
           </Select>
-          {error && error.projectStructure && (
-            <FormHelperText>{error.projectStructure}</FormHelperText>
+          {props.error && props.error.projectStructure && (
+            <FormHelperText>{props.error.projectStructure}</FormHelperText>
           )}
         </FormControl>
 

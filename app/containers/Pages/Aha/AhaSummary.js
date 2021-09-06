@@ -145,13 +145,17 @@ function AhaSummary() {
   const [assessments, setAssessments] = useState(true);
   const [approvals, setApprovals] = useState(false);
   const [lessonsLearned, setLessonsLearned] = useState(false);
+  const [closeOut, setCloseOut] = useState(false);
   //const [summary, setSummary] = useState(false);
   const history = useHistory();
   const [expanded, setExpanded] = React.useState("panel1");
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel5"
   );
-
+console.log(assessments)
+console.log(approvals)
+console.log(lessonsLearned)
+console.log(closeOut)
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
@@ -181,6 +185,12 @@ function AhaSummary() {
   const handleAhaLessonLearnPush = async () => {
     history.push("/app/pages/aha/lessons-learned/lessons-learned");
   };
+  
+  const handleCloseOutPush = async () => {
+    history.push("/app/pages/aha/close-out");
+  };
+
+
 
   const handleCommentsPush = async () => {
     history.push("/app/comments/comments");
@@ -414,7 +424,7 @@ function AhaSummary() {
                 setAssessments(true);
                 setApprovals(false);
                 setLessonsLearned(false);
-                //setSummary(false);
+                setCloseOut(false);
               }}
             >
               Assessments
@@ -435,10 +445,35 @@ function AhaSummary() {
                 setAssessments(false);
                 setApprovals(true);
                 setLessonsLearned(false);
+                setCloseOut(false);
+
                 //setSummary(false);
               }}
             >
               Approvals
+            </Button>
+            <Typography variant="caption" display="block">
+            {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
+            </Typography>
+          </div>
+
+          <div className={Styles.item}>
+            <Button
+              color={closeOut == true ? "secondary" : "primary"}
+              variant={ahaData.wrpApprovalUser !== "" ? "contained" : "outlined"}
+              size="small"
+              endIcon={ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
+              className={classes.statusButton}
+              onClick={(e) => {
+                setAssessments(false);
+                setApprovals(false);
+                setCloseOut(true);
+                setLessonsLearned(false);
+
+                //setSummary(false);
+              }}
+            >
+              Close Out
             </Button>
             <Typography variant="caption" display="block">
             {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
@@ -456,6 +491,7 @@ function AhaSummary() {
                 setAssessments(false);
                 setApprovals(false);
                 setLessonsLearned(true);
+                setCloseOut(false);
                 // setSummary(false);
               }}
             >
@@ -482,7 +518,7 @@ function AhaSummary() {
                 {(() => {
                   if (
                     assessments == true ||
-                    (approvals === false && lessonsLearned === false)
+                    (approvals === false && lessonsLearned === false && closeOut === false)
                   ) {
                     return (
                       <>
@@ -1248,6 +1284,68 @@ function AhaSummary() {
                       </>
                     );
                   }
+                  if(closeOut == true) {
+                    return(<>
+                      <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Reviewed by
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={classes.labelValue}
+                              >
+                                {user.name}, {user.badgeNo}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Reviewed on
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={classes.labelValue}
+                              >
+                                {user.name}, {user.badgeNo}
+                              </Typography>
+                            </Grid><Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Closed by
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={classes.labelValue}
+                              >
+                                {user.name}, {user.badgeNo}
+                              </Typography>
+                            </Grid><Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Closed on
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={classes.labelValue}
+                              >
+                                {user.name}, {user.badgeNo}
+                              </Typography>
+                            </Grid>
+                    </>)
+                  }
                   if (lessonsLearned == true) {
                     return (
                       <>
@@ -1348,7 +1446,7 @@ function AhaSummary() {
                   </ListItemIcon>
                   <ListItemText primary="Lessons Learned" />
                 </ListItemLink> */}
-                <ListItem button divider>
+                <ListItem button divider onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>

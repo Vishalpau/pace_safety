@@ -31,21 +31,21 @@ export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
 const fkincidentId =  localStorage.getItem("fkincidentId")
 
 export const INITIAL_NOTIFICATION_FORM = {
-  "Incident details": `/incident/${fkincidentId}/modify/`,
-  "People affected": `/incident/${fkincidentId}/modify/peoples-afftected/`,
-  "Property affected": `/incident/${fkincidentId}/modify/property-affected/`,
-  "Equipment affected": `/incident/${fkincidentId}/modify/equipment-affected/`,
-  "Environment impact": `/incident/${fkincidentId}/modify/environment-affected/`,
-  "Reporting and notification": `/incident/${fkincidentId}/modify/reporting-and-notification/`,
+  "Incident details": `/incident/${localStorage.getItem("fkincidentId")}/modify/`,
+  "People affected": `/incident/${localStorage.getItem("fkincidentId")}/modify/peoples-afftected/`,
+  "Property affected": `/incident/${localStorage.getItem("fkincidentId")}/modify/property-affected/`,
+  "Equipment affected": `/incident/${localStorage.getItem("fkincidentId")}/modify/equipment-affected/`,
+  "Environment impact": `/incident/${localStorage.getItem("fkincidentId")}/modify/environment-affected/`,
+  "Reporting and notification": `/incident/${localStorage.getItem("fkincidentId")}/modify/reporting-and-notification/`,
 };
 
 export const INITIAL_NOTIFICATION_FORM_NEW = {
   "Incident details": `/incident/new/`,
-  "People affected": `/incident/${fkincidentId}/peoples-afftected/new/`,
-  "Property affected": `/incident/${fkincidentId}/property-affected/new/`,
-  "Equipment affected": `/incident/${fkincidentId}/equipment-affected/new/`,
-  "Environment impact": `/incident/${fkincidentId}/environment-affected/new/`,
-  "Reporting and notification": `/incident/${fkincidentId}/reporting-and-notification/new/`,
+  "People affected": `/incident/${localStorage.getItem("fkincidentId")}/peoples-afftected/new/`,
+  "Property affected": `/incident/${localStorage.getItem("fkincidentId")}/property-affected/new/`,
+  "Equipment affected": `/incident/${localStorage.getItem("fkincidentId")}/equipment-affected/new/`,
+  "Environment impact": `/incident/${localStorage.getItem("fkincidentId")}/environment-affected/new/`,
+  "Reporting and notification": `/incident/${localStorage.getItem("fkincidentId")}/reporting-and-notification/new/`,
 };
 
 export const EVIDENCE_FORM = {
@@ -64,14 +64,16 @@ export const EVIDENCE_FORM = {
 };
 
 export const INVESTIGATION_FORM = {
-  "Investigation overview":`/incident/${fkincidentId}/investigation/new/investigation/`,
+  "Investigation overview":
+    "/app/incident-management/registration/investigation/investigation-overview/",
   "Severity consequences":
-    "/incident/${fkincidentId}/investigation/new/investigation/severity-consequences/",
-  "Worker details": `/incident/${fkincidentId}/investigation/new/investigation/worker-details/0/`,
+    "/app/incident-management/registration/investigation/severity-consequences/",
+  "Worker details":
+    `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem("fkincidentId")}`,
   "Event details":
-    `/incident/${fkincidentId}/investigation/new/investigation/event-details/`,
+    "/app/incident-management/registration/investigation/event-details/",
   "Action taken":
-    `/incident/${fkincidentId}/investigation/new/investigation/action-taken/`,
+    "/app/incident-management/registration/investigation/action-taken/"
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {

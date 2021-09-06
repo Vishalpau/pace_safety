@@ -309,6 +309,7 @@ function Observations(props) {
     setSeacrhIncident(e.target.value);
     // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
   };
+  console.log(allInitialData)
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
@@ -419,7 +420,7 @@ function Observations(props) {
                                 >
                                   <Chip
                               avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
-                              label={userName}
+                              label={item[1]["username"]?item[1]["username"]:"Admin"}
                             />
                                 </Grid>
                               </Grid>
@@ -527,7 +528,7 @@ function Observations(props) {
 
                               <Typography className={classes.listingLabelValue}>
                                 {/* {item[1]} */}
-                                {userName}
+                                {item[1]["username"]?item[1]["username"]:"Admin"}
                               </Typography>
                             </Grid>
                           </Grid>
@@ -635,7 +636,7 @@ function Observations(props) {
                   moment(item[1]["createdAt"]).format(
                     "Do MMMM YYYY, h:mm:ss a"
                   ),
-                  userName,
+                  item[1]["username"],
                 ])}
                 columns={columns}
                 options={options}
