@@ -38,8 +38,16 @@ import api from "../../../../utils/axios";
 import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
 
 import { AHA } from "../constants";
+import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 
-
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -163,6 +171,11 @@ const ProjectDetails = () => {
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
+  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+
+  
 
   // const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
@@ -293,6 +306,11 @@ bytes
 
 
   const handleSubmit = async (e) => {
+    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+      return depth;
+    }).join(':')
+    form["fkProjectStructureIds"] = fkProjectStructureId
     
     const { error, isValid } = ProjectDetailsValidator(form);
     await setError(error);
@@ -338,7 +356,7 @@ bytes
    
   }
 
-  
+  console.log(selectDepthAndId)
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -487,7 +505,66 @@ bytes
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
     const result = res.data.data.results;
     await setForm(result)
+    await fetchBreakDownData(result.fkProjectStructureIds)
+
    }
+
+   const fetchBreakDownData = async (projectBreakdown) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            await setIsLoading(true);
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                ];
+                setFetchSelectBreakDownList(selectBreakDown)
+              }
+            });
+          })
+          .catch((error) => {
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].substring(2)}`,
+          headers: HEADER_AUTH,
+        };
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            const res = result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                ];
+                setFetchSelectBreakDownList(selectBreakDown)
+              }
+            });
+          })
+          .catch((error) => {
+            console.log(error)
+            setIsNext(true);
+          });
+      }
+    }
+  };
   const fetchTeamData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
     const result =  res.data.data.results.results
@@ -524,14 +601,22 @@ bytes
 
         </Typography>
         </Grid>
-        <Grid item md={12}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Unit
-        </Typography>
-        <Typography className={classes.labelValue}>
-        {selectBreakdown.length !== 0 ? selectBreakdown[1].name : "-"}
-        </Typography>
-        </Grid>
+        {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
+              <Grid item xs={3} key={key}>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                  id="project-name-label"
+                >
+                  {selectBdown.label}
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {selectBdown.name}
+                </Typography>
+              </Grid>
+            ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
+            }
         <Grid
         item
         md={6}
