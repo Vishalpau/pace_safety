@@ -129,7 +129,6 @@ const PropertyAffected = () => {
 
   // On next click event capture.
   const handleNext = async () => {
-    if(!incidentsListData.closeDate){
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
 
     // If property data there then don't do anything as we are doing put request on each change.
@@ -243,7 +242,7 @@ const PropertyAffected = () => {
         );
       }
     }
-  }
+  
   };
 
   // get peoperty affetct value radio type
