@@ -514,7 +514,7 @@ function JhaSummary() {
                                         >
                                           Risk Assessment team
                                         </Typography>
-                                        {team.map((value) => (
+                                        {team !== undefined && team.map((value) => (
                                           <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
                                         ))}
 
@@ -636,7 +636,7 @@ function JhaSummary() {
                                         >
                                           Hazards Group
                                         </Typography>
-                                        {hazard.map((value) => (
+                                        {hazard !== undefined && hazard.map((value) => (
                                           <div>
                                             <Typography variant="body" className={Fonts.labelValue}>
                                               {checkValue(value.risk)}
@@ -672,7 +672,7 @@ function JhaSummary() {
                                         xs={12}
                                       >
                                         <div>
-                                          {hazard.map((value, index) => (
+                                          {hazard !== undefined && hazard.map((value, index) => (
                                             <Accordion
                                               expanded={expandedHazard === `panel${index}`}
                                               onChange={handleHazardExpand(`panel${index}`)}

@@ -3,6 +3,7 @@ import { HEADER_AUTH } from "./constants";
 import { apiUrl } from "./helper";
 const api = axios.create({
   baseURL: apiUrl,
-  headers:HEADER_AUTH
+  headers: HEADER_AUTH
 });
+api.defaults.timeout = 3000;
 export default api
