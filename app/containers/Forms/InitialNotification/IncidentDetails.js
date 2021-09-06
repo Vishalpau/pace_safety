@@ -76,6 +76,7 @@ const IncidentDetails = (props) => {
   const [isNext, setIsNext] = useState(true);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [selectValue, setSelectValue] = useState([])
+  const [levelLenght, setLevelLenght] = useState(0)
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
@@ -216,7 +217,7 @@ const IncidentDetails = (props) => {
           contractor: form.contractor,
           subContractor: form.subContractor,
         };
-        const { error, isValid } = validate(form);
+        const { error, isValid } = validate(form,selectDepthAndId,levelLenght);
         await setError(error);
         // check condition for error
         if (isValid === true) {
@@ -231,11 +232,7 @@ const IncidentDetails = (props) => {
               localStorage.setItem("fkincidentId", fkincidentId);
               localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
 
-              // Next path variable contains JSON as below. It helps us to decide on which path to move next.
-              /*
-     {"personAffect":"Yes","propertyAffect":"Yes","equipmentAffect":"Yes","environmentAffect":"Yes"}
-   */
-              localStorage.setItem("nextPath", JSON.stringify(nextPath));
+             localStorage.setItem("nextPath", JSON.stringify(nextPath));
 
               // Decide on which path to go next.
               if (nextPath.personAffect === "Yes") {
@@ -271,10 +268,10 @@ const IncidentDetails = (props) => {
         }
       } else {
         // Create case if id is not null and means it is an add new registration case.
-        const { error, isValid } = validate(form, selectDepthAndId);
+        const { error, isValid } = validate(form, selectDepthAndId,levelLenght);
         await setError(error);
-        if (selectDepthAndId.length === 0) {
-          // alert("Please select Level of phase.")
+        if (selectDepthAndId.length < levelLenght) {
+          // alert("Please select all Level of project.")
           setIsNext(true);
         } else {
           if (isValid === true) {
@@ -563,7 +560,8 @@ const IncidentDetails = (props) => {
   const fetchBreakDownData = async (projectBreakdown) => {
 
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-
+    let breakdownLength = projectData.projectName.breakdown.length
+    setLevelLenght(breakdownLength)
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
     setSelectDepthAndId(breakDown)
@@ -691,7 +689,9 @@ const IncidentDetails = (props) => {
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
-              {id ? fetchSelectBreakDownList.map((data, key) => <Grid item xs={3} md={3} key={key}>
+              {id ? 
+              fetchSelectBreakDownList.map((data, key) => 
+              <Grid item xs={3} md={3} key={key}>
                 <FormControl
                   error={error.incidentType}
                   variant="outlined"
@@ -726,7 +726,11 @@ const IncidentDetails = (props) => {
                 </FormControl>
               </Grid>
 
-              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
+              ) : <ProjectStructureInit 
+              selectDepthAndId={selectDepthAndId} 
+              setLevelLenght={setLevelLenght}
+              error= {error}
+              setSelectDepthAndId={setSelectDepthAndId} />
               }
               {/* Unit Name */}
 
