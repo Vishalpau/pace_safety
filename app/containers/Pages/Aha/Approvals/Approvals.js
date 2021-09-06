@@ -137,7 +137,7 @@ const Approvals = () => {
               className={classes.approvalButton}
               onClick={(e) => handelWorkAndPic("work")}
             >
-              Approve Now
+              {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
           </Grid>
           <Grid item md={8} xs={12} className={classes.formBox}>
@@ -150,7 +150,7 @@ const Approvals = () => {
               className={classes.approvalButton}
               onClick={(e) => handelWorkAndPic("pic")}
             >
-              Approve Now
+                            {form.picApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
           </Grid>
           <Grid item md={8}>
