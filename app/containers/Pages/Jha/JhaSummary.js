@@ -1057,7 +1057,7 @@ function JhaSummary() {
                           <>
                             <Comments
                               commentContext="Jha"
-                              contextReferenceIds={localStorage.getItem("fkJHAId")}
+                              id={localStorage.getItem("fkJHAId")}
                             />
                           </>
                         )
