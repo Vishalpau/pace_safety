@@ -61,6 +61,11 @@ import Pagination from '@material-ui/lab/Pagination';
 
 // Styles
 const useStyles = makeStyles((theme) => ({
+  pagination:{
+    padding:"1rem 0",
+    display:"flex",
+    justifyContent:"flex-end"
+  },
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
@@ -159,6 +164,9 @@ function BlankPage(props) {
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  
+
   const history = useHistory();
   const dispatch = useDispatch();
   const handelView = (e) => {
@@ -183,32 +191,23 @@ const fkProjectStructureIds = struct.slice(0, -1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-    const res = await api.get("api/v1/incidents/");
-    const selectBreakdown =props.projectName.breakDown
-    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
       : null;
   let struct = "";
+
   for (const i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  if(fkProjectStructureIds){
-    const newData = res.data.data.results.results.filter(
-      (item) =>
-        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId && item.fkProjectStructureIds.includes(fkProjectStructureIds)
-
-    );
-    await setIncidents(newData);
+  
+  const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
+    await setIncidents(res.data.data.results.results);
     
-  }else{
-    const newData = res.data.data.results.results.filter(
-      (item) =>
-        item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId 
-
-    );
-    await setIncidents(newData);
-  }
+    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    await setPageCount(pageCount)
+    
    
   };
 
@@ -283,7 +282,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
   const options = {
     data: incidents,
     onRowsDelete: (rowsDeleted) => {
-      console.log(rowsDeleted)
+      
       const idsToDelete = rowsDeleted.data.map(
         (d) => incidents[d.dataIndex].id
       );
@@ -295,14 +294,33 @@ const fkProjectStructureIds = struct.slice(0, -1);
     selectableRows: true,
     filterType: "dropdown",
     responsive: "stacked",
-    rowsPerPage: 10,
+    rowsPerPage: 100,
     print : false,
     search: false,
     filter: false,
     viewColumns: false,
-    download :false
+    download :false,
+    paging: false
+  
   };
-
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  
+  const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setIncidents(res.data.data.results.results);
+  };
   const classes = useStyles();
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -586,9 +604,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                 </CardActions>
               </Card>
             ))}
-            <div  marginTop={2}>
-      <Pagination count={10} />
-    </div>
+           
         </div>
       ) : (
         // listview end
@@ -617,9 +633,13 @@ const fkProjectStructureIds = struct.slice(0, -1);
             ])}
             columns={columns}
             options={options}
+            
           />
         </div>
       )}
+       <div className={classes.pagination}>
+      <Pagination count={pageCount} onChange={handleChange}/>
+    </div>
     </PapperBlock>
   );
 }
