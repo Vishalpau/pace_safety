@@ -199,13 +199,14 @@ const Assessment = () => {
     workStopCondition: [],
   })
   const [risk, setRisk] = useState([])
+  const [updatePage, setUpdatePage] = useState(false)
 
   const handelCheckList = async () => {
     const tempPerformance = {}
     const tempDocument = []
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-    const apiData = res.data.data.results.results
+    const apiData = res.data.data.results
 
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
@@ -365,7 +366,7 @@ const Assessment = () => {
 
   useEffect(() => {
     handelCallBack()
-  }, [])
+  }, [updatePage])
 
   return (
     <PapperBlock title="Assessments" icon="ion-md-list-box">
@@ -448,13 +449,19 @@ const Assessment = () => {
                             <ActionTracker
                               actionContext="jha:hazard"
                               enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
+                              setUpdatePage={setUpdatePage}
+                              updatePage={updatePage}
                             />
                           </Grid>
                           <Grid item xs={6} className={classes.createHazardbox}>
                             {form[index]["action"].length > 0
                               &&
                               form[index]["action"].map((value) => (
-                                <a style={{ marginLeft: "20px" }}>{value.trackerID}</a>
+                                <Link display="block"
+                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
+                                >
+                                  {actionId.number}
+                                </Link>
                               ))}
                           </Grid>
                         </Grid>
