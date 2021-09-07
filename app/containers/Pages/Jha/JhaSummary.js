@@ -153,13 +153,14 @@ function JhaSummary() {
     setHazard(resultHazard)
     let assessmentDecider = result.notifyTo !== null
     let approvalDecider = result.wrpApprovalUser !== null
-    let lessionLearned = result.anyLessonsLearnt !== null
+    let lessionDecider = result.anyLessonsLearnt !== null
+    let closeOutDecider = result.closedById !== null
     setFormStatus({
       ...formStatus,
       assessmentStatus: assessmentDecider,
       approvalStatus: approvalDecider,
-      closeOutStatus: false,
-      lessionLeranedStatus: lessionLearned
+      closeOutStatus: closeOutDecider,
+      lessionLeranedStatus: lessionDecider
     })
   }
 
@@ -248,9 +249,12 @@ function JhaSummary() {
     } else if (viewName = "closeOut") {
       setAssessmentsView(false);
       setApprovalsView(false);
-      setCloseOutView(true);
+      if (formStatus.closeOutStatus) {
+        setCloseOutView(true);
+      } else {
+        history.push(`/app/pages/jha/close-out`)
+      }
       setLessonsLearnedView(false);
-
     }
   }
 
@@ -317,7 +321,7 @@ function JhaSummary() {
 
               <div className={Styles.item}>
                 <Button
-                  // color={assessmentsView ? "secondary" : "primary"}
+                  color={closeOutView ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
                   variant={formStatus.closeOutStatus ? "contained" : "outlined"}
@@ -325,7 +329,7 @@ function JhaSummary() {
                     formStatus.closeOutStatus ? <CheckCircle /> : <AccessTime />
                   }
                   className={classes.statusButton}
-                  onClick={(e) => viewSwitch("assecloseOutssment")}
+                  onClick={(e) => viewSwitch("closeOut")}
                 >
                   Close out
                 </Button>
@@ -352,6 +356,7 @@ function JhaSummary() {
                   {formStatus.lessionLeranedStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
+
             </div>
             <Divider />
           </Box>
@@ -837,7 +842,6 @@ function JhaSummary() {
                       if (approvalsView == true) {
                         return (
                           <>
-
                             <Grid item xs={12} style={{ padding: '0px 12px' }}>
                               <Typography className={classes.heading}>
                                 Work Responsible Person
@@ -997,66 +1001,33 @@ function JhaSummary() {
                       if (closeOutView === true) {
                         return (
                           <>
-
-                            <Grid item xs={12} style={{ padding: '0px 12px' }}>
-                              <Typography className={classes.heading}>
-                                Work Responsible Person
-                              </Typography>
-                            </Grid>
                             <Grid item xs={12}>
                               <Grid container spacing={3}>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Approved by
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.wrpApprovalUser)}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Approved on
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
 
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} style={{ padding: '0px 12px', marginTop: '15px' }}>
-                                  <Typography className={classes.heading}>
-                                    Person in-charge
-                                  </Typography>
-                                </Grid>
                                 <Grid item xs={12} md={6}>
                                   <Typography
                                     variant="h6"
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Approved by
+                                    Closed by
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.picApprovalUser)}
+                                    {checkValue(assessment.closedByName)}
                                   </Typography>
                                 </Grid>
+
                                 <Grid item xs={12} md={6}>
                                   <Typography
                                     variant="h6"
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Approved on
+                                    Closed Data
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.picApprovalDateTime)).format("DD-MM-YY")}
+                                    {moment(checkValue(assessment.closedDate)).format("DD-MM-YY")}
+
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -1080,21 +1051,30 @@ function JhaSummary() {
                       <ListSubheader component="div">Actions</ListSubheader>
                     }
                   >
-                    <ListItemLink onClick={(e) => handleNewJhaPush(e)}>
+                    <ListItemLink
+                      onClick={(e) => handleNewJhaPush(e)}
+                      disabled={formStatus.closeOutStatus}
+                    >
                       <ListItemIcon>
                         {formStatus.assessmentStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
                       <ListItemText primary="Assessments" />
                     </ListItemLink>
 
-                    <ListItemLink onClick={(e) => handleJhaApprovalsPush(e)}>
+                    <ListItemLink
+                      onClick={(e) => handleJhaApprovalsPush(e)}
+                      disabled={formStatus.closeOutStatus}
+                    >
                       <ListItemIcon>
                         {formStatus.approvalStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
                       <ListItemText primary="Approvals" />
                     </ListItemLink>
 
-                    <ListItemLink onClick={(e) => handleJhaLessonLearnPush(e)}>
+                    <ListItemLink
+                      onClick={(e) => handleJhaLessonLearnPush(e)}
+                      disabled={formStatus.closeOutStatus}
+                    >
                       <ListItemIcon>
                         {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
