@@ -570,7 +570,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                         className={Fonts.listingLabelName}
                         onClick={()=>history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                       >
-                        <MessageIcon fontSize="small" /> Comments
+                        <MessageIcon fontSize="small" /> Comments:{item[1]["commentsCount"]}
                       </Typography>
                       
                     </Grid>
@@ -585,7 +585,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                         <AttachmentIcon fontSize="small" /> Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <ILink href="#">{item[1]["attachment_count"]}</ILink>
+                        <ILink href="#">{item[1]["attachmentCount"]}</ILink>
                       </Typography>
                     </Grid>
 
