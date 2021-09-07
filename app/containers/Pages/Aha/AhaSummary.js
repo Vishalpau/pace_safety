@@ -53,6 +53,7 @@ import moment from "moment";
 
 import Attachment from "../../Attachment/Attachment";
 import axios from "axios";
+import { Comments } from "../../pageListAsync";
 
 import {
   access_token,
@@ -146,6 +147,7 @@ function AhaSummary() {
   const [approvals, setApprovals] = useState(false);
   const [lessonsLearned, setLessonsLearned] = useState(false);
   const [closeOut, setCloseOut] = useState(false);
+  const [comments, setComments] = useState(false);
   //const [summary, setSummary] = useState(false);
   const history = useHistory();
   const [expanded, setExpanded] = React.useState("panel1");
@@ -187,13 +189,19 @@ console.log(closeOut)
   };
   
   const handleCloseOutPush = async () => {
+  
     history.push("/app/pages/aha/close-out");
   };
 
 
 
   const handleCommentsPush = async () => {
-    history.push("/app/comments/comments");
+    await setAssessments(false);
+    await setApprovals(false);
+    await setLessonsLearned(false);
+    await setCloseOut(false);
+    await setComments(true);
+    // history.push("/app/comments/comments");
   };
   const handleActivityPush = async () => {
     history.push("/app/activity/activity");
@@ -220,7 +228,7 @@ console.log(closeOut)
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`
     );
-    const result = res.data.data.results.results;
+    const result = res.data.data.results;
     await setTeamForm(result);
   };
   const fetchBreakDownData = async (projectBreakdown) => {
@@ -366,7 +374,9 @@ console.log(closeOut)
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
-    const result = res.data.data.results.results;
+    console.log("555555",res)
+    const result = res.data.data.results;
+    console.log("llllll",result)
     await setForm(result);
   };
 
@@ -459,10 +469,10 @@ console.log(closeOut)
 
           <div className={Styles.item}>
             <Button
-              color={closeOut == true ? "secondary" : "primary"}
-              variant={ahaData.wrpApprovalUser !== "" ? "contained" : "outlined"}
+              color={ "primary"}
+              variant={ "outlined"}
               size="small"
-              endIcon={ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
+              endIcon={ <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => {
                 setAssessments(false);
@@ -476,7 +486,7 @@ console.log(closeOut)
               Close Out
             </Button>
             <Typography variant="caption" display="block">
-            {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
+            Pending
             </Typography>
           </div>
 
@@ -518,7 +528,7 @@ console.log(closeOut)
                 {(() => {
                   if (
                     assessments == true ||
-                    (approvals === false && lessonsLearned === false && closeOut === false)
+                    (approvals === false && lessonsLearned === false && closeOut === false && comments === false)
                   ) {
                     return (
                       <>
@@ -600,7 +610,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={classes.labelValue}
                                     >
-                                      NA
+                                      {ahaData.username}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -680,7 +690,7 @@ console.log(closeOut)
                                       >
                                         {value.teamName !== "" ? (
                                           <li>{value.teamName}</li>
-                                        ) : null}
+                                        ) : "-"}
                                       </ul>
                                     ))}
                                   </Grid>
@@ -1385,6 +1395,11 @@ console.log(closeOut)
                         </Grid>
                       </>
                     );
+                  }
+                  if(comments == true){
+                    return (<div>
+                      <Comments/>
+                    </div>)
                   }
                   // if (summary == true) {
                   //   return (

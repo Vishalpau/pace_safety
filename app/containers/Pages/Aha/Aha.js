@@ -323,8 +323,8 @@ function Aha() {
 
                   <Grid item xs={1} justifyContent="flex-end">
                     <Chip
-                      avatar={<Avatar src="/images/pp_boy.svg" />}
-                      label="Admin"
+                      avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
+                              label={item[1]["username"]?item[1]["username"]:"Admin"}
                     />
                   </Grid>
                 </Grid>
@@ -414,7 +414,7 @@ function Aha() {
                 </Typography>
 
                 <Typography className={Fonts.listingLabelValue}>
-                {item[1]["createdBy"]}
+                {item[1]["username"]}
                 </Typography>
               </Grid>
             </Grid>

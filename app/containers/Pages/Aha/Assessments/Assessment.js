@@ -231,6 +231,7 @@ const Assessment = () => {
   };
   const approver = ['Yes' , 'No' ]
   const riskColor = ["1EBD10", "FFEB13", "F3C539", "FF0000"];
+  const [actionTakenData , setActionTakenData ]= useState([])
 
   // console.log(Object.keys(obj[2])[0])
   const [expanded, setExpanded] = useState(false);
@@ -243,7 +244,8 @@ const Assessment = () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
-    const result = res.data.data.results.results;
+    console.log("sdsd",res)
+    const result = res.data.data.results;
     await setForm(result);
 
     result.map((value) => {
@@ -252,7 +254,7 @@ const Assessment = () => {
     await setColorId(temp)
   };
 
-
+console.log(form)
   const handleSeverityss = async (key) => {
   
     await handleRisk()
@@ -411,6 +413,24 @@ console.log("66666666",form)
     }
   };
 
+  const fetchactionTrackerData = async () =>{
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    let ActionToCause = {}
+    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTracker = allActionTrackerData.data.data.results.results
+    const newData = allActionTracker.filter(
+      (item) => item.enitityReferenceId === localStorage.getItem("fkAHAId") 
+      
+      )
+      let sorting = newData.sort((a, b) => a.id - b.id)
+    await setActionTakenData(sorting)
+    await setIsLoading(true);
+
+  }
+
   // const handleWorkStopCondition = (value,e) => {
   //   if (e.target.checked == false) {
   //     let newData = ahaform.workStopCondition.filter((item) => item !== value);
@@ -477,6 +497,7 @@ console.log("66666666",form)
     checkList();
     fetchAhaData();
     pickListValue()
+    fetchactionTrackerData()
   }, []);
 
   const classes = useStyles();
@@ -727,6 +748,13 @@ console.log("66666666",form)
                             </span>
                           </Typography> */}
                         </Grid>
+                        <Grid item xs={6} className={classes.createHazardbox}>
+                            {actionTakenData.length > 0
+                              &&
+                              actionTakenData.map((value) => (
+                                <a style={{ marginLeft: "20px" }}>{value.actionTrackerId}</a>
+                              ))}
+                          </Grid>
                       </Grid>
                     </AccordionDetails>
                   </Accordion>
