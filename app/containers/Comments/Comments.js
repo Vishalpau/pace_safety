@@ -92,7 +92,6 @@ const Comments = () => {
       thanksFlag: 0,
       status: 'Active',
       createdBy: userDetails.id
-
     }
     console.log(data)
     const res = await api.post(`api/v1/comments/`, data)
@@ -124,7 +123,7 @@ const Comments = () => {
       await setReplyComments("");
       handleChange();
       // let newData = await fetchReplyComment(commentId);
-      
+
       // await setReplyCommentDataList([replyCommentDataList,{data:newData}])
     }
     console.log(newData)
@@ -150,7 +149,7 @@ const Comments = () => {
       let pId = []
       for (let i in result) {
         let parentId = result[i].parent
-        
+
         if (parentId > 0) {
           pId.push(parentId)
           // console.log({parentId:parentId})
@@ -160,9 +159,9 @@ const Comments = () => {
         }
       }
       let uniquePId = [...new Set(pId)];
-      for(let i in uniquePId){
+      for (let i in uniquePId) {
         let replyData = await fetchReplyComment(uniquePId[i])
-        newData.push({data:replyData})
+        newData.push({ data: replyData })
         console.log(replyData)
       }
       await setReplyCommentDataList(newData)
@@ -318,7 +317,7 @@ const Comments = () => {
                   </Grid>
                 </Box>
                 {/* {console.log(replyCommentDataList.map(fstarr => fstarr.filter(item => item.parent === comment.id)))} */}
-                {replyCommentDataList.length>0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
+                {replyCommentDataList.length > 0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
                   <Box padding={3} marginLeft={6} marginRight={6}>
                     {console.log({ reply: replyComment })}
                     <Grid container spacing={1}>

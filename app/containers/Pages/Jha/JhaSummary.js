@@ -46,6 +46,8 @@ import { handelJhaId, checkValue } from "../Jha/Utils/checkValue"
 import Assessment from './Assessments/Assessment';
 import { handelFileName } from "../Jha/Utils/checkValue"
 import Attachment from "../../../containers/Attachment/Attachment";
+import { Comments } from "../../pageListAsync";
+
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -122,6 +124,7 @@ function JhaSummary() {
   const [approvalsView, setApprovalsView] = useState(false);
   const [closeOutView, setCloseOutView] = useState(false);
   const [lessonsLearnedView, setLessonsLearnedView] = useState(false);
+  const [commentsView, setCommentsView] = useState(false)
   const history = useHistory();
   const [assessment, setAssessment] = useState({})
   const [expanded, setExpanded] = useState(false);
@@ -228,6 +231,7 @@ function JhaSummary() {
       setApprovalsView(false);
       setCloseOutView(false);
       setLessonsLearnedView(false);
+      setCommentsView(false)
     } else if (viewName == "approval") {
       setAssessmentsView(false);
       if (formStatus.approvalStatus) {
@@ -237,6 +241,7 @@ function JhaSummary() {
       }
       setCloseOutView(false);
       setLessonsLearnedView(false);
+      setCommentsView(false)
     } else if (viewName == "lession") {
       setAssessmentsView(false);
       setApprovalsView(false);
@@ -246,6 +251,14 @@ function JhaSummary() {
       } else {
         history.push(`/app/pages/jha/lessons-learned/lessons-learned`)
       }
+      setCommentsView(false)
+    } else if (viewName == "comments") {
+      console.log("here")
+      setAssessmentsView(false);
+      setApprovalsView(false);
+      setCloseOutView(false);
+      setLessonsLearnedView(false);
+      setCommentsView(true)
     } else if (viewName = "closeOut") {
       setAssessmentsView(false);
       setApprovalsView(false);
@@ -255,6 +268,7 @@ function JhaSummary() {
         history.push(`/app/pages/jha/close-out`)
       }
       setLessonsLearnedView(false);
+      setCommentsView(false)
     }
   }
 
@@ -278,7 +292,7 @@ function JhaSummary() {
     >
       {loader == false ?
         <>
-          {/* {console.log(assessment)} */}
+          {console.log(commentsView)}
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
 
@@ -373,7 +387,8 @@ function JhaSummary() {
                         assessmentsView == true
                         || (approvalsView === false
                           && lessonsLearnedView === false
-                          && closeOutView === false)
+                          && closeOutView === false
+                          && commentsView == false)
                       ) {
                         return (
                           <>
@@ -1037,6 +1052,16 @@ function JhaSummary() {
                           </>
                         )
                       }
+                      if (commentsView == true) {
+                        return (
+                          <>
+                            <Comments
+                              commentContext="Jha"
+                              contextReferenceIds={localStorage.getItem("fkJHAId")}
+                            />
+                          </>
+                        )
+                      }
                     })()}
                   </>
 
@@ -1088,12 +1113,12 @@ function JhaSummary() {
                       <ListItemText primary="Close Out" />
                     </ListItem>
 
-                    <ListItem button>
+                    <ListItemLink onClick={(e) => viewSwitch("comments")}>
                       <ListItemIcon>
                         <Comment />
                       </ListItemIcon>
                       <ListItemText primary="Comments" />
-                    </ListItem>
+                    </ListItemLink>
 
                     <ListItem button>
                       <ListItemIcon>
