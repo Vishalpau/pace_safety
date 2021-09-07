@@ -200,6 +200,10 @@ const Assessment = () => {
   })
   const [risk, setRisk] = useState([])
   const [updatePage, setUpdatePage] = useState(false)
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
 
   const handelCheckList = async () => {
     const tempPerformance = {}
@@ -333,15 +337,12 @@ const Assessment = () => {
 
   const handelNext = async () => {
     setSubmitLoader(true)
-    for (let obj in form) {
-      const res = await api.put(`/api/v1/jhas/${form[obj]["fkJhaId"]}/jobhazards/${form[obj]["id"]}/`, form[obj])
-    }
+    await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
     delete jobDetails["jhaAssessmentAttachment"]
     jobDetails["humanPerformanceAspects"] = additinalJobDetails.humanPerformanceAspects.toString()
     jobDetails["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     jobDetails["additionalRemarks"] = additinalJobDetails.additionalRemarks
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jobDetails)
-
     handelNavigate("next")
     setSubmitLoader(false)
   }
@@ -352,12 +353,27 @@ const Assessment = () => {
     }
   }
 
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+  }
+
   const classes = useStyles();
 
   const handelCallBack = async () => {
     await setLoading(true)
     await handelCheckList()
     await handelJobDetails()
+    await handelActionLink()
     PickListData(78).then(function (results) {
       setRisk(results)
     });
@@ -458,9 +474,12 @@ const Assessment = () => {
                               &&
                               form[index]["action"].map((value) => (
                                 <Link display="block"
-                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
+                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/
+                                  ?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&
+                                  companyId=${projectData.companyId}&projectId=${projectData.projectId}&
+                                  targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
                                 >
-                                  {actionId.number}
+                                  {value.number}
                                 </Link>
                               ))}
                           </Grid>
