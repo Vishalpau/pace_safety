@@ -35,6 +35,8 @@ import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from 'moment';
 
 import api from "../../../utils/axios";
+import { connect } from "react-redux";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -137,7 +139,7 @@ const ILink = withStyles({
   },
 })(Link);
 
-function Aha() {
+function Aha(props) {
   const [cardView, setCardView] = useState(true);
   const [tableView, setTableView] = useState(false);
   const [allAHAData , setAllAHAData] = useState([])
@@ -210,13 +212,54 @@ function Aha() {
     );
   };
 
-  const fetchAllAHAData = async () => {
-    const res = await api.get("/api/v1/ahas/")
-    const result = res.data.data.results.results
+  // const fetchAllAHAData = async () => {
+  //   const res = await api.get("/api/v1/ahas/")
+  //   const result = res.data.data.results.results
     
-    await setAllAHAData(result)
-    await handelTableView(result)
-  }
+  //   await setAllAHAData(result)
+  //   // await handelTableView(result)
+  // }
+
+  const fetchAllAHAData = async () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const res = await api.get("/api/v1/ahas/");
+    const selectBreakdown =
+      props.projectName.breakDown ||
+      JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+
+    if (fkProjectStructureIds) {
+      const newData = res.data.data.results.results.filter(
+        (item) =>
+          item.fkCompanyId === fkCompanyId &&
+          item.fkProjectId === fkProjectId &&
+          item.fkProjectStructureIds.includes(fkProjectStructureIds)
+      );
+    
+      await setAllAHAData(newData);
+      await setIsLoading(true);
+    } else {
+      const newData = res.data.data.results.results.filter(
+        (item) =>
+          item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
+      );
+      await setAllAHAData(newData);
+
+      // const res = await api.get(`/api/v1/observations/`);
+      // const result = res.data.data.results.results
+      // await setAllInitialData(result)
+      await setIsLoading(true);
+    }
+  };
 
   const handelTableView = (result) => {
     const temp = []
@@ -242,7 +285,7 @@ function Aha() {
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
-},[])
+},[props.projectName])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
       <div className={classes.root}>
@@ -523,4 +566,16 @@ function Aha() {
   );
 }
 
-export default Aha;
+// export default Aha;
+
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Aha);

@@ -48,6 +48,7 @@ import BuildIcon from "@material-ui/icons/Build";
 import CalendarTodayOutlinedIcon from "@material-ui/icons/CalendarTodayOutlined";
 import api from "../../../utils/axios";
 import axios from "axios";
+import Pagination from '@material-ui/lab/Pagination';
 
 // import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
@@ -58,6 +59,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
+  pagination:{
+    padding:"1rem 0",
+    display:"flex",
+    justifyContent:"flex-end"
+  },
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
@@ -153,6 +159,8 @@ function Observations(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [projectListData, setProjectListData] = useState([]);
   const [projectDisable, setProjectDisable] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
   ? JSON.parse(localStorage.getItem('userDetails')).name
   : null;
@@ -244,31 +252,30 @@ function Observations(props) {
     history.push(`/app/prints/${id}`);
   };
 
-  const handleProjectList = () => {
-    try {
-      const company = JSON.parse(localStorage.getItem("company"));
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      const data = userDetails.companies.map((item) => {
-        if (item.companyId === parseInt(company.fkCompanyId)) {
-          setProjectDisable(item.projects.length > 1);
-          return setProjectListData(item.projects);
-        }
-      });
-      const filterData = userDetails.companies.filter(
-        (item) => item.companyId === parseInt(company.fkCompanyId)
-      );
-      let projectLength = filterData[0].projects.length <= 1;
+  // const handleProjectList = () => {
+  //   try {
+  //     const company = JSON.parse(localStorage.getItem("company"));
+  //     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  //     const data = userDetails.companies.map((item) => {
+  //       if (item.companyId === parseInt(company.fkCompanyId)) {
+  //         setProjectDisable(item.projects.length > 1);
+  //         return setProjectListData(item.projects);
+  //       }
+  //     });
+  //     const filterData = userDetails.companies.filter(
+  //       (item) => item.companyId === parseInt(company.fkCompanyId)
+  //     );
+  //     let projectLength = filterData[0].projects.length <= 1;
 
-      setProjectDisable(projectLength);
-    } catch (error) {}
-  };
+  //     setProjectDisable(projectLength);
+  //   } catch (error) {}
+  // };
 
   const fetchInitialiObservation = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
       JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    const res = await api.get("/api/v1/observations/");
     const selectBreakdown =
       props.projectName.breakDown ||
       JSON.parse(localStorage.getItem("selectBreakDown")) !== null
@@ -280,40 +287,44 @@ function Observations(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    if (fkProjectStructureIds) {
-      const newData = res.data.data.results.results.filter(
-        (item) =>
-          item.fkCompanyId === fkCompanyId &&
-          item.fkProjectId === fkProjectId &&
-          item.fkProjectStructureIds.includes(fkProjectStructureIds)
-      );
-    
-      await setAllInitialData(newData);
-      await setIsLoading(true);
-    } else {
-      const newData = res.data.data.results.results.filter(
-        (item) =>
-          item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
-      );
-      await setAllInitialData(newData);
+    const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
+    const result = res.data.data.results.results
+    console.log(result);
+    await setAllInitialData(result)
+    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    await setPageCount(pageCount)
 
-      // const res = await api.get(`/api/v1/observations/`);
-      // const result = res.data.data.results.results
-      // await setAllInitialData(result)
-      await setIsLoading(true);
-      handelActionTracker();
-    }
+    await setIsLoading(true)
   };
   const handleSearch = (e) => {
     // console.log(e.target.value)
     setSeacrhIncident(e.target.value);
     // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
   };
+
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  
+  const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllInitialData(res.data.data.results.results);
+  };
   console.log(allInitialData)
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
-    handleProjectList();
+    // handleProjectList();
   }, [props.projectName]);
 
   return (
@@ -643,7 +654,11 @@ function Observations(props) {
               />
             </div>
           )}
+          <div className={classes.pagination}>
+      <Pagination count={pageCount} onChange={handleChange}/>
+    </div>
         </Box>
+        
       ) : (
         <h1>Loading...</h1>
       )}

@@ -339,7 +339,7 @@ console.log(form)
   const colorid = (id) => {
     let idcolor = idPerColor[id]
     if(idcolor !== undefined){
-      return idcolor
+      return red
     }else{
       return "white"
     }

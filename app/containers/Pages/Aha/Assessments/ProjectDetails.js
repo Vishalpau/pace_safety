@@ -314,7 +314,7 @@ bytes
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
     
-    const { error, isValid } = ProjectDetailsValidator(form);
+    const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId,levelLenght);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
