@@ -187,6 +187,8 @@ const ObservationInitialNotification = (props) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
+  const [levelLenght, setLevelLenght] = useState(0)
+
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
 
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
@@ -460,7 +462,7 @@ const ObservationInitialNotification = (props) => {
 
     }
     // if any error then this part is executed
-    const { error, isValid } = InitialNotificationValidator(form);
+    const { error, isValid } = InitialNotificationValidator(form,selectDepthAndId,levelLenght);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -1000,8 +1002,12 @@ const ObservationInitialNotification = (props) => {
                     {selectBdown.name}
                   </Typography>
                 </Grid>
-              ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId}/>
-}
+              ) : <ProjectStructureInit
+              selectDepthAndId={selectDepthAndId}
+              setLevelLenght={setLevelLenght}
+              error= {error}
+              setSelectDepthAndId={setSelectDepthAndId} />
+              }
             
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField

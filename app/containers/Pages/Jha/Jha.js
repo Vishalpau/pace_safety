@@ -280,8 +280,8 @@ function Jha() {
 
                       <Grid item xs={1} justifyContent="flex-end">
                         <Chip
-                          avatar={<Avatar src="/images/pp_boy.svg" />}
-                          label="Admin"
+                          avatar={<Avatar src={item[1]["avatar"]} />}
+                          label={item[1]["username"]}
                         />
                       </Grid>
                     </Grid>
@@ -313,7 +313,7 @@ function Jha() {
                       <Grid item xs={6} md={3}>
                         <Chip
                           variant="outlined"
-                          label="Initial Notification"
+                          label="JHA"
                           color="primary"
                           size="small"
                         />
@@ -371,7 +371,7 @@ function Jha() {
                     </Typography>
 
                     <Typography className={Fonts.listingLabelValue}>
-                      {item[1]["createdBy"]}
+                      {item[1]["username"]}
                     </Typography>
                   </Grid>
                 </Grid>

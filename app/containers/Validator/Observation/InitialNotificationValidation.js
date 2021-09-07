@@ -1,10 +1,17 @@
 import validator from "validator";
 
-function InitialNotificationValidator(data) {
+function InitialNotificationValidator(data,projectStructure,levelLenght) {
   
 
   const error = {};
   let isValid = true;
+
+
+  if(projectStructure?projectStructure.length<levelLenght:false){
+    error.projectStructure = "Please select stage of project";
+    isValid = false;
+  }
+
 
   if (validator.isEmpty(data.observationDetails.toString())) {
     error.observationDetails = "Please enter observation details";

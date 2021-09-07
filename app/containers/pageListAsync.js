@@ -667,7 +667,9 @@ export const ProjectAreaHazards = loadable(() => import("./Pages/Aha/Assessments
   fallback: <Loading />,
 });
 
-
+export const AhaCloseOut = loadable(() => import("./Pages/Aha/CloseOut/CloseOut"), {
+  fallback: <Loading />,
+});
 
 export const Assessment = loadable(() => import("./Pages/Aha/Assessments/Assessment"), {
   fallback: <Loading />,
