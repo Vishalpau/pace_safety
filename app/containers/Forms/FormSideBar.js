@@ -44,6 +44,7 @@ export const FormSideBar = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const handelNavigate = (value, key) => {
+    
     console.log(value,key)
     history.push(value)
   }
