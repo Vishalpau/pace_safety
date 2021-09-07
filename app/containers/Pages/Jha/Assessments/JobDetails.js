@@ -35,8 +35,7 @@ import { useParams, useHistory } from 'react-router';
 import moment from "moment";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from 'react-redux'
-import Axios from 'axios'
-
+import axios from 'axios'
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
@@ -50,6 +49,8 @@ import {
 } from "../../../../utils/constants";
 import Type from "../../../../styles/components/Fonts.scss";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
+import { ACCOUNT_API_URL, access_token } from '../../../../utils/constants';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -205,7 +206,7 @@ const JobDetails = (props) => {
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const radioDecide = ["Yes", "No"]
   const [workArea, setWorkArea] = useState("")
-
+  const [departmentName, setDepartmentName] = useState([])
   // fecth jha data
   const fetchJhaData = async () => {
     const jhaId = handelJhaId()
@@ -406,11 +407,37 @@ const JobDetails = (props) => {
     };
   }
 
+  const fetchDepartment = () => {
+    let filterDepartmentName = []
+    const config = {
+      method: "get",
+      url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+    axios(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const result = response.data.data.results;
+          let user = [];
+          user = result;
+          for (var i in result) {
+            filterDepartmentName.push(result[i].departmentName);
+          }
+          setDepartmentName([...filterDepartmentName, "Others"])
+        }
+      })
+      .catch((error) => {
+      });
+  };
+
   const classes = useStyles();
 
   const handelCallBack = async () => {
     await fetchJhaData()
     await fetchTeamData()
+    fetchDepartment()
   }
 
   useEffect(() => {
@@ -418,6 +445,7 @@ const JobDetails = (props) => {
   }, []);
   return (
     <PapperBlock title="Job Details" icon="ion-md-list-box">
+      {/* {console.log(departmentName)} */}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
@@ -707,9 +735,11 @@ const JobDetails = (props) => {
                 onChange={(e) => setForm({ ...form, department: e.target.value })}
                 variant="outlined"
               >
-                {department.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {departmentName.map((option) => (
+                  <MenuItem key={option}
+                    value={option}
+                  >
+                    {option}
                   </MenuItem>
                 ))}
               </TextField>

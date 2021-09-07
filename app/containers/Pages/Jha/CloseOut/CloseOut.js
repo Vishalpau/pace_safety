@@ -28,18 +28,15 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import FormSideBar from "../../../Forms/FormSideBar";
 import {
-    LOGIN_URL,
     access_token,
     ACCOUNT_API_URL,
-    HEADER_AUTH,
-    SUMMERY_FORM
 } from "../../../../utils/constants";
 import api from "../../../../utils/axios";
 import Type from "../../../../styles/components/Fonts.scss";
 import "../../../../styles/custom.css";
 import { handelJhaId, checkValue } from "../Utils/checkValue"
-
 import { CLOSE_OUT_FORM } from "../Utils/constants"
+import { SUMMARY_FORM } from "../Utils/constants"
 
 
 function Alert(props) {
@@ -63,7 +60,7 @@ const CloseOut = () => {
     const history = useHistory();
     const { id } = useParams();
     // const dispatch = useDispatch();
-    const [jhaListData, setJhaListdata] = useState([]);
+    const [jhaListData, setJhaListdata] = useState({});
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState({})
@@ -79,26 +76,15 @@ const CloseOut = () => {
             ? JSON.parse(localStorage.getItem("userDetails")).id
             : null;
 
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState("");
-    const [messageType, setMessageType] = useState("");
-
     // fetch incident data
     const fetchJhaData = async () => {
         const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
-        setJhaListdata(result)
         console.log(result)
-
+        setJhaListdata(result)
     };
     // handle close snackbar
-    const handleClose = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpen(false);
-    };
 
     const handleCloseDate = (e) => {
         if (new Date(e) > new Date(form.reviewDate)) {
@@ -112,19 +98,6 @@ const CloseOut = () => {
             error.closeDate = errorMessage
             setError(error);
 
-        }
-    }
-
-    const handleReviewDate = (e) => {
-        if (new Date(e) < new Date()) {
-            setForm({ ...form, reviewDate: moment(e).toISOString() });
-            error.reviewDate = ""
-            setError(error)
-        }
-        else {
-            setForm({ ...form, reviewDate: null })
-            error.reviewDate = "Invalid date-time selected"
-            setError(error);
         }
     }
 
@@ -153,39 +126,13 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
-        const temp = jhaListData;
-        temp.reviewedBy = form.reviewedBy || jhaListData.reviewedBy;
-        temp.reviewDate = form.reviewDate || jhaListData.reviewDate;
-        temp.closedBy = form.closedBy || jhaListData.closedBy;
-        temp.closeDate = form.closeDate || jhaListData.closeDate;
-        temp.updatedAt = new Date().toISOString();
-        temp.updatedBy = parseInt(userId)
-
-        try {
-            if (new Date(form.closeDate) > new Date(form.reviewDate)) {
-                const res = await api.put(
-                    `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-                    temp
-                );
-                if (res.status === 200) {
-                    let viewMode = {
-                        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
-                        , closeout: true
-                    }
-                    // dispatch(tabViewMode(viewMode));
-                    history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
-                }
-            }
-            else {
-                setForm({ ...form, closeDate: null })
-                let errorMessage = "Closed date cannot be prior to reviewed date"
-                setError(errorMessage)
-            }
-        } catch (error) {
-            console.log(error)
+        delete jhaListData["jhaAssessmentAttachment"]
+        const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
+        if (res.status == 200) {
+            history.push(SUMMARY_FORM["Summary"])
         }
-    }
 
+    }
     useEffect(() => {
         fetchUserList();
         fetchJhaData();
@@ -203,14 +150,13 @@ const CloseOut = () => {
                             </Typography>
 
                             <Typography varint="body1" className={Type.labelValue}>
-                                {checkValue(jhaListData.jhaNumber)}
+                                {jhaListData.jhaNumber}
                             </Typography>
                         </Grid>
 
-
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Jha assessment data
+                                Aha assessment data
                             </Typography>
                             <Typography className={Type.labelValue}>
                                 {moment(jhaListData.jhaAssessmentDate).format(
@@ -221,98 +167,22 @@ const CloseOut = () => {
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Job title
+                                Jha description
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {checkValue(jhaListData.jobTitle)}
+                                {jhaListData.description}
                             </Typography>
                         </Grid>
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Job description
+                                Jha location
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {checkValue(jhaListData.description)}
+                                {jhaListData.location}
                             </Typography>
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Job location
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {checkValue(jhaListData.location)}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <Typography variant="h6" gutterBottom>
-                                Incident report form review
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <FormControl
-                                variant="outlined"
-
-                                className={classes.formControl}
-
-
-                            >
-                                <InputLabel id="demo-simple-select-label">
-                                    Reviewed by
-                                </InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    label="Reviewed by"
-                                    value={form.reviewedBy || ""}
-                                    onChange={(e) => setForm({ ...form, reviewedBy: e.target.value })}
-
-                                >
-                                    {userList.map((selectValues, index) => (
-                                        <MenuItem
-                                            value={selectValues.id}
-                                            key={index}
-                                        >
-                                            {selectValues.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-
-                            </FormControl>
-                        </Grid>
-                        <Snackbar
-                            open={open}
-                            autoHideDuration={6000}
-                            onClose={handleClose}
-                        >
-                            <Alert onClose={handleClose} severity={messageType}>
-                                {message}
-                            </Alert>
-                        </Snackbar>
-                        <Grid item xs={12} md={6}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDateTimePicker
-                                    error={error.reviewDate}
-                                    helperText={
-                                        error.reviewDate ? error.reviewDate : null
-                                    }
-                                    className={classes.formControl}
-                                    id="date-picker-dialog"
-                                    format="yyyy/MM/dd HH:mm"
-                                    inputVariant="outlined"
-                                    label="Reviewed on"
-                                    value={form.reviewDate || null}
-                                    onChange={(e) => handleReviewDate(e)}
-                                    KeyboardButtonProps={{
-                                        "aria-label": "change date",
-                                    }}
-                                    disableFuture
-
-                                />
-                            </MuiPickersUtilsProvider>
-                        </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h6" gutterBottom>
                                 Action item close out
@@ -321,10 +191,7 @@ const CloseOut = () => {
                         <Grid item xs={12} md={6}>
                             <FormControl
                                 variant="outlined"
-
                                 className={classes.formControl}
-
-
                             >
                                 <InputLabel id="demo-simple-select-label">
                                     Closed by
@@ -333,14 +200,14 @@ const CloseOut = () => {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Closed by"
-                                    value={form.closedBy || ""}
-                                    onChange={(e) => setForm({ ...form, closedBy: e.target.value })}
+                                    value={jhaListData.closedByName ? jhaListData.closedByName : ""}
 
                                 >
                                     {userList.map((selectValues, index) => (
                                         <MenuItem
-                                            value={selectValues.id}
+                                            value={selectValues.name}
                                             key={index}
+                                            onClick={(e) => setJhaListdata({ ...jhaListData, closedByName: selectValues.name, closedById: selectValues.id })}
                                         >
                                             {selectValues.name}
                                         </MenuItem>
@@ -357,19 +224,22 @@ const CloseOut = () => {
                                     helperText={
                                         error.closeDate ? error.closeDate : null
                                     }
-                                    value={form.closeDate || null}
-                                    onChange={(e) => handleCloseDate(e)}
+                                    value={jhaListData.closedDate ? jhaListData.closedDate : null}
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     id="date-picker-dialog"
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     label="Closed on"
-
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
-
+                                    onChange={(e) => {
+                                        setJhaListdata({
+                                            ...jhaListData,
+                                            closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
+                                        });
+                                    }}
                                     disableFuture
                                 />
                             </MuiPickersUtilsProvider>
@@ -388,15 +258,7 @@ const CloseOut = () => {
                             </Button>
                         </Grid>
                     </Grid>
-                    {isDesktop && (
-                        <Grid item md={3}>
-                            <FormSideBar
-                                deleteForm={[1, 2, 3]}
-                                listOfItems={CLOSE_OUT_FORM}
-                                selectedItem="Close out"
-                            />
-                        </Grid>
-                    )}
+
                 </Grid>
             ) : (
                 <h1>Loading...</h1>
