@@ -92,7 +92,7 @@ const Comments = (props) => {
       fkCompanyId: fkCompanyId,
       fkProjectId: project.projectId,
       commentContext: props.commentContext,
-      contextReferenceIds: props.id,
+      contextReferenceIds: id,
       commentTags: 'string',
       comment: comment,
       parent: 0,
@@ -115,7 +115,7 @@ const Comments = (props) => {
       fkCompanyId: fkCompanyId,
       fkProjectId: project.projectId,
       commentContext: props.commentContext,
-      contextReferenceIds: props.id,
+      contextReferenceIds: id,
       commentTags: 'string',
       comment: replyComments,
       parent: commentId,
@@ -136,16 +136,19 @@ const Comments = (props) => {
   }
   const fetchReplyComment = async (parentId) => {
     // alert("hlo")
-    const res = await api.get(`api/v1/comments/${props.commentContext}/${props.id}/?parent=${parentId}`)
+    const res = await api.get(`api/v1/comments/${props.commentContext}/${id}/?parent=${parentId}`)
     console.log(res)
     if (res.status = 200) {
+
       return res.data.data.results.results
+
     }
+
   }
 
   const fetchComments = async () => {
     // alert("hlo")
-    const res = await api.get(`api/v1/comments/${props.commentContext}/${props.id}/`)
+    const res = await api.get(`api/v1/comments/${props.commentContext}/${id}/`)
     console.log(res)
     if (res.status === 200) {
       let result = res.data.data.results.results
@@ -320,7 +323,7 @@ const Comments = (props) => {
                   </Grid>
                 </Box>
 
-                {replyCommentDataList.length > 0 ? replyCommentDataList[key] !== undefined && replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
+                {replyCommentDataList.length > 0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
                   <Box padding={3} marginLeft={6} marginRight={6}>
 
                     <Grid container spacing={1}>

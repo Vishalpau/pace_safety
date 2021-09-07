@@ -24,7 +24,7 @@ import {
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { useHistory, useParams } from "react-router";
-import axios from "axios";
+
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import { LESSION_LEARNED_FORM } from "../../../utils/constants";
@@ -143,15 +143,9 @@ const CloseOut = () => {
     //   fetch user data
 
     const fetchUserList = async () => {
-        var config = {
-            method: 'get',
-            url: `${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
-        };
+        
 
-        axios(config)
+        api.get(`${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,)
             .then(function (response) {
 
                 if (response.status === 200) {
@@ -166,9 +160,9 @@ const CloseOut = () => {
 
     const handleNext = async () => {
         const temp = incidentsListData;
-        temp.reviewedBy = form.reviewedBy || incidentsListData.reviewedBy;
+        temp.reviewedByName = form.reviewedBy || incidentsListData.reviewedBy;
         temp.reviewDate = form.reviewDate || incidentsListData.reviewDate;
-        temp.closedBy = form.closedBy || incidentsListData.closedBy;
+        temp.closedByName = form.closedBy || incidentsListData.closedBy;
         temp.closeDate = form.closeDate || incidentsListData.closeDate;
         temp.updatedAt = new Date().toISOString();
         temp.updatedBy = parseInt(userId)
@@ -323,7 +317,7 @@ const CloseOut = () => {
                                 >
                                     {userList.map((selectValues, index) => (
                                         <MenuItem
-                                            value={selectValues.id}
+                                            value={selectValues.name}
                                             key={index}
                                         >
                                             {selectValues.name}
@@ -390,7 +384,7 @@ const CloseOut = () => {
                                 >
                                     {userList.map((selectValues, index) => (
                                         <MenuItem
-                                            value={selectValues.id}
+                                            value={selectValues.name}
                                             key={index}
                                         >
                                             {selectValues.name}

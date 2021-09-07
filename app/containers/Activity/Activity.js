@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function AhaSummary() {
+function ActivityHistory(props) {
     const [assessments, setAssessments] = useState(false);
     const [approvals, setApprovals] = useState(false);
     const [lessonsLearned, setLessonsLearned] = useState(false);
@@ -181,8 +181,8 @@ function AhaSummary() {
         setExpanded(isExpanded ? panel : false);
     };
     const fetchActivityHistoryData = ()=>{
-          
-          api.get(`api/v1/core/useractivities/incidents/123/`)
+        // incidents
+          api.get(`api/v1/core/useractivities/${props.module}/123/`)
           .then(function (response) {
             console.log(JSON.stringify(response.data));
             const data = response.data.data.results
@@ -241,4 +241,4 @@ function AhaSummary() {
     );
 }
 
-export default AhaSummary;
+export default ActivityHistory;
