@@ -75,13 +75,13 @@ const Comments = (props) => {
 
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const fkCompanyId =
-  JSON.parse(localStorage.getItem("company")) !== null
-    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-    : null;
-const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -107,7 +107,7 @@ const project =
     if (res.status === 201) {
       fetchComments();
     }
-    
+
 
   }
   const handleReplyComments = async (commentId) => {
@@ -124,15 +124,15 @@ const project =
       status: 'Active',
       createdBy: userDetails.id
     }
-    
+
     const res = await api.post(`api/v1/comments/`, data)
     if (res.status === 201) {
       await fetchComments();
       await setReplyComments("");
       handleChange();
-      
+
     }
-    
+
   }
   const fetchReplyComment = async (parentId) => {
     // alert("hlo")
@@ -141,11 +141,11 @@ const project =
     if (res.status = 200) {
 
       return res.data.data.results.results
-    
+
     }
-    
+
   }
-  
+
   const fetchComments = async () => {
     // alert("hlo")
     const res = await api.get(`api/v1/comments/${props.commentContext}/${id}/`)
@@ -158,20 +158,21 @@ const project =
       let pId = []
       for (let i in result) {
         let parentId = result[i].parent
-        
+
         if (parentId > 0) {
           pId.push(parentId)
-          
+
         }
       }
       let uniquePId = [...new Set(pId)];
-      for(let i in uniquePId){
+      for (let i in uniquePId) {
         let replyData = await fetchReplyComment(uniquePId[i])
-        newData.push({data:replyData})
-      
+        newData.push({ data: replyData })
+
       }
+      console.log(newData)
       await setReplyCommentDataList(newData)
-    
+
       await setIsLoading(true)
     }
 
@@ -182,7 +183,7 @@ const project =
   return (
     <>
       {isLoading ? <>
-        
+
         <Paper title="Comments (4)" elevation={1} className={classes.mTopfifty}>
 
           <Grid container spacing={3}>
@@ -321,10 +322,10 @@ const project =
                     </Grid>
                   </Grid>
                 </Box>
-                
-                {replyCommentDataList.length>0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
+
+                {replyCommentDataList.length > 0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
                   <Box padding={3} marginLeft={6} marginRight={6}>
-              
+
                     <Grid container spacing={1}>
                       <Grid item xs={1}>
                         <Avatar src={replyComment.avatar} alt={'A'}></Avatar>
@@ -339,7 +340,7 @@ const project =
                     </Grid>
                   </Box>
                 ) : null}
-                
+
               </Grid>
             </Grid>
           )}
