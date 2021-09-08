@@ -41,12 +41,15 @@ import ImageIcon from '@material-ui/icons/Image';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
+import axios from "axios";
+
 import api from "../../../utils/axios";
 import { handelJhaId, checkValue } from "../Jha/Utils/checkValue"
 import Assessment from './Assessments/Assessment';
 import { handelFileName } from "../Jha/Utils/checkValue"
 import Attachment from "../../../containers/Attachment/Attachment";
 import { Comments } from "../../pageListAsync";
+import { SUMMARY_FORM } from "./Utils/constants"
 
 
 // Sidebar Links Helper Function
@@ -109,6 +112,23 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '5px',
     color: '#ffffff',
   },
+  aLabelValue: {
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: '#063d55',
+    float: 'left',
+    width: '100%',
+  },
+  updateLink: {
+    float: 'left',
+    fontSize: '0.88rem',
+    fontWeight: '400',
+    lineHeight: '1.2',
+    '& a': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
   ratioColororange: {
     backgroundColor: 'orange',
     padding: '16px!important',
@@ -116,6 +136,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '7px',
     borderRadius: '5px',
     color: '#ffffff',
+  },
+  actionTitleLable: {
+    float: 'right',
+    width: 'calc(100% - 100px)',
+    textAlign: 'right',
   },
 }));
 
@@ -140,7 +165,11 @@ function JhaSummary() {
     closeOutStatus: false,
     lessionLeranedStatus: false
   })
-
+  const [approvalActionData, setApprovalactionData] = useState([])
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
@@ -152,7 +181,7 @@ function JhaSummary() {
     setTeam(resultTeam)
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-    const resultHazard = resHazards.data.data.results.results
+    const resultHazard = resHazards.data.data.results
     setHazard(resultHazard)
     let assessmentDecider = result.notifyTo !== null
     let approvalDecider = result.wrpApprovalUser !== null
@@ -202,6 +231,10 @@ function JhaSummary() {
       "/app/pages/jha/lessons-learned/lessons-learned"
     );
   };
+  const handleClosePush = async () => {
+    console.log("here")
+    history.push("/app/pages/jha/close-out");
+  };
 
   const [expandedTableDetail, setExpandedTableDetail] = useState('panel5');
 
@@ -216,6 +249,31 @@ function JhaSummary() {
   const handleHazardExpand = (panel) => (event, isExpanded) => {
     setExpandedHazard(isExpanded ? panel : false);
   };
+
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A00`);
+    let allAction = allActionTrackerData.data.data.results.results
+    setApprovalactionData(allAction !== null ? allAction : [])
+  };
+
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+  }
 
   let errorMessage = "Please fill"
   let errorApproval = "approval"
@@ -253,7 +311,6 @@ function JhaSummary() {
       }
       setCommentsView(false)
     } else if (viewName == "comments") {
-      console.log("here")
       setAssessmentsView(false);
       setApprovalsView(false);
       setCloseOutView(false);
@@ -276,6 +333,8 @@ function JhaSummary() {
     await setLoader(true)
     await handelAsessment()
     await handelProjectStructre()
+    await handelActionTracker()
+    await handelActionLink()
     await setLoader(false)
   }
 
@@ -292,7 +351,7 @@ function JhaSummary() {
     >
       {loader == false ?
         <>
-          {console.log(commentsView)}
+          {/* {console.log(commentsView)} */}
           <Box paddingBottom={1}>
             <div className={Styles.incidents}>
 
@@ -930,12 +989,20 @@ function JhaSummary() {
                               <Grid container spacing={3}>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                                    <div className={classes.actionTitleLable}>Action title</div>
-                                  </Typography>
-                                  <Typography className={classes.aLabelValue}>
-                                    <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                                    <div className={classes.actionTitleLable}>Action title</div>
+                                    {approvalActionData.map((value) => (
+                                      <>
+                                        <span className={classes.updateLink}>
+                                          <Link
+                                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
+                                          >
+                                            {value.actionNumber}
+                                          </Link>
+                                        </span>
+                                        <div className={classes.actionTitleLable}>
+                                          {value.actionTitle}
+                                        </div>
+                                      </>
+                                    ))}
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -1098,7 +1165,6 @@ function JhaSummary() {
 
                     <ListItemLink
                       onClick={(e) => handleJhaLessonLearnPush(e)}
-                      disabled={formStatus.closeOutStatus}
                     >
                       <ListItemIcon>
                         {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
@@ -1106,7 +1172,11 @@ function JhaSummary() {
                       <ListItemText primary="Lessons Learned" />
                     </ListItemLink>
 
-                    <ListItem button divider>
+                    <ListItem
+                      button
+                      divider
+                      onClick={(e) => handleClosePush(e)}
+                    >
                       <ListItemIcon>
                         <Close />
                       </ListItemIcon>

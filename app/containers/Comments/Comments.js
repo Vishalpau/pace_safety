@@ -92,7 +92,7 @@ const Comments = (props) => {
       fkCompanyId: fkCompanyId,
       fkProjectId: project.projectId,
       commentContext: props.commentContext,
-      contextReferenceIds: id,
+      contextReferenceIds: props.id,
       commentTags: 'string',
       comment: comment,
       parent: 0,
@@ -115,7 +115,7 @@ const Comments = (props) => {
       fkCompanyId: fkCompanyId,
       fkProjectId: project.projectId,
       commentContext: props.commentContext,
-      contextReferenceIds: id,
+      contextReferenceIds: props.id,
       commentTags: 'string',
       comment: replyComments,
       parent: commentId,
@@ -136,7 +136,7 @@ const Comments = (props) => {
   }
   const fetchReplyComment = async (parentId) => {
     // alert("hlo")
-    const res = await api.get(`api/v1/comments/${props.commentContext}/${id}/?parent=${parentId}`)
+    const res = await api.get(`api/v1/comments/${props.commentContext}/${props.id}/?parent=${parentId}`)
     console.log(res)
     if (res.status = 200) {
 
@@ -148,7 +148,7 @@ const Comments = (props) => {
 
   const fetchComments = async () => {
     // alert("hlo")
-    const res = await api.get(`api/v1/comments/${props.commentContext}/${id}/`)
+    const res = await api.get(`api/v1/comments/${props.commentContext}/${props.id}/`)
     console.log(res)
     if (res.status === 200) {
       let result = res.data.data.results.results
