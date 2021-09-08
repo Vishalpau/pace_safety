@@ -184,6 +184,7 @@ const ProjectAreaHazards = () => {
     const temp = {}
     const res = await api.get("/api/v1/core/checklists/aha-hazards/1/")
     const checklistGroups = res.data.data.results[0].checklistGroups
+    console.log("121",checklistGroups)
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
       value.checkListValues.map((checkListOptions) => {
@@ -196,8 +197,8 @@ const ProjectAreaHazards = () => {
         }
       })
     })
-    setCheckListGroups(temp)
-    setIsLoading(true)
+    await setCheckListGroups(temp)
+    await setIsLoading(true)
   }
 
   const handlePhysicalHazards = (e , index , value , checkListID) => {
@@ -450,7 +451,7 @@ bytes
     const otherNoId = []
     const tempForm = []
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
-    const apiData = res.data.data.results.results
+    const apiData = res.data.data.results
     apiData.map((value) => {
           if (value.fkChecklistId !== 0) {
             tempForm.push(value)
@@ -539,7 +540,7 @@ console.log(form)
     }
     return risk
   }
-
+console.log(checkGroups)
   useEffect(() => {
     // fetchBreakdown()
     // fetchCallBack()

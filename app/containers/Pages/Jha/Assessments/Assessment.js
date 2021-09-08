@@ -199,13 +199,18 @@ const Assessment = () => {
     workStopCondition: [],
   })
   const [risk, setRisk] = useState([])
+  const [updatePage, setUpdatePage] = useState(false)
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
 
   const handelCheckList = async () => {
     const tempPerformance = {}
     const tempDocument = []
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-    const apiData = res.data.data.results.results
+    const apiData = res.data.data.results
 
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
@@ -332,15 +337,12 @@ const Assessment = () => {
 
   const handelNext = async () => {
     setSubmitLoader(true)
-    for (let obj in form) {
-      const res = await api.put(`/api/v1/jhas/${form[obj]["fkJhaId"]}/jobhazards/${form[obj]["id"]}/`, form[obj])
-    }
+    await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
     delete jobDetails["jhaAssessmentAttachment"]
     jobDetails["humanPerformanceAspects"] = additinalJobDetails.humanPerformanceAspects.toString()
     jobDetails["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     jobDetails["additionalRemarks"] = additinalJobDetails.additionalRemarks
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jobDetails)
-
     handelNavigate("next")
     setSubmitLoader(false)
   }
@@ -351,12 +353,27 @@ const Assessment = () => {
     }
   }
 
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+  }
+
   const classes = useStyles();
 
   const handelCallBack = async () => {
     await setLoading(true)
     await handelCheckList()
     await handelJobDetails()
+    await handelActionLink()
     PickListData(78).then(function (results) {
       setRisk(results)
     });
@@ -365,7 +382,7 @@ const Assessment = () => {
 
   useEffect(() => {
     handelCallBack()
-  }, [])
+  }, [updatePage])
 
   return (
     <PapperBlock title="Assessments" icon="ion-md-list-box">
@@ -448,13 +465,22 @@ const Assessment = () => {
                             <ActionTracker
                               actionContext="jha:hazard"
                               enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
+                              setUpdatePage={setUpdatePage}
+                              updatePage={updatePage}
                             />
                           </Grid>
                           <Grid item xs={6} className={classes.createHazardbox}>
                             {form[index]["action"].length > 0
                               &&
                               form[index]["action"].map((value) => (
-                                <a style={{ marginLeft: "20px" }}>{value.trackerID}</a>
+                                <Link display="block"
+                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/
+                                  ?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&
+                                  companyId=${projectData.companyId}&projectId=${projectData.projectId}&
+                                  targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
+                                >
+                                  {value.number}
+                                </Link>
                               ))}
                           </Grid>
                         </Grid>

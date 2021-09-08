@@ -35,7 +35,6 @@ import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
-import Axios from 'axios'
 
 
 // redux
@@ -216,6 +215,8 @@ const IncidentDetails = (props) => {
           vendorReferenceId: "string",
           contractor: form.contractor,
           subContractor: form.subContractor,
+          incidentStage	:"",
+          incidentStatus:""
         };
         const { error, isValid } = validate(form,selectDepthAndId,levelLenght);
         await setError(error);
@@ -320,6 +321,8 @@ const IncidentDetails = (props) => {
               vendorReferenceId: "string",
               contractor: form.contractor,
               subContractor: form.subContractor,
+              incidentStage	:"",
+              incidentStatus:""
             };
             // sent post api
             try {
@@ -518,14 +521,10 @@ const IncidentDetails = (props) => {
     if (projectData.projectName.breakdown.length !== index) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-              }${value}`,
-            headers: HEADER_AUTH,
-          };
+         
           
-          await Axios(config)
+          await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+          }${value}`,)
             .then(function (response) {
               if (response.status === 200) {
 

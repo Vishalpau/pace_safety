@@ -8,6 +8,7 @@ import Link from '@material-ui/core/Link';
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import { useParams, useHistory } from 'react-router';
 import { Col, Row } from "react-grid-system";
+import axios from "axios";
 
 import api from "../../../../utils/axios";
 import FormSideBar from '../../../Forms/FormSideBar';
@@ -73,7 +74,6 @@ const useStyles = makeStyles((theme) => ({
   },
   approvalButton: {
     borderRadius: '4px',
-    backgroundColor: '#83a6b5',
     marginTop: '5px',
     fontSize: '13px',
     fontWeight: '400',
@@ -105,12 +105,25 @@ const useStyles = makeStyles((theme) => ({
 const Approvals = () => {
 
   const [form, setForm] = useState({})
+  const [check, setCheck] = useState({ wrp: false, pic: false })
   const history = useHistory()
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actiionData, setActionData] = useState([])
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+  })
+
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const apiData = res.data.data.results
     setForm(apiData)
+    setCheck({
+      ...check,
+      wrp: apiData.wrpApprovalUser !== null ? true : false,
+      pic: apiData.picApprovalUser !== null ? true : false
+    })
   }
 
   const handelWorkAndPic = (type) => {
@@ -121,6 +134,31 @@ const Approvals = () => {
     } else if (type == "pic") {
       setForm({ ...form, picApprovalUser: name, picApprovalDateTime: new Date() })
     }
+  }
+
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A00`);
+    let allAction = allActionTrackerData.data.data.results.results
+    setActionData(allAction !== null ? allAction : [])
+  };
+
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    setProjectData({ projectId: projectId, companyId: fkCompanyId })
   }
 
   const handelSubmit = async () => {
@@ -135,12 +173,15 @@ const Approvals = () => {
   useEffect(() => {
     handelJobDetails()
     handelWorkAndPic()
-  }, [])
+    handelActionTracker()
+    handelActionLink()
+  }, [updatePage])
 
   const classes = useStyles();
   return (
     <>
       <PapperBlock title="Approval" icon="ion-md-list-box">
+        {/* {console.log(form)} */}
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
@@ -155,11 +196,11 @@ const Approvals = () => {
                 </Typography>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color={check.wrp ? "secondary" : "primary"}
                   className={classes.approvalButton}
                   onClick={(e) => handelWorkAndPic("work")}
                 >
-                  Approve Now
+                  {check.wrp ? "Approved" : "Approve Now"}
                 </Button>
               </Grid>
               <Grid
@@ -173,20 +214,38 @@ const Approvals = () => {
                 </Typography>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color={check.pic ? "secondary" : "primary"}
                   className={classes.approvalButton}
                   onClick={(e) => handelWorkAndPic("pic")}
                 >
-                  Approve Now
+                  {check.pic ? "Approved" : "Approve Now"}
                 </Button>
               </Grid>
               <Grid item md={6} xs={12}>
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  <ActionTracker />
+                  <ActionTracker
+                    actionContext="jha:approval"
+                    enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
+                    setUpdatePage={setUpdatePage}
+                    updatePage={updatePage}
+                  />
                 </Typography>
                 <Typography className={classes.aLabelValue}>
-                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                  <div className={classes.actionTitleLable}>Action title</div>
+                  {actiionData.map((value) => (
+                    <>
+                      <span className={classes.updateLink}>
+                        <Link
+                          href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
+                        >
+                          {value.actionNumber}
+                        </Link>
+                      </span>
+                      <div className={classes.actionTitleLable}>
+                        {value.actionTitle}
+                      </div>
+                    </>
+                  ))}
+
                 </Typography>
               </Grid>
               <Grid

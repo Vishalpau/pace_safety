@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import {
   Grid, Typography, TextField, Button, Select, FormHelperText,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -35,8 +35,7 @@ import { useParams, useHistory } from 'react-router';
 import moment from "moment";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from 'react-redux'
-import Axios from 'axios'
-
+import axios from 'axios'
 
 import FormSideBar from '../../../Forms/FormSideBar';
 import { JHA_FORM } from "../Utils/constants"
@@ -50,6 +49,8 @@ import {
 } from "../../../../utils/constants";
 import Type from "../../../../styles/components/Fonts.scss";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
+import { ACCOUNT_API_URL, access_token } from '../../../../utils/constants';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -192,13 +193,11 @@ const JobDetails = (props) => {
   const [error, setError] = useState({})
   const [loading, setLoading] = useState(false)
   const [submitLoader, setSubmitLoader] = useState(false)
-  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
-  const [breakdownData, setBreakDownData] = useState([])
 
   // getting breakdown values form header
   const [headerSelectValue, setHeaderSelectValue] = useState([])
   // getting breakdown value form page
-  const [pageSlectValue, setPageSelectValue] = useState([])
+  const [levelLenght, setLevelLenght] = useState("")
 
   const [isNext, setIsNext] = useState([])
 
@@ -206,7 +205,8 @@ const JobDetails = (props) => {
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const radioDecide = ["Yes", "No"]
-
+  const [workArea, setWorkArea] = useState("")
+  const [departmentName, setDepartmentName] = useState([])
   // fecth jha data
   const fetchJhaData = async () => {
     const jhaId = handelJhaId()
@@ -223,8 +223,7 @@ const JobDetails = (props) => {
     const jhaId = handelJhaId()
     if (jhaId !== null) {
       const res = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
-      const result = res.data.data.results.results
-      console.log(result)
+      const result = res.data.data.results
       await setTeamForm(result)
     }
   }
@@ -323,12 +322,9 @@ const JobDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
-    if (headerSelectValue !== null && headerSelectValue[headerSelectValue.length - 1] !== undefined && headerSelectValue[headerSelectValue.length - 1]["depth"] == "3L") {
-      form["workArea"] = headerSelectValue[headerSelectValue.length - 1]["name"]
-    } else if (pageSlectValue !== null && pageSlectValue[pageSlectValue.length - 1] !== undefined && pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["depth"] == "3L") {
-      form["workArea"] = pageSlectValue[pageSlectValue.length - 1]["breakdownValue"][0]["name"]
-    }
+
     form["fkProjectStructureIds"] = fkProjectStructureId
+    form["workArea"] = Array.isArray(workArea) ? workArea[0] : workArea
   }
 
   const handleSubmit = async (e) => {
@@ -411,11 +407,37 @@ const JobDetails = (props) => {
     };
   }
 
+  const fetchDepartment = () => {
+    let filterDepartmentName = []
+    const config = {
+      method: "get",
+      url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+    axios(config)
+      .then((response) => {
+        if (response.status === 200) {
+          const result = response.data.data.results;
+          let user = [];
+          user = result;
+          for (var i in result) {
+            filterDepartmentName.push(result[i].departmentName);
+          }
+          setDepartmentName([...filterDepartmentName, "Others"])
+        }
+      })
+      .catch((error) => {
+      });
+  };
+
   const classes = useStyles();
 
   const handelCallBack = async () => {
     await fetchJhaData()
     await fetchTeamData()
+    fetchDepartment()
   }
 
   useEffect(() => {
@@ -423,10 +445,11 @@ const JobDetails = (props) => {
   }, []);
   return (
     <PapperBlock title="Job Details" icon="ion-md-list-box">
+      {/* {console.log(departmentName)} */}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
-
+            {/* {console.log(form)} */}
             <Grid item md={12}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Project
@@ -436,21 +459,49 @@ const JobDetails = (props) => {
               </Typography>
             </Grid>
 
-            {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-              <Grid item xs={3} key={key}>
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  {selectBdown.label}
-                </Typography>
-                <Typography className={Type.labelValue}>
-                  {selectBdown.name}
-                </Typography>
-              </Grid>
-            ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
+            {id ?
+              fetchSelectBreakDownList.map((data, key) =>
+                <Grid item xs={3} md={3} key={key}>
+                  <FormControl
+                    error={error.incidentType}
+                    variant="outlined"
+                    required
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-label">
+                      {data.breakDownLabel}
+                    </InputLabel>
+                    <Select
+                      labelId="incident-type-label"
+                      id="incident-type"
+                      label="Incident type"
+                      value={data.selectValue.id || ""}
+                      onChange={(e) => {
+                        handleBreakdown(e, key + 1, data.breakDownLabel, data.selectValue);
+                      }}
+                    >
+                      {data.breakDownData.length !== 0
+                        ? data.breakDownData.map((selectvalues, index) => (
+                          <MenuItem key={index}
+                            onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                            value={selectvalues.id}>
+                            {selectvalues.structureName}
+                          </MenuItem>
+                        ))
+                        : null}
+                    </Select>
+                    {error && error.incidentType && (
+                      <FormHelperText>{error.incidentType}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+              ) : <ProjectStructureInit
+                selectDepthAndId={selectDepthAndId}
+                setLevelLenght={setLevelLenght}
+                error={error}
+                setSelectDepthAndId={setSelectDepthAndId}
+                setWorkArea={setWorkArea}
+              />
             }
 
             {/* job title */}
@@ -684,9 +735,11 @@ const JobDetails = (props) => {
                 onChange={(e) => setForm({ ...form, department: e.target.value })}
                 variant="outlined"
               >
-                {department.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {departmentName.map((option) => (
+                  <MenuItem key={option}
+                    value={option}
+                  >
+                    {option}
                   </MenuItem>
                 ))}
               </TextField>
