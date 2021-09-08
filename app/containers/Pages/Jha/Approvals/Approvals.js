@@ -130,8 +130,10 @@ const Approvals = () => {
     let user = JSON.parse(localStorage.getItem("userDetails"))
     let name = user.id
     if (type == "work") {
+      setCheck({ ...check, wrp: true })
       setForm({ ...form, wrpApprovalUser: name, wrpApprovalDateTime: new Date() })
     } else if (type == "pic") {
+      setCheck({ ...check, pic: true })
       setForm({ ...form, picApprovalUser: name, picApprovalDateTime: new Date() })
     }
   }

@@ -151,8 +151,7 @@ const ProjectAreaHazards = () => {
     const tempForm = []
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-    const apiData = res.data.data.results.results
-    console.log(apiData)
+    const apiData = res.data.data.results
     apiData.map((value) => {
       if (value.fkChecklistId !== 0) {
         tempForm.push(value)
@@ -179,9 +178,8 @@ const ProjectAreaHazards = () => {
     const temp = {}
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
-    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/1/`)
+    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
-    console.log(checklistGroups)
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
       value.checkListValues.map((checkListOptions) => {
@@ -283,15 +281,17 @@ const ProjectAreaHazards = () => {
 
     let hazardNew = []
     let hazardUpdate = []
-    form.map((value) => {
-      if (value["id"] == undefined) {
-        hazardNew.push(value)
-      } else {
-        hazardUpdate.push(value)
-      }
-    })
+    let allHazard = [form, otherHazards]
 
-    console.log(hazardNew, hazardUpdate)
+    allHazard.map((values, index) => {
+      allHazard[index].map((value) => {
+        if (value["id"] == undefined) {
+          hazardNew.push(value)
+        } else {
+          hazardUpdate.push(value)
+        }
+      })
+    })
 
     if (hazardUpdate.length > 0) {
       const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate)
