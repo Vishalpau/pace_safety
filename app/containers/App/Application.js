@@ -227,8 +227,8 @@ function Application(props) {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
 
-          {/*Incident List  */}
-          <Route path="/incidents/" component={Incident} />
+        {/*Incident List  */}
+        <Route path="/incidents/" component={Incident} />
 
         {/* form initialNotification */}
         <Route
@@ -428,7 +428,7 @@ function Application(props) {
           path="/incident/:id/lesson-learnt/:mode/"
           component={LessionLearned}
         />
-        
+
 
         {/* checklist */}
         <Route
@@ -575,7 +575,7 @@ function Application(props) {
         <Route exact path="/app/pages" component={Parent} />
         <Route path="/app/pages/user-profile" component={Profile} />
         <Route path="/app/pages/blank-page" component={BlankPage} />
-        
+
         <Route path="/app/pages/photo-gallery" component={Photos} />
         <Route path="/app/pages/pricing" component={Pricing} />
         <Route path="/app/pages/not-found" component={NotFound} />

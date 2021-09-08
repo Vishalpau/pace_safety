@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Comments = () => {
+const Comments = (props) => {
   const classes = useStyles();
   const [value, setValue] = React.useState('female');
   const { id } = useParams()
@@ -72,7 +72,16 @@ const Comments = () => {
   const [replyCommentDataList, setReplyCommentDataList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const userDetails = JSON.parse(localStorage.getItem("userDetails"))
+
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -80,10 +89,9 @@ const Comments = () => {
 
   const handleComments = async () => {
     const data = {
-
-      fkCompanyId: 1,
-      fkProjectId: 1,
-      commentContext: "incident",
+      fkCompanyId: fkCompanyId,
+      fkProjectId: project.projectId,
+      commentContext: props.commentContext,
       contextReferenceIds: id,
       commentTags: 'string',
       comment: comment,
@@ -99,15 +107,14 @@ const Comments = () => {
     if (res.status === 201) {
       fetchComments();
     }
-    console.log(res)
+
 
   }
   const handleReplyComments = async (commentId) => {
     const data = {
-
-      fkCompanyId: 1,
-      fkProjectId: 1,
-      commentContext: "incident",
+      fkCompanyId: fkCompanyId,
+      fkProjectId: project.projectId,
+      commentContext: props.commentContext,
       contextReferenceIds: id,
       commentTags: 'string',
       comment: replyComments,
@@ -117,31 +124,32 @@ const Comments = () => {
       status: 'Active',
       createdBy: userDetails.id
     }
-    console.log(data)
+
     const res = await api.post(`api/v1/comments/`, data)
     if (res.status === 201) {
       await fetchComments();
       await setReplyComments("");
       handleChange();
-      // let newData = await fetchReplyComment(commentId);
-      
-      // await setReplyCommentDataList([replyCommentDataList,{data:newData}])
+
     }
-    console.log(newData)
+
   }
   const fetchReplyComment = async (parentId) => {
-
-    const res = await api.get(`api/v1/comments/incident/${id}/?parent=${parentId}`)
+    // alert("hlo")
+    const res = await api.get(`api/v1/comments/${props.commentContext}/${id}/?parent=${parentId}`)
+    console.log(res)
     if (res.status = 200) {
-      // let data = 
+
       return res.data.data.results.results
-      // setReplyCommentDataList()
+
     }
-    // console.log(res.data.data.results.results)
+
   }
-  console.log(replyCommentDataList)
+
   const fetchComments = async () => {
-    const res = await api.get(`api/v1/comments/incident/${id}/`)
+    // alert("hlo")
+    const res = await api.get(`api/v1/comments/${props.commentContext}/${id}/`)
+    console.log(res)
     if (res.status === 200) {
       let result = res.data.data.results.results
       let data = res.data.data.results.results.filter(item => item.parent === 0)
@@ -150,35 +158,32 @@ const Comments = () => {
       let pId = []
       for (let i in result) {
         let parentId = result[i].parent
-        
+
         if (parentId > 0) {
           pId.push(parentId)
-          // console.log({parentId:parentId})
-          // let replyData = await fetchReplyComment(parentId)
-          // // [...newData, {data:replyData}]
-          // console.log(replyData)
+
         }
       }
       let uniquePId = [...new Set(pId)];
-      for(let i in uniquePId){
+      for (let i in uniquePId) {
         let replyData = await fetchReplyComment(uniquePId[i])
-        newData.push({data:replyData})
-        console.log(replyData)
+        newData.push({ data: replyData })
+
       }
+      console.log(newData)
       await setReplyCommentDataList(newData)
-      // console.log(newData)
+
       await setIsLoading(true)
     }
 
   }
   React.useEffect(() => {
     fetchComments();
-    // fetchReplyComment();
   }, [])
   return (
     <>
       {isLoading ? <>
-        {/* <PapperBlock title="Comments (4)" icon="ion-ios-create-outline" desc="" color="primary"> */}
+
         <Paper title="Comments (4)" elevation={1} className={classes.mTopfifty}>
 
           <Grid container spacing={3}>
@@ -317,10 +322,10 @@ const Comments = () => {
                     </Grid>
                   </Grid>
                 </Box>
-                {/* {console.log(replyCommentDataList.map(fstarr => fstarr.filter(item => item.parent === comment.id)))} */}
-                {replyCommentDataList.length>0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
+
+                {replyCommentDataList.length > 0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
                   <Box padding={3} marginLeft={6} marginRight={6}>
-                    {console.log({ reply: replyComment })}
+
                     <Grid container spacing={1}>
                       <Grid item xs={1}>
                         <Avatar src={replyComment.avatar} alt={'A'}></Avatar>
@@ -335,35 +340,7 @@ const Comments = () => {
                     </Grid>
                   </Box>
                 ) : null}
-                {/* <Box padding={3} marginLeft={6} marginRight={6}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={1}>
-                    <Avatar>A</Avatar> 
-                    </Grid>
-                    <Grid item xs={10}>
-                          <Typography>User Name<span className={classes.pL20}>August 4, 2021,  06 : 50 PM</span></Typography>
-                          <Typography>This is a new comment from me and I am using the dummy content. Thanks.</Typography>
-                    </Grid>
-                    <Grid item xs={1}>
-                          <Typography><ThumbUpAltOutlinedIcon /></Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <Box padding={3} marginLeft={6} marginRight={6}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={1}>
-                    <Avatar>A</Avatar> 
-                    </Grid>
-                    <Grid item xs={10}>
-                          <Typography>User Name<span className={classes.pL20}>August 4, 2021,  06 : 50 PM</span></Typography>
-                          <Typography>This is a new comment from me and I am using the dummy content. Thanks.</Typography>
-                    </Grid>
-                    <Grid item xs={1}>
-                          <Typography><ThumbUpAltOutlinedIcon /></Typography>
-                    </Grid>
-                  </Grid>
-                </Box>              
-            */}
+
               </Grid>
             </Grid>
           )}
@@ -373,7 +350,7 @@ const Comments = () => {
           <Pagination count={10} variant="outlined" shape="rounded" className={classes.mTopThirtybtten} />
         </Grid>
       </> : <h1>Loading...</h1>}
-      {/* </PapperBlock> */}
+
     </>
   );
 };

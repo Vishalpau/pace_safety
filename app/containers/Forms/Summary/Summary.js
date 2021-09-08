@@ -58,7 +58,7 @@ import { useDispatch } from "react-redux";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
 import CloseOut from "../../SummaryDetails/CloseOut";
 import { Comments } from "../../pageListAsync";
-import AhaSummary from "../../../containers/Activity/Activity";
+import ActivityHistory from "../../../containers/Activity/Activity";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -763,8 +763,8 @@ const Summary = (props) => {
     <Grid item xs={12} md={9}>
       {/* summary and part */}
       {
-        isActivityHistory ? <AhaSummary /> :
-          isComments ? <Comments /> :
+        isActivityHistory ? <ActivityHistory module="incidents"/> :
+          isComments ? <Comments commentContext="incident" id={id} /> :
             <>
               {(() => {
                 if (
