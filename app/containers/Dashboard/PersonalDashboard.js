@@ -340,13 +340,23 @@ function PersonalDashboard(props) {
     setCompanyId(e)
     localStorage.setItem("company", JSON.stringify(companeyDetails));
     let newData = companyListData[key];
-    if (newData) {
+    if (newData.projects.length === 1) {
+      await setProjectListData(newData.projects[0]);
+      await setOpen(false);
+      let data = newData.projects[0];
+      await dispatch(projectName(data));
+      localStorage.setItem("projectName", JSON.stringify(data));
+
+
+    } else if (newData.projects.length > 1) {
       await setProjectListData(newData.projects);
       handleProjectOpen();
       await setOpen(false);
-    } else {
+    }
+    else {
       await setOpen(false);
     }
+   
   };
 
   //Project selections
