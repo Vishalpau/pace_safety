@@ -1361,6 +1361,10 @@ const ObservationInitialNotification = (props) => {
                 multiline
                 defaultValue={form.observationTitle}
                 fullWidth
+                error={error.observationTitle}
+                helperText={
+                  error.observationTitle ? error.observationTitle : ""
+                }
                 variant="outlined"
                 className={classes.formControl}
                 onChange={(e) => {

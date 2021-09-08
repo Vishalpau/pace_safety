@@ -197,6 +197,55 @@ console.log(closeOut)
 
 
 
+  const viewSwitch = (viewName) => {
+    if (viewName == "assessment") {
+      if (ahaData.notifyTo !== "") {
+        setAssessments(true);
+      } else {
+        history.push(`/app/pages/aha/assessments/project-details/`)
+      }
+      setApprovals(false);
+      setCloseOut(false);
+      setLessonsLearned(false);
+       setComments(false);
+    setActivity(false);
+    } else if (viewName == "approval") {
+      setAssessments(false);
+      if (ahaData.wrpApprovalUser !== "") {
+        setApprovals(true);
+      } else {
+        history.push(`/app/pages/aha/approvals/approvals`)
+      }
+      setCloseOutView(false);
+      setLessonsLearnedView(false);
+      setComments(false);
+    setActivity(false);
+    } else if (viewName == "lession") {
+      setAssessments(false);
+      setApprovals(false);
+      setCloseOut(false);
+      if (ahaData.anyLessonsLearnt !== "" ) {
+        setLessonsLearned(true);
+      } else {
+        history.push(`/app/pages/aha/lessons-learned/lessons-learned`)
+      }
+      setComments(false);
+    setActivity(false);
+    } else if (viewName = "closeOut") {
+      setAssessments(false);
+      setApprovals(false);
+      if (ahaData.closedByName !== null) {
+        setCloseOut(true);
+      } else {
+        history.push(`/app/pages/aha/close-out`)
+      }
+      setLessonsLearned(false);
+      setComments(false);
+    setActivity(false);
+    }
+  }
+
+
   const handleCommentsPush = async () => {
     await setAssessments(false);
     await setApprovals(false);
@@ -311,73 +360,7 @@ console.log(closeOut)
   };
   
 
-  // const fetchBreakDownData = async (projectBreakdown) => {
-  //   const projectData = JSON.parse(localStorage.getItem("projectName"));
-
-  //   let selectBreakDown = [];
-  //   const breakDown = projectBreakdown.split(":");
-  //   for (var key in breakDown) {
-  //     if (breakDown[key].slice(0, 2) === "1L") {
-  //       var config = {
-  //         method: "get",
-  //         url: `${SSO_URL}/${
-  //           projectData.projectName.breakdown[0].structure[0].url
-  //         }`,
-  //         headers: HEADER_AUTH,
-  //       };
-
-  //       await api(config)
-  //         .then(async (response) => {
-  //           const result = response.data.data.results;
-  //           console.log(result);
-
-  //           result.map((item) => {
-  //             if (breakDown[key].slice(2) == item.id) {
-  //               selectBreakDown = [
-  //                 ...selectBreakDown,
-  //                 { depth: item.depth, id: item.id, name: item.name },
-  //               ];
-  //             }
-  //           });
-  //         })
-  //         .catch((error) => {
-  //           setIsNext(true);
-  //         });
-  //     } else {
-  //       var config = {
-  //         method: "get",
-  //         url: `${SSO_URL}/${
-  //           projectData.projectName.breakdown[key].structure[0].url
-  //         }${breakDown[key - 1].slice(-1)}`,
-  //         headers: HEADER_AUTH,
-  //       };
-
-  //       await api(config)
-  //         .then(async (response) => {
-  //           const result = response.data.data.results;
-  //           console.log(result)
-
-  //           const res = result.map((item, index) => {
-  //             if (parseInt(breakDown[key].slice(2)) == item.id) {
-  //               selectBreakDown = [
-  //                 ...selectBreakDown,
-  //                 { depth: item.depth, id: item.id, name: item.name },
-  //               ];
-  //             }
-  //           });
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //           // setIsNext(true);
-  //         });
-  //     }
-  //   }
-    // dispatch(breakDownDetails(selectBreakDown));
-  //   console.log(selectBreakDown)
-
-  //   await setProjectSturcturedData(selectBreakDown);
-  //   // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
-  // };
+  
   console.log(projectSturcturedData)
   const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
@@ -440,13 +423,9 @@ console.log(closeOut)
               size="small"
               endIcon={ahaData.notifyTo !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(true);
-                setApprovals(false);
-                setLessonsLearned(false);
-                setCloseOut(false);
-                setActivity(false);
-              }}
+              onClick={(e) => 
+                viewSwitch("assessment")
+              }
             >
               Assessments
             </Button>
@@ -462,16 +441,8 @@ console.log(closeOut)
               size="small"
               endIcon={ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(false);
-                setApprovals(true);
-                setLessonsLearned(false);
-                setCloseOut(false);
-                setActivity(false);
+              onClick={(e) => viewSwitch("approval")}
 
-
-                //setSummary(false);
-              }}
             >
               Approvals
             </Button>
@@ -485,24 +456,16 @@ console.log(closeOut)
                           color={closeOut == true ? "secondary" : "primary"}
 
               size="small"
-              variant={ahaData.closedByName !== "" ? "contained" : "outlined"}
-              endIcon={ahaData.closedByName !== "" ? <CheckCircle /> : <AccessTime />}
+              variant={ahaData.closedByName !== null ? "contained" : "outlined"}
+              endIcon={ahaData.closedByName !== null ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(false);
-                setApprovals(false);
-                setCloseOut(true);
-                setLessonsLearned(false);
-                setActivity(false);
+              onClick={(e) => viewSwitch("closeOut")}
 
-
-                //setSummary(false);
-              }}
             >
               Close Out
             </Button>
             <Typography variant="caption" display="block">
-            {ahaData.closedByName !== "" ? "Done" : "Pending"}
+            {ahaData.closedByName !== null ? "Done" : "Pending"}
 
             </Typography>
           </div>
@@ -514,15 +477,8 @@ console.log(closeOut)
               size="small"
               endIcon={ahaData.anyLessonsLearnt !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(false);
-                setApprovals(false);
-                setLessonsLearned(true);
-                setCloseOut(false);
-                setActivity(false);
+              onClick={(e) => viewSwitch("lession")}
 
-                // setSummary(false);
-              }}
             >
               Lessons Learned
             </Button>
@@ -1412,52 +1368,60 @@ console.log(closeOut)
                   <ListSubheader component="div">Actions</ListSubheader>
                 }
               >{ahaData.notifyTo !== "" ? (
-                <ListItemLink onClick={(e) => handleNewAhaPush(e)}>
+                <ListItemLink                 disabled = {ahaData.closedByName !== null} 
+onClick={(e) => handleNewAhaPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Assessments" />
                 </ListItemLink>) :(
-                <ListItemLink onClick={(e) => handleNewAhaPush(e)}>
+                <ListItemLink                 disabled = {ahaData.closedByName !== null} 
+onClick={(e) => handleNewAhaPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Assessments" />
                 </ListItemLink> )}
-                {ahaData.wrpApprovalUser !== "" ? (<ListItemLink onClick={(e) => handleAhaApprovalsPush(e)}>
+                {ahaData.wrpApprovalUser !== "" ? (<ListItemLink 
+                                disabled = {ahaData.closedByName !== null} 
+onClick={(e) => handleAhaApprovalsPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Approvals" />
-                </ListItemLink>) :(<ListItemLink onClick={(e) => handleAhaApprovalsPush(e)}>
+                </ListItemLink>) :(<ListItemLink 
+                                disabled = {ahaData.closedByName !== null} 
+
+                onClick={(e) =>
+                 handleAhaApprovalsPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Approvals" />
                 </ListItemLink>) }
 
-                {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
+                {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink 
+                                disabled = {ahaData.closedByName !== null} 
+                  onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Lessons Learned" />
-                </ListItemLink>) :(<ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
+                </ListItemLink>) :
+                (<ListItemLink
+                disabled = {ahaData.closedByName !== null} 
+                onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Lessons Learned" />
                 </ListItemLink>) }
-                {ahaData.closedByName !== "" ? (<ListItemLink onClick={(e) => handleCloseOutPush(e)}>
+                <ListItemLink onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
-                    <Edit />
+                    <Close />
                   </ListItemIcon>
-                  <ListItemText primary="Update Close Out" />
-                </ListItemLink>) :(<ListItemLink onClick={(e) => handleCloseOutPush(e)}>
-                  <ListItemIcon>
-                    <Add />
-                  </ListItemIcon>
-                  <ListItemText primary="Add Close Out" />
-                </ListItemLink>) }
+                  <ListItemText primary=" Close Out" />
+                </ListItemLink>
                 
                 {/* <ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>

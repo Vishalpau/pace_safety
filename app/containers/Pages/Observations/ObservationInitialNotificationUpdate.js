@@ -299,6 +299,8 @@ const ObservationInitialNotificationUpdate = () => {
       }
       data.append("status", initialData.status),
       data.append("createdBy", initialData.createdBy),
+      data.append("observationStatus", initialData.observationStatus),
+      data.append("observationStage", initialData.observationStage),
       data.append("updatedBy", initialData.updatedBy),
       data.append("source", initialData.source),
       data.append("vendor", initialData.vendor),

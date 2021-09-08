@@ -36,7 +36,7 @@ import { CircularProgress } from '@material-ui/core';
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 
 
-
+import axios from "axios";
 import api from "../../../../utils/axios";
 
 import { AHA } from "../constants";
@@ -210,6 +210,8 @@ const Assessment = () => {
   const risk = useRef([])
   const [ahaform, setAHAForm] = useState({});
   const riskResidual = useRef([])
+  const [updatePage, setUpdatePage] = useState(false)
+
   const monitor = useRef([])
   const [additinalJobDetails, setAdditionalJobDetails] = useState({
     workStopCondition: [],
@@ -247,12 +249,23 @@ const Assessment = () => {
     console.log("sdsd",res)
     const result = res.data.data.results;
     await setForm(result);
+    await handelActionTracker(result)
 
     result.map((value) => {
       temp[value.id] = {"severity":"","probability": ""}
     })
     await setColorId(temp)
   };
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
 
 console.log(form)
   const handleSeverityss = async (key) => {
@@ -374,7 +387,7 @@ console.log(form)
   // }
   const [notifyToList, setNotifyToList] = useState([]);
 
-
+console.log("11111",actionTakenData)
   // const handleWorkStopCondition = async (value,e) => {
   //   if (e.target.checked === true) {
   //     let temp = [...notifyToList];
@@ -413,24 +426,57 @@ console.log("66666666",form)
     }
   };
 
-  const fetchactionTrackerData = async () =>{
+  // const fetchactionTrackerData = async () =>{
+  //   let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+  //   const api_action = axios.create({
+  //     baseURL: API_URL_ACTION_TRACKER,
+  //   });
+  //   let ActionToCause = {}
+  //   const allActionTrackerData = await api_action.get("/api/v1/actions/")
+  //   const allActionTracker = allActionTrackerData.data.data.results.results
+  //   const newData = allActionTracker.filter(
+  //     (item) => item.enitityReferenceId === localStorage.getItem("fkAHAId") 
+      
+  //     )
+  //     let sorting = newData.sort((a, b) => a.id - b.id)
+  //   await setActionTakenData(sorting)
+  //   await setIsLoading(true);
+
+  // }
+  const handelActionTracker = async (apiData) => {
+    let jhaId = localStorage.getItem("fkAHAId")
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
-    const allActionTracker = allActionTrackerData.data.data.results.results
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkAHAId") 
-      
-      )
-      let sorting = newData.sort((a, b) => a.id - b.id)
-    await setActionTakenData(sorting)
-    await setIsLoading(true);
+    for (let key in apiData) {
+      const allActionTrackerData = await api_action.get(
+        `api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A${apiData[key]["id"]
+        }`
+      );
+      if (allActionTrackerData.data.data.results.results.length > 0) {
+        let actionTracker = allActionTrackerData.data.data.results.results;
+        const temp = [];
+        actionTracker.map((value) => {
+          const tempAction = {}
+          let actionTrackerId = value.actionNumber;
+          let actionTrackerTitle = value.actionTitle
+          let actionId = value.id
+          tempAction["trackerID"] = actionTrackerId
+          tempAction["tarckerTitle"] = actionTrackerTitle
+          tempAction["actionId"] = actionId
+          temp.push(tempAction);
+        });
+        apiData[key]["action"] = temp;
+      } else {
+        apiData[key]["action"] = [];
+      }
+    }
+    console.log("2222",apiData);
+    setActionTakenData(apiData)
+    setIsLoading(true)
 
-  }
-
+  };
   // const handleWorkStopCondition = (value,e) => {
   //   if (e.target.checked == false) {
   //     let newData = ahaform.workStopCondition.filter((item) => item !== value);
@@ -484,7 +530,6 @@ console.log("66666666",form)
       ...additinalJobDetails,
       workStopCondition: result.workStopCondition != null ? result.workStopCondition.split(",") :[],
     });
-    await setIsLoading(true)
   };
 
   const pickListValue = async () => {
@@ -497,8 +542,8 @@ console.log("66666666",form)
     checkList();
     fetchAhaData();
     pickListValue()
-    fetchactionTrackerData()
-  }, []);
+    // fetchactionTrackerData()
+  }, [updatePage]);
 
   const classes = useStyles();
   return (
@@ -734,11 +779,13 @@ console.log("66666666",form)
                           <Divider light />
                         </Grid>
 
-                        <Grid item xs={12} className={classes.createHazardbox}>
+                        <Grid item xs={6} className={classes.createHazardbox}>
                         <Typography className={classes.increaseRowBox}>
                         <ActionTracker
                             actionContext="aha:hazard"
                             enitityReferenceId={`${localStorage.getItem("fkAHAId")}:${value.id}`}
+                            setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
                           />
           </Typography>
                           {/* <Typography className={classes.increaseRowBox}>
@@ -749,12 +796,17 @@ console.log("66666666",form)
                           </Typography> */}
                         </Grid>
                         <Grid item xs={6} className={classes.createHazardbox}>
-                            {actionTakenData.length > 0
+                            {actionTakenData[index]["action"].length > 0
                               &&
-                              actionTakenData.map((value) => (
-                                <a style={{ marginLeft: "20px" }}>{value.actionTrackerId}</a>
+                              actionTakenData[index]["action"].map((value) => (
+                                <Link display="block"
+                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.actionId}`}
+                                >
+                                  {value.trackerID}
+                                </Link>
                               ))}
                           </Grid>
+                        
                       </Grid>
                     </AccordionDetails>
                   </Accordion>

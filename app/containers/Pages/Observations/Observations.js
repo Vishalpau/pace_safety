@@ -273,19 +273,17 @@ function Observations(props) {
 
   const fetchInitialiObservation = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId =
-      props.projectName.projectId ||
-      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    const selectBreakdown =
-      props.projectName.breakDown ||
-      JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
-    let struct = "";
-    for (const i in selectBreakdown) {
-      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-    }
-    const fkProjectStructureIds = struct.slice(0, -1);
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results
@@ -316,7 +314,6 @@ function Observations(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  
   const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllInitialData(res.data.data.results.results);
   };
@@ -666,14 +663,12 @@ function Observations(props) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     projectName: state.getIn(["InitialDetailsReducer"]),
-    todoIncomplete: state,
-  };
-};
+    todoIncomplete: state
 
-export default connect(
-  mapStateToProps,
-  null
-)(Observations);
+  }
+}
+
+export default connect(mapStateToProps,null)(Observations);
