@@ -174,6 +174,8 @@ const ProjectDetails = () => {
 
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+  const [levelLenght, setLevelLenght] = useState(0)
+
 
   
 
@@ -312,7 +314,7 @@ bytes
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
     
-    const { error, isValid } = ProjectDetailsValidator(form);
+    const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId,levelLenght);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -567,7 +569,7 @@ bytes
   };
   const fetchTeamData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
-    const result =  res.data.data.results.results
+    const result =  res.data.data.results
     await setTeamForm(result)
     console.log(result)
   }
@@ -615,8 +617,12 @@ bytes
                   {selectBdown.name}
                 </Typography>
               </Grid>
-            ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
-            }
+            ) : <ProjectStructureInit
+              selectDepthAndId={selectDepthAndId}
+              setLevelLenght={setLevelLenght}
+              error= {error}
+              setSelectDepthAndId={setSelectDepthAndId} />
+              }
         <Grid
         item
         md={6}

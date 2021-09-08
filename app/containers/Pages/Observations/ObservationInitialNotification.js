@@ -296,7 +296,7 @@ const ObservationInitialNotification = (props) => {
   const fetchDepartment = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/departments/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -1361,6 +1361,10 @@ const ObservationInitialNotification = (props) => {
                 multiline
                 defaultValue={form.observationTitle}
                 fullWidth
+                error={error.observationTitle}
+                helperText={
+                  error.observationTitle ? error.observationTitle : ""
+                }
                 variant="outlined"
                 className={classes.formControl}
                 onChange={(e) => {

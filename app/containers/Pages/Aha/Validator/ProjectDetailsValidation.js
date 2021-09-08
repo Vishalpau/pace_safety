@@ -1,10 +1,15 @@
 import validator from "validator";
 
-function ProjectDetailsValidator(data) {
+function ProjectDetailsValidator(data,projectStructure,levelLenght) {
   
 
   const error = {};
   let isValid = true;
+
+  if(projectStructure?projectStructure.length<levelLenght:false){
+    error.projectStructure = "Please select stage of project";
+    isValid = false;
+  }
 
   if (validator.isEmpty(data.description.toString())) {
     error.description = "Please enter description";

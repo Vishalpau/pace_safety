@@ -53,6 +53,8 @@ import moment from "moment";
 
 import Attachment from "../../Attachment/Attachment";
 import axios from "axios";
+import { Comments } from "../../pageListAsync";
+// import AhaSummary from "../../../containers/Activity/Activity" ;
 
 import {
   access_token,
@@ -146,6 +148,8 @@ function AhaSummary() {
   const [approvals, setApprovals] = useState(false);
   const [lessonsLearned, setLessonsLearned] = useState(false);
   const [closeOut, setCloseOut] = useState(false);
+  const [comments, setComments] = useState(false);
+  const [activity, setActivity] = useState(false);
   //const [summary, setSummary] = useState(false);
   const history = useHistory();
   const [expanded, setExpanded] = React.useState("panel1");
@@ -187,16 +191,79 @@ console.log(closeOut)
   };
   
   const handleCloseOutPush = async () => {
+  
     history.push("/app/pages/aha/close-out");
   };
 
 
 
+  const viewSwitch = (viewName) => {
+    if (viewName == "assessment") {
+      if (ahaData.notifyTo !== "") {
+        setAssessments(true);
+      } else {
+        history.push(`/app/pages/aha/assessments/project-details/`)
+      }
+      setApprovals(false);
+      setCloseOut(false);
+      setLessonsLearned(false);
+       setComments(false);
+    setActivity(false);
+    } else if (viewName == "approval") {
+      setAssessments(false);
+      if (ahaData.wrpApprovalUser !== "") {
+        setApprovals(true);
+      } else {
+        history.push(`/app/pages/aha/approvals/approvals`)
+      }
+      setCloseOutView(false);
+      setLessonsLearnedView(false);
+      setComments(false);
+    setActivity(false);
+    } else if (viewName == "lession") {
+      setAssessments(false);
+      setApprovals(false);
+      setCloseOut(false);
+      if (ahaData.anyLessonsLearnt !== "" ) {
+        setLessonsLearned(true);
+      } else {
+        history.push(`/app/pages/aha/lessons-learned/lessons-learned`)
+      }
+      setComments(false);
+    setActivity(false);
+    } else if (viewName = "closeOut") {
+      setAssessments(false);
+      setApprovals(false);
+      if (ahaData.closedByName !== null) {
+        setCloseOut(true);
+      } else {
+        history.push(`/app/pages/aha/close-out`)
+      }
+      setLessonsLearned(false);
+      setComments(false);
+    setActivity(false);
+    }
+  }
+
+
   const handleCommentsPush = async () => {
-    history.push("/app/comments/comments");
+    await setAssessments(false);
+    await setApprovals(false);
+    await setLessonsLearned(false);
+    await setCloseOut(false);
+    await setComments(true);
+    await setActivity(false);
+
+    // history.push("/app/comments/comments");
   };
   const handleActivityPush = async () => {
-    history.push("/app/activity/activity");
+    await setAssessments(false);
+    await setApprovals(false);
+    await setLessonsLearned(false);
+    await setCloseOut(false);
+    await setComments(false);
+    await setActivity(true);
+    // history.push("/app/activity/activity");
   };
 
   const user = JSON.parse(localStorage.getItem("userDetails"));
@@ -220,7 +287,7 @@ console.log(closeOut)
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`
     );
-    const result = res.data.data.results.results;
+    const result = res.data.data.results;
     await setTeamForm(result);
   };
   const fetchBreakDownData = async (projectBreakdown) => {
@@ -293,80 +360,16 @@ console.log(closeOut)
   };
   
 
-  // const fetchBreakDownData = async (projectBreakdown) => {
-  //   const projectData = JSON.parse(localStorage.getItem("projectName"));
-
-  //   let selectBreakDown = [];
-  //   const breakDown = projectBreakdown.split(":");
-  //   for (var key in breakDown) {
-  //     if (breakDown[key].slice(0, 2) === "1L") {
-  //       var config = {
-  //         method: "get",
-  //         url: `${SSO_URL}/${
-  //           projectData.projectName.breakdown[0].structure[0].url
-  //         }`,
-  //         headers: HEADER_AUTH,
-  //       };
-
-  //       await api(config)
-  //         .then(async (response) => {
-  //           const result = response.data.data.results;
-  //           console.log(result);
-
-  //           result.map((item) => {
-  //             if (breakDown[key].slice(2) == item.id) {
-  //               selectBreakDown = [
-  //                 ...selectBreakDown,
-  //                 { depth: item.depth, id: item.id, name: item.name },
-  //               ];
-  //             }
-  //           });
-  //         })
-  //         .catch((error) => {
-  //           setIsNext(true);
-  //         });
-  //     } else {
-  //       var config = {
-  //         method: "get",
-  //         url: `${SSO_URL}/${
-  //           projectData.projectName.breakdown[key].structure[0].url
-  //         }${breakDown[key - 1].slice(-1)}`,
-  //         headers: HEADER_AUTH,
-  //       };
-
-  //       await api(config)
-  //         .then(async (response) => {
-  //           const result = response.data.data.results;
-  //           console.log(result)
-
-  //           const res = result.map((item, index) => {
-  //             if (parseInt(breakDown[key].slice(2)) == item.id) {
-  //               selectBreakDown = [
-  //                 ...selectBreakDown,
-  //                 { depth: item.depth, id: item.id, name: item.name },
-  //               ];
-  //             }
-  //           });
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //           // setIsNext(true);
-  //         });
-  //     }
-  //   }
-    // dispatch(breakDownDetails(selectBreakDown));
-  //   console.log(selectBreakDown)
-
-  //   await setProjectSturcturedData(selectBreakDown);
-  //   // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
-  // };
+  
   console.log(projectSturcturedData)
   const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
-    const result = res.data.data.results.results;
+    console.log("555555",res)
+    const result = res.data.data.results;
+    console.log("llllll",result)
     await setForm(result);
   };
 
@@ -420,12 +423,9 @@ console.log(closeOut)
               size="small"
               endIcon={ahaData.notifyTo !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(true);
-                setApprovals(false);
-                setLessonsLearned(false);
-                setCloseOut(false);
-              }}
+              onClick={(e) => 
+                viewSwitch("assessment")
+              }
             >
               Assessments
             </Button>
@@ -441,14 +441,8 @@ console.log(closeOut)
               size="small"
               endIcon={ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(false);
-                setApprovals(true);
-                setLessonsLearned(false);
-                setCloseOut(false);
+              onClick={(e) => viewSwitch("approval")}
 
-                //setSummary(false);
-              }}
             >
               Approvals
             </Button>
@@ -459,24 +453,20 @@ console.log(closeOut)
 
           <div className={Styles.item}>
             <Button
-              color={closeOut == true ? "secondary" : "primary"}
-              variant={ahaData.wrpApprovalUser !== "" ? "contained" : "outlined"}
-              size="small"
-              endIcon={ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
-              className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(false);
-                setApprovals(false);
-                setCloseOut(true);
-                setLessonsLearned(false);
+                          color={closeOut == true ? "secondary" : "primary"}
 
-                //setSummary(false);
-              }}
+              size="small"
+              variant={ahaData.closedByName !== null ? "contained" : "outlined"}
+              endIcon={ahaData.closedByName !== null ? <CheckCircle /> : <AccessTime />}
+              className={classes.statusButton}
+              onClick={(e) => viewSwitch("closeOut")}
+
             >
               Close Out
             </Button>
             <Typography variant="caption" display="block">
-            {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
+            {ahaData.closedByName !== null ? "Done" : "Pending"}
+
             </Typography>
           </div>
 
@@ -487,13 +477,8 @@ console.log(closeOut)
               size="small"
               endIcon={ahaData.anyLessonsLearnt !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => {
-                setAssessments(false);
-                setApprovals(false);
-                setLessonsLearned(true);
-                setCloseOut(false);
-                // setSummary(false);
-              }}
+              onClick={(e) => viewSwitch("lession")}
+
             >
               Lessons Learned
             </Button>
@@ -518,7 +503,7 @@ console.log(closeOut)
                 {(() => {
                   if (
                     assessments == true ||
-                    (approvals === false && lessonsLearned === false && closeOut === false)
+                    (approvals === false && lessonsLearned === false && closeOut === false && comments === false)
                   ) {
                     return (
                       <>
@@ -543,7 +528,7 @@ console.log(closeOut)
                                     >
                                       Project structure
                                     </Typography>
-                                    <Typography className={classes.labelValue}>
+                                    <Typography className={Fonts.labelValue}>
                                       {project.projectName} -{" "}
                                       {projectSturcturedData[0]
                                         ? projectSturcturedData[0].name
@@ -568,7 +553,7 @@ console.log(closeOut)
                                     </Typography>
                                     <Typography
                                       variant="body"
-                                      className={classes.labelValue}
+                                      className={Fonts.labelValue}
                                     >
                                       {ahaData.workArea}
                                     </Typography>
@@ -583,7 +568,7 @@ console.log(closeOut)
                                     </Typography>
                                     <Typography
                                       variant="body"
-                                      className={classes.labelValue}
+                                      className={Fonts.labelValue}
                                     >
                                       {ahaData.location}
                                     </Typography>
@@ -598,9 +583,9 @@ console.log(closeOut)
                                     </Typography>
                                     <Typography
                                       variant="body"
-                                      className={classes.labelValue}
+                                      className={Fonts.labelValue}
                                     >
-                                      NA
+                                      {ahaData.username}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -613,7 +598,7 @@ console.log(closeOut)
                                     </Typography>
                                     <Typography
                                       variant="body"
-                                      className={classes.labelValue}
+                                      className={Fonts.labelValue}
                                     >
                                       {moment(ahaData["assessmentDate"]).format(
                                         "Do MMMM YYYY"
@@ -630,7 +615,7 @@ console.log(closeOut)
                                     </Typography>
                                     <Typography
                                       variant="body"
-                                      className={classes.labelValue}
+                                      className={Fonts.labelValue}
                                     >
                                       {ahaData.permitToPerform}
                                     </Typography>
@@ -645,7 +630,7 @@ console.log(closeOut)
                                     </Typography>
                                     <Typography
                                       variant="body"
-                                      className={classes.labelValue}
+                                      className={Fonts.labelValue}
                                     >
                                       {ahaData.permitNumber}
                                     </Typography>
@@ -660,7 +645,7 @@ console.log(closeOut)
                                     </Typography>
                                     <Typography
                                       variant="body"
-                                      className={classes.labelValue}
+                                      className={Fonts.labelValue}
                                     >
                                       {ahaData.description}
                                     </Typography>
@@ -675,12 +660,12 @@ console.log(closeOut)
                                     </Typography>
                                     {Teamform.map((value, index) => (
                                       <ul
-                                        className={classes.labelValue}
+                                        className={Fonts.labelValue}
                                         key={index}
                                       >
                                         {value.teamName !== "" ? (
                                           <li>{value.teamName}</li>
-                                        ) : null}
+                                        ) : "-"}
                                       </ul>
                                     ))}
                                   </Grid>
@@ -706,7 +691,7 @@ console.log(closeOut)
                                     {form.map((item, index) => (
                                       <>
                                         <ul
-                                          className={classes.labelValue}
+                                          className={Fonts.labelValue}
                                           key={index}
                                         >
                                           {<li>{item.hazard}</li>}
@@ -763,7 +748,7 @@ console.log(closeOut)
                                                 >
                                                   <MenuOpenOutlinedIcon
                                                     className={
-                                                      classes.headingIcon
+                                                      Fonts.headingIcon
                                                     }
                                                   />
                                                   {item.hazard}
@@ -1059,9 +1044,9 @@ console.log(closeOut)
                                     {ahaData.ahaAssessmentAttachment ? (
                                       <Typography
                                         className={classes.labelValue}
-                                        title={handelFileName(
-                                          ahaData.ahaAssessmentAttachment
-                                        )}
+                                        // title={handelFileName(
+                                        //   ahaData.ahaAssessmentAttachment
+                                        // )}
                                       >
                                         {/* <Attachment value={initialData.attachment}/> */}
                                         {ahaData.ahaAssessmentAttachment ===
@@ -1138,9 +1123,9 @@ console.log(closeOut)
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
-                                {ahaData.wrpApprovalUser ? ahaData.wrpApprovalUser : "-"}
+                                {ahaData.username}
                               </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -1153,7 +1138,7 @@ console.log(closeOut)
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
                                 {ahaData.wrpApprovalDateTime ? moment(ahaData["wrpApprovalDateTime"]).format(
                                   "Do MMMM YYYY"
@@ -1179,9 +1164,9 @@ console.log(closeOut)
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
-                                {ahaData.picApprovalUser ? ahaData.picApprovalUser : "-"}
+                                {ahaData.username}
                               </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -1194,7 +1179,7 @@ console.log(closeOut)
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
                                 {ahaData.picApprovalDateTime ? moment(ahaData["picApprovalDateTime"]).format(
                                   "Do MMMM YYYY"
@@ -1205,7 +1190,7 @@ console.log(closeOut)
                         </Grid>
 
                         <Grid item xs={12}>
-                          <Typography className={classes.heading}>
+                          <Typography className={Fonts.heading}>
                             Actions
                           </Typography>
                         </Grid>
@@ -1292,42 +1277,13 @@ console.log(closeOut)
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                                Reviewed by
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={classes.labelValue}
-                              >
-                                {user.name}, {user.badgeNo}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Reviewed on
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={classes.labelValue}
-                              >
-                                {user.name}, {user.badgeNo}
-                              </Typography>
-                            </Grid><Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
                                 Closed by
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
-                                {user.name}, {user.badgeNo}
+                                {ahaData.closedByName}
                               </Typography>
                             </Grid><Grid item xs={12} md={6}>
                               <Typography
@@ -1339,9 +1295,12 @@ console.log(closeOut)
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
-                                {user.name}, {user.badgeNo}
+                              {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
+                                  "Do MMMM YYYY"
+                                ):"-"}
+                                
                               </Typography>
                             </Grid>
                     </>)
@@ -1361,7 +1320,7 @@ console.log(closeOut)
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
                                 {user.name}, {user.badgeNo}
                               </Typography>
@@ -1376,7 +1335,7 @@ console.log(closeOut)
                               </Typography>
                               <Typography
                                 variant="body"
-                                className={classes.labelValue}
+                                className={Fonts.labelValue}
                               >
                                 {ahaData.anyLessonsLearnt ? ahaData.anyLessonsLearnt : "-"}
                               </Typography>
@@ -1385,6 +1344,11 @@ console.log(closeOut)
                         </Grid>
                       </>
                     );
+                  }
+                  if(comments == true){
+                    return (<div>
+                      <Comments/>
+                    </div>)
                   }
                   // if (summary == true) {
                   //   return (
@@ -1404,41 +1368,60 @@ console.log(closeOut)
                   <ListSubheader component="div">Actions</ListSubheader>
                 }
               >{ahaData.notifyTo !== "" ? (
-                <ListItemLink onClick={(e) => handleNewAhaPush(e)}>
+                <ListItemLink                 disabled = {ahaData.closedByName !== null} 
+onClick={(e) => handleNewAhaPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Assessments" />
                 </ListItemLink>) :(
-                <ListItemLink onClick={(e) => handleNewAhaPush(e)}>
+                <ListItemLink                 disabled = {ahaData.closedByName !== null} 
+onClick={(e) => handleNewAhaPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Assessments" />
                 </ListItemLink> )}
-                {ahaData.wrpApprovalUser !== "" ? (<ListItemLink onClick={(e) => handleAhaApprovalsPush(e)}>
+                {ahaData.wrpApprovalUser !== "" ? (<ListItemLink 
+                                disabled = {ahaData.closedByName !== null} 
+onClick={(e) => handleAhaApprovalsPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Approvals" />
-                </ListItemLink>) :(<ListItemLink onClick={(e) => handleAhaApprovalsPush(e)}>
+                </ListItemLink>) :(<ListItemLink 
+                                disabled = {ahaData.closedByName !== null} 
+
+                onClick={(e) =>
+                 handleAhaApprovalsPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Approvals" />
                 </ListItemLink>) }
 
-                {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
+                {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink 
+                                disabled = {ahaData.closedByName !== null} 
+                  onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Lessons Learned" />
-                </ListItemLink>) :(<ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
+                </ListItemLink>) :
+                (<ListItemLink
+                disabled = {ahaData.closedByName !== null} 
+                onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Lessons Learned" />
                 </ListItemLink>) }
+                <ListItemLink onClick={(e) => handleCloseOutPush(e)}>
+                  <ListItemIcon>
+                    <Close />
+                  </ListItemIcon>
+                  <ListItemText primary=" Close Out" />
+                </ListItemLink>
                 
                 {/* <ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
@@ -1446,12 +1429,12 @@ console.log(closeOut)
                   </ListItemIcon>
                   <ListItemText primary="Lessons Learned" />
                 </ListItemLink> */}
-                <ListItem button divider onClick={(e) => handleCloseOutPush(e)}>
+                {/* <ListItem button divider onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>
                   <ListItemText primary="Close Out" />
-                </ListItem>
+                </ListItem> */}
 
                 <ListItem button onClick={(e) => handleCommentsPush(e)}>
                   <ListItemIcon>
