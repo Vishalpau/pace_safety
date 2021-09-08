@@ -8,7 +8,7 @@ function InitialNotificationValidator(data,projectStructure,levelLenght) {
 
 
   if(projectStructure?projectStructure.length<levelLenght:false){
-    error.projectStructure = "Please select stage of project";
+    error.projectStructure = "Please select project level";
     isValid = false;
   }
 

@@ -325,7 +325,7 @@ bytes
 
   }
   const classes = useStyles();
-
+console.log()
   useEffect(() => {
       if(id){
         fetchInitialiObservation();
