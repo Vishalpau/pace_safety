@@ -64,13 +64,14 @@ const useStyles = makeStyles((theme) => ({
 const Comments = (props) => {
   const classes = useStyles();
   const [value, setValue] = React.useState('female');
-  const { id } = useParams()
+  
   const [expanded, setExpanded] = React.useState('panel1');
   const [comment, setComments] = React.useState('');
   const [replyComments, setReplyComments] = React.useState('');
   const [commentDataList, setCommentDataList] = useState([]);
   const [replyCommentDataList, setReplyCommentDataList] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [commentCount, setCommentCount]= useState(0)
 
 
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -152,6 +153,7 @@ const Comments = (props) => {
     console.log(res)
     if (res.status === 200) {
       let result = res.data.data.results.results
+      setComments(result.length)
       let data = res.data.data.results.results.filter(item => item.parent === 0)
       let newData = []
       await setCommentDataList(data)
@@ -183,8 +185,8 @@ const Comments = (props) => {
   return (
     <>
       {isLoading ? <>
-
-        <Paper title="Comments (4)" elevation={1} className={classes.mTopfifty}>
+        
+        <Paper title={`Comments (${commentCount})`} elevation={1} className={classes.mTopfifty}>
 
           <Grid container spacing={3}>
             <Grid item md={12} xs={12}>

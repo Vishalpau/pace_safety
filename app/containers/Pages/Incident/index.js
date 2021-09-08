@@ -201,12 +201,20 @@ const fkProjectStructureIds = struct.slice(0, -1);
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  
-  const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
+  if(fkProjectStructureIds){
+    const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
     await setIncidents(res.data.data.results.results);
     
     let pageCount  = Math.ceil(res.data.data.results.count/25)
     await setPageCount(pageCount)
+  }else{
+    const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}`);
+    await setIncidents(res.data.data.results.results);
+    
+    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    await setPageCount(pageCount)
+  }
+  
     
    
   };

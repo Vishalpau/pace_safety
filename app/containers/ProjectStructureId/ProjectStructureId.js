@@ -56,6 +56,8 @@ const ProjectStructure = (props) => {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
 
+  const [selectDepth, setSelectDepth] = useState("")
+
   // const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [lenghtBreaddown, setLengthBreakDown] = useState(0)
   const [label, setLabel] = useState([])
@@ -110,7 +112,7 @@ const ProjectStructure = (props) => {
       });
     props.setWorkArea(selectName)
   }
-
+console.log(props.selectDepthAndId)
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
     let lenghtbreaddown = projectData.projectName.breakdown.length ? projectData.projectName.breakdown.length : 0
@@ -201,17 +203,21 @@ const ProjectStructure = (props) => {
     const value = e.target.value;
     let temp = [...breakdown1ListData]
     setBreakdown1ListData(temp)
-    if (props.selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
+    let tempDepthAndId = props.selectDepthAndId;
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
+    let sliceData = dataDepthAndId.slice(0,index-1)
+    let newdataDepthAndId = [...sliceData,`${index}L${value}`]
+    props.setSelectDepthAndId(newdataDepthAndId)
+    if (tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
       let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
+      
       if (breakDownValue.length > 0) {
         const removeBreakDownList = temp.slice(0, index)
         temp = removeBreakDownList
       } else {
         const removeBreakDownList = temp.slice(0, index)
         temp = removeBreakDownList
-      }
-
-
+      }  
     }
     if (projectData.projectName.breakdown.length !== index) {
       for (var key in projectData.projectName.breakdown) {
@@ -337,9 +343,11 @@ const ProjectStructure = (props) => {
                   <MenuItem
                     key={selectKey}
                     value={selectValue.id}
+                    value={item.selectValue || ""}
                     onClick={async (e) => {
-                      await handleDepthAndId(selectValue.depth, selectValue.id);
-                      await props.setWorkArea([selectValue.name])
+                      setSelectDepth(`${selectValue.depth}${selectValue.id}`)
+                      // await handleDepthAndId(selectValue.depth, selectValue.id);
+                      await props.setWorkArea(selectValue.name)
                     }}
                   >
                     {selectValue.name}
@@ -383,7 +391,7 @@ const ProjectStructure = (props) => {
                     value={selectValue.id}
 
                     onClick={async (e) => {
-                      await handleDepthAndId(selectValue.depth, selectValue.id);
+                      // await handleDepthAndId(selectValue.depth, selectValue.id);
                       await props.setWorkArea(selectValue.name)
                     }}
                   >
