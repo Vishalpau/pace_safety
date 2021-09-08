@@ -170,14 +170,13 @@ export default function ActionTracker(props) {
 
   return (
     <>
-      <button
-        size="small"
-        variant="outlined"
+      <IconButton
+        variant="contained"
         color="primary"
         onClick={handleClickOpen}
       >
         <FlashOnIcon />
-      </button>
+      </IconButton>
       {/* {console.log(reportedByName)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>

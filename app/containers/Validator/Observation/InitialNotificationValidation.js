@@ -55,6 +55,11 @@ if(data.isSituationAddressed === "Yes") {
   }
 }
 
+if(data.observationTitle.length > 255){
+  error.observationTitle = "Please enter less then 255 characters";
+    isValid = false;
+}
+
  if (validator.isEmpty(data.supervisorName.toString())) {
   error.supervisorName = "Please select the supervisor's name";
   isValid = false;
