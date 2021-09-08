@@ -32,7 +32,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
+import ActionTrackerValidator from "./ActionTrackerValidation";
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -138,7 +138,7 @@ export default function ActionTracker(props) {
     baseURL: API_URL_ACTION_TRACKER,
   });
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState({ actionTitle: "" });
+  const [error, setError] = useState({ });
   const [actionTakenData, setActionTakenData] = useState([])
   const [isLoading , setIsLoading] = useState(false);
 
@@ -146,31 +146,28 @@ export default function ActionTracker(props) {
     setOpen(true);
   };
   const handleClose = async () => {
-    await setError({ actionTitle: "" });
-    await setForm({ ...form, actionTitle: ""  , plannedEndDate: null })
+    await setError({ actionTitle: "",assignTo:"" });
+    await setForm({ ...form, actionTitle: ""  ,assignTo : "",severity : "", plannedEndDate: null })
     await setOpen(false);
   };
   const handelSubmit = async () => {
-    if (form.actionTitle == "") {
-      setError({ actionTitle: "Please enter action title" });
-      
-    } else {
-      if(form.actionTitle.length > 255){
-        setError({ actionTitle: "Please enter less than 255 character" });
-
-      }
-      else{
+    const { error, isValid } = ActionTrackerValidator(form);
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
+    
       let res = await api.post(`api/v1/actions/`, form);
       if (res.status == 201) {
         let actionId = res.data.data.results.actionNumber
         localStorage.setItem("actionId" , actionId)
-        await setError({ actionTitle: "" });
+        await setError({ actionTitle: "",assignTo : "" });
         await setForm({ ...form,actionTitle : "",assignTo : "",severity : "", plannedEndDate: null })
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
 
-      }
-    }
+      
+    
   };
   }
   let actionId = props.actionId;
@@ -286,6 +283,7 @@ export default function ActionTracker(props) {
                 id="combo-box-demo"
                 options={reportedByName}
                 className={classes.mT30}
+                
                 getOptionLabel={(option) => option.name}
                 onChange={(e,option) => 
                   setForm({
@@ -295,6 +293,10 @@ export default function ActionTracker(props) {
                 }
                 renderInput={(params) => <TextField {...params}
                 //  margin="dense"
+                error={error.assignTo}
+                required
+
+              helperText={error.assignTo ? error.assignTo : ""}
                   label="Assignee"  variant="outlined" />}
             />
             {/* </FormControl> */}
