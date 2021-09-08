@@ -182,9 +182,13 @@ bytes
   const classes = useStyles();
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
-    const result = res.data.data.results.results
+    const result = res.data.data.results.results[0]
+    const result1 = res.data.data.results
+    console.log(result1)
+    console.log(result)
+
     // await setComments(result[3])
-    await setComment(result[result.length -1] )
+    await setComment(result )
     // await setIsLoading(true)
   }
 
