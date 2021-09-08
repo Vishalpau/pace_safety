@@ -149,7 +149,9 @@ function ObservationCorrectiveAction() {
   const [updatePage, setUpdatePage] = useState(false)
   const [loading, setLoading] = useState(false)
   let filterReportedByName = []
-
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).id
+  : null;
   const [comment , setComment] = useState({
     "fkCompanyId": 0,
     "fkProjectId": 0,
@@ -161,7 +163,8 @@ function ObservationCorrectiveAction() {
     "private": "Yes",
     "thanksFlag": "string",
     "status": "Active",
-    "createdBy": 0
+    "createdBy": parseInt(userId),
+    
   })
   const reviewedBy =[
     "None", 
@@ -181,8 +184,15 @@ function ObservationCorrectiveAction() {
       setError({ comment: "Please enter comment" });
     }else{
       await setLoading(true)
-      const res1 = await api.post(`/api/v1/comments/`,comment);
-    if (res1.status === 201) {
+      if(comment.id){
+        console.log("555",comment)
+        comment['updatedBy'] = parseInt(userId)
+        const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/` ,comment)
+      }else{
+        console.log("111",comment)
+
+        const res1 = await api.post(`/api/v1/comments/`,comment);
+      }
       let data = new FormData();
     data.append("fkCompanyId", form.fkCompanyId),
       data.append("fkProjectId", form.fkProjectId),
@@ -217,6 +227,8 @@ function ObservationCorrectiveAction() {
       data.append("supervisorName", form.supervisorName),
       data.append("supervisorDepartment", form.supervisorDepartment)
       data.append("status", form.status),
+      data.append("observationStatus", form.observationStatus),
+      data.append("observationStage", form.observationStage),
       data.append("createdBy", form.createdBy),
       data.append("updatedBy", form.updatedBy),
       data.append("source", form.source),
@@ -235,7 +247,7 @@ function ObservationCorrectiveAction() {
         )}`
       );
     }
-    }
+    
     }
     
   }
@@ -270,6 +282,7 @@ function ObservationCorrectiveAction() {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
     const result = res.data.data.results.results[0]
     const result2 = res.data.data.results.results
+    console.log(result)
     if(result2.length > 0) {
       await setComment(result)
     }
@@ -373,7 +386,7 @@ temp.reviewedById = value.id
     if(id){
       fetchInitialiObservationData()
       fetchactionTrackerData()
-      // fetchComments()
+      fetchComments()
       fetchReportedBy()
     }
     
@@ -474,7 +487,7 @@ temp.reviewedById = value.id
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
+                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
                 //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
                 // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
@@ -566,6 +579,7 @@ temp.reviewedById = value.id
               helperText={error.reviewedOn ? error.reviewedOn : null}
               disableFuture={true}
               inputVariant="outlined"
+              InputProps={{ readOnly: true }}
               onChange={(e) => handleCloseDate(e)}
             />
           </MuiPickersUtilsProvider>
@@ -589,7 +603,7 @@ temp.reviewedById = value.id
             // disabled={comment.id ? true : false}
             fullWidth
             variant="outlined"
-            // defaultValue= {comment.comment}
+            value= {comment.comment ? comment.comment : ""}
             className={classes.formControl}
             onChange={(e) => {
                   setComment({ ...comment, comment: e.target.value });

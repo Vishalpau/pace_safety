@@ -62,6 +62,8 @@ export default function AlertDialog({open, setOpen,documentUrl}) {
     let extension = document.split('.')
     let lastname = extension[extension.length - 1]
     let uname = lastname.toLowerCase()
+
+    console.log("sss",uname)
   
   const handleClose = () => {
     setOpen(false);
@@ -99,7 +101,7 @@ export default function AlertDialog({open, setOpen,documentUrl}) {
             <DialogContentText id="alert-dialog-slide-description">
               <Grid container spacing={3}>
                 
-                {uname == "docx" || "pptx" || "doc" || "ppt" || "xls" || "xlsx" ? null :
+                {uname == "docx" || uname == "pptx" || uname == "doc" || uname == "ppt" || uname == "xls" || uname == "xlsx" ? null :
                 <Grid item xs={12} md={6}>
                   <Button
                     startIcon={<VisibilityIcon />}
