@@ -36,7 +36,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
 import ActionTracker from "./ActionTracker";
-import ActionTrackerUpdate from "./ActionTrackerUpdate";
 
 import {
   access_token,
