@@ -193,7 +193,6 @@ const ObservationSummary = () => {
     const result = res.data.data.results
     await setInitialData(result)
   }
-console.log(initialData)
   if(localStorage.getItem("update") === "Done"){
     setObservationInitialNotificationUpdate(true)
    localStorage.removeItem("update")

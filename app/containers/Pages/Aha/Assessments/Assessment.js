@@ -246,7 +246,6 @@ const Assessment = () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
-    console.log("sdsd",res)
     const result = res.data.data.results;
     await setForm(result);
     await handelActionTracker(result)
@@ -267,36 +266,8 @@ const Assessment = () => {
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
 
-console.log(form)
-  const handleSeverityss = async (key) => {
-  
-    await handleRisk()
 
-  };
-  // const handleProbability = async (key) => {
-  //   console.log(key);
-  //   await setProbabilityValue(key);
-  //   await handleRisk()
-  // };
 
-  const handleRisk = () => {
-    // temp = [...form]
-
-    // if(severityValue * probabilityValue > 4){
-    //   temp[0]['riskRating'] = "Low"
-    // }
-    // setForm(temp)
-  };
-
-  const handleSeverityValue = async (e, index) => {
-    
-    let temp = [...form];
-    // await setColorId(...colorId,{...temp[index].id , {severity}})
-
-    temp[index].severity = e.target.value;
-    await setForm(temp)
-
-  };
 
   const handelRiskAndControl = (changeType, index, value) => {
     const temp = [...form]
@@ -382,35 +353,9 @@ console.log(form)
     }
   };
 
-  // const handleWorkStopCondition = (index,value ,e) => {
-
-  // }
   const [notifyToList, setNotifyToList] = useState([]);
 
-console.log("11111",actionTakenData)
-  // const handleWorkStopCondition = async (value,e) => {
-  //   if (e.target.checked === true) {
-  //     let temp = [...notifyToList];
-     
-  //     temp.push(value)
-  //     let uniq = [...new Set(temp)];
-  //     setNotifyToList(uniq)
-  //     console.log(uniq)
-  //     console.log(temp.toString())
-     
-  //    await setAHAForm({...ahaform , workStopCondition : temp.toString()});
-  //   } else {
-  //     let temp = [...notifyToList];
-      
-  //       let newData = temp.filter((item) => item !== value);
-      
-  //     setNotifyToList(newData);
-  //     setAHAForm({...ahaform , workStopCondition : newData.toString()});
 
-  //   }
-    
-  // };
-console.log("66666666",form)
   const handleWorkStopCondition = (value,e) => {
     if (e.target.checked == false) {
       let newData = additinalJobDetails.workStopCondition.filter((item) => item !== value);
@@ -426,23 +371,7 @@ console.log("66666666",form)
     }
   };
 
-  // const fetchactionTrackerData = async () =>{
-  //   let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-  //   const api_action = axios.create({
-  //     baseURL: API_URL_ACTION_TRACKER,
-  //   });
-  //   let ActionToCause = {}
-  //   const allActionTrackerData = await api_action.get("/api/v1/actions/")
-  //   const allActionTracker = allActionTrackerData.data.data.results.results
-  //   const newData = allActionTracker.filter(
-  //     (item) => item.enitityReferenceId === localStorage.getItem("fkAHAId") 
-      
-  //     )
-  //     let sorting = newData.sort((a, b) => a.id - b.id)
-  //   await setActionTakenData(sorting)
-  //   await setIsLoading(true);
 
-  // }
   const handelActionTracker = async (apiData) => {
     let jhaId = localStorage.getItem("fkAHAId")
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
@@ -472,25 +401,11 @@ console.log("66666666",form)
         apiData[key]["action"] = [];
       }
     }
-    console.log("2222",apiData);
     setActionTakenData(apiData)
     setIsLoading(true)
 
   };
-  // const handleWorkStopCondition = (value,e) => {
-  //   if (e.target.checked == false) {
-  //     let newData = ahaform.workStopCondition.filter((item) => item !== value);
-  //     setAHAForm({
-  //       ...ahaform,
-  //       workStopCondition: newData
-  //     });
-  //   } else {
-  //     setAHAForm({
-  //       ...ahaform,
-  //       workStopCondition: [...ahaform.workStopCondition, value]
-  //     });
-  //   }
-  // };
+
 
   const handleRiskValue = async (e , index) => {
     let tempData = [...form]
@@ -507,17 +422,7 @@ console.log("66666666",form)
     );
     // const checklistGroups = res.data.data.results[0];
     const checklistGroups = res.data.data.results[0].checklistValues;
-    // console.log("00000",checklistGroups)
-    // let checkList = []
-
-    // checklistGroups.map((checklist) => {
-    //   let checkObj = {}
-    //   checkObj["inputLabel"] = checkValue.inputLabel
-    //   checkObj["inputValue"] = checkValue.inputValue
-    //   checkList.push(checkObj)
-    // }
-    // temp[checklistGroups.checkListLabel] = checklistGroups.checklistValues;
-    // console.log(temp)
+ 
     setCheckListGroups(checklistGroups);
   };
   const fetchAhaData = async () => {
