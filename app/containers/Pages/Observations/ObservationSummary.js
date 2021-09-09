@@ -202,7 +202,6 @@ const ObservationSummary = () => {
   setObservationCorrectiveActionView(true)
  localStorage.removeItem("updateAction")
 }
-  
 
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ['Yes', 'No'];
@@ -278,7 +277,10 @@ const ObservationSummary = () => {
               <>
                 {(() => {
                   if(comment === true) {
-                    return (<Comments/>)
+                    return (<Comments
+                              commentContext="observations"
+                              id={localStorage.getItem("fkobservationId")}
+                            />)
                   }
                   if(activity === true) {
                     return (<AhaSummary/>)

@@ -555,7 +555,7 @@ function Observations(props) {
                                 <MessageIcon fontSize="small" /> Comments:
                               </Typography>
                               <Typography variant="body2" display="inline">
-                                <Link href="#">3</Link>
+                                <Link href="#">{item[1].commentsCount}</Link>
                               </Typography>
                             </Grid>
 
@@ -580,7 +580,7 @@ function Observations(props) {
                                 <AttachmentIcon fontSize="small" /> Attachments:
                               </Typography>
                               <Typography variant="body2" display="inline">
-                                <Link href="#">3</Link>
+                                <Link href="#">{item[1].attachmentCount}</Link>
                               </Typography>
                             </Grid>
 

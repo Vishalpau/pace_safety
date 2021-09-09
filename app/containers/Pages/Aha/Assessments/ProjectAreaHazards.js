@@ -271,8 +271,8 @@ const ProjectAreaHazards = () => {
   
     let hazardNew = []
       let hazardUpdate = []
-      let allHazard = [form, otherHazards]
-      allHazard.map((value) => {
+      let allHazard = [form]
+      form.map((value) => {
       if (value["id"] == undefined) {
         hazardNew.push(value)
       } else {
