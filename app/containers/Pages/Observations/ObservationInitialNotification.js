@@ -225,7 +225,7 @@ const ObservationInitialNotification = (props) => {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-
+  const [workArea, setWorkArea] = useState("")
   let filterReportedByName = []
   let filterReportedById = []
   let filterReportedByBedgeID = []
@@ -1014,10 +1014,12 @@ const ObservationInitialNotification = (props) => {
                   </Typography>
                 </Grid>
               ) : <ProjectStructureInit
-              selectDepthAndId={selectDepthAndId}
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setSelectDepthAndId={setSelectDepthAndId} />
+                selectDepthAndId={selectDepthAndId}
+                setLevelLenght={setLevelLenght}
+                error={error}
+                setSelectDepthAndId={setSelectDepthAndId}
+                setWorkArea={setWorkArea}
+              />
               }
             
             <Grid item md={6} xs={12} className={classes.formBox}>

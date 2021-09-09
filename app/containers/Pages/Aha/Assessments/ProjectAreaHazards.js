@@ -284,18 +284,7 @@ const ProjectAreaHazards = () => {
     if (hazardUpdate.length > 0) {
       const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
     }
-    const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
- 
-    for (let i = 0; i < otherHazards.length; i++) {
-      if (otherHazards[i]["hazard"] != "") {
-        if (otherHazards[i]["id"] == undefined) {
-          
-          const resOther = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`, otherHazards[i])
-        } else {
-          const resOther = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${otherHazards[i]["id"]}/`, otherHazards[i])
-        }
-      }
-    }
+    const resHazardNew = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
    
     history.push("/app/pages/aha/assessments/assessment")
 
