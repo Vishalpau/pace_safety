@@ -304,7 +304,7 @@ console.log(breakdown1ListData)
     let tempDepthAndId = props.selectDepthAndId;
     let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== depth)
     let sliceData = dataDepthAndId.slice(0,tempDepthAndId.length-1)
-    let newdataDepthAndId = [...sliceData,`${depth}`]
+    let newdataDepthAndId = [...sliceData,`${depth}${id}`]
     console.log(newdataDepthAndId)
     props.setSelectDepthAndId(newdataDepthAndId)
   }
