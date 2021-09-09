@@ -518,7 +518,7 @@ console.log(selectDepthAndId)
     const temp = [...fetchSelectBreakDownList]
     temp[index-1]["selectValue"].id = value
     let removeTemp = temp.slice(0, index)
-    let tempDepthAndId = props.selectDepthAndId;
+    let tempDepthAndId = selectDepthAndId;
     let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
     let sliceData = dataDepthAndId.slice(0,index-1)
     let newdataDepthAndId = [...sliceData,`${index}L${value}`]
