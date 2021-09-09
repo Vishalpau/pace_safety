@@ -253,10 +253,12 @@ const Assessment = () => {
         const temp = [];
         actionTracker.map((value) => {
           const tempAction = {}
-          let actionTrackerId = value.actionNumber;
+          let actionTrackerNumber = value.actionNumber;
           let actionTrackerTitle = value.actionTitle
-          tempAction["trackerID"] = actionTrackerId
+          let actionTrackerId = value.id
+          tempAction["trackerNumber"] = actionTrackerNumber
           tempAction["tarckerTitle"] = actionTrackerTitle
+          tempAction["trackerId"] = actionTrackerId
           temp.push(tempAction);
         });
         apiData[key]["action"] = temp;
@@ -264,6 +266,7 @@ const Assessment = () => {
         apiData[key]["action"] = [];
       }
     }
+    console.log(apiData)
     setForm(apiData)
   };
 
@@ -474,12 +477,9 @@ const Assessment = () => {
                               &&
                               form[index]["action"].map((value) => (
                                 <Link display="block"
-                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/
-                                  ?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&
-                                  companyId=${projectData.companyId}&projectId=${projectData.projectId}&
-                                  targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
+                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.trackerId}`}
                                 >
-                                  {value.number}
+                                  {value.trackerNumber}
                                 </Link>
                               ))}
                           </Grid>
