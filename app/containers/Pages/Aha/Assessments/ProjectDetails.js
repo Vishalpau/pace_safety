@@ -196,7 +196,7 @@ bytes
   const [submitLoader , setSubmitLoader] = useState(false);
   const [isNext, setIsNext] = useState(true);
   const [isLoading , setIsLoading] = useState(false);
-
+  const [workArea, setWorkArea] = useState("")
    const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
@@ -207,7 +207,6 @@ bytes
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const radioDecide = ['Yes' , 'No' ]
   const [error, setError] = useState({});
-
 
   
   const handleTeamName = (e, key) => {
@@ -249,7 +248,7 @@ bytes
       "fkCompanyId": parseInt(fkCompanyId),
       "fkProjectId": parseInt(project.projectId),
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-      "workArea": "",
+      "workArea": workArea,
       "location": "",
       "assessmentDate": null,
       "permitToPerform": "",
@@ -689,11 +688,13 @@ bytes
                 </FormControl>
               </Grid>
 
-              ) : <ProjectStructureInit 
-              selectDepthAndId={selectDepthAndId} 
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setSelectDepthAndId={setSelectDepthAndId} />
+              ) : <ProjectStructureInit
+                selectDepthAndId={selectDepthAndId}
+                setLevelLenght={setLevelLenght}
+                error={error}
+                setSelectDepthAndId={setSelectDepthAndId}
+                setWorkArea={setWorkArea}
+              />
               }
         {/* <Grid
         item
