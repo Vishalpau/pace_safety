@@ -153,6 +153,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  addLabelTitleBox: {
+    padding: '0px 12px !important',
+    marginTop: '22px',
+    '& .MuiTypography-root': {
+      //marginBottom: '0px',
+      fontSize: '18px',
+      fontWeight: '400',
+      lineHeight: '1.2',
+      color: '#737373',
+      fontWeight: '600',
+    },
+  },
+
 }));
 
 function Alert(props) {
@@ -163,6 +176,10 @@ const filter = createFilterOptions();
 const ObservationInitialNotification = (props) => {
   // class ObservationInitialNotification extends Component {
   // All states are define here. 
+
+  const user = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails'))
+      : null;
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -190,7 +207,7 @@ const ObservationInitialNotification = (props) => {
   const [levelLenght, setLevelLenght] = useState(0)
 
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
-
+  console.log(reportedByName)
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [breakdownData, setBreakDownData] = useState([])
   const [selectValue, setSelectValue] = useState([])
@@ -212,6 +229,7 @@ const ObservationInitialNotification = (props) => {
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
+    
   const project =
   JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -226,7 +244,7 @@ const ObservationInitialNotification = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
   const [workArea, setWorkArea] = useState("")
-  let filterReportedByName = []
+  let filterReportedByName = [user]
   let filterReportedById = []
   let filterReportedByBedgeID = []
   let filterSuperVisorName = []
@@ -342,14 +360,14 @@ const ObservationInitialNotification = (props) => {
     isNotifiedToSupervisor: "",
     actionTaken: "",
     location: "",
-    observedAt: null,
+    observedAt: new Date().toISOString(),
     assigneeName: "",
     assigneeId: 0,
     shift: "",
     departmentName: "",
     departmentId: 0,
     reportedById: 0,
-    reportedByName: "",
+    reportedByName: user.name,
     reportedByDepartment: "",
     reportedDate: new Date().toISOString(),    
     reportedByBadgeId: "",
@@ -454,15 +472,7 @@ const ObservationInitialNotification = (props) => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
-    if(form["observationType"] === "Positive behavior"){
-      form['stopWork'] = ""
-      form['nearMiss'] = ""
-    }else if(form["observationType"] === "Risk"){
-      form['personRecognition'] = ""
-    }else if(form["observationType"] === "Comments"){
-      form['personRecognition'] = ""
-
-    }
+   
     // if any error then this part is executed
     const { error, isValid } = InitialNotificationValidator(form,selectDepthAndId,levelLenght);
     await setError(error);
@@ -633,7 +643,7 @@ const ObservationInitialNotification = (props) => {
   const handleReportedBy = (e, value) => {
     let tempData = { ...form };
     tempData.reportedByName = value.name;
-   
+   tempData.reportedById = value.id;
         tempData.reportedByBadgeId = value.badgeNo;
       
     setForm(tempData);
@@ -953,7 +963,7 @@ const ObservationInitialNotification = (props) => {
     setSelectDepthAndId([... new Set(newData)])
   }
 
-
+console.log(form.reportedByName)
   const classes = useStyles();
 
   const PickList = async () => {
@@ -965,11 +975,11 @@ const ObservationInitialNotification = (props) => {
       fetchTags()
       fetchDepartment()
       fetchAttachment()
-      setIsLoading(true);
       fetchNotificationSent()
       fetchSuperVisorName()
       fetchReportedBy()
       PickList()
+
      
     
   }, [props.initialValues.breakDown]);
@@ -983,6 +993,18 @@ const ObservationInitialNotification = (props) => {
       >
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>
+
+          <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.addLabelTitleBox}
+          >
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Project Information
+            </Typography>
+          </Grid>
+
             <Grid item md={12}>
               <Typography
                 variant="h6"
@@ -1021,35 +1043,25 @@ const ObservationInitialNotification = (props) => {
                 setWorkArea={setWorkArea}
               />
               }
-            
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <TextField
-                label="Location*"
-                name="location"
-                id="location"
-                error={error.location}
-                helperText={error.location ? error.location : ""}
-                defaultValue={form.location}
-                fullWidth
-                variant="outlined"
-                autoComplete="off"
-                className={classes.formControl}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    location: e.target.value,
-                  });
-                }}
-              />
-            </Grid>
-            
-            <Grid item md={6} xs={12} className={classes.formBox}>
+              <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.addLabelTitleBox}
+          >
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Observer and Reporter details
+            </Typography>
+          </Grid>
+
+              
+              <Grid item md={6} xs={12} className={classes.formBox}>
               <Autocomplete
                 id="combo-box-demo"
                 options={reportedByName}
                 className={classes.mT30}
                 getOptionLabel={(option) => option.name}
-                defaultValue={form.reportedByName}
+                defaultValue={form.reportedByName ? form.reportedByName : ""}
                 onChange={(e, value) => {
                   handleReportedBy(e, value);
                 }}
@@ -1064,6 +1076,30 @@ const ObservationInitialNotification = (props) => {
                 )}
               />
             </Grid>
+
+            <Grid item md={6} xs={12} className={classes.formBox}>
+              <TextField
+                label="Observer's Badge Number"
+                name="badgenumberreportingperson"
+                id="badgenumberreportingperson"
+                value={
+                  form.reportedByBadgeId !== null ? form.reportedByBadgeId : ""
+                }
+                fullWidth
+                variant="outlined"
+                autoComplete="off"
+                className={classes.formControl}
+                onChange={(e) => {
+                  setForm({
+                    ...form,
+                    reportedByBadgeId: e.target.value,
+                  });
+                }}
+              />
+            </Grid>
+
+            
+
             <Grid
             item
             md={6}
@@ -1131,29 +1167,17 @@ const ObservationInitialNotification = (props) => {
       )}
     />
          
-            {/* <Autocomplete
-                id="observerdepartment"
-                options={departmentName}
-                className={classes.mT30}
-                
-                getOptionLabel={(option) => option.inputValue}
-                onChange={(e , value) => {
-                  setForm({...form,reportedByDepartment:value})
-                }}
-                renderInput={(params) => <TextField {...params} label="Observer Department*"
-                 error={error.reportedByDepartment}
-                helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} 
-                variant="outlined" />}
-            /> */}
+        
           </Grid>
-            <Grid item md={6} xs={12} className={classes.formBox}>
+
+          <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
-                label="Observer's Badge Number"
-                name="badgenumberreportingperson"
-                id="badgenumberreportingperson"
-                value={
-                  form.reportedByBadgeId
-                }
+                label="Location*"
+                name="location"
+                id="location"
+                error={error.location}
+                helperText={error.location ? error.location : ""}
+                defaultValue={form.location}
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
@@ -1161,11 +1185,17 @@ const ObservationInitialNotification = (props) => {
                 onChange={(e) => {
                   setForm({
                     ...form,
-                    reportedByBadgeId: e.target.value,
+                    location: e.target.value,
                   });
                 }}
               />
             </Grid>
+            
+            
+            
+            
+            
+            
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Supervisor's Name*"
@@ -1264,169 +1294,18 @@ const ObservationInitialNotification = (props) => {
               </TextField>
             </Grid>
 
-            <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset" error={
-                                  error && error["observationType"]
-                                } >
-                <FormLabel component="legend" className={classes.labelName} >
-                  Type of observation*
-                </FormLabel>
-                <RadioGroup
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.observationType}
-                  
-                >
-                  {radioType.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                      onClick={(e) => {
-                    setForm({
-                      ...form,
-                      observationType: e.target.value,
-                    });
-                  }}
-                    />
-                  ))}
-                </RadioGroup>
-                {error && error["observationType"] && (
-                                  <FormHelperText>
-                                    {error["observationType"]}
-                                  </FormHelperText>
-                                )}
-              </FormControl>
-            </Grid>
-                  {  form['observationType'] === "Risk"  && <>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Stop Work
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.stopWork}
-                  onChange={(e) => {
-                    setForm({ ...form, stopWork: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Near Miss
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.nearMiss}
-                  onChange={(e) => {
-                    setForm({ ...form, nearMiss: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid> </> }
-            { form['observationType'] === "Comments"   && <>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Stop Work
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.stopWork}
-                  onChange={(e) => {
-                    setForm({ ...form, stopWork: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Near Miss
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.nearMiss}
-                  onChange={(e) => {
-                    setForm({ ...form, nearMiss: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid> </> }
-            {form.observationType === "Positive behavior" &&
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
-                  Is this an Employee Recognition?
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-label="gender"
-                  name="gender1"
-                  defaultValue={form.personRecognition}
-                  onChange={(e) => {
-                    setForm({ ...form, personRecognition: e.target.value });
-                  }}
-                >
-                  {radioSituation.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      className={classes.labelValue}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </Grid>}
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.addLabelTitleBox}
+          >
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+             Observation Details 
+            </Typography>
+          </Grid>
+
+            
             <Grid item md={12} xs={12} className={classes.formBox}>
               <TextField
                 label="Short title"
@@ -1522,7 +1401,20 @@ const ObservationInitialNotification = (props) => {
               ""
             )}
 
-            <Grid item md={12} xs={12} className={classes.formBox}>
+            
+
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.addLabelTitleBox}
+          >
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+             Observation Classification 
+            </Typography>
+          </Grid>
+
+          <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" className={classes.labelName}>
                   Classification
@@ -1549,22 +1441,56 @@ const ObservationInitialNotification = (props) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            
+
 
             <Grid item md={12} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset" error={
+                                  error && error["observationType"]
+                                } >
+                <FormLabel component="legend" className={classes.labelName} >
+                  Type of observation*
+                </FormLabel>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.observationType}
+                  
+                >
+                  {radioType.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                      onClick={(e) => {
+                    setForm({
+                      ...form,
+                      observationType: e.target.value,
+                    });
+                  }}
+                    />
+                  ))}
+                </RadioGroup>
+                {error && error["observationType"] && (
+                                  <FormHelperText>
+                                    {error["observationType"]}
+                                  </FormHelperText>
+                                )}
+              </FormControl>
+            </Grid>
+                 
+            <Grid item md={6} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" className={classes.labelName}>
-                  Do you need to escalate the issue to Safety Management?
+                  Stop Work
                 </FormLabel>
                 <RadioGroup
                   row
-                  aria-label="safetymanagement"
-                  name="safetymanagement"
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.stopWork}
                   onChange={(e) => {
-                    setForm({
-                      ...form,
-                      isNotifiedToSupervisor: e.target.value,
-                    });
+                    setForm({ ...form, stopWork: e.target.value });
                   }}
                 >
                   {radioSituation.map((value) => (
@@ -1578,30 +1504,36 @@ const ObservationInitialNotification = (props) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
+            <Grid item md={6} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Near Miss
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.nearMiss}
+                  onChange={(e) => {
+                    setForm({ ...form, nearMiss: e.target.value });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid> 
+            
+            
 
             
-            {notificationSentValue.map((value,index) =>(
-            <Grid
-            item
-            md={12}
-            xs={12}
-            className={classes.formBox}
-          >
-            <FormGroup>
-              <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                  <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="notify"
-                    onChange={(e) => {handleNotify(value.id,index , e)}}
-                  />
-                )}
-                label={`Do you want to Notify the ${value.roleName}`}
-              />
-            </FormGroup>
-          </Grid>))}
+            
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
@@ -1637,7 +1569,78 @@ const ObservationInitialNotification = (props) => {
               </Grid>
             </Grid>
 
+            
+
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.addLabelTitleBox}
+          >
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+             Confirmation and Notification
+            </Typography>
+          </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Is this an Employee Recognition?
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="gender1"
+                  defaultValue={form.personRecognition}
+                  onChange={(e) => {
+                    setForm({ ...form, personRecognition: e.target.value });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+
+            
+            
+
+            <Grid item md={12} xs={12} className={classes.formBox}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend" className={classes.labelName}>
+                  Do you need to escalate the issue to Safety Management?
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="safetymanagement"
+                  name="safetymanagement"
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      isNotifiedToSupervisor: e.target.value,
+                    });
+                  }}
+                >
+                  {radioSituation.map((value) => (
+                    <FormControlLabel
+                      value={value}
+                      className={classes.labelValue}
+                      control={<Radio />}
+                      label={value}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+
+            
+
+            {/* <Grid item md={6} xs={12} className={classes.formBox}>
               <Autocomplete
                 id="combo-box-demo"
                 options={reportedByName}
@@ -1674,7 +1677,31 @@ const ObservationInitialNotification = (props) => {
                   </MenuItem>
                 ))}
               </TextField>
-            </Grid>
+            </Grid> */}
+
+            {notificationSentValue.map((value,index) =>(
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBox}
+          >
+            <FormGroup>
+              <FormControlLabel
+                className={classes.labelValue}
+                control={(
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    name="notify"
+                    onChange={(e) => {handleNotify(value.id,index , e)}}
+                  />
+                )}
+                label={`Do you want to Notify the ${value.roleName}`}
+              />
+            </FormGroup>
+          </Grid>))}
+
             <Grid item md={12} xs={12} className={classes.formBox}>
               <Typography
                 variant="h6"
