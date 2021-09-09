@@ -1,7 +1,6 @@
 import validator from "validator";
 
 function CloseOutValidator(data) {
-    console.log(data);
   
 
   const error = {};

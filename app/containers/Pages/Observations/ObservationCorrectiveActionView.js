@@ -36,7 +36,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
 import ActionTracker from "./ActionTracker";
-import ActionTrackerUpdate from "./ActionTrackerUpdate";
 
 import {
   access_token,
@@ -184,8 +183,7 @@ bytes
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
     const result = res.data.data.results.results[0]
     const result1 = res.data.data.results
-    console.log(result1)
-    console.log(result)
+   
 
     // await setComments(result[3])
     await setComment(result )

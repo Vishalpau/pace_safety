@@ -112,7 +112,7 @@ const ProjectStructure = (props) => {
       });
     props.setWorkArea(selectName)
   }
-console.log(props.selectDepthAndId)
+console.log(breakdown1ListData)
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
     let lenghtbreaddown = projectData.projectName.breakdown.length ? projectData.projectName.breakdown.length : 0
@@ -197,12 +197,20 @@ console.log(props.selectDepthAndId)
     }
   };
 
-  const handleBreakdown = async (e, index, label) => {
+  const handleBreakdown = async (e, index, label,de,depth) => {
+    console.log({index:index,target:e.target.value, label:label,dep:depth})
     await setSelectValue(e.target.value)
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     const value = e.target.value;
     let temp = [...breakdown1ListData]
-    setBreakdown1ListData(temp)
+    console.log(temp)
+    temp.map((item,key)=>{
+      if(item.breakdownLabel === label){
+        temp[key]["selectValue"] = value
+      }
+    })
+    temp[temp.length-1]["selectValue"] = value
+    
     let tempDepthAndId = props.selectDepthAndId;
     let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
     let sliceData = dataDepthAndId.slice(0,index-1)
@@ -210,7 +218,7 @@ console.log(props.selectDepthAndId)
     props.setSelectDepthAndId(newdataDepthAndId)
     if (tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
       let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      
+      console.log({temp:temp.slice(0, index-1)})
       if (breakDownValue.length > 0) {
         const removeBreakDownList = temp.slice(0, index)
         temp = removeBreakDownList
@@ -229,7 +237,7 @@ console.log(props.selectDepthAndId)
             headers: HEADER_AUTH,
           };
           await Axios(config)
-            .then(function (response) {
+            .then(async (response)=> {
               if (response.status === 200) {
 
                 if (
@@ -241,7 +249,7 @@ console.log(props.selectDepthAndId)
                 ) {
                   return;
                 } else {
-                  setBreakdown1ListData([
+                  await setBreakdown1ListData([
                     ...temp,
                     {
                       breakdownLabel:
@@ -283,6 +291,22 @@ console.log(props.selectDepthAndId)
 
     await fetchCallBack(select, projectData);
 
+  }
+
+  const handleLeafValue = async(depth,id,name)=>{
+    console.log({depth:depth,id:id,name:name})
+    setSelectDepth(`${depth}${id}`);
+    await props.setWorkArea(name)
+    let temp = [...breakdown1ListData]
+    console.log(temp)
+    temp[temp.length-1]["selectValue"] = id
+    await setBreakdown1ListData(temp)
+    let tempDepthAndId = props.selectDepthAndId;
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== depth)
+    let sliceData = dataDepthAndId.slice(0,tempDepthAndId.length-1)
+    let newdataDepthAndId = [...sliceData,`${depth}`]
+    console.log(newdataDepthAndId)
+    props.setSelectDepthAndId(newdataDepthAndId)
   }
 
   useEffect(() => {
@@ -333,6 +357,7 @@ console.log(props.selectDepthAndId)
             labelId="filter3-label"
             id="filter3"
             value={item.selectValue || ""}
+            
             // onChange={(e) => props.setWorkArea(item.selectValue)}
             label="Phases"
             style={{ width: "100%" }}
@@ -343,11 +368,10 @@ console.log(props.selectDepthAndId)
                   <MenuItem
                     key={selectKey}
                     value={selectValue.id}
-                    value={item.selectValue || ""}
+                   
                     onClick={async (e) => {
-                      setSelectDepth(`${selectValue.depth}${selectValue.id}`)
-                      // await handleDepthAndId(selectValue.depth, selectValue.id);
-                      await props.setWorkArea(selectValue.name)
+                      handleLeafValue(selectValue.depth,selectValue.id,selectValue.name)
+                      
                     }}
                   >
                     {selectValue.name}
@@ -378,17 +402,18 @@ console.log(props.selectDepthAndId)
             labelId="filter3-label"
             id="filter3"
             onChange={(e) => {
-              handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
+              handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue,parseInt(item.index))
             }}
             label="Phases"
             style={{ width: "100%" }}
+            value={item.selectValue || ""}
           >
             {item.breakdownValue.length
               ? item.breakdownValue.map(
                 (selectValue, selectKey) => (
                   <MenuItem
                     key={selectKey}
-                    value={selectValue.id}
+                    value={selectValue.id ? selectValue.id : ""}
 
                     onClick={async (e) => {
                       // await handleDepthAndId(selectValue.depth, selectValue.id);
