@@ -32,6 +32,7 @@ import { useHistory, useParams } from 'react-router';
 import moment from 'moment';
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
+import axios from "axios";
 
 import api from "../../../utils/axios";
 import { JHA_FORM } from './Utils/constants';
@@ -149,9 +150,22 @@ function Jha() {
   const fetchData = async () => {
     const res = await api.get("/api/v1/jhas/")
     const result = res.data.data.results.results
-    await setAllJHAData(result)
     localStorage.removeItem("fkJHAId")
     handelTableView(result)
+    handelActionCount(result)
+  }
+
+  const handelActionCount = async (apiData) => {
+    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    const api_action = axios.create({
+      baseURL: API_URL_ACTION_TRACKER,
+    });
+    for (let key in apiData) {
+      const action = await api_action.get(`/api/v1/actions/?actionContext__startswith=jha&enitityReferenceId__startswith=${apiData[key]["id"]}`)
+      let actionNumber = action.data.data.results.count
+      apiData[key]["actionCount"] = actionNumber
+    }
+    await setAllJHAData(apiData)
   }
 
   // Function to toggle the view mode
@@ -391,7 +405,7 @@ function Jha() {
                       Comments:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      <ILink href="#">3</ILink>
+                      <ILink href="#">{item[1]["commentsCount"]}</ILink>
                     </Typography>
                   </Grid>
 
@@ -406,7 +420,7 @@ function Jha() {
                       Actions:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      <ILink href="#">3</ILink>
+                      <ILink href="#">{item[1]["actionCount"]}</ILink>
                     </Typography>
                   </Grid>
                   <Grid item xs={6} md={3}>
@@ -420,7 +434,7 @@ function Jha() {
                       Attachments:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      <ILink href="#">3</ILink>
+                      <ILink href="#">{item[1]["attachmentCount"]}</ILink>
                     </Typography>
                   </Grid>
 
