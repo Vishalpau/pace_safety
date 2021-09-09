@@ -178,15 +178,16 @@ function Jha() {
     history.push(`/app/pages/jha/all_jha/_table`)
   };
   //   Data for the table view
-  const columns = ['Jha number', 'Location', 'Created by', 'Created on'];
+  const columns = ['Jha number', 'Location', 'Work area', 'Created by', 'Created on'];
   const handelTableView = (result) => {
     const temp = []
     result.map((value) => {
       temp.push([
         value.jhaNumber,
         value.location,
-        value.createdBy,
-        value.createdAt
+        value.workArea,
+        value.username,
+        moment(value.createdAt).format('DD MM YYYY')
       ])
     })
     setData(temp)
