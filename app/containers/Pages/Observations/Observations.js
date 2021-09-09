@@ -287,7 +287,6 @@ function Observations(props) {
 
     const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results
-    console.log(result);
     await setAllInitialData(result)
     let pageCount  = Math.ceil(res.data.data.results.count/25)
     await setPageCount(pageCount)
@@ -317,7 +316,6 @@ function Observations(props) {
   const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllInitialData(res.data.data.results.results);
   };
-  console.log(allInitialData)
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
@@ -557,7 +555,7 @@ function Observations(props) {
                                 <MessageIcon fontSize="small" /> Comments:
                               </Typography>
                               <Typography variant="body2" display="inline">
-                                <Link href="#">3</Link>
+                                <Link href="#">{item[1].commentsCount}</Link>
                               </Typography>
                             </Grid>
 
@@ -582,7 +580,7 @@ function Observations(props) {
                                 <AttachmentIcon fontSize="small" /> Attachments:
                               </Typography>
                               <Typography variant="body2" display="inline">
-                                <Link href="#">3</Link>
+                                <Link href="#">{item[1].attachmentCount}</Link>
                               </Typography>
                             </Grid>
 

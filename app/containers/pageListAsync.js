@@ -618,9 +618,7 @@ export const ObservationCorrectiveAction = loadable(() => import("./Pages/Observ
   fallback: <Loading />,
 });
 
-export const ObservationCloseOut = loadable(() => import("./Pages/Observations/ObservationCloseOut"), {
-  fallback: <Loading />,
-});
+
 
 export const ObservationInitialNotificationUpdate = loadable(() => import("./Pages/Observations/ObservationInitialNotificationUpdate"), {
   fallback: <Loading />,

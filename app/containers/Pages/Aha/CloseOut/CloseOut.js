@@ -89,9 +89,7 @@ const CloseOut = () => {
         // const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
         const result = res.data.data.results;
-        console.log("4444",result)
        await  setJhaListdata(result)
-        console.log(result)
 
     };
     // handle close snackbar
@@ -155,15 +153,8 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
-        // const temp = jhaListData;
-        // temp.reviewedBy = form.reviewedBy || jhaListData.reviewedBy;
-        // temp.reviewDate = form.reviewDate || jhaListData.reviewDate;
-        // temp.closedBy = form.closedBy || jhaListData.closedBy;
-        // temp.closeDate = form.closeDate || jhaListData.closeDate;
-        // temp.updatedAt = new Date().toISOString();
-        // temp.updatedBy = parseInt(userId)
+        
         const { error, isValid } = CloseOutValidator(jhaListData);
-        console.log(error, isValid)
         await setError(error);
         if (!isValid) {
           return "Data is not valid";
@@ -175,7 +166,6 @@ const CloseOut = () => {
             history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
           }
     }
-    console.log(error)
     useEffect(() => {
         fetchUserList();
         fetchJhaData();

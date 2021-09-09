@@ -128,7 +128,6 @@ import {
   ObservationInitialNotification,
   ObservationInitialNotificationView,
   ObservationCorrectiveAction,
-  ObservationCloseOut,
   ObservationInitialNotificationUpdate,
   CheckList,
   Groups,
@@ -514,7 +513,6 @@ function Application(props) {
         <Route path="/app/observations#table" component={Observations} />
         <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />
         <Route exact path="/app/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
-        <Route path="/app/observation-close-out" component={ObservationCloseOut} />
         <Route path="/app/observation/details/:id" component={ObservationSummary} />
         <Route path="/app/observation/details/:id#action-taking" component={ObservationSummary} />
         <Route path="/app/observation/details/:id#comments" component={ObservationSummary} />

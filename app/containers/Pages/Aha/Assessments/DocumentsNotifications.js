@@ -263,7 +263,6 @@ const [notifyToList,setNotifyToList] = useState([]);
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const result = res.data.data.results;
-    console.log(result)
     if(result.ahaAssessmentAttachment !== null ) {
       const fileName = result.ahaAssessmentAttachment.split('/')
       const fn = fileName[fileName.length - 1]
@@ -274,7 +273,6 @@ const [notifyToList,setNotifyToList] = useState([]);
     await setIsLoading(true)
   };
 
-  console.log(ahaform)
 
   const classes = useStyles();
 

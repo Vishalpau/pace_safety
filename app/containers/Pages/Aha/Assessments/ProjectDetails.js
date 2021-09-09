@@ -176,17 +176,6 @@ const ProjectDetails = () => {
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0)
 
-
-  console.log("000",fetchSelectBreakDownList)
-
-  // const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
-
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
-
-  // render() {
-  // const {classes } = this.props;
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   const files = acceptedFiles.map(file => (
@@ -207,7 +196,7 @@ bytes
   const [submitLoader , setSubmitLoader] = useState(false);
   const [isNext, setIsNext] = useState(true);
   const [isLoading , setIsLoading] = useState(false);
-
+  const [workArea, setWorkArea] = useState("")
    const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
@@ -219,23 +208,6 @@ bytes
   const radioDecide = ['Yes' , 'No' ]
   const [error, setError] = useState({});
 
-  const handelPositivObservation = (e) => {
-    setPositiveObservation(false);
-    setRiskObservation(true);
-  };
-
-  const handelAtRiskConcern = (e) => {
-    setPositiveObservation(true);
-    setRiskObservation(false);
-  };
-
-  const handelAddressSituationYes = (e) => {
-    setAddressSituation(false);
-  };
-
-  const handelAddressSituationNo = (e) => {
-    setAddressSituation(true);
-  };
   
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -243,7 +215,7 @@ bytes
     temp[key]["teamName"] = value;
     setTeamForm(temp);
   };
-  console.log(Teamform)
+
   const handleAdd = (e) => {
     if (Object.keys(Teamform).length < 100) {
       setTeamForm([...Teamform, { "teamName": "" ,
@@ -257,7 +229,6 @@ bytes
 
     if (Teamform.length > 1) {
       if (Teamform[index].id !== undefined) {
-        console.log("here");
         const res = await api.delete(
           `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
         );
@@ -277,7 +248,7 @@ bytes
       "fkCompanyId": parseInt(fkCompanyId),
       "fkProjectId": parseInt(project.projectId),
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-      "workArea": "",
+      "workArea": workArea,
       "location": "",
       "assessmentDate": null,
       "permitToPerform": "",
@@ -361,7 +332,6 @@ bytes
    
   }
 
-  console.log(selectDepthAndId)
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -718,11 +688,13 @@ bytes
                 </FormControl>
               </Grid>
 
-              ) : <ProjectStructureInit 
-              selectDepthAndId={selectDepthAndId} 
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setSelectDepthAndId={setSelectDepthAndId} />
+              ) : <ProjectStructureInit
+                selectDepthAndId={selectDepthAndId}
+                setLevelLenght={setLevelLenght}
+                error={error}
+                setSelectDepthAndId={setSelectDepthAndId}
+                setWorkArea={setWorkArea}
+              />
               }
         {/* <Grid
         item

@@ -193,7 +193,6 @@ const ObservationSummary = () => {
     const result = res.data.data.results
     await setInitialData(result)
   }
-console.log(initialData)
   if(localStorage.getItem("update") === "Done"){
     setObservationInitialNotificationUpdate(true)
    localStorage.removeItem("update")
@@ -203,7 +202,6 @@ console.log(initialData)
   setObservationCorrectiveActionView(true)
  localStorage.removeItem("updateAction")
 }
-  
 
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ['Yes', 'No'];
@@ -279,7 +277,10 @@ console.log(initialData)
               <>
                 {(() => {
                   if(comment === true) {
-                    return (<Comments/>)
+                    return (<Comments
+                              commentContext="observations"
+                              id={localStorage.getItem("fkobservationId")}
+                            />)
                   }
                   if(activity === true) {
                     return (<AhaSummary/>)
