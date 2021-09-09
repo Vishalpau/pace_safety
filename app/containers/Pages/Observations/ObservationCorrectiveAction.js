@@ -185,11 +185,9 @@ function ObservationCorrectiveAction() {
     }else{
       await setLoading(true)
       if(comment.id){
-        console.log("555",comment)
         comment['updatedBy'] = parseInt(userId)
         const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/` ,comment)
       }else{
-        console.log("111",comment)
 
         const res1 = await api.post(`/api/v1/comments/`,comment);
       }
@@ -282,7 +280,6 @@ function ObservationCorrectiveAction() {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
     const result = res.data.data.results.results[0]
     const result2 = res.data.data.results.results
-    console.log(result)
     if(result2.length > 0) {
       await setComment(result)
     }

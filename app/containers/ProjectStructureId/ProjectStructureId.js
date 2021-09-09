@@ -413,7 +413,7 @@ console.log(breakdown1ListData)
                 (selectValue, selectKey) => (
                   <MenuItem
                     key={selectKey}
-                    value={selectValue.id}
+                    value={selectValue.id ? selectValue.id : ""}
 
                     onClick={async (e) => {
                       // await handleDepthAndId(selectValue.depth, selectValue.id);
