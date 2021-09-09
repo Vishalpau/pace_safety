@@ -477,7 +477,7 @@ function Aha(props) {
                   Comments:
                 </Typography>
                 <Typography variant="body2" display="inline">
-                  <ILink href="#">3</ILink>
+                  <ILink href="#">{item[1].commentsCount}</ILink>
                 </Typography>
               </Grid>
 
@@ -506,7 +506,7 @@ function Aha(props) {
                   Attachments:
                 </Typography>
                 <Typography variant="body2" display="inline">
-                  <ILink href="#">3</ILink>
+                  <ILink href="#">{item[1].attachmentCount}</ILink>
                 </Typography>
               </Grid>
 

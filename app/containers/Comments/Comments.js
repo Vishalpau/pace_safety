@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Comments = (props) => {
+  console.log("0000",props)
   const classes = useStyles();
   const [value, setValue] = React.useState('female');
   

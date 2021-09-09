@@ -1347,7 +1347,10 @@ console.log(closeOut)
                   }
                   if(comments == true){
                     return (<div>
-                      <Comments/>
+                      <Comments
+                              commentContext="Aha"
+                              id={localStorage.getItem("fkAHAId")}
+                            />
                     </div>)
                   }
                   // if (summary == true) {
@@ -1422,19 +1425,7 @@ onClick={(e) => handleAhaApprovalsPush(e)}>
                   </ListItemIcon>
                   <ListItemText primary=" Close Out" />
                 </ListItemLink>
-                
-                {/* <ListItemLink onClick={(e) => handleAhaLessonLearnPush(e)}>
-                  <ListItemIcon>
-                    <Add />
-                  </ListItemIcon>
-                  <ListItemText primary="Lessons Learned" />
-                </ListItemLink> */}
-                {/* <ListItem button divider onClick={(e) => handleCloseOutPush(e)}>
-                  <ListItemIcon>
-                    <Close />
-                  </ListItemIcon>
-                  <ListItemText primary="Close Out" />
-                </ListItem> */}
+   
 
                 <ListItem button onClick={(e) => handleCommentsPush(e)}>
                   <ListItemIcon>
