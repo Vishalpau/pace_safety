@@ -199,7 +199,6 @@ const ObservationInitialNotification = (props) => {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   let filterSuperVisorId = []
-  console.log(selectDepthAndId)
   let filterSuperVisorBadgeNo = []
   const radioType = ["Risk", "Comments", "Positive behavior"];
   const radioSituation = ["Yes", "No"];
@@ -307,23 +306,26 @@ const ObservationInitialNotification = (props) => {
         if (response.status === 200) {
           const result = response.data.data.results;
           let user = [];
-          user = result;
+          
           for (var i in result) {
-            filterDepartmentName.push(result[i].departmentName);
-            // filterReportedById.push(result[i].id);
+            let temp = {}
+
+            temp["inputValue"] = result[i].departmentName
+            temp["departmentId"] = result[i].id
+
+            user.push(temp);
           }
-          // setReportedByName(filterReportedByName);
-          // setDepartmentName([...filterDepartmentName , {name : "other"}]);
-          setDepartmentName([...filterDepartmentName , "Others"])
+
+      
+          setDepartmentName(user)
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
+       
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
       });
   };
+
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
@@ -727,81 +729,11 @@ const ObservationInitialNotification = (props) => {
     );
     const result = attachment.data.data.results[0];
     let ar = result.attachment;
-    // let onlyImage_url = ar.replace("https://", "");
-    // let image_url = "http://cors.digiqt.com/" + onlyImage_url;
-    // let imageArray = image_url.split("/");
-    // let image_name = imageArray[imageArray.length - 1];
-    // saveAs(image_url, image_name);
+   
     await setAttachment(ar)
   };
 
-  // const fetchBreakDownData = async (projectBreakdown) => {
-
-  //   const projectData = JSON.parse(localStorage.getItem('projectName'));
-
-  //   let selectBreakDown = [];
-  //   const breakDown = projectBreakdown.split(':');
-    
-  //   for (var key in breakDown) {
-  //     if (breakDown[key].slice(0, 2) === '1L') {
-  //       var config = {
-  //         method: "get",
-  //         url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-  //           }`,
-  //         headers: HEADER_AUTH,
-  //       };
-
-  //       await api(config)
-  //         .then(async (response) => {
-  //           const result = response.data.data.results;
-  //           await setIsLoading(true);
-  //           result.map((item) => {
-  //             if (breakDown[key].slice(2) == item.id) {
-  //               selectBreakDown = [
-  //                 ...selectBreakDown,
-  //                 { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-  //               ];
-  //               setFetchSelectBreakDownList(selectBreakDown)
-  //             }
-  //           });
-  //         })
-  //         .catch((error) => {
-
-  //           setIsNext(true);
-  //         });
-  //     } else {
-  //       var config = {
-  //         method: "get",
-  //         url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-  //           }${breakDown[key-1].substring(2)}`,
-  //         headers: HEADER_AUTH,
-  //       };
-
-  //       await api(config)
-  //         .then(async (response) => {
-
-  //           const result = response.data.data.results;
   
-  //           const res = result.map((item, index) => {
-  //             if (parseInt(breakDown[key].slice(2)) == item.id) {
-
-  //               selectBreakDown = [
-  //                 ...selectBreakDown,
-  //                 { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-  //               ];
-  //               setFetchSelectBreakDownList(selectBreakDown)
-  //             }
-  //           });
-
-
-  //         })
-  //         .catch((error) => {
-  //           console.log(error)
-  //           setIsNext(true);
-  //         });
-  //     }
-  //   }
-  // };
 
   const fetchBreakDownData = async (projectBreakdown) => {
 
@@ -1136,19 +1068,81 @@ const ObservationInitialNotification = (props) => {
             xs={12}
             className={classes.formBox}
           >
+         <Autocomplete
+      value={value}
+      onChange={(event, newValue) => {
+        if (typeof newValue === 'string') {
+          setValue({
+            inputValue: newValue,
+          });
+                  setForm({...form,reportedByDepartment:newValue})
+                
+        } else if (newValue && newValue.inputValue) {
+          // Create a new value from the user input
+          setValue({
+            inputValue: newValue.inputValue,
+          });
+          setForm({...form,reportedByDepartment:newValue.inputValue})
+
+        } else {
+          setValue(newValue);
+        }
+      }}
+      filterOptions={(options, params) => {
+        const filtered = filter(options, params);
+
+        // Suggest the creation of a new value
+        if (params.inputValue !== '') {
+          filtered.push({
+            inputValue: params.inputValue,
+            inputValue: `${params.inputValue}`,
+          });
+        }
+
+        return filtered;
+      }}
+      className={classes.mT30}
+      
+      handleHomeEndKeys
+      id="free-solo-with-text-demo"
+      options={departmentName}
+      getOptionLabel={(option) => {
+        // Value selected with enter, right from the input
+        if (typeof option === 'string') {
+          return option;
+        }
+        // Add "xxx" option created dynamically
+        if (option.inputValue) {
+          return option.inputValue;
+        }
+        // Regular option
+        return option.title;
+      }}
+      renderOption={(option) => option.inputValue}
+      // style={{ width: 300 }}
+      freeSolo
+      renderInput={(params) => (
+        <TextField {...params} label="Observer Department*" 
+        error={error.reportedByDepartment}
+                helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} 
+                variant="outlined" />
+      )}
+    />
          
-            <Autocomplete
+            {/* <Autocomplete
                 id="observerdepartment"
                 options={departmentName}
                 className={classes.mT30}
                 
-                getOptionLabel={(option) => option}
+                getOptionLabel={(option) => option.inputValue}
                 onChange={(e , value) => {
                   setForm({...form,reportedByDepartment:value})
                 }}
-                renderInput={(params) => <TextField {...params} label="Observer Department*" error={error.reportedByDepartment}
-                helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} variant="outlined" />}
-            />
+                renderInput={(params) => <TextField {...params} label="Observer Department*"
+                 error={error.reportedByDepartment}
+                helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} 
+                variant="outlined" />}
+            /> */}
           </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
@@ -1302,7 +1296,7 @@ const ObservationInitialNotification = (props) => {
                                   </FormHelperText>
                                 )}
               </FormControl>
-            </Grid>{console.log(form.observationType)}
+            </Grid>
                   {  form['observationType'] === "Risk"  && <>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
@@ -1667,13 +1661,14 @@ const ObservationInitialNotification = (props) => {
                 fullWidth
                 defaultValue={form.departmentName}
                 variant="outlined"
-                onChange={(e) => {
-                  setForm({ ...form, departmentName: e.target.value });
-                }}
+                
               >
                 {departmentName.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
+                  <MenuItem key={option} value={option.inputValue}
+                  onClick={(e) => {
+                  setForm({ ...form, departmentName: option.inputValue ,departmentId : option.departmentId });
+                }}>
+                    {option.inputValue}
                   </MenuItem>
                 ))}
               </TextField>

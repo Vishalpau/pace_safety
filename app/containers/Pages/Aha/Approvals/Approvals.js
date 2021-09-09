@@ -210,14 +210,7 @@ const Approvals = () => {
                   <CircularProgress color="secondary" />
                 </IconButton>
               }
-            {/* <Button
-              variant="outlined"
-              size="medium"
-              className={classes.custmSubmitBtn}
-              onClick={(e) => handelSubmit()}
-            >
-              Submit
-            </Button> */}
+        
           </Grid>
         </Grid>
       </PapperBlock>
