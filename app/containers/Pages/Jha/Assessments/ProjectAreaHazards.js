@@ -286,7 +286,9 @@ const ProjectAreaHazards = () => {
     allHazard.map((values, index) => {
       allHazard[index].map((value) => {
         if (value["id"] == undefined) {
-          hazardNew.push(value)
+          if (value["hazard"] !== "") {
+            hazardNew.push(value)
+          }
         } else {
           hazardUpdate.push(value)
         }
