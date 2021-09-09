@@ -90,6 +90,7 @@ const IncidentDetails = (props) => {
   const dispatch = useDispatch();
   const [hideAffect, setHideAffect] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
+  const [workArea, setWorkArea] = useState([])
 
   const [nextPath, setNextPath] = useState({
     personAffect: "",
@@ -508,7 +509,7 @@ const IncidentDetails = (props) => {
       }
     }
   };
-
+console.log(selectDepthAndId)
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     
@@ -517,6 +518,11 @@ const IncidentDetails = (props) => {
     const temp = [...fetchSelectBreakDownList]
     temp[index-1]["selectValue"].id = value
     let removeTemp = temp.slice(0, index)
+    let tempDepthAndId = props.selectDepthAndId;
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
+    let sliceData = dataDepthAndId.slice(0,index-1)
+    let newdataDepthAndId = [...sliceData,`${index}L${value}`]
+    setSelectDepthAndId(newdataDepthAndId)
     await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index) {
       for (var key in projectData.projectName.breakdown) {
@@ -635,10 +641,16 @@ const IncidentDetails = (props) => {
     }
   };
 
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...selectDepthAndId, `${depth}${id}`]
-    setSelectDepthAndId([... new Set(newData)])
-  }
+  // const handleDepthAndId = (depth, id) => {
+  //   if(selectDepthAndId.length>0){
+  //     let data = selectDepthAndId.filter(item=>!item.includes(depth))
+  //     let newData = data.push(`${depth}${id}`) ;
+  //     setSelectDepthAndId(newData);
+  //   }else{
+  //     let newData = [...selectDepthAndId, `${depth}${id}`]
+  //     setSelectDepthAndId(newData);
+  //   } 
+  // }
   useEffect(() => {
     fetchContractorValue();
     fetchIncidentTypeValue();
@@ -712,7 +724,7 @@ const IncidentDetails = (props) => {
                     {data.breakDownData.length !== 0
                       ? data.breakDownData.map((selectvalues, index) => (
                         <MenuItem key={index} 
-                        onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                        // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
                         value={selectvalues.id}>
                           {selectvalues.structureName}
                         </MenuItem>
@@ -729,6 +741,7 @@ const IncidentDetails = (props) => {
               selectDepthAndId={selectDepthAndId} 
               setLevelLenght={setLevelLenght}
               error= {error}
+              setWorkArea={setWorkArea}
               setSelectDepthAndId={setSelectDepthAndId} />
               }
               {/* Unit Name */}
