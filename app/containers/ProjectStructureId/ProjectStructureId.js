@@ -343,7 +343,7 @@ console.log(props.selectDepthAndId)
                   <MenuItem
                     key={selectKey}
                     value={selectValue.id}
-                    value={item.selectValue || ""}
+                   
                     onClick={async (e) => {
                       setSelectDepth(`${selectValue.depth}${selectValue.id}`)
                       // await handleDepthAndId(selectValue.depth, selectValue.id);
@@ -382,6 +382,7 @@ console.log(props.selectDepthAndId)
             }}
             label="Phases"
             style={{ width: "100%" }}
+            value={item.selectValue || ""}
           >
             {item.breakdownValue.length
               ? item.breakdownValue.map(
