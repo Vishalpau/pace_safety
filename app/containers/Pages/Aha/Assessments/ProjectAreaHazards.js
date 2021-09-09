@@ -271,13 +271,18 @@ const ProjectAreaHazards = () => {
   
     let hazardNew = []
       let hazardUpdate = []
-      let allHazard = [form]
-      form.map((value) => {
-      if (value["id"] == undefined) {
-        hazardNew.push(value)
-      } else {
-        hazardUpdate.push(value)
-      }
+      let allHazard = [form, otherHazards]
+
+    allHazard.map((values, index) => {
+      allHazard[index].map((value) => {
+        if (value["id"] == undefined) {
+          if (value["hazard"] !== "") {
+            hazardNew.push(value)
+          }
+        } else {
+          hazardUpdate.push(value)
+        }
+      })
     })
 
 
