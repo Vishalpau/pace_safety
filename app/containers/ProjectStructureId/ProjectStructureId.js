@@ -204,8 +204,13 @@ console.log(breakdown1ListData)
     const value = e.target.value;
     let temp = [...breakdown1ListData]
     console.log(temp)
+    temp.map((item,key)=>{
+      if(item.breakdownLabel === label){
+        temp[key]["selectValue"] = value
+      }
+    })
     temp[temp.length-1]["selectValue"] = value
-    setBreakdown1ListData(temp)
+    
     let tempDepthAndId = props.selectDepthAndId;
     let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
     let sliceData = dataDepthAndId.slice(0,index-1)
@@ -213,7 +218,7 @@ console.log(breakdown1ListData)
     props.setSelectDepthAndId(newdataDepthAndId)
     if (tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
       let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      
+      console.log({temp:temp.slice(0, index-1)})
       if (breakDownValue.length > 0) {
         const removeBreakDownList = temp.slice(0, index)
         temp = removeBreakDownList
