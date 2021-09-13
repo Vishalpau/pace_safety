@@ -218,7 +218,7 @@ function xflha(props) {
     const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
       .projectName.projectId;
     // alert(fkProjectId);
-    const res = await api.get('api/v1/flhas/list/');
+    const res = await api.get('api/v1/flhas/');
     console.log({ res: res.data.data.results.results });
     setFlhas(res.data.data.results.results);
   };

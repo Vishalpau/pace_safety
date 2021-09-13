@@ -185,10 +185,12 @@ class SimpleTabs extends React.Component {
   }
 
   getPreventiveControls = async (value=undefined) => {
+    alert(234567)
     const flhaId = this.props.match.params.id;
     // this.props.match.params.id
     if(value != undefined){
-      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/?version='+value);
+      // var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/?version='+value);
+      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
     }
     else{
       var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
@@ -418,7 +420,8 @@ class SimpleTabs extends React.Component {
                         <CommentIcon />
                       </ListItemIcon>
                       <Link
-                        href="/app/pages/actions/comments"
+                        href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/comments"}
+                        // href="/app/pages/actions/comments"
                         variant="subtitle"
                       >
 
@@ -433,7 +436,7 @@ class SimpleTabs extends React.Component {
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                        href="/app/pages/activity/activity"
+                        href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/activities"}
                         variant="subtitle"
                       >
                         <ListItemText primary="Activity History" />

@@ -758,6 +758,14 @@ export const FlhaEdit = loadable(() => import("./Pages/Assesments/FlhaEdit"), {
   fallback: <Loading />,
 });
 
+export const FlhaActivities = loadable(() => import("./Pages/Assesments/ActivityHistory"), {
+  fallback: <Loading />,
+});
+
+export const FlhaComments = loadable(() => import("./Pages/Assesments/Comments"), {
+  fallback: <Loading />,
+});
+
 export const FlhaRevision = loadable(() => import("./Pages/Assesments/FlhaRevision"), {
   fallback: <Loading />,
 });
