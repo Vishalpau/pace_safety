@@ -33,6 +33,7 @@ import moment from 'moment';
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import { connect } from "react-redux";
+import axios from "axios";
 
 import api from "../../../utils/axios";
 import { JHA_FORM } from './Utils/constants';
@@ -205,15 +206,16 @@ function Jha(props) {
     history.push(`/app/pages/jha/all_jha/_table`)
   };
   //   Data for the table view
-  const columns = ['Jha number', 'Location', 'Created by', 'Created on'];
+  const columns = ['Jha number', 'Location', 'Work area', 'Created by', 'Created on'];
   const handelTableView = (result) => {
     const temp = []
     result.map((value) => {
       temp.push([
         value.jhaNumber,
         value.location,
-        value.createdBy,
-        value.createdAt
+        value.workArea,
+        value.username,
+        moment(value.createdAt).format('DD MM YYYY')
       ])
     })
     setData(temp)
@@ -432,7 +434,7 @@ function Jha(props) {
                       Comments:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      <ILink href="#">3</ILink>
+                      <ILink href="#">{item[1]["commentsCount"]}</ILink>
                     </Typography>
                   </Grid>
 
@@ -447,7 +449,7 @@ function Jha(props) {
                       Actions:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      <ILink href="#">3</ILink>
+                      <ILink href="#">{item[1]["actionCount"]}</ILink>
                     </Typography>
                   </Grid>
                   <Grid item xs={6} md={3}>
@@ -461,7 +463,7 @@ function Jha(props) {
                       Attachments:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      <ILink href="#">3</ILink>
+                      <ILink href="#">{item[1]["attachmentCount"]}</ILink>
                     </Typography>
                   </Grid>
 
