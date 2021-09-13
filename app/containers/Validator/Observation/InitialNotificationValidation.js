@@ -5,7 +5,7 @@ function InitialNotificationValidator(data,projectStructure,levelLenght) {
 
   const error = {};
   let isValid = true;
-
+console.log(levelLenght)
 
   if(projectStructure?projectStructure.length<levelLenght:false){
     error.projectStructure = "Please select project level";
