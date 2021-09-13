@@ -260,7 +260,7 @@ const ConfigHazard = (props) => {
                   defaultValue={props.editPayload[0] || ""}
                 />
               </Grid>
-                {console.log("payload.fkDeparmentName ", props.editPayload[0])}
+                {/* {console.log("payload.fkDeparmentName ", props.editPayload[0])} */}
               <Grid item md={4} sm={4} xs={12}>
                 <img src={props.editPayload[1]} height={58} alt="" className={classes.mttopSix} />
               </Grid>

@@ -79,6 +79,7 @@ import {
   SSO_URL,
   HEADER_AUTH,
 } from '../../../utils/constants';
+import { ArrowLeftRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -442,8 +443,8 @@ const FlhaDetails = (props) => {
   };
 
   const handelSubmit = async () => {
-    // // console.log('depFor',
-    // debugger
+
+    const isValid = validate()
     const formData = new FormData(); // formdata object
 
     formData.append('fkCompanyId', JSON.parse(localStorage.getItem('company')).fkCompanyId);
@@ -457,7 +458,7 @@ const FlhaDetails = (props) => {
     formData.append('jobDetail', form.jobDetail);
     formData.append('jobTitle', form.jobTitle);
 
-   
+
     // localStorage.setItem('fkJobId', jobTitle.id);
 
     const res = await api.post('api/v1/configflhas/jobtitles/', formData);
@@ -473,6 +474,7 @@ const FlhaDetails = (props) => {
     });
     dropDownHandle();
     setRender(!render);
+    
     await jobTitleApiHandler();
   };
 
@@ -553,7 +555,7 @@ const FlhaDetails = (props) => {
 
   // third dialog
   const [ConfigOpen, setConfigOpen] = React.useState(false);
-  const [ editPayload , setEditPayloadData] = React.useState([]) ;
+  const [editPayload, setEditPayloadData] = React.useState([]);
 
   function handleConfigClickOpen(tableMeta) {
     setEditPayloadData(tableMeta.rowData)
@@ -564,50 +566,96 @@ const FlhaDetails = (props) => {
     setConfigOpen(false);
   }
 
-//for edit
-const [ hazardPayload , setCriticalPayload] = React.useState({}) ;
-function dataHandler(data) {
-  setCriticalPayload(data) ;
-}
+  //for edit
+  const [hazardPayload, setCriticalPayload] = React.useState({});
+  function dataHandler(data) {
+    setCriticalPayload(data);
+  }
 
-const hazardEditSubmitHandler = async () => {
-  // debugger
-  console.log({submithazard: payload})
+ 
+
+  const [payload, setPayload] = React.useState([])
+  const handleFieldChange = async (e, fieldname) => {
+    // alert(fieldname)
+    const temp = { ...payload }
+    // alert(fieldname)
+    if (fieldname == "jobTitleImage") {
+      temp['jobTitleImage'] = e[0];
+    }
+    else {
+      if(fieldname == 'fkDepartmentId'){
+        // alert(fieldname)
+        temp['fkDepartmentName'] = e.nativeEvent.target.innerText
+      }
+      // alert(e.nativeEvent.target.innerText)
+      // console.log( e.target.te,"testdep")
+      console.log( e,"testdep")
+
+      temp[fieldname] = e.target.value
+    }
+    console.log('jobTitleImage', temp)
+    await setPayload(temp);
+  }
+  console.log( payload,"test")
+
+
+  const hazardEditSubmitHandler = async () => {
+  
+    console.log( 'submithazard',  payload.fkDepartmentName )
     const formData = new FormData();
 
-    formData.append('fkDeparmentName', payload.fkDeparmentName);
     formData.append('jobTitle', payload.jobTitle);
     formData.append('jobDetail', payload.jobDetail);
-    formData.append('jobTitleImage', payload.jobTitleImage);
+    formData.append('fkDeparmentName', payload.fkDepartmentName);
     formData.append('fkDepartmentId', payload.fkDepartmentId);
 
-  let res = await api.put(`api/v1/configflhas/jobtitles/${editPayload[editPayload.length-2]}/`, formData) ;
-  handleFlhaClose()
-  jobTitleApiHandler()
+    if(payload.jobTitleImage!==undefined){
+      formData.append('jobTitleImage', payload.jobTitleImage);
+    }
 
-}
+    let res = await api.put(`api/v1/configflhas/jobtitles/${editPayload[editPayload.length - 2]}/`, formData);
+    handleConfigClose()
+    jobTitleApiHandler()
 
-const [payload, setPayload] = React.useState({
-  fkDeparmentName:   "" ,
-  jobTitle: "" ,
-  jobDetail:  "" ,
-  jobTitleImage:  "" ,
-  fkDepartmentId:  "" ,
-})
-const handleFieldChange = async(e, fieldname) => {
-  const temp = {...payload}
-  // alert(fieldname)
-  if(fieldname == "jobTitleImage"){
-    console.log({event: e})
-    temp['jobTitleImage'] = e[0];
   }
-  else {
-    temp[fieldname] = e.target.value
+
+  //validations
+  const [error, setError] = React.useState({
+    fkCompanyId: '',
+    fkDeparmentName: '',
+    jobTitle: '',
+    projectName: '',
+    jobDetail: '',
+    fkDepartmentId: '',
+    jobTitleImage: '',
+    status: ""
+  })
+
+  const validate = () => {
+    let isValid = true;
+    let err = {};
+    // return valid
+    if (form.jobTitle == '') {
+      err.jobTitle = 'Job title is required';
+      isValid = false;
+    }
+    if (form.jobDetail == '') {
+      err.jobDetail = 'Job detail is required';
+      isValid = false;
+    }
+    if (form.fkDeparmentName == '') {
+      err.fkDeparmentName = 'Deparment mame is required';
+      isValid = false;
+    }
+
+    if (form.jobTitleImage == '') {
+      err.jobTitleImage = 'job title image is required';
+      isValid = false;
+    }
+    setError(err)
+
+    return isValid
   }
-  console.log('jobTitleImage',temp)
-  await setPayload(temp);    
-  console.log({payload: payload})
-}
 
 
   //   Data for the table view
@@ -679,20 +727,20 @@ const handleFieldChange = async(e, fieldname) => {
               >
                 <MenuItem onClick={handleClose}> */}
 
-                  <Link
-                    // href={"/app/pages/assesments/FlhaConfigCriticalTask"+tableMeta.rowData[5]}
-                    href={`/app/pages/assesments/flhaconfigcriticaltask/${tableMeta.rowData[5]}`}
+              <Link
+                // href={"/app/pages/assesments/FlhaConfigCriticalTask"+tableMeta.rowData[5]}
+                href={`/app/pages/assesments/flhaconfigcriticaltask/${tableMeta.rowData[5]}`}
 
-                  >
-                    Critical task
+              >
+                Critical task
 
-                  </Link>
-                {/* </MenuItem> */}
-                {/* <MenuItem onClick={handleClose}> */}
-                  <span variant="outlined" color="primary" onClick={() => handleConfigClickOpen(tableMeta)}>
-                    Edit job title
-                  </span>
-                {/* </MenuItem> */}
+              </Link>
+              {/* </MenuItem> */}
+              {/* <MenuItem onClick={handleClose}> */}
+              <span variant="outlined" color="primary" onClick={() => handleConfigClickOpen(tableMeta)}>
+                Edit job title
+              </span>
+              {/* </MenuItem> */}
               {/* </Menu> */}
             </>
           )
@@ -741,7 +789,7 @@ const handleFieldChange = async(e, fieldname) => {
   ));
   console.log({ dropDownAr });
   console.log({ dataAr });
-console.log("test",form.jobTitle);
+  console.log("test", form.jobTitle);
   return (
     <div>
       <PapperBlock title="X-FLHA - Job Titles" icon="ion-ios-create-outline" desc="" color="primary">
@@ -759,8 +807,7 @@ console.log("test",form.jobTitle);
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  {console.log(editPayload,"kkkkk")}
-                  <FlhaConfigEdit onChangeField={(e, fieldname) => handleFieldChange(e, fieldname)} editpayload={payload} dataHandler={(data) => dataHandler(data)} editPayload={editPayload}/>
+                  <FlhaConfigEdit onChangeField={(e, fieldname) => handleFieldChange(e, fieldname)} editpayload={payload} dataHandler={(data) => dataHandler(data)} editPayload={editPayload} />
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -796,12 +843,18 @@ console.log("test",form.jobTitle);
                     id="immediate-actions"
                     multiline
                     rows="1"
-                    onChange={(e) => payloadHandler(e, 'jobTitle')}
+                    onChange={(e) => { payloadHandler(e, 'jobTitle');}}
                     value={form.jobTitle}
                     label="titles"
                     className={classes.fullWidth}
                   />
+                  {/* {Object.keys(error.jobTitle).map((key)=>{
+                return <div style={{color:"red"}}>{error.jobTitle}</div>
+              })} */}
+                  <div style={{ color: "red" }}>{error.jobTitle}</div>
+
                 </Grid>
+
 
                 <Grid item sm={4} xs={12}>
                   <FormControl
@@ -838,6 +891,9 @@ console.log("test",form.jobTitle);
                       ))}
                     </Select>
                   </FormControl>
+
+                  <div style={{ color: "red" }}>{error.fkDeparmentName}</div>
+
                 </Grid>
                 <Grid
                   item
@@ -849,15 +905,11 @@ console.log("test",form.jobTitle);
                     {({ getRootProps, getInputProps }) => (
                       <div className="block-dropzone" {...getRootProps()}>
                         <input onChange={handleNewFileUpload} {...getInputProps()} />
-                        <p>{fileName || ""}</p>
+                        {/* <p>{fileName || ""}</p> */}
                       </div>
                     )}
                   </Dropzone>
-                  {/* <div {...getRootProps({ className: 'dropzone' })}>
-                    <input {...getInputProps()} onChange={handleNewFileUpload} />
-                    <p>Drag 'n' drop some files here, or click to select files</p>
-                  </div> */}
-                  {/* <p>{fileName ? fileName : ""}</p> */}
+                  <div style={{ color: "red" }}>{error.jobTitleImage}</div>
                   <aside>
                     <ul>{files}</ul>
                   </aside>
@@ -870,9 +922,11 @@ console.log("test",form.jobTitle);
                     rows="1"
                     label="details"
                     className={classes.fullWidth}
-                    onChange={(e) => payloadHandler(e, 'jobDetail')}
+                    onChange={(e) =>  payloadHandler(e, 'jobDetail')}
                     value={form.jobDetail}
                   />
+                  <div style={{ color: "red" }}>{error.jobDetail}</div>
+
                 </Grid>
                 <Grid item md={1} sm={1} xs={12}>
                   <Button size="medium" variant="contained" color="primary" className={classes.spacerRight} onClick={(e) => handelSubmit()}>

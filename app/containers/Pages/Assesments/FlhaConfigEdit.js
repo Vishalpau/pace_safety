@@ -8,6 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import DateFnsUtils from '@date-io/date-fns';
 import MomentUtils from '@date-io/moment';
+import Dropzone from 'react-dropzone'
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -291,7 +292,7 @@ const FlhaDetails = (props) => {
   }, []);
 
   React.useEffect(() => {
-    console.log("payload ", payload);
+    console.log("payloadvalue ", payload);
   }, [payload])
 
 
@@ -319,8 +320,10 @@ const FlhaDetails = (props) => {
     props.dataHandler(payload)
   }, [payload])
 
-  const handleDepartment = (id, name) => {
-    setPayload({ ...payload, fkDepartmentId: id, fkDeparmentName: name });
+  const handleDepartment = async (id, name) => {
+    
+    await setPayload({ ...payload, fkDepartmentId: id, fkDeparmentName: name });
+    console.log(id,name,"check")
   };
 
   return (
@@ -337,13 +340,13 @@ const FlhaDetails = (props) => {
                   rows="1"
                   label="titles"
                   className={classes.fullWidth}
-                  onChange={fieldHandler}
+                  onChange={(e)=>props.onChangeField(e, 'jobTitle')}                    
                   defaultValue={props.editPayload[0] || ""}
                 />
               </Grid>
-              {/* {console.log("payload.fkDeparmentName ", props)} */}
+              {console.log("payload.fkDeparmentName ", props.editPayload[0])}
 
-              {console.log("payload.fkDeparmentName ", props.editPayload[1])}
+              {/* {console.log("payload.fkDeparmentName ", props.editPayload[6])} */}
               <Grid item md={12} sm={12} xs={12}>
                 <FormControl
                   variant="outlined"
@@ -355,19 +358,21 @@ const FlhaDetails = (props) => {
                   </InputLabel>
                   <Select
                     labelId="incident-type-label"
-                    id="fkDeparmentName"
+                    id="fkDepartmentId"
                     label="department"
                     Select
-                    onChange={fieldHandler}
-                    defaultValue={props.editPayload[1]}
+                    onChange={(e)=>props.onChangeField(e, 'fkDepartmentId')}                    
+                    defaultValue={props.editPayload[6] || ""}
                   >
                     {dropDownAr.map((department) => (
+
                       <MenuItem
-                        key={department.id} value={props.editPayload[1]} onClick={(e) => {
+                      value={department.id}
+
+                        key={department.id} onClick={(e) => {
                           handleDepartment(department.id, department.departmentName);
                         }}
                       >
-
                         {department.departmentName}
                       </MenuItem>
                     ))}
@@ -379,11 +384,17 @@ const FlhaDetails = (props) => {
                 </FormControl>
               </Grid>
               <Grid item md={4} sm={4} xs={12}>
-                <img src={payload.jobTitleImage} height={58} alt="" className={classes.mttopSix} />
+                <img src={props.editPayload[2]} height={58} alt="" className={classes.mttopSix} />
               </Grid>
               <Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
-
-                <input src={props.editPayload[2]} accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
+              <Dropzone className="dropzone" onDrop={(e) => props.onChangeField(e,'jobTitleImage')}>
+                  {({ getRootProps, getInputProps }) => (
+                    <div className="block-dropzone" {...getRootProps()}>
+                      <input onChange={(e) => props.onChangeField(e, 'jobTitleImage')} {...getInputProps()} />
+                    </div>
+                  )}
+                </Dropzone>
+                {/* <input onChange={(e)=>props.onChangeField(e, 'jobTitleImage')} accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" /> */}
               </Grid>
               <Grid item md={12} sm={12} xs={12}>
                 <TextField
@@ -393,7 +404,7 @@ const FlhaDetails = (props) => {
                   rows="1"
                   label="details"
                   className={classes.fullWidth}
-                  onChange={fieldHandler}
+                  onChange={(e)=>props.onChangeField(e, 'jobDetail')}                    
                   defaultValue={props.editPayload[3] || ""}
 
                 />
