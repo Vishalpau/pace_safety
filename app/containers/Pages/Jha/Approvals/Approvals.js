@@ -108,7 +108,7 @@ const Approvals = () => {
   const [check, setCheck] = useState({ wrp: false, pic: false })
   const history = useHistory()
   const [updatePage, setUpdatePage] = useState(false)
-  const [actiionData, setActionData] = useState([])
+  const [actionData, setActionData] = useState([])
   const [projectData, setProjectData] = useState({
     projectId: "",
     companyId: "",
@@ -144,7 +144,7 @@ const Approvals = () => {
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A00`);
+    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
     let allAction = allActionTrackerData.data.data.results.results
     setActionData(allAction !== null ? allAction : [])
   };
@@ -233,7 +233,7 @@ const Approvals = () => {
                   />
                 </Typography>
                 <Typography className={classes.aLabelValue}>
-                  {actiionData.map((value) => (
+                  {actionData.map((value) => (
                     <>
                       <span className={classes.updateLink}>
                         <Link
@@ -247,7 +247,6 @@ const Approvals = () => {
                       </div>
                     </>
                   ))}
-
                 </Typography>
               </Grid>
               <Grid
