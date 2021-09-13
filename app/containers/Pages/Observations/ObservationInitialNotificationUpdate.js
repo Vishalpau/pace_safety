@@ -196,6 +196,11 @@ const ObservationInitialNotificationUpdate = () => {
   JSON.parse(localStorage.getItem("selectBreakDown")) !== null
     ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
+
+    const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
  
   const handelPositivObservation = (e) => {
     setPositiveObservation(false);
@@ -365,7 +370,7 @@ const ObservationInitialNotificationUpdate = () => {
   const fetchReportedBy = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -394,7 +399,7 @@ const ObservationInitialNotificationUpdate = () => {
   const fetchDepartment = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/departments/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -541,7 +546,7 @@ const ObservationInitialNotificationUpdate = () => {
                 Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}-` : null} 
+            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}` : null} 
             </Typography>
           </Grid>
           <Grid
