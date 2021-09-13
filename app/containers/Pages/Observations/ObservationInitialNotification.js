@@ -1113,7 +1113,7 @@ const ObservationInitialNotification = (props) => {
       // style={{ width: 300 }}
       freeSolo
       renderInput={(params) => (
-        <TextField {...params} label="Observers Department*" 
+        <TextField {...params} label="Observer's Department*" 
         error={error.reportedByDepartment}
                 helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} 
                 variant="outlined" />
