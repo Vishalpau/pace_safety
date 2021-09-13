@@ -1711,7 +1711,7 @@ const ObservationInitialNotification = (props) => {
                       }}
                     />
                   }
-                  label="I Accept & Pledge*"
+                  label="I accept & pledge*"
                 />
               </FormGroup>
               <p style={{color: "red"}}>{error.acceptAndPledge}</p>
