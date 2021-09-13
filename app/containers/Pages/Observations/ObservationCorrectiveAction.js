@@ -152,9 +152,19 @@ function ObservationCorrectiveAction() {
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
   ? JSON.parse(localStorage.getItem('userDetails')).id
   : null;
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
   const [comment , setComment] = useState({
-    "fkCompanyId": 0,
-    "fkProjectId": 0,
+    "fkCompanyId": parseInt(fkCompanyId),
+    "fkProjectId": parseInt(projectId),
     "commentContext": "Observation",
     "contextReferenceIds": localStorage.getItem("fkobservationId"),
     "commentTags": "Corrective-Action",
@@ -250,15 +260,7 @@ function ObservationCorrectiveAction() {
     
   }
 
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
-
-      const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
+  
     
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
@@ -352,7 +354,7 @@ temp.reviewedById = value.id
   const fetchReportedBy = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'

@@ -396,26 +396,7 @@ bytes
           )}
           </Typography>
         </Grid>
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-              Submited by
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {userName} , {userBadgeNo}
-            {/* {initialData.observedAt} */}
-          </Typography>
-        </Grid>
-
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Submited on
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {moment(initialData["createdAt"]).format(
-            "Do MMMM YYYY, h:mm:ss a"
-          )}
-          </Typography>
-        </Grid>
+        
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
               Supervisor details
@@ -552,27 +533,29 @@ bytes
           </Avatar> */}
           </Typography>):("-")}
         </Grid>
-        {/* <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Reviewed By
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {initialData["reviewedByName"] ? initialData["reviewedByName"] : "-"}
-          
-          </Typography>
-        </Grid>
-       
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Reviewed On
+              Submited by
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData["reviewedOn"] ? moment(initialData["reviewedOn"]).format(
-            "Do MMMM YYYY, h:mm:ss a"
-          ) :"-"}
+          {userName} , {userBadgeNo}
+            {/* {initialData.observedAt} */}
           </Typography>
-        </Grid> */}
+        </Grid>
+
+        <Grid item md={6}>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+                    Submited on
+          </Typography>
+          <Typography className={classes.labelValue}>
+          {moment(initialData["createdAt"]).format(
+            "Do MMMM YYYY, h:mm:ss a"
+          )}
+          </Typography>
+        </Grid>
+        
       </Grid>
+      
 
       <Dialog
         open={open}
