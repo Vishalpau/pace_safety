@@ -40,7 +40,7 @@ import {
 } from "../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -135,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
-// });
+  // });
 }));
 
 const ObservationInitialNotificationUpdate = () => {
@@ -156,10 +156,10 @@ const ObservationInitialNotificationUpdate = () => {
     'Assignee Department 2',
     'Assignee Department 3',
     'Assignee Department 4',
-    
+
   ];
 
-  const {id} = useParams();
+  const { id } = useParams();
   const history = useHistory();
 
   const [state, setState] = React.useState({
@@ -174,29 +174,29 @@ const ObservationInitialNotificationUpdate = () => {
   //   setState({ ...state, [event.target.name]: event.target.checked });
   // };
 
-  const [initialData , setInitialData] = useState({});
+  const [initialData, setInitialData] = useState({});
 
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
-  const [isLoading , setIsLoading] = useState(false);
-  const [tagData , setTagData] = useState([])
-  const [reportedByName , setReportedByName] = useState([]);
-  const [departmentName , setDepartmentName] = useState([])
-  const [submitLoader , setSubmitLoader] = useState(false);
-  const [projectSturcturedData , setProjectSturcturedData] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [tagData, setTagData] = useState([])
+  const [reportedByName, setReportedByName] = useState([]);
+  const [departmentName, setDepartmentName] = useState([])
+  const [submitLoader, setSubmitLoader] = useState(false);
+  const [projectSturcturedData, setProjectSturcturedData] = useState([])
   let filterReportedByName = []
   let filterDepartmentName = []
 
   const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
- 
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+
   const handelPositivObservation = (e) => {
     setPositiveObservation(false);
     setRiskObservation(true);
@@ -216,27 +216,27 @@ const ObservationInitialNotificationUpdate = () => {
   };
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [error , setError] = useState();
+  const [error, setError] = useState();
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
 
-  const [catagory , setCatagory ] = useState();
+  const [catagory, setCatagory] = useState();
 
-  const handleChange = async (e, index ,value) => {
-    if (e.target.checked == true){
+  const handleChange = async (e, index, value) => {
+    if (e.target.checked == true) {
       let TempPpeData = [...catagory];
-    TempPpeData[index].observationTag = value;
-    await setCatagory(TempPpeData);
-      
-    }else{
+      TempPpeData[index].observationTag = value;
+      await setCatagory(TempPpeData);
+
+    } else {
       let TempPpeData = [...catagory];
-    TempPpeData[index].observationTag = "";
-    await setCatagory(TempPpeData);
+      TempPpeData[index].observationTag = "";
+      await setCatagory(TempPpeData);
     }
-    
+
   };
 
   const handleOther = (e) => {
@@ -253,9 +253,9 @@ const ObservationInitialNotificationUpdate = () => {
       return "Data is not valid";
     }
     await setLoading(true)
-    
+
     let data = new FormData();
-      data.append("fkCompanyId", initialData.fkCompanyId),
+    data.append("fkCompanyId", initialData.fkCompanyId),
       data.append("fkProjectId", initialData.fkProjectId),
       data.append("fkProjectStructureIds", initialData.fkProjectStructureIds),
       data.append("observationType", initialData.observationType),
@@ -279,25 +279,25 @@ const ObservationInitialNotificationUpdate = () => {
       data.append("reportedById", initialData.reportedById),
       data.append("reportedByName", initialData.reportedByName),
       data.append("reportedByDepartment", initialData.reportedByDepartment)
-      if(initialData.reportedDate !== null && typeof initialData.reportedDate !== "string" ){
-        data.append("reportedDate", null)
-      }
-      data.append("reportedByBadgeId", initialData.reportedByBadgeId),
+    if (initialData.reportedDate !== null && typeof initialData.reportedDate !== "string") {
+      data.append("reportedDate", null)
+    }
+    data.append("reportedByBadgeId", initialData.reportedByBadgeId),
       data.append("closedById", initialData.closedById),
       data.append("closedByName", initialData.closedByName),
       data.append("closedByDepartment", initialData.closedByDepartment)
-      if(initialData.closedDate !== null && typeof initialData.closedDate !== "string" ){
-        data.append("closedDate", null)
-      }
-      if(initialData.closedoutAttachment !== null && typeof initialData.closedoutAttachment !== "string" ){
-        data.append("closedoutAttachment", initialData.closedoutAttachment)
-      }
-      data.append("supervisorName", initialData.supervisorName),
+    if (initialData.closedDate !== null && typeof initialData.closedDate !== "string") {
+      data.append("closedDate", null)
+    }
+    if (initialData.closedoutAttachment !== null && typeof initialData.closedoutAttachment !== "string") {
+      data.append("closedoutAttachment", initialData.closedoutAttachment)
+    }
+    data.append("supervisorName", initialData.supervisorName),
       data.append("supervisorDepartment", initialData.supervisorDepartment)
-      if(initialData.attachment !== null && typeof initialData.attachment !== "string" ){
-        data.append("attachment", initialData.attachment)
-      }
-      data.append("status", initialData.status),
+    if (initialData.attachment !== null && typeof initialData.attachment !== "string") {
+      data.append("attachment", initialData.attachment)
+    }
+    data.append("status", initialData.status),
       data.append("createdBy", initialData.createdBy),
       data.append("observationStatus", initialData.observationStatus),
       data.append("observationStage", initialData.observationStage),
@@ -308,9 +308,9 @@ const ObservationInitialNotificationUpdate = () => {
 
     if (id) {
       data.append("id", id)
-      for(let i = 0; i <catagory.length ; i++) {
-      
-      const res = await api.put(`/api/v1/observations/${id}/observationtags/${catagory[i].id}/`,catagory[i])
+      for (let i = 0; i < catagory.length; i++) {
+
+        const res = await api.put(`/api/v1/observations/${id}/observationtags/${catagory[i].id}/`, catagory[i])
       }
       const res1 = await api.put(`/api/v1/observations/${id}/`, data);
       if (res1.status === 200) {
@@ -319,7 +319,7 @@ const ObservationInitialNotificationUpdate = () => {
           `/app/observation/details/${id}`
         );
       }
-    } 
+    }
   };
 
   const handleClose = async () => {
@@ -334,7 +334,7 @@ const ObservationInitialNotificationUpdate = () => {
 
     await setCatagory(sorting);
     await setIsLoading(true);
-    
+
   }
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
@@ -350,7 +350,7 @@ const ObservationInitialNotificationUpdate = () => {
     const result = res.data.data.results.results;
     let temp = []
     result.map((value) => {
-      if(value.status === "Active") {
+      if (value.status === "Active") {
         temp.push(value)
       }
     })
@@ -424,23 +424,22 @@ const ObservationInitialNotificationUpdate = () => {
 
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-   
+
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[0].structure[0].url
-          }`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
           headers: HEADER_AUTH,
         };
-       
+
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            
+
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
@@ -451,26 +450,25 @@ const ObservationInitialNotificationUpdate = () => {
             });
           })
           .catch((error) => {
-            
+
             setIsNext(true);
           });
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[key].structure[0].url
-          }${breakDown[key-1].slice(-1)}`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].slice(-1)}`,
           headers: HEADER_AUTH,
         };
-       
+
         await api(config)
           .then(async (response) => {
-          
+
             const result = response.data.data.results;
-           
-            const res=result.map((item, index) => {
+
+            const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-               
+
                 selectBreakDown = [
                   ...selectBreakDown,
                   { depth: item.depth, id: item.id, name: item.name },
@@ -478,7 +476,7 @@ const ObservationInitialNotificationUpdate = () => {
               }
             });
 
-          
+
           })
           .catch((error) => {
             console.log(error)
@@ -487,19 +485,19 @@ const ObservationInitialNotificationUpdate = () => {
       }
     }
     // dispatch(breakDownDetails(selectBreakDown));
-    await setProjectSturcturedData(selectBreakDown)    
+    await setProjectSturcturedData(selectBreakDown)
     // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
   useEffect(() => {
-    
-      fetchInitialiObservation();
-      fetchCheckBoxData();
-      fetchTags()
-      fetchReportedBy()
-      fetchDepartment()
-    
-},[])
+
+    fetchInitialiObservation();
+    fetchCheckBoxData();
+    fetchTags()
+    fetchReportedBy()
+    fetchDepartment()
+
+  }, [])
 
   const classes = useStyles();
   return (
@@ -509,39 +507,39 @@ const ObservationInitialNotificationUpdate = () => {
         title="Update Observation"
         icon="ion-md-list-box"
       > */}
-      {isLoading ? 
+      {isLoading ?
         <Grid container spacing={3} className={classes.observationNewSection}>
 
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
-                      Observation Title
+              Observation Title
             </Typography>
             <Typography className={classes.labelValue}>
-                      {initialData.observationTitle}
+              {initialData.observationTitle}
             </Typography>
           </Grid>
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
-                      Observation Type
+              Observation Type
             </Typography>
             <Typography className={classes.labelValue}>
-                      {initialData.observationTitle}
+              {initialData.observationTitle}
             </Typography>
           </Grid>
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
-                      Observation Description
+              Observation Description
             </Typography>
             <Typography className={classes.labelValue}>
-                      {initialData.observationDetails}
+              {initialData.observationDetails}
             </Typography>
           </Grid>
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Project Information
+              Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}-` : null} 
+              {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}` : null}
             </Typography>
           </Grid>
           <Grid
@@ -550,102 +548,102 @@ const ObservationInitialNotificationUpdate = () => {
             xs={12}
             className={classes.formBox}
           >
-          
+
             <TextField
               label="Location*"
               //margin="dense"
               name="location"
               id="location"
               shrink={initialData.location !== null ? true : false}
-              value={initialData.location  ? initialData.location : ""}
+              value={initialData.location ? initialData.location : ""}
               fullWidth
               error={error ? error.location : null}
               helperText={error ? error.location ? error.location : "" : ""}
               variant="outlined"
               className={classes.formControl}
               onChange={(e) => {
-                  setInitialData({
-                    ...initialData,
-                    location: e.target.value,
-                  });
-                }}
+                setInitialData({
+                  ...initialData,
+                  location: e.target.value,
+                });
+              }}
             />
           </Grid>
-          
+
           <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormLabel className={classes.labelName} component="legend">
-                Categories
-              </FormLabel>
-              <FormGroup className={classes.customCheckBoxList}>
-                {tagData.map((value , index) => (
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name={value}
-                        defaultChecked ={catagory[index].id ? catagory[index].observationTag ? true : false : false }
-                        
-                        onChange={(e) => handleChange(e, index,value.tagName)}
-                      />
-                    }
-                    label={value.tagName}
-                  />
-                ))}
-              </FormGroup>
-              
-            </Grid> 
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <Autocomplete
-                id="combo-box-demo"
-                options={reportedByName}
-                value={initialData.assigneeName ? initialData.assigneeName :""}
-                className={classes.mT30}
-                getOptionLabel={(option) => option}
-                onChange={(e, value) => {
-                  setInitialData({
-                    ...initialData,
-                    assigneeName: value,
-                  });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Assignee"
-                    variant="outlined"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-            
-              <TextField
-                label="Assignee Department"
-                // margin="dense"
-                name="assigneedepartment"
-                id="assigneedepartment"
-                select
-                fullWidth
-                value={initialData.departmentName ? initialData.departmentName : ""}
-                variant="outlined"
-                onChange={(e) => {
-                  setInitialData({ ...initialData, departmentName: e.target.value });
-                }}
-              >
-                {departmentName.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+            <FormLabel className={classes.labelName} component="legend">
+              Categories
+            </FormLabel>
+            <FormGroup className={classes.customCheckBoxList}>
+              {tagData.map((value, index) => (
+                <FormControlLabel
+                  className={classes.labelValue}
+                  control={
+                    <Checkbox
+                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                      checkedIcon={<CheckBoxIcon fontSize="small" />}
+                      name={value}
+                      defaultChecked={catagory[index].id ? catagory[index].observationTag ? true : false : false}
+
+                      onChange={(e) => handleChange(e, index, value.tagName)}
+                    />
+                  }
+                  label={value.tagName}
+                />
+              ))}
+            </FormGroup>
+
+          </Grid>
+          <Grid item md={6} xs={12} className={classes.formBox}>
+            <Autocomplete
+              id="combo-box-demo"
+              options={reportedByName}
+              value={initialData.assigneeName ? initialData.assigneeName : ""}
+              className={classes.mT30}
+              getOptionLabel={(option) => option}
+              onChange={(e, value) => {
+                setInitialData({
+                  ...initialData,
+                  assigneeName: value,
+                });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Assignee"
+                  variant="outlined"
+                />
+              )}
+            />
+          </Grid>
+          <Grid item md={6} xs={12} className={classes.formBox}>
+
+            <TextField
+              label="Assignee Department"
+              // margin="dense"
+              name="assigneedepartment"
+              id="assigneedepartment"
+              select
+              fullWidth
+              value={initialData.departmentName ? initialData.departmentName : ""}
+              variant="outlined"
+              onChange={(e) => {
+                setInitialData({ ...initialData, departmentName: e.target.value });
+              }}
+            >
+              {departmentName.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
           <Grid
             item
             md={12}
             xs={12}
           >
-          {/* {submitLoader == false ?
+            {/* {submitLoader == false ?
                 <Button
                   variant="outlined"
                   onClick={(e) => handleSubmit()}
@@ -660,29 +658,18 @@ const ObservationInitialNotificationUpdate = () => {
                   <CircularProgress color="secondary" />
                 </IconButton>
               } */}
-              <div className={classes.loadingWrapper}>
-        <Button
-          variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                  disabled={loading}
-        >
-          Submit
-        </Button>
-        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-      </div>
-            {/* <Button
+            <div className={classes.loadingWrapper}>
+              <Button
                 variant="outlined"
-                size="medium"
+                onClick={(e) => handleSubmit()}
                 className={classes.custmSubmitBtn}
-                onClick={() => handleSubmit()}
+                style={{ marginLeft: "10px" }}
+                disabled={loading}
               >
                 Submit
-              </Button> */}
-            <Button variant="outlined" size="medium" className={classes.custmCancelBtn} 
-                        onClick={() => handleClose()}
->Cancel</Button>
+              </Button>
+              {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            </div>
           </Grid>
         </Grid> : <h1>Loading...</h1>}
       {/* </PapperBlock> */}
