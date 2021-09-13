@@ -54,6 +54,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import { mdiConsole } from "@mdi/js";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -180,7 +181,6 @@ const ObservationInitialNotification = (props) => {
   const user = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails'))
       : null;
-    console.log("user",user)
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -213,7 +213,6 @@ const ObservationInitialNotification = (props) => {
   const [selectValue, setSelectValue] = useState([])
   const [value, setValue] = React.useState(user);
   const [valueReportedBy, setValueReportedBy] = React.useState(null);
-console.log("dddddd",departmentName)
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   let filterSuperVisorId = []
@@ -263,7 +262,6 @@ console.log("dddddd",departmentName)
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].roles[0].users;
-          console.log("8888888",result);
           let user = []
           
             for (var i in result) {
@@ -294,7 +292,6 @@ console.log("dddddd",departmentName)
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].users;
-          console.log(result)
           const userDetails = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails'))
       : null;
@@ -325,7 +322,7 @@ console.log("dddddd",departmentName)
         // window.location.href = {LOGIN_URL}
       });
   };
-console.log("555",reportedByDetails)
+
   const fetchDepartment = () => {
     const config = {
       method: "get",
@@ -405,6 +402,7 @@ console.log("555",reportedByDetails)
     vendor: "string",
     vendorReferenceId: "string",
   });
+  console.log(form)
 
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([
@@ -1065,6 +1063,7 @@ console.log("555",reportedByDetails)
           setValue({
             inputValue: newValue,
           });
+          console.log("444",newValue);
                   setForm({...form,reportedByDepartment:newValue})
                 
         } else if (newValue && newValue.inputValue) {
@@ -1072,6 +1071,8 @@ console.log("555",reportedByDetails)
           setValue({
             inputValue: newValue.inputValue,
           });
+          console.log("544",newValue);
+
           setForm({...form,reportedByDepartment:newValue.inputValue})
 
         } else {
@@ -1152,26 +1153,28 @@ console.log("555",reportedByDetails)
             <Autocomplete
       value={form.supervisorName ? form.supervisorName : ''}
       onChange={(event, newValue) => {
-        if (typeof newValue === 'string') {
+        if (typeof newValue === 'string' ) {
           // setValueReportedBy({
           //   inputValue: newValue,
           // });
-                  setForm({...form,supervisorName:newValue.inputValue,supervisorId: 0,supervisorByBadgeId: ""})
+                  setForm({...form,supervisorName:newValue})
+                  
                 
         } else if (newValue && newValue.inputValue) {
           // Create a new value from the user input
-          setValueReportedBy({
-            inputValue: newValue.inputValue,
-          });
-          setForm({...form,supervisorName:newValue.inputValue,supervisorByBadgeId: newValue.badgeNo})
-
+          // setValueReportedBy({
+          //   inputValue: newValue.inputValue,
+          // });
           if(newValue.supervisorId){
-            setForm({...form,supervisorName:newValue.inputValue,supervisorByBadgeId: newValue.badgeNo,supervisorId: newValue.supervisorId})
+            console.log(newValue)
+            setForm({...form,supervisorName:newValue.inputValue ,supervisorByBadgeId:newValue.badgeNo , supervisorId : newValue.supervisorId});
 
           }else{
-            setForm({...form,supervisorId: 0 ,supervisorByBadgeId : "" })
+            setForm({...form,supervisorName:newValue.inputValue,supervisorByBadgeId:"" , supervisorId : 0});
 
           }
+
+          
 
         } else {
           setValueReportedBy(newValue);
@@ -1218,26 +1221,7 @@ console.log("555",reportedByDetails)
       )}
     />
 
-              {/* <TextField
-                label="Supervisor's Name*"
-                name="supervisorname"
-                id="supervisorname"
-                defaultValue={form.supervisorName}
-                error={error.supervisorName}
-                helperText={error.supervisorName ? error.supervisorName : ""}
-                select
-                fullWidth
-                variant="outlined"
-                // onChange={(e) => {
-                //   handleSuperVisior(e)}}
-              >
-                {superVisorName.map((option) => (
-                  <MenuItem key={option} value={option.name}
-                  onClick={(e) => handleSuperVisior(e,option)}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </TextField> */}
+              
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
