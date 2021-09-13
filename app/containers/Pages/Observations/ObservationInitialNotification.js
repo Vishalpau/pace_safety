@@ -186,7 +186,7 @@ const ObservationInitialNotification = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({});
-  const [addressSituation, setAddressSituation] = useState(false);
+  const [addressSituation, setAddressSituation] = useState(true);
   const [tagData, setTagData] = useState([]);
   const [fileShow, setFileShow] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -298,7 +298,7 @@ const ObservationInitialNotification = (props) => {
       let us = {
         inputValue : userDetails.name, reportedById:userDetails.id, badgeNo:userDetails.badgeNo
       }
-          let user = [us];
+          let user = [];
           for (var i in result) {
 
             let temp = {}
@@ -369,7 +369,7 @@ const ObservationInitialNotification = (props) => {
     personRecognition: "",
     observationTitle: "",
     observationDetails: "",
-    isSituationAddressed: "Yes",
+    isSituationAddressed: "",
     isNotifiedToSupervisor: "",
     actionTaken: "",
     location: "",
@@ -1384,7 +1384,7 @@ const ObservationInitialNotification = (props) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            {form.isSituationAddressed == "Yes" ? (
+            {addressSituation === true ? (
               <>
                 <Grid item md={12} xs={12} className={classes.formBox}>
                   <TextField
