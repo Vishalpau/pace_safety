@@ -245,7 +245,7 @@ const Assessment = () => {
     });
     for (let key in apiData) {
       const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A${apiData[key]["id"]
+        `api/v1/actions/?enitityReferenceId=${jhaId}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {

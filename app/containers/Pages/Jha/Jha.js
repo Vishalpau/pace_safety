@@ -161,7 +161,7 @@ function Jha() {
       baseURL: API_URL_ACTION_TRACKER,
     });
     for (let key in apiData) {
-      const action = await api_action.get(`/api/v1/actions/?actionContext__startswith=jha&enitityReferenceId__startswith=${apiData[key]["id"]}`)
+      const action = await api_action.get(`/api/v1/actions/?actionContext=jha&enitityReferenceId=${apiData[key]["id"]}`)
       let actionNumber = action.data.data.results.count
       apiData[key]["actionCount"] = actionNumber
     }
@@ -173,12 +173,16 @@ function Jha() {
     setCardView(true)
     history.push(`/app/pages/jha/all_jha/`)
   };
+
   const handleTabelView = () => {
     setCardView(false)
     history.push(`/app/pages/jha/all_jha/_table`)
   };
+
   //   Data for the table view
+
   const columns = ['Jha number', 'Location', 'Work area', 'Created by', 'Created on'];
+
   const handelTableView = (result) => {
     const temp = []
     result.map((value) => {
@@ -196,9 +200,13 @@ function Jha() {
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
-    print: true,
+    print: false,
     rowsPerPage: 100,
     page: 100,
+    search: true,
+    filter: false,
+    viewColumns: false,
+    download: false
   };
 
   const handleSummaryPush = async (e, index) => {
