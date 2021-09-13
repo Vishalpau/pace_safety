@@ -67,9 +67,14 @@ const PrintObservation = React.forwardRef((props, ref) => {
   const fetchTags = async () => {
     const res = await api.get(`/api/v1/tags/`);
     const result = res.data.data.results.results;
-    let sorting = result.sort((a, b) => a.id - b.id);
+    let temp = []
+    result.map((value) => {
+      if(value.status === "Active") {
+        temp.push(value)
+      }
+    })
+    let sorting = temp.sort((a, b) => a.id - b.id);
     await setTagData(sorting);
-
   };
 
   const fetchCatagories = async () => {

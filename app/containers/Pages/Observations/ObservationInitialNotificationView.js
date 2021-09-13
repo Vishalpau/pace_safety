@@ -367,7 +367,7 @@ bytes
           </Typography>
           <Typography className={classes.labelValue}>
             
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null} - {projectSturcturedData[1] ? projectSturcturedData[1].name : null} - {projectSturcturedData[2] ? projectSturcturedData[2].name : null} 
+          {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}` : null} 
           </Typography>
         </Grid>
         <Grid item md={6}>
